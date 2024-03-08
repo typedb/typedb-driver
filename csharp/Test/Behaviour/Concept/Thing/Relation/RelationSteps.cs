@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var1, owner);
@@ -128,7 +128,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var1, owner);
@@ -143,7 +143,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var1, owner);
@@ -157,7 +157,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetRelationType(typeLabel).Resolve()
                 .GetInstances(SingleTransaction);
 
-            Assert.True(instances.anyMatch(i => i.equals(Get(var))));
+            Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get instances do not contain: {var}")]
@@ -168,7 +168,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetRelationType(typeLabel).Resolve()
                 .GetInstances(SingleTransaction);
 
-            Assert.True(instances.noneMatch(i => i.equals(Get(var))));
+            Assert.False(players.Where(i => i.Equals(Get(var))).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get instances is empty")]
@@ -186,12 +186,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationAddPlayerForRole(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetType()
                 .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
 
             Get(var1)
-                .asRelation()
+                .AsRelation()
                 .addPlayer(SingleTransaction, relates, Get(var2)).Resolve();
         }
 
@@ -199,12 +199,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationAddPlayerForRoleThrowsException(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetType()
                 .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
 
             Assert.Throws<TypeDBDriverException>(() => Get(var1)
-                .asRelation()
+                .AsRelation()
                 .addPlayer(SingleTransaction, relates, Get(var2)).Resolve());
         }
 
@@ -212,19 +212,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationRemovePlayerForRole(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetType()
                 .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
 
             Get(var1)
-                .asRelation()
+                .AsRelation()
                 .removePlayer(SingleTransaction, relates, Get(var2)).Resolve();
         }
 
         [Then(@"relation {var} get players contain:")]
-        public void RelationGetPlayersContain(string var, Map<string, string> players)
+        public void RelationGetPlayersContain(string var, Dictionary<string, string> players)
         {
-            Relation relation = Get(var).asRelation();
+            Relation relation = Get(var).AsRelation();
 
             players.forEach((rt, var2) =>
                 {
@@ -232,14 +232,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                         .GetPlayers(SingleTransaction)
                         .Get(relation.GetType().GetRelates(SingleTransaction, rt).Resolve();
 
-                    Assert.True(players.contains(Get(var2.substring(1))));
+                    Assert.True(players.Contains(Get(var2.Substring(1))));
                 });
         }
 
         [Then(@"relation {var} get players do not contain:")]
-        public void RelationGetPlayersDoNotContain(string var, Map<string, string> players)
+        public void RelationGetPlayersDoNotContain(string var, Dictionary<string, string> players)
         {
-            Relation relation = Get(var).asRelation();
+            Relation relation = Get(var).AsRelation();
 
             players.forEach((rt, var2) =>
                 {
@@ -249,7 +249,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                     if (players != null)
                     {
-                        Assert.False(p.contains(Get(var2.substring(1))));
+                        Assert.False(p.Contains(Get(var2.Substring(1))));
                     }
                 });
         }
@@ -257,45 +257,46 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation {var} get players contain: {var}")]
         public void RelationGetPlayersContain(string var1, string var2)
         {
-            var players = Get(var1).asRelation().GetPlayersByRoleType(SingleTransaction);
-            Assert.True(players.anyMatch(p => p.equals(Get(var2))));
+            var players = Get(var1).AsRelation().GetPlayersByRoleType(SingleTransaction);
+            Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
         [Then(@"relation {var} get players do not contain: {var}")]
         public void RelationGetPlayersDoNotContain(string var1, string var2)
         {
-            var players = Get(var1).asRelation().GetPlayersByRoleType(SingleTransaction);
-            Assert.True(players.noneMatch(p => p.equals(Get(var2))));
+            var players = Get(var1).AsRelation().GetPlayersByRoleType(SingleTransaction);
+
+            Assert.False(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
         [Then(@"relation {var} get players for role\\( ?{type_label} ?) contain: {var}")]
         public void RelationGetPlayersForRoleContain(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetType()
                 .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
 
             var players = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetPlayersByRoleType(SingleTransaction, relates);
 
-            Assert.True(players.anyMatch(p => p.equals(Get(var2))));
+            Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
         [Then(@"relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")]
         public void RelationGetPlayersForRoleDoNotContain(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetType()
                 .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
 
             var players = Get(var1)
-                .asRelation()
+                .AsRelation()
                 .GetPlayersByRoleType(SingleTransaction, relates);
 
-            Assert.True(players.noneMatch(p => p.equals(Get(var2))));
+            Assert.False(players.Where(p => p.Equals(Get(var2)))).Any());
         }
     }
 }

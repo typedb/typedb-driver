@@ -131,28 +131,24 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")]
         public void RelationTypeGetRoleTypeGetLabel(string relationLabel, string roleLabel, string getLabel)
         {
-            var relatesLabelName = SingleTransaction
+            var relates = SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .Label
-                .Name;
+                .GetRelates(SingleTransaction, roleLabel).Resolve();
 
-            Assert.Equals(getLabel, relatesLabelName);
+            Assert.Equals(getLabel, relates.Label.Name);
         }
 
         [Then(@"relation\\( ?{type_label} ?) get overridden role\\( ?{type_label} ?) get label: {type_label}")]
         public void RelationTypeGetOverriddenRoleTypeGetLabel(
             string relationLabel, string roleLabel, string getLabel)
         {
-            var relatesLabelName = SingleTransaction
+            var relates = SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelatesOverridden(SingleTransaction, roleLabel).Resolve()
-                .Label
-                .Name;
+                .GetRelatesOverridden(SingleTransaction, roleLabel).Resolve();
 
-            Assert.Equals(getLabel, relatesLabelName);
+            Assert.Equals(getLabel, relates.Label.Name);
         }
 
         [When(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")]
@@ -162,46 +158,47 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .isAbstract();
+                .IsAbstract();
 
             Assert.Equals(isAbstract, isRelatesAbstract);
         }
 
-        private Set<Label> RelationTypeGetRelatedRoleTypes(string relationLabel)
+        private HashSet<Label> RelationTypeGetRelatedRoleTypes(string relationLabel)
         {
             return SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(SingleTransaction)
-                .map(Type::getLabel)
-                .collect(toSet());
+                .Select(obj => obj.Label)
+                .ToHashSet();
         }
 
         [Then(@"relation\\( ?{type_label} ?) get related roles contain:")]
         public void RelationTypeGetRelatedRoleTypesContain(string relationLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
-            Assert.True(actuals.containsAll(roleLabels));
+            HashSet<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
+
+            Assert.False(actuals.Except(roleLabels).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get related roles do not contain:")]
         public void RelationTypeGetRelatedRoleTypesDoNotContain(string relationLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
+            HashSet<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
             
             for (Label label : roleLabels) 
             {
-                Assert.False(actuals.contains(label));
+                Assert.False(actuals.Contains(label));
             }
         }
 
-        private Set<Label> RelationTypeGetRelatedExplicitRoleTypes(string relationLabel)
+        private HashSet<Label> RelationTypeGetRelatedExplicitRoleTypes(string relationLabel)
         {
             return SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(SingleTransaction, EXPLICIT)
-                .map(Type::getLabel)
+                .Select(obj => obj.Label)
                 .ToHashSet();
         }
 
@@ -209,19 +206,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRelatedExplicitRoleTypesContain(
             string relationLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
-            Assert.True(actuals.containsAll(roleLabels));
+            HashSet<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
+
+            Assert.False(actuals.Except(roleLabels).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get related explicit roles do not contain:")]
         public void RelationTypeGetRelatedExplicitRoleTypesDoNotContain(
             string relationLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
+            HashSet<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
 
             for (Label label : roleLabels)
             {
-                Assert.False(actuals.contains(label));
+                Assert.False(actuals.Contains(label));
             }
         }
 
@@ -230,7 +228,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             RoleType superLabelType = SingleTransaction
                 .Concepts
-                .GetRelationType(superLabel.scope().Get()).Resolve()
+                .GetRelationType(superLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, superLabel.Name).Resolve();
 
             RoleType labelSupertype = SingleTransaction
@@ -242,42 +240,43 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equals(superLabelType, labelSupertype);
         }
 
-        private Set<Label> RelationTypeGetRoleTypeGetSupertypes(string relationLabel, string roleLabel) 
+        private HashSet<Label> RelationTypeGetRoleTypeGetSupertypes(string relationLabel, string roleLabel) 
         {
             return SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetSupertypes(SingleTransaction).map(Type::getLabel).collect(toSet());
+                .GetSupertypes(SingleTransaction).Select(obj => obj.Label).ToHashSet();
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")]
         public void RelationTypeGetRoleTypeGetSupertypesContain(
             string relationLabel, string roleLabel, List<Label> superLabels)
         {
-            Set<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
-            Assert.True(actuals.containsAll(superLabels));
+            HashSet<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
+
+            Assert.False(actuals.Except(superLabels).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSupertypesDoNotContain(
             string relationLabel, string roleLabel, List<Label> superLabels)
         {
-            Set<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
+            HashSet<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
             
             for (Label superLabel : superLabels) 
             {
-                Assert.False(actuals.contains(superLabel));
+                Assert.False(actuals.Contains(superLabel));
             }
         }
 
-        private Set<string> RelationTypeGetRoleTypeGetPlayers(string relationLabel, string roleLabel) 
+        private HashSet<string> RelationTypeGetRoleTypeGetPlayers(string relationLabel, string roleLabel) 
         {
             return SingleTransaction
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetPlayerTypes(SingleTransaction).map(t => t.Label.Name)
+                .GetPlayerTypes(SingleTransaction).Select(t => t.Label.Name)
                 .ToHashSet();
         }
 
@@ -285,23 +284,24 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeGetPlayersContain(
             string relationLabel, string roleLabel, List<string> playerLabels)
         {
-            Set<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
-            Assert.True(actuals.containsAll(playerLabels));
+            HashSet<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
+
+            Assert.False(actuals.Except(playerLabels).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players do not contain:")]
         public void RelationTypeGetRoleTypeGetPlayersDoNotContain(
             string relationLabel, string roleLabel, List<string> playerLabels)
         {
-            Set<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
+            HashSet<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
 
             for (string superLabel : playerLabels)
             {
-                Assert.False(actuals.contains(superLabel));
+                Assert.False(actuals.Contains(superLabel));
             }
         }
 
-        private Set<Label> RelationTypeGetRoleTypeGetSubtypes(string relationLabel, string roleLabel) 
+        private HashSet<Label> RelationTypeGetRoleTypeGetSubtypes(string relationLabel, string roleLabel) 
         {
             return SingleTransaction
                 .Concepts
@@ -316,19 +316,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeGetSubtypesContain(
             string relationLabel, string roleLabel, List<Label> subLabels)
         {
-            Set<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
-            Assert.True(actuals.containsAll(subLabels));
+            HashSet<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
+
+            Assert.False(actuals.Except(subLabels).Any());
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSubtypesDoNotContain(
             string relationLabel, string roleLabel, List<Label> subLabels)
         {
-            Set<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
+            HashSet<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
 
             for (Label subLabel : subLabels)
             {
-                Assert.False(actuals.contains(subLabel));
+                Assert.False(actuals.Contains(subLabel));
             }
         }
     }

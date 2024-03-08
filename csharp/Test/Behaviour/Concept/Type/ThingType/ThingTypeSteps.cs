@@ -132,7 +132,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"{root_label}\\( ?{type_label} ?) is abstract: {bool}")]
         public void ThingTypeIsAbstract(RootLabel rootLabel, string typeLabel, bool isAbstract)
         {
-            Assert.Equals(isAbstract, GetThingType(rootLabel, typeLabel).isAbstract());
+            Assert.Equals(isAbstract, GetThingType(rootLabel, typeLabel).IsAbstract());
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set supertype: {type_label}")]
@@ -190,52 +190,52 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> superLabels)
         {
             ThingType thing_type = GetThingType(rootLabel, typeLabel);
-            Set<string> actuals = thing_type
+            HashSet<string> actuals = thing_type
                 .GetSupertypes(SingleTransaction)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(superLabels));
+            Assert.False(actuals.Except(superLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get supertypes do not contain:")]
         public void ThingTypeGetSupertypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> superLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetSupertypes(SingleTransaction)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
             for (string superLabel : superLabels)
             {
-                Assert.False(actuals.contains(superLabel));
+                Assert.False(actuals.Contains(superLabel));
             }
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get subtypes contain:")]
         public void ThingTypeGetSubtypesContain(RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetSubtypes(SingleTransaction)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(subLabels));
+            Assert.False(actuals.Except(superLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get subtypes do not contain:")]
         public void ThingTypeGetSubtypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetSubtypes(SingleTransaction)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
             for (string subLabel : subLabels)
             {
-                Assert.False(actuals.contains(subLabel));
+                Assert.False(actuals.Contains(subLabel));
             }
         }
 
@@ -286,26 +286,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsAttributeTypesWithAnnotationsContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, set(annotations))
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(attributeLabels));
+            Assert.False(actuals.Except(attributeLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types, with annotations: {annotations}; do not contain:")]
         public void ThingTypeGetOwnsAttributeTypesWithAnnotationsDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, set(annotations))
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
             for (string attributeLabel : attributeLabels)
             {
-                Assert.False(actuals.contains(attributeLabel));
+                Assert.False(actuals.Contains(attributeLabel));
             }
         }
 
@@ -313,26 +313,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsExplicitAttributeTypesWithAnnotationsContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(attributeLabels));
+            Assert.False(actuals.Except(attributeLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types, with annotations: {annotations}; do not contain:")]
         public void ThingTypeGetOwnsExplicitAttributeTypesWithAnnotationsDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Select(t => t.Label.Name)
+                .ToHashSet();
 
             for (string attributeLabel : attributeLabels)
             {
-                Assert.False(actuals.contains(attributeLabel));
+                Assert.False(actuals.Contains(attributeLabel));
             }
         }
 
@@ -411,26 +411,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsAttributeTypesContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction)
-                .map(at => at.Label.Name)
-                .collect(toSet());
+                .Select(at => at.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(attributeLabels));
+            Assert.False(actuals.Except(attributeLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")]
         public void ThingTypeGetOwnsAttributeTypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction)
-                .map(at => at.Label.Name)
-                .collect(toSet());
+                .Select(at => at.Label.Name)
+                .ToHashSet();
 
             for (string attributeLabel : attributeLabels)
             {
-                Assert.False(actuals.contains(attributeLabel));
+                Assert.False(actuals.Contains(attributeLabel));
             }
         }
 
@@ -438,26 +438,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsExplicitAttributeTypesContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, EXPLICIT)
-                .map(at => at.Label.Name)
-                .collect(toSet());
+                .Select(at => at.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(attributeLabels));
+            Assert.False(actuals.Except(attributeLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types do not contain:")]
         public void ThingTypeGetOwnsExplicitAttributeTypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
-            Set<string> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
                 .GetOwns(SingleTransaction, EXPLICIT)
-                .map(at => at.Label.Name)
-                .collect(toSet());
+                .Select(at => at.Label.Name)
+                .ToHashSet();
 
             for (string attributeLabel : attributeLabels)
             {
-                Assert.False(actuals.contains(attributeLabel));
+                Assert.False(actuals.Contains(attributeLabel));
             }
         }
 
@@ -466,7 +466,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel).SetPlays(SingleTransaction, roleType).Resolve();
@@ -484,12 +484,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
             RoleType overriddenType = SingleTransaction
                 .Concepts
-                .GetRelationType(overriddenLabel.scope().Get()).Resolve()
+                .GetRelationType(overriddenLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, overriddenLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel)
@@ -508,7 +508,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel).unsetPlays(SingleTransaction, roleType).Resolve();
@@ -525,26 +525,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetPlayingRolesContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(SingleTransaction)
-                .map(Type::getLabel)
-                .collect(toSet());
+                .Select(obj => obj.Label)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(roleLabels));
+            Assert.False(actuals.Except(roleLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles do not contain:")]
         public void ThingTypeGetPlayingRolesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(SingleTransaction)
-                .map(Type::getLabel)
-                .collect(toSet());
+                .Select(obj => obj.Label)
+                .ToHashSet();
 
             for (Label roleLabel : roleLabels)
             {
-                Assert.False(actuals.contains(roleLabel));
+                Assert.False(actuals.Contains(roleLabel));
             }
         }
 
@@ -552,26 +552,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetPlayingRolesExplicitContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(SingleTransaction, EXPLICIT)
-                .map(Type::getLabel)
-                .collect(toSet());
+                .Select(obj => obj.Label)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(roleLabels));
+            Assert.False(actuals.Except(roleLabels).Any());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles explicit do not contain:")]
         public void ThingTypeGetPlayingRolesExplicitDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
-            Set<Label> actuals = GetThingType(rootLabel, typeLabel)
+            HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(SingleTransaction, EXPLICIT)
-                .map(Type::getLabel)
-                .collect(toSet());
+                .Select(obj => obj.Label)
+                .ToHashSet();
 
             for (Label roleLabel : roleLabels)
             {
-                Assert.False(actuals.contains(roleLabel));
+                Assert.False(actuals.Contains(roleLabel));
             }
         }
     }

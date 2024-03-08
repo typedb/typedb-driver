@@ -121,7 +121,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var, entityType);
@@ -135,7 +135,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var, entityType);
@@ -150,7 +150,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(keyType).Resolve()
                 .Get(SingleTransaction, keyValue).Resolve()
                 .GetOwners(SingleTransaction)
-                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
+                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
             Put(var, entityType);
@@ -163,7 +163,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Concepts
                 .GetEntityType(typeLabel).Resolve()
                 .GetInstances(SingleTransaction)
-                .anyMatch(i => i.equals(Get(var))));
+                .Where(i => i.Equals(Get(var)))
+                .Any());
         }
 
         [Then(@"entity\\( ?{type_label} ?) get instances is empty")]
