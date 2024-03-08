@@ -56,8 +56,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) get supertype value type: {value_type}")]
         public void AttributeTypeGetSupertypeValueType(string typeLabel, Value.Type valueType)
         {
-            AttributeType supertype = Tx
-                .Concepts
+            AttributeType supertype = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .GetSupertype(Tx).Resolve()
                 .AsAttributeType();
@@ -88,7 +87,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string subLabel : subLabels)
+            foreach (string subLabel in subLabels)
             {
                 Assert.False(actuals.Contains(subLabel));
             }
@@ -159,7 +158,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string ownerLabel : ownerLabels)
+            foreach (string ownerLabel in ownerLabels)
             {
                 Assert.False(actuals.Contains(ownerLabel));
             }
@@ -188,7 +187,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string ownerLabel : ownerLabels)
+            foreach (string ownerLabel in ownerLabels)
             {
                 Assert.False(actuals.Contains(ownerLabel));
             }
@@ -215,7 +214,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string ownerLabel : ownerLabels)
+            foreach (string ownerLabel in ownerLabels)
             {
                 Assert.False(actuals.Contains(ownerLabel));
             }
@@ -242,7 +241,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string ownerLabel : ownerLabels)
+            foreach (string ownerLabel in ownerLabels)
             {
                 Assert.False(actuals.Contains(ownerLabel));
             }

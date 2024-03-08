@@ -143,24 +143,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             {
                 case ENTITY:
                     EntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve();
-                    Tx
-                        .Concepts
+                    Tx.Concepts
                         .GetEntityType(typeLabel).Resolve()
                         .SetSupertype(Tx, entitySuperType).Resolve();
                     break;
 
                 case ATTRIBUTE:
                     AttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve();
-                    Tx
-                        .Concepts
+                    Tx.Concepts
                         .GetAttributeType(typeLabel).Resolve()
                         .SetSupertype(Tx, attributeSuperType).Resolve();
                     break;
 
                 case RELATION:
                     RelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve();
-                    Tx
-                        .Concepts
+                    Tx.Concepts
                         .GetRelationType(typeLabel).Resolve()
                         .SetSupertype(Tx, relationSuperType).Resolve();
                     break;
@@ -208,7 +205,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string superLabel : superLabels)
+            foreach (string superLabel in superLabels)
             {
                 Assert.False(actuals.Contains(superLabel));
             }
@@ -234,7 +231,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string subLabel : subLabels)
+            foreach (string subLabel in subLabels)
             {
                 Assert.False(actuals.Contains(subLabel));
             }
@@ -304,7 +301,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string attributeLabel : attributeLabels)
+            foreach (string attributeLabel in attributeLabels)
             {
                 Assert.False(actuals.Contains(attributeLabel));
             }
@@ -331,7 +328,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            for (string attributeLabel : attributeLabels)
+            foreach (string attributeLabel in attributeLabels)
             {
                 Assert.False(actuals.Contains(attributeLabel));
             }
@@ -429,7 +426,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
-            for (string attributeLabel : attributeLabels)
+            foreach (string attributeLabel in attributeLabels)
             {
                 Assert.False(actuals.Contains(attributeLabel));
             }
@@ -456,7 +453,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
-            for (string attributeLabel : attributeLabels)
+            foreach (string attributeLabel in attributeLabels)
             {
                 Assert.False(actuals.Contains(attributeLabel));
             }
@@ -465,8 +462,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")]
         public void ThingTypeSetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            RoleType roleType = Tx
-                .Concepts
+            RoleType roleType = Tx.Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, roleLabel.Name).Resolve();
 
@@ -483,13 +479,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeSetPlaysRoleAs(
             RootLabel rootLabel, string typeLabel, Label roleLabel, Label overriddenLabel)
         {
-            RoleType roleType = Tx
-                .Concepts
+            RoleType roleType = Tx.Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, roleLabel.Name).Resolve();
 
-            RoleType overriddenType = Tx
-                .Concepts
+            RoleType overriddenType = Tx.Concepts
                 .GetRelationType(overriddenLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, overriddenLabel.Name).Resolve();
 
@@ -507,8 +501,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")]
         public void ThingTypeUnsetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            RoleType roleType = Tx
-                .Concepts
+            RoleType roleType = Tx.Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, roleLabel.Name).Resolve();
 
@@ -543,7 +536,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
-            for (Label roleLabel : roleLabels)
+            foreach (Label roleLabel in roleLabels)
             {
                 Assert.False(actuals.Contains(roleLabel));
             }
@@ -570,7 +563,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
-            for (Label roleLabel : roleLabels)
+            foreach (Label roleLabel in roleLabels)
             {
                 Assert.False(actuals.Contains(roleLabel));
             }

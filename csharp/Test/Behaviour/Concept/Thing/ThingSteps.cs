@@ -247,8 +247,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")]
         public void ThingGetRelationsContain(string var1, Label scopedLabel, string var2)
         {
-            var relates = Tx
-                .Concepts
+            var relates = Tx.Concepts
                 .GetRelationType(scopedLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, scopedLabel.Name).Resolve();
 
@@ -264,8 +263,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")]
         public void ThingGetRelationsDoNotContain(string var1, Label scopedLabel, string var2)
         {
-            var relates = Tx
-                .Concepts
+            var relates = Tx.Concepts
                 .GetRelationType(scopedLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, scopedLabel.Name).Resolve();
 
