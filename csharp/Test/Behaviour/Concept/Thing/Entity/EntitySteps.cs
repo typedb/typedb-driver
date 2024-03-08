@@ -41,10 +41,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance")]
         public void EntityTypeCreateNewInstance(string var, string typeLabel)
         {
-            var entityType = SingleTransaction
+            var entityType = Tx
                 .Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
             Put(var, entityType);
         }
@@ -52,26 +52,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"entity\\( ?{type_label} ?) create new instance; throws exception")]
         public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
-            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .create(SingleTransaction).Resolve());
+                .create(Tx).Resolve());
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Entity entity = SingleTransaction
+            Entity entity = Tx
                 .Concepts
                 .GetEntityType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            entity.SetHas(SingleTransaction, key).Resolve();
+            entity.SetHas(Tx, key).Resolve();
 
             Put(var, entity);
         }
@@ -79,17 +79,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Entity entity = SingleTransaction
+            Entity entity = Tx
                 .Concepts
                 .GetEntityType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            entity.SetHas(SingleTransaction, key).Resolve();
+            entity.SetHas(Tx, key).Resolve();
 
             Put(var, entity);
         }
@@ -98,17 +98,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Entity entity = SingleTransaction
+            Entity entity = Tx
                 .Concepts
                 .GetEntityType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            entity.SetHas(SingleTransaction, key).Resolve();
+            entity.SetHas(Tx, key).Resolve();
 
             Put(var, entity);
         }
@@ -116,11 +116,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")]
         public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
-            var entityType = SingleTransaction
+            var entityType = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -130,11 +130,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")]
         public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
-            var entityType = SingleTransaction
+            var entityType = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -145,11 +145,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
-            var entityType = SingleTransaction
+            var entityType = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -159,10 +159,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity\\( ?{type_label} ?) get instances contain: {var}")]
         public void EntityTypeGetInstancesContain(string typeLabel, string var)
         {
-            Assert.True(SingleTransaction
+            Assert.True(Tx
                 .Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction)
+                .GetInstances(Tx)
                 .Where(i => i.Equals(Get(var)))
                 .Any());
         }
@@ -170,10 +170,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity\\( ?{type_label} ?) get instances is empty")]
         public void EntityTypeGetInstancesIsEmpty(string typeLabel)
         {
-            var instances = SingleTransaction
+            var instances = Tx
                 .Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction);
+                .GetInstances(Tx);
 
             Assert.Equals(0, instances.Count);
         }
