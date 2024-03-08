@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Api
 
         /**
          * Retrieves all direct and indirect subtypes of the type.
-         * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
+         * Equivalent to <code>GetSubtypes(transaction, TRANSITIVE)</code>
          *
          * @see Type#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -126,12 +126,12 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * type.GetSubtypes(transaction);
-         * type.GetSubtypes(transaction, Transitivity.EXPLICIT);
+         * type.GetSubtypes(transaction, EXPLICIT);
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
+         * @param transitivity <code>TRANSITIVE</code> for direct and indirect subtypes,
+         *                     <code>EXPLICIT</code> for direct subtypes only
          */
         IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 

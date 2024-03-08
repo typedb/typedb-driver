@@ -48,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Api
 
         /**
          * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.
-         * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
+         * Equivalent to <code>GetInstances(transaction, TRANSITIVE)</code>
          *
          * @see ThingType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -61,11 +61,11 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetInstances(transaction);
-         * thingType.GetInstances(transaction, Transitivity.EXPLICIT);
+         * thingType.GetInstances(transaction, EXPLICIT);
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only, <code>Transitivity.TRANSITIVE</code> to include instances of subtypes
+         * @param transitivity <code>EXPLICIT</code> for direct instances only, <code>TRANSITIVE</code> to include instances of subtypes
          */
         IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
@@ -175,12 +175,12 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetPlays(transaction).Resolve();
-         * thingType.GetPlays(transaction, Transitivity.EXPLICIT).Resolve();
+         * thingType.GetPlays(transaction, EXPLICIT).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity transitivity: <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
-         *                                   <code>Transitivity.EXPLICIT</code> for direct playing only
+         * @param transitivity transitivity: <code>TRANSITIVE</code> for direct and indirect playing,
+         *                                   <code>EXPLICIT</code> for direct playing only
          */
         IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
@@ -264,13 +264,13 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetOwns(transaction);
-         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, new []{Annotation.NewKey()}));
+         * thingType.GetOwns(transaction, valueType, EXPLICIT, new []{Annotation.NewKey()}));
          * </pre>
          *
          * @param transaction The current transaction
          * @param valueType If specified, only attribute types of this <code>ValueType</code> will be retrieved.
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
-         *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
+         * @param transitivity <code>TRANSITIVE</code> for direct and inherited ownership,
+         *                     <code>EXPLICIT</code> for direct ownership only
          * @param annotations Only retrieve attribute types owned with annotations.
          */
         IEnumerable<IAttributeType> GetOwns(
