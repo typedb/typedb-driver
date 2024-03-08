@@ -46,13 +46,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             switch (rootLabel)  // TODO: Type?
             {
                 case ENTITY:
-                    return SingleTransaction.Concepts.getEntityType(typeLabel).Resolve();
+                    return SingleTransaction.Concepts.GetEntityType(typeLabel).Resolve();
 
                 case ATTRIBUTE:
-                    return SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+                    return SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
 
                 case RELATION:
-                    return SingleTransaction.Concepts.getRelationType(typeLabel).Resolve();
+                    return SingleTransaction.Concepts.GetRelationType(typeLabel).Resolve();
 
                 default:
                     throw new BehaviourTestException(ILLEGAL_ARGUMENT);
@@ -78,43 +78,43 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"delete {root_label} type: {type_label}")]
-        public void delete_thing_type(RootLabel rootLabel, string typeLabel)
+        public void DeleteThingType(RootLabel rootLabel, string typeLabel)
         {
             GetThingType(rootLabel, typeLabel).delete(SingleTransaction).Resolve();
         }
 
         [Then(@"delete {root_label} type: {type_label}; throws exception")]
-        public void delete_thing_type_throws_exception(RootLabel rootLabel, string typeLabel)
+        public void DeleteThingTypeThrowsException(RootLabel rootLabel, string typeLabel)
         {
-            assertThrows(() => delete_thing_type(rootLabel, typeLabel));
+            Assert.Throws<TypeDBDriverException>(() => DeleteThingType(rootLabel, typeLabel));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) is null: {bool}")]
-        public void thing_type_is_null(RootLabel rootLabel, string typeLabel, boolean isNull)
+        public void ThingTypeIsNull(RootLabel rootLabel, string typeLabel, bool isNull)
         {
-            assertEquals(isNull, isNull(GetThingType(rootLabel, typeLabel)));
+            Assert.Equals(isNull, isNull(GetThingType(rootLabel, typeLabel)));
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set label: {type_label}")]
-        public void thing_type_set_label(RootLabel rootLabel, string typeLabel, string newLabel)
+        public void ThingTypeSetLabel(RootLabel rootLabel, string typeLabel, string newLabel)
         {
-            GetThingType(rootLabel, typeLabel).setLabel(SingleTransaction, newLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetLabel(SingleTransaction, newLabel).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get label: {type_label}")]
-        public void thing_type_get_label(RootLabel rootLabel, string typeLabel, string getLabel)
+        public void ThingTypeGetLabel(RootLabel rootLabel, string typeLabel, string getLabel)
         {
-            assertEquals(getLabel, GetThingType(rootLabel, typeLabel).getLabel().name());
+            Assert.Equals(getLabel, GetThingType(rootLabel, typeLabel).Label.Name);
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set abstract: {bool}")]
-        public void thing_type_set_abstract(RootLabel rootLabel, string typeLabel, boolean isAbstract)
+        public void ThingTypeSetAbstract(RootLabel rootLabel, string typeLabel, bool isAbstract)
         {
             ThingType thingType = GetThingType(rootLabel, typeLabel);
 
             if (isAbstract)
             {
-                thingType.setAbstract(SingleTransaction).Resolve();
+                thingType.SetAbstract(SingleTransaction).Resolve();
             }
             else
             {
@@ -123,45 +123,45 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set abstract: {bool}; throws exception")]
-        public void thing_type_set_abstract_throws_exception(
-            RootLabel rootLabel, string typeLabel, boolean isAbstract)
+        public void ThingTypeSetAbstractThrowsException(
+            RootLabel rootLabel, string typeLabel, bool isAbstract)
         {
-            assertThrows(() => thing_type_set_abstract(rootLabel, typeLabel, isAbstract));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetAbstract(rootLabel, typeLabel, isAbstract));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) is abstract: {bool}")]
-        public void thing_type_is_abstract(RootLabel rootLabel, string typeLabel, boolean isAbstract)
+        public void ThingTypeIsAbstract(RootLabel rootLabel, string typeLabel, bool isAbstract)
         {
-            assertEquals(isAbstract, GetThingType(rootLabel, typeLabel).isAbstract());
+            Assert.Equals(isAbstract, GetThingType(rootLabel, typeLabel).isAbstract());
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set supertype: {type_label}")]
-        public void thing_type_set_supertype(RootLabel rootLabel, string typeLabel, string superLabel)
+        public void ThingTypeSetSupertype(RootLabel rootLabel, string typeLabel, string superLabel)
         {
             switch (rootLabel)
             {
                 case ENTITY:
-                    EntityType entitySuperType = SingleTransaction.Concepts.getEntityType(superLabel).Resolve();
+                    EntityType entitySuperType = SingleTransaction.Concepts.GetEntityType(superLabel).Resolve();
                     SingleTransaction
                         .Concepts
-                        .getEntityType(typeLabel).Resolve()
-                        .setSupertype(SingleTransaction, entitySuperType).Resolve();
+                        .GetEntityType(typeLabel).Resolve()
+                        .SetSupertype(SingleTransaction, entitySuperType).Resolve();
                     break;
 
                 case ATTRIBUTE:
-                    AttributeType attributeSuperType = SingleTransaction.Concepts.getAttributeType(superLabel).Resolve();
+                    AttributeType attributeSuperType = SingleTransaction.Concepts.GetAttributeType(superLabel).Resolve();
                     SingleTransaction
                         .Concepts
-                        .getAttributeType(typeLabel).Resolve()
-                        .setSupertype(SingleTransaction, attributeSuperType).Resolve();
+                        .GetAttributeType(typeLabel).Resolve()
+                        .SetSupertype(SingleTransaction, attributeSuperType).Resolve();
                     break;
 
                 case RELATION:
-                    RelationType relationSuperType = SingleTransaction.Concepts.getRelationType(superLabel).Resolve();
+                    RelationType relationSuperType = SingleTransaction.Concepts.GetRelationType(superLabel).Resolve();
                     SingleTransaction
                         .Concepts
-                        .getRelationType(typeLabel).Resolve()
-                        .setSupertype(SingleTransaction, relationSuperType).Resolve();
+                        .GetRelationType(typeLabel).Resolve()
+                        .SetSupertype(SingleTransaction, relationSuperType).Resolve();
                     break;
 
                 case THING:
@@ -170,408 +170,408 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set supertype: {type_label}; throws exception")]
-        public void thing_type_set_supertype_throws_exception(
+        public void ThingTypeSetSupertypeThrowsException(
             RootLabel rootLabel, string typeLabel, string superLabel)
         {
-            assertThrows(() => thing_type_set_supertype(rootLabel, typeLabel, superLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetSupertype(rootLabel, typeLabel, superLabel));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get supertype: {type_label}")]
-        public void thing_type_get_supertype(RootLabel rootLabel, string typeLabel, string superLabel)
+        public void ThingTypeGetSupertype(RootLabel rootLabel, string typeLabel, string superLabel)
         {
             ThingType supertype = GetThingType(rootLabel, superLabel);
-            assertEquals(
+            Assert.Equals(
                 supertype,
-                GetThingType(rootLabel, typeLabel).getSupertype(SingleTransaction).Resolve());
+                GetThingType(rootLabel, typeLabel).GetSupertype(SingleTransaction).Resolve());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get supertypes contain:")]
-        public void thing_type_get_supertypes_contain(
+        public void ThingTypeGetSupertypesContain(
             RootLabel rootLabel, string typeLabel, List<string> superLabels)
         {
             ThingType thing_type = GetThingType(rootLabel, typeLabel);
             Set<string> actuals = thing_type
-                .getSupertypes(SingleTransaction)
-                .map(t => t.getLabel().name())
+                .GetSupertypes(SingleTransaction)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(superLabels));
+            Assert.True(actuals.containsAll(superLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get supertypes do not contain:")]
-        public void thing_type_get_supertypes_do_not_contain(
+        public void ThingTypeGetSupertypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> superLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getSupertypes(SingleTransaction)
-                .map(t => t.getLabel().name())
+                .GetSupertypes(SingleTransaction)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string superLabel : superLabels)
             {
-                assertFalse(actuals.contains(superLabel));
+                Assert.False(actuals.contains(superLabel));
             }
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get subtypes contain:")]
-        public void thing_type_get_subtypes_contain(RootLabel rootLabel, string typeLabel, List<string> subLabels)
+        public void ThingTypeGetSubtypesContain(RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getSubtypes(SingleTransaction)
-                .map(t => t.getLabel().name())
+                .GetSubtypes(SingleTransaction)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(subLabels));
+            Assert.True(actuals.containsAll(subLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get subtypes do not contain:")]
-        public void thing_type_get_subtypes_do_not_contain(
+        public void ThingTypeGetSubtypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getSubtypes(SingleTransaction)
-                .map(t => t.getLabel().name())
+                .GetSubtypes(SingleTransaction)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string subLabel : subLabels)
             {
-                assertFalse(actuals.contains(subLabel));
+                Assert.False(actuals.contains(subLabel));
             }
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}")]
-        public void thing_type_set_owns_attribute_type_with_annotations(
+        public void ThingTypeSetOwnsAttributeTypeWithAnnotations(
             RootLabel rootLabel, string typeLabel, string attTypeLabel, List<Annotation> annotations)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attTypeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).setOwns(SingleTransaction, attributeType, set(annotations)).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attTypeLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType, set(annotations)).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}")]
-        public void thing_type_set_owns_attribute_type_as_type_with_annotations(
+        public void ThingTypeSetOwnsAttributeTypeAsTypeWithAnnotations(
             RootLabel rootLabel,
             string typeLabel,
             string attTypeLabel,
             string overriddenLabel,
             List<Annotation> annotations)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attTypeLabel).Resolve();
-            AttributeType overriddenType = SingleTransaction.Concepts.getAttributeType(overriddenLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attTypeLabel).Resolve();
+            AttributeType overriddenType = SingleTransaction.Concepts.GetAttributeType(overriddenLabel).Resolve();
 
             GetThingType(rootLabel, typeLabel)
-                .setOwns(SingleTransaction, attributeType, overriddenType, set(annotations)).Resolve();
+                .SetOwns(SingleTransaction, attributeType, overriddenType, set(annotations)).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception")]
-        public void thing_type_set_owns_attribute_type_with_annotations_throws_exception(
+        public void ThingTypeSetOwnsAttributeTypeWithAnnotationsThrowsException(
             RootLabel rootLabel, string typeLabel, string attributeLabel, List<Annotation> annotations)
         {
-            assertThrows(() => thing_type_set_owns_attribute_type_with_annotations(
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetOwnsAttributeTypeWithAnnotations(
                 rootLabel, typeLabel, attributeLabel, annotations));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}; throws exception")]
-        public void thing_type_set_owns_attribute_type_as_type_with_annotations_throws_exception(
+        public void ThingTypeSetOwnsAttributeTypeAsTypeWithAnnotationsThrowsException(
             RootLabel rootLabel,
             string typeLabel,
             string attributeLabel,
             string overriddenLabel,
             List<Annotation> annotations)
         {
-            assertThrows(() => thing_type_set_owns_attribute_type_as_type_with_annotations(
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetOwnsAttributeTypeAsTypeWithAnnotations(
                 rootLabel, typeLabel, attributeLabel, overriddenLabel, annotations));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types, with annotations: {annotations}; contain:")]
-        public void thing_type_get_owns_attribute_types_with_annotations_contain(
+        public void ThingTypeGetOwnsAttributeTypesWithAnnotationsContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, set(annotations))
-                .map(t => t.getLabel().name())
+                .GetOwns(SingleTransaction, set(annotations))
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(attributeLabels));
+            Assert.True(actuals.containsAll(attributeLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types, with annotations: {annotations}; do not contain:")]
-        public void thing_type_get_owns_attribute_types_with_annotations_do_not_contain(
+        public void ThingTypeGetOwnsAttributeTypesWithAnnotationsDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, set(annotations))
-                .map(t => t.getLabel().name())
+                .GetOwns(SingleTransaction, set(annotations))
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string attributeLabel : attributeLabels)
             {
-                assertFalse(actuals.contains(attributeLabel));
+                Assert.False(actuals.contains(attributeLabel));
             }
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types, with annotations: {annotations}; contain:")]
-        public void thing_type_get_owns_explicit_attribute_types_with_annotations_contain(
+        public void ThingTypeGetOwnsExplicitAttributeTypesWithAnnotationsContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(attributeLabels));
+            Assert.True(actuals.containsAll(attributeLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types, with annotations: {annotations}; do not contain:")]
-        public void thing_type_get_owns_explicit_attribute_types_with_annotations_do_not_contain(
+        public void ThingTypeGetOwnsExplicitAttributeTypesWithAnnotationsDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string attributeLabel : attributeLabels)
             {
-                assertFalse(actuals.contains(attributeLabel));
+                Assert.False(actuals.contains(attributeLabel));
             }
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}")]
-        public void thing_type_set_owns_attribute_type(
+        public void ThingTypeSetOwnsAttributeType(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attributeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).setOwns(SingleTransaction, attributeType).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}; throws exception")]
-        public void thing_type_set_owns_attribute_type_throws_exception(
+        public void ThingTypeSetOwnsAttributeTypeThrowsException(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            assertThrows(() => thing_type_set_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetOwnsAttributeType(rootLabel, typeLabel, attributeLabel));
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}")]
-        public void thing_type_set_owns_attribute_type_as(
+        public void ThingTypeSetOwnsAttributeTypeAs(
             RootLabel rootLabel, string typeLabel, string attributeLabel, string overriddenLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attributeLabel).Resolve();
-            AttributeType overriddenType = SingleTransaction.Concepts.getAttributeType(overriddenLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).setOwns(SingleTransaction, attributeType, overriddenType).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
+            AttributeType overriddenType = SingleTransaction.Concepts.GetAttributeType(overriddenLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType, overriddenType).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}; throws exception")]
-        public void thing_type_set_owns_attribute_as_throws_exception(
+        public void ThingTypeSetowns_attributeAsThrowsException(
             RootLabel rootLabel, string typeLabel, string attributeLabel, string overriddenLabel)
         {
-            assertThrows(() =>
-                thing_type_set_owns_attribute_type_as(rootLabel, typeLabel, attributeLabel, overriddenLabel));
+            Assert.Throws<TypeDBDriverException>(() =>
+                ThingTypeSetOwnsAttributeTypeAs(rootLabel, typeLabel, attributeLabel, overriddenLabel));
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")]
-        public void thing_type_unset_owns_attribute_type(
+        public void ThingTypeUnsetOwnsAttributeType(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attributeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
             GetThingType(rootLabel, typeLabel).unsetOwns(SingleTransaction, attributeType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")]
-        public void thing_type_unset_owns_attribute_type_throws_exception(
+        public void ThingTypeUnsetOwnsAttributeTypeThrowsException(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            assertThrows(() => thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeUnsetOwnsAttributeType(rootLabel, typeLabel, attributeLabel));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns overridden attribute\\( ?{type_label} ?) is null: {bool}")]
-        public void thing_type_get_owns_overridden_attribute_is_null(
-            RootLabel rootLabel, string typeLabel, string attributeLabel, boolean isNull)
+        public void ThingTypeGetOwnsOverriddenAttributeIsNull(
+            RootLabel rootLabel, string typeLabel, string attributeLabel, bool isNull)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attributeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .getOwnsOverridden(SingleTransaction, attributeType).Resolve();
+                .GetOwnsOverridden(SingleTransaction, attributeType).Resolve();
 
-            assertEquals(isNull, isNull(ownsOverridden));
+            Assert.Equals(isNull, isNull(ownsOverridden));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns overridden attribute\\( ?{type_label} ?) get label: {type_label}")]
-        public void thing_type_get_owns_overridden_attribute_get_label(
+        public void ThingTypeGetOwnsOverriddenAttributeGetLabel(
             RootLabel rootLabel, string typeLabel, string attributeLabel, string getLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(attributeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .getOwnsOverridden(SingleTransaction, attributeType).Resolve();
+                .GetOwnsOverridden(SingleTransaction, attributeType).Resolve();
 
-            assertEquals(getLabel, ownsOverridden.Label.Name);
+            Assert.Equals(getLabel, ownsOverridden.Label.Name);
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types contain:")]
-        public void thing_type_get_owns_attribute_types_contain(
+        public void ThingTypeGetOwnsAttributeTypesContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction)
-                .map(at => at.getLabel().name())
+                .GetOwns(SingleTransaction)
+                .map(at => at.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(attributeLabels));
+            Assert.True(actuals.containsAll(attributeLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")]
-        public void thing_type_get_owns_attribute_types_do_not_contain(
+        public void ThingTypeGetOwnsAttributeTypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction)
-                .map(at => at.getLabel().name())
+                .GetOwns(SingleTransaction)
+                .map(at => at.Label.Name)
                 .collect(toSet());
 
             for (string attributeLabel : attributeLabels)
             {
-                assertFalse(actuals.contains(attributeLabel));
+                Assert.False(actuals.contains(attributeLabel));
             }
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types contain:")]
-        public void thing_type_get_owns_explicit_attribute_types_contain(
+        public void ThingTypeGetOwnsExplicitAttributeTypesContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, EXPLICIT)
-                .map(at => at.getLabel().name())
+                .GetOwns(SingleTransaction, EXPLICIT)
+                .map(at => at.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(attributeLabels));
+            Assert.True(actuals.containsAll(attributeLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get owns explicit attribute types do not contain:")]
-        public void thing_type_get_owns_explicit_attribute_types_do_not_contain(
+        public void ThingTypeGetOwnsExplicitAttributeTypesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             Set<string> actuals = GetThingType(rootLabel, typeLabel)
-                .getOwns(SingleTransaction, EXPLICIT)
-                .map(at => at.getLabel().name())
+                .GetOwns(SingleTransaction, EXPLICIT)
+                .map(at => at.Label.Name)
                 .collect(toSet());
 
             for (string attributeLabel : attributeLabels)
             {
-                assertFalse(actuals.contains(attributeLabel));
+                Assert.False(actuals.contains(attributeLabel));
             }
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")]
-        public void thing_type_set_plays_role(RootLabel rootLabel, string typeLabel, Label roleLabel)
+        public void ThingTypeSetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .getRelationType(roleLabel.scope().get()).Resolve()
-                .getRelates(SingleTransaction, roleLabel.name()).Resolve();
+                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
-            GetThingType(rootLabel, typeLabel).setPlays(SingleTransaction, roleType).Resolve();
+            GetThingType(rootLabel, typeLabel).SetPlays(SingleTransaction, roleType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}; throws exception")]
-        public void thing_type_set_plays_role_throws_exception(RootLabel rootLabel, string typeLabel, Label roleLabel)
+        public void ThingTypeSetPlaysRoleThrowsException(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            assertThrows(() => thing_type_set_plays_role(rootLabel, typeLabel, roleLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetPlaysRole(rootLabel, typeLabel, roleLabel));
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}")]
-        public void thing_type_set_plays_role_as(
+        public void ThingTypeSetPlaysRoleAs(
             RootLabel rootLabel, string typeLabel, Label roleLabel, Label overriddenLabel)
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .getRelationType(roleLabel.scope().get()).Resolve()
-                .getRelates(SingleTransaction, roleLabel.name()).Resolve();
+                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
             RoleType overriddenType = SingleTransaction
                 .Concepts
-                .getRelationType(overriddenLabel.scope().get()).Resolve()
-                .getRelates(SingleTransaction, overriddenLabel.name()).Resolve();
+                .GetRelationType(overriddenLabel.scope().Get()).Resolve()
+                .GetRelates(SingleTransaction, overriddenLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel)
-                .setPlays(SingleTransaction, roleType, overriddenType).Resolve();
+                .SetPlays(SingleTransaction, roleType, overriddenType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}; throws exception")]
-        public void thing_type_set_plays_role_as_throws_exception(
+        public void ThingTypeSetPlaysRoleAsThrowsException(
             RootLabel rootLabel, string typeLabel, Label roleLabel, Label overriddenLabel)
         {
-            assertThrows(() => thing_type_set_plays_role_as(rootLabel, typeLabel, roleLabel, overriddenLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetPlaysRoleAs(rootLabel, typeLabel, roleLabel, overriddenLabel));
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")]
-        public void thing_type_unset_plays_role(RootLabel rootLabel, string typeLabel, Label roleLabel)
+        public void ThingTypeUnsetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
             RoleType roleType = SingleTransaction
                 .Concepts
-                .getRelationType(roleLabel.scope().get()).Resolve()
-                .getRelates(SingleTransaction, roleLabel.name()).Resolve();
+                .GetRelationType(roleLabel.scope().Get()).Resolve()
+                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel).unsetPlays(SingleTransaction, roleType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")]
-        public void thing_type_unset_plays_role_throws_exception(
+        public void ThingTypeUnsetPlaysRoleThrowsException(
             RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            assertThrows(() => thing_type_unset_plays_role(rootLabel, typeLabel, roleLabel));
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeUnsetPlaysRole(rootLabel, typeLabel, roleLabel));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles contain:")]
-        public void thing_type_get_playing_roles_contain(
+        public void ThingTypeGetPlayingRolesContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             Set<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .getPlays(SingleTransaction)
+                .GetPlays(SingleTransaction)
                 .map(Type::getLabel)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(roleLabels));
+            Assert.True(actuals.containsAll(roleLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles do not contain:")]
-        public void thing_type_get_playing_roles_do_not_contain(
+        public void ThingTypeGetPlayingRolesDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             Set<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .getPlays(SingleTransaction)
+                .GetPlays(SingleTransaction)
                 .map(Type::getLabel)
                 .collect(toSet());
 
             for (Label roleLabel : roleLabels)
             {
-                assertFalse(actuals.contains(roleLabel));
+                Assert.False(actuals.contains(roleLabel));
             }
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles explicit contain:")]
-        public void thing_type_get_playing_roles_explicit_contain(
+        public void ThingTypeGetPlayingRolesExplicitContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             Set<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .getPlays(SingleTransaction, EXPLICIT)
+                .GetPlays(SingleTransaction, EXPLICIT)
                 .map(Type::getLabel)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(roleLabels));
+            Assert.True(actuals.containsAll(roleLabels));
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get playing roles explicit do not contain:")]
-        public void thing_type_get_playing_roles_explicit_do_not_contain(
+        public void ThingTypeGetPlayingRolesExplicitDoNotContain(
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             Set<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .getPlays(SingleTransaction, EXPLICIT)
+                .GetPlays(SingleTransaction, EXPLICIT)
                 .map(Type::getLabel)
                 .collect(toSet());
 
             for (Label roleLabel : roleLabels)
             {
-                assertFalse(actuals.contains(roleLabel));
+                Assert.False(actuals.contains(roleLabel));
             }
         }
     }
