@@ -41,10 +41,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label}")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
-            SingleTransaction
+            Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .SetRelates(SingleTransaction, roleLabel).Resolve();
+                .SetRelates(Tx, roleLabel).Resolve();
         }
 
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label}; throws exception")]
@@ -56,10 +56,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) unset related role: {type_label}")]
         public void RelationTypeUnsetRelatedRoleType(string relationLabel, string roleLabel)
         {
-            SingleTransaction
+            Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .unsetRelates(SingleTransaction, roleLabel).Resolve();
+                .unsetRelates(Tx, roleLabel).Resolve();
         }
 
         [When(@"relation\\( ?{type_label} ?) unset related role: {type_label}; throws exception")]
@@ -71,10 +71,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")]
         public void RelationTypeSetRelatesRoleTypeAs(string relationLabel, string roleLabel, string superRole)
         {
-            SingleTransaction
+            Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .SetRelates(SingleTransaction, roleLabel, superRole).Resolve();
+                .SetRelates(Tx, roleLabel, superRole).Resolve();
         }
 
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")]
@@ -88,20 +88,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) remove related role: {type_label}")]
         public void RelationTypeRemoveRelatedRole(string relationLabel, string roleLabel)
         {
-            SingleTransaction
+            Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .Delete(SingleTransaction).Resolve();
+                .GetRelates(Tx, roleLabel).Resolve()
+                .Delete(Tx).Resolve();
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is null: {bool}")]
         public void RelationTypeGetRoleTypeIsNull(string relationLabel, string roleLabel, bool isNull)
         {
-            var roleType = SingleTransaction
+            var roleType = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve();
+                .GetRelates(Tx, roleLabel).Resolve();
 
             Assert.Equals(isNull, isNull(roleType));
         }
@@ -110,10 +110,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetOverriddenRoleTypeIsNull(
             string relationLabel, string roleLabel, bool isNull)
         {
-            var overridenType = SingleTransaction
+            var overridenType = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelatesOverridden(SingleTransaction, roleLabel).Resolve();
+                .GetRelatesOverridden(Tx, roleLabel).Resolve();
 
             Assert.Equals(isNull, isNull(overridenType));
         }
@@ -121,20 +121,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")]
         public void RelationTypeGetRoleTypeSetLabel(string relationLabel, string roleLabel, string newLabel)
         {
-            SingleTransaction
+            Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .SetLabel(SingleTransaction, newLabel).Resolve();
+                .GetRelates(Tx, roleLabel).Resolve()
+                .SetLabel(Tx, newLabel).Resolve();
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")]
         public void RelationTypeGetRoleTypeGetLabel(string relationLabel, string roleLabel, string getLabel)
         {
-            var relates = SingleTransaction
+            var relates = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve();
+                .GetRelates(Tx, roleLabel).Resolve();
 
             Assert.Equals(getLabel, relates.Label.Name);
         }
@@ -143,10 +143,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetOverriddenRoleTypeGetLabel(
             string relationLabel, string roleLabel, string getLabel)
         {
-            var relates = SingleTransaction
+            var relates = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelatesOverridden(SingleTransaction, roleLabel).Resolve();
+                .GetRelatesOverridden(Tx, roleLabel).Resolve();
 
             Assert.Equals(getLabel, relates.Label.Name);
         }
@@ -154,10 +154,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")]
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
-            var isRelatesAbstract = SingleTransaction
+            var isRelatesAbstract = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
+                .GetRelates(Tx, roleLabel).Resolve()
                 .IsAbstract();
 
             Assert.Equals(isAbstract, isRelatesAbstract);
@@ -165,10 +165,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRelatedRoleTypes(string relationLabel)
         {
-            return SingleTransaction
+            return Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction)
+                .GetRelates(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
         }
@@ -194,10 +194,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRelatedExplicitRoleTypes(string relationLabel)
         {
-            return SingleTransaction
+            return Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, EXPLICIT)
+                .GetRelates(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
                 .ToHashSet();
         }
@@ -226,27 +226,27 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertype: {scoped_label}")]
         public void RelationTypeGetRoleTypeGetSupertype(string relationLabel, string roleLabel, Label superLabel)
         {
-            RoleType superLabelType = SingleTransaction
+            RoleType superLabelType = Tx
                 .Concepts
                 .GetRelationType(superLabel.Scope.Get()).Resolve()
-                .GetRelates(SingleTransaction, superLabel.Name).Resolve();
+                .GetRelates(Tx, superLabel.Name).Resolve();
 
-            RoleType labelSupertype = SingleTransaction
+            RoleType labelSupertype = Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetSupertype(SingleTransaction).Resolve();
+                .GetRelates(Tx, roleLabel).Resolve()
+                .GetSupertype(Tx).Resolve();
 
             Assert.Equals(superLabelType, labelSupertype);
         }
 
         private HashSet<Label> RelationTypeGetRoleTypeGetSupertypes(string relationLabel, string roleLabel) 
         {
-            return SingleTransaction
+            return Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetSupertypes(SingleTransaction).Select(obj => obj.Label).ToHashSet();
+                .GetRelates(Tx, roleLabel).Resolve()
+                .GetSupertypes(Tx).Select(obj => obj.Label).ToHashSet();
         }
 
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")]
@@ -272,11 +272,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<string> RelationTypeGetRoleTypeGetPlayers(string relationLabel, string roleLabel) 
         {
-            return SingleTransaction
+            return Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetPlayerTypes(SingleTransaction).Select(t => t.Label.Name)
+                .GetRelates(Tx, roleLabel).Resolve()
+                .GetPlayerTypes(Tx).Select(t => t.Label.Name)
                 .ToHashSet();
         }
 
@@ -303,11 +303,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRoleTypeGetSubtypes(string relationLabel, string roleLabel) 
         {
-            return SingleTransaction
+            return Tx
                 .Concepts
                 .GetRelationType(relationLabel).Resolve()
-                .GetRelates(SingleTransaction, roleLabel).Resolve()
-                .GetSubtypes(SingleTransaction)
+                .GetRelates(Tx, roleLabel).Resolve()
+                .GetSubtypes(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
         }

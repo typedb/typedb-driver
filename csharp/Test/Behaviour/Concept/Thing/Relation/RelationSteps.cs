@@ -43,30 +43,30 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Put(
                 var,
-                SingleTransaction.Concepts.GetRelationType(typeLabel).Resolve().create(SingleTransaction).Resolve());
+                Tx.Concepts.GetRelationType(typeLabel).Resolve().create(Tx).Resolve());
         }
 
         [Then(@"relation\\( ?{type_label} ?) create new instance; throws exception")]
         public void RelationTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() =>
-                SingleTransaction.Concepts.GetRelationType(typeLabel).Resolve().create(SingleTransaction).Resolve());
+                Tx.Concepts.GetRelationType(typeLabel).Resolve().create(Tx).Resolve());
         }
 
         [When(@"{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")]
         public void RelationTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Relation relation = SingleTransaction
+            Relation relation = Tx
                 .Concepts
                 .GetRelationType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            relation.SetHas(SingleTransaction, key).Resolve();
+            relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
         }
 
@@ -74,17 +74,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, string keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Relation relation = SingleTransaction
+            Relation relation = Tx
                 .Concepts
                 .GetRelationType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            relation.SetHas(SingleTransaction, key).Resolve();
+            relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
         }
 
@@ -92,28 +92,28 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            Attribute key = SingleTransaction
+            Attribute key = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Put(SingleTransaction, keyValue).Resolve();
+                .Put(Tx, keyValue).Resolve();
 
-            Relation relation = SingleTransaction
+            Relation relation = Tx
                 .Concepts
                 .GetRelationType(type).Resolve()
-                .create(SingleTransaction).Resolve();
+                .create(Tx).Resolve();
 
-            relation.SetHas(SingleTransaction, key).Resolve();
+            relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
         }
 
         [When(@"{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
-            var owner = SingleTransaction
+            var owner = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -123,11 +123,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
-            var owner = SingleTransaction
+            var owner = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -138,11 +138,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
-            var owner = SingleTransaction
+            var owner = Tx
                 .Concepts
                 .GetAttributeType(keyType).Resolve()
-                .Get(SingleTransaction, keyValue).Resolve()
-                .GetOwners(SingleTransaction)
+                .Get(Tx, keyValue).Resolve()
+                .GetOwners(Tx)
                 .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
                 .findFirst().orElse(null);
 
@@ -152,10 +152,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances contain: {var}")]
         public void RelationTypeGetInstancesContain(string typeLabel, string var)
         {
-            var instances = SingleTransaction
+            var instances = Tx
                 .Concepts
                 .GetRelationType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction);
+                .GetInstances(Tx);
 
             Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
         }
@@ -163,10 +163,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances do not contain: {var}")]
         public void RelationTypeGetInstancesDoNotContain(string typeLabel, string var)
         {
-            var instances = SingleTransaction
+            var instances = Tx
                 .Concepts
                 .GetRelationType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction);
+                .GetInstances(Tx);
 
             Assert.False(players.Where(i => i.Equals(Get(var))).Any());
         }
@@ -174,10 +174,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances is empty")]
         public void RelationTypeGetInstancesIsEmpty(string typeLabel)
         {
-            var instances = SingleTransaction
+            var instances = Tx
                 .Concepts
                 .GetRelationType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction);
+                .GetInstances(Tx);
 
             Assert.Equals(0, instances.Count);
         }
@@ -188,11 +188,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var relates = Get(var1)
                 .AsRelation()
                 .GetType()
-                .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve();
 
             Get(var1)
                 .AsRelation()
-                .addPlayer(SingleTransaction, relates, Get(var2)).Resolve();
+                .addPlayer(Tx, relates, Get(var2)).Resolve();
         }
 
         [When(@"relation {var} add player for role\\( ?{type_label} ?): {var}; throws exception")]
@@ -201,11 +201,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var relates = Get(var1)
                 .AsRelation()
                 .GetType()
-                .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve();
 
             Assert.Throws<TypeDBDriverException>(() => Get(var1)
                 .AsRelation()
-                .addPlayer(SingleTransaction, relates, Get(var2)).Resolve());
+                .addPlayer(Tx, relates, Get(var2)).Resolve());
         }
 
         [When(@"relation {var} remove player for role\\( ?{type_label} ?): {var}")]
@@ -214,11 +214,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var relates = Get(var1)
                 .AsRelation()
                 .GetType()
-                .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve();
 
             Get(var1)
                 .AsRelation()
-                .removePlayer(SingleTransaction, relates, Get(var2)).Resolve();
+                .removePlayer(Tx, relates, Get(var2)).Resolve();
         }
 
         [Then(@"relation {var} get players contain:")]
@@ -229,8 +229,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             players.forEach((rt, var2) =>
                 {
                     var players = relation
-                        .GetPlayers(SingleTransaction)
-                        .Get(relation.GetType().GetRelates(SingleTransaction, rt).Resolve();
+                        .GetPlayers(Tx)
+                        .Get(relation.GetType().GetRelates(Tx, rt).Resolve();
 
                     Assert.True(players.Contains(Get(var2.Substring(1))));
                 });
@@ -244,8 +244,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             players.forEach((rt, var2) =>
                 {
                     var players = relation
-                        .GetPlayers(SingleTransaction)
-                        .Get(relation.GetType().GetRelates(SingleTransaction, rt).Resolve());
+                        .GetPlayers(Tx)
+                        .Get(relation.GetType().GetRelates(Tx, rt).Resolve());
 
                     if (players != null)
                     {
@@ -257,14 +257,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation {var} get players contain: {var}")]
         public void RelationGetPlayersContain(string var1, string var2)
         {
-            var players = Get(var1).AsRelation().GetPlayersByRoleType(SingleTransaction);
+            var players = Get(var1).AsRelation().GetPlayersByRoleType(Tx);
             Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
         [Then(@"relation {var} get players do not contain: {var}")]
         public void RelationGetPlayersDoNotContain(string var1, string var2)
         {
-            var players = Get(var1).AsRelation().GetPlayersByRoleType(SingleTransaction);
+            var players = Get(var1).AsRelation().GetPlayersByRoleType(Tx);
 
             Assert.False(players.Where(p => p.Equals(Get(var2))).Any());
         }
@@ -275,11 +275,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var relates = Get(var1)
                 .AsRelation()
                 .GetType()
-                .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve();
 
             var players = Get(var1)
                 .AsRelation()
-                .GetPlayersByRoleType(SingleTransaction, relates);
+                .GetPlayersByRoleType(Tx, relates);
 
             Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
         }
@@ -290,11 +290,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var relates = Get(var1)
                 .AsRelation()
                 .GetType()
-                .GetRelates(SingleTransaction, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve();
 
             var players = Get(var1)
                 .AsRelation()
-                .GetPlayersByRoleType(SingleTransaction, relates);
+                .GetPlayersByRoleType(Tx, relates);
 
             Assert.False(players.Where(p => p.Equals(Get(var2)))).Any());
         }

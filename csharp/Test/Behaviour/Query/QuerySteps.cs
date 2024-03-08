@@ -47,7 +47,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
-            SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
+            Tx.Query.Define(defineQueryStatements.Content).Resolve();
         }
 
         [Given(@"typeql define; throws exception")]
@@ -72,7 +72,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql undefine")]
         public void TypeqlUndefine(DocString undefineQueryStatements)
         {
-            SingleTransaction.Query.Undefine(undefineQueryStatements.Content).Resolve();
+            Tx.Query.Undefine(undefineQueryStatements.Content).Resolve();
         }
 
         [Given(@"typeql undefine; throws exception")]
@@ -97,7 +97,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql insert")]
         public IConceptMap[] TypeqlInsert(DocString insertQueryStatements)
         {
-            return SingleTransaction.Query.Insert(insertQueryStatements.Content).ToArray();
+            return Tx.Query.Insert(insertQueryStatements.Content).ToArray();
         }
 
         [Given(@"typeql insert; throws exception")]
@@ -121,7 +121,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql delete")]
         public void TypeqlDelete(DocString deleteQueryStatements)
         {
-            SingleTransaction.Query.Delete(deleteQueryStatements.Content).Resolve();
+            Tx.Query.Delete(deleteQueryStatements.Content).Resolve();
         }
 
         [Given(@"typeql delete; throws exception")]
@@ -147,7 +147,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql update")]
         public IConceptMap[] TypeqlUpdate(DocString updateQueryStatements)
         {
-            return SingleTransaction.Query.Update(updateQueryStatements.Content).ToArray();
+            return Tx.Query.Update(updateQueryStatements.Content).ToArray();
         }
 
         [Given(@"typeql update; throws exception")]
@@ -172,7 +172,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void GetAnswersOfTypeqlInsert(DocString insertQueryStatements)
         {
             ClearAnswers();
-            _answers = SingleTransaction.Query.Insert(insertQueryStatements.Content).ToList();
+            _answers = Tx.Query.Insert(insertQueryStatements.Content).ToList();
         }
 
         [Given(@"get answers of typeql get")]
@@ -181,7 +181,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlGet(DocString getQueryStatements)
         {
             ClearAnswers();
-            _answers = SingleTransaction.Query.Get(getQueryStatements.Content).ToList();
+            _answers = Tx.Query.Get(getQueryStatements.Content).ToList();
         }
 
         [When(@"typeql get; throws exception")]
@@ -208,7 +208,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlGetAggregate(DocString getQueryStatements)
         {
             ClearAnswers();
-            _valueAnswer = SingleTransaction.Query.GetAggregate(getQueryStatements.Content).Resolve();
+            _valueAnswer = Tx.Query.GetAggregate(getQueryStatements.Content).Resolve();
         }
 
         [When(@"typeql get aggregate; throws exception")]
@@ -225,7 +225,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlGetGroup(DocString getQueryStatements)
         {
             ClearAnswers();
-            _answerGroups = SingleTransaction.Query.GetGroup(getQueryStatements.Content).ToList();
+            _answerGroups = Tx.Query.GetGroup(getQueryStatements.Content).ToList();
         }
 
         [When(@"typeql get group; throws exception")]
@@ -242,7 +242,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlGetGroupAggregate(DocString getQueryStatements)
         {
             ClearAnswers();
-            _valueAnswerGroups = SingleTransaction.Query.GetGroupAggregate(getQueryStatements.Content).ToList();
+            _valueAnswerGroups = Tx.Query.GetGroupAggregate(getQueryStatements.Content).ToList();
         }
 
         [Given(@"answer size is: {}")]
@@ -456,7 +456,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlFetch(DocString fetchQueryStatements)
         {
             ClearAnswers();
-            _fetchAnswers = SingleTransaction.Query.Fetch(fetchQueryStatements.Content).ToList();
+            _fetchAnswers = Tx.Query.Fetch(fetchQueryStatements.Content).ToList();
         }
 
         [When(@"typeql fetch; throws exception")]
@@ -505,7 +505,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private bool CurrentRulesContain(string ruleLabel)
         {
-            return SingleTransaction.Logic.Rules.Any(rule => rule.Label.Equals(ruleLabel));
+            return Tx.Logic.Rules.Any(rule => rule.Label.Equals(ruleLabel));
         }
 
         [Then(@"rules contain: {}")]
@@ -526,7 +526,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             foreach (IConceptMap answer in _answers)
             {
                 string query = ApplyQueryTemplate(templatedQuery.Content, answer);
-                long answerSize = SingleTransaction.Query.Get(query).ToArray().Length;
+                long answerSize = Tx.Query.Get(query).ToArray().Length;
                 Assert.Equal(1, answerSize);
             }
         }
@@ -540,7 +540,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 var exception = Assert.Throws<TypeDBDriverException>(() =>
                     {
-                        long ignored = SingleTransaction.Query.Get(query).ToArray().Length;
+                        long ignored = Tx.Query.Get(query).ToArray().Length;
                     });
             }
         }
@@ -705,7 +705,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 HashSet<IAttribute> keys = concept
                     .AsThing()
-                    .GetHas(SingleTransaction, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()})
+                    .GetHas(Tx, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()})
                     .ToHashSet();
 
                 Dictionary<Label, string> keyMap = new Dictionary<Label, string>();
