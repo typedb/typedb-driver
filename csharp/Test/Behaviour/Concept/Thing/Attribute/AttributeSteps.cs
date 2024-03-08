@@ -46,25 +46,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetAttributeType(typeLabel).Resolve()
                 .GetInstances(SingleTransaction);
 
-            Assert.True(instances.anyMatch(i => i.equals(Get(var))));
+            Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
         }
 
         [Then(@"attribute {var} get owners contain: {var}")]
         public void AttributeGetOwnersContain(string var1, string var2)
         {
-            Assert.True(Get(var1).asAttribute().GetOwners(SingleTransaction).anyMatch(o => o.equals(Get(var2))));
+            Assert.True(Get(var1).AsAttribute().GetOwners(SingleTransaction).Where(o => o.Equals(Get(var2))).Any());
         }
 
         [Then(@"attribute {var} get owners do not contain: {var}")]
         public void AttributeGetOwnersDoNotContain(string var1, string var2)
         {
-            Assert.True(Get(var1).asAttribute().GetOwners(SingleTransaction).noneMatch(o => o.equals(Get(var2))));
+            Assert.False(
+                Get(var1).AsAttribute().GetOwners(SingleTransaction).Where(o => o.Equals(Get(var2))).Any());
         }
 
         [Then(@"attribute {var} has value type: {valueType}")]
         public void AttributeHasValueType(string var, Value.Type valueType)
         {
-            Assert.Equals(valueType, Get(var).asAttribute().GetType().GetValueType());
+            Assert.Equals(valueType, Get(var).AsAttribute().GetType().GetValueType());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")]
@@ -226,31 +227,31 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute {var} has bool value: {bool}")]
         public void AttributeHasBooleanValue(string var, bool value)
         {
-            Assert.Equals(value, Get(var).asAttribute().GetValue().asBoolean());
+            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsBoolean());
         }
 
         [Then(@"attribute {var} has long value: {long}")]
         public void AttributeHasLongValue(string var, long value)
         {
-            Assert.Equals(value, Get(var).asAttribute().GetValue().asLong());
+            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsLong());
         }
 
         [Then(@"attribute {var} has double value: {double}")]
         public void AttributeHasDoubleValue(string var, double value)
         {
-            Assert.Equals(value, Get(var).asAttribute().GetValue().asDouble(), 0.0001);
+            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsDouble(), 0.0001);
         }
 
         [Then(@"attribute {var} has string value: {word}")]
         public void AttributeHasStringValue(string var, string value)
         {
-            Assert.Equals(value, Get(var).asAttribute().GetValue().asString());
+            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsString());
         }
 
         [Then(@"attribute {var} has datetime value: {datetime}")]
         public void AttributeHasDatetimeValue(string var, DateTime value)
         {
-            Assert.Equals(value, Get(var).asAttribute().GetValue().asDateTime());
+            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsDateTime());
         }
     }
 }
