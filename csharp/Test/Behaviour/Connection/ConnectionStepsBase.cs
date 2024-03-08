@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        public static ITypeDBTransaction? SingleTransaction
+        public static ITypeDBTransaction? Tx
         {
             get { return SessionsToTransactions[Sessions[0]][0]; }
         }

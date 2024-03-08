@@ -46,13 +46,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             switch (rootLabel)  // TODO: Type?
             {
                 case ENTITY:
-                    return SingleTransaction.Concepts.GetEntityType(typeLabel).Resolve();
+                    return Tx.Concepts.GetEntityType(typeLabel).Resolve();
 
                 case ATTRIBUTE:
-                    return SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
+                    return Tx.Concepts.GetAttributeType(typeLabel).Resolve();
 
                 case RELATION:
-                    return SingleTransaction.Concepts.GetRelationType(typeLabel).Resolve();
+                    return Tx.Concepts.GetRelationType(typeLabel).Resolve();
 
                 default:
                     throw new BehaviourTestException(ILLEGAL_ARGUMENT);
@@ -65,11 +65,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             switch (rootLabel) 
             {
                 case ENTITY:
-                    SingleTransaction.Concepts.PutEntityType(typeLabel).Resolve();
+                    Tx.Concepts.PutEntityType(typeLabel).Resolve();
                     break;
 
                 case RELATION:
-                    SingleTransaction.Concepts.PutRelationType(typeLabel).Resolve();
+                    Tx.Concepts.PutRelationType(typeLabel).Resolve();
                     break;
 
                 default:
@@ -80,7 +80,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"delete {root_label} type: {type_label}")]
         public void DeleteThingType(RootLabel rootLabel, string typeLabel)
         {
-            GetThingType(rootLabel, typeLabel).delete(SingleTransaction).Resolve();
+            GetThingType(rootLabel, typeLabel).delete(Tx).Resolve();
         }
 
         [Then(@"delete {root_label} type: {type_label}; throws exception")]
@@ -98,7 +98,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{root_label}\\( ?{type_label} ?) set label: {type_label}")]
         public void ThingTypeSetLabel(RootLabel rootLabel, string typeLabel, string newLabel)
         {
-            GetThingType(rootLabel, typeLabel).SetLabel(SingleTransaction, newLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetLabel(Tx, newLabel).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get label: {type_label}")]
@@ -114,11 +114,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             if (isAbstract)
             {
-                thingType.SetAbstract(SingleTransaction).Resolve();
+                thingType.SetAbstract(Tx).Resolve();
             }
             else
             {
-                thingType.unsetAbstract(SingleTransaction).Resolve();
+                thingType.unsetAbstract(Tx).Resolve();
             }
         }
 
@@ -141,27 +141,27 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             switch (rootLabel)
             {
                 case ENTITY:
-                    EntityType entitySuperType = SingleTransaction.Concepts.GetEntityType(superLabel).Resolve();
-                    SingleTransaction
+                    EntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve();
+                    Tx
                         .Concepts
                         .GetEntityType(typeLabel).Resolve()
-                        .SetSupertype(SingleTransaction, entitySuperType).Resolve();
+                        .SetSupertype(Tx, entitySuperType).Resolve();
                     break;
 
                 case ATTRIBUTE:
-                    AttributeType attributeSuperType = SingleTransaction.Concepts.GetAttributeType(superLabel).Resolve();
-                    SingleTransaction
+                    AttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve();
+                    Tx
                         .Concepts
                         .GetAttributeType(typeLabel).Resolve()
-                        .SetSupertype(SingleTransaction, attributeSuperType).Resolve();
+                        .SetSupertype(Tx, attributeSuperType).Resolve();
                     break;
 
                 case RELATION:
-                    RelationType relationSuperType = SingleTransaction.Concepts.GetRelationType(superLabel).Resolve();
-                    SingleTransaction
+                    RelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve();
+                    Tx
                         .Concepts
                         .GetRelationType(typeLabel).Resolve()
-                        .SetSupertype(SingleTransaction, relationSuperType).Resolve();
+                        .SetSupertype(Tx, relationSuperType).Resolve();
                     break;
 
                 case THING:
@@ -182,7 +182,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ThingType supertype = GetThingType(rootLabel, superLabel);
             Assert.Equals(
                 supertype,
-                GetThingType(rootLabel, typeLabel).GetSupertype(SingleTransaction).Resolve());
+                GetThingType(rootLabel, typeLabel).GetSupertype(Tx).Resolve());
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) get supertypes contain:")]
@@ -191,7 +191,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             ThingType thing_type = GetThingType(rootLabel, typeLabel);
             HashSet<string> actuals = thing_type
-                .GetSupertypes(SingleTransaction)
+                .GetSupertypes(Tx)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -203,7 +203,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> superLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetSupertypes(SingleTransaction)
+                .GetSupertypes(Tx)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -217,7 +217,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetSubtypesContain(RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetSubtypes(SingleTransaction)
+                .GetSubtypes(Tx)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -229,7 +229,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> subLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetSubtypes(SingleTransaction)
+                .GetSubtypes(Tx)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -243,8 +243,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeSetOwnsAttributeTypeWithAnnotations(
             RootLabel rootLabel, string typeLabel, string attTypeLabel, List<Annotation> annotations)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attTypeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType, set(annotations)).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, set(annotations)).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}")]
@@ -255,11 +255,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string overriddenLabel,
             List<Annotation> annotations)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attTypeLabel).Resolve();
-            AttributeType overriddenType = SingleTransaction.Concepts.GetAttributeType(overriddenLabel).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve();
+            AttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve();
 
             GetThingType(rootLabel, typeLabel)
-                .SetOwns(SingleTransaction, attributeType, overriddenType, set(annotations)).Resolve();
+                .SetOwns(Tx, attributeType, overriddenType, set(annotations)).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception")]
@@ -287,7 +287,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, set(annotations))
+                .GetOwns(Tx, set(annotations))
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -299,7 +299,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, set(annotations))
+                .GetOwns(Tx, set(annotations))
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -314,7 +314,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
+                .GetOwns(Tx, set(annotations), EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -326,7 +326,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, set(annotations), EXPLICIT)
+                .GetOwns(Tx, set(annotations), EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -340,8 +340,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeSetOwnsAttributeType(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}; throws exception")]
@@ -355,9 +355,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeSetOwnsAttributeTypeAs(
             RootLabel rootLabel, string typeLabel, string attributeLabel, string overriddenLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
-            AttributeType overriddenType = SingleTransaction.Concepts.GetAttributeType(overriddenLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).SetOwns(SingleTransaction, attributeType, overriddenType).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            AttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, overriddenType).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}; throws exception")]
@@ -372,8 +372,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeUnsetOwnsAttributeType(
             RootLabel rootLabel, string typeLabel, string attributeLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).unsetOwns(SingleTransaction, attributeType).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            GetThingType(rootLabel, typeLabel).unsetOwns(Tx, attributeType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")]
@@ -387,10 +387,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsOverriddenAttributeIsNull(
             RootLabel rootLabel, string typeLabel, string attributeLabel, bool isNull)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .GetOwnsOverridden(SingleTransaction, attributeType).Resolve();
+                .GetOwnsOverridden(Tx, attributeType).Resolve();
 
             Assert.Equals(isNull, isNull(ownsOverridden));
         }
@@ -399,10 +399,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetOwnsOverriddenAttributeGetLabel(
             RootLabel rootLabel, string typeLabel, string attributeLabel, string getLabel)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(attributeLabel).Resolve();
+            AttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .GetOwnsOverridden(SingleTransaction, attributeType).Resolve();
+                .GetOwnsOverridden(Tx, attributeType).Resolve();
 
             Assert.Equals(getLabel, ownsOverridden.Label.Name);
         }
@@ -412,7 +412,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction)
+                .GetOwns(Tx)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -424,7 +424,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction)
+                .GetOwns(Tx)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -439,7 +439,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, EXPLICIT)
+                .GetOwns(Tx, EXPLICIT)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -451,7 +451,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(SingleTransaction, EXPLICIT)
+                .GetOwns(Tx, EXPLICIT)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -464,12 +464,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")]
         public void ThingTypeSetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            RoleType roleType = SingleTransaction
+            RoleType roleType = Tx
                 .Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
-                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
+                .GetRelates(Tx, roleLabel.Name).Resolve();
 
-            GetThingType(rootLabel, typeLabel).SetPlays(SingleTransaction, roleType).Resolve();
+            GetThingType(rootLabel, typeLabel).SetPlays(Tx, roleType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}; throws exception")]
@@ -482,18 +482,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeSetPlaysRoleAs(
             RootLabel rootLabel, string typeLabel, Label roleLabel, Label overriddenLabel)
         {
-            RoleType roleType = SingleTransaction
+            RoleType roleType = Tx
                 .Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
-                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
+                .GetRelates(Tx, roleLabel.Name).Resolve();
 
-            RoleType overriddenType = SingleTransaction
+            RoleType overriddenType = Tx
                 .Concepts
                 .GetRelationType(overriddenLabel.Scope.Get()).Resolve()
-                .GetRelates(SingleTransaction, overriddenLabel.Name).Resolve();
+                .GetRelates(Tx, overriddenLabel.Name).Resolve();
 
             GetThingType(rootLabel, typeLabel)
-                .SetPlays(SingleTransaction, roleType, overriddenType).Resolve();
+                .SetPlays(Tx, roleType, overriddenType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}; throws exception")]
@@ -506,12 +506,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")]
         public void ThingTypeUnsetPlaysRole(RootLabel rootLabel, string typeLabel, Label roleLabel)
         {
-            RoleType roleType = SingleTransaction
+            RoleType roleType = Tx
                 .Concepts
                 .GetRelationType(roleLabel.Scope.Get()).Resolve()
-                .GetRelates(SingleTransaction, roleLabel.Name).Resolve();
+                .GetRelates(Tx, roleLabel.Name).Resolve();
 
-            GetThingType(rootLabel, typeLabel).unsetPlays(SingleTransaction, roleType).Resolve();
+            GetThingType(rootLabel, typeLabel).unsetPlays(Tx, roleType).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")]
@@ -526,7 +526,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(SingleTransaction)
+                .GetPlays(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
@@ -538,7 +538,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(SingleTransaction)
+                .GetPlays(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
@@ -553,7 +553,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(SingleTransaction, EXPLICIT)
+                .GetPlays(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
@@ -565,7 +565,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Label> roleLabels)
         {
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(SingleTransaction, EXPLICIT)
+                .GetPlays(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 

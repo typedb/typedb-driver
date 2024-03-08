@@ -41,10 +41,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"attribute\\( ?{type_label} ?) get instances contain: {var}")]
         public void AttributeTypeGetInstancesContain(string typeLabel, string var)
         {
-            var instances = SingleTransaction
+            var instances = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .GetInstances(SingleTransaction);
+                .GetInstances(Tx);
 
             Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
         }
@@ -52,14 +52,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute {var} get owners contain: {var}")]
         public void AttributeGetOwnersContain(string var1, string var2)
         {
-            Assert.True(Get(var1).AsAttribute().GetOwners(SingleTransaction).Where(o => o.Equals(Get(var2))).Any());
+            Assert.True(Get(var1).AsAttribute().GetOwners(Tx).Where(o => o.Equals(Get(var2))).Any());
         }
 
         [Then(@"attribute {var} get owners do not contain: {var}")]
         public void AttributeGetOwnersDoNotContain(string var1, string var2)
         {
             Assert.False(
-                Get(var1).AsAttribute().GetOwners(SingleTransaction).Where(o => o.Equals(Get(var2))).Any());
+                Get(var1).AsAttribute().GetOwners(Tx).Where(o => o.Equals(Get(var2))).Any());
         }
 
         [Then(@"attribute {var} has value type: {valueType}")]
@@ -71,10 +71,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")]
         public void AttributeTypeAsBooleanPut(string var, string typeLabel, bool value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve();
+                .Put(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -82,19 +82,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}; throws exception")]
         public void AttributeTypeAsBooleanPutThrowsException(string typeLabel, bool value)
         {
-            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve());
+                .Put(Tx, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}")]
         public void AttributeTypeAsLongPut(string var, string typeLabel, long value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve();
+                .Put(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -102,19 +102,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}; throws exception")]
         public void AttributeTypeAsLongPutThrowsException(string typeLabel, long value)
         {
-            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve());
+                .Put(Tx, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}")]
         public void AttributeTypeAsDoublePut(string var, string typeLabel, double value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve();
+                .Put(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -122,19 +122,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}; throws exception")]
         public void AttributeTypeAsDoublePutThrowsException(string typeLabel, double value)
         {
-            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve());
+                .Put(Tx, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}")]
         public void AttributeTypeAsStringPut(string var, string typeLabel, string value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve();
+                .Put(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -142,19 +142,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}; throws exception")]
         public void AttributeTypeAsStringPutThrowsException(string typeLabel, string value)
         {
-            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve());
+                .Put(Tx, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}")]
         public void AttributeTypeAsDatetimePut(string var, string typeLabel, DateTime value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value).Resolve();
+                .Put(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -162,9 +162,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}; throws exception")]
         public void AttributeTypeAsDatetimePutThrowsException(string typeLabel, DateTime value)
         {
-            var exception = Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+            var exception = Assert.Throws<TypeDBDriverException>(() => Tx
                 .Concepts.GetAttributeType(typeLabel).Resolve()
-                .Put(SingleTransaction, value));
+                .Put(Tx, value));
 
             Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
         }
@@ -172,10 +172,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) get: {bool}")]
         public void AttributeTypeAsBooleanGet(string var, string typeLabel, bool value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Get(SingleTransaction, value).Resolve();
+                .Get(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -183,10 +183,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) get: {int}")]
         public void AttributeTypeAsLongGet(string var, string typeLabel, long value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Get(SingleTransaction, value).Resolve();
+                .Get(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -194,10 +194,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) get: {double}")]
         public void AttributeTypeAsDoubleGet(string var, string typeLabel, double value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Get(SingleTransaction, value).Resolve();
+                .Get(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -205,10 +205,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) get: {word}")]
         public void AttributeTypeAsStringGet(string var, string typeLabel, string value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Get(SingleTransaction, value).Resolve();
+                .Get(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
@@ -216,10 +216,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")]
         public void AttributeTypeAsDatetimeGet(string var, string typeLabel, DateTime value)
         {
-            var attributeType = SingleTransaction
+            var attributeType = Tx
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
-                .Get(SingleTransaction, value).Resolve();
+                .Get(Tx, value).Resolve();
 
             Put(var, attributeType);
         }
