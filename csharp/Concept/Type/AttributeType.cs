@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
@@ -78,13 +79,13 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetSubtypes(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, IValue.ValueType valueType) 
         {
-            return GetSubtypes(transaction, valueType, IConcept.Transitivity.TRANSITIVE);
+            return GetSubtypes(transaction, valueType, TRANSITIVE);
         }
 
         public override IEnumerable<IType> GetSubtypes(
@@ -128,7 +129,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
-            return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetInstances(transaction, TRANSITIVE);
         }
 
         public override IEnumerable<IThing> GetInstances(
@@ -157,7 +158,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations) 
         {
-            return GetOwners(transaction, annotations, IConcept.Transitivity.TRANSITIVE);
+            return GetOwners(transaction, annotations, TRANSITIVE);
         }
 
         public IEnumerable<IThingType> GetOwners(

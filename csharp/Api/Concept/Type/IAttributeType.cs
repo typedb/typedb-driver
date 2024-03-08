@@ -378,8 +378,8 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          * @param valueType <code>IValue.ValueType</code> for retrieving subtypes
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
+         * @param transitivity <code>TRANSITIVE</code> for direct and indirect subtypes,
+         *                     <code>EXPLICIT</code> for direct subtypes only
          */
         IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, 
@@ -423,8 +423,8 @@ namespace Vaticle.Typedb.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
-         *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
+         * @param transitivity <code>TRANSITIVE</code> for direct and inherited ownership,
+         *                     <code>EXPLICIT</code> for direct ownership only
          */
         IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
@@ -441,8 +441,8 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param annotations Only retrieve <code>ThingTypes</code> that have an attribute of this
          *                    <code>IAttributeType</code> with all given <code>Annotation</code>s
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
-         *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
+         * @param transitivity <code>TRANSITIVE</code> for direct and inherited ownership,
+         *                     <code>EXPLICIT</code> for direct ownership only
          */
         IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, 

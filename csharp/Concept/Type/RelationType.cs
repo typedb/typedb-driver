@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
@@ -54,7 +55,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction)
         {
-            return GetRelates(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetRelates(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IRoleType> GetRelates(
@@ -148,7 +149,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetSubtypes(transaction, TRANSITIVE);
         }
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
@@ -168,7 +169,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
-            return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetInstances(transaction, TRANSITIVE);
         }
 
         public override IEnumerable<IThing> GetInstances(

@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
@@ -99,7 +100,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetSubtypes(transaction, TRANSITIVE);
         }
 
         public override IEnumerable<IType> GetSubtypes(
@@ -143,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
         {
-            return GetPlayerTypes(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetPlayerTypes(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IThingType> GetPlayerTypes(
@@ -164,7 +165,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
         {
-            return GetRelationInstances(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetRelationInstances(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IRelation> GetRelationInstances(
@@ -185,7 +186,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
         {
-            return GetPlayerInstances(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetPlayerInstances(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IThing> GetPlayerInstances(

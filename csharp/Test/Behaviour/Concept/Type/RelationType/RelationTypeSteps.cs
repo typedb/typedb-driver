@@ -33,6 +33,7 @@ using Xunit.Gherkin.Quick;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
