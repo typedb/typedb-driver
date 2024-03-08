@@ -139,7 +139,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.put(transaction, value).Resolve();
+         * attributeType.Put(transaction, value).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
