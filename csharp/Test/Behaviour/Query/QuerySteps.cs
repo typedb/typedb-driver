@@ -6,7 +6,7 @@
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
- * "License")]; you may not use this file except in compliance
+ * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
@@ -249,7 +249,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"answer size is: {}")]
         public void AnswerSizeIs(int expectedAnswers)
         {
-            Assert.Equal(expectedAnswers, _answers.Count); // $"Expected {expectedAnswers} answers, but got {_answers.Count}"
+            Assert.Equal(expectedAnswers, _answers.Count);
         }
 
         [Given(@"uniquely identify answer concepts")]
@@ -295,8 +295,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"aggregate value is: {}")]
         public void AggregateValueIs(double expectedAnswer)
         {
-            Assert.NotNull(_valueAnswer); // , "The last executed query was not an aggregate query"
-            Assert.True(_valueAnswer != null, "The last executed aggregate query returned NaN");
+            Assert.NotNull(_valueAnswer);
 
             double value = _valueAnswer.IsDouble()
                 ? _valueAnswer.AsDouble()
@@ -305,11 +304,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(expectedAnswer, value, 0.001);
         }
 
-        [Then(@"aggregate answer is empty")] // TODO: Fix
+        [Then(@"aggregate answer is empty")]
         public void AggregateAnswerIsEmpty()
         {
-            Assert.NotNull(_valueAnswer);
-            Assert.True(_valueAnswer == null);
+            Assert.Null(_valueAnswer);
         }
 
         [Then(@"answer groups are")]
@@ -503,13 +501,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var answers = new JArray(_fetchAnswers);
 
             Assert.True(Util.JsonDeepEqualsUnordered(expected, answers));
-        }
-
-        [Then(@"rules are")]
-        public void RulesAre(DataTable rules)
-        {
-            throw new Exception("Rules Are is not ready! Just need to recheck its logic"); // TODO
-            //_rules = Util.ParseDataTableToMultiDictionary(rules);
         }
 
         private bool CurrentRulesContain(string ruleLabel)
