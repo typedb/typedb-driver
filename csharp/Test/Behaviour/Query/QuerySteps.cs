@@ -35,6 +35,7 @@ using Xunit.Gherkin.Quick;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
 
 using QueryError = Vaticle.Typedb.Driver.Common.Error.Query; // TODO: Change to TypeDB.Driver.Common..... everywhere.
 
@@ -705,7 +706,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 HashSet<IAttribute> keys = concept
                     .AsThing()
-                    .GetHas(Tx, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()})
+                    .GetHas(Tx, new HashSet<IThingType.Annotation>(){NewKey()})
                     .ToHashSet();
 
                 Dictionary<Label, string> keyMap = new Dictionary<Label, string>();

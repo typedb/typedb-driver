@@ -27,10 +27,11 @@ using System.Linq;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
 
 namespace Vaticle.Typedb.Driver.Test.Integration
 {
-    public static class Utils // TODO: Move to a separate library for all tests
+    public static class Utils
     {
         public static ITypeDBDriver OpenConnection()
         {
@@ -173,7 +174,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
                     // The content of such results is checked in behaviour tests.
                     Assert.AreEqual(xAttributesWithEmptyAnnotations.Length, 2);
 
-                    var annotations = new []{IThingType.Annotation.NewKey()};
+                    var annotations = new []{NewKey()};
                     IAttribute[] xAttributesWithAnnotations = x.GetHas(writeTransaction, annotations).ToArray();
 
                     Assert.AreEqual(xAttributesWithAnnotations.Length, 1);
