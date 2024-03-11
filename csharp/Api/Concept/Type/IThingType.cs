@@ -124,7 +124,7 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.SetOwns(transaction, attributeType).Resolve();
-         * thingType.SetOwns(transaction, attributeType, overriddenType, new []{Annotation.NewKey()}).Resolve();
+         * thingType.SetOwns(transaction, attributeType, overriddenType, new []{NewKey()}).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
@@ -264,7 +264,7 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetOwns(transaction);
-         * thingType.GetOwns(transaction, valueType, EXPLICIT, new []{Annotation.NewKey()}));
+         * thingType.GetOwns(transaction, valueType, EXPLICIT, new []{NewKey()}));
          * </pre>
          *
          * @param transaction The current transaction
@@ -347,7 +347,8 @@ namespace Vaticle.Typedb.Driver.Api
              *
              * <h3>Examples</h3>
              * <pre>
-             * Annotation.NewKey();
+             * using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
+             * NewKey();
              * </pre>
              */
             public static Annotation NewKey()

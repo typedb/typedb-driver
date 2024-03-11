@@ -27,6 +27,7 @@ using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
 using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 
 using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
@@ -146,13 +147,13 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
-            return SetOwns(transaction, attributeType, null, new IThingType.Annotation[0]);
+            return SetOwns(transaction, attributeType, null, new Annotation[0]);
         }
 
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction,
             IAttributeType attributeType,
-            ICollection<IThingType.Annotation> annotations)
+            ICollection<Annotation> annotations)
         {
             return SetOwns(transaction, attributeType, null, annotations);
         }
@@ -160,14 +161,14 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType)
         {
-            return SetOwns(transaction, attributeType, overriddenType, new IThingType.Annotation[0]);
+            return SetOwns(transaction, attributeType, overriddenType, new Annotation[0]);
         }
 
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction, 
             IAttributeType attributeType, 
             IAttributeType? overriddenType,
-            ICollection<IThingType.Annotation> annotations)
+            ICollection<Annotation> annotations)
         {
             Pinvoke.Concept? overriddenTypeNative = overriddenType != null
                 ? ((AttributeType)overriddenType).NativeObject
@@ -215,23 +216,23 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
-            return GetOwns(transaction, TRANSITIVE, new IThingType.Annotation[0]);
+            return GetOwns(transaction, TRANSITIVE, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
             return GetOwns(
-                transaction, valueType, TRANSITIVE, new IThingType.Annotation[0]);
+                transaction, valueType, TRANSITIVE, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
+            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
         {
             return GetOwns(transaction, TRANSITIVE, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<IThingType.Annotation> annotations)
+            ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<Annotation> annotations)
         {
             return GetOwns(transaction, valueType, TRANSITIVE, annotations);
         }
@@ -239,18 +240,18 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, transitivity, new IThingType.Annotation[0]);
+            return GetOwns(transaction, transitivity, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, valueType, transitivity, new IThingType.Annotation[0]);
+            return GetOwns(transaction, valueType, transitivity, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
-            ICollection<IThingType.Annotation> annotations,
+            ICollection<Annotation> annotations,
             IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, annotations);
@@ -259,7 +260,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IValue.ValueType? valueType,
-            ICollection<IThingType.Annotation> annotations,
+            ICollection<Annotation> annotations,
             IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, valueType, transitivity, annotations);
@@ -268,7 +269,7 @@ namespace Vaticle.Typedb.Driver.Concept
         private IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IConcept.Transitivity transitivity,
-            ICollection<IThingType.Annotation> annotations)
+            ICollection<Annotation> annotations)
         {
             return GetOwns(transaction, null, transitivity, annotations);
         }
@@ -277,7 +278,7 @@ namespace Vaticle.Typedb.Driver.Concept
             ITypeDBTransaction transaction, 
             IValue.ValueType? valueType,
             IConcept.Transitivity transitivity, 
-            ICollection<IThingType.Annotation> annotations) 
+            ICollection<Annotation> annotations) 
         {
             try
             {

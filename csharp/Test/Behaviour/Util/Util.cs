@@ -148,7 +148,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             return result;
         }
 
-        public void ValidateRootLabel(string label)
+        public static void ValidateRootLabel(string label)
         {
             var rootLabel = RootLabel.Values.Where(value => value.Equals(label)).FirstOrDefault();
             if (rootLabel == null)
