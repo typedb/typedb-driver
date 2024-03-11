@@ -29,14 +29,6 @@ using Xunit.Gherkin.Quick;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
-    public class BehaviourTestException : Exception
-    {
-        public BehaviourTestException(string message)
-            : base(message)
-        {
-        }
-    }
-
     public class Util
     {
         public static readonly int KEY_ROW_INDEX = 0;
@@ -80,12 +72,33 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             return parsedData;
         }
 
+        public static List<string> ParseEnumerationToList(string enumeration)
+        {
+            return enumeration.Split(",\\s?").ToList();
+        }
+
+        public static Dictionary<string, string> ParseDataTableToDictionary(DataTable dataTable)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            foreach (var row in dataTable.Rows)
+            {
+                var cells = row.Cells.ToArray();
+                var key = cells[0].Value;
+                var value = cells[1].Value;
+
+                result[key] = value;
+            }
+
+            return result;
+        }
+
         public static bool JsonDeepEqualsUnordered(JToken expectedToken, JToken checkedToken)
         {
             return JToken.DeepEquals(GetSortedJson(expectedToken), GetSortedJson(checkedToken));
         }
 
-        private static JToken GetSortedJson(JToken token)
+        private static JToken? GetSortedJson(JToken? token)
         {
             if (token == null)
             {
@@ -133,6 +146,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             return result;
+        }
+
+        public void ValidateRootLabel(string label)
+        {
+            var rootLabel = RootLabel.Values.Where(value => value.Equals(label)).FirstOrDefault();
+            if (rootLabel == null)
+            {
+                throw new BehaviourTestException($"Could not find such label {label}");
+            }
         }
     }
 }
