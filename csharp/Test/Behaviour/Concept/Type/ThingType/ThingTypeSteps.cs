@@ -64,7 +64,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             throw new BehaviourTestException($"Label {rootLabel} is not accepted");
         }
 
-        [When(@"put {} type: {}")]
+        [Given(@"put {} type: {}")]
         public void PutThingType(string rootLabel, string typeLabel)
         {
             if (rootLabel == ENTITY)

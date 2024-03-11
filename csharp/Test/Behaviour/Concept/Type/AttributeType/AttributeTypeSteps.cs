@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [When(@"put attribute type: ([a-zA-Z0-9-_]+), with value type: {}")]
+        [Given(@"put attribute type: ([a-zA-Z0-9-_]+), with value type: {}")]
         public void PutAttributeTypeWithValueType(string typeLabel, string valueTypeData)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
