@@ -39,7 +39,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [When(@"relation\\( ?([a-zA-Z0-9-_]+) ?) set relates role: ([a-zA-Z0-9-_]+)")]
+        [Given(@"relation\\( ?([a-zA-Z0-9-_]+) ?) set relates role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
