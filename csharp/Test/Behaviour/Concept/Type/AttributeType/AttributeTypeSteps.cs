@@ -34,43 +34,67 @@ using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [When(@"put attribute type: ([a-zA-Z0-9-_]+), with value type: {value_type}")] // TODO: Add!
-        public void PutAttributeTypeWithValueType(string typeLabel, Value.Type valueType)
+        public IValue.ValueType GetValueType(string type)
         {
-            Tx.Concepts.putAttributeType(typeLabel, valueType).Resolve();
+            switch (type)
+            {
+                case "long":
+                    return IValue.ValueType.LONG;
+                case "double":
+                    return IValue.ValueType.DOUBLE;
+                case "string":
+                    return IValue.ValueType.STRING;
+                case "boolean":
+                    return IValue.ValueType.BOOL;
+                case "datetime":
+                    return IValue.ValueType.DATETIME;
+                default:
+                    throw new BehaviourTestException($"Unexpected value type {type}");
+            }
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get value type: {value_type}")]
-        public void AttributeTypeGetValueType(string typeLabel, Value.Type valueType)
+        [When(@"put attribute type: ([a-zA-Z0-9-_]+), with value type: {}")]
+        public void PutAttributeTypeWithValueType(string typeLabel, string valueTypeData)
         {
-            Assert.Equals(
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Tx.Concepts.PutAttributeType(typeLabel, valueType).Resolve();
+        }
+
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get value type: {}")]
+        public void AttributeTypeGetValueType(string typeLabel, string valueTypeData)
+        {
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Assert.Equal(
                 valueType,
-                Tx.Concepts.GetAttributeType(typeLabel).Resolve().GetValueType());
+                Tx.Concepts.GetAttributeType(typeLabel).Resolve().ValueType);
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get supertype value type: {value_type}")]
-        public void AttributeTypeGetSupertypeValueType(string typeLabel, Value.Type valueType)
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get supertype value type: {}")]
+        public void AttributeTypeGetSupertypeValueType(string typeLabel, string valueTypeData)
         {
-            AttributeType supertype = Tx.Concepts
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            IAttributeType supertype = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .GetSupertype(Tx).Resolve()
                 .AsAttributeType();
 
-            Assert.Equals(valueType, supertype.GetValueType());
+            Assert.Equal(valueType, supertype.ValueType);
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) get subtypes contain:")]
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) get subtypes contain:")]
         public void AttributeTypeAsValueTypeGetSubtypesContain(
-            string typeLabel, Value.Type valueType, DataTable subLabelsData)
+            string typeLabel, string valueTypeData, DataTable subLabelsData)
         {
-            var subLabels = ParseDataTableToTypeList<string>(subLabelsData);
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            var subLabels = Util.ParseDataTableToTypeList<string>(subLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetSubtypes(Tx, valueType)
                 .Select(t => t.Label.Name)
@@ -79,13 +103,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(subLabels).Any());
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) get subtypes do not contain:")]
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) get subtypes do not contain:")]
         public void AttributeTypeAsValueTypeGetSubtypesDoNotContain(
-        string typeLabel, Value.Type valueType, DataTable subLabelsData)
+        string typeLabel, string valueTypeData, DataTable subLabelsData)
         {
-            var subLabels = ParseDataTableToTypeList<string>(subLabelsData);
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            var subLabels = Util.ParseDataTableToTypeList<string>(subLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetSubtypes(Tx, valueType)
                 .Select(t => t.Label.Name)
@@ -97,59 +122,53 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) set regex: {}")]
-        public void AttributeTypeAsValueTypeSetRegex(string typeLabel, Value.Type valueType, string regex)
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) set regex: {}")]
+        public void AttributeTypeAsValueTypeSetRegex(string typeLabel, string valueTypeData, string regex)
         {
-            if (!valueType.Equals(Value.Type.STRING))
-            {
-                fail();
-            }
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             attributeType.SetRegex(Tx, regex).Resolve();
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) unset regex")]
-        public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, Value.Type valueType)
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) unset regex")]
+        public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, string valueTypeData)
         {
-            if (!valueType.Equals(Value.Type.STRING))
-            {
-                fail();
-            }
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
-            attributeType.unsetRegex(Tx).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            attributeType.UnsetRegex(Tx).Resolve();
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) get regex: {}")]
-        public void AttributeTypeAsValueTypeGetRegex(string typeLabel, Value.Type valueType, string regex)
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) get regex: {}")]
+        public void AttributeTypeAsValueTypeGetRegex(string typeLabel, string valueTypeData, string regex)
         {
-            if (!valueType.Equals(Value.Type.STRING))
-            {
-                fail();
-            }
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
-            Assert.Equals(regex, attributeType.GetRegex(Tx).Resolve());
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            Assert.Equal(regex, attributeType.GetRegex(Tx).Resolve());
         }
 
-        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{value_type} ?) does not have any regex")]
-        public void AttributeTypeAsValueTypeDoesNotHaveAnyRegex(string typeLabel, Value.Type valueType)
+        [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?{} ?) does not have any regex")]
+        public void AttributeTypeAsValueTypeDoesNotHaveAnyRegex(string typeLabel, string valueTypeData)
         {
-            AttributeTypeAsValueTypeGetRegex(typeLabel, valueType, null);
+            AttributeTypeAsValueTypeGetRegex(typeLabel, valueTypeData, null);
         }
 
         [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get owners, with annotations: (\s*([\w\-_]+,\s*)*[\w\-_]*\s*); contain:")]
         public void AttributeTypeGetOwnersWithAnnotationsContain(
             string typeLabel, string annotationsData, DataTable ownerLabelsData)
         {
-            List<Annotation> annotations = GetAnnotations(Utils.ParseEnumerationToList(annotationsData));
+            List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
         
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new []{annotations})
+                .GetOwners(Tx, annotations)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -160,13 +179,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AttributeTypeGetOwnersWithAnnotationsDoNotContain(
             string typeLabel, string annotationsData, DataTable ownerLabelsData)
         {
-            List<Annotation> annotations = GetAnnotations(Utils.ParseEnumerationToList(annotationsData));
+            List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
 
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new []{annotations})
+                .GetOwners(Tx, annotations)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -180,13 +199,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AttributeTypeGetOwnersExplicitWithAnnotationsContain(
             string typeLabel, string annotationsData, DataTable ownerLabelsData)
         {
-            List<Annotation> annotations = GetAnnotations(Utils.ParseEnumerationToList(annotationsData));
+            List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
 
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new []{annotations}, EXPLICIT)
+                .GetOwners(Tx, annotations, EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -197,13 +216,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AttributeTypeGetOwnersExplicitWithAnnotationsDoNotContain(
             string typeLabel, string annotationsData, DataTable ownerLabelsData)
         {
-            List<Annotation> annotations = GetAnnotations(Utils.ParseEnumerationToList(annotationsData));
+            List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
 
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new []{annotations}, EXPLICIT)
+                .GetOwners(Tx, annotations, EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -216,9 +235,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get owners contain:")]
         public void AttributeTypeGetOwnersContain(string typeLabel, DataTable ownerLabelsData)
         {
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0])
                 .Select(t => t.Label.Name)
@@ -230,9 +249,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get owners do not contain:")]
         public void AttributeTypeGetOwnersDoNotContain(string typeLabel, DataTable ownerLabelsData)
         {
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0])
                 .Select(t => t.Label.Name)
@@ -247,9 +266,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get owners explicit contain:")]
         public void AttributeTypeGetOwnersExplicitContain(string typeLabel, DataTable ownerLabelsData)
         {
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0], EXPLICIT)
                 .Select(t => t.Label.Name)
@@ -261,9 +280,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?([a-zA-Z0-9-_]+) ?) get owners explicit do not contain:")]
         public void AttributeTypeGetOwnersExplicitDoNotContain(string typeLabel, DataTable ownerLabelsData)
         {
-            var ownerLabels = ParseDataTableToTypeList<string>(ownerLabelsData);
+            var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0], EXPLICIT)
                 .Select(t => t.Label.Name)

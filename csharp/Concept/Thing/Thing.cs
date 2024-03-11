@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 
 using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
@@ -92,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Concept
         }
 
         public IEnumerable<IAttribute> GetHas(
-            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
+            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
         {
             Pinvoke.Annotation[] annotationsArray = annotations
                 .Select(obj => obj.NativeObject)

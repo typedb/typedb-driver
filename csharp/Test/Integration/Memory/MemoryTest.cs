@@ -27,6 +27,7 @@ using System.Linq;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
 
 namespace Vaticle.Typedb.Driver.Test.Integration
@@ -167,7 +168,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
                     var x = conceptMap.Get("x").AsThing();
                     Assert.NotNull(x);
 
-                    var emptyAnnotations = new IThingType.Annotation[0];
+                    var emptyAnnotations = new Annotation[0];
                     IAttribute[] xAttributesWithEmptyAnnotations =
                         x.GetHas(writeTransaction, emptyAnnotations).ToArray();
 
@@ -279,7 +280,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
                     var x = conceptMap.Get("x").AsThing();
                     Assert.NotNull(x);
 
-                    var emptyAnnotations = new IThingType.Annotation[0];
+                    var emptyAnnotations = new Annotation[0];
                     IAttributeType[] xAttributeTypesLong =
                         x.Type.GetOwns(writeTransaction, IValue.ValueType.LONG, emptyAnnotations).ToArray();
 
