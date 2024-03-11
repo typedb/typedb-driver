@@ -29,7 +29,7 @@ load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
 csharp_library(
     name = "util",
-    srcs = glob(["Util.cs"]),
+    srcs = glob(["*.cs"]),
     deps = behaviour_tests_deps + ["@paket.csharp_deps//newtonsoft.json"],
     runtime_identifier = "any",
     nullable = nullable_context,

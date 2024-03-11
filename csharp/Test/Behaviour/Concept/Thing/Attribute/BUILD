@@ -38,8 +38,8 @@ csharp_behaviour_test(
     name = "test-core",
     test_files = ["AttributeTest.cs"],
     steps_files = [
-        "//csharp/Test/Behaviour/AttributeType:steps",
-        "//csharp/Test/Behaviour/ThingType:steps",
+        "//csharp/Test/Behaviour/Concept/Type/AttributeType:steps",
+        "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
@@ -61,8 +61,8 @@ csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["AttributeTest.cs"],
     steps_files = [
-        "//csharp/Test/Behaviour/AttributeType:steps",
-        "//csharp/Test/Behaviour/ThingType:steps",
+        "//csharp/Test/Behaviour/Concept/Type/AttributeType:steps",
+        "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
