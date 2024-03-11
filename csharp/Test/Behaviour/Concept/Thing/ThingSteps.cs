@@ -39,16 +39,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private static Dictionary<string, Thing> _things = new Dictionary<string, IThing>();
+        private static Dictionary<string, IThing> _things = new Dictionary<string, IThing>();
 
-        public static Thing Get(string variable)
+        public static IThing Get(string variable)
         {
-            return _things.Get(variable);
+            return _things[variable];
         }
 
-        public static void Put(string variable, Thing thing)
+        public static void Put(string variable, IThing thing)
         {
-            _things.Put(variable, thing);
+            Assert.NotNull(thing);
+            _things[variable] = thing;
         }
 
         [Then(@"entity/attribute/relation \\$([a-zA-Z0-9]+) is null: {bool}")]
@@ -67,14 +68,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity/attribute/relation \\$([a-zA-Z0-9]+) is deleted: {bool}")]
         public void ThingIsDeleted(string var, bool isDeleted)
         {
-            Assert.Equals(isDeleted, Get(var).isDeleted(Tx).Resolve());
+            Assert.Equal(isDeleted, Get(var).IsDeleted(Tx).Resolve());
         }
 
         [Then(@"{} \\$([a-zA-Z0-9]+) has type: ([a-zA-Z0-9-_]+)")]
         public void ThingHasType(string rootLabel, string var, string typeLabel)
         {
-            ThingType type = GetThingType(rootLabel, typeLabel);
-            Assert.Equals(type, Get(var).GetType());
+            IThingType type = GetThingType(rootLabel, typeLabel);
+            Assert.Equal(type, Get(var).Type);
         }
 
         [When(@"delete entity:/attribute:/relation: \\$([a-zA-Z0-9]+)")]
@@ -241,10 +242,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [Then(@"entity/attribute/relation \\$([a-zA-Z0-9]+) get relations\\( ?([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+) ?) contain: \\$([a-zA-Z0-9]+)")]
-        public void ThingGetRelationsContain(string var1, Label scopedLabel, string var2)
+        public void ThingGetRelationsContain(string var1, string scopedLabelData, string var2)
         {
+            Label scopedLabel = GetScopedLabel(scopedLabelData);
+
             var relates = Tx.Concepts
-                .GetRelationType(scopedLabel.Scope.Get()).Resolve()
+                .GetRelationType(scopedLabel.Scope).Resolve()
                 .GetRelates(Tx, scopedLabel.Name).Resolve();
 
             Assert.True(Get(var1).GetRelations(Tx, relates).Where(k => k.Equals(Get(var2))).Any());
@@ -257,10 +260,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [Then(@"entity/attribute/relation \\$([a-zA-Z0-9]+) get relations\\( ?([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+) ?) do not contain: \\$([a-zA-Z0-9]+)")]
-        public void ThingGetRelationsDoNotContain(string var1, Label scopedLabel, string var2)
+        public void ThingGetRelationsDoNotContain(string var1, string scopedLabelData, string var2)
         {
+            Label scopedLabel = GetScopedLabel(scopedLabelData);
+
             var relates = Tx.Concepts
-                .GetRelationType(scopedLabel.Scope.Get()).Resolve()
+                .GetRelationType(scopedLabel.Scope).Resolve()
                 .GetRelates(Tx, scopedLabel.Name).Resolve();
 
             Assert.False(Get(var1).GetRelations(Tx, relates).Where(k => k.Equals(Get(var2))).Any());
@@ -270,12 +275,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingGetRelationsDoNotContain(string var1, string var2)
         {
             Assert.False(Get(var1).GetRelations(Tx).Where(k => k.Equals(Get(var2))).Any());
-        }
-
-        public void override Dispose()
-        {
-            _things.Clear();
-            base.Dispose();
         }
     }
 }

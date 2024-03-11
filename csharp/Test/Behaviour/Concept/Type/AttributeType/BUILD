@@ -39,6 +39,8 @@ csharp_behaviour_test(
     test_files = ["AttributeTypeTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
+        "//csharp/Test/Behaviour/Concept/Thing:steps",
+        "//csharp/Test/Behaviour/Concept/Type/AttributeType:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",
@@ -62,6 +64,8 @@ csharp_behaviour_test(
     test_files = ["AttributeTypeTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
+        "//csharp/Test/Behaviour/Concept/Thing:steps",
+        "//csharp/Test/Behaviour/Concept/Type/AttributeType:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",

@@ -43,7 +43,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var entityType = Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .create(Tx).Resolve();
+                .Create(Tx).Resolve();
 
             Put(var, entityType);
         }
@@ -53,19 +53,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
-                .create(Tx).Resolve());
+                .Create(Tx).Resolve());
         }
 
         [When(@"\\$([a-zA-Z0-9]+) = entity\\( ?([a-zA-Z0-9-_]+) ?) create new instance with key\\( ?([a-zA-Z0-9-_]+) ?): {int}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
-            Attribute key = Tx.Concepts
+            IAttribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx.Concepts
+            IEntity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
-                .create(Tx).Resolve();
+                .Create(Tx).Resolve();
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -75,13 +75,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"\\$([a-zA-Z0-9]+) = entity\\( ?([a-zA-Z0-9-_]+) ?) create new instance with key\\( ?([a-zA-Z0-9-_]+) ?): {word}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
-            Attribute key = Tx.Concepts
+            IAttribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx.Concepts
+            IEntity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
-                .create(Tx).Resolve();
+                .Create(Tx).Resolve();
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -92,13 +92,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            Attribute key = Tx.Concepts
+            IAttribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx.Concepts
+            IEntity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
-                .create(Tx).Resolve();
+                .Create(Tx).Resolve();
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -106,41 +106,41 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"\\$([a-zA-Z0-9]+) = entity\\( ?([a-zA-Z0-9-_]+) ?) get instance with key\\( ?([a-zA-Z0-9-_]+) ?): {long}")]
-        public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
+        public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, long keyValue)
         {
             var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
-                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
-                .findFirst().orElse(null);
+                .Where(owner => owner.Type.Label.Equals(new Label(type)))
+                .First();
 
             Put(var, entityType);
         }
 
         [When(@"\\$([a-zA-Z0-9]+) = entity\\( ?([a-zA-Z0-9-_]+) ?) get instance with key\\( ?([a-zA-Z0-9-_]+) ?): {word}")]
-        public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
+        public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
-                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
-                .findFirst().orElse(null);
+                .Where(owner => owner.Type.Label.Equals(new Label(type)))
+                .First();
 
             Put(var, entityType);
         }
 
         [When(@"\\$([a-zA-Z0-9]+) = entity\\( ?([a-zA-Z0-9-_]+) ?) get instance with key\\( ?([a-zA-Z0-9-_]+) ?): {datetime}")]
         public void EntityTypeGetInstanceWithKey(
-            string var1, string type, string keyType, DateTime keyValue)
+            string var, string type, string keyType, DateTime keyValue)
         {
             var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
-                .filter(owner => owner.GetType().Label.Equals(Label.of(type)))
-                .findFirst().orElse(null);
+                .Where(owner => owner.Type.Label.Equals(new Label(type)))
+                .First();
 
             Put(var, entityType);
         }
@@ -162,7 +162,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetEntityType(typeLabel).Resolve()
                 .GetInstances(Tx);
 
-            Assert.Equals(0, instances.Count);
+            Assert.Equal(0, instances.Count());
         }
     }
 }

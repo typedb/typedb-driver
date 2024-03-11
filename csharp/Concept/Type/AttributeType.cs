@@ -27,6 +27,7 @@ using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
 using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
@@ -152,11 +153,11 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IThingType> GetOwners(ITypeDBTransaction transaction)
         {
-            return GetOwners(transaction, new IThingType.Annotation[0]);
+            return GetOwners(transaction, new Annotation[0]);
         }
 
         public IEnumerable<IThingType> GetOwners(
-            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations) 
+            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
         {
             return GetOwners(transaction, annotations, TRANSITIVE);
         }
@@ -164,12 +165,12 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
-            return GetOwners(transaction, new IThingType.Annotation[0], transitivity);
+            return GetOwners(transaction, new Annotation[0], transitivity);
         }
 
         public IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, 
-            ICollection<IThingType.Annotation> annotations, 
+            ICollection<Annotation> annotations,
             IConcept.Transitivity transitivity) 
         {
             Pinvoke.Annotation[] annotationsArray = 

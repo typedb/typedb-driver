@@ -61,10 +61,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 Get(var1).AsAttribute().GetOwners(Tx).Where(o => o.Equals(Get(var2))).Any());
         }
 
-        [Then(@"attribute \\$([a-zA-Z0-9]+) has value type: {valueType}")]
-        public void AttributeHasValueType(string var, Value.Type valueType)
+        [Then(@"attribute \\$([a-zA-Z0-9]+) has value type: {}")]
+        public void AttributeHasValueType(string var, string valueTypeData)
         {
-            Assert.Equals(valueType, Get(var).AsAttribute().GetType().GetValueType());
+            IValue.ValueType valueType = GetValueType(valueTypeData);
+            Assert.Equal(valueType, Get(var).Type.AsAttributeType().ValueType);
         }
 
         [When(@"\\$([a-zA-Z0-9]+) = attribute\\( ?([a-zA-Z0-9-_]+) ?) as\\( ?boolean ?) put: {bool}")]
@@ -211,31 +212,31 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute \\$([a-zA-Z0-9]+) has bool value: {bool}")]
         public void AttributeHasBooleanValue(string var, bool value)
         {
-            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsBoolean());
+            Assert.Equal(value, Get(var).AsAttribute().Value.AsBool());
         }
 
         [Then(@"attribute \\$([a-zA-Z0-9]+) has long value: {long}")]
         public void AttributeHasLongValue(string var, long value)
         {
-            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsLong());
+            Assert.Equal(value, Get(var).AsAttribute().Value.AsLong());
         }
 
         [Then(@"attribute \\$([a-zA-Z0-9]+) has double value: {double}")]
         public void AttributeHasDoubleValue(string var, double value)
         {
-            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsDouble(), 0.0001);
+            Assert.Equal(value, Get(var).AsAttribute().Value.AsDouble(), 0.0001);
         }
 
         [Then(@"attribute \\$([a-zA-Z0-9]+) has string value: {word}")]
         public void AttributeHasStringValue(string var, string value)
         {
-            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsString());
+            Assert.Equal(value, Get(var).AsAttribute().Value.AsString());
         }
 
         [Then(@"attribute \\$([a-zA-Z0-9]+) has datetime value: {datetime}")]
         public void AttributeHasDatetimeValue(string var, DateTime value)
         {
-            Assert.Equals(value, Get(var).AsAttribute().GetValue().AsDateTime());
+            Assert.Equal(value, Get(var).AsAttribute().Value.AsDateTime());
         }
     }
 }

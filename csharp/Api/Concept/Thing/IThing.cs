@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IThingType;
 
 namespace Vaticle.Typedb.Driver.Api
 {
@@ -132,13 +133,13 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thing.GetHas(transaction);
-         * thing.GetHas(transaction, new []{IThingType.Annotation.NewKey()});
+         * thing.GetHas(transaction, new []{NewKey()});
          * </pre>
          *
          * @param transaction The current transaction
          * @param annotations Only retrieve attributes with all given <code>Annotation</code>s
          */
-        IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations);
+        IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
     
         /**
          * Retrieves all the <code>Relations</code> which this <code>IThing</code> plays a role in,

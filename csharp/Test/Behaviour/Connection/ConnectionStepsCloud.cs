@@ -38,11 +38,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             : base()
         {}
 
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
             return CreateTypeDBDriver(address);
