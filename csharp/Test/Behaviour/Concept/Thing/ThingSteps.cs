@@ -44,27 +44,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             return _things[variable];
         }
 
-        public static void Put(string variable, IThing thing, bool canBeNull = false)
+        public static void Put(string variable, IThing thing)
         {
-            if (!canBeNull)
-            {
-                Assert.NotNull(thing);
-            }
-
             _things[variable] = thing;
         }
 
         [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is null: {}")]
         public void ThingIsNull(string rootLabel, string var, bool isNull)
         {
-            if (isNull)
-            {
-                Assert.Null(Get(var));
-            }
-            else
-            {
-                Assert.NotNull(Get(var));
-            }
+            Assert.Equal(isNull, Get(var) == null);
         }
 
         [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is deleted: {}")]
@@ -92,6 +80,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Get(var1).SetHas(Tx, Get(var2).AsAttribute()).Resolve();
         }
 
+        [When(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) set has: \$([a-zA-Z0-9]+); throws exception")]
         [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) set has: \$([a-zA-Z0-9]+); throws exception")]
         public void ThingSetHasThrowsException(string rootLabel, string var1, string var2)
         {

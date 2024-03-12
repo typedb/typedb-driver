@@ -83,7 +83,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, relation);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -99,7 +99,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, relation);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {long}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
             var owner = Tx.Concepts
@@ -109,7 +109,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
 
-            Put(var1, owner, true); // canBeNull
+            Put(var1, owner);
         }
 
         IEnumerable<IThing> cache = null;
@@ -124,10 +124,10 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
 
-            Put(var1, owner, true); // canBeNull
+            Put(var1, owner);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
@@ -138,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
 
-            Put(var1, owner, true); // canBeNull
+            Put(var1, owner);
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances contain: \$([a-zA-Z0-9]+)")]

@@ -121,7 +121,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) set regex: {}")]
+        [Given(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) set regex: {}")]
         public void AttributeTypeAsValueTypeSetRegex(string typeLabel, string valueTypeData, string regex)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
@@ -131,7 +131,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             attributeType.SetRegex(Tx, regex).Resolve();
         }
 
-        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) unset regex")]
+        [Given(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) unset regex")]
         public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, string valueTypeData)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
