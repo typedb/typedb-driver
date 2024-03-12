@@ -128,6 +128,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [Given(@"transaction commits")]
+        [When(@"transaction commits")]
         [Then(@"transaction commits")]
         public void TransactionCommits()
         {
