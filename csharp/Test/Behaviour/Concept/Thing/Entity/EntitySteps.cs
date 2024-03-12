@@ -86,7 +86,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entity);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -103,7 +103,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entity);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {long}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, long keyValue)
         {
             var entityType = Tx.Concepts
@@ -111,7 +111,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
             Put(var, entityType);
         }
@@ -124,12 +124,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
             Put(var, entityType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void EntityTypeGetInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -138,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
             Put(var, entityType);
         }
