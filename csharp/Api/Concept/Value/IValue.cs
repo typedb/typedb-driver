@@ -228,6 +228,17 @@ namespace Vaticle.Typedb.Driver.Api
                 DATETIME,
             };
 
+            public override string ToString()
+            {
+                if (this == OBJECT) return "object";
+                if (this == BOOL) return "bool";
+                if (this == LONG) return "long";
+                if (this == DOUBLE) return "double";
+                if (this == STRING) return "string";
+                if (this == DATETIME) return "DateTime";
+                return "Unknown";
+            }
+
             public override bool Equals(object? obj)
             {
                 if (Object.ReferenceEquals(this, obj))

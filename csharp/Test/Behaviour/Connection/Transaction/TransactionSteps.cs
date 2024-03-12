@@ -132,7 +132,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"transaction commits")]
         public void TransactionCommits()
         {
-            SessionsToTransactions[Sessions[0]][0].Commit();
+            Tx.Commit();
         }
 
         [Then(@"transaction commits; throws exception")]

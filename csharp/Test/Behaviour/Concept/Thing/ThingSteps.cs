@@ -44,9 +44,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             return _things[variable];
         }
 
-        public static void Put(string variable, IThing thing)
+        public static void Put(string variable, IThing thing, bool canBeNull = false)
         {
-            Assert.NotNull(thing);
+            if (!canBeNull)
+            {
+                Assert.NotNull(thing);
+            }
+
             _things[variable] = thing;
         }
 
@@ -76,8 +80,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(type, Get(var).Type);
         }
 
-        [When(@"delete (entity:|attribute:|relation:) \$([a-zA-Z0-9]+)")]
-        public void DeleteThings(string var)
+        [When(@"delete (entity|attribute|relation): \$([a-zA-Z0-9]+)")]
+        public void DeleteThings(string rootLabel, string var)
         {
             Get(var).Delete(Tx).Resolve();
         }
@@ -125,7 +129,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.True(Get(var1).GetHas(Tx).Where(k => k.Equals(Get(var2))).Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -134,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(boolean\) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(boolean\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsBooleanContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -143,7 +147,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(long\) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(long\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsLongContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -152,7 +156,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(double\) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(double\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsDoubleContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -161,7 +165,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(string\) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(string\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsStringContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -170,7 +174,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(datetime\) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(datetime\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsDatetimeContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.True(Get(var1)
@@ -185,7 +189,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(Get(var1).GetHas(Tx).Where(k => k.Equals(Get(var2))).Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -194,7 +198,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(boolean\) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(boolean\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsBooleanDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -203,7 +207,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(long\) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(long\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsLongDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -212,7 +216,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(double\) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(double\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsDoubleDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -221,7 +225,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(string\) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(string\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsStringDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -230,7 +234,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes(\([a-zA-Z0-9-_]+\)) as\(datetime\) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get attributes\(([a-zA-Z0-9-_]+)\) as\(datetime\) do not contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetAttributesAsDatetimeDoNotContain(string rootLabel, string var1, string typeLabel, string var2)
         {
             Assert.False(Get(var1)
@@ -239,7 +243,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get relations(\([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+\)) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) get relations\(([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)\) contain: \$([a-zA-Z0-9]+)")]
         public void ThingGetRelationsContain(string rootLabel, string var1, string scopedLabelData, string var2)
         {
             Label scopedLabel = GetScopedLabel(scopedLabelData);

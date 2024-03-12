@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) create new instance")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance")]
         public void EntityTypeCreateNewInstance(string var, string typeLabel)
         {
             var entityType = Tx.Concepts
@@ -46,7 +46,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entityType);
         }
 
-        [When(@"entity(\([a-zA-Z0-9-_]+\)) create new instance; throws exception")]
+        [When(@"entity\(([a-zA-Z0-9-_]+)\) create new instance; throws exception")]
         public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -54,7 +54,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Create(Tx).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {int}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
             IAttribute key = Tx.Concepts
@@ -70,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entity);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {word}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {word}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             IAttribute key = Tx.Concepts
@@ -86,7 +86,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entity);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -103,7 +103,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entity);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {long}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {long}")]
         public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, long keyValue)
         {
             var entityType = Tx.Concepts
@@ -116,7 +116,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entityType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {word}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {word}")]
         public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             var entityType = Tx.Concepts
@@ -129,7 +129,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entityType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = entity(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
         public void EntityTypeGetInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -143,7 +143,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, entityType);
         }
 
-        [Then(@"entity(\([a-zA-Z0-9-_]+\)) get instances contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"entity\(([a-zA-Z0-9-_]+)\) get instances contain: \$([a-zA-Z0-9]+)")]
         public void EntityTypeGetInstancesContain(string typeLabel, string var)
         {
             Assert.True(Tx.Concepts
@@ -153,7 +153,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Any());
         }
 
-        [Then(@"entity(\([a-zA-Z0-9-_]+\)) get instances is empty")]
+        [Then(@"entity\(([a-zA-Z0-9-_]+)\) get instances is empty")]
         public void EntityTypeGetInstancesIsEmpty(string typeLabel)
         {
             var instances = Tx.Concepts

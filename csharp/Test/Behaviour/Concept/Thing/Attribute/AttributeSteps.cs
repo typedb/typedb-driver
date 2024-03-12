@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [When(@"attribute(\([a-zA-Z0-9-_]+\)) get instances contain: \$([a-zA-Z0-9]+)")]
+        [When(@"attribute\(([a-zA-Z0-9-_]+)\) get instances contain: \$([a-zA-Z0-9]+)")]
         public void AttributeTypeGetInstancesContain(string typeLabel, string var)
         {
             var instances = Tx.Concepts
@@ -66,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(valueType, Get(var).Type.AsAttributeType().ValueType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(boolean\) put: {}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: {}")]
         public void AttributeTypeAsBooleanPut(string var, string typeLabel, bool value)
         {
             var attributeType = Tx.Concepts
@@ -76,7 +76,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute(\([a-zA-Z0-9-_]+\)) as\(boolean\) put: {}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: {}; throws exception")]
         public void AttributeTypeAsBooleanPutThrowsException(string typeLabel, bool value)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -84,7 +84,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Put(Tx, value).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(long\) put: {int}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(long\) put: {int}")]
         public void AttributeTypeAsLongPut(string var, string typeLabel, long value)
         {
             var attributeType = Tx.Concepts
@@ -94,7 +94,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute(\([a-zA-Z0-9-_]+\)) as\(long\) put: {int}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(long\) put: {int}; throws exception")]
         public void AttributeTypeAsLongPutThrowsException(string typeLabel, long value)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -102,7 +102,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Put(Tx, value).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(double\) put: {double}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(double\) put: {double}")]
         public void AttributeTypeAsDoublePut(string var, string typeLabel, double value)
         {
             var attributeType = Tx.Concepts
@@ -112,7 +112,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute(\([a-zA-Z0-9-_]+\)) as\(double\) put: {double}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(double\) put: {double}; throws exception")]
         public void AttributeTypeAsDoublePutThrowsException(string typeLabel, double value)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -120,7 +120,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Put(Tx, value).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(string\) put: {word}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(string\) put: {word}")]
         public void AttributeTypeAsStringPut(string var, string typeLabel, string value)
         {
             var attributeType = Tx.Concepts
@@ -130,7 +130,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute(\([a-zA-Z0-9-_]+\)) as\(string\) put: {word}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(string\) put: {word}; throws exception")]
         public void AttributeTypeAsStringPutThrowsException(string typeLabel, string value)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -138,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Put(Tx, value).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(datetime\) put: {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) put: {datetime}")]
         public void AttributeTypeAsDatetimePut(string var, string typeLabel, DateTime value)
         {
             var attributeType = Tx.Concepts
@@ -148,7 +148,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute(\([a-zA-Z0-9-_]+\)) as\(datetime\) put: {datetime}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) put: {datetime}; throws exception")]
         public void AttributeTypeAsDatetimePutThrowsException(string typeLabel, DateTime value)
         {
             var exception = Assert.Throws<TypeDBDriverException>(() => Tx.Concepts.GetAttributeType(typeLabel).Resolve()
@@ -157,7 +157,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(boolean\) get: {}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) get: {}")]
         public void AttributeTypeAsBooleanGet(string var, string typeLabel, bool value)
         {
             var attributeType = Tx.Concepts
@@ -167,7 +167,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(long\) get: {int}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(long\) get: {int}")]
         public void AttributeTypeAsLongGet(string var, string typeLabel, long value)
         {
             var attributeType = Tx.Concepts
@@ -177,7 +177,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(double\) get: {double}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(double\) get: {double}")]
         public void AttributeTypeAsDoubleGet(string var, string typeLabel, double value)
         {
             var attributeType = Tx.Concepts
@@ -187,7 +187,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(string\) get: {word}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(string\) get: {word}")]
         public void AttributeTypeAsStringGet(string var, string typeLabel, string value)
         {
             var attributeType = Tx.Concepts
@@ -197,7 +197,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute(\([a-zA-Z0-9-_]+\)) as\(datetime\) get: {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) get: {datetime}")]
         public void AttributeTypeAsDatetimeGet(string var, string typeLabel, DateTime value)
         {
             var attributeType = Tx.Concepts

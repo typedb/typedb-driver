@@ -38,22 +38,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [Given(@"relation(\([a-zA-Z0-9-_]+\)) set relates role: ([a-zA-Z0-9-_]+)")]
+        [Given(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
-            Console.WriteLine(Tx.Concepts.GetRelationType(relationLabel).Resolve() == null);
             Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .SetRelates(Tx, roleLabel).Resolve();
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) set relates role: ([a-zA-Z0-9-_]+); throws exception")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeSetRelatesRoleTypeThrowsException(string relationLabel, string roleLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => RelationTypeSetRelatesRoleType(relationLabel, roleLabel));
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) unset related role: ([a-zA-Z0-9-_]+)")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeUnsetRelatedRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
@@ -61,13 +60,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .UnsetRelates(Tx, roleLabel).Resolve();
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) unset related role: ([a-zA-Z0-9-_]+); throws exception")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeUnsetRelatedRoleTypeThrowsException(string relationLabel, string roleLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => RelationTypeUnsetRelatedRoleType(relationLabel, roleLabel));
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+)")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+)")]
         public void RelationTypeSetRelatesRoleTypeAs(string relationLabel, string roleLabel, string superRole)
         {
             Tx.Concepts
@@ -75,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .SetRelates(Tx, roleLabel, superRole).Resolve();
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+); throws exception")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeSetRelatesRoleTypeAsThrowsException(
             string relationLabel, string roleLabel, string superRole)
         {
@@ -83,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 RelationTypeSetRelatesRoleTypeAs(relationLabel, roleLabel, superRole));
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) remove related role: ([a-zA-Z0-9-_]+)")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) remove related role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeRemoveRelatedRole(string relationLabel, string roleLabel)
         {
             Tx.Concepts
@@ -92,7 +91,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Delete(Tx).Resolve();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) is null: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is null: {}")]
         public void RelationTypeGetRoleTypeIsNull(string relationLabel, string roleLabel, bool isNull)
         {
             var roleType = Tx.Concepts
@@ -102,7 +101,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(isNull, roleType == null);
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get overridden role(\([a-zA-Z0-9-_]+\)) is null: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get overridden role\(([a-zA-Z0-9-_]+)\) is null: {}")]
         public void RelationTypeGetOverriddenRoleTypeIsNull(
             string relationLabel, string roleLabel, bool isNull)
         {
@@ -113,7 +112,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(isNull, overridenType == null);
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) set label: ([a-zA-Z0-9-_]+)")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) set label: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeGetRoleTypeSetLabel(string relationLabel, string roleLabel, string newLabel)
         {
             Tx.Concepts
@@ -122,7 +121,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .SetLabel(Tx, newLabel).Resolve();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get label: ([a-zA-Z0-9-_]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get label: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeGetRoleTypeGetLabel(string relationLabel, string roleLabel, string getLabel)
         {
             var relates = Tx.Concepts
@@ -132,7 +131,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(getLabel, relates.Label.Name);
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get overridden role(\([a-zA-Z0-9-_]+\)) get label: ([a-zA-Z0-9-_]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get overridden role\(([a-zA-Z0-9-_]+)\) get label: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeGetOverriddenRoleTypeGetLabel(
             string relationLabel, string roleLabel, string getLabel)
         {
@@ -143,7 +142,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(getLabel, relates.Label.Name);
         }
 
-        [When(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) is abstract: {}")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is abstract: {}")]
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
             var isRelatesAbstract = Tx.Concepts
@@ -163,7 +162,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .ToHashSet();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get related roles contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related roles contain:")]
         public void RelationTypeGetRelatedRoleTypesContain(string relationLabel, DataTable roleLabelsData)
         {
             List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
@@ -173,7 +172,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(roleLabels).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get related roles do not contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related roles do not contain:")]
         public void RelationTypeGetRelatedRoleTypesDoNotContain(string relationLabel, DataTable roleLabelsData)
         {
             List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
@@ -195,7 +194,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .ToHashSet();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get related explicit roles contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related explicit roles contain:")]
         public void RelationTypeGetRelatedExplicitRoleTypesContain(
             string relationLabel, DataTable roleLabelsData)
         {
@@ -206,7 +205,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(roleLabels).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get related explicit roles do not contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related explicit roles do not contain:")]
         public void RelationTypeGetRelatedExplicitRoleTypesDoNotContain(
             string relationLabel, DataTable roleLabelsData)
         {
@@ -220,7 +219,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get supertype: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get supertype: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
         public void RelationTypeGetRoleTypeGetSupertype(string relationLabel, string roleLabel, string superLabelData)
         {
             Label superLabel = GetScopedLabel(superLabelData);
@@ -246,7 +245,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .GetSupertypes(Tx).Select(obj => obj.Label).ToHashSet();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get supertypes contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get supertypes contain:")]
         public void RelationTypeGetRoleTypeGetSupertypesContain(
             string relationLabel, string roleLabel, DataTable superLabelsData)
         {
@@ -257,7 +256,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(superLabels).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get supertypes do not contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get supertypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSupertypesDoNotContain(
             string relationLabel, string roleLabel, DataTable superLabelsData)
         {
@@ -280,7 +279,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .ToHashSet();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get players contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get players contain:")]
         public void RelationTypeGetRoleTypeGetPlayersContain(
             string relationLabel, string roleLabel, DataTable playerLabelsData)
         {
@@ -291,7 +290,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(playerLabels).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get players do not contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get players do not contain:")]
         public void RelationTypeGetRoleTypeGetPlayersDoNotContain(
             string relationLabel, string roleLabel, DataTable playerLabelsData)
         {
@@ -315,7 +314,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .ToHashSet();
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get subtypes contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get subtypes contain:")]
         public void RelationTypeGetRoleTypeGetSubtypesContain(
             string relationLabel, string roleLabel, DataTable subLabelsData)
         {
@@ -326,7 +325,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(actuals.Except(subLabels).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get role(\([a-zA-Z0-9-_]+\)) get subtypes do not contain:")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get subtypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSubtypesDoNotContain(
             string relationLabel, string roleLabel, DataTable subLabelsData)
         {
