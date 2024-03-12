@@ -94,6 +94,11 @@ namespace Vaticle.Typedb.Driver.Concept
                     RoleType role = new RoleType(Pinvoke.typedb_driver.role_player_get_role_type(rolePlayer));
                     IThing player = Thing.ThingOf(Pinvoke.typedb_driver.role_player_get_player(rolePlayer));
 
+                    if (!rolePlayers.ContainsKey(role))
+                    {
+                        rolePlayers[role] = new List<IThing>();
+                    }
+
                     rolePlayers[role].Add(player);
                 }
             }

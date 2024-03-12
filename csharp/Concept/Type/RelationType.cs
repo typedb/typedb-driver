@@ -96,7 +96,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel)
         {
-            return SetRelates(transaction, roleLabel, "");
+            return SetRelates(transaction, roleLabel, (string)null);
         }
 
         public VoidPromise SetRelates(
@@ -128,7 +128,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
             return Promise<IType>.Map<Pinvoke.Concept, IType>(
                 Pinvoke.typedb_driver.relation_type_get_supertype(
-                    NativeTransaction(transaction), NativeObject).Resolve, 
+                    NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new RelationType(obj));
         }
 
