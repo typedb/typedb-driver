@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) create new instance")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance")]
         public void RelationTypeCreateNewInstance(string var, string typeLabel)
         {
             Put(
@@ -45,14 +45,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 Tx.Concepts.GetRelationType(typeLabel).Resolve().Create(Tx).Resolve());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) create new instance; throws exception")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) create new instance; throws exception")]
         public void RelationTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() =>
                 Tx.Concepts.GetRelationType(typeLabel).Resolve().Create(Tx).Resolve());
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {int}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void RelationTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
             IAttribute key = Tx.Concepts
@@ -67,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, relation);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {word}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {word}")]
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, string keyValue)
         {
@@ -83,7 +83,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, relation);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) create new instance with key(\([a-zA-Z0-9-_]+\)): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
@@ -99,7 +99,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, relation);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {long}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {long}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
             var owner = Tx.Concepts
@@ -107,12 +107,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
-            Put(var1, owner);
+            Put(var1, owner, true); // canBeNull
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {word}")]
+        IEnumerable<IThing> cache = null;
+
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {word}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
             var owner = Tx.Concepts
@@ -120,12 +122,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
-            Put(var1, owner);
+            Put(var1, owner, true); // canBeNull
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = relation(\([a-zA-Z0-9-_]+\)) get instance with key(\([a-zA-Z0-9-_]+\)): {datetime}")]
+        [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {datetime}")]
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
@@ -134,12 +136,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
-                .First();
+                .FirstOrDefault();
 
-            Put(var1, owner);
+            Put(var1, owner, true); // canBeNull
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get instances contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances contain: \$([a-zA-Z0-9]+)")]
         public void RelationTypeGetInstancesContain(string typeLabel, string var)
         {
             var instances = Tx.Concepts
@@ -149,7 +151,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get instances do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances do not contain: \$([a-zA-Z0-9]+)")]
         public void RelationTypeGetInstancesDoNotContain(string typeLabel, string var)
         {
             var instances = Tx.Concepts
@@ -159,7 +161,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(instances.Where(i => i.Equals(Get(var))).Any());
         }
 
-        [Then(@"relation(\([a-zA-Z0-9-_]+\)) get instances is empty")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances is empty")]
         public void RelationTypeGetInstancesIsEmpty(string typeLabel)
         {
             var instances = Tx.Concepts
@@ -169,7 +171,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(0, instances.Count());
         }
 
-        [When(@"relation \$([a-zA-Z0-9]+) add player for role(\([a-zA-Z0-9-_]+\)): \$([a-zA-Z0-9]+)")]
+        [When(@"relation \$([a-zA-Z0-9]+) add player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+)")]
         public void RelationAddPlayerForRole(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
@@ -182,7 +184,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .AddPlayer(Tx, relates, Get(var2)).Resolve();
         }
 
-        [When(@"relation \$([a-zA-Z0-9]+) add player for role(\([a-zA-Z0-9-_]+\)): \$([a-zA-Z0-9]+); throws exception")]
+        [When(@"relation \$([a-zA-Z0-9]+) add player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+); throws exception")]
         public void RelationAddPlayerForRoleThrowsException(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
@@ -195,7 +197,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .AddPlayer(Tx, relates, Get(var2)).Resolve());
         }
 
-        [When(@"relation \$([a-zA-Z0-9]+) remove player for role(\([a-zA-Z0-9-_]+\)): \$([a-zA-Z0-9]+)")]
+        [When(@"relation \$([a-zA-Z0-9]+) remove player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+)")]
         public void RelationRemovePlayerForRole(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
@@ -212,7 +214,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationGetPlayersContain(string var, DataTable playersData)
         {
             Dictionary<string, string> players = Util.ParseDataTableToDictionary(playersData);
-
             IRelation relation = Get(var).AsRelation();
 
             foreach (var (rt, var2) in players)
@@ -227,18 +228,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation \$([a-zA-Z0-9]+) get players do not contain:")]
         public void RelationGetPlayersDoNotContain(string var, DataTable playersData)
         {
-            Dictionary<string, string> players = Util.ParseDataTableToDictionary(playersData);
+            Dictionary<string, string> expectedPlayers = Util.ParseDataTableToDictionary(playersData);
 
             IRelation relation = Get(var).AsRelation();
 
-            foreach (var (rt, var2) in players)
+            foreach (var (rt, var2) in expectedPlayers)
             {
-                var relationPlayers = relation
-                    .GetPlayers(Tx)[relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve()];
+                var players = relation.GetPlayers(Tx);
+                var relates = relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve();
 
-                if (relationPlayers != null)
+                if (players.ContainsKey(relates))
                 {
-                    Assert.False(relationPlayers.Contains(Get(var2.Substring(1))));
+                    Assert.Fail(); // TODO: Just want to see when it triggers! If it does not, it is sus!
+                    var relatesPlayers = players[relates];
+                    Assert.False(relatesPlayers.Contains(Get(var2.Substring(1))));
                 }
             }
         }
@@ -258,7 +261,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.False(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
-        [Then(@"relation \$([a-zA-Z0-9]+) get players for role(\([a-zA-Z0-9-_]+\)) contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"relation \$([a-zA-Z0-9]+) get players for role\(([a-zA-Z0-9-_]+)\) contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersForRoleContain(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
@@ -273,7 +276,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
         }
 
-        [Then(@"relation \$([a-zA-Z0-9]+) get players for role(\([a-zA-Z0-9-_]+\)) do not contain: \$([a-zA-Z0-9]+)")]
+        [Then(@"relation \$([a-zA-Z0-9]+) get players for role\(([a-zA-Z0-9-_]+)\) do not contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersForRoleDoNotContain(string var1, string roleTypeLabel, string var2)
         {
             var relates = Get(var1)
