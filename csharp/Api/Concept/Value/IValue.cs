@@ -51,7 +51,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * value.Type
+         * value.Type;
          * </pre>
          */
         ValueType Type { get; }

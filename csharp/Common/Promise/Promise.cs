@@ -29,7 +29,7 @@ namespace Vaticle.Typedb.Driver.Common
     /**
      * A <code>Promise</code> represents an asynchronous network operation.
      * <p>The request it represents is performed immediately. The response is only retrieved
-     * once the <code>Promise</code> is <code>Resolve</code>d.</p>
+     * once the <code>Promise</code> is <code>Resolve</code>d.</p>.
      */
     public class Promise<T>
     {

@@ -26,9 +26,8 @@ using Vaticle.Typedb.Driver.Common;
 namespace Vaticle.Typedb.Driver.Common
 {
     /**
-     * A <code>VoidPromise</code> represents an asynchronous network operation without a return type.
-     * <p>The request it represents is performed immediately. The response is only retrieved
-     * once the <code>Promise</code> is <code>Resolve</code>d, but it is always null.</p> // TODO Change this description!
+     * A <code>VoidPromise</code> represents a <code>Promise</code> without an operation's result.
+     * @see Promise
      */
     public class VoidPromise
     {

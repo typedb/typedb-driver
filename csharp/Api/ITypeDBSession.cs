@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.IsOpen()
+         * session.IsOpen();
          * </pre>
          */
         bool IsOpen();
@@ -47,7 +47,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.Type
+         * session.Type;
          * </pre>
          */
         SessionType Type { get; }
@@ -57,7 +57,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.DatabaseName
+         * session.DatabaseName;
          * </pre>
          */
         string DatabaseName { get; }
@@ -67,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.Options
+         * session.Options;
          * </pre>
          */
         TypeDBOptions Options { get; }
@@ -97,7 +97,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.OnClose(function)
+         * session.OnClose(function);
          * </pre>
          *
          * @param function The callback function.
@@ -111,7 +111,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.OnReopen(function)
+         * session.OnReopen(function);
          * </pre>
          *
          * @param function The callback function.

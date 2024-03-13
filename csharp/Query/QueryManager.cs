@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Query
 {
     public class QueryManager : IQueryManager
     {
-        private Pinvoke.Transaction _nativeTransaction { get; }
+        private readonly Pinvoke.Transaction _nativeTransaction;
 
         public QueryManager(Pinvoke.Transaction nativeTransaction) 
         {

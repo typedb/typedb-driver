@@ -32,7 +32,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.IsOpen()
+         * driver.IsOpen();
          * </pre>
          */
         bool IsOpen();
@@ -42,7 +42,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases
+         * driver.Databases;
          * </pre>
          */
         IDatabaseManager Databases { get; }
@@ -53,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.User
+         * driver.User;
          * </pre>
          */
         IUser User { get; }
@@ -63,7 +63,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Users
+         * driver.Users;
          * </pre>
          */
         IUserManager Users { get; }
@@ -95,7 +95,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Close()
+         * driver.Close();
          * </pre>
          */
         void Close();

@@ -240,7 +240,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 if (players.ContainsKey(relates))
                 {
-                    Assert.Fail(); // TODO: Just want to see when it triggers! If it does not, it is sus!
                     var relatesPlayers = players[relates];
                     Assert.False(relatesPlayers.Contains(Get(var2.Substring(1))));
                 }

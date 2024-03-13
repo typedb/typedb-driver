@@ -30,7 +30,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Name
+         * database.Name;
          * </pre>
          */
         public string Name { get; }
@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Schema
+         * database.Schema;
          * </pre>
          */
         public string Schema { get; }
@@ -50,7 +50,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.TypeSchema
+         * database.TypeSchema;
          * </pre>
          */
         public string TypeSchema { get; }
@@ -60,7 +60,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.RuleSchema
+         * database.RuleSchema;
          * </pre>
          */
         public string RuleSchema { get; }
@@ -71,7 +71,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Replicas
+         * database.Replicas;
          * </pre>
          */
         public ISet<IReplica> Replicas { get; }
@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.PrimaryReplica
+         * database.PrimaryReplica;
          * </pre>
          */
         public IReplica? PrimaryReplica { get; }
@@ -93,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.PreferredReplica
+         * database.PreferredReplica;
          * </pre>
          */
         public IReplica? PreferredReplica { get; }
@@ -103,7 +103,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Delete()
+         * database.Delete();
          * </pre>
          */
         public void Delete();

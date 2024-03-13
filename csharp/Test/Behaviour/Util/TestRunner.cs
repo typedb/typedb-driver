@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using Xunit.Runners;
 
-// TODO: Remove all or reduce WriteLines to Console if we don't want to see them.
 namespace Vaticle.Typedb.Driver.Test.TestRunner
 {
     class Program
@@ -22,7 +21,7 @@ namespace Vaticle.Typedb.Driver.Test.TestRunner
         static int Main(string[] args)
         {
             var testAssembly = Assembly.GetExecutingAssembly().Location;
-            Console.WriteLine(testAssembly);
+
             var typeName = args.Length == 1 ? args[0] : null;
 
             using (var runner = AssemblyRunner.WithoutAppDomain(testAssembly))

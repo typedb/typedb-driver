@@ -35,7 +35,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Type
+         * transaction.Type;
          * </pre>
          */
         TransactionType Type { get; }
@@ -45,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Options
+         * transaction.Options;
          * </pre>
          */
         TypeDBOptions Options { get; }
@@ -55,7 +55,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts
+         * transaction.Concepts;
          * </pre>
          */
         IConceptManager Concepts { get; }
@@ -65,7 +65,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Logic
+         * transaction.Logic;
          * </pre>
          */
         ILogicManager Logic { get; }
@@ -75,7 +75,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Query
+         * transaction.Query;
          * </pre>
          */
         IQueryManager Query { get; }
@@ -85,7 +85,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.IsOpen()
+         * transaction.IsOpen();
          * </pre>
          */
         bool IsOpen();
@@ -108,7 +108,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Commit()
+         * transaction.Commit();
          * </pre>
          */
         void Commit();
@@ -128,7 +128,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Close()
+         * transaction.Close();
          * </pre>
          */
         void Close();
