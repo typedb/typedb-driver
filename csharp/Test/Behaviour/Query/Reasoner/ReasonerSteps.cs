@@ -44,7 +44,9 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private static string DEFAULT_DATABASE = "test";
+        private DocString _previousQuery;
+
+        public static string DEFAULT_DATABASE = "test";
 
         [Given(@"reasoning schema")]
         public void ReasoningSchema(DocString defineQueryStatements)
@@ -58,6 +60,8 @@ namespace TypeDB.Driver.Test.Behaviour
             ForEachSessionOpenTransactionsOfType("write");
 
             TypeqlDefine(defineQueryStatements);
+            _previousQuery = defineQueryStatements;
+
             TransactionCommits();
             ConnectionCloseAllSessions();
         }
@@ -69,6 +73,8 @@ namespace TypeDB.Driver.Test.Behaviour
             ForEachSessionOpenTransactionsOfType("write");
 
             TypeqlInsert(dataQueryStatements);
+            _previousQuery = dataQueryStatements;
+
             TransactionCommits();
             ConnectionCloseAllSessions();
         }
@@ -80,6 +86,8 @@ namespace TypeDB.Driver.Test.Behaviour
             ForEachSessionOpenTransactionsOfType("read");
 
             GetAnswersOfTypeqlGet(getQueryStatements);
+            _previousQuery = getQueryStatements;
+
             ConnectionCloseAllSessions();
         }
 
@@ -105,29 +113,40 @@ namespace TypeDB.Driver.Test.Behaviour
         [And(@"verify answer set is equivalent for query")]
         public void VerifyAnswerSetIsEquivalentForQuery(DocString queryStatements)
         {
-            var prevAnswer = _answers;
+            List<IConceptMap> oldAnswers = new List<IConceptMap>();
+            foreach (var a in _answers)
+            {
+                oldAnswers.Add(a);
+            }
+
             ReasoningQuery(queryStatements);
-            int totalRows = _answers.Count;
-            // TODO: Collect to two sets and compare???
-            int matchedRows = 0;
+
+            int answersCount = _answers.Count;
+            Assert.Equal(oldAnswers.Count, answersCount);
+
+            int matchedCount = 0;
+
             foreach (var currentAnswer in _answers)
             {
-                var matchedElement =
-                    prevAnswer.Where(val => val == currentAnswer).FirstOrDefault();
+                var matchedAnswer =
+                    oldAnswers.Where(oldAnswer => oldAnswer.Equals(currentAnswer)).FirstOrDefault();
 
-                if (matchedElement != null)
+                if (matchedAnswer != null)
                 {
-                    matchedRows += 1;
+                    matchedCount += 1;
                 }
             }
 
-            Assert.Equal(totalRows, matchedRows);
+            Assert.Equal(answersCount, matchedCount);
         }
 
         [Then(@"verify answers are consistent across {int} executions")]
         public void VerifyAnswersAreConsistentAcrossExecutions(int executionNum)
         {
-            // TODO: We can't execute previous query again because don't remember the query // Why not storing it?
+            for (int i = 0; i < executionNum; i++)
+            {
+                VerifyAnswerSetIsEquivalentForQuery(_previousQuery);
+            }
         }
 
         [Then(@"verify answer size is: {int}")]
