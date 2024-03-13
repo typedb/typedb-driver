@@ -100,7 +100,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(subLabels).Any());
+            Assert.False(subLabels.Except(actuals).Any());
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) get subtypes do not contain:")]
@@ -174,7 +174,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(ownerLabels).Any());
+            Assert.False(ownerLabels.Except(actuals).Any());
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) get owners, with annotations: (\s*([\w\-_]+,\s*)*[\w\-_]*\s*); do not contain:")]
@@ -211,7 +211,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(ownerLabels).Any());
+            Assert.False(ownerLabels.Except(actuals).Any());
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) get owners explicit, with annotations: (\s*([\w\-_]+,\s*)*[\w\-_]*\s*); do not contain:")]
@@ -245,7 +245,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(ownerLabels).Any());
+            Assert.False(ownerLabels.Except(actuals).Any());
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) get owners do not contain:")]
@@ -276,7 +276,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(ownerLabels).Any());
+            Assert.False(ownerLabels.Except(actuals).Any());
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) get owners explicit do not contain:")]

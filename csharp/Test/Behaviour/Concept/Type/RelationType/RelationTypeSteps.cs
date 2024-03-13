@@ -38,6 +38,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
+        [Given(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+)")]
         [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
@@ -92,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Delete(Tx).Resolve();
         }
 
-        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is null: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is null: (true|false)")]
         public void RelationTypeGetRoleTypeIsNull(string relationLabel, string roleLabel, bool isNull)
         {
             var roleType = Tx.Concepts
@@ -102,7 +103,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(isNull, roleType == null);
         }
 
-        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get overridden role\(([a-zA-Z0-9-_]+)\) is null: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get overridden role\(([a-zA-Z0-9-_]+)\) is null: (true|false)")]
         public void RelationTypeGetOverriddenRoleTypeIsNull(
             string relationLabel, string roleLabel, bool isNull)
         {
@@ -143,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(getLabel, relates.Label.Name);
         }
 
-        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is abstract: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is abstract: (true|false)")]
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
             var isRelatesAbstract = Tx.Concepts
@@ -166,17 +167,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related roles contain:")]
         public void RelationTypeGetRelatedRoleTypesContain(string relationLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
 
-            Assert.False(actuals.Except(roleLabels).Any());
+            Assert.False(roleLabels.Except(actuals).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related roles do not contain:")]
         public void RelationTypeGetRelatedRoleTypesDoNotContain(string relationLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
             
@@ -199,18 +200,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRelatedExplicitRoleTypesContain(
             string relationLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
 
-            Assert.False(actuals.Except(roleLabels).Any());
+            Assert.False(roleLabels.Except(actuals).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get related explicit roles do not contain:")]
         public void RelationTypeGetRelatedExplicitRoleTypesDoNotContain(
             string relationLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
 
@@ -250,18 +251,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeGetSupertypesContain(
             string relationLabel, string roleLabel, DataTable superLabelsData)
         {
-            List<Label> superLabels = Util.ParseDataTableToTypeList<Label>(superLabelsData, val => new Label(val));
+            List<Label> superLabels = Util.ParseDataTableToTypeList<Label>(superLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
 
-            Assert.False(actuals.Except(superLabels).Any());
+            Assert.False(superLabels.Except(actuals).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get supertypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSupertypesDoNotContain(
             string relationLabel, string roleLabel, DataTable superLabelsData)
         {
-            List<Label> superLabels = Util.ParseDataTableToTypeList<Label>(superLabelsData, val => new Label(val));
+            List<Label> superLabels = Util.ParseDataTableToTypeList<Label>(superLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
             
@@ -288,7 +289,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             HashSet<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
 
-            Assert.False(actuals.Except(playerLabels).Any());
+            Assert.False(playerLabels.Except(actuals).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get players do not contain:")]
@@ -319,18 +320,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeGetSubtypesContain(
             string relationLabel, string roleLabel, DataTable subLabelsData)
         {
-            List<Label> subLabels = Util.ParseDataTableToTypeList<Label>(subLabelsData, val => new Label(val));
+            List<Label> subLabels = Util.ParseDataTableToTypeList<Label>(subLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
 
-            Assert.False(actuals.Except(subLabels).Any());
+            Assert.False(subLabels.Except(actuals).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) get subtypes do not contain:")]
         public void RelationTypeGetRoleTypeGetSubtypesDoNotContain(
             string relationLabel, string roleLabel, DataTable subLabelsData)
         {
-            List<Label> subLabels = Util.ParseDataTableToTypeList<Label>(subLabelsData, val => new Label(val));
+            List<Label> subLabels = Util.ParseDataTableToTypeList<Label>(subLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
 

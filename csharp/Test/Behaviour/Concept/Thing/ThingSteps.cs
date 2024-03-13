@@ -49,13 +49,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             _things[variable] = thing;
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is null: {}")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is null: (true|false)")]
         public void ThingIsNull(string rootLabel, string var, bool isNull)
         {
             Assert.Equal(isNull, Get(var) == null);
         }
 
-        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is deleted: {}")]
+        [Then(@"(entity|attribute|relation) \$([a-zA-Z0-9]+) is deleted: (true|false)")]
         public void ThingIsDeleted(string rootLabel, string var, bool isDeleted)
         {
             Assert.Equal(isDeleted, Get(var).IsDeleted(Tx).Resolve());
