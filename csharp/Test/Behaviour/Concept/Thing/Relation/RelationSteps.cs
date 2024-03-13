@@ -38,6 +38,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     public partial class BehaviourSteps
     {
         [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance")]
+        [Then(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance")]
         public void RelationTypeCreateNewInstance(string var, string typeLabel)
         {
             Put(

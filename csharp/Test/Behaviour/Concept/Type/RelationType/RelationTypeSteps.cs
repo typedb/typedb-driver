@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [Given(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+)")]
+        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
@@ -46,13 +46,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .SetRelates(Tx, roleLabel).Resolve();
         }
 
-        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+); throws exception")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeSetRelatesRoleTypeThrowsException(string relationLabel, string roleLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => RelationTypeSetRelatesRoleType(relationLabel, roleLabel));
         }
 
         [When(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+)")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+)")]
         public void RelationTypeUnsetRelatedRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
@@ -60,7 +61,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .UnsetRelates(Tx, roleLabel).Resolve();
         }
 
-        [When(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+); throws exception")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) unset related role: ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeUnsetRelatedRoleTypeThrowsException(string relationLabel, string roleLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => RelationTypeUnsetRelatedRoleType(relationLabel, roleLabel));
@@ -74,7 +75,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .SetRelates(Tx, roleLabel, superRole).Resolve();
         }
 
-        [When(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+); throws exception")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) set relates role: ([a-zA-Z0-9-_]+) as ([a-zA-Z0-9-_]+); throws exception")]
         public void RelationTypeSetRelatesRoleTypeAsThrowsException(
             string relationLabel, string roleLabel, string superRole)
         {
@@ -142,7 +143,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(getLabel, relates.Label.Name);
         }
 
-        [When(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is abstract: {}")]
+        [Then(@"relation\(([a-zA-Z0-9-_]+)\) get role\(([a-zA-Z0-9-_]+)\) is abstract: {}")]
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
             var isRelatesAbstract = Tx.Concepts
