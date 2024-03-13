@@ -162,7 +162,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 }
             }
 
-            // TODO: Could there be just == ? The description is more like >=!
             Assert.True(expectedDatabasesSize >= Driver.Databases.All.Count);
         }
 

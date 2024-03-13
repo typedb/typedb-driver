@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * explanation.Rule
+         * explanation.Rule;
          * </pre>
          */
         IRule Rule { get; }

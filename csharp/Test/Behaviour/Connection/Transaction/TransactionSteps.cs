@@ -197,7 +197,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 IEnumerator<string> typesEnumerator = types.GetEnumerator();
                 IEnumerator<ITypeDBTransaction?> transactionsEnumerator = transactions.GetEnumerator();
 
-
                 while (typesEnumerator.MoveNext())
                 {
                     Assert.True(transactionsEnumerator.MoveNext());
@@ -310,18 +309,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             Task.WaitAll(assertions.ToArray());
-        }
-
-        [Then(@"[for each ]*session in parallel, transactions in parallel are null: {}")]
-        public void ForEachSessionInParallelTransactionsInParallelAreNull(bool expectedNull)
-        {
-            throw new System.Exception("Parallel Parallel Null test is not ready yet!"); // TODO
-        }
-
-        [Then(@"[for each ]*session in parallel, transactions in parallel are open: {}")]
-        public void ForEachSessionInParallelTransactionsInParallelAreOpen(bool expectedOpen)
-        {
-            throw new System.Exception("Parallel Parallel Open test is not ready yet!"); // TODO
         }
 
         [Given(@"set transaction option {} to: {word}")]

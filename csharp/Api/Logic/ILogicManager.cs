@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Logic.Rules
+         * transaction.Logic.Rules;
          * </pre>
          */
         IEnumerable<IRule> Rules { get; }

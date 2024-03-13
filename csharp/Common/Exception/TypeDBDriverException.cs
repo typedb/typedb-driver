@@ -35,7 +35,7 @@ namespace Vaticle.Typedb.Driver.Common
         public TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
             : base(error.ToString(errorParams))
         {
-            _errorMessage = error;
+            ErrorMessage = error;
         }
 
         /**
@@ -44,7 +44,7 @@ namespace Vaticle.Typedb.Driver.Common
         public TypeDBDriverException(string message)
             : base(message)
         {
-            _errorMessage = null;
+            ErrorMessage = null;
         }
 
         /**
@@ -53,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Common
         public TypeDBDriverException(System.Exception error)
             : base(error.Message)
         {
-            _errorMessage = null;
+            ErrorMessage = null;
         }
 
         /**
@@ -62,7 +62,7 @@ namespace Vaticle.Typedb.Driver.Common
         public TypeDBDriverException(Pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
-            _errorMessage = null;
+            ErrorMessage = null;
         }
 
         public string Name
@@ -70,11 +70,6 @@ namespace Vaticle.Typedb.Driver.Common
             get { return this.GetType().Name; }
         }
 
-        public ErrorMessage? ErrorMessage
-        {
-            get { return _errorMessage; }
-        }
-
-        private readonly ErrorMessage? _errorMessage; // TODO: Looks like it is used in Java only for a test...
+        public ErrorMessage? ErrorMessage { get; private set; }
     }
 }

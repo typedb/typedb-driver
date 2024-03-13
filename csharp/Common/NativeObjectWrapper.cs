@@ -30,7 +30,7 @@ namespace Vaticle.Typedb.Driver.Common
 {
     public abstract class NativeObjectWrapper<T>
     {
-        public T NativeObject { get; }
+        public readonly T NativeObject;
 
         static NativeObjectWrapper()
         {

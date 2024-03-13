@@ -81,7 +81,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             if (Driver != null)
             {
-                throw new Exception("Expected the Driver to be closed"); // TODO (needed for debug RN)
                 Driver.Close();
                 Driver = null;
             }

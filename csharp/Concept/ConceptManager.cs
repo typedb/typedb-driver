@@ -35,7 +35,7 @@ namespace Vaticle.Typedb.Driver.Concept
 {
     public class ConceptManager : IConceptManager
     {
-        public Pinvoke.Transaction NativeTransaction { get; }
+        public readonly Pinvoke.Transaction NativeTransaction;
 
         public ConceptManager(Pinvoke.Transaction nativeTransaction) 
         {

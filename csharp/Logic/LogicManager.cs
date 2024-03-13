@@ -33,7 +33,7 @@ namespace Vaticle.Typedb.Driver.Logic
 {
     public class LogicManager : ILogicManager
     {
-        public Pinvoke.Transaction NativeTransaction { get; }
+        public readonly Pinvoke.Transaction NativeTransaction;
 
         public LogicManager(Pinvoke.Transaction nativeTransaction)
         {

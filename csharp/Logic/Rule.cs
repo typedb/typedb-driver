@@ -35,8 +35,8 @@ namespace Vaticle.Typedb.Driver.Logic
     {
         private int _hash = 0;
 
-        private string _when { get; }
-        private string _then { get; }
+        private readonly string _when;
+        private readonly string _then;
 
         public Rule(Pinvoke.Rule nativeRule)
             : base(nativeRule)
@@ -107,14 +107,14 @@ namespace Vaticle.Typedb.Driver.Logic
 
             Rule that = (Rule)obj;
 
-            return this.Label.Equals(that.Label);
+            return Label.Equals(that.Label);
         }
 
         public override int GetHashCode()
         {
             if (_hash == 0)
             {
-            _hash = Label.GetHashCode();
+                _hash = Label.GetHashCode();
             }
 
             return _hash;
