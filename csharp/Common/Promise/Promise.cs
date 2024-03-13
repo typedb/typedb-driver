@@ -21,10 +21,10 @@
 
 using System;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     /**
      * A <code>Promise</code> represents an asynchronous network operation.

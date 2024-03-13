@@ -21,9 +21,9 @@
 
 using System;
 
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Common.Validation
+namespace TypeDB.Driver.Common.Validation
 {
     public static class Validator
     {

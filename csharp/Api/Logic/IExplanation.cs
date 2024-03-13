@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
+using TypeDB.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     /**
      * An explanation of which rule was used for inferring the explained concept, the condition of the rule,

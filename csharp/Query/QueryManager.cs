@@ -23,17 +23,17 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Logic;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
+using TypeDB.Driver.Logic;
+using TypeDB.Driver.Common.Validation;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
-using QueryError = Vaticle.Typedb.Driver.Common.Error.Query;
+using DriverError = TypeDB.Driver.Common.Error.Driver;
+using QueryError = TypeDB.Driver.Common.Error.Query;
 
-namespace Vaticle.Typedb.Driver.Query
+namespace TypeDB.Driver.Query
 {
     public class QueryManager : IQueryManager
     {

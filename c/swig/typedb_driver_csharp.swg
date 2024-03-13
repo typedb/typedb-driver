@@ -21,10 +21,6 @@
 
 %csconst(1);
 
-%include "enums.swg"
-%include "arrays_csharp.i"
-#include "stdio.h"
-
 %typemap(cscode) SWIGTYPE %{
     public $csclassname Released()
     {
@@ -454,6 +450,7 @@
                 swigCMemOwn = false;
                 Resolver(); // An equivalent for the standard "delete_xxxPromise".
             }
+
             swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
         }
     }
@@ -502,6 +499,7 @@
                 swigCMemOwn = false;
                 Resolver(); // An equivalent for the standard "delete_VoidPromise".
             }
+
             swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
         }
     }
@@ -588,7 +586,7 @@
     return $imcall;
 }
 
-%typemap(in)      char ** "$1 = $input;"
+%typemap(in) char ** "$1 = $input;"
 %typemap(freearg) char ** ""
 
 %typemap(cscode) Type %{
@@ -637,7 +635,7 @@
     return $imcall;
 }
 
-%typemap(in)      char ** "$1 = $input;"
+%typemap(in) char ** "$1 = $input;"
 %typemap(freearg) char ** ""
 
 /* ValueType* needs special handling */
@@ -649,16 +647,12 @@
     }
 }
 
-/* This cleans up the memory we malloc'd before the function call */
 %typemap(freearg) enum ValueType * { free($1); }
 
-/* These 3 typemaps tell SWIG what intermediate (pinvoke) and C# types to use */
 %typemap(ctype) enum ValueType * "int"
 %typemap(imtype) enum ValueType * "int"
 %typemap(cstype) enum ValueType * "ValueType?"
 
-/* These 2 typemaps handle the conversion of the imtype to cstype typemap type
-      and vice versa */
 %typemap(csin) enum ValueType * "$csinput == null ? -1 : (int)$csinput"
 %typemap(csout) enum ValueType *
 {

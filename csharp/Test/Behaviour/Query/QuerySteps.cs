@@ -32,15 +32,15 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using static Vaticle.Typedb.Driver.Api.IThingType;
-using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using static TypeDB.Driver.Api.IThingType;
+using static TypeDB.Driver.Api.IThingType.Annotation;
 
-using QueryError = Vaticle.Typedb.Driver.Common.Error.Query; // TODO: Change to TypeDB.Driver.Common..... everywhere.
+using QueryError = TypeDB.Driver.Common.Error.Query;
 
-namespace Vaticle.Typedb.Driver.Test.Behaviour
+namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
@@ -180,7 +180,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"get answers of typeql get")]
         [When(@"get answers of typeql get")]
         [Then(@"get answers of typeql get")]
-        public void TypeqlGet(DocString getQueryStatements)
+        public void GetAnswersOfTypeqlGet(DocString getQueryStatements)
         {
             ClearAnswers();
             _answers = Tx.Query.Get(getQueryStatements.Content).ToList();
@@ -190,7 +190,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql get; throws exception")]
         public void TypeqlGetThrowsException(DocString getQueryStatements)
         {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlGet(getQueryStatements));
+            Assert.Throws<TypeDBDriverException>(() => GetAnswersOfTypeqlGet(getQueryStatements));
         }
 
         [When(@"typeql get; throws exception containing {string}")]
@@ -198,7 +198,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void TypeqlGetThrowsExceptionContaining(string expectedMessage, DocString getQueryStatements)
         {
             var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlGet(getQueryStatements));
+                () => GetAnswersOfTypeqlGet(getQueryStatements));
 
             Assert.Contains(expectedMessage, exception.Message);
         }
@@ -668,19 +668,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 }
 
                 IAttribute attribute = concept.AsAttribute();
-                IAttributeType attributeType = (IAttributeType)attribute.Type; // TODO: Is it ok?
+                IAttributeType attributeType = attribute.Type.AsAttributeType();
 
                 if (attribute.Value.IsDateTime())
                 {
-                    DateTime dateTime;
-//                    try // TODO?
-//                    {
-                        dateTime = DateTime.Parse(_value);
-//                    }
-//                    catch (DateTimeParseException e)
-//                    {
-////                        dateTime = DateTime.Parse(value).atStartOfDay();
-//                    }
+                    DateTime dateTime = DateTime.Parse(_value);
 
                     return _type.Equals(attributeType.Label)
                         && dateTime.Equals(attribute.Value.AsDateTime());
@@ -752,15 +744,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     return _value.Equals(concept.AsValue().AsString());
                 if (type == IValue.ValueType.DATETIME)
                 {
-                    DateTime dateTime;
-//                        try // TODO?
-//                        {
-                            dateTime = DateTime.Parse(_value);
-//                        }
-//                        catch (DateTimeParseException e)
-//                        {
-//                            dateTime = LocalDate.Parse(_value).AtStartOfDay();
-//                        }
+                    DateTime dateTime = DateTime.Parse(_value);
 
                     return dateTime.Equals(concept.AsValue().AsDateTime());
                 }

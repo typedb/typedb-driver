@@ -21,7 +21,7 @@
 
 using System;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     /**
      * A <code>Label</code> holds the uniquely identifying name of a type.
@@ -31,6 +31,31 @@ namespace Vaticle.Typedb.Driver.Common
      */
     public struct Label
     {
+        /**
+         * Returns the scope of this Label.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * label.Scope;
+         * </pre>
+         */
+        public readonly string? Scope;
+
+        /**
+         * Returns the name of this Label.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * label.Name;
+         * </pre>
+         */
+        public readonly string Name;
+
+        /**
+         * @hidden
+         */
+        private readonly int _hash;
+
         /**
          * Creates a Label from a specified scope and name.
          *
@@ -63,26 +88,6 @@ namespace Vaticle.Typedb.Driver.Common
             : this(null, name)
         {
         }
-
-        /**
-         * Returns the scope of this Label.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * label.Scope;
-         * </pre>
-         */
-        public readonly string? Scope;
-
-        /**
-         * Returns the name of this Label.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * label.Name;
-         * </pre>
-         */
-        public readonly string Name;
 
         /**
          * Returns the string representation of the scoped name.
@@ -144,7 +149,5 @@ namespace Vaticle.Typedb.Driver.Common
         {
             return _hash;
         }
-
-        private int _hash { get; }
     }
 }

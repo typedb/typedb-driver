@@ -21,15 +21,15 @@
 
 using System;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
-using Vaticle.Typedb.Driver.Concept;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
+using TypeDB.Driver.Concept;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class Value : Concept, IValue
     {

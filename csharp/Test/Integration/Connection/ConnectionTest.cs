@@ -23,11 +23,11 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Test.Integration
+namespace TypeDB.Driver.Test.Integration
 {
     public static class Utils
     {
@@ -93,8 +93,6 @@ namespace Vaticle.Typedb.Driver.Test.Integration
     [TestFixture]
     public class ConnectionTestFixture
     {
-        // TODO: Add cleanup in case of errors.
-
         [Test]
         public void OpenAndCloseConnection()
         {
@@ -140,7 +138,6 @@ namespace Vaticle.Typedb.Driver.Test.Integration
 
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
 
-            // TODO: This has to start failing after we implement exceptions!
             var exception = Assert.Throws<TypeDBDriverException>(
                 () => Utils.CreateDatabaseNoChecks(dbManager, expectedDbName));
             Assert.That(exception.Message, Does.Contain("already exists"));

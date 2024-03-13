@@ -21,7 +21,7 @@
 
 using System;
 
-namespace Vaticle.Typedb.Driver.Test.Behaviour
+namespace TypeDB.Driver.Test.Behaviour
 {
     public class BehaviourTestException : Exception
     {
