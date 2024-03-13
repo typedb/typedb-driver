@@ -121,16 +121,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        public static void SaveTransaction(ITypeDBTransaction? transaction, ITypeDBSession? session)
-        {
-            if (!SessionsToTransactions.ContainsKey(session))
-            {
-                SessionsToTransactions[session] = new List<ITypeDBTransaction?>();
-            }
-
-            SessionsToTransactions[session].Add(transaction);
-        }
-
         private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
         {
             TypeDBStarts();
