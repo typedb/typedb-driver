@@ -47,6 +47,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"entity\(([a-zA-Z0-9-_]+)\) create new instance; throws exception")]
+        [Then(@"entity\(([a-zA-Z0-9-_]+)\) create new instance; throws exception")]
         public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
