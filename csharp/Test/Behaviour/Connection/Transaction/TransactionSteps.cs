@@ -50,33 +50,41 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        public void ForEachSessionOpenTransactionsOfType(List<string> types)
+        {
+            List<TransactionType> transactionTypes = types
+                .Select(type => StringToTransactionType(type))
+                .ToList();
+
+            foreach (ITypeDBSession session in Sessions)
+            {
+                List<ITypeDBTransaction> transactions = new List<ITypeDBTransaction>();
+
+                foreach (TransactionType transactionType in transactionTypes)
+                {
+                    ITypeDBTransaction transaction =
+                        session.Transaction(transactionType, TransactionOptions);
+
+                    transactions.Add(transaction);
+                }
+
+                SessionsToTransactions[session] = transactions;
+            }
+        }
+
         [Given(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         [When(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         [Then(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         public void ForEachSessionOpenTransactionsOfType(string type)
         {
-            TransactionType transactionType = StringToTransactionType(type);
-            
-            foreach (ITypeDBSession session in Sessions)
-            {
-                ClearTransactions(session);
-                ITypeDBTransaction transaction =
-                    session.Transaction(transactionType, TransactionOptions);
-
-                SaveTransaction(transaction, session);
-            }
+            ForEachSessionOpenTransactionsOfType(new List<string>(){type});
         }
 
         [When(@"[for each ]*session[,]? open transaction[s]? of type:")]
         public void ForEachSessionOpenTransactionsOfType(DataTable types)
         {
-            foreach (var row in types.Rows)
-            {
-                foreach (var type in row.Cells)
-                {
-                    ForEachSessionOpenTransactionsOfType(type.Value);
-                }
-            }
+            ForEachSessionOpenTransactionsOfType(
+                Util.ParseDataTableToTypeList<string>(types, val => val.ToString()));
         }
 
         [When(@"[for each ]*session[,]? open transaction[s]? of type; throws exception: {word}")]
