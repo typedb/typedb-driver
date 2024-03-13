@@ -23,14 +23,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
+using TypeDB.Driver.Common.Validation;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
 
-namespace Vaticle.Typedb.Driver.Logic
+namespace TypeDB.Driver.Logic
 {
     public class Explanation : NativeObjectWrapper<Pinvoke.Explanation>, IExplanation
     {

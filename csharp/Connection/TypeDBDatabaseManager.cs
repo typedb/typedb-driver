@@ -23,14 +23,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using DriverError = TypeDB.Driver.Common.Error.Driver;
 
-namespace Vaticle.Typedb.Driver.Connection
+namespace TypeDB.Driver.Connection
 {
     public class TypeDBDatabaseManager : NativeObjectWrapper<Pinvoke.DatabaseManager>, IDatabaseManager
     {

@@ -21,11 +21,11 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Connection;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Connection;
 
-namespace Vaticle.Typedb.Driver
+namespace TypeDB.Driver
 {
     public static class TypeDB
     {

@@ -22,10 +22,10 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface IType : IConcept
     {

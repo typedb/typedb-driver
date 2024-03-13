@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading;
 using Xunit.Runners;
 
-namespace Vaticle.Typedb.Driver.Test.TestRunner
+namespace TypeDB.Driver.Test.TestRunner
 {
     class Program
     {

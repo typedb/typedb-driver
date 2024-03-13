@@ -22,10 +22,10 @@
 using System;
 using System.Diagnostics;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     public class TypeDBDriverException : System.Exception
     {

@@ -23,11 +23,11 @@ using DataTable = Gherkin.Ast.DataTable;
 using System;
 using Xunit.Gherkin.Quick;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Test.Behaviour;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Test.Behaviour;
 
-namespace Vaticle.Typedb.Driver.Test.Behaviour
+namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps : ConnectionStepsBase
     {

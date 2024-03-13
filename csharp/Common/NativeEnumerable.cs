@@ -22,12 +22,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     public class NativeEnumerable<T> : IEnumerable<T>
     {
@@ -65,7 +65,7 @@ namespace Vaticle.Typedb.Driver.Common
 
         object IEnumerator.Current
         {
-            get { return Current; }
+            get { return Current!; }
         }
 
         public T Current

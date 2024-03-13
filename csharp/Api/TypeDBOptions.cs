@@ -19,13 +19,13 @@
  * under the License.
  */
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using DriverError = TypeDB.Driver.Common.Error.Driver;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     /**
      * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override

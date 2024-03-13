@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * A <code>Label</code> holds the uniquely identifying name of a type.
  * <p>It consists of an optional <code>scope</code>, and a <code>name</code>, represented <code>scope:name</code>.
- * The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+ * The scope is used only used to distinguish between role-types of the same name declared in different relation types.</p>
  */
 public class Label {
     private final String scope;
@@ -99,7 +99,7 @@ public class Label {
      *
      * <h3>Examples</h3>
      * <pre>
-     * label.scoped_name();
+     * label.scopedName();
      * </pre>
      */
     public String scopedName() {
@@ -112,7 +112,7 @@ public class Label {
      *
      * <h3>Examples</h3>
      * <pre>
-     * label.scoped_name();
+     * label.toString();
      * </pre>
      */
     @Override

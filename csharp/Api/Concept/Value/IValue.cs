@@ -21,12 +21,12 @@
 
 using System;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface IValue : IConcept
     {
@@ -184,9 +184,11 @@ namespace Vaticle.Typedb.Driver.Api
             public static readonly ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);
             public static readonly ValueType DATETIME = new ValueType(typeof(System.DateTime), true, true, Pinvoke.ValueType.DateTime);
 
-            public System.Type ValueClass { get; }
-            public bool IsWritable { get; }
-            public bool IsKeyable { get; }
+            public readonly System.Type ValueClass;
+            public readonly bool IsWritable;
+            public readonly bool IsKeyable;
+
+            private int _hash = 0;
 
             public ValueType(Pinvoke.ValueType nativeObject)
                 : base(nativeObject)
@@ -253,6 +255,21 @@ namespace Vaticle.Typedb.Driver.Api
 
                 ValueType typeObj = (ValueType)obj;
                 return this.ValueClass == typeObj.ValueClass;
+            }
+
+            public override int GetHashCode()
+            {
+                if (_hash == 0)
+                {
+                    _hash = ComputeHash();
+                }
+
+                return _hash;
+            }
+
+            private int ComputeHash()
+            {
+                return (ValueClass, IsWritable, IsKeyable).GetHashCode();
             }
         }
     }

@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
+using TypeDB.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     /**
      * <p>Attribute is an instance of the attribute type and has a value.

@@ -22,17 +22,17 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
-using Vaticle.Typedb.Driver.Logic;
-using Vaticle.Typedb.Driver.Query;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Concept;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
+using TypeDB.Driver.Logic;
+using TypeDB.Driver.Query;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using DriverError = TypeDB.Driver.Common.Error.Driver;
 
-namespace Vaticle.Typedb.Driver.Connection
+namespace TypeDB.Driver.Connection
 {
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {

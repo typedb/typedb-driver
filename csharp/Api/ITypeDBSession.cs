@@ -22,12 +22,12 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface ITypeDBSession : IDisposable
     {

@@ -23,13 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-using static Vaticle.Typedb.Driver.Concept.Concept;
+using static TypeDB.Driver.Concept.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class ConceptMapGroup : NativeObjectWrapper<Pinvoke.ConceptMapGroup>, IConceptMapGroup
     {

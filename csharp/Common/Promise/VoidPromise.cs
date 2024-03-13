@@ -21,9 +21,9 @@
 
 using System;
 
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     /**
      * A <code>VoidPromise</code> represents a <code>Promise</code> without an operation's result.

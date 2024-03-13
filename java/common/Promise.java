@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 /**
  * A <code>Promise</code> represents an asynchronous network operation.
  * <p>The request it represents is performed immediately. The response is only retrieved
- * once the <code>Promise</code> is <code>resolve</code>d.
+ * once the <code>Promise</code> is <code>resolve</code>d.</p>
  */
 public class Promise<T> {
     private final Supplier<T> inner;

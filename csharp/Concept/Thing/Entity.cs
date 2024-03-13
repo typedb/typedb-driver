@@ -19,10 +19,10 @@
  * under the License.
  */
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Concept;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class Entity : Thing, IEntity
     {

@@ -21,15 +21,15 @@
 
 using System;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
-using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
+using DriverError = TypeDB.Driver.Common.Error.Driver;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
 
-namespace Vaticle.Typedb.Driver.Logic
+namespace TypeDB.Driver.Logic
 {
     public class Rule : NativeObjectWrapper<Pinvoke.Rule>, IRule
     {
