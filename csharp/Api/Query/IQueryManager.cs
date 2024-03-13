@@ -44,7 +44,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Query.Get(query, options)
+         * transaction.Query.Get(query, options);
          * </pre>
          *
          * @param query The TypeQL Get (Get) query to be executed

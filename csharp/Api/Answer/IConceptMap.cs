@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Api
          * conceptMap.Map;
          * </pre>
          */
-        Dictionary<string, IConcept> Map { get; }
+        Dictionary<string, IConcept> Map { get; } // TODO: Could be confused with a Map function, what if we call it "Values"?
     
         /**
          * Retrieves a concept for a given variable name.
@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Api
          * conceptMap.AllExplainables;
          * </pre>
          */
-        IExplainables AllExplainables { get; } // TODO: Think about renaming
+        IExplainables AllExplainables { get; }
     
         /**
          * Contains explainable objects.

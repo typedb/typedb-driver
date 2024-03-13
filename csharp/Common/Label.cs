@@ -72,7 +72,7 @@ namespace Vaticle.Typedb.Driver.Common
          * label.Scope;
          * </pre>
          */
-        public string? Scope { get; }
+        public readonly string? Scope;
 
         /**
          * Returns the name of this Label.
@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Common
          * label.Name;
          * </pre>
          */
-        public string Name { get; }
+        public readonly string Name;
 
         /**
          * Returns the string representation of the scoped name.

@@ -84,7 +84,6 @@ namespace Vaticle.Typedb.Driver.Connection
             get { return _databaseManager; }
         }
 
-
         public IUser User
         {
             get { return _userManager.CurrentUser; }
