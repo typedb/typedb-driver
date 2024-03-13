@@ -67,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(valueType, Get(var).Type.AsAttributeType().ValueType);
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: {}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: (true|false)")]
         public void AttributeTypeAsBooleanPut(string var, string typeLabel, bool value)
         {
             var attributeType = Tx.Concepts
@@ -77,7 +77,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: {}; throws exception")]
+        [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) put: (true|false); throws exception")]
         public void AttributeTypeAsBooleanPutThrowsException(string typeLabel, bool value)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
@@ -154,11 +154,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var exception = Assert.Throws<TypeDBDriverException>(() => Tx.Concepts.GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value));
-
-            Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
         }
 
-        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) get: {}")]
+        [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) get: (true|false)")]
         public void AttributeTypeAsBooleanGet(string var, string typeLabel, bool value)
         {
             var attributeType = Tx.Concepts
@@ -208,7 +206,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Put(var, attributeType);
         }
 
-        [Then(@"attribute \$([a-zA-Z0-9]+) has boolean value: {}")]
+        [Then(@"attribute \$([a-zA-Z0-9]+) has boolean value: (true|false)")]
         public void AttributeHasBooleanValue(string var, bool value)
         {
             Assert.Equal(value, Get(var).AsAttribute().Value.AsBool());

@@ -63,8 +63,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             throw new BehaviourTestException($"Label {rootLabel} is not accepted");
         }
 
-        [Given(@"put (entity|attribute|relation|thing) type: {}")]
-        [When(@"put (entity|attribute|relation|thing) type: {}")]
+        [Given(@"put (entity|relation) type: {}")]
+        [When(@"put (entity|relation) type: {}")]
         public void PutThingType(string rootLabel, string typeLabel)
         {
             if (rootLabel == ENTITY)
@@ -85,7 +85,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public Label GetScopedLabel(string scopedLabels)
         {
             string[] labels = scopedLabels.Split(":");
-            return new Label(labels[0], labels[1]);
+            if (labels.Count() == 1)
+            {
+                return new Label(labels[0]);
+            }
+
             return new Label(labels[0], labels[1]);
         }
 
@@ -124,7 +128,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => DeleteThingType(rootLabel, typeLabel));
         }
 
-        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) is null: {}")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) is null: (true|false)")]
         public void ThingTypeIsNull(string rootLabel, string typeLabel, bool isNull)
         {
             Assert.Equal(isNull, GetThingType(rootLabel, typeLabel) == null);
@@ -142,8 +146,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(getLabel, GetThingType(rootLabel, typeLabel).Label.Name);
         }
 
-        [When(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: {}")]
-        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: {}")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: (true|false); throws exception")]
+        public void ThingTypeSetAbstractThrowsException(
+            string rootLabel, string typeLabel, bool isAbstract)
+        {
+            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetAbstract(rootLabel, typeLabel, isAbstract));
+        }
+
+        [When(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: (true|false)")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: (true|false)")]
         public void ThingTypeSetAbstract(string rootLabel, string typeLabel, bool isAbstract)
         {
             IThingType thingType = GetThingType(rootLabel, typeLabel);
@@ -158,14 +169,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set abstract: {}; throws exception")]
-        public void ThingTypeSetAbstractThrowsException(
-            string rootLabel, string typeLabel, bool isAbstract)
-        {
-            Assert.Throws<TypeDBDriverException>(() => ThingTypeSetAbstract(rootLabel, typeLabel, isAbstract));
-        }
-
-        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) is abstract: {}")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) is abstract: (true|false)")]
         public void ThingTypeIsAbstract(string rootLabel, string typeLabel, bool isAbstract)
         {
             Assert.Equal(isAbstract, GetThingType(rootLabel, typeLabel).IsAbstract());
@@ -239,7 +243,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(superLabels).Any());
+            Assert.False(superLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get supertypes do not contain:")]
@@ -269,7 +273,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(subLabels).Any());
+            Assert.False(subLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get subtypes do not contain:")]
@@ -353,7 +357,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(attributeLabels).Any());
+            Assert.False(attributeLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns attribute types, with annotations: (\s*([\w\-_]+,\s*)*[\w\-_]*\s*); do not contain:")]
@@ -388,7 +392,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(attributeLabels).Any());
+            Assert.False(attributeLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns explicit attribute types, with annotations: (\s*([\w\-_]+,\s*)*[\w\-_]*\s*); do not contain:")]
@@ -462,7 +466,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 ThingTypeUnsetOwnsAttributeType(rootLabel, typeLabel, attributeLabel));
         }
 
-        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns overridden attribute\(([a-zA-Z0-9-_]+)\) is null: {}")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns overridden attribute\(([a-zA-Z0-9-_]+)\) is null: (true|false)")]
         public void ThingTypeGetOwnsOverriddenAttributeIsNull(
             string rootLabel, string typeLabel, string attributeLabel, bool isNull)
         {
@@ -497,7 +501,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(attributeLabels).Any());
+            Assert.False(attributeLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns attribute types do not contain:")]
@@ -528,7 +532,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(attributeLabels).Any());
+            Assert.False(attributeLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get owns explicit attribute types do not contain:")]
@@ -548,6 +552,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        [Given(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set plays role: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
         [When(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set plays role: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
         public void ThingTypeSetPlaysRole(string rootLabel, string typeLabel, string roleLabelData)
         {
@@ -617,21 +622,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetPlayingRolesContain(
             string rootLabel, string typeLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(roleLabels).Any());
+            Assert.False(roleLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get playing roles do not contain:")]
         public void ThingTypeGetPlayingRolesDoNotContain(
             string rootLabel, string typeLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(Tx)
@@ -648,21 +653,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ThingTypeGetPlayingRolesExplicitContain(
             string rootLabel, string typeLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
-            Assert.False(actuals.Except(roleLabels).Any());
+            Assert.False(roleLabels.Except(actuals).Any());
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get playing roles explicit do not contain:")]
         public void ThingTypeGetPlayingRolesExplicitDoNotContain(
             string rootLabel, string typeLabel, DataTable roleLabelsData)
         {
-            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => new Label(val));
+            List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
                 .GetPlays(Tx, EXPLICIT)
