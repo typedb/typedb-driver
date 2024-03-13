@@ -21,9 +21,9 @@
 
 using System;
 
-using Vaticle.Typedb.Driver.Api;
+using TypeDB.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface ITypeDBDriver : IDisposable
     {

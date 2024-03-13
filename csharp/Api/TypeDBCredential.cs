@@ -22,10 +22,10 @@
 using System.Diagnostics;
 using System.IO;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     /**
      * User credentials and TLS encryption settings for connecting to TypeDB Cloud.

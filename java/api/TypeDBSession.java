@@ -55,7 +55,7 @@ public interface TypeDBSession extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    String database_name();
+    String databaseName();
 
     /**
      * Gets the options for the session

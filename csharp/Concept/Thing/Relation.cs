@@ -22,11 +22,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class Relation : Thing, IRelation
     {

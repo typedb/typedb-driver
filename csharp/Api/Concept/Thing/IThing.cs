@@ -21,11 +21,11 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using static Vaticle.Typedb.Driver.Api.IThingType;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using static TypeDB.Driver.Api.IThingType;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface IThing : IConcept
     {

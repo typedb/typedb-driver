@@ -22,15 +22,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
-using static Vaticle.Typedb.Driver.Api.IThingType;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
+using static TypeDB.Driver.Api.IThingType;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public abstract class Thing : Concept, IThing
     {

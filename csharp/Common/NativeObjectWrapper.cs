@@ -21,12 +21,12 @@
 
 using System;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Common;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace TypeDB.Driver.Common
 {
     public abstract class NativeObjectWrapper<T>
     {

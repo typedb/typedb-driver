@@ -27,7 +27,7 @@ load(":rules.bzl", "swig_native_csharp_library")
 swig_native_csharp_library(
     name = "typedb_driver_Pinvoke",
     lib = "//c:typedb_driver_clib_headers",
-    namespace = "Vaticle.Typedb.Driver.Pinvoke",
+    namespace = "TypeDB.Driver.Pinvoke",
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_csharp.swg"],
     enable_cxx = True,

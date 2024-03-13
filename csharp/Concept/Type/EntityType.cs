@@ -22,13 +22,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
-using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
+using static TypeDB.Driver.Api.IConcept.Transitivity;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class EntityType : ThingType, IEntityType
     {

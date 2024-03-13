@@ -21,11 +21,11 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.User
+namespace TypeDB.Driver.User
 {
     public class User : NativeObjectWrapper<Pinvoke.User>, IUser 
     {

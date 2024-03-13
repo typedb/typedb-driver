@@ -21,11 +21,11 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     /**
      * Entity types represent the classification of independent objects in the data model of the business domain.

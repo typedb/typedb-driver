@@ -27,7 +27,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-namespace Vaticle.Typedb.Driver.Test.Behaviour
+namespace TypeDB.Driver.Test.Behaviour
 {
     public class Util
     {

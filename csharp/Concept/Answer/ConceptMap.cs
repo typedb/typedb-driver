@@ -23,22 +23,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Common.Validation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
+using TypeDB.Driver.Common.Validation;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
-using QueryError = Vaticle.Typedb.Driver.Common.Error.Query;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
+using QueryError = TypeDB.Driver.Common.Error.Query;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public class ConceptMap : NativeObjectWrapper<Pinvoke.ConceptMap>, IConceptMap 
     {        
-        private int _hash = 0;
         private Dictionary<string, IConcept>? _cachedMap = null;
-        
+        private int _hash = 0;
+
         public ConceptMap(Pinvoke.ConceptMap nativeConceptMap)
             : base(nativeConceptMap)
         {
@@ -257,8 +257,8 @@ namespace Vaticle.Typedb.Driver.Concept
             private int ComputeHash()
             {
                 return (Relations.ToList(),
-                        Attributes.ToList(),
-                        Ownerships.ToList()).GetHashCode();
+                    Attributes.ToList(),
+                    Ownerships.ToList()).GetHashCode();
             }
         }
     

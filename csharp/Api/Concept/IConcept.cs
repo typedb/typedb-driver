@@ -19,13 +19,13 @@
  * under the License.
  */
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface IConcept
     {

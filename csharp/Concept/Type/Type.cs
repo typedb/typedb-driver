@@ -21,11 +21,11 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept
+namespace TypeDB.Driver.Concept
 {
     public abstract class Type : Concept, IType
     {

@@ -71,7 +71,7 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
     }
 
     @Override
-    public String database_name() {
+    public String databaseName() {
         return session_get_database_name(nativeObject);
     }
 

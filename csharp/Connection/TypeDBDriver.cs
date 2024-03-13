@@ -22,13 +22,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Connection;
-using Vaticle.Typedb.Driver.User;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Connection;
+using TypeDB.Driver.User;
 
-namespace Vaticle.Typedb.Driver.Connection
+namespace TypeDB.Driver.Connection
 {
     public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
     {

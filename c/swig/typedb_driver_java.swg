@@ -78,8 +78,6 @@
         jthrowable throwable = (jthrowable)jenv->NewObject(exceptionClass, ctor, jerror, true);
 
         jenv->Throw(throwable);
-
-        return $null;
     }
 }
 
@@ -393,6 +391,15 @@
         }
     }
 %}
+%typemap(javadestruct, methodname="delete", methodmodifiers="public synchronized") Type ## Promise %{{
+    if (swigCPtr != 0) {
+        if (swigCMemOwn) {
+            swigCMemOwn = false;
+            get();
+        }
+        swigCPtr = 0;
+    }
+}%}
 %enddef
 
 %promise(Concept, concept)

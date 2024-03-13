@@ -22,11 +22,11 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface IThingType : IType
     {
@@ -336,6 +336,11 @@ namespace Vaticle.Typedb.Driver.Api
          */
         public class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
         {
+            /**
+             * @hidden
+             */
+            private readonly int _hash;
+
             private Annotation(Pinvoke.Annotation annotation)
                 : base(annotation)
             {
@@ -347,7 +352,7 @@ namespace Vaticle.Typedb.Driver.Api
              *
              * <h3>Examples</h3>
              * <pre>
-             * using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
+             * using static TypeDB.Driver.Api.IThingType.Annotation;
              * NewKey();
              * </pre>
              */
@@ -435,12 +440,13 @@ namespace Vaticle.Typedb.Driver.Api
                 return Pinvoke.typedb_driver.annotation_equals(this.NativeObject, that.NativeObject);
             }
 
+            /**
+             * @hidden
+             */
             public override int GetHashCode()
             {
                 return _hash;
             }
-
-            private int _hash { get; }
         }
     }
 }

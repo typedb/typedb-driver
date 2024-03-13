@@ -28,12 +28,12 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using static TypeDB.Driver.Api.IThingType.Annotation;
 
-namespace Vaticle.Typedb.Driver.Test.Behaviour
+namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {

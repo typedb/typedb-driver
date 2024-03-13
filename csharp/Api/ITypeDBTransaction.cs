@@ -22,11 +22,11 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Api
+namespace TypeDB.Driver.Api
 {
     public interface ITypeDBTransaction : IDisposable
     {

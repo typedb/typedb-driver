@@ -24,13 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Common;
-using static Vaticle.Typedb.Driver.Api.IThingType;
-using static Vaticle.Typedb.Driver.Api.IThingType.Annotation;
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using static TypeDB.Driver.Api.IThingType;
+using static TypeDB.Driver.Api.IThingType.Annotation;
 
-namespace Vaticle.Typedb.Driver.Test.Integration
+namespace TypeDB.Driver.Test.Integration
 {
     public static class Utils
     {
@@ -96,8 +96,6 @@ namespace Vaticle.Typedb.Driver.Test.Integration
     [TestFixture]
     public class MemoryTestFixture
     {
-        // TODO: Add cleanup in case of errors.
-
         [Test]
         public void SendArraysToNativeSide()
         {
