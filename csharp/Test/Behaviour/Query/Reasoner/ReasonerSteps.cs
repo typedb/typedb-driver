@@ -44,14 +44,14 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private DocString _previousQuery;
+        private DocString? _previousQuery;
 
         public static string DEFAULT_DATABASE = "test";
 
         [Given(@"reasoning schema")]
         public void ReasoningSchema(DocString defineQueryStatements)
         {
-            if (!Driver.Databases.Contains(DEFAULT_DATABASE))
+            if (!Driver!.Databases.Contains(DEFAULT_DATABASE))
             {
                 ConnectionCreateDatabase(DEFAULT_DATABASE);
             }
@@ -94,19 +94,19 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"verifier is initialised")]
         public void VerifierIsInitialised()
         {
-            // Covered only in Core.
+            // no-op: verification runs on the backend only.
         }
 
         [Then(@"verify answers are sound")]
         public void VerifyAnswersAreSound()
         {
-            // Covered only in Core.
+            // no-op: verification runs on the backend only.
         }
 
         [Then(@"verify answers are complete")]
         public void VerifyAnswersAreComplete()
         {
-            // Covered only in Core.
+            // no-op: verification runs on the backend only.
         }
 
         [Then(@"verify answer set is equivalent for query")]
@@ -114,7 +114,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void VerifyAnswerSetIsEquivalentForQuery(DocString queryStatements)
         {
             List<IConceptMap> oldAnswers = new List<IConceptMap>();
-            foreach (var a in _answers)
+            foreach (var a in _answers!)
             {
                 oldAnswers.Add(a);
             }
@@ -145,7 +145,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             for (int i = 0; i < executionNum; i++)
             {
-                VerifyAnswerSetIsEquivalentForQuery(_previousQuery);
+                VerifyAnswerSetIsEquivalentForQuery(_previousQuery!);
             }
         }
 

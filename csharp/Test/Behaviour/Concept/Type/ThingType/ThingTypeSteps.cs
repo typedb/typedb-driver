@@ -72,11 +72,11 @@ namespace TypeDB.Driver.Test.Behaviour
             switch (rootLabel)
             {
                 case RootLabel.ENTITY:
-                    return Tx.Concepts.GetEntityType(typeLabel).Resolve();
+                    return Tx.Concepts.GetEntityType(typeLabel).Resolve()!;
                 case RootLabel.ATTRIBUTE:
-                    return Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+                    return Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
                 case RootLabel.RELATION:
-                    return Tx.Concepts.GetRelationType(typeLabel).Resolve();
+                    return Tx.Concepts.GetRelationType(typeLabel).Resolve()!;
                 default:
                     throw new BehaviourTestException($"Label {rootLabel} is not accepted");
             }
@@ -201,25 +201,25 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 case RootLabel.ENTITY:
                 {
-                    IEntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve();
+                    IEntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve()!;
                     Tx.Concepts
-                        .GetEntityType(typeLabel).Resolve()
+                        .GetEntityType(typeLabel).Resolve()!
                         .SetSupertype(Tx, entitySuperType).Resolve();
                     break;
                 }
                 case RootLabel.ATTRIBUTE:
                 {
-                    IAttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve();
+                    IAttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve()!;
                     Tx.Concepts
-                        .GetAttributeType(typeLabel).Resolve()
+                        .GetAttributeType(typeLabel).Resolve()!
                         .SetSupertype(Tx, attributeSuperType).Resolve();
                     break;
                 }
                 case RootLabel.RELATION:
                 {
-                    IRelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve();
+                    IRelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve()!;
                     Tx.Concepts
-                        .GetRelationType(typeLabel).Resolve()
+                        .GetRelationType(typeLabel).Resolve()!
                         .SetSupertype(Tx, relationSuperType).Resolve();
                     break;
                 }
@@ -241,7 +241,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IThingType supertype = GetThingType(rootLabel, superLabel);
             Assert.Equal(
                 supertype,
-                GetThingType(rootLabel, typeLabel).GetSupertype(Tx).Resolve());
+                GetThingType(rootLabel, typeLabel).GetSupertype(Tx).Resolve()!);
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) get supertypes contain:")]
@@ -314,7 +314,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
         
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve()!;
             GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, annotations).Resolve();
         }
 
@@ -329,8 +329,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             List<Annotation> annotations = GetAnnotations(Util.ParseEnumerationToList(annotationsData));
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve();
-            IAttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve()!;
+            IAttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve()!;
 
             GetThingType(rootLabel, typeLabel)
                 .SetOwns(Tx, attributeType, overriddenType, annotations).Resolve();
@@ -433,7 +433,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void ThingTypeSetOwnsAttributeType(
             string rootLabel, string typeLabel, string attributeLabel)
         {
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve()!;
             GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType).Resolve();
         }
 
@@ -449,8 +449,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void ThingTypeSetOwnsAttributeTypeAs(
             string rootLabel, string typeLabel, string attributeLabel, string overriddenLabel)
         {
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
-            IAttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve()!;
+            IAttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve()!;
 
             GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, overriddenType).Resolve();
         }
@@ -467,7 +467,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void ThingTypeUnsetOwnsAttributeType(
             string rootLabel, string typeLabel, string attributeLabel)
         {
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve()!;
             GetThingType(rootLabel, typeLabel).UnsetOwns(Tx, attributeType).Resolve();
         }
 
@@ -483,10 +483,10 @@ namespace TypeDB.Driver.Test.Behaviour
         public void ThingTypeGetOwnsOverriddenAttributeIsNull(
             string rootLabel, string typeLabel, string attributeLabel, bool isNull)
         {
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve()!;
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .GetOwnsOverridden(Tx, attributeType).Resolve();
+                .GetOwnsOverridden(Tx, attributeType).Resolve()!;
 
             Assert.Equal(isNull, ownsOverridden == null);
         }
@@ -495,10 +495,10 @@ namespace TypeDB.Driver.Test.Behaviour
         public void ThingTypeGetOwnsOverriddenAttributeGetLabel(
             string rootLabel, string typeLabel, string attributeLabel, string getLabel)
         {
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(attributeLabel).Resolve()!;
 
             var ownsOverridden = GetThingType(rootLabel, typeLabel)
-                .GetOwnsOverridden(Tx, attributeType).Resolve();
+                .GetOwnsOverridden(Tx, attributeType).Resolve()!;
 
             Assert.Equal(getLabel, ownsOverridden.Label.Name);
         }
@@ -572,8 +572,8 @@ namespace TypeDB.Driver.Test.Behaviour
             Label roleLabel = GetScopedLabel(roleLabelData);
 
             IRoleType roleType = Tx.Concepts
-                .GetRelationType(roleLabel.Scope).Resolve()
-                .GetRelates(Tx, roleLabel.Name).Resolve();
+                .GetRelationType(roleLabel.Scope!).Resolve()!
+                .GetRelates(Tx, roleLabel.Name).Resolve()!;
 
             GetThingType(rootLabel, typeLabel).SetPlays(Tx, roleType).Resolve();
         }
@@ -592,12 +592,12 @@ namespace TypeDB.Driver.Test.Behaviour
             Label overriddenLabel = GetScopedLabel(overriddenLabelData);
 
             IRoleType roleType = Tx.Concepts
-                .GetRelationType(roleLabel.Scope).Resolve()
-                .GetRelates(Tx, roleLabel.Name).Resolve();
+                .GetRelationType(roleLabel.Scope!).Resolve()!
+                .GetRelates(Tx, roleLabel.Name).Resolve()!;
 
             IRoleType overriddenType = Tx.Concepts
-                .GetRelationType(overriddenLabel.Scope).Resolve()
-                .GetRelates(Tx, overriddenLabel.Name).Resolve();
+                .GetRelationType(overriddenLabel.Scope!).Resolve()!
+                .GetRelates(Tx, overriddenLabel.Name).Resolve()!;
 
             GetThingType(rootLabel, typeLabel)
                 .SetPlays(Tx, roleType, overriddenType).Resolve();
@@ -618,8 +618,8 @@ namespace TypeDB.Driver.Test.Behaviour
             Label roleLabel = GetScopedLabel(roleLabelData);
 
             IRoleType roleType = Tx.Concepts
-                .GetRelationType(roleLabel.Scope).Resolve()
-                .GetRelates(Tx, roleLabel.Name).Resolve();
+                .GetRelationType(roleLabel.Scope!).Resolve()!
+                .GetRelates(Tx, roleLabel.Name).Resolve()!;
 
             GetThingType(rootLabel, typeLabel).UnsetPlays(Tx, roleType).Resolve();
         }

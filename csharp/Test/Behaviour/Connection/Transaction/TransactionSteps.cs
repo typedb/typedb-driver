@@ -199,11 +199,11 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             foreach (ITypeDBSession session in Sessions)
             {
-                List<ITypeDBTransaction?> transactions = SessionsToTransactions[session];
+                List<ITypeDBTransaction> transactions = SessionsToTransactions[session];
                 Assert.Equal(types.Count, transactions.Count);
 
                 IEnumerator<string> typesEnumerator = types.GetEnumerator();
-                IEnumerator<ITypeDBTransaction?> transactionsEnumerator = transactions.GetEnumerator();
+                IEnumerator<ITypeDBTransaction> transactionsEnumerator = transactions.GetEnumerator();
 
                 while (typesEnumerator.MoveNext())
                 {
@@ -241,12 +241,12 @@ namespace TypeDB.Driver.Test.Behaviour
 
             foreach (ITypeDBSession session in Sessions)
             {
-                List<Task<ITypeDBTransaction?>> parallelTransactions = new List<Task<ITypeDBTransaction?>>();
+                List<Task<ITypeDBTransaction>> parallelTransactions = new List<Task<ITypeDBTransaction>>();
                 for (int i = 0; i < collectedTypes.Count; i++)
                 {
                     TransactionType type = collectedTypes[i];
 
-                    parallelTransactions.Add(Task.Factory.StartNew<ITypeDBTransaction?>(() =>
+                    parallelTransactions.Add(Task.Factory.StartNew<ITypeDBTransaction>(() =>
                         {
                             return session.Transaction(type);
                         }));
@@ -305,7 +305,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 Assert.Equal(transactions.Count, collectedTypes.Count);
 
                 IEnumerator<TransactionType> typesEnumerator = collectedTypes.GetEnumerator();
-                IEnumerator<Task<ITypeDBTransaction?>> transactionsEnumerator = transactions.GetEnumerator();
+                IEnumerator<Task<ITypeDBTransaction>> transactionsEnumerator = transactions.GetEnumerator();
 
                 while (typesEnumerator.MoveNext())
                 {

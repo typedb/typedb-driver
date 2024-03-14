@@ -39,6 +39,7 @@ csharp_behaviour_test(
     test_files = ["AttributeTypeTest.cs"],
     steps_files = [
         ":steps",
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
         "//csharp/Test/Behaviour/Concept/Thing:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
@@ -64,6 +65,7 @@ csharp_behaviour_test(
     test_files = ["AttributeTypeTest.cs"],
     steps_files = [
         ":steps",
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
         "//csharp/Test/Behaviour/Concept/Thing:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",

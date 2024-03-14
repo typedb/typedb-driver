@@ -31,6 +31,7 @@ csharp_behaviour_test(
     name = "test-core",
     test_files = ["EntityTypeTest.cs"],
     steps_files = [
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Entity:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Relation:steps",
@@ -59,6 +60,7 @@ csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["EntityTypeTest.cs"],
     steps_files = [
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Attribute:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Entity:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Relation:steps",

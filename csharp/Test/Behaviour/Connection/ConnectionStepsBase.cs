@@ -33,17 +33,42 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
-        protected ConnectionStepsBase() // "Before"
+        public static ITypeDBDriver? Driver;
+
+        public static List<ITypeDBSession> Sessions = new List<ITypeDBSession>();
+        public static List<Task<ITypeDBSession>> ParallelSessions = new List<Task<ITypeDBSession>>();
+
+        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction>> SessionsToTransactions =
+            new Dictionary<ITypeDBSession, List<ITypeDBTransaction>>();
+        public static Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>> SessionsToParallelTransactions =
+            new Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>>();
+        public static Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>> ParallelSessionsToParallelTransactions =
+            new Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>>();
+
+        public static TypeDBOptions SessionOptions = new TypeDBOptions();
+        public static TypeDBOptions TransactionOptions = new TypeDBOptions();
+
+        public static readonly Dictionary<string, Action<TypeDBOptions, string>> OptionSetters =
+            new Dictionary<string, Action<TypeDBOptions, string>>(){
+                {"session-idle-timeout-millis", (option, val) => option.SessionIdleTimeoutMillis(Int32.Parse(val))},
+                {"transaction-timeout-millis", (option, val) => option.TransactionTimeoutMillis(Int32.Parse(val))}
+        };
+
+        public static readonly Dictionary<string, string> ServerOptions =
+            new Dictionary<string, string>(){
+                {"--diagnostics.reporting.enable", "false"}
+        };
+
+        public ConnectionStepsBase() // "Before"
         {
             CleanInCaseOfPreviousFail();
 
-            SessionOptions = CreateOptions().Infer(true);
-            TransactionOptions = CreateOptions().Infer(true);
+            SessionOptions = SessionOptions.Infer(true);
+            TransactionOptions = TransactionOptions.Infer(true);
         }
 
         public virtual void Dispose() // "After"
         {
-
             foreach (var (session, transactions) in SessionsToParallelTransactions)
             {
                 Task.WaitAll(transactions.ToArray());
@@ -66,33 +91,29 @@ namespace TypeDB.Driver.Test.Behaviour
                 session.Wait();
                 Task.WaitAll(transactions.ToArray());
             }
+            
             ParallelSessionsToParallelTransactions.Clear();
 
             if (Driver != null)
             {
-                foreach (var db in Driver.Databases.All)
+                foreach (var db in Driver!.Databases.All)
                 {
                     db.Delete();
                 }
 
                 if (Driver.IsOpen())
                 {
-                    Driver.Close();
+                    Driver!.Close();
                 }
             }
         }
 
-        public static ITypeDBTransaction? Tx
+        public static ITypeDBTransaction Tx
         {
             get { return SessionsToTransactions[Sessions[0]][0]; }
         }
 
         public abstract ITypeDBDriver CreateTypeDBDriver(string address);
-
-        private TypeDBOptions CreateOptions()
-        {
-            return new TypeDBOptions();
-        }
 
         public abstract void TypeDBStarts();
 
@@ -109,11 +130,11 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
-            Driver.Close();
+            Driver!.Close();
             Driver = null;
         }
 
-        public static void ClearTransactions(ITypeDBSession? session)
+        public static void ClearTransactions(ITypeDBSession session)
         {
             if (SessionsToTransactions.ContainsKey(session))
             {
@@ -129,31 +150,5 @@ namespace TypeDB.Driver.Test.Behaviour
             Dispose();
             ConnectionCloses();
         }
-
-        public static ITypeDBDriver Driver;
-
-        public static List<ITypeDBSession?> Sessions = new List<ITypeDBSession?>();
-        public static List<Task<ITypeDBSession?>> ParallelSessions = new List<Task<ITypeDBSession?>>();
-
-        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction?>> SessionsToTransactions =
-            new Dictionary<ITypeDBSession, List<ITypeDBTransaction?>>();
-        public static Dictionary<ITypeDBSession?, List<Task<ITypeDBTransaction?>>> SessionsToParallelTransactions =
-            new Dictionary<ITypeDBSession?, List<Task<ITypeDBTransaction?>>>();
-        public static Dictionary<Task<ITypeDBSession?>, List<Task<ITypeDBTransaction?>>> ParallelSessionsToParallelTransactions =
-            new Dictionary<Task<ITypeDBSession?>, List<Task<ITypeDBTransaction?>>>();
-
-        public static TypeDBOptions SessionOptions;
-        public static TypeDBOptions TransactionOptions;
-
-        public static readonly Dictionary<string, Action<TypeDBOptions, string>> OptionSetters =
-            new Dictionary<string, Action<TypeDBOptions, string>>(){
-                {"session-idle-timeout-millis", (option, val) => option.SessionIdleTimeoutMillis(Int32.Parse(val))},
-                {"transaction-timeout-millis", (option, val) => option.TransactionTimeoutMillis(Int32.Parse(val))}
-        };
-
-        public static readonly Dictionary<string, string> ServerOptions =
-            new Dictionary<string, string>(){
-                {"--diagnostics.reporting.enable", "false"}
-        };
     }
 }

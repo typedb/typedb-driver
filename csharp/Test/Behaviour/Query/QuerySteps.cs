@@ -251,7 +251,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"answer size is: {}")]
         public void AnswerSizeIs(int expectedAnswers)
         {
-            Assert.Equal(expectedAnswers, _answers.Count);
+            Assert.Equal(expectedAnswers, _answers!.Count);
         }
 
         [Given(@"uniquely identify answer concepts")]
@@ -259,7 +259,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void UniquelyIdentifyAnswerConcepts(DataTable answerConcepts)
         {
             var parsedConcepts = Util.ParseDataTableToMultiDictionary(answerConcepts);
-            Assert.Equal(parsedConcepts.Count, _answers.Count);
+            Assert.Equal(parsedConcepts.Count, _answers!.Count);
 
             foreach (IConceptMap answer in _answers)
             {
@@ -281,9 +281,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void OrderOfAnswerConceptsIs(DataTable answersIdentifiers)
         {
             var parsedIdentifiers = Util.ParseDataTableToMultiDictionary(answersIdentifiers);
-            Assert.Equal(parsedIdentifiers.Count, _answers.Count);
+            Assert.Equal(parsedIdentifiers.Count, _answers!.Count);
 
-            for (int i = 0; i < _answers.Count; i++)
+            for (int i = 0; i < _answers!.Count; i++)
             {
                 IConceptMap answer = _answers[i];
                 Dictionary<string, string> answerIdentifiers = parsedIdentifiers[i];
@@ -322,7 +322,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 .Select(group => new AnswerIdentifierGroup(group.ToList()))
                 .ToHashSet();
 
-            Assert.Equal(answerIdentifierGroups.Count, _answerGroups.Count);
+            Assert.Equal(answerIdentifierGroups.Count, _answerGroups!.Count);
 
             foreach (AnswerIdentifierGroup answerIdentifierGroup in answerIdentifierGroups)
             {
@@ -346,7 +346,7 @@ namespace TypeDB.Driver.Test.Behaviour
                         throw new BehaviourTestException("Unexpected value: " + identifier[0]);
                 }
 
-                IConceptMapGroup answerGroup = _answerGroups
+                IConceptMapGroup answerGroup = _answerGroups!
                     .Where(ag => checker.Check(ag.Owner))
                     .First();
 
@@ -382,7 +382,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 expectations[groupOwnerIdentifier] = expectedAnswer;
             }
 
-            Assert.Equal(expectations.Count, _valueAnswerGroups.Count);
+            Assert.Equal(expectations.Count, _valueAnswerGroups!.Count);
 
             foreach (var (expectationKey, expectedAnswer) in expectations)
             {
@@ -407,7 +407,7 @@ namespace TypeDB.Driver.Test.Behaviour
                         throw new BehaviourTestException("Unexpected value: " + identifier[0]);
                 }
 
-                IValueGroup answerGroup = _valueAnswerGroups
+                IValueGroup answerGroup = _valueAnswerGroups!
                     .Where(ag => checker.Check(ag.Owner))
                     .First();
 
@@ -423,7 +423,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"number of groups is: {int}")]
         public void NumberOfGroupsIs(int expectedGroupsCount)
         {
-            Assert.Equal(expectedGroupsCount, _answerGroups.Count);
+            Assert.Equal(expectedGroupsCount, _answerGroups!.Count);
         }
 
         public class AnswerIdentifierGroup
@@ -450,8 +450,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"group aggregate answer value is empty")]
         public void GroupAggregateAnswerValueIsEmpty()
         {
-            Assert.Equal(1, _valueAnswerGroups.Count);
-            Assert.True(_valueAnswerGroups[0].Value == null);
+            Assert.Equal(1, _valueAnswerGroups!.Count);
+            Assert.True(_valueAnswerGroups![0].Value == null);
         }
 
         [When(@"get answers of typeql fetch")]
@@ -499,8 +499,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"fetch answers are")]
         public void FetchAnswersAre(DocString expectedJSON)
         {
-            var expected = new JArray(JArray.Parse(expectedJSON.Content).ToObject<List<JObject>>());
-            var answers = new JArray(_fetchAnswers);
+            var expected = new JArray(JArray.Parse(expectedJSON.Content).ToObject<List<JObject>>()!);
+            var answers = new JArray(_fetchAnswers!);
 
             Assert.True(Util.JsonDeepEqualsUnordered(expected, answers));
         }
@@ -525,7 +525,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"each answer satisfies")]
         public void EachAnswerSatisfies(DocString templatedQuery)
         {
-            foreach (IConceptMap answer in _answers)
+            foreach (IConceptMap answer in _answers!)
             {
                 string query = ApplyQueryTemplate(templatedQuery.Content, answer);
                 long answerSize = Tx.Query.Get(query).ToArray().Length;
@@ -536,7 +536,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"templated typeql get; throws exception")]
         public void TemplatedTypeqlGetThrowsException(DocString templatedQuery)
         {
-            foreach (IConceptMap answer in _answers)
+            foreach (IConceptMap answer in _answers!)
             {
                 string query = ApplyQueryTemplate(templatedQuery.Content, answer);
 
@@ -566,28 +566,14 @@ namespace TypeDB.Driver.Test.Behaviour
 
                 builder.Append(template, i, matchedGroup.Index - i);
 
-                try
+                IConcept concept = templateFiller.Get(requiredVariable);
+                if (!concept.IsThing())
                 {
-                    IConcept concept = templateFiller.Get(requiredVariable);
-                    if (!concept.IsThing())
-                    {
-                        throw new BehaviourTestException("Cannot apply IID templating to Type concepts");
-                    }
+                    throw new BehaviourTestException("Cannot apply IID templating to Type concepts");
+                }
 
-                    string conceptId = concept.AsThing().IID;
-                    builder.Append(conceptId);
-                }
-                catch (TypeDBDriverException e)
-                {
-                    if (e.ErrorMessage.Equals(QueryError.VARIABLE_DOES_NOT_EXIST))
-                    {
-                        throw new BehaviourTestException($"No IID available for template placeholder: {matchedGroup}");
-                    }
-                    else
-                    {
-                        throw e;
-                    }
-                }
+                string conceptId = concept.AsThing().IID;
+                builder.Append(conceptId);
 
                 i = matchedGroup.Index + matchedGroup.Length;
             }
@@ -706,7 +692,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
                 foreach (IAttribute key in keys)
                 {
-                    keyMap[key.Type.Label] = key.Value.ToString();
+                    keyMap[key.Type.Label] = key.Value.ToString()!;
                 }
 
                 return _value.Equals(keyMap.ContainsKey(_type) ? keyMap[_type] : null);
@@ -735,17 +721,28 @@ namespace TypeDB.Driver.Test.Behaviour
                 var type = concept.AsValue().Type;
 
                 if (type == IValue.ValueType.BOOL)
+                {
                     return bool.Parse(_value).Equals(concept.AsValue().AsBool());
+                }
+
                 if (type == IValue.ValueType.LONG)
+                {
                     return long.Parse(_value).Equals(concept.AsValue().AsLong());
+                }
+
                 if (type == IValue.ValueType.DOUBLE)
+                {
                     return double.Parse(_value).Equals(concept.AsValue().AsDouble());
+                }
+
                 if (type == IValue.ValueType.STRING)
+                {
                     return _value.Equals(concept.AsValue().AsString());
+                }
+
                 if (type == IValue.ValueType.DATETIME)
                 {
                     DateTime dateTime = DateTime.Parse(_value);
-
                     return dateTime.Equals(concept.AsValue().AsDateTime());
                 }
 
@@ -812,16 +809,15 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        public static List<IConceptMap> Answers
+        public static List<IConceptMap>? Answers
         {
             get { return _answers; }
         }
 
-        private static List<IConceptMap> _answers;
-        private static List<JObject> _fetchAnswers;
+        private static List<IConceptMap>? _answers;
+        private static List<JObject>? _fetchAnswers;
         private static IValue? _valueAnswer;
-        private static List<IConceptMapGroup> _answerGroups;
-        private static List<IValueGroup> _valueAnswerGroups;
-        private Dictionary<string, Dictionary<string, string>> _rules;
+        private static List<IConceptMapGroup>? _answerGroups;
+        private static List<IValueGroup>? _valueAnswerGroups;
     }
 }

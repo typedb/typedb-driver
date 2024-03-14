@@ -39,6 +39,7 @@ csharp_behaviour_test(
     test_files = ["RelationTypeTest.cs"],
     steps_files = [
         ":steps",
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Entity:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Relation:steps",
         "//csharp/Test/Behaviour/Concept/Thing:steps",
@@ -66,6 +67,7 @@ csharp_behaviour_test(
     test_files = ["RelationTypeTest.cs"],
     steps_files = [
         ":steps",
+        "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Entity:steps",
         "//csharp/Test/Behaviour/Concept/Thing/Relation:steps",
         "//csharp/Test/Behaviour/Concept/Thing:steps",

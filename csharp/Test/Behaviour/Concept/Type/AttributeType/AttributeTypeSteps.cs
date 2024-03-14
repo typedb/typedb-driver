@@ -69,7 +69,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IValue.ValueType valueType = GetValueType(valueTypeData);
             Assert.Equal(
                 valueType,
-                Tx.Concepts.GetAttributeType(typeLabel).Resolve().ValueType);
+                Tx.Concepts.GetAttributeType(typeLabel).Resolve()!.ValueType);
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) get supertype value type: {}")]
@@ -77,8 +77,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
             IAttributeType supertype = Tx.Concepts
-                .GetAttributeType(typeLabel).Resolve()
-                .GetSupertype(Tx).Resolve()
+                .GetAttributeType(typeLabel).Resolve()!
+                .GetSupertype(Tx).Resolve()!
                 .AsAttributeType();
 
             Assert.Equal(valueType, supertype.ValueType);
@@ -91,7 +91,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IValue.ValueType valueType = GetValueType(valueTypeData);
             var subLabels = Util.ParseDataTableToTypeList<string>(subLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetSubtypes(Tx, valueType)
                 .Select(t => t.Label.Name)
@@ -107,7 +107,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IValue.ValueType valueType = GetValueType(valueTypeData);
             var subLabels = Util.ParseDataTableToTypeList<string>(subLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetSubtypes(Tx, valueType)
                 .Select(t => t.Label.Name)
@@ -127,7 +127,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IValue.ValueType valueType = GetValueType(valueTypeData);
             Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             attributeType.SetRegex(Tx, regex).Resolve();
         }
 
@@ -137,17 +137,17 @@ namespace TypeDB.Driver.Test.Behaviour
             IValue.ValueType valueType = GetValueType(valueTypeData);
             Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             attributeType.UnsetRegex(Tx).Resolve();
         }
 
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\({}\) get regex: {}")]
-        public void AttributeTypeAsValueTypeGetRegex(string typeLabel, string valueTypeData, string regex)
+        public void AttributeTypeAsValueTypeGetRegex(string typeLabel, string valueTypeData, string? regex)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
             Assert.True(valueType.Equals(IValue.ValueType.STRING));
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             Assert.Equal(regex, attributeType.GetRegex(Tx).Resolve());
         }
 
@@ -165,7 +165,7 @@ namespace TypeDB.Driver.Test.Behaviour
         
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, annotations)
                 .Select(t => t.Label.Name)
@@ -182,7 +182,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, annotations)
                 .Select(t => t.Label.Name)
@@ -202,7 +202,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, annotations, EXPLICIT)
                 .Select(t => t.Label.Name)
@@ -219,7 +219,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, annotations, EXPLICIT)
                 .Select(t => t.Label.Name)
@@ -236,7 +236,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0])
                 .Select(t => t.Label.Name)
@@ -250,7 +250,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0])
                 .Select(t => t.Label.Name)
@@ -267,7 +267,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0], EXPLICIT)
                 .Select(t => t.Label.Name)
@@ -281,7 +281,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var ownerLabels = Util.ParseDataTableToTypeList<string>(ownerLabelsData, val => val.ToString());
 
-            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+            IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
                 .GetOwners(Tx, new Annotation[0], EXPLICIT)
                 .Select(t => t.Label.Name)
