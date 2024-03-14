@@ -38,16 +38,34 @@ namespace TypeDB.Driver.Test.Behaviour
             : base()
         {}
 
+        public override void Dispose()
+        {
+            if (Driver == null)
+            {
+                ConnectionOpensWithDefaultAuthentication();
+            }
+
+            foreach (var user in Driver!.Users.All)
+            {
+                if (!user.Username.Equals("admin"))
+                {
+                    Driver!.Users.Delete(user.Username);
+                }
+            }
+
+            base.Dispose();
+        }
+
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
             return CreateTypeDBDriver(address);
         }
 
         private ITypeDBDriver CreateTypeDBDriver(
-            ICollection<string> addresses = null,
-            string username = null,
-            string password = null,
-            string certificatesPath = null)
+            ICollection<string>? addresses = null,
+            string? username = null,
+            string? password = null,
+            string? certificatesPath = null)
         {
             return TypeDB.CloudDriver(
                 addresses ?? DEFAULT_ADDRESSES,
@@ -57,7 +75,7 @@ namespace TypeDB.Driver.Test.Behaviour
                     certificatesPath ?? DEFAULT_CERTIFICATES_PATH));
         }
 
-        private ITypeDBDriver CreateTypeDBDriver(string address, string username = null, string password = null)
+        private ITypeDBDriver CreateTypeDBDriver(string address, string? username = null, string? password = null)
         {
             return CreateTypeDBDriver(new string[]{address}, username, password);
         }
@@ -81,11 +99,11 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (Driver != null)
             {
-                Driver.Close();
+                Driver!.Close();
                 Driver = null;
             }
 
-            Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS, username, password);
+            Driver = CreateTypeDBDriver(DEFAULT_ADDRESSES, username, password);
         }
 
         [When(@"connection opens with authentication: {}, {}; throws exception")]
@@ -101,15 +119,13 @@ namespace TypeDB.Driver.Test.Behaviour
             // no-op: configuration tests are only run on the backend themselves
         }
 
-        private const string[] DEFAULT_ADDRESSES =
+        private static readonly string[] DEFAULT_ADDRESSES =
         {
-            "localhost:11729",
-//            "localhost:21729", // Should run only with one address!
-//            "localhost:31729"
+            "localhost:11729"
         };
 
-        private const string DEFAULT_CERTIFICATES_PATH = Environment.GetEnvironmentVariable("ROOT_CA");
-        private const string DEFAULT_USERNAME = "admin";
-        private const string DEFAULT_PASSWORD = "password";
+        private static readonly string DEFAULT_CERTIFICATES_PATH = Environment.GetEnvironmentVariable("ROOT_CA")!;
+        private static readonly string DEFAULT_USERNAME = "admin";
+        private static readonly string DEFAULT_PASSWORD = "password";
     }
 }

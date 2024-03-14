@@ -28,6 +28,16 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
+        public static string CurrentTimeZoneId = TimeZoneInfo.Local.Id;
+
+        public DateTime PutTimeZoneInfo(DateTime dateTime)
+        {
+            Console.WriteLine(CurrentTimeZoneId);
+            Console.WriteLine($"Inut = {dateTime}; CONVERTED: {TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId)}");
+//            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId); // TODO
+            return dateTime;
+        }
+
         [Then(@"wait {} seconds")]
         public void WaitSeconds(int seconds)
         {
@@ -36,10 +46,9 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [Given(@"set time-zone is: {}")]
         [When(@"set time-zone is: {}")]
-        public void SetTimeZoneIs(string type)
+        public void SetTimeZoneIs(string timeZoneId)
         {
-            // TODO:
-//            throw new NotImplementedException("TimeZone step is not ready yet.");
+            CurrentTimeZoneId = timeZoneId;
         }
     }
 }

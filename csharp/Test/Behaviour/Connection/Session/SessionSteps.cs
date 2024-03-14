@@ -39,7 +39,7 @@ namespace TypeDB.Driver.Test.Behaviour
         private void ConnectionOpenSessionForDatabase(string name, SessionType sessionType)
         {
             Sessions.Add(
-                Driver.Session(
+                Driver!.Session(
                     name, sessionType, SessionOptions));
         }
 
@@ -104,9 +104,9 @@ namespace TypeDB.Driver.Test.Behaviour
             for (int i = 0; i < collectedNames.Count; i++)
             {
                 var name = collectedNames[i];
-                ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession?>(() =>
+                ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession>(() =>
                     {
-                        return Driver.Session(
+                        return Driver!.Session(
                             name, SessionType.DATA, SessionOptions);
                     }));
             }
@@ -172,7 +172,7 @@ namespace TypeDB.Driver.Test.Behaviour
         private void SessionsHaveDatabases(List<string> names)
         {
             Assert.Equal(names.Count, Sessions.Count);
-            IEnumerator<ITypeDBSession?> sessionsEnumerator = Sessions.GetEnumerator();
+            IEnumerator<ITypeDBSession> sessionsEnumerator = Sessions.GetEnumerator();
             IEnumerator<string> namesEnumerator = names.GetEnumerator();
 
             while (sessionsEnumerator.MoveNext() && namesEnumerator.MoveNext())
@@ -208,7 +208,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             List<Task> assertions = new List<Task>();
 
-            IEnumerator<Task<ITypeDBSession?>> sessionsEnumerator = ParallelSessions.GetEnumerator();
+            IEnumerator<Task<ITypeDBSession>> sessionsEnumerator = ParallelSessions.GetEnumerator();
 
             Assert.Equal(ParallelSessions.Count, names.Rows.Count());
             foreach (var row in names.Rows)
