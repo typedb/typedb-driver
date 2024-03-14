@@ -47,13 +47,62 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var retrievedUser = Driver!.User;
         }
+
+        [Then(@"users get user: {}; throws exception")]
+        public void UsersGetUserThrowsException(string username)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersGetUser(username));
+        }
+
+        [Then(@"users get all; throws exception")]
+        public void UsersGetAllThrowsException()
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersGetAll());
+        }
+
+        [Then(@"users contains: {}; throws exception")]
+        public void UsersContainsThrowsException(string username)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersContains(username));
+        }
+
+        [Then(@"users not contains: {}; throws exception")]
+        public void UsersNotContainsThrowsException(string username)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
+        }
+
+        [Then(@"users create: {}, {}; throws exception")]
+        public void UsersCreateThrowsException(string username, string password)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
+        }
+
+        [Then(@"users delete: {}; throws exception")]
+        public void UsersDeleteThrowsException(string username)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
+        }
+
+        [Then(@"user password update: {}, {}; throws exception")]
+        public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
+        {
+            Assert.Throws<TypeDBDriverException>(
+                () => UserPasswordUpdate(oldPassword, newPassword));
+        }
+
+        [Then(@"users password set: {}, {}; throws exception")]
+        public void UsersPasswordSetThrowsException(string username, string passwordNew)
+        {
+            Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));
+        }
     
         [Then(@"users get user: {}")]
         public void UsersGetUser(string username)
         {
             var retrievedUser = Driver!.Users.Get(username);
         }
-    
+
         [Then(@"users get all")]
         public void UsersGetAll()
         {
@@ -62,20 +111,20 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [When(@"users contains: {}")]
         [Then(@"users contains: {}")]
-        public void UsersContains(string username) 
+        public void UsersContains(string username)
         {
             Assert.True(IsUserInUsers(username));
         }
-    
+
         [Then(@"users not contains: {}")]
-        public void UsersNotContains(string username) 
+        public void UsersNotContains(string username)
         {
             Assert.False(IsUserInUsers(username));
         }
-    
+
         [When(@"users create: {}, {}")]
         [Then(@"users create: {}, {}")]
-        public void UsersCreate(string username, string password) 
+        public void UsersCreate(string username, string password)
         {
             Driver!.Users.Create(username, password);
         }
@@ -104,55 +153,6 @@ namespace TypeDB.Driver.Test.Behaviour
         public void UsersPasswordSet(string username, string newPassword)
         {
             Driver!.Users.SetPassword(username, newPassword);
-        }
-    
-        [Then(@"users get user: {}; throws exception")]
-        public void UsersGetUserThrowsException(string username) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersGetUser(username));
-        }
-    
-        [Then(@"users get all; throws exception")]
-        public void UsersGetAllThrowsException() 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersGetAll());
-        }
-    
-        [Then(@"users contains: {}; throws exception")]
-        public void UsersContainsThrowsException(string username) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersContains(username));
-        }
-    
-        [Then(@"users not contains: {}; throws exception")]
-        public void UsersNotContainsThrowsException(string username) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
-        }
-    
-        [Then(@"users create: {}, {}; throws exception")]
-        public void UsersCreateThrowsException(string username, string password) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
-        }
-    
-        [Then(@"users delete: {}; throws exception")]
-        public void UsersDeleteThrowsException(string username) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
-        }
-    
-        [Then(@"user password update: {}, {}; throws exception")]
-        public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
-        {
-            Assert.Throws<TypeDBDriverException>(
-                () => UserPasswordUpdate(oldPassword, newPassword));
-        }
-    
-        [Then(@"users password set: {}, {}; throws exception")]
-        public void UsersPasswordSetThrowsException(string username, string passwordNew) 
-        {
-            Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));
         }
     }
 }
