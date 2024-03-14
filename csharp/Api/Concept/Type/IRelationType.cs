@@ -145,7 +145,7 @@ namespace TypeDB.Driver.Api
          * @param roleLabel The new role for the <code>IRelationType</code> to relate to
          * @param overriddenLabel The label being overridden, if applicable
          */
-        VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, string overriddenLabel);
+        VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, string? overriddenLabel);
     
         /**
          * Disallows this <code>IRelationType</code> from relating to the given role.

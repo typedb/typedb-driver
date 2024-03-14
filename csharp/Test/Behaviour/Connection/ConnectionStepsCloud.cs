@@ -101,15 +101,15 @@ namespace TypeDB.Driver.Test.Behaviour
             // no-op: configuration tests are only run on the backend themselves
         }
 
-        private static readonly string[] DEFAULT_ADDRESSES =
+        private const string[] DEFAULT_ADDRESSES =
         {
             "localhost:11729",
 //            "localhost:21729", // Should run only with one address!
 //            "localhost:31729"
         };
 
-        private static readonly string DEFAULT_CERTIFICATES_PATH = Environment.GetEnvironmentVariable("ROOT_CA");
-        private static readonly string DEFAULT_USERNAME = "admin";
-        private static readonly string DEFAULT_PASSWORD = "password";
+        private const string DEFAULT_CERTIFICATES_PATH = Environment.GetEnvironmentVariable("ROOT_CA");
+        private const string DEFAULT_USERNAME = "admin";
+        private const string DEFAULT_PASSWORD = "password";
     }
 }

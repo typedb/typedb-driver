@@ -28,6 +28,8 @@ using TypeDB.Driver.Common;
 using TypeDB.Driver.Concept;
 using static TypeDB.Driver.Api.IConcept.Transitivity;
 using static TypeDB.Driver.Api.IThingType;
+using static TypeDB.Driver.Api.IValue.ValueType;
+using static TypeDB.Driver.Concept.ThingType;
 
 namespace TypeDB.Driver.Concept
 {
@@ -42,7 +44,7 @@ namespace TypeDB.Driver.Concept
         {
             get
             {
-                return new IValue.ValueType(
+                return ValueTypeOf(
                     Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject));
             }
         }
@@ -184,7 +186,7 @@ namespace TypeDB.Driver.Concept
                         NativeObject,
                         transitivity.NativeObject,
                         annotationsArray))
-                    .Select(obj => ThingType.ThingTypeOf(obj));
+                    .Select(obj => ThingTypeOf(obj));
             } 
             catch (Pinvoke.Error e) 
             {

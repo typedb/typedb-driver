@@ -50,8 +50,8 @@ namespace TypeDB.Driver.Common
     {
         public class Driver : ErrorMessage
         {
-            private static readonly string CODE_PREFIX = "CSCL";
-            private static readonly string MESSAGE_PREFIX = "Driver Error";
+            private const string CODE_PREFIX = "CSCL";
+            private const string MESSAGE_PREFIX = "Driver Error";
 
             public Driver(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
@@ -76,8 +76,8 @@ namespace TypeDB.Driver.Common
 
         public class Concept : ErrorMessage
         {
-            private static readonly string CODE_PREFIX = "CSCO";
-            private static readonly string MESSAGE_PREFIX = "Concept Error";
+            private const string CODE_PREFIX = "CSCO";
+            private const string MESSAGE_PREFIX = "Concept Error";
 
             public Concept(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
@@ -106,8 +106,8 @@ namespace TypeDB.Driver.Common
 
         public class Query : ErrorMessage
         {
-            private static readonly string CODE_PREFIX = "CSQY";
-            private static readonly string MESSAGE_PREFIX = "Query Error";
+            private const string CODE_PREFIX = "CSQY";
+            private const string MESSAGE_PREFIX = "Query Error";
 
             public Query(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
@@ -122,8 +122,8 @@ namespace TypeDB.Driver.Common
 
         public class Internal : ErrorMessage
         {
-            private static readonly string CODE_PREFIX = "CSIN";
-            private static readonly string MESSAGE_PREFIX = "C# Internal Error";
+            private const string CODE_PREFIX = "CSIN";
+            private const string MESSAGE_PREFIX = "C# Internal Error";
 
             public Internal(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)

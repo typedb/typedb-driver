@@ -20,6 +20,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -190,22 +192,18 @@ namespace TypeDB.Driver.Api
 
             private int _hash = 0;
 
-            public ValueType(Pinvoke.ValueType nativeObject)
-                : base(nativeObject)
+            public static ValueType ValueTypeOf(Pinvoke.ValueType nativeObject)
             {
-                foreach (var type in ALL_VALUE_TYPES)
-                {
-                    if (type.NativeObject == nativeObject)
-                    {
-                        ValueClass = type.ValueClass;
-                        IsWritable = type.IsWritable;
-                        IsKeyable = type.IsKeyable;
+                ValueType? matchingValueType = Values
+                    .Where(value => value.NativeObject.Equals(nativeObject))
+                    .FirstOrDefault();
 
-                        return;
-                    }
+                if (matchingValueType == null)
+                {
+                    throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
                 }
 
-                throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
+                return matchingValueType;
             }
 
             private ValueType(
@@ -220,15 +218,18 @@ namespace TypeDB.Driver.Api
                 IsKeyable = isKeyable;
             }
 
-            private static readonly ValueType[] ALL_VALUE_TYPES =
+            public static IEnumerable<ValueType> Values
             {
-                OBJECT,
-                BOOL,
-                LONG,
-                DOUBLE,
-                STRING,
-                DATETIME,
-            };
+                get
+                {
+                    yield return OBJECT;
+                    yield return BOOL;
+                    yield return LONG;
+                    yield return DOUBLE;
+                    yield return STRING;
+                    yield return DATETIME;
+                }
+            }
 
             public override string ToString()
             {
