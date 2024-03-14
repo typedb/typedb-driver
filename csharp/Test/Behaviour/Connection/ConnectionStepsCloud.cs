@@ -40,10 +40,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public override void Dispose()
         {
-            if (Driver == null)
-            {
-                ConnectionOpensWithDefaultAuthentication();
-            }
+            ConnectionOpensWithDefaultAuthentication();
 
             foreach (var user in Driver!.Users.All)
             {
