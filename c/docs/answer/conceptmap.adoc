@@ -1,0 +1,256 @@
+[#_concept_map_drop]
+==== concept_map_drop
+
+[source,cpp]
+----
+void concept_map_drop(struct ConceptMap* concept_map)
+----
+
+
+
+Frees the native rust ``ConceptMap`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_map_equals]
+==== concept_map_equals
+
+[source,cpp]
+----
+bool concept_map_equals(const struct ConceptMap* lhs, const struct ConceptMap* rhs)
+----
+
+
+
+Checks whether the provided ``ConceptMap`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_concept_map_get]
+==== concept_map_get
+
+[source,cpp]
+----
+struct Concept* concept_map_get(const struct ConceptMap* concept_map, const char* var)
+----
+
+
+
+Retrieves a concept for a given variable name.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_map_get_explainables]
+==== concept_map_get_explainables
+
+[source,cpp]
+----
+struct Explainables* concept_map_get_explainables(const struct ConceptMap* concept_map)
+----
+
+
+
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable.
+
+[caption=""]
+.Returns
+`struct Explainables*`
+
+[#_concept_map_get_values]
+==== concept_map_get_values
+
+[source,cpp]
+----
+struct ConceptIterator* concept_map_get_values(const struct ConceptMap* concept_map)
+----
+
+
+
+Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptMap``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_concept_map_get_variables]
+==== concept_map_get_variables
+
+[source,cpp]
+----
+struct StringIterator* concept_map_get_variables(const struct ConceptMap* concept_map)
+----
+
+
+
+Produces an ``Iterator`` over all variables in this ``ConceptMap``.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_concept_map_group_drop]
+==== concept_map_group_drop
+
+[source,cpp]
+----
+void concept_map_group_drop(struct ConceptMapGroup* concept_map_group)
+----
+
+
+
+Frees the native rust ``ConceptMapGroup`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_map_group_equals]
+==== concept_map_group_equals
+
+[source,cpp]
+----
+bool concept_map_group_equals(const struct ConceptMapGroup* lhs, const struct ConceptMapGroup* rhs)
+----
+
+
+
+Checks whether the provided ``ConceptMapGroup`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_concept_map_group_get_concept_maps]
+==== concept_map_group_get_concept_maps
+
+[source,cpp]
+----
+struct ConceptMapIterator* concept_map_group_get_concept_maps(const struct ConceptMapGroup* concept_map_group)
+----
+
+
+
+Retrieves the ``ConceptMap``s of the group.
+
+[caption=""]
+.Returns
+`struct ConceptMapIterator*`
+
+[#_concept_map_group_get_owner]
+==== concept_map_group_get_owner
+
+[source,cpp]
+----
+struct Concept* concept_map_group_get_owner(const struct ConceptMapGroup* concept_map_group)
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_map_group_iterator_drop]
+==== concept_map_group_iterator_drop
+
+[source,cpp]
+----
+void concept_map_group_iterator_drop(struct ConceptMapGroupIterator* it)
+----
+
+
+
+Frees the native rust ``ConceptMapGroupIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_map_group_iterator_next]
+==== concept_map_group_iterator_next
+
+[source,cpp]
+----
+struct ConceptMapGroup* concept_map_group_iterator_next(struct ConceptMapGroupIterator* it)
+----
+
+
+
+Forwards the ``ConceptMapGroupIterator`` and returns the next ``ConceptMapGroup`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConceptMapGroup*`
+
+[#_concept_map_group_to_string]
+==== concept_map_group_to_string
+
+[source,cpp]
+----
+char* concept_map_group_to_string(const struct ConceptMapGroup* concept_map_group)
+----
+
+
+
+A string representation of this ``ConceptMapGroup`` object
+
+[caption=""]
+.Returns
+`char*`
+
+[#_concept_map_iterator_drop]
+==== concept_map_iterator_drop
+
+[source,cpp]
+----
+void concept_map_iterator_drop(struct ConceptMapIterator* it)
+----
+
+
+
+Frees the native rust ``ConceptMapIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_map_iterator_next]
+==== concept_map_iterator_next
+
+[source,cpp]
+----
+struct ConceptMap* concept_map_iterator_next(struct ConceptMapIterator* it)
+----
+
+
+
+Forwards the ``ConceptMapIterator`` and returns the next ``ConceptMap`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConceptMap*`
+
+[#_concept_map_to_string]
+==== concept_map_to_string
+
+[source,cpp]
+----
+char* concept_map_to_string(const struct ConceptMap* concept_map)
+----
+
+
+
+A string representation of this ConceptMap.
+
+[caption=""]
+.Returns
+`char*`
+

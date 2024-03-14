@@ -1,0 +1,352 @@
+[#_explainable_drop]
+==== explainable_drop
+
+[source,cpp]
+----
+void explainable_drop(struct Explainable* explainable)
+----
+
+
+
+Frees the native rust ``Explainable`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_explainable_get_conjunction]
+==== explainable_get_conjunction
+
+[source,cpp]
+----
+char* explainable_get_conjunction(const struct Explainable* explainable)
+----
+
+
+
+Retrieves the subquery of the original query that is actually being explained.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_explainable_get_id]
+==== explainable_get_id
+
+[source,cpp]
+----
+int64_t explainable_get_id(const struct Explainable* explainable)
+----
+
+
+
+Retrieves the unique ID that identifies this ``Explainable``.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_explainables_drop]
+==== explainables_drop
+
+[source,cpp]
+----
+void explainables_drop(struct Explainables* explainables)
+----
+
+
+
+Frees the native rust ``Explainables`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_explainables_equals]
+==== explainables_equals
+
+[source,cpp]
+----
+bool explainables_equals(const struct Explainables* lhs, const struct Explainables* rhs)
+----
+
+
+
+Checks whether the provided ``Explainables`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_explainables_get_attribute]
+==== explainables_get_attribute
+
+[source,cpp]
+----
+struct Explainable* explainables_get_attribute(const struct Explainables* explainables, const char* var)
+----
+
+
+
+Retrieves the explainable attribute with the given variable name.
+
+[caption=""]
+.Returns
+`struct Explainable*`
+
+[#_explainables_get_attributes_keys]
+==== explainables_get_attributes_keys
+
+[source,cpp]
+----
+struct StringIterator* explainables_get_attributes_keys(const struct Explainables* explainables)
+----
+
+
+
+Retrieves all variables corresponding to this ``ConceptMap``’s explainable attributes.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_explainables_get_ownership]
+==== explainables_get_ownership
+
+[source,cpp]
+----
+struct Explainable* explainables_get_ownership(const struct Explainables* explainables, const char* owner, const char* attribute)
+----
+
+
+
+Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+
+[caption=""]
+.Returns
+`struct Explainable*`
+
+[#_explainables_get_ownerships_keys]
+==== explainables_get_ownerships_keys
+
+[source,cpp]
+----
+struct StringPairIterator* explainables_get_ownerships_keys(const struct Explainables* explainables)
+----
+
+
+
+Retrieves all variables corresponding to this ``ConceptMap``’s explainable ownerships.
+
+[caption=""]
+.Returns
+`struct StringPairIterator*`
+
+[#_explainables_get_relation]
+==== explainables_get_relation
+
+[source,cpp]
+----
+struct Explainable* explainables_get_relation(const struct Explainables* explainables, const char* var)
+----
+
+
+
+Retrieves the explainable relation with the given variable name.
+
+[caption=""]
+.Returns
+`struct Explainable*`
+
+[#_explainables_get_relations_keys]
+==== explainables_get_relations_keys
+
+[source,cpp]
+----
+struct StringIterator* explainables_get_relations_keys(const struct Explainables* explainables)
+----
+
+
+
+Retrieves all variables corresponding to this ``ConceptMap``’s explainable relations.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_explainables_to_string]
+==== explainables_to_string
+
+[source,cpp]
+----
+char* explainables_to_string(const struct Explainables* explainables)
+----
+
+
+
+A string representation of this ``Explainables`` object
+
+[caption=""]
+.Returns
+`char*`
+
+[#_explanation_drop]
+==== explanation_drop
+
+[source,cpp]
+----
+void explanation_drop(struct Explanation* explanation)
+----
+
+
+
+Frees the native rust ``Explanation`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_explanation_equals]
+==== explanation_equals
+
+[source,cpp]
+----
+bool explanation_equals(const struct Explanation* lhs, const struct Explanation* rhs)
+----
+
+
+
+Checks whether the provided ``Explanation`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_explanation_get_conclusion]
+==== explanation_get_conclusion
+
+[source,cpp]
+----
+struct ConceptMap* explanation_get_conclusion(const struct Explanation* explanation)
+----
+
+
+
+Retrieves the Conclusion for this Explanation.
+
+[caption=""]
+.Returns
+`struct ConceptMap*`
+
+[#_explanation_get_condition]
+==== explanation_get_condition
+
+[source,cpp]
+----
+struct ConceptMap* explanation_get_condition(const struct Explanation* explanation)
+----
+
+
+
+Retrieves the Condition for this Explanation.
+
+[caption=""]
+.Returns
+`struct ConceptMap*`
+
+[#_explanation_get_mapped_variables]
+==== explanation_get_mapped_variables
+
+[source,cpp]
+----
+struct StringIterator* explanation_get_mapped_variables(const struct Explanation* explanation)
+----
+
+
+
+Retrieves the query variables for this ``Explanation``.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_explanation_get_mapping]
+==== explanation_get_mapping
+
+[source,cpp]
+----
+struct StringIterator* explanation_get_mapping(const struct Explanation* explanation, const char* var)
+----
+
+
+
+Retrieves the rule variables corresponding to the query variable var for this ``Explanation``.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_explanation_get_rule]
+==== explanation_get_rule
+
+[source,cpp]
+----
+struct Rule* explanation_get_rule(const struct Explanation* explanation)
+----
+
+
+
+Retrieves the Rule for this Explanation.
+
+[caption=""]
+.Returns
+`struct Rule*`
+
+[#_explanation_iterator_drop]
+==== explanation_iterator_drop
+
+[source,cpp]
+----
+void explanation_iterator_drop(struct ExplanationIterator* it)
+----
+
+
+
+Frees the native rust ``ExplanationIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_explanation_iterator_next]
+==== explanation_iterator_next
+
+[source,cpp]
+----
+struct Explanation* explanation_iterator_next(struct ExplanationIterator* it)
+----
+
+
+
+Forwards the ``Explanation`` and returns the next ``Explanation`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Explanation*`
+
+[#_explanation_to_string]
+==== explanation_to_string
+
+[source,cpp]
+----
+char* explanation_to_string(const struct Explanation* explanation)
+----
+
+
+
+A string representation of this ``Explanation`` object
+
+[caption=""]
+.Returns
+`char*`
+

@@ -162,7 +162,7 @@ public interface AttributeType extends ThingType {
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
-     * if such <code>Attribute</code> exists. Otherwise, returns <code>None</code>.
+     * if such <code>Attribute</code> exists. Otherwise, returns <code>null</code>.
      *
      * <h3>Examples</h3>
      * <pre>

@@ -1,0 +1,175 @@
+[#_transaction_close]
+==== transaction_close
+
+[source,cpp]
+----
+void transaction_close(struct Transaction* txn)
+----
+
+
+
+Closes the transaction and frees the native rust object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_transaction_commit]
+==== transaction_commit
+
+[source,cpp]
+----
+struct VoidPromise* transaction_commit(struct Transaction* txn)
+----
+
+
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, the transaction is closed after the commit call and the native rust object is freed.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_transaction_force_close]
+==== transaction_force_close
+
+[source,cpp]
+----
+void transaction_force_close(struct Transaction* txn)
+----
+
+
+
+Forcibly closes this transaction. To be used in exceptional cases.
+
+[caption=""]
+.Returns
+`void`
+
+[#_transaction_is_open]
+==== transaction_is_open
+
+[source,cpp]
+----
+bool transaction_is_open(const struct Transaction* txn)
+----
+
+
+
+Checks whether this transaction is open.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_transaction_new]
+==== transaction_new
+
+[source,cpp]
+----
+struct Transaction* transaction_new(const struct Session* session, enum TransactionType type_, const struct Options* options)
+----
+
+
+
+Opens a transaction to perform read or write queries on the database connected to the session.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     type_
+     The type of transaction to be created (Write or Read).
+    
+    
+     options
+     Options for the transaction
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `type_` a| The type of transaction to be created (Write or Read). a| 
+a| `options` a| Options for the transaction a| 
+|===
+
+[caption=""]
+.Returns
+`struct Transaction*`
+
+[#_transaction_on_close]
+==== transaction_on_close
+
+[source,cpp]
+----
+void transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, void(*)(uintptr_t, struct Error*) callback)
+----
+
+
+
+Registers a callback function which will be executed when this transaction is closed.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     txn
+     The transaction on which to register the callback
+    
+    
+     callback_id
+     The argument to be passed to the callback function when it is executed.
+    
+    
+     callback
+     The function to be called
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `txn` a| The transaction on which to register the callback a| 
+a| `callback_id` a| The argument to be passed to the callback function when it is executed. a| 
+a| `callback` a| The function to be called a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_transaction_rollback]
+==== transaction_rollback
+
+[source,cpp]
+----
+struct VoidPromise* transaction_rollback(const struct Transaction* txn)
+----
+
+
+
+Rolls back the uncommitted changes made via this transaction.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

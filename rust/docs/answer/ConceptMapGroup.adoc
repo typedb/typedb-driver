@@ -8,6 +8,8 @@
 * `PartialEq<ConceptMapGroup>`
 * `StructuralPartialEq`
 
+Contains an element of the TypeQL Get Group query result.
+
 [caption=""]
 .Fields
 // tag::properties[]

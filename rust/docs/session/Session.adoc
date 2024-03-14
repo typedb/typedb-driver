@@ -6,6 +6,8 @@
 * `Debug`
 * `Drop`
 
+A session with a TypeDB database.
+
 // tag::methods[]
 [#_struct_Session_database_name__]
 ==== database_name

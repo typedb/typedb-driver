@@ -1,0 +1,48 @@
+[#_attribute_get_owners]
+==== attribute_get_owners
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_get_owners(struct Transaction* transaction, const struct Concept* attribute, const struct Concept* thing_type)
+----
+
+
+
+Retrieves the instances that own this ``Attribute``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_get_type]
+==== attribute_get_type
+
+[source,cpp]
+----
+struct Concept* attribute_get_type(const struct Concept* attribute)
+----
+
+
+
+Retrieves the type which this ``Attribute`` belongs to.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_attribute_get_value]
+==== attribute_get_value
+
+[source,cpp]
+----
+struct Concept* attribute_get_value(const struct Concept* attribute)
+----
+
+
+
+Retrieves the type which this ``Relation`` belongs to.
+
+[caption=""]
+.Returns
+`struct Concept*`
+

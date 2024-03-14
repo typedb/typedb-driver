@@ -1,0 +1,149 @@
+[#_init_logging]
+==== init_logging
+
+[source,cpp]
+----
+void init_logging(void)
+----
+
+
+
+Enables logging in the TypeDB driver.
+
+[caption=""]
+.Returns
+`void`
+
+[#_connection_close]
+==== connection_close
+
+[source,cpp]
+----
+void connection_close(struct Connection* connection)
+----
+
+
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. Closing a connction frees the underlying rust object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_connection_force_close]
+==== connection_force_close
+
+[source,cpp]
+----
+void connection_force_close(struct Connection* connection)
+----
+
+
+
+Forcibly closes the driver. To be used in exceptional cases.
+
+[caption=""]
+.Returns
+`void`
+
+[#_connection_is_open]
+==== connection_is_open
+
+[source,cpp]
+----
+bool connection_is_open(const struct Connection* connection)
+----
+
+
+
+Checks whether this connection is presently open.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_connection_open_cloud]
+==== connection_open_cloud
+
+[source,cpp]
+----
+struct Connection* connection_open_cloud(const char*const* addresses, const struct Credential* credential)
+----
+
+
+
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     addresses
+     a null-terminated array holding the address(es) of the TypeDB server(s)
+    
+    
+     credential
+     The ``Credential`` to connect with
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| a null-terminated array holding the address(es) of the TypeDB server(s) a| 
+a| `credential` a| The ``Credential`` to connect with a| 
+|===
+
+[caption=""]
+.Returns
+`struct Connection*`
+
+[#_connection_open_core]
+==== connection_open_core
+
+[source,cpp]
+----
+struct Connection* connection_open_core(const char* address)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     address
+     The address of the TypeDB server
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| 
+|===
+
+[caption=""]
+.Returns
+`struct Connection*`
+

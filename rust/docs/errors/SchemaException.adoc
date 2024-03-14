@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+Represents invalid schema constructs discovered during schema validation.
+
 [caption=""]
 .Fields
 // tag::properties[]

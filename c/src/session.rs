@@ -28,6 +28,12 @@ use super::{
     memory::{borrow, borrow_mut, free, release_string, string_view},
 };
 
+/// Opens a session to the given database.
+///
+/// @param databases The <code>DatabaseManager</code> object on this connection.
+/// @param database_name The name of the database with which the session connects
+/// @param session_type The type of session to be created (Schema or Data)
+/// @param options <code>Options</code> for this session
 #[no_mangle]
 pub extern "C" fn session_new(
     databases: *mut DatabaseManager,
@@ -42,21 +48,26 @@ pub extern "C" fn session_new(
     )
 }
 
+/// Closes the session. Before opening a new session, the session currently open should first be closed.
+/// The native rust object is freed on close.
 #[no_mangle]
 pub extern "C" fn session_close(session: *mut Session) {
     free(session);
 }
 
+/// Returns the name of the database of the session.
 #[no_mangle]
 pub extern "C" fn session_get_database_name(session: *const Session) -> *mut c_char {
     release_string(borrow(session).database_name().to_owned())
 }
 
+/// Checks whether this session is open.
 #[no_mangle]
 pub extern "C" fn session_is_open(session: *const Session) -> bool {
     borrow(session).is_open()
 }
 
+/// Forcibly closes the session. To be used in exceptional cases.
 #[no_mangle]
 pub extern "C" fn session_force_close(session: *mut Session) {
     unwrap_void(borrow_mut(session).force_close())
@@ -95,6 +106,12 @@ mod private {
     }
 }
 
+/// Registers a callback function which will be executed when this session is closed.
+///
+/// @param session The session on which to register the callback
+/// @param data The argument to be passed to the callback function when it is executed
+/// @param callback The function to be called
+/// @param finished A function which will be executed when the session is destroyed, allowing cleanup
 #[no_mangle]
 pub extern "C" fn session_on_close(
     session: *const Session,
@@ -107,6 +124,14 @@ pub extern "C" fn session_on_close(
     borrow(session).on_close(move || callback.call())
 }
 
+/// Registers a callback function which will be executed when this session is reopened.
+/// A session may be closed if it times out, or loses the connection to the database.
+/// In such situations, the session is reopened automatically when opening a new transaction.
+///
+/// @param session The session on which to register the callback
+/// @param data The argument to be passed to the callback function when it is executed
+/// @param callback The function to be called
+/// @param finished A function which will be executed when the session is destroyed, allowing cleanup
 #[no_mangle]
 pub extern "C" fn session_on_reopen(
     session: *const Session,

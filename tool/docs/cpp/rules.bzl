@@ -21,18 +21,18 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def doxygen_to_adoc(name, data, docs_dirs, **kwargs):
-    args = ["$(location %s)" % target for target in data] + [
+def doxygen_cpp_to_adoc(name, data, docs_dirs, output_dir, args = [], **kwargs):
+    extended_args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "cpp/docs",
-    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
+        output_dir,
+    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs] + args
     kt_jvm_binary(
         name = name,
         srcs = [
-            "//tool/docs:cpp/DoxygenParser.kt",
+            "//tool/docs:cpp/DoxygenParserCpp.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.docs.cpp.DoxygenParserKt",
-        args = args,
+        main_class = "com.vaticle.typedb.driver.tool.docs.cpp.DoxygenParserCppKt",
+        args = extended_args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",
             "@maven//:org_jsoup_jsoup",
