@@ -335,8 +335,6 @@ namespace TypeDB.Driver.Concept
             {
             }
 
-            // TODO: Is Label the same for Root?
-
             public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
             {
                 return new Promise<IType>(() => null);
@@ -352,8 +350,7 @@ namespace TypeDB.Driver.Concept
                 return new List<IType>(){this}
                     .Concat(transaction.Concepts.RootEntityType.GetSubtypes(transaction))
                     .Concat(transaction.Concepts.RootRelationType.GetSubtypes(transaction))
-                    .Concat(transaction.Concepts.RootAttributeType.GetSubtypes(transaction))
-                    .Select(obj => (ThingType)obj);
+                    .Concat(transaction.Concepts.RootAttributeType.GetSubtypes(transaction));
             }
 
             public override IEnumerable<IType> GetSubtypes(
@@ -364,7 +361,7 @@ namespace TypeDB.Driver.Concept
                         transaction.Concepts.RootEntityType,
                         transaction.Concepts.RootRelationType,
                         transaction.Concepts.RootAttributeType
-                    }.Select(obj => (ThingType)obj);
+                    };
             }
 
             public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
@@ -372,7 +369,6 @@ namespace TypeDB.Driver.Concept
                 return transaction.Concepts.RootEntityType.GetInstances(transaction)
                     .Concat(transaction.Concepts.RootRelationType.GetInstances(transaction))
                     .Concat(transaction.Concepts.RootAttributeType.GetInstances(transaction))
-                    .Select(obj => (ThingType)obj)
                     .Cast<IThing>();
             }
 
