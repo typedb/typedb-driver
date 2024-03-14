@@ -25,6 +25,11 @@ namespace TypeDB.Driver.Common
 {
     public abstract class ErrorMessage
     {
+        private readonly string _codePrefix;
+        private readonly string _codeNumber;
+        private readonly string _messagePrefix;
+        private readonly string _messageBody;
+
         public ErrorMessage(
             string codePrefix, int codeNumber, string messagePrefix, string messageBody)
         {
@@ -39,11 +44,6 @@ namespace TypeDB.Driver.Common
             var formattedBody = String.Format(_messageBody, errorParams);
             return $"[{_codePrefix}{_codeNumber}] {_messagePrefix}: {formattedBody}";
         }
-
-        private readonly string _codePrefix;
-        private readonly string _codeNumber;
-        private readonly string _messagePrefix;
-        private readonly string _messageBody;
     }
 
     namespace Error
