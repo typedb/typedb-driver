@@ -23,9 +23,6 @@ using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -35,51 +32,71 @@ using TypeDB.Driver.Common;
 using static TypeDB.Driver.Api.IConcept.Transitivity;
 using static TypeDB.Driver.Api.IThingType;
 using static TypeDB.Driver.Api.IThingType.Annotation;
-using static TypeDB.Driver.Test.Behaviour.RootLabel;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
+        public class RootLabel
+        {
+            public const string ENTITY = "entity";
+            public const string ATTRIBUTE = "attribute";
+            public const string RELATION = "relation";
+            public const string THING = "thing";
+
+            public static IEnumerable<string> Values
+            {
+                get
+                {
+                    yield return ENTITY;
+                    yield return ATTRIBUTE;
+                    yield return RELATION;
+                    yield return THING;
+                }
+            }
+        }
+
+        public static void ValidateRootLabel(string label)
+        {
+            var rootLabel = RootLabel.Values.Where(value => value.Equals(label)).FirstOrDefault();
+            if (rootLabel == null)
+            {
+                throw new BehaviourTestException($"Could not find such label {label}");
+            }
+        }
+
         public static IThingType GetThingType(string rootLabel, string typeLabel)
         {
-            Util.ValidateRootLabel(rootLabel);
+            ValidateRootLabel(rootLabel);
 
-            if (rootLabel == ENTITY)
+            switch (rootLabel)
             {
-                return Tx.Concepts.GetEntityType(typeLabel).Resolve();
+                case RootLabel.ENTITY:
+                    return Tx.Concepts.GetEntityType(typeLabel).Resolve();
+                case RootLabel.ATTRIBUTE:
+                    return Tx.Concepts.GetAttributeType(typeLabel).Resolve();
+                case RootLabel.RELATION:
+                    return Tx.Concepts.GetRelationType(typeLabel).Resolve();
+                default:
+                    throw new BehaviourTestException($"Label {rootLabel} is not accepted");
             }
-
-            if (rootLabel == ATTRIBUTE)
-            {
-                return Tx.Concepts.GetAttributeType(typeLabel).Resolve();
-            }
-
-            if (rootLabel == RELATION)
-            {
-                return Tx.Concepts.GetRelationType(typeLabel).Resolve();
-            }
-
-            throw new BehaviourTestException($"Label {rootLabel} is not accepted");
         }
 
         [Given(@"put (entity|relation) type: {}")]
         [When(@"put (entity|relation) type: {}")]
         public void PutThingType(string rootLabel, string typeLabel)
         {
-            if (rootLabel == ENTITY)
+            switch (rootLabel)
             {
-                Tx.Concepts.PutEntityType(typeLabel).Resolve();
-                return;
+                case RootLabel.ENTITY:
+                    Tx.Concepts.PutEntityType(typeLabel).Resolve();
+                    break;
+                case RootLabel.RELATION:
+                    Tx.Concepts.PutRelationType(typeLabel).Resolve();
+                    break;
+                default:
+                    throw new BehaviourTestException($"Label {rootLabel} is not accepted");
             }
-
-            if (rootLabel == RELATION)
-            {
-                Tx.Concepts.PutRelationType(typeLabel).Resolve();
-                return;
-            }
-
-            throw new BehaviourTestException($"Label {rootLabel} is not accepted");
         }
 
         public Label GetScopedLabel(string scopedLabels)
@@ -178,41 +195,37 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set supertype: ([a-zA-Z0-9-_]+)")]
         public void ThingTypeSetSupertype(string rootLabel, string typeLabel, string superLabel)
         {
-            Util.ValidateRootLabel(rootLabel);
-            
-            if (rootLabel == ENTITY)
+            ValidateRootLabel(rootLabel);
+
+            switch (rootLabel)
             {
-                IEntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve();
-                Tx.Concepts
-                    .GetEntityType(typeLabel).Resolve()
-                    .SetSupertype(Tx, entitySuperType).Resolve();
-
-                return;
+                case RootLabel.ENTITY:
+                {
+                    IEntityType entitySuperType = Tx.Concepts.GetEntityType(superLabel).Resolve();
+                    Tx.Concepts
+                        .GetEntityType(typeLabel).Resolve()
+                        .SetSupertype(Tx, entitySuperType).Resolve();
+                    break;
+                }
+                case RootLabel.ATTRIBUTE:
+                {
+                    IAttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve();
+                    Tx.Concepts
+                        .GetAttributeType(typeLabel).Resolve()
+                        .SetSupertype(Tx, attributeSuperType).Resolve();
+                    break;
+                }
+                case RootLabel.RELATION:
+                {
+                    IRelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve();
+                    Tx.Concepts
+                        .GetRelationType(typeLabel).Resolve()
+                        .SetSupertype(Tx, relationSuperType).Resolve();
+                    break;
+                }
+                default:
+                    throw new BehaviourTestException($"Label {rootLabel} is not accepted");
             }
-
-            if (rootLabel == ATTRIBUTE)
-            {
-                IAttributeType attributeSuperType = Tx.Concepts.GetAttributeType(superLabel).Resolve();
-                Tx.Concepts
-                    .GetAttributeType(typeLabel).Resolve()
-                    .SetSupertype(Tx, attributeSuperType).Resolve();
-
-                return;
-            }
-
-
-            if (rootLabel == RELATION)
-            {
-                IRelationType relationSuperType = Tx.Concepts.GetRelationType(superLabel).Resolve();
-                Tx.Concepts
-                    .GetRelationType(typeLabel).Resolve()
-                    .SetSupertype(Tx, relationSuperType).Resolve();
-
-                return;
-            }
-
-
-            throw new BehaviourTestException($"Label {rootLabel} is not accepted");
         }
 
         [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set supertype: ([a-zA-Z0-9-_]+); throws exception")]

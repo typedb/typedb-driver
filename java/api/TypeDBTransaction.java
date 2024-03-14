@@ -24,12 +24,9 @@ package com.vaticle.typedb.driver.api;
 import com.vaticle.typedb.driver.api.concept.ConceptManager;
 import com.vaticle.typedb.driver.api.logic.LogicManager;
 import com.vaticle.typedb.driver.api.query.QueryManager;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
-
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBTransaction extends AutoCloseable {
     /**
@@ -136,15 +133,6 @@ public interface TypeDBTransaction extends AutoCloseable {
             this.nativeObject = nativeObject;
 
             this.isWrite = nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Write;
-        }
-
-        public static Type of(com.vaticle.typedb.driver.jni.TransactionType transactionType) {
-            for (Type type : Type.values()) {
-                if (type.nativeObject == transactionType) {
-                    return type;
-                }
-            }
-            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {

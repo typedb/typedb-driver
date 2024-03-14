@@ -59,7 +59,7 @@ namespace TypeDB.Driver.Api
          * conceptMap.Map;
          * </pre>
          */
-        Dictionary<string, IConcept> Map { get; } // TODO: Could be confused with a Map function, what if we call it "Values"?
+        Dictionary<string, IConcept> Map { get; }
     
         /**
          * Retrieves a concept for a given variable name.

@@ -25,6 +25,7 @@ using System.Linq;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Concept;
+using static TypeDB.Driver.Concept.Thing;
 
 namespace TypeDB.Driver.Concept
 {
@@ -52,7 +53,7 @@ namespace TypeDB.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.attribute_get_owners(
                         NativeTransaction(transaction), NativeObject, null))
-                    .Select(obj => Thing.ThingOf(obj));
+                    .Select(obj => ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -69,7 +70,7 @@ namespace TypeDB.Driver.Concept
                         NativeTransaction(transaction),
                         NativeObject,
                         ((ThingType)ownerType).NativeObject))
-                    .Select(obj => Thing.ThingOf(obj));
+                    .Select(obj => ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {

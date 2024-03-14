@@ -94,19 +94,19 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"verifier is initialised")]
         public void VerifierIsInitialised()
         {
-            // Not enough instruments to verify for now. // TODO: Add task (for Rust as well)?
+            // Covered only in Core.
         }
 
         [Then(@"verify answers are sound")]
         public void VerifyAnswersAreSound()
         {
-            // Not enough instruments to verify for now. // TODO: Add task (for Rust as well)?
+            // Covered only in Core.
         }
 
         [Then(@"verify answers are complete")]
         public void VerifyAnswersAreComplete()
         {
-            // Not enough instruments to verify for now. // TODO: Add task (for Rust as well)?
+            // Covered only in Core.
         }
 
         [Then(@"verify answer set is equivalent for query")]
