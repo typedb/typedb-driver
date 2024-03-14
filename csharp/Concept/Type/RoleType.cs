@@ -27,6 +27,8 @@ using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Concept;
 using static TypeDB.Driver.Api.IConcept.Transitivity;
+using static TypeDB.Driver.Concept.Thing;
+using static TypeDB.Driver.Concept.ThingType;
 
 namespace TypeDB.Driver.Concept
 {
@@ -155,7 +157,7 @@ namespace TypeDB.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_types(
                         NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
-                    .Select(obj => ThingType.ThingTypeOf(obj));
+                    .Select(obj => ThingTypeOf(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -197,7 +199,7 @@ namespace TypeDB.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_instances(
                         NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
-                    .Select(obj => Thing.ThingOf(obj));
+                    .Select(obj => ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {

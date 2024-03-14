@@ -28,6 +28,7 @@ using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Concept;
 using TypeDB.Driver.Common.Validation;
+using static TypeDB.Driver.Concept.Concept;
 
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
 using QueryError = TypeDB.Driver.Common.Error.Query;
@@ -59,7 +60,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.concept_map_get_values(NativeObject))
-                    .Select(obj => Concept.ConceptOf(obj));
+                    .Select(obj => ConceptOf(obj));
             }
         }
     
@@ -86,7 +87,7 @@ namespace TypeDB.Driver.Concept
                 throw new TypeDBDriverException(QueryError.VARIABLE_DOES_NOT_EXIST, variable);
             }
 
-            return Concept.ConceptOf(concept);
+            return ConceptOf(concept);
         }
     
         public IConceptMap.IExplainables AllExplainables

@@ -31,7 +31,7 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public class Util
     {
-        public static readonly int KEY_ROW_INDEX = 0;
+        public const int KEY_ROW_INDEX = 0;
 
         public static List<T> ParseDataTableToTypeList<T>(DataTable dataTable, Func<string, T> converter)
         {
@@ -146,15 +146,6 @@ namespace TypeDB.Driver.Test.Behaviour
             }
 
             return result;
-        }
-
-        public static void ValidateRootLabel(string label)
-        {
-            var rootLabel = RootLabel.Values.Where(value => value.Equals(label)).FirstOrDefault();
-            if (rootLabel == null)
-            {
-                throw new BehaviourTestException($"Could not find such label {label}");
-            }
         }
     }
 }

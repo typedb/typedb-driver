@@ -96,7 +96,7 @@ namespace TypeDB.Driver.Concept
 
         public VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel)
         {
-            return SetRelates(transaction, roleLabel, (string)null);
+            return SetRelates(transaction, roleLabel, (string?)null);
         }
 
         public VoidPromise SetRelates(
@@ -106,7 +106,7 @@ namespace TypeDB.Driver.Concept
         }
 
         public VoidPromise SetRelates(
-            ITypeDBTransaction transaction, string roleLabel, string overriddenLabel)
+            ITypeDBTransaction transaction, string roleLabel, string? overriddenLabel)
         {
             return new VoidPromise(Pinvoke.typedb_driver.relation_type_set_relates(
                 NativeTransaction(transaction), NativeObject, roleLabel, overriddenLabel).Resolve);

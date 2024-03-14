@@ -40,7 +40,7 @@ namespace TypeDB.Driver.Concept
         {
         }
 
-        public static ThingType ThingTypeOf(Pinvoke.Concept nativeConcept) // TODO: Think about use cases and refactor!
+        public static IThingType ThingTypeOf(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity_type(nativeConcept))
                 return new EntityType(nativeConcept);

@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Concept
         {
         }
 
-        public static Concept ConceptOf(Pinvoke.Concept nativeConcept) // TODO: Refactor somehow?
+        public static IConcept ConceptOf(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity_type(nativeConcept))
                 return new EntityType(nativeConcept);

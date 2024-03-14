@@ -431,7 +431,7 @@ namespace TypeDB.Driver.Test.Behaviour
             public string OwnerIdentifier { get; }
             public List<Dictionary<string, string>> AnswersIdentifiers { get; }
 
-            public static readonly string GROUP_COLUMN_NAME = "owner";
+            public const string GROUP_COLUMN_NAME = "owner";
 
             public AnswerIdentifierGroup(List<Dictionary<string, string>> answerIdentifiers)
             {

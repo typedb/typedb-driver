@@ -25,6 +25,7 @@ using System.Linq;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Concept;
+using static TypeDB.Driver.Concept.Thing;
 
 namespace TypeDB.Driver.Concept
 {
@@ -70,7 +71,7 @@ namespace TypeDB.Driver.Concept
                         NativeTransaction(transaction),
                         NativeObject,
                         roleTypes.Select(obj => (Pinvoke.Concept)((RoleType)obj).NativeObject).ToArray<Pinvoke.Concept>()))
-                    .Select(obj => Thing.ThingOf(obj));
+                    .Select(obj => ThingOf(obj));
 
             }
             catch (Pinvoke.Error e)
@@ -92,7 +93,7 @@ namespace TypeDB.Driver.Concept
                 foreach (var rolePlayer in nativeRolePlayers)
                 {
                     RoleType role = new RoleType(Pinvoke.typedb_driver.role_player_get_role_type(rolePlayer));
-                    IThing player = Thing.ThingOf(Pinvoke.typedb_driver.role_player_get_player(rolePlayer));
+                    IThing player = ThingOf(Pinvoke.typedb_driver.role_player_get_player(rolePlayer));
 
                     if (!rolePlayers.ContainsKey(role))
                     {

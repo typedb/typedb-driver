@@ -19,11 +19,15 @@
  * under the License.
  */
 
+using System.Collections.Generic;
+using System.Linq;
+
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Api
 {
@@ -38,8 +42,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -51,8 +55,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsThingType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -64,8 +68,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsEntityType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -77,8 +81,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsAttributeType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -90,8 +94,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsRelationType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -103,8 +107,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsRoleType()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -129,8 +133,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsEntity()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -142,8 +146,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsRelation()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -155,8 +159,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsAttribute()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -168,8 +172,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         bool IsValue()
-        { 
-            return false; 
+        {
+            return false;
         }
 
         /**
@@ -334,19 +338,17 @@ namespace TypeDB.Driver.Api
          * attributeType.GetOwners(transaction, annotation, EXPLICIT);
          * </pre>
          */
-         public class Transitivity
-         {
-             public Pinvoke.Transitivity NativeObject { get; }
+        public class Transitivity
+        {
+            public Pinvoke.Transitivity NativeObject { get; }
 
-             public static readonly Transitivity TRANSITIVE = new Transitivity(Pinvoke.Transitivity.Transitive);
-             public static readonly Transitivity EXPLICIT = new Transitivity(Pinvoke.Transitivity.Explicit);
+            public static readonly Transitivity TRANSITIVE = new Transitivity(Pinvoke.Transitivity.Transitive);
+            public static readonly Transitivity EXPLICIT = new Transitivity(Pinvoke.Transitivity.Explicit);
 
-             private Transitivity(Pinvoke.Transitivity nativeObject)
-             {
-                 NativeObject = nativeObject;
-             }
-
-             // TODO: "of" method?
-         }
+            private Transitivity(Pinvoke.Transitivity nativeObject)
+            {
+                NativeObject = nativeObject;
+            }
+        }
     }
 }
