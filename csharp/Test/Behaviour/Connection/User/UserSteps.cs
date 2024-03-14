@@ -38,26 +38,26 @@ namespace TypeDB.Driver.Test.Behaviour
     {
         private bool IsUserInUsers(string username) 
         {
-            HashSet<string> users = Driver.Users.All.Select(user => user.Username).ToHashSet();
+            HashSet<string> users = Driver!.Users.All.Select(user => user.Username).ToHashSet();
             return users.Contains(username);
         }
     
         [Then(@"get connected user")]
         public void GetConnectedUser()
         {
-            var retrievedUser = Driver.User;
+            var retrievedUser = Driver!.User;
         }
     
         [Then(@"users get user: {}")]
         public void UsersGetUser(string username)
         {
-            var retrievedUser = Driver.Users.Get(username);
+            var retrievedUser = Driver!.Users.Get(username);
         }
     
         [Then(@"users get all")]
         public void UsersGetAll()
         {
-            var allRetrievedUsers = Driver.Users.All;
+            var allRetrievedUsers = Driver!.Users.All;
         }
 
         [When(@"users contains: {}")]
@@ -77,32 +77,33 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"users create: {}, {}")]
         public void UsersCreate(string username, string password) 
         {
-            Driver.Users.Create(username, password);
+            Driver!.Users.Create(username, password);
         }
 
         [Given(@"users delete: {}")]
         [When(@"users delete: {}")]
         public void UsersDelete(string username) 
         {
-            Driver.Users.Delete(username);
+            Driver!.Users.Delete(username);
         }
     
-        [When(@"user password update: {}, {}")]
+        [Then(@"user password update: {}, {}")]
+        [And(@"user password update: {}, {}")]
         public void UserPasswordUpdate(string oldPassword, string newPassword)
         {
-            Driver.Users.Get(Driver.User.Username).UpdatePassword(oldPassword, newPassword);
+            Driver!.Users.Get(Driver.User.Username)!.UpdatePassword(oldPassword, newPassword);
         }
     
         [Then(@"user expiry-seconds")]
         public void UserExpirySeconds() 
         {
-            var retrievedSeconds = Driver.User.PasswordExpirySeconds;
+            var retrievedSeconds = Driver!.User.PasswordExpirySeconds;
         }
     
         [When(@"users password set: {}, {}")]
         public void UsersPasswordSet(string username, string newPassword)
         {
-            Driver.Users.SetPassword(username, newPassword);
+            Driver!.Users.SetPassword(username, newPassword);
         }
     
         [Then(@"users get user: {}; throws exception")]
@@ -129,26 +130,26 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
         }
     
-        [When(@"users create: {}, {}; throws exception")]
+        [Then(@"users create: {}, {}; throws exception")]
         public void UsersCreateThrowsException(string username, string password) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
         }
     
-        [When(@"users delete: {}; throws exception")]
+        [Then(@"users delete: {}; throws exception")]
         public void UsersDeleteThrowsException(string username) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
         }
     
-        [When(@"user password update: {}, {}; throws exception")]
+        [Then(@"user password update: {}, {}; throws exception")]
         public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
         {
             Assert.Throws<TypeDBDriverException>(
                 () => UserPasswordUpdate(oldPassword, newPassword));
         }
     
-        [When(@"users password set: {}, {}; throws exception")]
+        [Then(@"users password set: {}, {}; throws exception")]
         public void UsersPasswordSetThrowsException(string username, string passwordNew) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));

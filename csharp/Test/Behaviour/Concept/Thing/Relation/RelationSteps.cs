@@ -43,26 +43,26 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             Put(
                 var,
-                Tx.Concepts.GetRelationType(typeLabel).Resolve().Create(Tx).Resolve());
+                Tx.Concepts.GetRelationType(typeLabel).Resolve()!.Create(Tx).Resolve()!);
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) create new instance; throws exception")]
         public void RelationTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() =>
-                Tx.Concepts.GetRelationType(typeLabel).Resolve().Create(Tx).Resolve());
+                Tx.Concepts.GetRelationType(typeLabel).Resolve()!.Create(Tx).Resolve()!);
         }
 
         [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void RelationTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, keyValue).Resolve()!;
 
             IRelation relation = Tx.Concepts
-                .GetRelationType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetRelationType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
@@ -73,12 +73,12 @@ namespace TypeDB.Driver.Test.Behaviour
             string var, string type, string keyType, string keyValue)
         {
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, keyValue).Resolve()!;
 
             IRelation relation = Tx.Concepts
-                .GetRelationType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetRelationType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
@@ -88,13 +88,15 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
+            var timeZonedValue = PutTimeZoneInfo(keyValue);
+
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, timeZonedValue).Resolve()!;
 
             IRelation relation = Tx.Concepts
-                .GetRelationType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetRelationType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             relation.SetHas(Tx, key).Resolve();
             Put(var, relation);
@@ -104,8 +106,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
             var owner = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -113,14 +115,12 @@ namespace TypeDB.Driver.Test.Behaviour
             Put(var1, owner);
         }
 
-        IEnumerable<IThing> cache = null;
-
         [When(@"\$([a-zA-Z0-9]+) = relation\(([a-zA-Z0-9-_]+)\) get instance with key\(([a-zA-Z0-9-_]+)\): {word}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
             var owner = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -132,9 +132,11 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
+            var timeZonedValue = PutTimeZoneInfo(keyValue);
+
             var owner = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, timeZonedValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -146,27 +148,27 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetInstancesContain(string typeLabel, string var)
         {
             var instances = Tx.Concepts
-                .GetRelationType(typeLabel).Resolve()
+                .GetRelationType(typeLabel).Resolve()!
                 .GetInstances(Tx);
 
-            Assert.True(instances.Where(i => i.Equals(Get(var))).Any());
+            Assert.True(instances.Where(i => i.Equals(Get(var)!)).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances do not contain: \$([a-zA-Z0-9]+)")]
         public void RelationTypeGetInstancesDoNotContain(string typeLabel, string var)
         {
             var instances = Tx.Concepts
-                .GetRelationType(typeLabel).Resolve()
+                .GetRelationType(typeLabel).Resolve()!
                 .GetInstances(Tx);
 
-            Assert.False(instances.Where(i => i.Equals(Get(var))).Any());
+            Assert.False(instances.Where(i => i.Equals(Get(var)!)).Any());
         }
 
         [Then(@"relation\(([a-zA-Z0-9-_]+)\) get instances is empty")]
         public void RelationTypeGetInstancesIsEmpty(string typeLabel)
         {
             var instances = Tx.Concepts
-                .GetRelationType(typeLabel).Resolve()
+                .GetRelationType(typeLabel).Resolve()!
                 .GetInstances(Tx);
 
             Assert.Equal(0, instances.Count());
@@ -175,54 +177,54 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"relation \$([a-zA-Z0-9]+) add player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+)")]
         public void RelationAddPlayerForRole(string var1, string roleTypeLabel, string var2)
         {
-            var relates = Get(var1)
+            var relates = Get(var1)!
                 .AsRelation()
                 .Type.AsRelationType()
-                .GetRelates(Tx, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve()!;
 
-            Get(var1)
+            Get(var1)!
                 .AsRelation()
-                .AddPlayer(Tx, relates, Get(var2)).Resolve();
+                .AddPlayer(Tx, relates, Get(var2)!).Resolve();
         }
 
         [When(@"relation \$([a-zA-Z0-9]+) add player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+); throws exception")]
         public void RelationAddPlayerForRoleThrowsException(string var1, string roleTypeLabel, string var2)
         {
-            var relates = Get(var1)
+            var relates = Get(var1)!
                 .AsRelation()
                 .Type.AsRelationType()
-                .GetRelates(Tx, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve()!;
 
-            Assert.Throws<TypeDBDriverException>(() => Get(var1)
+            Assert.Throws<TypeDBDriverException>(() => Get(var1)!
                 .AsRelation()
-                .AddPlayer(Tx, relates, Get(var2)).Resolve());
+                .AddPlayer(Tx, relates, Get(var2)!).Resolve());
         }
 
         [When(@"relation \$([a-zA-Z0-9]+) remove player for role\(([a-zA-Z0-9-_]+)\): \$([a-zA-Z0-9]+)")]
         public void RelationRemovePlayerForRole(string var1, string roleTypeLabel, string var2)
         {
-            var relates = Get(var1)
+            var relates = Get(var1)!
                 .AsRelation()
                 .Type.AsRelationType()
-                .GetRelates(Tx, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve()!;
 
-            Get(var1)
+            Get(var1)!
                 .AsRelation()
-                .RemovePlayer(Tx, relates, Get(var2)).Resolve();
+                .RemovePlayer(Tx, relates, Get(var2)!).Resolve();
         }
 
         [Then(@"relation \$([a-zA-Z0-9]+) get players contain:")]
         public void RelationGetPlayersContain(string var, DataTable playersData)
         {
             Dictionary<string, string> players = Util.ParseDataTableToDictionary(playersData);
-            IRelation relation = Get(var).AsRelation();
+            IRelation relation = Get(var)!.AsRelation();
 
             foreach (var (rt, var2) in players)
             {
                 var relationPlayers = relation
-                    .GetPlayers(Tx)[relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve()];
+                    .GetPlayers(Tx)[relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve()!];
 
-                Assert.True(relationPlayers.Contains(Get(var2.Substring(1))));
+                Assert.True(relationPlayers.Contains(Get(var2.Substring(1))!));
             }
         }
 
@@ -231,17 +233,17 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             Dictionary<string, string> expectedPlayers = Util.ParseDataTableToDictionary(playersData);
 
-            IRelation relation = Get(var).AsRelation();
+            IRelation relation = Get(var)!.AsRelation();
 
             foreach (var (rt, var2) in expectedPlayers)
             {
                 var players = relation.GetPlayers(Tx);
-                var relates = relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve();
+                var relates = relation.Type.AsRelationType().GetRelates(Tx, rt).Resolve()!;
 
                 if (players.ContainsKey(relates))
                 {
                     var relatesPlayers = players[relates];
-                    Assert.False(relatesPlayers.Contains(Get(var2.Substring(1))));
+                    Assert.False(relatesPlayers.Contains(Get(var2.Substring(1))!));
                 }
             }
         }
@@ -249,46 +251,46 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"relation \$([a-zA-Z0-9]+) get players contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersContain(string var1, string var2)
         {
-            var players = Get(var1).AsRelation().GetPlayersByRoleType(Tx);
-            Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
+            var players = Get(var1)!.AsRelation().GetPlayersByRoleType(Tx);
+            Assert.True(players.Where(p => p.Equals(Get(var2)!)).Any());
         }
 
         [Then(@"relation \$([a-zA-Z0-9]+) get players do not contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersDoNotContain(string var1, string var2)
         {
-            var players = Get(var1).AsRelation().GetPlayersByRoleType(Tx);
+            var players = Get(var1)!.AsRelation().GetPlayersByRoleType(Tx);
 
-            Assert.False(players.Where(p => p.Equals(Get(var2))).Any());
+            Assert.False(players.Where(p => p.Equals(Get(var2)!)).Any());
         }
 
         [Then(@"relation \$([a-zA-Z0-9]+) get players for role\(([a-zA-Z0-9-_]+)\) contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersForRoleContain(string var1, string roleTypeLabel, string var2)
         {
-            var relates = Get(var1)
+            var relates = Get(var1)!
                 .AsRelation()
                 .Type.AsRelationType()
-                .GetRelates(Tx, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve()!;
 
-            var players = Get(var1)
+            var players = Get(var1)!
                 .AsRelation()
                 .GetPlayersByRoleType(Tx, relates);
 
-            Assert.True(players.Where(p => p.Equals(Get(var2))).Any());
+            Assert.True(players.Where(p => p.Equals(Get(var2)!)).Any());
         }
 
         [Then(@"relation \$([a-zA-Z0-9]+) get players for role\(([a-zA-Z0-9-_]+)\) do not contain: \$([a-zA-Z0-9]+)")]
         public void RelationGetPlayersForRoleDoNotContain(string var1, string roleTypeLabel, string var2)
         {
-            var relates = Get(var1)
+            var relates = Get(var1)!
                 .AsRelation()
                 .Type.AsRelationType()
-                .GetRelates(Tx, roleTypeLabel).Resolve();
+                .GetRelates(Tx, roleTypeLabel).Resolve()!;
 
-            var players = Get(var1)
+            var players = Get(var1)!
                 .AsRelation()
                 .GetPlayersByRoleType(Tx, relates);
 
-            Assert.False(players.Where(p => p.Equals(Get(var2))).Any());
+            Assert.False(players.Where(p => p.Equals(Get(var2)!)).Any());
         }
     }
 }

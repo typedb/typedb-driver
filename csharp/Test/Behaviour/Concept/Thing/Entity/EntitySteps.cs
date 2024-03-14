@@ -37,8 +37,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstance(string var, string typeLabel)
         {
             var entityType = Tx.Concepts
-                .GetEntityType(typeLabel).Resolve()
-                .Create(Tx).Resolve();
+                .GetEntityType(typeLabel).Resolve()!
+                .Create(Tx).Resolve()!;
 
             Put(var, entityType);
         }
@@ -48,20 +48,20 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
             Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
-                .GetEntityType(typeLabel).Resolve()
-                .Create(Tx).Resolve());
+                .GetEntityType(typeLabel).Resolve()!
+                .Create(Tx).Resolve()!);
         }
 
         [When(@"\$([a-zA-Z0-9]+) = entity\(([a-zA-Z0-9-_]+)\) create new instance with key\(([a-zA-Z0-9-_]+)\): {int}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, keyValue).Resolve()!;
 
             IEntity entity = Tx.Concepts
-                .GetEntityType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetEntityType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -72,12 +72,12 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, keyValue).Resolve()!;
 
             IEntity entity = Tx.Concepts
-                .GetEntityType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetEntityType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -88,13 +88,15 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
+            var timeZonedValue = PutTimeZoneInfo(keyValue);
+
             IAttribute key = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Put(Tx, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()!
+                .Put(Tx, timeZonedValue).Resolve()!;
 
             IEntity entity = Tx.Concepts
-                .GetEntityType(type).Resolve()
-                .Create(Tx).Resolve();
+                .GetEntityType(type).Resolve()!
+                .Create(Tx).Resolve()!;
 
             entity.SetHas(Tx, key).Resolve();
 
@@ -105,8 +107,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, long keyValue)
         {
             var entityType = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -118,8 +120,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             var entityType = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -131,9 +133,11 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
+            var timeZonedValue = PutTimeZoneInfo(keyValue);
+
             var entityType = Tx.Concepts
-                .GetAttributeType(keyType).Resolve()
-                .Get(Tx, keyValue).Resolve()
+                .GetAttributeType(keyType).Resolve()!
+                .Get(Tx, timeZonedValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
@@ -145,7 +149,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstancesContain(string typeLabel, string var)
         {
             Assert.True(Tx.Concepts
-                .GetEntityType(typeLabel).Resolve()
+                .GetEntityType(typeLabel).Resolve()!
                 .GetInstances(Tx)
                 .Where(i => i.Equals(Get(var)))
                 .Any());
@@ -155,7 +159,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstancesIsEmpty(string typeLabel)
         {
             var instances = Tx.Concepts
-                .GetEntityType(typeLabel).Resolve()
+                .GetEntityType(typeLabel).Resolve()!
                 .GetInstances(Tx);
 
             Assert.Equal(0, instances.Count());

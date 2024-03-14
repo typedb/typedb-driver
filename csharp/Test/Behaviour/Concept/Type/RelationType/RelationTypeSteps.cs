@@ -40,7 +40,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
                 .SetRelates(Tx, roleLabel).Resolve();
         }
 
@@ -55,7 +55,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeUnsetRelatedRoleType(string relationLabel, string roleLabel)
         {
             Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
                 .UnsetRelates(Tx, roleLabel).Resolve();
         }
 
@@ -69,7 +69,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeSetRelatesRoleTypeAs(string relationLabel, string roleLabel, string superRole)
         {
             Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
                 .SetRelates(Tx, roleLabel, superRole).Resolve();
         }
 
@@ -85,8 +85,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeRemoveRelatedRole(string relationLabel, string roleLabel)
         {
             Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .Delete(Tx).Resolve();
         }
 
@@ -94,8 +94,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeIsNull(string relationLabel, string roleLabel, bool isNull)
         {
             var roleType = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve();
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!;
 
             Assert.Equal(isNull, roleType == null);
         }
@@ -105,8 +105,8 @@ namespace TypeDB.Driver.Test.Behaviour
             string relationLabel, string roleLabel, bool isNull)
         {
             var overridenType = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelatesOverridden(Tx, roleLabel).Resolve();
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelatesOverridden(Tx, roleLabel).Resolve()!;
 
             Assert.Equal(isNull, overridenType == null);
         }
@@ -115,8 +115,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeSetLabel(string relationLabel, string roleLabel, string newLabel)
         {
             Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .SetLabel(Tx, newLabel).Resolve();
         }
 
@@ -124,8 +124,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeGetLabel(string relationLabel, string roleLabel, string getLabel)
         {
             var relates = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve();
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!;
 
             Assert.Equal(getLabel, relates.Label.Name);
         }
@@ -135,8 +135,8 @@ namespace TypeDB.Driver.Test.Behaviour
             string relationLabel, string roleLabel, string getLabel)
         {
             var relates = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelatesOverridden(Tx, roleLabel).Resolve();
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelatesOverridden(Tx, roleLabel).Resolve()!;
 
             Assert.Equal(getLabel, relates.Label.Name);
         }
@@ -145,8 +145,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
             var isRelatesAbstract = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .IsAbstract();
 
             Assert.Equal(isAbstract, isRelatesAbstract);
@@ -155,7 +155,7 @@ namespace TypeDB.Driver.Test.Behaviour
         private HashSet<Label> RelationTypeGetRelatedRoleTypes(string relationLabel)
         {
             return Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
                 .GetRelates(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
@@ -187,7 +187,7 @@ namespace TypeDB.Driver.Test.Behaviour
         private HashSet<Label> RelationTypeGetRelatedExplicitRoleTypes(string relationLabel)
         {
             return Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
                 .GetRelates(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
                 .ToHashSet();
@@ -224,13 +224,13 @@ namespace TypeDB.Driver.Test.Behaviour
             Label superLabel = GetScopedLabel(superLabelData);
 
             IRoleType superLabelType = Tx.Concepts
-                .GetRelationType(superLabel.Scope).Resolve()
-                .GetRelates(Tx, superLabel.Name).Resolve();
+                .GetRelationType(superLabel.Scope!).Resolve()!
+                .GetRelates(Tx, superLabel.Name).Resolve()!;
 
             IRoleType labelSupertype = Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
-                .GetSupertype(Tx).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
+                .GetSupertype(Tx).Resolve()!
                 .AsRoleType();
 
             Assert.Equal(superLabelType, labelSupertype);
@@ -239,8 +239,8 @@ namespace TypeDB.Driver.Test.Behaviour
         private HashSet<Label> RelationTypeGetRoleTypeGetSupertypes(string relationLabel, string roleLabel) 
         {
             return Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .GetSupertypes(Tx).Select(obj => obj.Label).ToHashSet();
         }
 
@@ -272,8 +272,8 @@ namespace TypeDB.Driver.Test.Behaviour
         private HashSet<string> RelationTypeGetRoleTypeGetPlayers(string relationLabel, string roleLabel) 
         {
             return Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .GetPlayerTypes(Tx).Select(t => t.Label.Name)
                 .ToHashSet();
         }
@@ -306,8 +306,8 @@ namespace TypeDB.Driver.Test.Behaviour
         private HashSet<Label> RelationTypeGetRoleTypeGetSubtypes(string relationLabel, string roleLabel) 
         {
             return Tx.Concepts
-                .GetRelationType(relationLabel).Resolve()
-                .GetRelates(Tx, roleLabel).Resolve()
+                .GetRelationType(relationLabel).Resolve()!
+                .GetRelates(Tx, roleLabel).Resolve()!
                 .GetSubtypes(Tx)
                 .Select(obj => obj.Label)
                 .ToHashSet();
