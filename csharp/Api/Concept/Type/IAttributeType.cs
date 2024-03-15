@@ -136,6 +136,7 @@ namespace TypeDB.Driver.Api
         /**
          * Adds and returns an <code>IAttribute</code> of this <code>IAttributeType</code>
          * with the given <code>DateTime</code> value.
+         * The input DateTime value is treated as timezone naive, with DateTimeKind being ignored.
          *
          * <h3>Examples</h3>
          * <pre>

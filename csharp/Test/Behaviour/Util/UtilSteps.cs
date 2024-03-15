@@ -28,15 +28,6 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        public static string CurrentTimeZoneId = TimeZoneInfo.Local.Id;
-
-        public DateTime PutTimeZoneInfo(DateTime dateTime)
-        {
-            Console.WriteLine(CurrentTimeZoneId);
-            Console.WriteLine($"Inut = {dateTime}; CONVERTED: {TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId)}");
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId);
-        }
-
         [Then(@"wait {} seconds")]
         public void WaitSeconds(int seconds)
         {
@@ -47,7 +38,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"set time-zone is: {}")]
         public void SetTimeZoneIs(string timeZoneId)
         {
-            CurrentTimeZoneId = timeZoneId;
+            // no-op: C# doesn't support time zone changes.
         }
     }
 }
