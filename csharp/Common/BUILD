@@ -32,7 +32,7 @@ csharp_library(
         "*.cs",
         "*/*.cs",
     ]),
-    deps = ["//csharp:typedb_driver_Pinvoke"],
+    deps = ["//csharp:typedb_driver_pinvoke"],
     runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,

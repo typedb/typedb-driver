@@ -32,7 +32,7 @@ csharp_library(
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
-        "//csharp:typedb_driver_Pinvoke",
+        "//csharp:typedb_driver_pinvoke",
     ],
     nullable = nullable_context,
     target_frameworks = target_frameworks,
