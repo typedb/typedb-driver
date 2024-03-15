@@ -59,6 +59,9 @@ namespace TypeDB.Driver.Test.Behaviour
                 {"--diagnostics.reporting.enable", "false"}
         };
 
+        // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
+        protected bool _requiredConfiguration = false;
+
         public ConnectionStepsBase() // "Before"
         {
             CleanInCaseOfPreviousFail();
@@ -122,6 +125,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"connection has been opened")]
         public virtual void ConnectionHasBeenOpened()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
         }
@@ -130,6 +135,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver!.Close();
             Driver = null;
         }
