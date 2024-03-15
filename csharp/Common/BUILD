@@ -28,10 +28,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
     name = "common",
-    srcs = glob([
-        "*.cs",
-        "*/*.cs",
-    ]),
+    srcs = glob(["*.cs", "*/*.cs"]),
     deps = ["//csharp:typedb_driver_pinvoke"],
     runtime_identifier = "any",
     nullable = nullable_context,
@@ -43,9 +40,6 @@ csharp_library(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob([
-        "*",
-        "*/*",
-    ]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
 )

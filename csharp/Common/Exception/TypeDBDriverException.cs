@@ -70,6 +70,6 @@ namespace TypeDB.Driver.Common
             get { return this.GetType().Name; }
         }
 
-        public ErrorMessage? ErrorMessage { get; private set; }
+        public readonly ErrorMessage? ErrorMessage;
     }
 }

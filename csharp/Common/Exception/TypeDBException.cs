@@ -31,6 +31,6 @@ namespace TypeDB.Driver.Common
             Code = code;
         }
 
-        public string Code;
+        public readonly string Code;
     }
 }
