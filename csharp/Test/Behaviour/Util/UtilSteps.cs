@@ -34,8 +34,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             Console.WriteLine(CurrentTimeZoneId);
             Console.WriteLine($"Inut = {dateTime}; CONVERTED: {TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId)}");
-//            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId); // TODO
-            return dateTime;
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, CurrentTimeZoneId);
         }
 
         [Then(@"wait {} seconds")]

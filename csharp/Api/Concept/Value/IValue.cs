@@ -168,6 +168,7 @@ namespace TypeDB.Driver.Api
 
         /**
          * Returns a <code>datetime</code> value of this value concept.
+         * This value contains raw date and time without considering your time zone (Kind = Unspecified).
          * If the value has another type, raises an exception.
          *
          * <h3>Examples</h3>

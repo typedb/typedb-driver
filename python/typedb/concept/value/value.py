@@ -60,7 +60,7 @@ class _Value(Value, _Concept):
         return _Value(value_new_string(value))
 
     @of.register
-    def _(value: datetime):
+    def _(value: datetime): # TODO: .replace(tzinfo) looks incorrect and error-prone.
         return _Value(value_new_date_time_from_millis(int(value.replace(tzinfo=timezone.utc).timestamp() * 1000)))
 
     @of.register

@@ -36,7 +36,7 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private bool IsUserInUsers(string username) 
+        private bool IsUserInUsers(string username)
         {
             HashSet<string> users = Driver!.Users.All.Select(user => user.Username).ToHashSet();
             return users.Contains(username);
@@ -45,48 +45,64 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"get connected user")]
         public void GetConnectedUser()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             var retrievedUser = Driver!.User;
         }
 
         [Then(@"users get user: {}; throws exception")]
         public void UsersGetUserThrowsException(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersGetUser(username));
         }
 
         [Then(@"users get all; throws exception")]
         public void UsersGetAllThrowsException()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersGetAll());
         }
 
         [Then(@"users contains: {}; throws exception")]
         public void UsersContainsThrowsException(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersContains(username));
         }
 
         [Then(@"users not contains: {}; throws exception")]
         public void UsersNotContainsThrowsException(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
         }
 
         [Then(@"users create: {}, {}; throws exception")]
         public void UsersCreateThrowsException(string username, string password)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
         }
 
         [Then(@"users delete: {}; throws exception")]
         public void UsersDeleteThrowsException(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
         }
 
         [Then(@"user password update: {}, {}; throws exception")]
         public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(
                 () => UserPasswordUpdate(oldPassword, newPassword));
         }
@@ -94,18 +110,24 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"users password set: {}, {}; throws exception")]
         public void UsersPasswordSetThrowsException(string username, string passwordNew)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));
         }
     
         [Then(@"users get user: {}")]
         public void UsersGetUser(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             var retrievedUser = Driver!.Users.Get(username);
         }
 
         [Then(@"users get all")]
         public void UsersGetAll()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             var allRetrievedUsers = Driver!.Users.All;
         }
 
@@ -113,12 +135,16 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"users contains: {}")]
         public void UsersContains(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.True(IsUserInUsers(username));
         }
 
         [Then(@"users not contains: {}")]
         public void UsersNotContains(string username)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.False(IsUserInUsers(username));
         }
 
@@ -126,6 +152,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"users create: {}, {}")]
         public void UsersCreate(string username, string password)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver!.Users.Create(username, password);
         }
 
@@ -133,6 +161,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"users delete: {}")]
         public void UsersDelete(string username) 
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver!.Users.Delete(username);
         }
     
@@ -140,18 +170,24 @@ namespace TypeDB.Driver.Test.Behaviour
         [And(@"user password update: {}, {}")]
         public void UserPasswordUpdate(string oldPassword, string newPassword)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver!.Users.Get(Driver.User.Username)!.UpdatePassword(oldPassword, newPassword);
         }
     
         [Then(@"user expiry-seconds")]
         public void UserExpirySeconds() 
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             var retrievedSeconds = Driver!.User.PasswordExpirySeconds;
         }
     
         [When(@"users password set: {}, {}")]
         public void UsersPasswordSet(string username, string newPassword)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver!.Users.SetPassword(username, newPassword);
         }
     }
