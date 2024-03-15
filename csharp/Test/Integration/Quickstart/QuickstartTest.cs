@@ -20,6 +20,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -91,6 +92,63 @@ namespace TypeDB.Driver.Test.Integration
     [TestFixture]
     public class ConnectionTestFixture
     {
+        public ConnectionTestFixture()
+        {
+            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
+
+            try {var db = driver.Databases.Get("mydb");
+            if (db != null) db.Delete();} catch(TypeDBDriverException e) { Console.WriteLine(e); }
+        }
+
+        [Test]
+        public void Test()
+        {
+            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
+
+            string dbName = "mydb";
+            driver.Databases.Create(dbName);
+            IDatabase mydb = driver.Databases.Get(dbName);
+            System.Console.WriteLine(mydb.Name);
+
+            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+            {
+                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                {
+                    writeTransaction.Query.Define("define person sub entity;").Resolve(); // Can throw exceptions, so could be wrapped in try-catch!
+
+                    string longQuery = "define name sub attribute, value string; person owns name;";
+                    writeTransaction.Query.Define(longQuery).Resolve();
+
+                    writeTransaction.Commit();
+                }
+            }
+
+            ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA);
+            ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
+
+            string query = "insert $p isa person, has name 'Alice';";
+            var results = dataWriteTransaction.Query.Insert(query).ToArray();
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+
+            dataWriteTransaction.Close();
+            dataSession.Close();
+
+            dataSession = driver.Session(dbName, SessionType.DATA);
+            dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
+
+            var results2 = dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
+            foreach (var result in results2)
+            {
+                Console.WriteLine(result);
+            }
+
+
+            mydb.Delete();
+        }
+
         [Test]
         public void OpenAndCloseConnection()
         {
