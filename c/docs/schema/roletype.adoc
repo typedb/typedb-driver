@@ -1,0 +1,240 @@
+[#_role_type_delete]
+==== role_type_delete
+
+[source,cpp]
+----
+struct VoidPromise* role_type_delete(struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Deletes this role type from the database.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_role_type_get_name]
+==== role_type_get_name
+
+[source,cpp]
+----
+char* role_type_get_name(const struct Concept* role_type)
+----
+
+
+
+Gets the name of this role type.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_role_type_get_player_instances]
+==== role_type_get_player_instances
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_player_instances(struct Transaction* transaction, const struct Concept* role_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves the ``Thing`` instances that play this role. Specify ``Transitive`` for direct and indirect playing, or ``Explicit`` for direct playing only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_get_player_types]
+==== role_type_get_player_types
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_player_types(struct Transaction* transaction, const struct Concept* role_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves the ``ThingType``s whose instances play this role. Specify ``Transitive`` for direct and indirect playing, or ``Explicit`` for direct playing only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_get_relation_instances]
+==== role_type_get_relation_instances
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_relation_instances(struct Transaction* transaction, const struct Concept* role_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves the ``Relation`` instances that this role is related to. Specify ``Transitive`` for direct and indirect relation, or ``Explicit`` for direct relation only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_get_relation_type]
+==== role_type_get_relation_type
+
+[source,cpp]
+----
+struct ConceptPromise* role_type_get_relation_type(struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Retrieves the ``RelationType`` that this role is directly related to.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_role_type_get_relation_types]
+==== role_type_get_relation_types
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_relation_types(struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_get_scope]
+==== role_type_get_scope
+
+[source,cpp]
+----
+char* role_type_get_scope(const struct Concept* role_type)
+----
+
+
+
+Gets the 'scope' of this role type. This corresponds to the label of the ``RelationType`` it is directly related to.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_role_type_get_subtypes]
+==== role_type_get_subtypes
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_subtypes(struct Transaction* transaction, const struct Concept* role_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the given ``RoleType``. Specify ``Transitive`` for direct and indirect subtypes, Or ``Explicit`` for directly subtypes only.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_get_supertype]
+==== role_type_get_supertype
+
+[source,cpp]
+----
+struct ConceptPromise* role_type_get_supertype(struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Retrieves the most immediate supertype of the given ``RoleType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_role_type_get_supertypes]
+==== role_type_get_supertypes
+
+[source,cpp]
+----
+struct ConceptIterator* role_type_get_supertypes(struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Retrieves all supertypes of the given ``RoleType``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_role_type_is_abstract]
+==== role_type_is_abstract
+
+[source,cpp]
+----
+bool role_type_is_abstract(const struct Concept* role_type)
+----
+
+
+
+Checks if the role type is prevented from having data instances (i.e., ``abstract``).
+
+[caption=""]
+.Returns
+`bool`
+
+[#_role_type_is_deleted]
+==== role_type_is_deleted
+
+[source,cpp]
+----
+struct BoolPromise* role_type_is_deleted(const struct Transaction* transaction, const struct Concept* role_type)
+----
+
+
+
+Check if the role type has been deleted
+
+[caption=""]
+.Returns
+`struct BoolPromise*`
+
+[#_role_type_is_root]
+==== role_type_is_root
+
+[source,cpp]
+----
+bool role_type_is_root(const struct Concept* role_type)
+----
+
+
+
+Checks if the role type is the root role type, ""relation:role""
+
+[caption=""]
+.Returns
+`bool`
+
+[#_role_type_set_label]
+==== role_type_set_label
+
+[source,cpp]
+----
+struct VoidPromise* role_type_set_label(struct Transaction* transaction, const struct Concept* role_type, const char* new_label)
+----
+
+
+
+Renames the label of the type. The new label must remain unique in the hierarchy of a relation type.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

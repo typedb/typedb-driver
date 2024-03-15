@@ -47,7 +47,7 @@ Types which have `*_close` methods will be freed on close.
 ```c
     ...
     string_free(gotName);
-    database_drop(database); // Not to be confused with database_delete.
+    database_close(database);
     database_manager_drop(databaseManager);
     connection_close(connection);
 ```

@@ -92,6 +92,7 @@ error_messages! { InternalError
         6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
 }
 
+/// Represents errors encountered during operation.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Error {
     Connection(ConnectionError),

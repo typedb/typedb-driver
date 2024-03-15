@@ -1,0 +1,205 @@
+[#_query_define]
+==== query_define
+
+[source,cpp]
+----
+struct VoidPromise* query_define(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Define query in the transaction.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_query_delete]
+==== query_delete
+
+[source,cpp]
+----
+struct VoidPromise* query_delete(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Delete query in the transaction.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_query_explain]
+==== query_explain
+
+[source,cpp]
+----
+struct ExplanationIterator* query_explain(struct Transaction* transaction, const struct Explainable* explainable, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Explain query in the transaction.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     explainable
+     The Explainable to be explained
+    
+    
+     options
+     Specify query options
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explainable` a| The Explainable to be explained a| 
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`struct ExplanationIterator*`
+
+[#_query_fetch]
+==== query_fetch
+
+[source,cpp]
+----
+struct StringIterator* query_fetch(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Fetch query in the transaction.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_query_get]
+==== query_get
+
+[source,cpp]
+----
+struct ConceptMapIterator* query_get(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Get (Get) query in the transaction.
+
+[caption=""]
+.Returns
+`struct ConceptMapIterator*`
+
+[#_query_get_aggregate]
+==== query_get_aggregate
+
+[source,cpp]
+----
+struct ConceptPromise* query_get_aggregate(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Get Aggregate query in the transaction.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_query_get_group]
+==== query_get_group
+
+[source,cpp]
+----
+struct ConceptMapGroupIterator* query_get_group(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Get Group query in the transaction.
+
+[caption=""]
+.Returns
+`struct ConceptMapGroupIterator*`
+
+[#_query_get_group_aggregate]
+==== query_get_group_aggregate
+
+[source,cpp]
+----
+struct ValueGroupIterator* query_get_group_aggregate(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Get Group Aggregate query in the transaction.
+
+[caption=""]
+.Returns
+`struct ValueGroupIterator*`
+
+[#_query_insert]
+==== query_insert
+
+[source,cpp]
+----
+struct ConceptMapIterator* query_insert(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Insert query in the transaction.
+
+[caption=""]
+.Returns
+`struct ConceptMapIterator*`
+
+[#_query_undefine]
+==== query_undefine
+
+[source,cpp]
+----
+struct VoidPromise* query_undefine(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Undefine query in the transaction.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_query_update]
+==== query_update
+
+[source,cpp]
+----
+struct ConceptMapIterator* query_update(struct Transaction* transaction, const char* query, const struct Options* options)
+----
+
+
+
+Performs a TypeQL Update query in the transaction.
+
+[caption=""]
+.Returns
+`struct ConceptMapIterator*`
+

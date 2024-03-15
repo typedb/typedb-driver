@@ -51,7 +51,7 @@ public abstract class JSON {
         } else if (value.isString()) {
             return new JSON.String(value.asString());
         } else if (value.isNumber()) {
-            return new JSON.Number(value.asFloat());
+            return new JSON.Number(value.asDouble());
         } else if (value.isBoolean()) {
             return new JSON.Boolean(value.asBoolean());
         } else if (value.isNull()) {

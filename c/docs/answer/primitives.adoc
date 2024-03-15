@@ -1,0 +1,144 @@
+[#_string_free]
+==== string_free
+
+[source,cpp]
+----
+void string_free(char* str)
+----
+
+
+
+Frees a native rust string. _WARNING: Always use this function to free strings returned by the driver. Using the standard C free function will create a dangling reference on the rust side._
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_iterator_drop]
+==== string_iterator_drop
+
+[source,cpp]
+----
+void string_iterator_drop(struct StringIterator* it)
+----
+
+
+
+Frees the native rust ``StringIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_iterator_next]
+==== string_iterator_next
+
+[source,cpp]
+----
+char* string_iterator_next(struct StringIterator* it)
+----
+
+
+
+Forwards the ``StringIterator`` and returns the next string if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_string_pair_drop]
+==== string_pair_drop
+
+[source,cpp]
+----
+void string_pair_drop(struct StringPair* string_pair)
+----
+
+
+
+Frees the native rust ``StringPair`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_pair_iterator_drop]
+==== string_pair_iterator_drop
+
+[source,cpp]
+----
+void string_pair_iterator_drop(struct StringPairIterator* it)
+----
+
+
+
+Frees the native rust ``StringPairIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_pair_iterator_next]
+==== string_pair_iterator_next
+
+[source,cpp]
+----
+struct StringPair* string_pair_iterator_next(struct StringPairIterator* it)
+----
+
+
+
+Forwards the ``StringIterator`` and returns the next ``StringPair`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct StringPair*`
+
+[#_string_promise_resolve]
+==== string_promise_resolve
+
+[source,cpp]
+----
+char* string_promise_resolve(struct StringPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_bool_promise_resolve]
+==== bool_promise_resolve
+
+[source,cpp]
+----
+bool bool_promise_resolve(struct BoolPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_void_promise_resolve]
+==== void_promise_resolve
+
+[source,cpp]
+----
+void void_promise_resolve(struct VoidPromise* promise)
+----
+
+
+
+Waits for the operation represented by the ``VoidPromise`` to complete. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`void`
+

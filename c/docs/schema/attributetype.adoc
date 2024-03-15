@@ -1,0 +1,234 @@
+[#_attribute_type_get]
+==== attribute_type_get
+
+[source,cpp]
+----
+struct ConceptPromise* attribute_type_get(struct Transaction* transaction, const struct Concept* attribute_type, const struct Concept* value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given ``Value`` if such ``Attribute`` exists. Otherwise, returns ``null``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_attribute_type_get_instances]
+==== attribute_type_get_instances
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_type_get_instances(struct Transaction* transaction, const struct Concept* attribute_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all ``Attribute`` objects that are instances of this ``AttributeType`` or its subtypes. Specify ``Transitive`` for instances of this AttributeType and subtypes, Or ``Explicit`` of this AttributeType only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_type_get_owners]
+==== attribute_type_get_owners
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_type_get_owners(struct Transaction* transaction, const struct Concept* attribute_type, enum Transitivity transitivity, const struct Annotation*const* annotations)
+----
+
+
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly or through inheritance. Specify ``Transitive`` for direct and inherited ownership, or ``Explicit`` for direct ownership only
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     annotations
+     a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations.
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations. a| 
+|===
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_type_get_regex]
+==== attribute_type_get_regex
+
+[source,cpp]
+----
+struct StringPromise* attribute_type_get_regex(struct Transaction* transaction, const struct Concept* attribute_type)
+----
+
+
+
+Retrieves the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Returns
+`struct StringPromise*`
+
+[#_attribute_type_get_subtypes]
+==== attribute_type_get_subtypes
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_type_get_subtypes(struct Transaction* transaction, const struct Concept* attribute_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the given ``AttributeType``. Specify ``Transitive`` for direct and indirect subtypes, Or ``Explicit`` for directly subtypes only.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_type_get_subtypes_with_value_type]
+==== attribute_type_get_subtypes_with_value_type
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_type_get_subtypes_with_value_type(struct Transaction* transaction, const struct Concept* attribute_type, enum ValueType value_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves subtypes of this ``AttributeType`` with given ``ValueType``. Specify ``Transitive`` for direct and indirect subtypes, Or ``Explicit`` for directly subtypes only.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_type_get_supertype]
+==== attribute_type_get_supertype
+
+[source,cpp]
+----
+struct ConceptPromise* attribute_type_get_supertype(struct Transaction* transaction, const struct Concept* attribute_type)
+----
+
+
+
+Retrieves the most immediate supertype of the given ``AttributeType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_attribute_type_get_supertypes]
+==== attribute_type_get_supertypes
+
+[source,cpp]
+----
+struct ConceptIterator* attribute_type_get_supertypes(struct Transaction* transaction, const struct Concept* attribute_type)
+----
+
+
+
+Retrieves all supertypes of the given ``AttributeType``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_attribute_type_get_value_type]
+==== attribute_type_get_value_type
+
+[source,cpp]
+----
+enum ValueType attribute_type_get_value_type(const struct Concept* attribute_type)
+----
+
+
+
+Retrieves the ``ValueType`` of this ``AttributeType``.
+
+[caption=""]
+.Returns
+`enum ValueType`
+
+[#_attribute_type_put]
+==== attribute_type_put
+
+[source,cpp]
+----
+struct ConceptPromise* attribute_type_put(struct Transaction* transaction, const struct Concept* attribute_type, const struct Concept* value)
+----
+
+
+
+Creates and returns a new instance of this ``AttributeType``, with the specified ``Value``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_attribute_type_set_regex]
+==== attribute_type_set_regex
+
+[source,cpp]
+----
+struct VoidPromise* attribute_type_set_regex(struct Transaction* transaction, const struct Concept* attribute_type, const char* regex)
+----
+
+
+
+Sets a regular expression as a constraint for this ``AttributeType``. ``Value``s of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
+
+Can only be applied for ``AttributeType``s with a ``string`` value type.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_attribute_type_set_supertype]
+==== attribute_type_set_supertype
+
+[source,cpp]
+----
+struct VoidPromise* attribute_type_set_supertype(struct Transaction* transaction, struct Concept* attribute_type, const struct Concept* supertype)
+----
+
+
+
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_attribute_type_unset_regex]
+==== attribute_type_unset_regex
+
+[source,cpp]
+----
+struct VoidPromise* attribute_type_unset_regex(struct Transaction* transaction, const struct Concept* attribute_type)
+----
+
+
+
+Removes the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

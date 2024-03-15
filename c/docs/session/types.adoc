@@ -1,0 +1,43 @@
+[#_Options]
+=== Options
+
+
+
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options are specified using properties assignment.
+
+
+[#_Session]
+=== Session
+
+
+
+A session with a TypeDB database.
+
+[#_SessionType]
+=== SessionType
+
+
+
+This enum is used to specify the type of the session.
+
+
+[#_SessionType]
+=== SessionType
+
+
+
+This enum is used to specify the type of the session.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `Data = 0`
+a| `Schema = 1`
+|===
+// end::enum_constants[]
+

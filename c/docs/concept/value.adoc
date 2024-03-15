@@ -1,0 +1,240 @@
+[#_value_get_boolean]
+==== value_get_boolean
+
+[source,cpp]
+----
+bool value_get_boolean(const struct Concept* value)
+----
+
+
+
+Returns a ``boolean`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_get_date_time_as_millis]
+==== value_get_date_time_as_millis
+
+[source,cpp]
+----
+int64_t value_get_date_time_as_millis(const struct Concept* value)
+----
+
+
+
+Returns the value of this datetime value concept as milliseconds since the start of the UNIX epoch. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_value_get_double]
+==== value_get_double
+
+[source,cpp]
+----
+double value_get_double(const struct Concept* value)
+----
+
+
+
+Returns the ``double`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`double`
+
+[#_value_get_long]
+==== value_get_long
+
+[source,cpp]
+----
+int64_t value_get_long(const struct Concept* value)
+----
+
+
+
+Returns the ``long`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_value_get_string]
+==== value_get_string
+
+[source,cpp]
+----
+char* value_get_string(const struct Concept* value)
+----
+
+
+
+Returns the ``string`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_value_is_boolean]
+==== value_is_boolean
+
+[source,cpp]
+----
+bool value_is_boolean(const struct Concept* value)
+----
+
+
+
+Returns ``true`` if the value which this ``Value`` concept holds is of type ``boolean``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_is_date_time]
+==== value_is_date_time
+
+[source,cpp]
+----
+bool value_is_date_time(const struct Concept* value)
+----
+
+
+
+Returns ``true`` if the value which this ``Value`` concept holds is of type ``datetime``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_is_double]
+==== value_is_double
+
+[source,cpp]
+----
+bool value_is_double(const struct Concept* value)
+----
+
+
+
+Returns ``true`` if the value which this ``Value`` concept holds is of type ``double``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_is_long]
+==== value_is_long
+
+[source,cpp]
+----
+bool value_is_long(const struct Concept* value)
+----
+
+
+
+Returns ``true`` if the value which this ``Value`` concept holds is of type ``long``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_is_string]
+==== value_is_string
+
+[source,cpp]
+----
+bool value_is_string(const struct Concept* value)
+----
+
+
+
+Returns ``true`` if the value which this ``Value`` concept holds is of type ``string``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_new_boolean]
+==== value_new_boolean
+
+[source,cpp]
+----
+struct Concept* value_new_boolean(bool bool_)
+----
+
+
+
+Creates a new ``Value`` object of the specified boolean value.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_new_date_time_from_millis]
+==== value_new_date_time_from_millis
+
+[source,cpp]
+----
+struct Concept* value_new_date_time_from_millis(int64_t millis)
+----
+
+
+
+Creates a new ``Value`` object of the specified datetime value.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_new_double]
+==== value_new_double
+
+[source,cpp]
+----
+struct Concept* value_new_double(double double_)
+----
+
+
+
+Creates a new ``Value`` object of the specified double value.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_new_long]
+==== value_new_long
+
+[source,cpp]
+----
+struct Concept* value_new_long(int64_t long_)
+----
+
+
+
+Creates a new ``Value`` object of the specified long value.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_new_string]
+==== value_new_string
+
+[source,cpp]
+----
+struct Concept* value_new_string(const char* string)
+----
+
+
+
+Creates a new ``Value`` object of the specified string value.
+
+[caption=""]
+.Returns
+`struct Concept*`
+

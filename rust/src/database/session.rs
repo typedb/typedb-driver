@@ -32,6 +32,7 @@ use crate::{
 
 type Callback = Box<dyn FnMut() + Send>;
 
+/// A session with a TypeDB database.
 pub struct Session {
     database: Database,
     server_session_info: RwLock<SessionInfo>,

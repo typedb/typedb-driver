@@ -1,0 +1,272 @@
+[#_database_close]
+==== database_close
+
+[source,cpp]
+----
+void database_close(struct Database* database)
+----
+
+
+
+Frees the native rust ``Database`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_database_delete]
+==== database_delete
+
+[source,cpp]
+----
+void database_delete(struct Database* database)
+----
+
+
+
+Deletes this database.
+
+[caption=""]
+.Returns
+`void`
+
+[#_database_get_name]
+==== database_get_name
+
+[source,cpp]
+----
+char* database_get_name(const struct Database* database)
+----
+
+
+
+The database name as a string.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_database_get_preferred_replica_info]
+==== database_get_preferred_replica_info
+
+[source,cpp]
+----
+struct ReplicaInfo* database_get_preferred_replica_info(const struct Database* database)
+----
+
+
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
+
+[caption=""]
+.Returns
+`struct ReplicaInfo*`
+
+[#_database_get_primary_replica_info]
+==== database_get_primary_replica_info
+
+[source,cpp]
+----
+struct ReplicaInfo* database_get_primary_replica_info(const struct Database* database)
+----
+
+
+
+Returns the primary replica for this database. _Only works in TypeDB Cloud_
+
+[caption=""]
+.Returns
+`struct ReplicaInfo*`
+
+[#_database_get_replicas_info]
+==== database_get_replicas_info
+
+[source,cpp]
+----
+struct ReplicaInfoIterator* database_get_replicas_info(const struct Database* database)
+----
+
+
+
+Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+
+[caption=""]
+.Returns
+`struct ReplicaInfoIterator*`
+
+[#_database_iterator_drop]
+==== database_iterator_drop
+
+[source,cpp]
+----
+void database_iterator_drop(struct DatabaseIterator* it)
+----
+
+
+
+Frees the native rust ``DatabaseIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_database_iterator_next]
+==== database_iterator_next
+
+[source,cpp]
+----
+struct Database* database_iterator_next(struct DatabaseIterator* it)
+----
+
+
+
+Forwards the ``DatabaseIterator`` and returns the next ``Database`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Database*`
+
+[#_database_manager_drop]
+==== database_manager_drop
+
+[source,cpp]
+----
+void database_manager_drop(struct DatabaseManager* databases)
+----
+
+
+
+Frees the native rust ``DatabaseManager`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_database_manager_new]
+==== database_manager_new
+
+[source,cpp]
+----
+struct DatabaseManager* database_manager_new(const struct Connection* connection)
+----
+
+
+
+Creates and returns a native ``DatabaseManager`` for the connection
+
+[caption=""]
+.Returns
+`struct DatabaseManager*`
+
+[#_database_rule_schema]
+==== database_rule_schema
+
+[source,cpp]
+----
+char* database_rule_schema(struct Database* database)
+----
+
+
+
+The rules in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_database_schema]
+==== database_schema
+
+[source,cpp]
+----
+char* database_schema(struct Database* database)
+----
+
+
+
+A full schema text as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_database_type_schema]
+==== database_type_schema
+
+[source,cpp]
+----
+char* database_type_schema(struct Database* database)
+----
+
+
+
+The types in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_databases_all]
+==== databases_all
+
+[source,cpp]
+----
+struct DatabaseIterator* databases_all(struct DatabaseManager* databases)
+----
+
+
+
+Returns a ``DatabaseIterator`` over all databases present on the TypeDB server
+
+[caption=""]
+.Returns
+`struct DatabaseIterator*`
+
+[#_databases_contains]
+==== databases_contains
+
+[source,cpp]
+----
+bool databases_contains(struct DatabaseManager* databases, const char* name)
+----
+
+
+
+Checks if a database with the given name exists
+
+[caption=""]
+.Returns
+`bool`
+
+[#_databases_create]
+==== databases_create
+
+[source,cpp]
+----
+void databases_create(struct DatabaseManager* databases, const char* name)
+----
+
+
+
+Create a database with the given name
+
+[caption=""]
+.Returns
+`void`
+
+[#_databases_get]
+==== databases_get
+
+[source,cpp]
+----
+struct Database* databases_get(struct DatabaseManager* databases, const char* name)
+----
+
+
+
+Retrieve the database with the given name.
+
+[caption=""]
+.Returns
+`struct Database*`
+

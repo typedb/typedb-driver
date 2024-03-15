@@ -111,12 +111,12 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
-[#_Transaction_TypeDBSessiontransaction___TransactionType_type__const_Options__options___const]
+[#_Transaction_TypeDBSessiontransaction___TransactionType_type__const_Options__options__Options_____const]
 ==== transaction
 
 [source,cpp]
 ----
-Transaction TypeDB::Session::transaction(TransactionType type, const Options& options) const
+Transaction TypeDB::Session::transaction(TransactionType type, const Options& options = Options()) const
 ----
 
 

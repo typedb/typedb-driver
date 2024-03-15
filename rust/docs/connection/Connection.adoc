@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
 // tag::methods[]
 [#_struct_Connection_force_close__]
 ==== force_close

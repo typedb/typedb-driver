@@ -1,0 +1,80 @@
+[#_error_code]
+==== error_code
+
+[source,cpp]
+----
+char* error_code(const struct Error* error)
+----
+
+
+
+Returns the error code of the ``Error`` object
+
+[caption=""]
+.Returns
+`char*`
+
+[#_error_drop]
+==== error_drop
+
+[source,cpp]
+----
+void error_drop(struct Error* error)
+----
+
+
+
+Frees the native rust ``Error`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_error_message]
+==== error_message
+
+[source,cpp]
+----
+char* error_message(const struct Error* error)
+----
+
+
+
+Returns the error message of the ``Error`` object
+
+[caption=""]
+.Returns
+`char*`
+
+[#_get_last_error]
+==== get_last_error
+
+[source,cpp]
+----
+struct Error* get_last_error(void)
+----
+
+
+
+Returns the error which set the error flag.
+
+[caption=""]
+.Returns
+`struct Error*`
+
+[#_check_error]
+==== check_error
+
+[source,cpp]
+----
+bool check_error(void)
+----
+
+
+
+Checks if the error flag was set by the last operation. If true, the error can be retrieved using get_last_error(void)
+
+[caption=""]
+.Returns
+`bool`
+

@@ -49,6 +49,7 @@ impl Value {
     }
 }
 
+/// Represents the type of primitive value is held by a Value or Attribute.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ValueType {
