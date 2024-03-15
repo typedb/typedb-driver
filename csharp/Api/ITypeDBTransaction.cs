@@ -144,7 +144,7 @@ namespace TypeDB.Driver.Api
      */
     public class TransactionType : NativeObjectWrapper<Pinvoke.TransactionType>
     {
-        public int Id { get; }
+        public readonly int Id;
 
         public static readonly TransactionType READ = new TransactionType(1, Pinvoke.TransactionType.Read);
         public static readonly TransactionType WRITE = new TransactionType(2, Pinvoke.TransactionType.Write);
