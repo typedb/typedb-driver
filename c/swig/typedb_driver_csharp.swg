@@ -570,6 +570,7 @@
 %iterator(ReplicaInfo, ReplicaInfo, replica_info)
 %iterator(SchemaException, SchemaException, schema_exception)
 
+
 %define %array(Type)
 %typemap(ctype) Type ** "Type**"
 %typemap(cstype) Type ** "Type[]"
@@ -617,6 +618,7 @@
 %array(Annotation)
 %array(Concept)
 
+
 %typemap(ctype) char ** "char**"
 %typemap(cstype) char ** "string[]"
 %typemap(
@@ -638,7 +640,7 @@
 %typemap(in) char ** "$1 = $input;"
 %typemap(freearg) char ** ""
 
-/* ValueType* needs special handling */
+
 %typemap(in) enum ValueType * {
     if ($input >= 0)
     {
