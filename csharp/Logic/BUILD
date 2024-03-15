@@ -33,7 +33,7 @@ csharp_library(
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp/Concept:concept",
-        "//csharp:typedb_driver_Pinvoke",
+        "//csharp:typedb_driver_pinvoke",
     ],
     nullable = nullable_context,
     target_frameworks = target_frameworks,

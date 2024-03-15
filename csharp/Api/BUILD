@@ -32,7 +32,7 @@ csharp_library(
     srcs = glob(["*.cs", "*/*.cs", "*/*/*.cs"]),
     deps = [
         "//csharp/Common:common",
-        "//csharp:typedb_driver_Pinvoke",
+        "//csharp:typedb_driver_pinvoke",
         "@paket.csharp_deps//newtonsoft.json",
     ],
     runtime_identifier = "any",
