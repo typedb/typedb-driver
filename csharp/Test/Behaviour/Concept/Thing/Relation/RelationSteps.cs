@@ -88,11 +88,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            var timeZonedValue = PutTimeZoneInfo(keyValue);
-
             IAttribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()!
-                .Put(Tx, timeZonedValue).Resolve()!;
+                .Put(Tx, keyValue).Resolve()!;
 
             IRelation relation = Tx.Concepts
                 .GetRelationType(type).Resolve()!
@@ -132,11 +130,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
-            var timeZonedValue = PutTimeZoneInfo(keyValue);
-
             var owner = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()!
-                .Get(Tx, timeZonedValue).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
