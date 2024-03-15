@@ -24,7 +24,7 @@ group csharp_deps
     storage: none
     source https://api.nuget.org/v3/index.json
 
-    nuget XUnit.Gherkin.Quick 4.4.0
+    nuget XUnit.Gherkin.Quick 4.5.0
     nuget xunit.runner.utility 2.6.4
     nuget Gherkin 5.0.0
     nuget Newtonsoft.Json 13.0.3

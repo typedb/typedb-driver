@@ -141,6 +141,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var timeZonedValue = PutTimeZoneInfo(value);
 
+            Console.WriteLine($"TIMEZONEDVALUE PUT: {timeZonedValue}, {timeZonedValue.Kind}");
             var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()!
                 .Put(Tx, timeZonedValue).Resolve()!;
@@ -236,9 +237,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"attribute \$([a-zA-Z0-9]+) has datetime value: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void AttributeHasDatetimeValue(string var, DateTime value)
         {
-            var timeZonedValue = PutTimeZoneInfo(value);
-
-            Assert.Equal(timeZonedValue, Get(var)!.AsAttribute().Value.AsDateTime());
+            Assert.Equal(value, Get(var)!.AsAttribute().Value.AsDateTime());
         }
     }
 }

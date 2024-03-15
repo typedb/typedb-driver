@@ -62,7 +62,8 @@ namespace TypeDB.Driver.Concept
 
         public Value(System.DateTime value)
             : this(Pinvoke.typedb_driver.value_new_date_time_from_millis(
-                new System.DateTimeOffset(value!.ToUniversalTime()).ToUnixTimeMilliseconds()))
+                new System.DateTimeOffset(
+                    System.DateTime.SpecifyKind(value, DateTimeKind.Unspecified)).ToUnixTimeMilliseconds()))
         {
         }
 
@@ -149,7 +150,7 @@ namespace TypeDB.Driver.Concept
             Validator.ThrowIfFalse(IsDateTime, InternalError.ILLEGAL_CAST, "DateTime");
 
             return System.DateTimeOffset.FromUnixTimeMilliseconds(
-                Pinvoke.typedb_driver.value_get_date_time_as_millis(NativeObject)).LocalDateTime;
+                Pinvoke.typedb_driver.value_get_date_time_as_millis(NativeObject)).DateTime;
         }
 
         public override string ToString()

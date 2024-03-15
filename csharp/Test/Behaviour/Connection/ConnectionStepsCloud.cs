@@ -42,11 +42,14 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             ConnectionOpensWithDefaultAuthentication();
 
-            foreach (var user in Driver!.Users.All)
+            if (Driver != null)
             {
-                if (!user.Username.Equals("admin"))
+                foreach (var user in Driver!.Users.All)
                 {
-                    Driver!.Users.Delete(user.Username);
+                    if (!user.Username.Equals("admin"))
+                    {
+                        Driver!.Users.Delete(user.Username);
+                    }
                 }
             }
 
@@ -87,6 +90,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Driver = CreateTypeDBDriver();
         }
 
@@ -94,6 +99,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             if (Driver != null)
             {
                 Driver!.Close();
@@ -106,6 +113,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with authentication: {}, {}; throws exception")]
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
             Assert.Throws<TypeDBDriverException>(
                 () => ConnectionOpensWithAuthentication(username, password));
         }
@@ -113,7 +122,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"typedb has configuration")]
         public void TypeDBHasConfiguration(DataTable data)
         {
-            // no-op: configuration tests are only run on the backend themselves
+            _requiredConfiguration = true;
         }
 
         private static readonly string[] DEFAULT_ADDRESSES =
