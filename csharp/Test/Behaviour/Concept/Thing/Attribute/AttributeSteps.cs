@@ -139,12 +139,9 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) put: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void AttributeTypeAsDatetimePut(string var, string typeLabel, DateTime value)
         {
-            var timeZonedValue = PutTimeZoneInfo(value);
-
-            Console.WriteLine($"TIMEZONEDVALUE PUT: {timeZonedValue}, {timeZonedValue.Kind}");
             var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()!
-                .Put(Tx, timeZonedValue).Resolve()!;
+                .Put(Tx, value).Resolve()!;
 
             Put(var, attributeType);
         }
@@ -152,10 +149,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) put: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}); throws exception")]
         public void AttributeTypeAsDatetimePutThrowsException(string typeLabel, DateTime value)
         {
-            var timeZonedValue = PutTimeZoneInfo(value);
-
             var exception = Assert.Throws<TypeDBDriverException>(() => Tx.Concepts.GetAttributeType(typeLabel).Resolve()!
-                .Put(Tx, timeZonedValue));
+                .Put(Tx, value));
         }
 
         [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(boolean\) get: (true|false)")]
@@ -201,11 +196,9 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"\$([a-zA-Z0-9]+) = attribute\(([a-zA-Z0-9-_]+)\) as\(datetime\) get: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void AttributeTypeAsDatetimeGet(string var, string typeLabel, DateTime value)
         {
-            var timeZonedValue = PutTimeZoneInfo(value);
-
             var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()!
-                .Get(Tx, timeZonedValue).Resolve()!;
+                .Get(Tx, value).Resolve()!;
 
             Put(var, attributeType);
         }
@@ -237,6 +230,9 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"attribute \$([a-zA-Z0-9]+) has datetime value: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})")]
         public void AttributeHasDatetimeValue(string var, DateTime value)
         {
+            var resultDateTime = Get(var)!.AsAttribute().Value.AsDateTime();
+
+            Assert.Equal(DateTimeKind.Unspecified, resultDateTime.Kind);
             Assert.Equal(value, Get(var)!.AsAttribute().Value.AsDateTime());
         }
     }

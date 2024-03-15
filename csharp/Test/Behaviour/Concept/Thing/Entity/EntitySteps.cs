@@ -88,11 +88,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            var timeZonedValue = PutTimeZoneInfo(keyValue);
-
             IAttribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()!
-                .Put(Tx, timeZonedValue).Resolve()!;
+                .Put(Tx, keyValue).Resolve()!;
 
             IEntity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()!
@@ -133,11 +131,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            var timeZonedValue = PutTimeZoneInfo(keyValue);
-
             var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()!
-                .Get(Tx, timeZonedValue).Resolve()!
+                .Get(Tx, keyValue).Resolve()!
                 .GetOwners(Tx)
                 .Where(owner => owner.Type.Label.Equals(new Label(type)))
                 .FirstOrDefault();
