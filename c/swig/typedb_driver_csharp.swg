@@ -417,13 +417,11 @@
 %typemap(csbody) Prefix ## Promise %{
     private global::System.Runtime.InteropServices.HandleRef swigCPtr;
     protected bool swigCMemOwn;
-    public readonly global::System.Func<Type> Resolver;
 
     internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
     {
         swigCMemOwn = cMemoryOwn;
         swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
-        Resolver = Resolve;
     }
 
     internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
@@ -448,7 +446,7 @@
             if (swigCMemOwn)
             {
                 swigCMemOwn = false;
-                Resolver(); // An equivalent for the standard "delete_xxxPromise".
+                Resolve(); // An equivalent for the standard "delete_xxxPromise".
             }
 
             swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
@@ -466,13 +464,11 @@
 %typemap(csbody) VoidPromise %{
     private global::System.Runtime.InteropServices.HandleRef swigCPtr;
     protected bool swigCMemOwn;
-    public readonly global::System.Action Resolver;
 
     internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
     {
         swigCMemOwn = cMemoryOwn;
         swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
-        Resolver = Resolve;
     }
 
     internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
@@ -497,7 +493,7 @@
             if (swigCMemOwn)
             {
                 swigCMemOwn = false;
-                Resolver(); // An equivalent for the standard "delete_VoidPromise".
+                Resolve(); // An equivalent for the standard "delete_VoidPromise".
             }
 
             swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);

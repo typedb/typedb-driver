@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Concept
 {
     public abstract class ThingType : Type, IThingType
     {
-        public ThingType(Pinvoke.Concept nativeConcept)
+        internal ThingType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }

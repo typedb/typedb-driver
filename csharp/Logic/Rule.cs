@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Logic
         private readonly string _when;
         private readonly string _then;
 
-        public Rule(Pinvoke.Rule nativeRule)
+        internal Rule(Pinvoke.Rule nativeRule)
             : base(nativeRule)
         {
             _when = Pinvoke.typedb_driver.rule_get_when(NativeObject);
