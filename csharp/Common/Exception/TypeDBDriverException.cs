@@ -35,7 +35,6 @@ namespace TypeDB.Driver.Common
         public TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
             : base(error.ToString(errorParams))
         {
-            ErrorMessage = error;
         }
 
         /**
@@ -44,7 +43,6 @@ namespace TypeDB.Driver.Common
         public TypeDBDriverException(string message)
             : base(message)
         {
-            ErrorMessage = null;
         }
 
         /**
@@ -53,7 +51,6 @@ namespace TypeDB.Driver.Common
         public TypeDBDriverException(System.Exception error)
             : base(error.Message)
         {
-            ErrorMessage = null;
         }
 
         /**
@@ -62,14 +59,33 @@ namespace TypeDB.Driver.Common
         public TypeDBDriverException(Pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
-            ErrorMessage = null;
         }
 
-        public string Name
+        /**
+         * Checks whether a substring is a part of this exception's message.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * try
+         * {
+         *     ...
+         * }
+         * catch (TypeDBDriverException e)
+         * {
+         *     if (e.Contains("CSCO01"))
+         *     {
+         *         ...
+         *     }
+         *     else
+         *     {
+         *         ...
+         *     }
+         * }
+         * </pre>
+         */
+        public bool Contains(string subString)
         {
-            get { return this.GetType().Name; }
+            return Message.Contains(subString);
         }
-
-        public readonly ErrorMessage? ErrorMessage;
     }
 }
