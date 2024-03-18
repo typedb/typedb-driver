@@ -31,7 +31,7 @@ namespace TypeDB.Driver.User
     {
         private readonly UserManager _users;
 
-        public User(Pinvoke.User nativeUser, UserManager users)
+        internal User(Pinvoke.User nativeUser, UserManager users)
             : base(nativeUser) 
         {
             _users = users;

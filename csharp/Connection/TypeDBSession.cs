@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Connection
 
         private readonly List<SessionCallback> _callbacks;
 
-        public TypeDBSession(IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
+        internal TypeDBSession(IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
             : base(NewNative(databaseManager, database, type, options))
         {
             _type = type;

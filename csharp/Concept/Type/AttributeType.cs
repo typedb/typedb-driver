@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Concept
 {
     public class AttributeType : ThingType, IAttributeType 
     {
-        public AttributeType(Pinvoke.Concept nativeConcept) 
+        public AttributeType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }

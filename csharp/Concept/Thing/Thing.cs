@@ -36,7 +36,7 @@ namespace TypeDB.Driver.Concept
     {
         private int _hash = 0;
 
-        public Thing(Pinvoke.Concept nativeConcept)
+        internal Thing(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }

@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Connection
     {
         private readonly List<TransactionOnClose> _callbacks;
 
-        public TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
+        internal TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
             : base(NewNative(session, type, options))
         {
             Type = type;
