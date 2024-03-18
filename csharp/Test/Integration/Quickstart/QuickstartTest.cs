@@ -278,10 +278,12 @@ namespace TypeDB.Driver.Test.Integration
                                 transaction.Query.Get("match $p isa person, has name $n; get $n;").ToArray();
 
                             // Matches only Alice as Bob has not been committed
-                            Console.WriteLine($"Found the first name: {matchResults[0]}");
+                            var resultName = matchResults[0].Get("n");
+                            Console.WriteLine($"Found the first name: {resultName.AsAttribute().Value.AsString()}");
+
                             if (matchResults.Length > 1) // Will work only if the previous transaction is committed.
                             {
-                                Console.WriteLine($"Found the second name: {matchResults[1]}");
+                                Console.WriteLine($"Found the second name as concept: {matchResults[1]}");
                             }
                         }
                     }
