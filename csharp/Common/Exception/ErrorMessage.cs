@@ -65,11 +65,11 @@ namespace TypeDB.Driver.Common
             public static readonly Driver TRANSACTION_CLOSED =
                 new Driver(3, "The transaction has been closed and no further operation is allowed.");
             public static readonly Driver TRANSACTION_CLOSED_WITH_ERRORS =
-                new Driver(4, "The transaction has been closed with error(s): \n{}.");
+                new Driver(4, "The transaction has been closed with error(s): \n{0}.");
             public static readonly Driver DATABASE_DELETED =
                 new Driver(5, "The database has been deleted and no further operation is allowed.");
             public static readonly Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(6, "Value cannot be less than 1, was: {}.");
+                new Driver(6, "Value cannot be less than 1, was: {0}.");
             public static readonly Driver MISSING_DB_NAME =
                 new Driver(7, "Database name cannot be null.");
         }
@@ -85,7 +85,7 @@ namespace TypeDB.Driver.Common
             }
 
             public static readonly Concept INVALID_CONCEPT_CASTING =
-                new Concept(1, "Invalid concept conversion from {} to {}.");
+                new Concept(1, "Invalid concept conversion from {0} to {1}.");
             public static readonly Concept MISSING_TRANSACTION =
                 new Concept(2, "Transaction cannot be null.");
             public static readonly Concept MISSING_IID =
@@ -97,11 +97,11 @@ namespace TypeDB.Driver.Common
             public static readonly Concept MISSING_VALUE =
                 new Concept(6, "Value cannot be null.");
             public static readonly Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
-                new Concept(7, "The concept identified by {} is not explainable.");
+                new Concept(7, "The concept identified by {0} is not explainable.");
             public static readonly Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
-                new Concept(8, "The ownership by owner {} of attribute {} is not explainable.");
+                new Concept(8, "The ownership by owner {0} of attribute {1} is not explainable.");
             public static readonly Concept UNRECOGNISED_ANNOTATION =
-                new Concept(9, "The annotation {} is not recognised.");
+                new Concept(9, "The annotation {0} is not recognised.");
         }
 
         public class Query : ErrorMessage
@@ -115,7 +115,7 @@ namespace TypeDB.Driver.Common
             }
 
             public static readonly Query VARIABLE_DOES_NOT_EXIST =
-                new Query(1, "The variable {} does not exist.");
+                new Query(1, "The variable {0} does not exist.");
             public static readonly Query MISSING_QUERY =
                 new Query(2, "Query cannot be null or empty.");
         }
@@ -133,9 +133,9 @@ namespace TypeDB.Driver.Common
             public static readonly Internal UNEXPECTED_NATIVE_VALUE =
                 new Internal(1, "Unexpected native value encountered!");
             public static readonly Internal ILLEGAL_STATE =
-                new Internal(2, "Illegal state has been reached! ({} : {}).");
+                new Internal(2, "Illegal state has been reached! ({0} : {1}).");
             public static readonly Internal ILLEGAL_CAST =
-                new Internal(3, "Illegal casting operation to {}.");
+                new Internal(3, "Illegal casting operation to {0}.");
             public static readonly Internal NULL_NATIVE_VALUE =
                 new Internal(4, "Unhandled null pointer to a native object encountered!");
             public static readonly Internal INVALID_NATIVE_HANDLE =
