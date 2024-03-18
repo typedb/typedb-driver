@@ -22,7 +22,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_integration_test(
     name = "test",
-    srcs = ["QuickstartTest.cs"],
+    srcs = ["ExamplesTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",
