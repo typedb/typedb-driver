@@ -222,6 +222,7 @@ build:
 #        .factory/test-core.sh //java/test/behaviour/query/language/update/... --test_output=errors
 #        .factory/test-core.sh //java/test/behaviour/query/language/define/... --test_output=errors
 #        .factory/test-core.sh //java/test/behaviour/query/language/undefine/... --test_output=errors
+#        .factory/test-core.sh //java/test/behaviour/query/language/rulevalidation/... --test_output=errors
 #
 #    test-java-behaviour-cloud:
 #      image: vaticle-ubuntu-22.04
@@ -246,6 +247,7 @@ build:
 #        .factory/test-cloud.sh //java/test/behaviour/query/language/update/... --test_output=errors
 #        .factory/test-cloud.sh //java/test/behaviour/query/language/define/... --test_output=errors
 #        .factory/test-cloud.sh //java/test/behaviour/query/language/undefine/... --test_output=errors
+#        .factory/test-cloud.sh //java/test/behaviour/query/language/rulevalidation/... --test_output=errors
 #
 #    test-python-behaviour-core:
 #      image: vaticle-ubuntu-22.04
