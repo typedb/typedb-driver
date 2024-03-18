@@ -96,126 +96,196 @@ namespace TypeDB.Driver.Test.Integration
         {
             ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
 
-            try {var db = driver.Databases.Get("mydb");
+            try {var db = driver.Databases.Get("access-management-db");
             if (db != null) db.Delete();} catch(TypeDBDriverException e) { Console.WriteLine(e); }
         }
 
-        private void ProcessPersonInsertResult(IConceptMap[] results, string variableName)
+        private void ProcessPersonInsertResult(
+            IConceptMap[] results,
+            string variableName,
+            string expectedVariableTypeLabel,
+            string expectedAttributeValue)
         {
             Assert.AreEqual(1, results.Length);
 
             var result = results[0];
-            var variable = result.Get(variableName);
-
-            Assert.IsNotNull(variable);
-            Assert.IsTrue(variable.IsEntity());
             Assert.AreEqual(2, result.Variables.Count());
             Assert.AreEqual(2, result.Concepts.Count());
 
+            var entity = result.Get(variableName);
+            Assert.IsNotNull(entity);
+            Assert.IsTrue(entity.IsEntity());
+
+            var entityType = entity.AsEntity().Type;
+            Assert.IsNotNull(entityType);
+            Assert.IsTrue(entityType.IsType() && entityType.IsEntityType());
+            Assert.AreEqual(expectedVariableTypeLabel, entityType.Label.ToString());
+
             var attribute = result.Get("_0");
             Assert.IsNotNull(attribute);
-            Assert.IsTrue(variable.AsAttribute().IsAttribute()); // Reenable and check the fail!!
-            Console.WriteLine($"Attr: {attribute}");
-//            Assert.AreEqual("")
+            Assert.IsTrue(attribute.IsAttribute());
+
+            var attributeValue = attribute.AsAttribute().Value;
+            Assert.IsNotNull(attributeValue);
+            Assert.IsTrue(attributeValue.IsString());
+            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
+        }
+
+        private void ProcessPersonMatchResult(
+            IEnumerable<IConceptMap> results,
+            string variableName,
+            string expectedAttributeValue,
+            string expectedVariableTypeLabel)
+        {
+            var collectedResults = results.ToArray();
+            Assert.AreEqual(1, collectedResults.Length); // Only one insert has been committed
+
+            var result = collectedResults[0];
+
+            var attribute = result.Get(variableName);
+            Assert.IsNotNull(attribute);
+            Assert.IsTrue(attribute.IsAttribute());
+
+            var attributeValue = attribute.AsAttribute().Value;
+            Assert.IsNotNull(attributeValue);
+            Assert.IsTrue(attributeValue.IsString());
+            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
+
+            var attributeType = attribute.AsAttribute().Type;
+            Assert.IsNotNull(attributeType);
+            Assert.IsTrue(attributeType.IsType() && attributeType.IsAttributeType());
+            Assert.AreEqual(expectedVariableTypeLabel, attributeType.Label.ToString());
         }
 
         [Test]
-        public void Test()
+        public void Usings()
         {
-            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
+            string dbName = "access-management-db";
+            string serverAddr = "127.0.0.1:1729";
 
-            string dbName = "mydb";
-            driver.Databases.Create(dbName);
-            IDatabase mydb = driver.Databases.Get(dbName);
-            System.Console.WriteLine(mydb.Name);
-
-            // Example with "using"
-            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+            try
             {
-                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                using (ITypeDBDriver driver = TypeDB.CoreDriver(serverAddr))
                 {
-                    writeTransaction.Query.Define("define person sub entity;").Resolve(); // Can throw exceptions, so could be wrapped in try-catch!
+                    driver.Databases.Create(dbName);
+                    IDatabase database = driver.Databases.Get(dbName);
 
-                    string longQuery = "define name sub attribute, value string; person owns name;";
-                    writeTransaction.Query.Define(longQuery).Resolve();
+                    // Example of one transaction for one session
+                    using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+                    {
+                        // Example of multiple queries for one transaction
+                        using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                        {
+                            writeTransaction.Query.Define("define person sub entity;").Resolve();
 
-                    writeTransaction.Commit();
+                            string longQuery = "define name sub attribute, value string; person owns name;";
+                            writeTransaction.Query.Define(longQuery).Resolve();
+
+                            writeTransaction.Commit();
+                        }
+                    }
+
+                    // Example of multiple transactions for one session
+                    using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA))
+                    {
+                        // Examples of one query for one transaction
+                        using (ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE))
+                        {
+                            string query = "insert $p isa person, has name 'Alice';";
+                            IConceptMap[] insertResults = dataWriteTransaction.Query.Insert(query).ToArray();
+                            ProcessPersonInsertResult(insertResults, "p", "person", "Alice");
+
+                            dataWriteTransaction.Commit();
+                        }
+
+                        using (ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE))
+                        {
+                            IConceptMap[] insertResults =
+                                dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
+                            ProcessPersonInsertResult(insertResults, "p", "person", "Bob");
+
+                            // Not committed
+                        }
+
+                        using (ITypeDBTransaction dataReadTransaction = dataSession.Transaction(TransactionType.READ))
+                        {
+                            IEnumerable<IConceptMap> matchResults =
+                                dataReadTransaction.Query.Get("match $p isa person, has name $n; get $n;");
+
+                            // Matches only Alice as Bob has not been committed
+                            ProcessPersonMatchResult(matchResults, "n", "Alice", "name");
+                        }
+                    }
+
+                    database.Delete();
                 }
             }
-
-            // Example with manual sessions and transactions management
-
-            ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA);
-            ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
-
-            string query = "insert $p isa person, has name 'Alice';";
-            var results = dataWriteTransaction.Query.Insert(query).ToArray();
-            ProcessPersonInsertResult(results, "p");
-
-            dataWriteTransaction.Close();
-            dataSession.Close();
-
-            dataSession = driver.Session(dbName, SessionType.DATA);
-            dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
-
-            var results2 = dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
-            ProcessPersonInsertResult(results2, "p");
-
-
-            mydb.Delete();
+            catch (TypeDBDriverException e)
+            {
+                Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
+                // ...
+            }
         }
-
+        
         [Test]
-        public void OpenAndCloseConnection()
+        public void Manual()
         {
-            ITypeDBDriver driver = Utils.OpenConnection();
-            Utils.CloseConnection(driver);
-        }
+            string dbName = "access-management-db";
+            string serverAddr = "127.0.0.1:1729";
 
-        [Test]
-        public void CreateAndDeleteAndRecreateDatabase()
-        {
-            string expectedDbName = "hello_from_csharp";
+            try
+            {
+                ITypeDBDriver driver = TypeDB.CoreDriver(serverAddr);
+                driver.Databases.Create(dbName);
 
-            ITypeDBDriver driver = Utils.OpenConnection();
-            IDatabaseManager dbManager = driver.Databases;
+                IDatabase database = driver.Databases.Get(dbName);
 
-            Assert.Throws<TypeDBDriverException>(() => dbManager.Contains(""));
-            Utils.CheckAllDatabases(dbManager, new HashSet<string>());
+                ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA);
+                ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE);
 
-            IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+                writeTransaction.Query.Define("define person sub entity;").Resolve();
 
-            Utils.CheckAllDatabases(dbManager, new HashSet<string>(){expectedDbName});
-            Assert.False(dbManager.Contains(expectedDbName + "1"));
-            Assert.False(dbManager.Contains(expectedDbName.Substring(1)));
-            Assert.False(dbManager.Contains(expectedDbName.Remove(expectedDbName.Length - 1)));
-            Assert.Throws<TypeDBDriverException>(() => dbManager.Contains(""));
+                string longQuery = "define name sub attribute, value string; person owns name;";
+                writeTransaction.Query.Define(longQuery).Resolve();
 
-            Utils.DeleteDatabase(dbManager, db1);
+                writeTransaction.Commit(); // No need to close manually if committed
+                schemaSession.Close();
 
-            IDatabase db2 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+                ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA);
+                ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
 
-            Utils.CheckAllDatabases(dbManager, new HashSet<string>(){expectedDbName});
-            Utils.DeleteDatabase(dbManager, db2);
-            Utils.CloseConnection(driver);
-        }
+                string query = "insert $p isa person, has name 'Alice';";
+                IConceptMap[] insertResults = dataWriteTransaction.Query.Insert(query).ToArray();
+                ProcessPersonInsertResult(insertResults, "p", "person", "Alice");
 
-        [Test]
-        public void FailCreateTwoDatabasesWithSameName()
-        {
-            string expectedDbName = "hello_from_csharp";
+                dataWriteTransaction.Commit();
+                dataSession.Close();
 
-            ITypeDBDriver driver = Utils.OpenConnection();
-            IDatabaseManager dbManager = driver.Databases;
+                dataSession = driver.Session(dbName, SessionType.DATA);
+                dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
 
-            IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+                insertResults = dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
+                ProcessPersonInsertResult(insertResults, "p", "person", "Bob");
 
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => Utils.CreateDatabaseNoChecks(dbManager, expectedDbName));
-            Assert.That(exception.Message, Does.Contain("already exists"));
+    //            dataWriteTransaction.Commit(); // Not committed
 
-            Utils.DeleteDatabase(dbManager, db1);
-            Utils.CloseConnection(driver);
+                ITypeDBTransaction readTransaction = dataSession.Transaction(TransactionType.READ);
+                IEnumerable<IConceptMap> matchResults =
+                    readTransaction.Query.Get("match $p isa person, has name $n; get $n;");
+
+                ProcessPersonMatchResult(matchResults, "n", "Alice", "name");
+
+                readTransaction.Close();
+                dataSession.Close();
+
+                database.Delete();
+                driver.Close();
+            }
+            catch (TypeDBDriverException e)
+            {
+                Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
+                // ...
+            }
         }
     }
 }
