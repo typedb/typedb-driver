@@ -43,7 +43,7 @@ namespace TypeDB.Driver.Api
         IDatabase Get(string name);
 
         /**
-         * Checks if a database with the given name exists
+         * Checks if a database with the given name exists.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -55,7 +55,7 @@ namespace TypeDB.Driver.Api
         bool Contains(string name);
 
         /**
-         * Create a database with the given name
+         * Create a database with the given name.
          *
          * <h3>Examples</h3>
          * <pre>

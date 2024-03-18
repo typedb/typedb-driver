@@ -148,7 +148,7 @@ namespace TypeDB.Driver.Api
         VoidPromise Delete(ITypeDBTransaction transaction);
 
         /**
-         * Check if the concept has been deleted
+         * Check if the concept has been deleted.
          *
          * <h3>Examples</h3>
          * <pre>

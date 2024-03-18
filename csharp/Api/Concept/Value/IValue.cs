@@ -240,7 +240,7 @@ namespace TypeDB.Driver.Api
                 if (this == DOUBLE) return "double";
                 if (this == STRING) return "string";
                 if (this == DATETIME) return "DateTime";
-                return "Unknown";
+                throw new System.InvalidOperationException("IValue does not correspond to an acceptable ValueType");
             }
 
             public override bool Equals(object? obj)
