@@ -38,6 +38,13 @@ csharp_library(
 )
 
 
+filegroup(
+    name = "docs_source_files",
+    srcs = glob(["*.cs", "*/*.cs", "*/*/*.cs"]),
+    visibility = ["//csharp:__pkg__"],
+)
+
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "*/*", "*/*/*"]),

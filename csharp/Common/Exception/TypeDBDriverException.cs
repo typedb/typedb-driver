@@ -24,6 +24,9 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Common
 {
+    /**
+     * Exceptions raised by the driver.
+     */
     public class TypeDBDriverException : System.Exception
     {
         /**

@@ -17,7 +17,7 @@ As usual, Add the include paths to your compile step & the library to your link 
 A [sample `CMakeLists`](https://github.com/vaticle/typedb-driver/blob/master/cpp/test/assembly/CMakeLists.txt) is available on the TypeDB Driver repository.
 
 ## API Reference
-Will be added to [the docs](https://typedb.com/docs/drivers/overview) in a later release. The general layout (of classes, their methods and intended usage) resembles the [Java Driver API](https://typedb.com/docs/clients/java-driver/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using Driver Java, refer to the [API Reference](https://typedb.com/docs/drivers/cpp/api-reference).
 
 ## Driver Architecture
 The C++ driver is a thin wrapper around the TypeDB rust driver, introducing classes for a more intuitive interface. Each C++ object holds a unique pointer to the corresponding native rust object and is the unique owner of that rust object. To ensure this, we enforce move-semantics on the C++ objects. The rust object is freed when the C++ object owning it is destructed.

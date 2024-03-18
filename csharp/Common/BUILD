@@ -33,6 +33,13 @@ csharp_library(
 )
 
 
+filegroup(
+    name = "docs_source_files",
+    srcs = ["Label.cs", "Promise/*.cs", "Exception/TypeDBDriverException.cs"],
+    visibility = ["//csharp:__pkg__"],
+)
+
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
