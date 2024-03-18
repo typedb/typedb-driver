@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
         features = "external/vaticle_typedb_behaviour/query/language/rule-validation.feature",
         tags = "not @ignore and not @ignore-driver and not @ignore-typedb-driver-java"
 )
-public class RuleValidationTest extends BehaviourTest { // TODO: How to add to automation.yml?
+public class RuleValidationTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
