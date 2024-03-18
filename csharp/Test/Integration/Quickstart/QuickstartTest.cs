@@ -100,6 +100,25 @@ namespace TypeDB.Driver.Test.Integration
             if (db != null) db.Delete();} catch(TypeDBDriverException e) { Console.WriteLine(e); }
         }
 
+        private void ProcessPersonInsertResult(IConceptMap[] results, string variableName)
+        {
+            Assert.AreEqual(1, results.Length);
+
+            var result = results[0];
+            var variable = result.Get(variableName);
+
+            Assert.IsNotNull(variable);
+            Assert.IsTrue(variable.IsEntity());
+            Assert.AreEqual(2, result.Variables.Count());
+            Assert.AreEqual(2, result.Concepts.Count());
+
+            var attribute = result.Get("_0");
+            Assert.IsNotNull(attribute);
+            Assert.IsTrue(variable.AsAttribute().IsAttribute()); // Reenable and check the fail!!
+            Console.WriteLine($"Attr: {attribute}");
+//            Assert.AreEqual("")
+        }
+
         [Test]
         public void Test()
         {
@@ -110,6 +129,7 @@ namespace TypeDB.Driver.Test.Integration
             IDatabase mydb = driver.Databases.Get(dbName);
             System.Console.WriteLine(mydb.Name);
 
+            // Example with "using"
             using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
             {
                 using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
@@ -123,15 +143,14 @@ namespace TypeDB.Driver.Test.Integration
                 }
             }
 
+            // Example with manual sessions and transactions management
+
             ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA);
             ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
 
             string query = "insert $p isa person, has name 'Alice';";
             var results = dataWriteTransaction.Query.Insert(query).ToArray();
-            foreach (var result in results)
-            {
-                Console.WriteLine(result);
-            }
+            ProcessPersonInsertResult(results, "p");
 
             dataWriteTransaction.Close();
             dataSession.Close();
@@ -140,10 +159,7 @@ namespace TypeDB.Driver.Test.Integration
             dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
 
             var results2 = dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
-            foreach (var result in results2)
-            {
-                Console.WriteLine(result);
-            }
+            ProcessPersonInsertResult(results2, "p");
 
 
             mydb.Delete();
