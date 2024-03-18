@@ -27,69 +27,8 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Integration
 {
-    public static class Utils
-    {
-        public static ITypeDBDriver OpenConnection()
-        {
-            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
-            Assert.IsNotNull(driver);
-            Assert.True(driver.IsOpen());
-
-            return driver;
-        }
-
-        public static void CloseConnection(ITypeDBDriver driver)
-        {
-            driver.Close();
-            Assert.False(driver.IsOpen());
-        }
-
-        public static void CreateDatabaseNoChecks(IDatabaseManager dbManager, string expectedDbName)
-        {
-            dbManager.Create(expectedDbName);
-        }
-
-        public static IDatabase CreateAndGetDatabase(
-            IDatabaseManager dbManager, string expectedDbName, bool checkAbsence = true)
-        {
-            if (checkAbsence)
-            {
-                Assert.False(dbManager.Contains(expectedDbName));
-            }
-
-            CreateDatabaseNoChecks(dbManager, expectedDbName);
-            Assert.True(dbManager.Contains(expectedDbName));
-
-            IDatabase db = dbManager.Get(expectedDbName);
-            Assert.IsNotNull(db);
-
-            string realDbName = db.Name;
-            Assert.AreEqual(expectedDbName, realDbName);
-
-            return db;
-        }
-
-        public static void DeleteDatabase(IDatabaseManager dbManager, IDatabase db)
-        {
-            string dbName = db.Name;
-            db.Delete();
-            Assert.False(dbManager.Contains(dbName));
-        }
-
-        public static void CheckAllDatabases(IDatabaseManager dbManager, ICollection<string> expectedDbNames)
-        {
-            var allDbs = dbManager.GetAll();
-            Assert.AreEqual(expectedDbNames.Count, allDbs.Count);
-
-            foreach (var db in allDbs)
-            {
-                Assert.True(expectedDbNames.Contains(db.Name));
-            }
-        }
-    }
-
     [TestFixture]
-    public class ConnectionTestFixture
+    public class QuickstartTestFixture
     {
         private void ProcessPersonInsertResult(
             IConceptMap[] results,
