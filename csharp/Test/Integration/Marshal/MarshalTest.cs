@@ -47,11 +47,6 @@ namespace TypeDB.Driver.Test.Integration
             Assert.False(driver.IsOpen());
         }
 
-        public static void CreateDatabaseNoChecks(IDatabaseManager dbManager, string expectedDbName)
-        {
-            dbManager.Create(expectedDbName);
-        }
-
         public static IDatabase CreateAndGetDatabase(
             IDatabaseManager dbManager, string expectedDbName, bool checkAbsence = true)
         {
@@ -60,7 +55,7 @@ namespace TypeDB.Driver.Test.Integration
                 Assert.False(dbManager.Contains(expectedDbName));
             }
 
-            CreateDatabaseNoChecks(dbManager, expectedDbName);
+            dbManager.Create(expectedDbName);
             Assert.True(dbManager.Contains(expectedDbName));
 
             IDatabase db = dbManager.Get(expectedDbName);
@@ -77,17 +72,6 @@ namespace TypeDB.Driver.Test.Integration
             string dbName = db.Name;
             db.Delete();
             Assert.False(dbManager.Contains(dbName));
-        }
-
-        public static void CheckAllDatabases(IDatabaseManager dbManager, ICollection<string> expectedDbNames)
-        {
-            var allDbs = dbManager.GetAll();
-            Assert.AreEqual(expectedDbNames.Count, allDbs.Count);
-
-            foreach (var db in allDbs)
-            {
-                Assert.True(expectedDbNames.Contains(db.Name));
-            }
         }
     }
 
