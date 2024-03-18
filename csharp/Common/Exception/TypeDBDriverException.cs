@@ -20,7 +20,6 @@
  */
 
 using System;
-using System.Diagnostics;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Common;
