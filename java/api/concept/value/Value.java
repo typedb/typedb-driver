@@ -208,16 +208,42 @@ public interface Value extends Concept {
             throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
 
+        /**
+         * Returns a <code>Class</code> equivalent of this value concept for this programming language.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.valueClass();
+         * </pre>
+         */
         @CheckReturnValue
         public Class<?> valueClass() {
             return valueClass;
         }
 
+        /**
+         * Returns <code>true</code> if this value concept can be written to a database.
+         * Otherwise, returns <code>false</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.isWritable();
+         * </pre>
+         */
         @CheckReturnValue
         public boolean isWritable() {
             return isWritable;
         }
 
+        /**
+         * Returns <code>true</code> if this value concept can be used as a key via the @key annotation.
+         * Otherwise, returns <code>false</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.isKeyable();
+         * </pre>
+         */
         @CheckReturnValue
         public boolean isKeyable() {
             return isKeyable;

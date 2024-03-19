@@ -191,6 +191,14 @@ namespace TypeDB.Driver.Api
 
     public static class ValueTypeExtensions
     {
+        /**
+         * Returns a <code>System.Type</code> equivalent of this value concept for this programming language.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.GetValueClass();
+         * </pre>
+         */
         public static System.Type GetValueClass(this IValue.ValueType valueType)
         {
             switch (valueType)
@@ -212,6 +220,15 @@ namespace TypeDB.Driver.Api
             }
         }
 
+        /**
+         * Returns <code>true</code> if this value concept can be written to a database.
+         * Otherwise, returns <code>false</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.IsWritable();
+         * </pre>
+         */
         public static bool IsWritable(this IValue.ValueType valueType)
         {
             switch (valueType)
@@ -229,6 +246,15 @@ namespace TypeDB.Driver.Api
             }
         }
 
+        /**
+         * Returns <code>true</code> if this value concept can be used as a key via the @key annotation.
+         * Otherwise, returns <code>false</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * valueType.IsKeyable();
+         * </pre>
+         */
         public static bool IsKeyable(this ValueType valueType)
         {
             switch (valueType)
