@@ -41,15 +41,15 @@ namespace TypeDB.Driver.Test.Behaviour
             switch (type)
             {
                 case "long":
-                    return IValue.ValueType.LONG;
+                    return IValue.ValueType.Long;
                 case "double":
-                    return IValue.ValueType.DOUBLE;
+                    return IValue.ValueType.Double;
                 case "string":
-                    return IValue.ValueType.STRING;
+                    return IValue.ValueType.String;
                 case "boolean":
-                    return IValue.ValueType.BOOL;
+                    return IValue.ValueType.Bool;
                 case "datetime":
-                    return IValue.ValueType.DATETIME;
+                    return IValue.ValueType.DateTime;
                 default:
                     throw new BehaviourTestException($"Unexpected value type {type}");
             }
@@ -125,7 +125,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AttributeTypeAsValueTypeSetRegex(string typeLabel, string valueTypeData, string regex)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
-            Assert.True(valueType.Equals(IValue.ValueType.STRING));
+            Assert.True(valueType.Equals(IValue.ValueType.String));
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             attributeType.SetRegex(Tx, regex).Resolve();
@@ -135,7 +135,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, string valueTypeData)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
-            Assert.True(valueType.Equals(IValue.ValueType.STRING));
+            Assert.True(valueType.Equals(IValue.ValueType.String));
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             attributeType.UnsetRegex(Tx).Resolve();
@@ -145,7 +145,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AttributeTypeAsValueTypeGetRegex(string typeLabel, string valueTypeData, string? regex)
         {
             IValue.ValueType valueType = GetValueType(valueTypeData);
-            Assert.True(valueType.Equals(IValue.ValueType.STRING));
+            Assert.True(valueType.Equals(IValue.ValueType.String));
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             Assert.Equal(regex, attributeType.GetRegex(Tx).Resolve());

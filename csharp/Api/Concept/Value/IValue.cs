@@ -178,171 +178,71 @@ namespace TypeDB.Driver.Api
          */
         System.DateTime AsDateTime();
 
-//        enum ValueType
-//        {
-//            Object = Pinvoke.ValueType.Object,
-//            Bool = Pinvoke.ValueType.Boolean,
-//            Long = Pinvoke.ValueType.Long,
-//            Double = Pinvoke.ValueType.Double,
-//            String = Pinvoke.ValueType.String,
-//            DateTime = Pinvoke.ValueType.DateTime,
-//        }
-//
-//        namespace ValueTypeExtension
-//        {
-//            public static class Extensions
-//            {
-//                public static System.Type GetValueClass(this ValueType valueType)
-//                {
-//                    switch (valueType)
-//                    {
-//                        case Object:
-//                            return typeof(object);
-//                        case Bool:
-//                            return typeof(bool);
-//                        case Long:
-//                            return typeof(long);
-//                        case Double:
-//                            return typeof(double);
-//                        case String:
-//                            return typeof(string);
-//                        case DateTime:
-//                            return typeof(System.DateTime);
-//                        default:
-//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
-//                    }
-//                }
-//
-//                public static bool IsWritable(this ValueType valueType)
-//                {
-//                    switch (valueType)
-//                    {
-//                        case Object:
-//                            return false;
-//                        case Bool:
-//                        case Long:
-//                        case Double:
-//                        case String:
-//                        case DateTime:
-//                            return true;
-//                        default:
-//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
-//                    }
-//                }
-//
-//                public static bool IsKeyable(this ValueType valueType)
-//                {
-//                    switch (valueType)
-//                    {
-//                        case Object:
-//                        case Bool:
-//                        case Double:
-//                            return false;
-//                        case Long:
-//                        case String:
-//                        case DateTime:
-//                            return true;
-//                        default:
-//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
-//                    }
-//                }
-//            }
-//        }
-
-        public class ValueType : NativeObjectWrapper<Pinvoke.ValueType>
+        public enum ValueType
         {
-            public static readonly ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);
-            public static readonly ValueType BOOL = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Boolean);
-            public static readonly ValueType LONG = new ValueType(typeof(long), true, true, Pinvoke.ValueType.Long);
-            public static readonly ValueType DOUBLE = new ValueType(typeof(double), true, false, Pinvoke.ValueType.Double);
-            public static readonly ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);
-            public static readonly ValueType DATETIME = new ValueType(typeof(System.DateTime), true, true, Pinvoke.ValueType.DateTime);
+            Object = Pinvoke.ValueType.Object,
+            Bool = Pinvoke.ValueType.Boolean,
+            Long = Pinvoke.ValueType.Long,
+            Double = Pinvoke.ValueType.Double,
+            String = Pinvoke.ValueType.String,
+            DateTime = Pinvoke.ValueType.DateTime,
+        }
+    }
 
-            public readonly System.Type ValueClass;
-            public readonly bool IsWritable;
-            public readonly bool IsKeyable;
-
-            private int _hash = 0;
-
-            public static ValueType ValueTypeOf(Pinvoke.ValueType nativeObject)
+    public static class ValueTypeExtensions
+    {
+        public static System.Type GetValueClass(this IValue.ValueType valueType)
+        {
+            switch (valueType)
             {
-                ValueType? matchingValueType = Values
-                    .Where(value => value.NativeObject.Equals(nativeObject))
-                    .FirstOrDefault();
-
-                if (matchingValueType == null)
-                {
-                    throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
-                }
-
-                return matchingValueType;
+                case IValue.ValueType.Object:
+                    return typeof(object);
+                case IValue.ValueType.Bool:
+                    return typeof(bool);
+                case IValue.ValueType.Long:
+                    return typeof(long);
+                case IValue.ValueType.Double:
+                    return typeof(double);
+                case IValue.ValueType.String:
+                    return typeof(string);
+                case IValue.ValueType.DateTime:
+                    return typeof(System.DateTime);
+                default:
+                    throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
             }
+        }
 
-            private ValueType(
-                System.Type valueClass,
-                bool isWritable,
-                bool isKeyable,
-                Pinvoke.ValueType nativeObject)
-                : base(nativeObject)
+        public static bool IsWritable(this IValue.ValueType valueType)
+        {
+            switch (valueType)
             {
-                ValueClass = valueClass;
-                IsWritable = isWritable;
-                IsKeyable = isKeyable;
-            }
-
-            public static IEnumerable<ValueType> Values
-            {
-                get
-                {
-                    yield return OBJECT;
-                    yield return BOOL;
-                    yield return LONG;
-                    yield return DOUBLE;
-                    yield return STRING;
-                    yield return DATETIME;
-                }
-            }
-
-            public override string ToString()
-            {
-                if (this == OBJECT) return "object";
-                if (this == BOOL) return "bool";
-                if (this == LONG) return "long";
-                if (this == DOUBLE) return "double";
-                if (this == STRING) return "string";
-                if (this == DATETIME) return "DateTime";
-                throw new System.InvalidOperationException("IValue does not correspond to an acceptable ValueType");
-            }
-
-            public override bool Equals(object? obj)
-            {
-                if (Object.ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (obj == null || this.GetType() != obj.GetType())
-                {
+                case IValue.ValueType.Object:
                     return false;
-                }
-
-                ValueType typeObj = (ValueType)obj;
-                return this.ValueClass == typeObj.ValueClass;
+                case IValue.ValueType.Bool:
+                case IValue.ValueType.Long:
+                case IValue.ValueType.Double:
+                case IValue.ValueType.String:
+                case IValue.ValueType.DateTime:
+                    return true;
+                default:
+                    throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
             }
+        }
 
-            public override int GetHashCode()
+        public static bool IsKeyable(this ValueType valueType)
+        {
+            switch (valueType)
             {
-                if (_hash == 0)
-                {
-                    _hash = ComputeHash();
-                }
-
-                return _hash;
-            }
-
-            private int ComputeHash()
-            {
-                return (ValueClass, IsWritable, IsKeyable).GetHashCode();
+                case IValue.ValueType.Object:
+                case IValue.ValueType.Bool:
+                case IValue.ValueType.Double:
+                    return false;
+                case IValue.ValueType.Long:
+                case IValue.ValueType.String:
+                case IValue.ValueType.DateTime:
+                    return true;
+                default:
+                    throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
             }
         }
     }

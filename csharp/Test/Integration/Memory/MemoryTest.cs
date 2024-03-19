@@ -183,20 +183,23 @@ namespace TypeDB.Driver.Test.Integration
                     var refType = writeTransaction.Concepts.GetAttributeType("ref").Resolve();
                     var emailType = writeTransaction.Concepts.GetAttributeType("email").Resolve();
 
+                    Assert.NotNull(refType);
+                    Assert.NotNull(emailType);
+
                     IAttribute[] xAttributesWithAttributeTypes = x.GetHas(
-                        writeTransaction, refType, emailType).ToArray();
+                        writeTransaction, refType!, emailType!).ToArray();
 
                     Assert.AreEqual(xAttributesWithAttributeTypes.Length, 2);
 
                     IAttribute[] xAttributesWithAttributeTypes2 = x.GetHas(
-                        writeTransaction, refType).ToArray();
+                        writeTransaction, refType!).ToArray();
 
                     Assert.AreEqual(xAttributesWithAttributeTypes2.Length, 1);
                     Assert.That(xAttributesWithAttributeTypes2[0].IsAttribute());
                     Assert.That(xAttributesWithAttributeTypes2[0].Value.IsLong());
 
                     IAttribute[] xAttributesWithAttributeTypes3 = x.GetHas(
-                        writeTransaction, emailType).ToArray();
+                        writeTransaction, emailType!).ToArray();
 
                     Assert.AreEqual(xAttributesWithAttributeTypes3.Length, 1);
                     Assert.That(xAttributesWithAttributeTypes3[0].IsAttribute());
@@ -280,12 +283,12 @@ namespace TypeDB.Driver.Test.Integration
 
                     var emptyAnnotations = new Annotation[0];
                     IAttributeType[] xAttributeTypesLong =
-                        x.Type.GetOwns(writeTransaction, IValue.ValueType.LONG, emptyAnnotations).ToArray();
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.Long, emptyAnnotations).ToArray();
 
                     Assert.AreEqual(xAttributeTypesLong.Length, 2);
 
                     IAttributeType[] xAttributeTypesString =
-                        x.Type.GetOwns(writeTransaction, IValue.ValueType.STRING, emptyAnnotations).ToArray();
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.String, emptyAnnotations).ToArray();
 
                     Assert.AreEqual(xAttributeTypesString.Length, 2);
 
@@ -295,7 +298,7 @@ namespace TypeDB.Driver.Test.Integration
                     Assert.AreEqual(xAttributeTypesNull.Length, 4);
 
                     IAttributeType[] xAttributeTypesDatetime =
-                        x.Type.GetOwns(writeTransaction, IValue.ValueType.DATETIME, emptyAnnotations).ToArray();
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.DateTime, emptyAnnotations).ToArray();
 
                     Assert.AreEqual(xAttributeTypesDatetime.Length, 0);
                 }

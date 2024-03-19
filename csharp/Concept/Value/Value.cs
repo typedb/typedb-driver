@@ -71,11 +71,11 @@ namespace TypeDB.Driver.Concept
         {
             get
             {
-                if (IsBool()) return IValue.ValueType.BOOL;
-                if (IsLong()) return IValue.ValueType.LONG;
-                if (IsDouble()) return IValue.ValueType.DOUBLE;
-                if (IsString()) return IValue.ValueType.STRING;
-                if (IsDateTime()) return IValue.ValueType.DATETIME;
+                if (IsBool()) return IValue.ValueType.Bool;
+                if (IsLong()) return IValue.ValueType.Long;
+                if (IsDouble()) return IValue.ValueType.Double;
+                if (IsString()) return IValue.ValueType.String;
+                if (IsDateTime()) return IValue.ValueType.DateTime;
                 
                 throw new TypeDBDriverException(InternalError.ILLEGAL_STATE);
             }

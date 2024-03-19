@@ -44,8 +44,7 @@ namespace TypeDB.Driver.Concept
         {
             get
             {
-                return ValueTypeOf(
-                    Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject));
+                return (IValue.ValueType)Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject);
             }
         }
 
@@ -120,7 +119,7 @@ namespace TypeDB.Driver.Concept
                     Pinvoke.typedb_driver.attribute_type_get_subtypes_with_value_type(
                         NativeTransaction(transaction), 
                         NativeObject, 
-                        valueType.NativeObject, 
+                        (Pinvoke.ValueType)valueType,
                         (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new AttributeType(obj));
             } 

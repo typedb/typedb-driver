@@ -114,7 +114,7 @@ namespace TypeDB.Driver.Concept
 
             return Promise<IAttributeType>.Map<Pinvoke.Concept, IAttributeType>(
                 Pinvoke.typedb_driver.concepts_put_attribute_type(
-                    NativeTransaction, label, valueType.NativeObject).Resolve,
+                    NativeTransaction, label, (Pinvoke.ValueType)valueType).Resolve,
                 obj => new AttributeType(obj));
         }
 

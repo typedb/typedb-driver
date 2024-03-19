@@ -282,7 +282,7 @@ namespace TypeDB.Driver.Api
          */
         bool IsBool()
         {
-            return ValueType == IValue.ValueType.BOOL;
+            return ValueType == IValue.ValueType.Bool;
         }
 
         /**
@@ -296,7 +296,7 @@ namespace TypeDB.Driver.Api
          */
         bool IsLong()
         {
-            return ValueType == IValue.ValueType.LONG;
+            return ValueType == IValue.ValueType.Long;
         }
 
         /**
@@ -310,7 +310,7 @@ namespace TypeDB.Driver.Api
          */
         bool IsDouble() 
         {
-            return ValueType == IValue.ValueType.DOUBLE;
+            return ValueType == IValue.ValueType.Double;
         }
 
         /**
@@ -324,7 +324,7 @@ namespace TypeDB.Driver.Api
          */
         bool IsString()
         {
-            return ValueType == IValue.ValueType.STRING;
+            return ValueType == IValue.ValueType.String;
         }
 
         /**
@@ -338,7 +338,7 @@ namespace TypeDB.Driver.Api
          */
         bool IsDateTime()
         {
-            return ValueType == IValue.ValueType.DATETIME;
+            return ValueType == IValue.ValueType.DateTime;
         }
 
         /**

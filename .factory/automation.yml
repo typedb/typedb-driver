@@ -51,7 +51,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel build -- //... -//python/... -//nodejs/... # TODO: Temporarily disable some drivers for more space on agents
+        bazel build //...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
