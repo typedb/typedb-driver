@@ -286,7 +286,7 @@ namespace TypeDB.Driver.Concept
                     Pinvoke.typedb_driver.thing_type_get_owns(
                         NativeTransaction(transaction),
                         NativeObject,
-                        valueType != null ? valueType.NativeObject : null,
+                        valueType != null ? (Pinvoke.ValueType)valueType : null,
                         (Pinvoke.Transitivity)transitivity,
                         annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>()))
                     .Select(obj => new AttributeType(obj));

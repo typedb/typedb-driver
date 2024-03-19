@@ -718,36 +718,25 @@ namespace TypeDB.Driver.Test.Behaviour
                     return false;
                 }
 
-                var type = concept.AsValue().Type;
-
-                if (type == IValue.ValueType.BOOL)
+                switch (concept.AsValue().Type)
                 {
-                    return bool.Parse(_value).Equals(concept.AsValue().AsBool());
+                    case IValue.ValueType.Bool:
+                        return bool.Parse(_value).Equals(concept.AsValue().AsBool());
+                    case IValue.ValueType.Long:
+                        return long.Parse(_value).Equals(concept.AsValue().AsLong());
+                    case IValue.ValueType.Double:
+                        return double.Parse(_value).Equals(concept.AsValue().AsDouble());
+                    case IValue.ValueType.String:
+                        return _value.Equals(concept.AsValue().AsString());
+                    case IValue.ValueType.DateTime:
+                    {
+                        DateTime dateTime = DateTime.Parse(_value);
+                        return dateTime.Equals(concept.AsValue().AsDateTime());
+                    }
+                    default:
+                        throw new BehaviourTestException(
+                            "Unrecognised value type specified in test " + _valueType);
                 }
-
-                if (type == IValue.ValueType.LONG)
-                {
-                    return long.Parse(_value).Equals(concept.AsValue().AsLong());
-                }
-
-                if (type == IValue.ValueType.DOUBLE)
-                {
-                    return double.Parse(_value).Equals(concept.AsValue().AsDouble());
-                }
-
-                if (type == IValue.ValueType.STRING)
-                {
-                    return _value.Equals(concept.AsValue().AsString());
-                }
-
-                if (type == IValue.ValueType.DATETIME)
-                {
-                    DateTime dateTime = DateTime.Parse(_value);
-                    return dateTime.Equals(concept.AsValue().AsDateTime());
-                }
-
-                throw new BehaviourTestException(
-                    "Unrecognised value type specified in test " + _valueType);
             }
         }
 
