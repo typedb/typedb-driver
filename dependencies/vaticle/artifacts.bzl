@@ -43,6 +43,6 @@ def vaticle_typedb_cloud_artifact():
     )
 
 maven_artifacts = {
-    'com.vaticle.typedb:typedb-runner': '240c3c108f8cbf6e620e52c4df8730431ec13e3f',
-    'com.vaticle.typedb:typedb-cloud-runner': '54c3f23385f356d830e1ab1bb66345acfce103e7',
+    'com.vaticle.typedb:typedb-runner': '0.0.0-fee8e9c5a8c17a58b4639b91e23458e715e0d3a3',
+    'com.vaticle.typedb:typedb-cloud-runner': '0.0.0-2c96925694c196be3c898aa3ffc0f56ccc84f400',
 }

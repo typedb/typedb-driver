@@ -35,30 +35,6 @@ filegroup(
 
 
 csharp_behaviour_test(
-    name = "test-core",
-    test_files = ["UserTest.cs"],
-    steps_files = [
-        ":steps",
-        "//csharp/Test/Behaviour/Util:steps",
-        "//csharp/Test/Behaviour/Query:steps",
-        "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
-        "//csharp/Test/Behaviour/Connection:steps-core",
-    ],
-    features = ["@vaticle_typedb_behaviour//connection:user.feature"],
-    deps = [
-        "//csharp/Api:api",
-        "//csharp/Common:common",
-        "//csharp:driver-csharp",
-        "//csharp/Test/Behaviour/Util:util",
-        "@paket.csharp_deps//newtonsoft.json",
-    ],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["UserTest.cs"],
     steps_files = [

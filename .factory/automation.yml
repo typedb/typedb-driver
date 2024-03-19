@@ -212,7 +212,7 @@ build:
 #        # TODO: delete --jobs=1 if we fix the issue with excess memory usage
 #        .factory/test-core.sh //java/test/behaviour/concept/... --test_output=errors
 #        .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
-#        .factory/test-core.sh //java/test/behaviour/query/language/match/... --test_output=errors
+#        .factory/test-core.sh //java/test/behaviour/query/language/match/... --test_output=errors # TODO: Squeeze such tests to /language/... --jobs=1
 #        .factory/test-core.sh //java/test/behaviour/query/language/get/... --test_output=errors
 #        .factory/test-core.sh //java/test/behaviour/query/language/fetch/... --test_output=errors
 #        .factory/test-core.sh //java/test/behaviour/query/language/modifiers/... --test_output=errors
@@ -280,8 +280,6 @@ build:
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
-#
-#    TODO Add C#
 #
 #    test-python-behaviour-cloud:
 #      image: vaticle-ubuntu-22.04
@@ -527,7 +525,89 @@ build:
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS
-#
+
+    test-csharp-integration-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        sudo apt-get update
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          bazel test //csharp/Test/Integration/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-csharp-behaviour-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        sudo apt-get update
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=streamed --jobs=1 &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=streamed --jobs=1 &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=streamed --jobs=1 &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Match/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Get/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Fetch/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Modifiers/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Expression/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Insert/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Delete/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Update/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Define/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Undefine/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/RuleValidation/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-csharp-behaviour-cloud:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-cloud-servers.sh &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cloud-servers.sh
+        exit $TEST_SUCCESS
+
 #    sync-dependencies:
 #      image: vaticle-ubuntu-22.04
 #      filter:
