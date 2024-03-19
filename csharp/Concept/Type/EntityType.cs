@@ -76,7 +76,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, TRANSITIVE);
+            return GetSubtypes(transaction, Transitive);
         }
 
         public override IEnumerable<IType> GetSubtypes(
@@ -86,7 +86,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.entity_type_get_subtypes(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new EntityType(obj));
             }
              catch (Pinvoke.Error e) 
@@ -97,7 +97,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
-            return GetInstances(transaction, TRANSITIVE);
+            return GetInstances(transaction, Transitive);
         }
 
         public override IEnumerable<IThing> GetInstances(
@@ -107,7 +107,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.entity_type_get_instances(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new Entity(obj));
             } 
             catch (Pinvoke.Error e) 

@@ -55,7 +55,7 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction)
         {
-            return GetRelates(transaction, TRANSITIVE);
+            return GetRelates(transaction, Transitive);
         }
 
         public IEnumerable<IRoleType> GetRelates(
@@ -64,7 +64,7 @@ namespace TypeDB.Driver.Concept
             try 
             {
                 return new NativeEnumerable<Pinvoke.Concept>(Pinvoke.typedb_driver.relation_type_get_relates(
-                    NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                    NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new RoleType(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -149,7 +149,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, TRANSITIVE);
+            return GetSubtypes(transaction, Transitive);
         }
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
@@ -158,7 +158,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.relation_type_get_subtypes(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new RelationType(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -169,7 +169,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
-            return GetInstances(transaction, TRANSITIVE);
+            return GetInstances(transaction, Transitive);
         }
 
         public override IEnumerable<IThing> GetInstances(
@@ -179,7 +179,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.relation_type_get_instances(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new Relation(obj));
             } 
             catch (Pinvoke.Error e) 

@@ -78,8 +78,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>TRANSITIVE</code> for direct and inherited relates,
-         *                     <code>EXPLICIT</code> for direct relates only
+         * @param transitivity <code>Transitive</code> for direct and inherited relates,
+         *                     <code>Explicit</code> for direct relates only
          */
         IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     

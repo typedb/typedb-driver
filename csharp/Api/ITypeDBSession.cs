@@ -43,7 +43,7 @@ namespace TypeDB.Driver.Api
         bool IsOpen();
 
         /**
-         * The current session’s type (SCHEMA or DATA).
+         * The current session’s type (Schema or Data).
          *
          * <h3>Examples</h3>
          * <pre>
@@ -87,7 +87,7 @@ namespace TypeDB.Driver.Api
          * session.Transaction(transactionType, options);
          * </pre>
          *
-         * @param type The type of transaction to be created (READ or WRITE)
+         * @param type The type of transaction to be created (Read or Write)
          * @param options Options for the session
          */
         ITypeDBTransaction Transaction(TransactionType type, TypeDBOptions options);
@@ -134,20 +134,12 @@ namespace TypeDB.Driver.Api
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.Session(database, SessionType.SCHEMA);
+     * driver.Session(database, SessionType.Schema);
      * </pre>
      */
-    public class SessionType : NativeObjectWrapper<Pinvoke.SessionType>
+    public enum SessionType
     {
-        public readonly int Id;
-
-        public static readonly SessionType DATA = new SessionType(1, Pinvoke.SessionType.Data);
-        public static readonly SessionType SCHEMA = new SessionType(2, Pinvoke.SessionType.Schema);
-
-        private SessionType(int id, Pinvoke.SessionType nativeObject)
-            : base(nativeObject)
-        {
-            Id = id;
-        }
+        Data = Pinvoke.SessionType.Data,
+        Schema = Pinvoke.SessionType.Schema,
     }
 }

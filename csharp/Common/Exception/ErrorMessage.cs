@@ -138,12 +138,10 @@ namespace TypeDB.Driver.Common
                 new Internal(3, "Illegal casting operation to {0}.");
             public static readonly Internal NULL_NATIVE_VALUE =
                 new Internal(4, "Unhandled null pointer to a native object encountered!");
-            public static readonly Internal INVALID_NATIVE_HANDLE =
-                new Internal(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
             public static readonly Internal ENUMERATOR_EXCESSIVE_ACCESS =
-                new Internal(6, "Such Enumerables support Enumerator's getting only once.");
+                new Internal(5, "Such Enumerables support Enumerator's getting only once.");
             public static readonly Internal UNEXPECTED_INTERNAL_VALUE =
-                new Internal(7, "Unexpected internal value encountered!");
+                new Internal(6, "Unexpected internal value {0} encountered!");
         }
     }
 }

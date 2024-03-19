@@ -104,9 +104,9 @@ namespace TypeDB.Driver.Test.Integration
             IDatabaseManager dbManager = driver.Databases;
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, dbName);
 
-            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.Schema))
             {
-                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.Write))
                 {
                     string defineQuery = @"
                         define
@@ -151,9 +151,9 @@ namespace TypeDB.Driver.Test.Integration
                 }
             }
 
-            using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA))
+            using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.Data))
             {
-                using (ITypeDBTransaction writeTransaction = dataSession.Transaction(TransactionType.WRITE))
+                using (ITypeDBTransaction writeTransaction = dataSession.Transaction(TransactionType.Write))
                 {
                     string insertQuery = @"
                         insert
@@ -216,9 +216,9 @@ namespace TypeDB.Driver.Test.Integration
             IDatabaseManager dbManager = driver.Databases;
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, dbName);
 
-            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.Schema))
             {
-                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.Write))
                 {
                     string defineQuery = @"
                         define
@@ -263,9 +263,9 @@ namespace TypeDB.Driver.Test.Integration
                 }
             }
 
-            using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA))
+            using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.Data))
             {
-                using (ITypeDBTransaction writeTransaction = dataSession.Transaction(TransactionType.WRITE))
+                using (ITypeDBTransaction writeTransaction = dataSession.Transaction(TransactionType.Write))
                 {
                     string insertQuery = @"
                         insert

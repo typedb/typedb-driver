@@ -57,7 +57,7 @@ namespace TypeDB.Driver.Connection
             try
             {
                 return Pinvoke.typedb_driver.transaction_new(
-                    session.NativeObject, type.NativeObject, options.NativeObject);
+                    session.NativeObject, (Pinvoke.TransactionType)type, options.NativeObject);
             }
             catch (Pinvoke.Error e)
             {

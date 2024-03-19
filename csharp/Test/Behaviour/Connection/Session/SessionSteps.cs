@@ -47,7 +47,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection open schema session for database: {word}")]
         public void ConnectionOpenSchemaSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, SessionType.SCHEMA);
+            ConnectionOpenSessionForDatabase(name, SessionType.Schema);
         }
 
         [When(@"connection open schema session for database: {word}")]
@@ -66,7 +66,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection open[ data | ]+session[s]? for database[s]?: {word}")]
         public void ConnectionOpenDataSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, SessionType.DATA);
+            ConnectionOpenSessionForDatabase(name, SessionType.Data);
         }
 
         [Given(@"connection open[ data | ]+session[s]? for database[s]?:")]
@@ -107,7 +107,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession>(() =>
                     {
                         return Driver!.Session(
-                            name, SessionType.DATA, SessionOptions);
+                            name, SessionType.Data, SessionOptions);
                     }));
             }
         }

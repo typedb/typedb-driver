@@ -82,13 +82,13 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, TRANSITIVE);
+            return GetSubtypes(transaction, Transitive);
         }
 
         public IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, IValue.ValueType valueType) 
         {
-            return GetSubtypes(transaction, valueType, TRANSITIVE);
+            return GetSubtypes(transaction, valueType, Transitive);
         }
 
         public override IEnumerable<IType> GetSubtypes(
@@ -100,7 +100,7 @@ namespace TypeDB.Driver.Concept
                     Pinvoke.typedb_driver.attribute_type_get_subtypes(
                         NativeTransaction(transaction),
                         NativeObject,
-                        transitivity.NativeObject))
+                        (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new AttributeType(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -121,7 +121,7 @@ namespace TypeDB.Driver.Concept
                         NativeTransaction(transaction), 
                         NativeObject, 
                         valueType.NativeObject, 
-                        transitivity.NativeObject))
+                        (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new AttributeType(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -132,7 +132,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
-            return GetInstances(transaction, TRANSITIVE);
+            return GetInstances(transaction, Transitive);
         }
 
         public override IEnumerable<IThing> GetInstances(
@@ -144,7 +144,7 @@ namespace TypeDB.Driver.Concept
                     Pinvoke.typedb_driver.attribute_type_get_instances(
                         NativeTransaction(transaction),
                         NativeObject,
-                        transitivity.NativeObject))
+                        (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new Attribute(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -161,7 +161,7 @@ namespace TypeDB.Driver.Concept
         public IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, ICollection<Annotation> annotations)
         {
-            return GetOwners(transaction, annotations, TRANSITIVE);
+            return GetOwners(transaction, annotations, Transitive);
         }
 
         public IEnumerable<IThingType> GetOwners(
@@ -184,7 +184,7 @@ namespace TypeDB.Driver.Concept
                     Pinvoke.typedb_driver.attribute_type_get_owners(
                         NativeTransaction(transaction),
                         NativeObject,
-                        transitivity.NativeObject,
+                        (Pinvoke.Transitivity)transitivity,
                         annotationsArray))
                     .Select(obj => ThingTypeOf(obj));
             } 

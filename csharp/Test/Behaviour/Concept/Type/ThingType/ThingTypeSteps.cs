@@ -401,7 +401,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var attributeLabels = Util.ParseDataTableToTypeList<string>(attributeLabelsData, val => val.ToString());
 
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, annotations, EXPLICIT)
+                .GetOwns(Tx, annotations, Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -417,7 +417,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var attributeLabels = Util.ParseDataTableToTypeList<string>(attributeLabelsData, val => val.ToString());
 
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, annotations, EXPLICIT)
+                .GetOwns(Tx, annotations, Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -541,7 +541,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var attributeLabels = Util.ParseDataTableToTypeList<string>(attributeLabelsData, val => val.ToString());
 
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, EXPLICIT)
+                .GetOwns(Tx, Explicit)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -555,7 +555,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var attributeLabels = Util.ParseDataTableToTypeList<string>(attributeLabelsData, val => val.ToString());
 
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, EXPLICIT)
+                .GetOwns(Tx, Explicit)
                 .Select(at => at.Label.Name)
                 .ToHashSet();
 
@@ -669,7 +669,7 @@ namespace TypeDB.Driver.Test.Behaviour
             List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(Tx, EXPLICIT)
+                .GetPlays(Tx, Explicit)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
@@ -683,7 +683,7 @@ namespace TypeDB.Driver.Test.Behaviour
             List<Label> roleLabels = Util.ParseDataTableToTypeList<Label>(roleLabelsData, val => GetScopedLabel(val));
 
             HashSet<Label> actuals = GetThingType(rootLabel, typeLabel)
-                .GetPlays(Tx, EXPLICIT)
+                .GetPlays(Tx, Explicit)
                 .Select(obj => obj.Label)
                 .ToHashSet();
 
