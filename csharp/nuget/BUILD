@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2022 Vaticle
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -18,3 +17,14 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    exclude = glob([
+        "paket.csharp_deps.bzl",
+        "paket.csharp_deps_extension.bzl",
+    ]),
+    license_type = "apache-header",
+)
