@@ -16,6 +16,7 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
+load("@vaticle_bazel_distribution//docs:cpp/rules.bzl", "doxygen_docs")
 load(":build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_csharp_library")
@@ -55,6 +56,22 @@ csharp_library(
     visibility = ["//visibility:public"],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+)
+
+
+filegroup(
+    name = "docs_source_files",
+    srcs = [":TypeDB.cs"],
+)
+
+
+# TODO: Not hermetic - requires doxygen on the host
+doxygen_docs(
+    name = "docs_html",
+    project_name = "TypeDB C# Driver",
+    sources = [":docs_source_files", "//csharp/Api:docs_source_files", "//csharp/Common:docs_source_files"],
+    main_page_md = ":README.md",
+    tags = ["manual"],
 )
 
 
