@@ -63,7 +63,7 @@ namespace TypeDB.Driver.Api
     
         /**
          * Retrieves the <code>ThingType</code>s whose instances play this role.
-         * Equivalent to <code>GetPlayerTypes(transaction, TRANSITIVE)</code>.
+         * Equivalent to <code>GetPlayerTypes(transaction, Transitive)</code>.
          *
          * @see IRoleType#GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -78,14 +78,14 @@ namespace TypeDB.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>TRANSITIVE</code> for direct and indirect playing,
-         *                     <code>EXPLICIT</code> for direct playing only
+         * @param transitivity <code>Transitive</code> for direct and indirect playing,
+         *                     <code>Explicit</code> for direct playing only
          */
         IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves the <code>Relation</code> instances that this role is related to.
-         * Equivalent to <code>GetRelationInstances(transaction, TRANSITIVE)</code>
+         * Equivalent to <code>GetRelationInstances(transaction, Transitive)</code>
          *
          * @see IRoleType#GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -100,7 +100,7 @@ namespace TypeDB.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>TRANSITIVE</code> for direct and indirect relation, <code>EXPLICIT</code> for direct relation only
+         * @param transitivity <code>Transitive</code> for direct and indirect relation, <code>Explicit</code> for direct relation only
          */
         IEnumerable<IRelation> GetRelationInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
@@ -121,8 +121,8 @@ namespace TypeDB.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>TRANSITIVE</code> for direct and indirect playing,
-         *                     <code>EXPLICIT</code> for direct playing only
+         * @param transitivity <code>Transitive</code> for direct and indirect playing,
+         *                     <code>Explicit</code> for direct playing only
          */
         IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     }

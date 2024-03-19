@@ -204,7 +204,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, annotations, EXPLICIT)
+                .GetOwners(Tx, annotations, Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -221,7 +221,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, annotations, EXPLICIT)
+                .GetOwners(Tx, annotations, Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -269,7 +269,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new Annotation[0], EXPLICIT)
+                .GetOwners(Tx, new Annotation[0], Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -283,7 +283,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             IAttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve()!;
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, new Annotation[0], EXPLICIT)
+                .GetOwners(Tx, new Annotation[0], Explicit)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 

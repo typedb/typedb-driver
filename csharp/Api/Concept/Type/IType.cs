@@ -114,7 +114,7 @@ namespace TypeDB.Driver.Api
 
         /**
          * Retrieves all direct and indirect subtypes of the type.
-         * Equivalent to <code>GetSubtypes(transaction, TRANSITIVE)</code>
+         * Equivalent to <code>GetSubtypes(transaction, Transitive)</code>
          *
          * @see Type#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -126,12 +126,12 @@ namespace TypeDB.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * type.GetSubtypes(transaction);
-         * type.GetSubtypes(transaction, EXPLICIT);
+         * type.GetSubtypes(transaction, Explicit);
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>EXPLICIT</code> for direct subtypes only
+         * @param transitivity <code>Transitive</code> for direct and indirect subtypes,
+         *                     <code>Explicit</code> for direct subtypes only
          */
         IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 

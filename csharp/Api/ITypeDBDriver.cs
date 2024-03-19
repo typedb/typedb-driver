@@ -85,7 +85,7 @@ namespace TypeDB.Driver.Api
          * </pre>
          *
          * @param database The name of the database with which the session connects
-         * @param type The type of session to be created (DATA or SCHEMA)
+         * @param type The type of session to be created (Data or Schema)
          * @param options <code>TypeDBOptions</code> for the session
          */
         ITypeDBSession Session(string database, SessionType type, TypeDBOptions options);

@@ -102,7 +102,7 @@ namespace TypeDB.Driver.Concept
 
         public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
-            return GetSubtypes(transaction, TRANSITIVE);
+            return GetSubtypes(transaction, Transitive);
         }
 
         public override IEnumerable<IType> GetSubtypes(
@@ -112,7 +112,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_subtypes(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new RoleType(obj));
             } 
             catch (Pinvoke.Error e) 
@@ -146,7 +146,7 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
         {
-            return GetPlayerTypes(transaction, TRANSITIVE);
+            return GetPlayerTypes(transaction, Transitive);
         }
 
         public IEnumerable<IThingType> GetPlayerTypes(
@@ -156,7 +156,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_types(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => ThingTypeOf(obj));
             }
             catch (Pinvoke.Error e)
@@ -167,7 +167,7 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
         {
-            return GetRelationInstances(transaction, TRANSITIVE);
+            return GetRelationInstances(transaction, Transitive);
         }
 
         public IEnumerable<IRelation> GetRelationInstances(
@@ -177,7 +177,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_relation_instances(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new Relation(obj));
             }
             catch (Pinvoke.Error e)
@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
         {
-            return GetPlayerInstances(transaction, TRANSITIVE);
+            return GetPlayerInstances(transaction, Transitive);
         }
 
         public IEnumerable<IThing> GetPlayerInstances(
@@ -198,7 +198,7 @@ namespace TypeDB.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_instances(
-                        NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                        NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => ThingOf(obj));
             }
             catch (Pinvoke.Error e)

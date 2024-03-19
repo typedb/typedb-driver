@@ -178,6 +178,77 @@ namespace TypeDB.Driver.Api
          */
         System.DateTime AsDateTime();
 
+//        enum ValueType
+//        {
+//            Object = Pinvoke.ValueType.Object,
+//            Bool = Pinvoke.ValueType.Boolean,
+//            Long = Pinvoke.ValueType.Long,
+//            Double = Pinvoke.ValueType.Double,
+//            String = Pinvoke.ValueType.String,
+//            DateTime = Pinvoke.ValueType.DateTime,
+//        }
+//
+//        namespace ValueTypeExtension
+//        {
+//            public static class Extensions
+//            {
+//                public static System.Type GetValueClass(this ValueType valueType)
+//                {
+//                    switch (valueType)
+//                    {
+//                        case Object:
+//                            return typeof(object);
+//                        case Bool:
+//                            return typeof(bool);
+//                        case Long:
+//                            return typeof(long);
+//                        case Double:
+//                            return typeof(double);
+//                        case String:
+//                            return typeof(string);
+//                        case DateTime:
+//                            return typeof(System.DateTime);
+//                        default:
+//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
+//                    }
+//                }
+//
+//                public static bool IsWritable(this ValueType valueType)
+//                {
+//                    switch (valueType)
+//                    {
+//                        case Object:
+//                            return false;
+//                        case Bool:
+//                        case Long:
+//                        case Double:
+//                        case String:
+//                        case DateTime:
+//                            return true;
+//                        default:
+//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
+//                    }
+//                }
+//
+//                public static bool IsKeyable(this ValueType valueType)
+//                {
+//                    switch (valueType)
+//                    {
+//                        case Object:
+//                        case Bool:
+//                        case Double:
+//                            return false;
+//                        case Long:
+//                        case String:
+//                        case DateTime:
+//                            return true;
+//                        default:
+//                            throw new TypeDBDriverException(InternalError.UNEXPECTED_INTERNAL_VALUE, valueType);
+//                    }
+//                }
+//            }
+//        }
+
         public class ValueType : NativeObjectWrapper<Pinvoke.ValueType>
         {
             public static readonly ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);

@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()!
-                .GetRelates(Tx, EXPLICIT)
+                .GetRelates(Tx, Explicit)
                 .Select(obj => obj.Label)
                 .ToHashSet();
         }

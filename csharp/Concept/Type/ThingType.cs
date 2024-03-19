@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction)
         {
-            return GetPlays(transaction, TRANSITIVE);
+            return GetPlays(transaction, Transitive);
         }
 
         public IEnumerable<IRoleType> GetPlays(
@@ -197,7 +197,7 @@ namespace TypeDB.Driver.Concept
             try
             {
                 return new NativeEnumerable<Pinvoke.Concept>(Pinvoke.typedb_driver.thing_type_get_plays(
-                    NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
+                    NativeTransaction(transaction), NativeObject, (Pinvoke.Transitivity)transitivity))
                     .Select(obj => new RoleType(obj));
             }
             catch (Pinvoke.Error e)
@@ -216,25 +216,25 @@ namespace TypeDB.Driver.Concept
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
-            return GetOwns(transaction, TRANSITIVE, new Annotation[0]);
+            return GetOwns(transaction, Transitive, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
             return GetOwns(
-                transaction, valueType, TRANSITIVE, new Annotation[0]);
+                transaction, valueType, Transitive, new Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<Annotation> annotations)
         {
-            return GetOwns(transaction, TRANSITIVE, annotations);
+            return GetOwns(transaction, Transitive, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<Annotation> annotations)
         {
-            return GetOwns(transaction, valueType, TRANSITIVE, annotations);
+            return GetOwns(transaction, valueType, Transitive, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
@@ -287,7 +287,7 @@ namespace TypeDB.Driver.Concept
                         NativeTransaction(transaction),
                         NativeObject,
                         valueType != null ? valueType.NativeObject : null,
-                        transitivity.NativeObject,
+                        (Pinvoke.Transitivity)transitivity,
                         annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>()))
                     .Select(obj => new AttributeType(obj));
             }

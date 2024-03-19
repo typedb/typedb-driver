@@ -30,16 +30,13 @@ namespace TypeDB.Driver.Connection
 {
     public class TypeDBSession : NativeObjectWrapper<Pinvoke.Session>, ITypeDBSession
     {
-        private readonly SessionType _type;
-        private readonly TypeDBOptions _options;
-
         private readonly List<SessionCallback> _callbacks;
 
         internal TypeDBSession(IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
             : base(NewNative(databaseManager, database, type, options))
         {
-            _type = type;
-            _options = options;
+            Type = type;
+            Options = options;
             _callbacks = new List<SessionCallback>();
         }
 
@@ -51,7 +48,7 @@ namespace TypeDB.Driver.Connection
                 return Pinvoke.typedb_driver.session_new(
                     ((TypeDBDatabaseManager)databaseManager).NativeObject,
                     database,
-                    type.NativeObject,
+                    (Pinvoke.SessionType)type,
                     options.NativeObject);
             }
             catch (Pinvoke.Error e)
@@ -65,19 +62,13 @@ namespace TypeDB.Driver.Connection
             return Pinvoke.typedb_driver.session_is_open(NativeObject);
         }
 
-        public SessionType Type
-        {
-            get { return _type; }
-        }
+        public SessionType Type { get; }
+
+        public TypeDBOptions Options { get; }
 
         public string DatabaseName
         {
             get { return Pinvoke.typedb_driver.session_get_database_name(NativeObject); }
-        }
-
-        public TypeDBOptions Options
-        {
-            get { return _options; }
         }
 
         public ITypeDBTransaction Transaction(TransactionType type)

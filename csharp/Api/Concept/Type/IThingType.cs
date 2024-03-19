@@ -48,7 +48,7 @@ namespace TypeDB.Driver.Api
 
         /**
          * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.
-         * Equivalent to <code>GetInstances(transaction, TRANSITIVE)</code>
+         * Equivalent to <code>GetInstances(transaction, Transitive)</code>
          *
          * @see ThingType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
@@ -61,11 +61,11 @@ namespace TypeDB.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetInstances(transaction);
-         * thingType.GetInstances(transaction, EXPLICIT);
+         * thingType.GetInstances(transaction, Explicit);
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>EXPLICIT</code> for direct instances only, <code>TRANSITIVE</code> to include instances of subtypes
+         * @param transitivity <code>Explicit</code> for direct instances only, <code>Transitive</code> to include instances of subtypes
          */
         IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
@@ -175,12 +175,12 @@ namespace TypeDB.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetPlays(transaction).Resolve();
-         * thingType.GetPlays(transaction, EXPLICIT).Resolve();
+         * thingType.GetPlays(transaction, Explicit).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity transitivity: <code>TRANSITIVE</code> for direct and indirect playing,
-         *                                   <code>EXPLICIT</code> for direct playing only
+         * @param transitivity transitivity: <code>Transitive</code> for direct and indirect playing,
+         *                                   <code>Explicit</code> for direct playing only
          */
         IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
@@ -264,13 +264,13 @@ namespace TypeDB.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetOwns(transaction);
-         * thingType.GetOwns(transaction, valueType, EXPLICIT, new []{NewKey()}));
+         * thingType.GetOwns(transaction, valueType, Explicit, new []{NewKey()}));
          * </pre>
          *
          * @param transaction The current transaction
          * @param valueType If specified, only attribute types of this <code>ValueType</code> will be retrieved.
-         * @param transitivity <code>TRANSITIVE</code> for direct and inherited ownership,
-         *                     <code>EXPLICIT</code> for direct ownership only
+         * @param transitivity <code>Transitive</code> for direct and inherited ownership,
+         *                     <code>Explicit</code> for direct ownership only
          * @param annotations Only retrieve attribute types owned with annotations.
          */
         IEnumerable<IAttributeType> GetOwns(

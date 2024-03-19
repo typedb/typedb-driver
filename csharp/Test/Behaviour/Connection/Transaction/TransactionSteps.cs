@@ -42,9 +42,9 @@ namespace TypeDB.Driver.Test.Behaviour
             switch (value)
             {
                 case "read":
-                    return TransactionType.READ;
+                    return TransactionType.Read;
                 case "write":
-                    return TransactionType.WRITE;
+                    return TransactionType.Write;
                 default:
                     throw new Exception($"The test value {value} passed to StringToTransactionType is invalid!");
             }

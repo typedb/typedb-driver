@@ -31,7 +31,7 @@ namespace TypeDB.Driver.Api
     public interface ITypeDBTransaction : IDisposable
     {
         /**
-         * The transaction’s type (READ or WRITE).
+         * The transaction’s type (Read or Write).
          *
          * <h3>Examples</h3>
          * <pre>
@@ -118,7 +118,7 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Rollback()
+         * transaction.Rollback();
          * </pre>
          */
         void Rollback();
@@ -139,20 +139,12 @@ namespace TypeDB.Driver.Api
      *
      * <h3>Examples</h3>
      * <pre>
-     * session.Transaction(TransactionType.READ);
+     * session.Transaction(TransactionType.Read);
      * </pre>
      */
-    public class TransactionType : NativeObjectWrapper<Pinvoke.TransactionType>
+    public enum TransactionType
     {
-        public readonly int Id;
-
-        public static readonly TransactionType READ = new TransactionType(1, Pinvoke.TransactionType.Read);
-        public static readonly TransactionType WRITE = new TransactionType(2, Pinvoke.TransactionType.Write);
-
-        private TransactionType(int id, Pinvoke.TransactionType nativeObject)
-            : base(nativeObject)
-        {
-            Id = id;
-        }
+        Read = Pinvoke.TransactionType.Read,
+        Write = Pinvoke.TransactionType.Write,
     }
 }

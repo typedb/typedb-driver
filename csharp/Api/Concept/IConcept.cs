@@ -335,18 +335,13 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.GetOwners(transaction, annotation, EXPLICIT);
+         * attributeType.GetOwners(transaction, annotation, Explicit);
          * </pre>
          */
-        public class Transitivity : NativeObjectWrapper<Pinvoke.Transitivity>
+        public enum Transitivity
         {
-            public static readonly Transitivity TRANSITIVE = new Transitivity(Pinvoke.Transitivity.Transitive);
-            public static readonly Transitivity EXPLICIT = new Transitivity(Pinvoke.Transitivity.Explicit);
-
-            private Transitivity(Pinvoke.Transitivity nativeObject)
-                : base(nativeObject)
-            {
-            }
+            Transitive = Pinvoke.Transitivity.Transitive,
+            Explicit = Pinvoke.Transitivity.Explicit,
         }
     }
 }
