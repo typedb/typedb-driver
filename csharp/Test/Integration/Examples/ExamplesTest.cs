@@ -100,10 +100,10 @@ namespace TypeDB.Driver.Test.Integration
                     IDatabase database = driver.Databases.Get(dbName);
 
                     // Example of one transaction for one session
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.SCHEMA))
+                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Schema))
                     {
                         // Example of multiple queries for one transaction
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             transaction.Query.Define("define person sub entity;").Resolve();
 
@@ -115,10 +115,10 @@ namespace TypeDB.Driver.Test.Integration
                     }
 
                     // Example of multiple transactions for one session
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.DATA))
+                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Data))
                     {
                         // Examples of one query for one transaction
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             string query = "insert $p isa person, has name 'Alice';";
                             IConceptMap[] insertResults = transaction.Query.Insert(query).ToArray();
@@ -127,7 +127,7 @@ namespace TypeDB.Driver.Test.Integration
                             transaction.Commit();
                         }
 
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             IConceptMap[] insertResults =
                                 transaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
@@ -136,7 +136,7 @@ namespace TypeDB.Driver.Test.Integration
                             // Not committed
                         }
 
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.READ))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Read))
                         {
                             IConceptMap[] matchResults =
                                 transaction.Query.Get("match $p isa person, has name $n; get $n;").ToArray();
@@ -169,8 +169,8 @@ namespace TypeDB.Driver.Test.Integration
 
                 IDatabase database = driver.Databases.Get(dbName);
 
-                ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA);
-                ITypeDBTransaction schemaWriteTransaction = schemaSession.Transaction(TransactionType.WRITE);
+                ITypeDBSession schemaSession = driver.Session(dbName, SessionType.Schema);
+                ITypeDBTransaction schemaWriteTransaction = schemaSession.Transaction(TransactionType.Write);
 
                 schemaWriteTransaction.Query.Define("define person sub entity;").Resolve();
 
@@ -180,8 +180,8 @@ namespace TypeDB.Driver.Test.Integration
                 schemaWriteTransaction.Commit(); // No need to close manually if committed
                 schemaSession.Close();
 
-                ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA);
-                ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
+                ITypeDBSession dataSession = driver.Session(dbName, SessionType.Data);
+                ITypeDBTransaction dataWriteTransaction = dataSession.Transaction(TransactionType.Write);
 
                 string query = "insert $p isa person, has name 'Alice';";
                 IConceptMap[] insertResults = dataWriteTransaction.Query.Insert(query).ToArray();
@@ -190,15 +190,15 @@ namespace TypeDB.Driver.Test.Integration
                 dataWriteTransaction.Commit();
                 dataSession.Close();
 
-                dataSession = driver.Session(dbName, SessionType.DATA);
-                dataWriteTransaction = dataSession.Transaction(TransactionType.WRITE);
+                dataSession = driver.Session(dbName, SessionType.Data);
+                dataWriteTransaction = dataSession.Transaction(TransactionType.Write);
 
                 insertResults = dataWriteTransaction.Query.Insert("insert $p isa person, has name 'Bob';").ToArray();
                 ProcessPersonInsertResult(insertResults, "p", "person", "Bob");
 
     //            dataWriteTransaction.Commit(); // Not committed
 
-                ITypeDBTransaction readTransaction = dataSession.Transaction(TransactionType.READ);
+                ITypeDBTransaction readTransaction = dataSession.Transaction(TransactionType.Read);
                 IConceptMap[] matchResults =
                     readTransaction.Query.Get("match $p isa person, has name $n; get $n;").ToArray();
 
@@ -231,10 +231,10 @@ namespace TypeDB.Driver.Test.Integration
                     IDatabase database = driver.Databases.Get(dbName);
 
                     // Example of one transaction for one session
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.SCHEMA))
+                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Schema))
                     {
                         // Example of multiple queries for one transaction
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             transaction.Query.Define("define person sub entity;").Resolve();
 
@@ -246,10 +246,10 @@ namespace TypeDB.Driver.Test.Integration
                     }
 
                     // Example of multiple transactions for one session
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.DATA))
+                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Data))
                     {
                         // Examples of one query for one transaction
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             string query = "insert $p isa person, has name 'Alice';";
                             IEnumerable<IConceptMap> insertResults = transaction.Query.Insert(query);
@@ -259,7 +259,7 @@ namespace TypeDB.Driver.Test.Integration
                             transaction.Commit();
                         }
 
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.WRITE))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
                         {
                             IEnumerable<IConceptMap> insertResults =
                                 transaction.Query.Insert("insert $p isa person, has name 'Bob';");
@@ -272,7 +272,7 @@ namespace TypeDB.Driver.Test.Integration
                             // transaction.Commit(); // Not committed
                         }
 
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.READ))
+                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Read))
                         {
                             IConceptMap[] matchResults =
                                 transaction.Query.Get("match $p isa person, has name $n; get $n;").ToArray();
