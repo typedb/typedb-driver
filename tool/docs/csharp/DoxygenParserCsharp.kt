@@ -65,39 +65,15 @@ class DoxygenParserCsharp : Callable<Unit> {
             Files.createDirectory(docsDir)
         }
         val classes: MutableList<Class> = ArrayList()
-        // Namespace file for the enums & typedefs
-        run {
-            val namespacefile = File(inputDirectoryName).resolve("html/namespace_type_d_b.html")
-            assert(namespacefile.exists())
-            val html = File(namespacefile.path).readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
 
-            // Typedefs
-            val typeDefFile = getFile(docsDir, "typedefs.adoc")
-            typeDefFile.writeText("")
-            val typeDefTBody =
-                parsed.select("tr.heading").first { element -> element.text().equals("Typedefs") }.parent()!!
-            typeDefTBody.select("tr").filter { tr ->
-                tr.className().startsWith("memitem")
-            }.map {
-                parseTypeDef(it!!)
-            }.forEach {
-                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cs"))
-            }
-
-            // Enums
-            parsed.select("td.memname").filter { element ->
-                element.text().startsWith("enum")
-            }.map { element -> element.parents().select(".memitem").first() }.forEach {
-                val parsedEnum = parseEnum(it!!)
-                if (parsedEnum.isNotEmpty()) classes.add(parsedEnum)
-            }
-        }
+        // TODO: Parse enums?
 
         // class files
         File(inputDirectoryName).walkTopDown().filter {
-            it.toString().startsWith("csharp/doxygen_docs/html/class_type_") && it.toString().endsWith(".html")
-                    && !it.toString().contains("-members")
+            (it.toString().startsWith("csharp/doxygen_docs/html/class_type_")
+                    || it.toString().startsWith("csharp/doxygen_docs/html/interface_type_"))
+                && it.toString().endsWith(".html")
+                && !it.toString().contains("-members")
         }.forEach {
             val html = File(it.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
@@ -337,6 +313,6 @@ class DoxygenParserCsharp : Callable<Unit> {
     }
 
     private fun generateFilename(className: String): String {
-        return className.replace("[<> ,]".toRegex(), "_")
+        return className.replace("[<> ,]".toRegex(), "_").replace("_Interface_Reference", "")
     }
 }

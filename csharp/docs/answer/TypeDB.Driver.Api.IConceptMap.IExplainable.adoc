@@ -1,0 +1,9 @@
+[#_TypeDB_Driver_Api_IConceptMap_IExplainable_Interface_Reference]
+=== TypeDB.Driver.Api.IConceptMap.IExplainable Interface Reference
+
+*Package*: `TypeDB.Driver.Api.IConceptMap.IExplainable Interface Reference`
+
+
+
+Contains an explainable object.
+

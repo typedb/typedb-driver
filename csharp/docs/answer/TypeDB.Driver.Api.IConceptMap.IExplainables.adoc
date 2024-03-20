@@ -1,0 +1,142 @@
+[#_TypeDB_Driver_Api_IConceptMap_IExplainables_Interface_Reference]
+=== TypeDB.Driver.Api.IConceptMap.IExplainables Interface Reference
+
+*Package*: `TypeDB.Driver.Api.IConceptMap.IExplainables Interface Reference`
+
+
+
+Contains explainable objects.
+
+// tag::methods[]
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Attribute___string_variable_]
+==== Attribute
+
+[source,cs]
+----
+IExplainable TypeDB.Driver.Api.IConceptMap.IExplainables.Attribute(string variable)
+----
+
+
+
+Retrieves the explainable attribute with the given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| 
+|===
+
+[caption=""]
+.Returns
+`IExplainable`
+
+[#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetAttributes___]
+==== GetAttributes
+
+[source,cs]
+----
+IEnumerable< KeyValuePair< string, IExplainable > > TypeDB.Driver.Api.IConceptMap.IExplainables.GetAttributes()
+----
+
+
+
+Retrieves all of this ``IConceptMap``’s explainable attributes.
+
+
+[caption=""]
+.Returns
+`IEnumerable< KeyValuePair< string, IExplainable > >`
+
+[#_IEnumerable__KeyValuePair__KeyValuePair__string__string____IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetOwnerships___]
+==== GetOwnerships
+
+[source,cs]
+----
+IEnumerable< KeyValuePair< KeyValuePair< string, string >, IExplainable > > TypeDB.Driver.Api.IConceptMap.IExplainables.GetOwnerships()
+----
+
+
+
+Retrieves all of this ``IConceptMap``’s explainable ownerships.
+
+
+[caption=""]
+.Returns
+`IEnumerable< KeyValuePair< KeyValuePair< string, string >, IExplainable > >`
+
+[#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetRelations___]
+==== GetRelations
+
+[source,cs]
+----
+IEnumerable< KeyValuePair< string, IExplainable > > TypeDB.Driver.Api.IConceptMap.IExplainables.GetRelations()
+----
+
+
+
+Retrieves all of this ``IConceptMap``’s explainable relations.
+
+
+[caption=""]
+.Returns
+`IEnumerable< KeyValuePair< string, IExplainable > >`
+
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Ownership___string_owner__string_attribute_]
+==== Ownership
+
+[source,cs]
+----
+IExplainable TypeDB.Driver.Api.IConceptMap.IExplainables.Ownership(string owner, string attribute)
+----
+
+
+
+Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `owner` a| The string representation of the owner variable a| 
+a| `attribute` a| The string representation of the attribute variable a| 
+|===
+
+[caption=""]
+.Returns
+`IExplainable`
+
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Relation___string_variable_]
+==== Relation
+
+[source,cs]
+----
+IExplainable TypeDB.Driver.Api.IConceptMap.IExplainables.Relation(string variable)
+----
+
+
+
+Retrieves the explainable relation with the given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| 
+|===
+
+[caption=""]
+.Returns
+`IExplainable`
+
+// end::methods[]
+

@@ -1,0 +1,63 @@
+[#_TypeDB_Driver_Common_VoidPromise]
+=== TypeDB.Driver.Common.VoidPromise
+
+*Package*: `TypeDB.Driver.Common.VoidPromise`
+
+
+
+A ``VoidPromise`` represents a ``Promise`` without an operation's result.
+
+ 
+  See also
+ 
+ 
+  Promise
+ 
+
+
+// tag::methods[]
+[#_void_TypeDB_Driver_Common_VoidPromise_Resolve___]
+==== Resolve
+
+[source,cs]
+----
+void TypeDB.Driver.Common.VoidPromise.Resolve()
+----
+
+
+
+Retrieves the result of the Promise.
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_TypeDB_Driver_Common_VoidPromise_VoidPromise___Action_resolver_]
+==== VoidPromise
+
+[source,cs]
+----
+TypeDB.Driver.Common.VoidPromise.VoidPromise(Action resolver)
+----
+
+
+
+Promise constructor
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `promise` a| The function to wrap into the promise a| 
+|===
+
+[caption=""]
+.Returns
+`TypeDB.Driver.Common.VoidPromise.VoidPromise`
+
+// end::methods[]
+
