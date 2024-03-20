@@ -20,7 +20,8 @@ load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load(":build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_csharp_library")
-
+load("//csharp:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:cpp/rules.bzl", "doxygen_cpp_to_adoc")
 
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
@@ -72,6 +73,15 @@ doxygen_docs(
     sources = [":docs_source_files", "//csharp/Api:docs_source_files", "//csharp/Common:docs_source_files"],
     main_page_md = ":README.md",
     tags = ["manual"],
+)
+
+
+doxygen_cpp_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = dir_mapping,
+    output_dir = 'csharp/docs',
+    tags = ["manual"]
 )
 
 
