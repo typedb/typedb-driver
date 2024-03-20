@@ -71,9 +71,9 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases.All;
+         * driver.Databases.GetAll();
          * </pre>
          */
-        IList<IDatabase> All { get; }
+        IList<IDatabase> GetAll();
     }
 }

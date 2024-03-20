@@ -34,6 +34,10 @@ namespace TypeDB.Driver.Logic
 {
     public class Explanation : NativeObjectWrapper<Pinvoke.Explanation>, IExplanation
     {
+        private IRule? _rule;
+        private IConceptMap? _conclusion;
+        private IConceptMap? _condition;
+
         private int _hash = 0;
 
         public Explanation(Pinvoke.Explanation nativeExplanation)
@@ -43,27 +47,32 @@ namespace TypeDB.Driver.Logic
 
         public IRule Rule
         {
-            get { return new Rule(Pinvoke.typedb_driver.explanation_get_rule(NativeObject)); }
+            get { return _rule ?? (_rule = new Rule(Pinvoke.typedb_driver.explanation_get_rule(NativeObject))); }
         }
 
         public IConceptMap Conclusion
         {
-            get { return new ConceptMap(Pinvoke.typedb_driver.explanation_get_conclusion(NativeObject)); }
+            get
+            {
+                return _conclusion ?? (_conclusion =
+                    new ConceptMap(Pinvoke.typedb_driver.explanation_get_conclusion(NativeObject)));
+            }
         }
 
         public IConceptMap Condition
         {
-            get { return new ConceptMap(Pinvoke.typedb_driver.explanation_get_condition(NativeObject)); }
-        }
-
-        public ISet<string> QueryVariables
-        {
             get
             {
-                return new NativeEnumerable<string>(
-                    Pinvoke.typedb_driver.explanation_get_mapped_variables(NativeObject))
-                    .ToHashSet<string>();
+                return _condition ?? (_condition =
+                    new ConceptMap(Pinvoke.typedb_driver.explanation_get_condition(NativeObject)));
             }
+        }
+
+        public ISet<string> GetQueryVariables()
+        {
+            return new NativeEnumerable<string>(
+                Pinvoke.typedb_driver.explanation_get_mapped_variables(NativeObject))
+                .ToHashSet<string>();
         }
 
         public ISet<string> QueryVariableMapping(string variable)

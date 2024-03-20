@@ -314,6 +314,7 @@
 %nojavaexception relation_remove_role_player;
 %nojavaexception thing_type_is_deleted;
 %nojavaexception thing_type_delete;
+%nojavaexception thing_type_get_label;
 %nojavaexception thing_type_set_label;
 %nojavaexception thing_type_set_abstract;
 %nojavaexception thing_type_unset_abstract;

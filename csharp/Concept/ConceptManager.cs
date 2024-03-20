@@ -37,6 +37,10 @@ namespace TypeDB.Driver.Concept
     {
         public readonly Pinvoke.Transaction NativeTransaction;
 
+        private IEntityType? _rootEntityType;
+        private IRelationType? _rootRelationType;
+        private IAttributeType? _rootAttributeType;
+
         public ConceptManager(Pinvoke.Transaction nativeTransaction) 
         {
             NativeTransaction = nativeTransaction;
@@ -44,17 +48,29 @@ namespace TypeDB.Driver.Concept
 
         public IEntityType RootEntityType
         {
-            get { return new EntityType(Pinvoke.typedb_driver.concepts_get_root_entity_type()); }
+            get
+            {
+                return _rootEntityType ?? (_rootEntityType =
+                    new EntityType(Pinvoke.typedb_driver.concepts_get_root_entity_type()));
+            }
         }
 
         public IRelationType RootRelationType
         {
-            get { return new RelationType(Pinvoke.typedb_driver.concepts_get_root_relation_type()); }
+            get
+            {
+                return _rootRelationType ?? (_rootRelationType =
+                    new RelationType(Pinvoke.typedb_driver.concepts_get_root_relation_type()));
+            }
         }
 
         public IAttributeType RootAttributeType
         {
-            get { return new AttributeType(Pinvoke.typedb_driver.concepts_get_root_attribute_type()); }
+            get
+            {
+                return _rootAttributeType ?? (_rootAttributeType =
+                    new AttributeType(Pinvoke.typedb_driver.concepts_get_root_attribute_type()));
+            }
         }
 
         public Promise<IEntityType> GetEntityType(string label) 
@@ -77,7 +93,7 @@ namespace TypeDB.Driver.Concept
                 obj => new RelationType(obj));
         }
 
-        public Promise<IAttributeType> GetAttributeType(string label) 
+        public Promise<IAttributeType> GetAttributeType(string label)
         {
             Validator.NonEmptyString(label, ConceptError.MISSING_LABEL);
             Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -148,25 +164,23 @@ namespace TypeDB.Driver.Concept
                 obj => new Attribute(obj));
         }
 
-        public IList<TypeDBException> SchemaExceptions
+        public IList<TypeDBException> GetSchemaExceptions()
         {
-            get 
-            {
-                Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-                try
-                {
-                    return new NativeEnumerable<Pinvoke.SchemaException>(
-                        Pinvoke.typedb_driver.concepts_get_schema_exceptions(NativeTransaction))
-                        .Select(e => new TypeDBException(
-                            Pinvoke.typedb_driver.schema_exception_code(e),
-                            Pinvoke.typedb_driver.schema_exception_message(e)))
-                        .ToList<TypeDBException>();
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+            Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
+
+            try
+            {
+                return new NativeEnumerable<Pinvoke.SchemaException>(
+                    Pinvoke.typedb_driver.concepts_get_schema_exceptions(NativeTransaction))
+                    .Select(e => new TypeDBException(
+                        Pinvoke.typedb_driver.schema_exception_code(e),
+                        Pinvoke.typedb_driver.schema_exception_message(e)))
+                    .ToList<TypeDBException>();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
     }

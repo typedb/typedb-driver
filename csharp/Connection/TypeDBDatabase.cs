@@ -33,6 +33,14 @@ namespace TypeDB.Driver.Connection
 {
     public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase
     {
+        private string? _name;
+
+        private IDatabase.IReplica? _primaryReplica;
+        private bool _primaryReplicaFetched = false;
+
+        private IDatabase.IReplica? _preferredReplica;
+        private bool _preferredReplicaFetched = false;
+
         public TypeDBDatabase(Pinvoke.Database database)
             : base(database)
         {}
@@ -42,72 +50,60 @@ namespace TypeDB.Driver.Connection
             get
             {
                 Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
-                return Pinvoke.typedb_driver.database_get_name(NativeObject);
+                return _name ?? (_name = Pinvoke.typedb_driver.database_get_name(NativeObject));
             }
         }
 
-        public string Schema
+        public string GetSchema()
         {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
-                try
-                {
-                    return Pinvoke.typedb_driver.database_schema(NativeObject);
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+            try
+            {
+                return Pinvoke.typedb_driver.database_schema(NativeObject);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 
-        public string TypeSchema
+        public string GetTypeSchema()
         {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
-                try
-                {
-                    return Pinvoke.typedb_driver.database_type_schema(NativeObject);
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+            try
+            {
+                return Pinvoke.typedb_driver.database_type_schema(NativeObject);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 
-        public string RuleSchema
+        public string GetRuleSchema()
         {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
-                try
-                {
-                    return Pinvoke.typedb_driver.database_rule_schema(NativeObject);
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+            try
+            {
+                return Pinvoke.typedb_driver.database_rule_schema(NativeObject);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 
-        public ISet<IDatabase.IReplica> Replicas
+        public ISet<IDatabase.IReplica> GetReplicas()
         {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
-                return new NativeEnumerable<Pinvoke.ReplicaInfo>(
-                    Pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
-                    .Select(obj => new Replica(obj))
-                    .ToHashSet<IDatabase.IReplica>();
-            }
+            return new NativeEnumerable<Pinvoke.ReplicaInfo>(
+                Pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
+                .Select(obj => new Replica(obj))
+                .ToHashSet<IDatabase.IReplica>();
         }
 
         public IDatabase.IReplica? PrimaryReplica
@@ -115,14 +111,20 @@ namespace TypeDB.Driver.Connection
             get
             {
                 Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+                if (_primaryReplicaFetched)
+                {
+                    return _primaryReplica;
+                }
 
                 Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
+                _primaryReplicaFetched = true;
+
                 if (replicaInfo == null)
                 {
                     return null;
                 }
 
-                return new Replica(replicaInfo);
+                return (_primaryReplica = new Replica(replicaInfo));
             }
         }
 
@@ -131,14 +133,20 @@ namespace TypeDB.Driver.Connection
             get
             {
                 Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+                if (_preferredReplicaFetched)
+                {
+                    return _preferredReplica;
+                }
 
                 Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
+                _preferredReplicaFetched = true;
+
                 if (replicaInfo == null)
                 {
                     return null;
                 }
 
-                return new Replica(replicaInfo);
+                return (_preferredReplica = new Replica(replicaInfo));
             }
         }
 
@@ -163,6 +171,9 @@ namespace TypeDB.Driver.Connection
 
         public class Replica : NativeObjectWrapper<Pinvoke.ReplicaInfo>, IDatabase.IReplica
         {
+            private string? _address;
+            private long? _term;
+
             public Replica(Pinvoke.ReplicaInfo replicaInfo)
                 : base(replicaInfo)
             {}
@@ -179,12 +190,20 @@ namespace TypeDB.Driver.Connection
 
             public string Address
             {
-                get { return Pinvoke.typedb_driver.replica_info_get_address(NativeObject); }
+                get { return _address ?? (_address = Pinvoke.typedb_driver.replica_info_get_address(NativeObject)); }
             }
 
             public long Term
             {
-                get { return Pinvoke.typedb_driver.replica_info_get_term(NativeObject); }
+                get
+                {
+                    if (!_term.HasValue)
+                    {
+                        _term = Pinvoke.typedb_driver.replica_info_get_term(NativeObject);
+                    }
+
+                    return _term.Value;
+                }
             }
         }
     }

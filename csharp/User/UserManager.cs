@@ -101,21 +101,18 @@ namespace TypeDB.Driver.User
             }
         }
 
-        public ISet<IUser> All
+        public ISet<IUser> GetAll()
         {
-            get
+            try
             {
-                try
-                {
-                    return new NativeEnumerable<Pinvoke.User>(
-                        Pinvoke.typedb_driver.users_all(NativeObject))
-                        .Select(obj => new User(obj, this))
-                        .ToHashSet<IUser>();
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+                return new NativeEnumerable<Pinvoke.User>(
+                    Pinvoke.typedb_driver.users_all(NativeObject))
+                    .Select(obj => new User(obj, this))
+                    .ToHashSet<IUser>();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 
@@ -131,18 +128,15 @@ namespace TypeDB.Driver.User
             }
         }
 
-        public IUser CurrentUser
+        public IUser GetCurrentUser()
         {
-            get
+            try
             {
-                try
-                {
-                    return new User(Pinvoke.typedb_driver.users_current_user(NativeObject), this);
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+                return new User(Pinvoke.typedb_driver.users_current_user(NativeObject), this);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
     }

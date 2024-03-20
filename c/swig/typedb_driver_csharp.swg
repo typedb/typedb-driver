@@ -369,6 +369,7 @@
 %noexception relation_remove_role_player;
 %noexception thing_type_is_deleted;
 %noexception thing_type_delete;
+%noexception thing_type_get_label;
 %noexception thing_type_set_label;
 %noexception thing_type_set_abstract;
 %noexception thing_type_unset_abstract;

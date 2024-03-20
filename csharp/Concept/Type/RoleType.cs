@@ -34,6 +34,8 @@ namespace TypeDB.Driver.Concept
 {
     public class RoleType : Type, IRoleType
     {
+        private Label? _label;
+
         public RoleType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
@@ -53,9 +55,14 @@ namespace TypeDB.Driver.Concept
         {
             get
             {
-                return new Label(
-                    Pinvoke.typedb_driver.role_type_get_scope(NativeObject),
-                    Pinvoke.typedb_driver.role_type_get_name(NativeObject));
+                if (!_label.HasValue)
+                {
+                    _label = new Label(
+                        Pinvoke.typedb_driver.role_type_get_scope(NativeObject),
+                        Pinvoke.typedb_driver.role_type_get_name(NativeObject));
+                }
+
+                return _label.Value;
             }
         }
 

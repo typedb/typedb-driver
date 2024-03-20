@@ -40,22 +40,19 @@ namespace TypeDB.Driver.Logic
             NativeTransaction = nativeTransaction;
         }
 
-        public IEnumerable<IRule> Rules
+        public IEnumerable<IRule> GetRules()
         {
-            get
-            {
-                Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
+            Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-                try
-                {
-                    return new NativeEnumerable<Pinvoke.Rule>(
-                        Pinvoke.typedb_driver.logic_manager_get_rules(NativeTransaction))
-                        .Select(obj => new Rule(obj));
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+            try
+            {
+                return new NativeEnumerable<Pinvoke.Rule>(
+                    Pinvoke.typedb_driver.logic_manager_get_rules(NativeTransaction))
+                    .Select(obj => new Rule(obj));
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 

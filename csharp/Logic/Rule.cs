@@ -33,32 +33,24 @@ namespace TypeDB.Driver.Logic
 {
     public class Rule : NativeObjectWrapper<Pinvoke.Rule>, IRule
     {
+        private string? _label;
         private int _hash = 0;
-
-        private readonly string _when;
-        private readonly string _then;
 
         internal Rule(Pinvoke.Rule nativeRule)
             : base(nativeRule)
         {
-            _when = Pinvoke.typedb_driver.rule_get_when(NativeObject);
-            _then = Pinvoke.typedb_driver.rule_get_then(NativeObject);
+            When = Pinvoke.typedb_driver.rule_get_when(NativeObject);
+            Then = Pinvoke.typedb_driver.rule_get_then(NativeObject);
         }
 
         public string Label
         {
-            get { return Pinvoke.typedb_driver.rule_get_label(NativeObject); }
+            get { return _label ?? (_label = Pinvoke.typedb_driver.rule_get_label(NativeObject)); }
         }
 
-        public string When
-        {
-            get { return _when; }
-        }
+        public string When { get; }
 
-        public string Then
-        {
-            get { return _then; }
-        }
+        public string Then { get; }
 
         public VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {

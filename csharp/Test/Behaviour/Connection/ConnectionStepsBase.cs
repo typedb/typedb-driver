@@ -99,7 +99,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             if (Driver != null)
             {
-                foreach (var db in Driver!.Databases.All)
+                foreach (var db in Driver!.Databases.GetAll())
                 {
                     db.Delete();
                 }

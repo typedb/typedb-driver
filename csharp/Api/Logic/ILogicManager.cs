@@ -36,10 +36,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Logic.Rules;
+         * transaction.Logic.GetRules();
          * </pre>
          */
-        IEnumerable<IRule> Rules { get; }
+        IEnumerable<IRule> GetRules();
 
         /**
          * Retrieves the Rule that has the given label.

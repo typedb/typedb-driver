@@ -34,6 +34,7 @@ namespace TypeDB.Driver.Concept
 {
     public abstract class Thing : Concept, IThing
     {
+        private string? _iid;
         private int _hash = 0;
 
         internal Thing(Pinvoke.Concept nativeConcept)
@@ -55,7 +56,7 @@ namespace TypeDB.Driver.Concept
 
         public string IID
         {
-            get { return Pinvoke.typedb_driver.thing_get_iid(NativeObject); }
+            get { return _iid ?? (_iid = Pinvoke.typedb_driver.thing_get_iid(NativeObject)); }
         }
 
         public abstract IThingType Type { get; }

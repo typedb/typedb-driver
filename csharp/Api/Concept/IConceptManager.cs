@@ -36,7 +36,7 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.RootEntityType
+         * transaction.Concepts.RootEntityType;
          * </pre>
          */
         IEntityType RootEntityType { get; }
@@ -46,7 +46,7 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.RootRelationType
+         * transaction.Concepts.RootRelationType;
          * </pre>
          */
         IRelationType RootRelationType { get; }
@@ -56,7 +56,7 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.RootAttributeType
+         * transaction.Concepts.RootAttributeType;
          * </pre>
          */
         IAttributeType RootAttributeType { get; }
@@ -66,10 +66,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetEntityType(label).Resolve()
+         * transaction.Concepts.GetEntityType(label).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>IEntityType</code> to retrieve
+         * @param label The label of the <code>IEntityType</code> to retrieve.
          */
         Promise<IEntityType> GetEntityType(string label);
 
@@ -78,10 +78,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetRelationType(label).Resolve()
+         * transaction.Concepts.GetRelationType(label).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>IRelationType</code> to retrieve
+         * @param label The label of the <code>IRelationType</code> to retrieve.
          */
         Promise<IRelationType> GetRelationType(string label);
 
@@ -90,10 +90,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetAttributeType(label).Resolve()
+         * transaction.Concepts.GetAttributeType(label).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>AttributeType</code> to retrieve
+         * @param label The label of the <code>AttributeType</code> to retrieve.
          */
         Promise<IAttributeType> GetAttributeType(string label);
 
@@ -103,10 +103,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.PutEntityType(label).Resolve()
+         * transaction.Concepts.PutEntityType(label).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>IEntityType</code> to create or retrieve
+         * @param label The label of the <code>IEntityType</code> to create or retrieve.
          */
         Promise<IEntityType> PutEntityType(string label);
 
@@ -116,10 +116,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.PutRelationType(label).Resolve()
+         * transaction.Concepts.PutRelationType(label).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>IRelationType</code> to create or retrieve
+         * @param label The label of the <code>IRelationType</code> to create or retrieve.
          */
         Promise<IRelationType> PutRelationType(string label);
 
@@ -129,11 +129,11 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * await transaction.Concepts.PutAttributeType(label, valueType).Resolve()
+         * await transaction.Concepts.PutAttributeType(label, valueType).Resolve();
          * </pre>
          *
-         * @param label The label of the <code>IAttributeType</code> to create or retrieve
-         * @param valueType The value type of the <code>IAttributeType</code> to create
+         * @param label The label of the <code>IAttributeType</code> to create or retrieve.
+         * @param valueType The value type of the <code>IAttributeType</code> to create.
          */
         Promise<IAttributeType> PutAttributeType(string label, IValue.ValueType valueType);
 
@@ -142,10 +142,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetEntity(iid).Resolve()
+         * transaction.Concepts.GetEntity(iid).Resolve();
          * </pre>
          *
-         * @param iid The iid of the <code>Entity</code> to retrieve
+         * @param iid The iid of the <code>Entity</code> to retrieve.
          */
         Promise<IEntity> GetEntity(string iid);
 
@@ -154,10 +154,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetRelation(iid).Resolve()
+         * transaction.Concepts.GetRelation(iid).Resolve();
          * </pre>
          *
-         * @param iid The iid of the <code>Relation</code> to retrieve
+         * @param iid The iid of the <code>Relation</code> to retrieve.
          */
         Promise<IRelation> GetRelation(string iid);
 
@@ -166,10 +166,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.GetAttribute(iid).Resolve()
+         * transaction.Concepts.GetAttribute(iid).Resolve();
          * </pre>
          *
-         * @param iid The iid of the <code>Attribute</code> to retrieve
+         * @param iid The iid of the <code>Attribute</code> to retrieve.
          */
         Promise<IAttribute> GetAttribute(string iid);
 
@@ -178,9 +178,9 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.Concepts.SchemaExceptions
+         * transaction.Concepts.GetSchemaExceptions();
          * </pre>
          */
-        IList<TypeDBException> SchemaExceptions { get; }
+        IList<TypeDBException> GetSchemaExceptions();
     }
 }

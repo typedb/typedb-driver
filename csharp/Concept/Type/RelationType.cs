@@ -152,7 +152,9 @@ namespace TypeDB.Driver.Concept
             return GetSubtypes(transaction, Transitive);
         }
 
-        public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+        public override IEnumerable<IType> GetSubtypes(
+            ITypeDBTransaction transaction,
+            IConcept.Transitivity transitivity)
         {
             try 
             {

@@ -48,18 +48,18 @@ namespace TypeDB.Driver.Api
         IDatabaseManager Databases { get; }
 
         /**
-         * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-         * Only for TypeDB Cloud.
+         * Returns the logged-in user for the connection. Only for TypeDB Cloud.
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.User;
+         * driver.GetCurrentUser();
          * </pre>
          */
-        IUser User { get; }
+        IUser GetCurrentUser();
 
         /**
-         * Returns the logged-in user for the connection. Only for TypeDB Cloud.
+         * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+         * Only for TypeDB Cloud.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -71,7 +71,7 @@ namespace TypeDB.Driver.Api
         /**
          * Opens a session to the given database with default options.
          *
-         * @see TypeDBDriver#Session(string, SessionType, TypeDBOptions)
+         * @see TypeDBDriver#Session(string, SessionType, TypeDBOptions);
          */
         ITypeDBSession Session(string database, SessionType type);
 

@@ -35,10 +35,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.Variables;
+         * conceptMap.GetVariables();
          * </pre>
          */
-        IEnumerable<string> Variables { get; }
+        IEnumerable<string> GetVariables();
     
         /**
          * Returns a collection of all concepts in this <code>IConceptMap</code>.
@@ -56,10 +56,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.Map;
+         * conceptMap.GetMap();
          * </pre>
          */
-        Dictionary<string, IConcept> Map { get; }
+        Dictionary<string, IConcept> GetMap();
     
         /**
          * Retrieves a concept for a given variable name.
@@ -131,30 +131,30 @@ namespace TypeDB.Driver.Api
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.AllExplainables.Relations;
+             * conceptMap.AllExplainables.GetRelations();
              * </pre>
              */
-            IEnumerable<KeyValuePair<string, IExplainable>> Relations { get; }
+            IEnumerable<KeyValuePair<string, IExplainable>> GetRelations();
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable attributes.
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.AllExplainables.Attributes;
+             * conceptMap.AllExplainables.GetAttributes();
              * </pre>
              */
-            IEnumerable<KeyValuePair<string, IExplainable>> Attributes { get; }
+            IEnumerable<KeyValuePair<string, IExplainable>> GetAttributes();
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable ownerships.
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.AllExplainables.Ownerships;
+             * conceptMap.AllExplainables.GetOwnerships();
              * </pre>
              */
-            IEnumerable<KeyValuePair<KeyValuePair<string, string>, IExplainable>> Ownerships { get; }
+            IEnumerable<KeyValuePair<KeyValuePair<string, string>, IExplainable>> GetOwnerships();
         }
     
         /**

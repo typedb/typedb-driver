@@ -84,9 +84,9 @@ namespace TypeDB.Driver.Connection
             get { return _databaseManager; }
         }
 
-        public IUser User
+        public IUser GetCurrentUser()
         {
-            get { return _userManager.CurrentUser; }
+            return _userManager.GetCurrentUser();
         }
 
         public IUserManager Users

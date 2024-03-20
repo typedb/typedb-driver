@@ -45,9 +45,9 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMapGroup.ConceptMaps;
+         * conceptMapGroup.GetConceptMaps();
          * </pre>
          */
-        IEnumerable<IConceptMap> ConceptMaps { get; }
+        IEnumerable<IConceptMap> GetConceptMaps();
     }
 }

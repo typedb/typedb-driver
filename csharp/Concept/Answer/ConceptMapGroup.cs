@@ -33,6 +33,7 @@ namespace TypeDB.Driver.Concept
 {
     public class ConceptMapGroup : NativeObjectWrapper<Pinvoke.ConceptMapGroup>, IConceptMapGroup
     {
+        private IConcept? _owner;
         private int _hash = 0;
     
         public ConceptMapGroup(Pinvoke.ConceptMapGroup nativeConceptMapGroup) 
@@ -42,17 +43,18 @@ namespace TypeDB.Driver.Concept
     
         public IConcept Owner
         {
-            get { return ConceptOf(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)); }
-        }
-    
-        public IEnumerable<IConceptMap> ConceptMaps
-        {
             get
             {
-                return new NativeEnumerable<Pinvoke.ConceptMap>(
-                    Pinvoke.typedb_driver.concept_map_group_get_concept_maps(NativeObject))
-                    .Select(obj => new ConceptMap(obj));
+                return _owner ?? (_owner =
+                    ConceptOf(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)));
             }
+        }
+    
+        public IEnumerable<IConceptMap> GetConceptMaps()
+        {
+            return new NativeEnumerable<Pinvoke.ConceptMap>(
+                Pinvoke.typedb_driver.concept_map_group_get_concept_maps(NativeObject))
+                .Select(obj => new ConceptMap(obj));
         }
     
         public override string ToString()
@@ -90,7 +92,7 @@ namespace TypeDB.Driver.Concept
     
         private int ComputeHash()
         {
-            return (Owner, ConceptMaps.ToList()).GetHashCode();
+            return (Owner, GetConceptMaps().ToList()).GetHashCode();
         }
     }
 }

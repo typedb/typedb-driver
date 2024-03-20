@@ -84,10 +84,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Users.All;
+         * driver.Users.GetAll();
          * </pre>
          */
-        ISet<IUser> All { get; }
+        ISet<IUser> GetAll();
 
         /**
          * Sets a new password for a user. This operation can only be performed by administrators.
