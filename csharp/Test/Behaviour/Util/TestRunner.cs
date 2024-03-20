@@ -60,6 +60,14 @@ namespace TypeDB.Driver.Test.TestRunner
                 finished.WaitOne();
                 finished.Dispose();
 
+                while (runner.Status != AssemblyRunnerStatus.Idle)
+                {
+                    // Wait for assembly runner to finish.
+                    // If we try to dispose while runner is executing,
+                    // it will throw an error.
+                    Thread.Sleep(100);
+                }
+
                 return result;
             }
         }

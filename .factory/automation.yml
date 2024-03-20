@@ -560,17 +560,7 @@ build:
           .factory/test-core.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
           .factory/test-core.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Match/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Get/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Fetch/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Modifiers/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Expression/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Insert/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Delete/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Update/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Define/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/Undefine/... --test_output=errors &&
-          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/RuleValidation/... --test_output=errors &&
+          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/... --test_output=errors --jobs=1 &&
           .factory/test-core.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
@@ -593,16 +583,7 @@ build:
           .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cloud.sh //csharp/Test/Behaviour/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-cloud.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/Undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors  --jobs=1 &&
           .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cloud-servers.sh
