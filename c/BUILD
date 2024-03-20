@@ -22,7 +22,7 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
-load("@vaticle_bazel_distribution//docs:cpp/rules.bzl", "doxygen_docs")
+load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")

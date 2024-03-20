@@ -16,7 +16,7 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load("@vaticle_bazel_distribution//docs:cpp/rules.bzl", "doxygen_docs")
+load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load(":build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_csharp_library")
