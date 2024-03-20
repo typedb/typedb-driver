@@ -166,7 +166,7 @@ Returns the string representation of the scoped name.
 .Code examples
 [source,java]
 ----
-label.scoped_name();
+label.scopedName();
 ----
 
 [#_Label_toString__]
@@ -188,7 +188,7 @@ Returns the string representation of the scoped name.
 .Code examples
 [source,java]
 ----
-label.scoped_name();
+label.toString();
 ----
 
 // end::methods[]
