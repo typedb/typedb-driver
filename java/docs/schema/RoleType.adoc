@@ -244,7 +244,7 @@ java.util.stream.Stream<? extends Thing> getPlayerInstances​(TypeDBTransaction
 Retrieves the ``Thing`` instances that play this role.
 
 
-See also: <<#_getPlayerTypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getPlayerTypes(TypeDBTransaction, Transitivity)``>>
+See also: <<#_getPlayerInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getPlayerInstances(TypeDBTransaction, Transitivity)``>>
 
 
 [caption=""]

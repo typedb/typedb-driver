@@ -30,13 +30,13 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close();
 ----
 
-[#_TypeDBSession_database_name__]
-==== database_name
+[#_TypeDBSession_databaseName__]
+==== databaseName
 
 [source,java]
 ----
 @CheckReturnValue
-java.lang.String database_name()
+java.lang.String databaseName()
 ----
 
 Returns the name of the database of the session. 

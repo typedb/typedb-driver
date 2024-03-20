@@ -26,20 +26,6 @@ a| `TRANSITIVE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_Concept_Transitivity_of__com_vaticle_typedb_driver_jni_Transitivity]
-==== of
-
-[source,java]
-----
-public static Concept.Transitivity of​(com.vaticle.typedb.driver.jni.Transitivity transitivity)
-----
-
-
-
-[caption=""]
-.Returns
-`public static Concept.Transitivity`
-
 [#_Concept_Transitivity_valueOf__java_lang_String]
 ==== valueOf
 
