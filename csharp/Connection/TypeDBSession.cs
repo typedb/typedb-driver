@@ -30,6 +30,7 @@ namespace TypeDB.Driver.Connection
 {
     public class TypeDBSession : NativeObjectWrapper<Pinvoke.Session>, ITypeDBSession
     {
+        private string? _databaseName;
         private readonly List<SessionCallback> _callbacks;
 
         internal TypeDBSession(IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
@@ -68,7 +69,11 @@ namespace TypeDB.Driver.Connection
 
         public string DatabaseName
         {
-            get { return Pinvoke.typedb_driver.session_get_database_name(NativeObject); }
+            get
+            {
+                return _databaseName ?? (_databaseName =
+                    Pinvoke.typedb_driver.session_get_database_name(NativeObject));
+            }
         }
 
         public ITypeDBTransaction Transaction(TransactionType type)

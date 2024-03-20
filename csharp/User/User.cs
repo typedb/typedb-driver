@@ -29,6 +29,9 @@ namespace TypeDB.Driver.User
 {
     public class User : NativeObjectWrapper<Pinvoke.User>, IUser 
     {
+        private long? _passwordExpirySeconds;
+        private bool _passwordExpirySecondsFetched = false;
+
         private readonly UserManager _users;
 
         internal User(Pinvoke.User nativeUser, UserManager users)
@@ -46,13 +49,20 @@ namespace TypeDB.Driver.User
         {
             get
             {
-                long res = Pinvoke.typedb_driver.user_get_password_expiry_seconds(NativeObject);
-                if (res >= 0)
+                if (_passwordExpirySecondsFetched)
                 {
-                    return res;
+                    return _passwordExpirySeconds;
                 }
 
-                return null;
+                long res = Pinvoke.typedb_driver.user_get_password_expiry_seconds(NativeObject);
+                _passwordExpirySecondsFetched = true;
+
+                if (res >= 0)
+                {
+                    _passwordExpirySeconds = res;
+                }
+
+                return _passwordExpirySeconds;
             }
         }
 

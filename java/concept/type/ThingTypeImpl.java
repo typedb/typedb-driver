@@ -94,11 +94,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public Label getLabel() {
-        try {
-            return Label.of(thing_type_get_label(nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Label.of(thing_type_get_label(nativeObject));
     }
 
     @Override

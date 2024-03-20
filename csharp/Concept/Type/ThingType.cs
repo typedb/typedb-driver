@@ -35,6 +35,8 @@ namespace TypeDB.Driver.Concept
 {
     public abstract class ThingType : Type, IThingType
     {
+        private Label? _label;
+
         internal ThingType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
@@ -88,14 +90,12 @@ namespace TypeDB.Driver.Concept
         {
             get
             {
-                try
+                if (!_label.HasValue)
                 {
-                    return new Label(Pinvoke.typedb_driver.thing_type_get_label(NativeObject));
+                    _label = new Label(Pinvoke.typedb_driver.thing_type_get_label(NativeObject));
                 }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+
+                return _label.Value;
             }
         }
 

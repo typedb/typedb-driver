@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Test.Behaviour
     {
         private bool IsUserInUsers(string username)
         {
-            HashSet<string> users = Driver!.Users.All.Select(user => user.Username).ToHashSet();
+            HashSet<string> users = Driver!.Users.GetAll().Select(user => user.Username).ToHashSet();
             return users.Contains(username);
         }
     
@@ -47,7 +47,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            var retrievedUser = Driver!.User;
+            var retrievedUser = Driver!.GetCurrentUser();
         }
 
         [Then(@"users get user: {}; throws exception")]
@@ -128,7 +128,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            var allRetrievedUsers = Driver!.Users.All;
+            var allRetrievedUsers = Driver!.Users.GetAll();
         }
 
         [When(@"users contains: {}")]
@@ -172,7 +172,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            Driver!.Users.Get(Driver.User.Username)!.UpdatePassword(oldPassword, newPassword);
+            Driver!.Users.Get(Driver.GetCurrentUser().Username)!.UpdatePassword(oldPassword, newPassword);
         }
     
         [Then(@"user expiry-seconds")]
@@ -180,7 +180,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            var retrievedSeconds = Driver!.User.PasswordExpirySeconds;
+            var retrievedSeconds = Driver!.GetCurrentUser().PasswordExpirySeconds;
         }
     
         [When(@"users password set: {}, {}")]

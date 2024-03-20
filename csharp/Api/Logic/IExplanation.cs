@@ -67,10 +67,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * explanation.QueryVariables
+         * explanation.GetQueryVariables()
          * </pre>
          */
-        ISet<string> QueryVariables { get; }
+        ISet<string> GetQueryVariables();
 
         /**
          * Retrieves the rule variables corresponding to the query variable var for this <code>Explanation</code>.

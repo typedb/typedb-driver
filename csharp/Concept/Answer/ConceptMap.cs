@@ -36,22 +36,20 @@ using QueryError = TypeDB.Driver.Common.Error.Query;
 namespace TypeDB.Driver.Concept
 {
     public class ConceptMap : NativeObjectWrapper<Pinvoke.ConceptMap>, IConceptMap 
-    {        
-        private Dictionary<string, IConcept>? _cachedMap = null;
+    {
+        private Dictionary<string, IConcept>? _cachedMap;
+        private IConceptMap.IExplainables? _allExplainables;
         private int _hash = 0;
 
         public ConceptMap(Pinvoke.ConceptMap nativeConceptMap)
             : base(nativeConceptMap)
         {
         }
-    
-        public IEnumerable<string> Variables
+
+        public IEnumerable<string> GetVariables()
         {
-            get
-            {
-                return new NativeEnumerable<string>(
-                    Pinvoke.typedb_driver.concept_map_get_variables(NativeObject));
-            }
+            return new NativeEnumerable<string>(
+                Pinvoke.typedb_driver.concept_map_get_variables(NativeObject));
         }
     
         public IEnumerable<IConcept> Concepts
@@ -64,17 +62,9 @@ namespace TypeDB.Driver.Concept
             }
         }
     
-        public Dictionary<string, IConcept> Map
+        public Dictionary<string, IConcept> GetMap()
         {
-            get
-            {
-                if (_cachedMap == null)
-                {
-                    _cachedMap = Variables.ToDictionary(v => v, v => Get(v));
-                }
-
-                return _cachedMap!;
-            }
+            return _cachedMap ?? (_cachedMap = GetVariables().ToDictionary(v => v, v => Get(v)));
         }
     
         public IConcept Get(string variable)
@@ -92,7 +82,11 @@ namespace TypeDB.Driver.Concept
     
         public IConceptMap.IExplainables AllExplainables
         {
-            get { return new Explainables(Pinvoke.typedb_driver.concept_map_get_explainables(NativeObject)); }
+            get
+            {
+                return _allExplainables ?? (_allExplainables =
+                    new Explainables(Pinvoke.typedb_driver.concept_map_get_explainables(NativeObject)));
+            }
         }
     
         public override string ToString()
@@ -130,7 +124,7 @@ namespace TypeDB.Driver.Concept
     
         private int ComputeHash()
         {
-            return Map.GetHashCode();
+            return GetMap().GetHashCode();
         }
     
         public class Explainables : NativeObjectWrapper<Pinvoke.Explainables>, IConceptMap.IExplainables
@@ -185,41 +179,32 @@ namespace TypeDB.Driver.Concept
                 return new Explainable(explainable);
             }
     
-            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> Relations
+            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> GetRelations()
             {
-                get
-                {
-                    return new NativeEnumerable<string>(
-                        Pinvoke.typedb_driver.explainables_get_relations_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Relation(key)));
-                }
+                return new NativeEnumerable<string>(
+                    Pinvoke.typedb_driver.explainables_get_relations_keys(NativeObject))
+                    .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Relation(key)));
             }
 
-            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> Attributes
+            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> GetAttributes()
             {
-                get
-                {
-                    return new NativeEnumerable<string>(
-                        Pinvoke.typedb_driver.explainables_get_attributes_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Attribute(key)));
-                }
+                return new NativeEnumerable<string>(
+                    Pinvoke.typedb_driver.explainables_get_attributes_keys(NativeObject))
+                    .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Attribute(key)));
             }
     
-            public IEnumerable<KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>> Ownerships
+            public IEnumerable<KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>> GetOwnerships()
             {
-                get
-                {
-                    return new NativeEnumerable<Pinvoke.StringPair>(
-                        Pinvoke.typedb_driver.explainables_get_ownerships_keys(NativeObject))
-                        .Select(pair =>
-                        {
-                            string owner = pair._0;
-                            string attribute = pair._1;
-                            return new KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>(
-                                new KeyValuePair<string, string>(owner, attribute),
-                                Ownership(owner, attribute));
-                        });
-                }
+                return new NativeEnumerable<Pinvoke.StringPair>(
+                    Pinvoke.typedb_driver.explainables_get_ownerships_keys(NativeObject))
+                    .Select(pair =>
+                    {
+                        string owner = pair._0;
+                        string attribute = pair._1;
+                        return new KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>(
+                            new KeyValuePair<string, string>(owner, attribute),
+                            Ownership(owner, attribute));
+                    });
             }
     
             public override string ToString()
@@ -257,14 +242,17 @@ namespace TypeDB.Driver.Concept
     
             private int ComputeHash()
             {
-                return (Relations.ToList(),
-                    Attributes.ToList(),
-                    Ownerships.ToList()).GetHashCode();
+                return (GetRelations().ToList(),
+                    GetAttributes().ToList(),
+                    GetOwnerships().ToList()).GetHashCode();
             }
         }
     
         public class Explainable : NativeObjectWrapper<Pinvoke.Explainable>, IConceptMap.IExplainable
         {
+            private string? _conjunction;
+            private long? _id;
+
             public Explainable(Pinvoke.Explainable nativeExplainable)
                 : base(nativeExplainable)
             {
@@ -272,12 +260,24 @@ namespace TypeDB.Driver.Concept
     
             public string Conjunction
             {
-                get { return Pinvoke.typedb_driver.explainable_get_conjunction(NativeObject); }
+                get
+                {
+                    return _conjunction ?? (_conjunction =
+                        Pinvoke.typedb_driver.explainable_get_conjunction(NativeObject));
+                }
             }
     
             public long Id
             {
-                get { return Pinvoke.typedb_driver.explainable_get_id(NativeObject); }
+                get
+                {
+                    if (!_id.HasValue)
+                    {
+                        _id = Pinvoke.typedb_driver.explainable_get_id(NativeObject);
+                    }
+
+                    return _id.Value;
+                }
             }
     
             public override string ToString() 

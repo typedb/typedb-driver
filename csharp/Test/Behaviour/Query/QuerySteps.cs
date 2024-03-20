@@ -186,6 +186,7 @@ namespace TypeDB.Driver.Test.Behaviour
             _answers = Tx.Query.Get(getQueryStatements.Content).ToList();
         }
 
+        [Given(@"typeql get; throws exception")]
         [When(@"typeql get; throws exception")]
         [Then(@"typeql get; throws exception")]
         public void TypeqlGetThrowsException(DocString getQueryStatements)
@@ -352,7 +353,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
                 List<Dictionary<string, string>> answersIdentifiers = answerIdentifierGroup.AnswersIdentifiers;
 
-                foreach (var answer in answerGroup.ConceptMaps)
+                foreach (var answer in answerGroup.GetConceptMaps())
                 {
                     List<Dictionary<string, string>> matchingIdentifiers = new List<Dictionary<string, string>>();
 
@@ -507,7 +508,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         private bool CurrentRulesContain(string ruleLabel)
         {
-            return Tx.Logic.Rules.Any(rule => rule.Label.Equals(ruleLabel));
+            return Tx.Logic.GetRules().Any(rule => rule.Label.Equals(ruleLabel));
         }
 
         [Then(@"rules contain: {}")]

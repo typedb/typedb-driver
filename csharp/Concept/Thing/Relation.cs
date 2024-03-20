@@ -31,6 +31,8 @@ namespace TypeDB.Driver.Concept
 {
     public class Relation : Thing, IRelation
     {
+        private IRelationType? _type;
+
         public Relation(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
@@ -38,7 +40,7 @@ namespace TypeDB.Driver.Concept
 
         public override IRelationType Type
         {
-            get { return new RelationType(Pinvoke.typedb_driver.relation_get_type(NativeObject)); }
+            get { return _type ?? (_type = new RelationType(Pinvoke.typedb_driver.relation_get_type(NativeObject))); }
         }
 
         public VoidPromise AddPlayer(

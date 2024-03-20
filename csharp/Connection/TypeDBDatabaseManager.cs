@@ -92,21 +92,18 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        public IList<IDatabase> All
+        public IList<IDatabase> GetAll()
         {
-            get
+            try
             {
-                try
-                {
-                    return new NativeEnumerable<Pinvoke.Database>(
-                        Pinvoke.typedb_driver.databases_all(NativeObject))
-                        .Select(obj => new TypeDBDatabase(obj))
-                        .ToList<IDatabase>();
-                }
-                catch (Pinvoke.Error e)
-                {
-                    throw new TypeDBDriverException(e);
-                }
+                return new NativeEnumerable<Pinvoke.Database>(
+                    Pinvoke.typedb_driver.databases_all(NativeObject))
+                    .Select(obj => new TypeDBDatabase(obj))
+                    .ToList<IDatabase>();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
     }

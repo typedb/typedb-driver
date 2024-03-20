@@ -44,7 +44,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
             if (Driver != null)
             {
-                foreach (var user in Driver!.Users.All)
+                foreach (var user in Driver!.Users.GetAll())
                 {
                     if (!user.Username.Equals("admin"))
                     {

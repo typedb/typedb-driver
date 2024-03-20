@@ -162,7 +162,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
             }
 
-            Assert.True(expectedDatabasesSize >= Driver!.Databases.All.Count);
+            Assert.True(expectedDatabasesSize >= Driver!.Databases.GetAll().Count);
         }
 
         [Then(@"connection does not have database: {word}")]
@@ -189,7 +189,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
-            Assert.Equal(0, Driver!.Databases.All.Count);
+            Assert.Equal(0, Driver!.Databases.GetAll().Count);
         }
     }
 }

@@ -37,6 +37,9 @@ namespace TypeDB.Driver.Concept
 {
     public class ValueGroup : NativeObjectWrapper<Pinvoke.ValueGroup>, IValueGroup
     {
+        private IConcept? _owner;
+        private IValue? _value;
+        private bool _valueFetched = false;
         private int _hash = 0;
 
         public ValueGroup(Pinvoke.ValueGroup nativeValueGroup)
@@ -46,20 +49,27 @@ namespace TypeDB.Driver.Concept
 
         public IConcept Owner
         {
-            get { return ConceptOf(Pinvoke.typedb_driver.value_group_get_owner(NativeObject)); }
+            get { return _owner ?? (_owner = ConceptOf(Pinvoke.typedb_driver.value_group_get_owner(NativeObject))); }
         }
 
         public IValue? Value
         {
             get
             {
+                if (_valueFetched)
+                {
+                    return _value;
+                }
+
                 Pinvoke.Concept concept = Pinvoke.typedb_driver.value_group_get_value(NativeObject);
+                _valueFetched = true;
+
                 if (concept == null)
                 {
                     return null;
                 }
 
-                return new Value(concept);
+                return (_value = new Value(concept));
             }
         }
 

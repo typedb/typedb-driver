@@ -80,7 +80,7 @@ namespace TypeDB.Driver.Test.Integration
 
         public static void CheckAllDatabases(IDatabaseManager dbManager, ICollection<string> expectedDbNames)
         {
-            var allDbs = dbManager.All;
+            var allDbs = dbManager.GetAll();
             Assert.AreEqual(expectedDbNames.Count, allDbs.Count);
 
             foreach (var db in allDbs)

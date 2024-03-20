@@ -40,30 +40,30 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Schema;
+         * database.GetSchema();
          * </pre>
          */
-        public string Schema { get; }
+        public string GetSchema();
 
         /**
          * The types in the schema as a valid TypeQL define query string.
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.TypeSchema;
+         * database.GetTypeSchema();
          * </pre>
          */
-        public string TypeSchema { get; }
+        public string GetTypeSchema();
 
         /**
          * The rules in the schema as a valid TypeQL define query string.
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.RuleSchema;
+         * database.GetRuleSchema();
          * </pre>
          */
-        public string RuleSchema { get; }
+        public string GetRuleSchema();
 
         /**
          * Set of <code>Replica</code> instances for this database.
@@ -71,10 +71,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Replicas;
+         * database.GetReplicas();
          * </pre>
          */
-        public ISet<IReplica> Replicas { get; }
+        public ISet<IReplica> GetReplicas();
 
         /**
          * Returns the primary replica for this database.
