@@ -142,7 +142,7 @@ class InternalErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(InternalErrorMessage, self).__init__(code_prefix="PIN", code_number=code,
+        super(InternalErrorMessage, self).__init__(code_prefix="INT", code_number=code,
                                                    message_prefix="Python Internal Error", message_body=message)
 
 
