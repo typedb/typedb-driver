@@ -123,10 +123,13 @@ class DoxygenParserCsharp : Callable<Unit> {
                 }
             }
             map[heading] = members
+            print("Result for now: $map")
         }
+
         if (missingDeclarations.isNotEmpty()) {
             println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
+
         return Pair(map, idToAnchor)
     }
 
