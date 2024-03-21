@@ -291,6 +291,24 @@ build:
 #        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
+##    test-python-integration-cloud-failover:
+##      machine: 4-core-16-gb
+##      image: vaticle-ubuntu-22.04
+##      dependencies:
+##        - build
+##      type: foreground
+##      command: |
+##        export PATH="$HOME/.local/bin:$PATH"
+##        sudo apt-get update
+##        sudo apt install python3-pip -y
+##        python3 -m pip install -U pip
+##        python3 -m pip install -r python/requirements_dev.txt
+##        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+##        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+##        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+##        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+##        bazel test //python/tests/integration:test_cloud_failover --test_output=errors
+#
 #    test-nodejs-integration:
 #      image: vaticle-ubuntu-22.04
 #      dependencies:
