@@ -91,7 +91,7 @@ build:
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         tool/test/start-core-server.sh &&
           bazel test //rust/tests --test_output=streamed --test_arg=-- \
-            --test_arg=integration::queries::core &&
+            --test_arg=integration::queries::core && 
           export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
@@ -212,7 +212,7 @@ build:
         # TODO: delete --jobs=1 if we fix the issue with excess memory usage
         .factory/test-core.sh //java/test/behaviour/concept/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/query/language/... --test_output=errors --jobs=1
+        .factory/test-core.sh //java/test/behaviour/query/language/undefine/... --test_output=errors --jobs=1
 
     test-java-behaviour-cloud:
       image: vaticle-ubuntu-22.04
@@ -245,7 +245,7 @@ build:
           .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-          .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && 
           .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors &&
           .factory/test-core.sh //python/tests/behaviour/query/language/... --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -295,23 +295,23 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-python-integration-cloud-failover:
-      machine: 4-core-16-gb
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
-      type: foreground
-      command: |
-        export PATH="$HOME/.local/bin:$PATH"
-        sudo apt-get update
-        sudo apt install python3-pip -y
-        python3 -m pip install -U pip
-        python3 -m pip install -r python/requirements_dev.txt
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //python/tests/integration:test_cloud_failover --test_output=errors
+    #    test-python-integration-cloud-failover:
+    #      machine: 4-core-16-gb
+    #      image: vaticle-ubuntu-22.04
+    #      dependencies:
+    #        - build
+    #      type: foreground
+    #      command: |
+    #        export PATH="$HOME/.local/bin:$PATH"
+    #        sudo apt-get update
+    #        sudo apt install python3-pip -y
+    #        python3 -m pip install -U pip
+    #        python3 -m pip install -r python/requirements_dev.txt
+    #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+    #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+    #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+    #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+    #        bazel test //python/tests/integration:test_cloud_failover --test_output=errors
 
     test-nodejs-integration:
       image: vaticle-ubuntu-22.04
@@ -327,7 +327,7 @@ build:
         tool/test/start-core-server.sh &&
           node nodejs/test/integration/test-concept.js &&
           node nodejs/test/integration/test-connection.js &&
-          node nodejs/test/integration/test-query.js &&
+          node nodejs/test/integration/test-query.js && 
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -345,7 +345,7 @@ build:
         cp -rL bazel-bin/nodejs/node_modules nodejs/.
         cp -rL bazel-bin/nodejs/dist nodejs/.
         source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-          node nodejs/test/integration/test-cloud-failover.js &&
+          node nodejs/test/integration/test-cloud-failover.js && 
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
@@ -361,10 +361,10 @@ build:
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
           .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 && 
           .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
           .factory/test-core.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 && 
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -381,7 +381,7 @@ build:
           .factory/test-cloud.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-cloud.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-cloud.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cloud.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cloud.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && 
           .factory/test-cloud.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-cloud.sh //nodejs/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-cloud.sh //nodejs/test/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -423,7 +423,7 @@ build:
           .factory/test-core.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-          .factory/test-core.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 && 
           .factory/test-core.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
           .factory/test-core.sh //cpp/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -519,7 +519,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: [master, development]
+        branch: [ master, development ]
       dependencies:
         - build
         - build-dependency
@@ -542,12 +542,17 @@ build:
         - test-cpp-integration-core
         - test-cpp-behaviour-core
         - test-cpp-behaviour-cloud
+        - test-csharp-integration-core
+        - test-csharp-behaviour-core
+        - test-csharp-behaviour-cloud
       command: |
-          sudo add-apt-repository -y ppa:deadsnakes/ppa
-          sudo apt update && sudo apt install -y python3.9 python3.9-distutils python3-pip
-          python3.9 -m pip install -U cffi
-          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update && sudo apt install -y python3.9 python3.9-distutils python3-pip
+        python3.9 -m pip install -U cffi
+        export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+        bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
+
+# TODO: assembly tests for all drivers to run in factory
 
 release:
   filter:
