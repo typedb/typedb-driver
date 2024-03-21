@@ -71,7 +71,8 @@ class DoxygenParserCsharp : Callable<Unit> {
         // class files
         File(inputDirectoryName).walkTopDown().filter {
             (it.toString().startsWith("csharp/doxygen_docs/html/class_type_")
-                    || it.toString().startsWith("csharp/doxygen_docs/html/interface_type_"))
+                    || it.toString().startsWith("csharp/doxygen_docs/html/interface_type_")
+                    || it.toString().startsWith("csharp/doxygen_docs/html/struct_type_"))
                 && it.toString().endsWith(".html")
                 && !it.toString().contains("-members")
         }.forEach {
@@ -127,31 +128,6 @@ class DoxygenParserCsharp : Callable<Unit> {
             println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
         return Pair(map, idToAnchor)
-    }
-
-    private fun parseTypeDef(element: Element): Class {
-        val memItemLeft = element.selectFirst("td.memItemLeft")
-        if (memItemLeft != null) {
-            if (memItemLeft.text().startsWith("typedef")) {
-                val actual = element.selectFirst("td.memItemLeft")!!.text().substringAfter("typedef ")
-                val alias = element.selectFirst("td.memItemRight")!!.text()
-                return Class(
-                    name = alias,
-                    anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
-                )
-            } else if (memItemLeft.text().startsWith("using")) {
-                val usingEquality = element.selectFirst("td.memItemRight")!!
-                val actual = usingEquality.text().substringAfter("=").trim()
-                val alias = usingEquality.text().substringBefore("=").trim()
-                return Class(
-                    name = alias,
-                    anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for $actual")
-                )
-            }
-        }
-        return Class("")
     }
 
     private fun parseClass(document: Element): Class {
