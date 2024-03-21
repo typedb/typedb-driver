@@ -30,7 +30,11 @@ namespace TypeDB {
 
 namespace DriverError {
 
+<<<<<<< HEAD
 #define ERR_DRIVER(ID, MSG) ERRMSG("CCDR", "Driver Error", ID, MSG)
+=======
+#define ERR_DRIVER(ID, MSG) ERRMSG("DRI", "Driver Error", ID, MSG)
+>>>>>>> 08a62756 (Refactor error messages codes. Update deps)
 DECLSPEC_DLL extern const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(1, "The driver has been closed and no further operation is allowed.");
 DECLSPEC_DLL extern const ErrorMessage SESSION_CLOSED = ERR_DRIVER(2, "The session has been closed and no further operation is allowed.");
 DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(3, "The transaction has been closed and no further operation is allowed.");
@@ -46,7 +50,11 @@ DECLSPEC_DLL extern const ErrorMessage CALLBACK_EXCEPTION = ERR_DRIVER(9, "An ex
 
 namespace ConceptError {
 
+<<<<<<< HEAD
 #define ERR_CONCEPT(ID, MSG) ERRMSG("CCCO", "Concept Error", ID, MSG)
+=======
+#define ERR_CONCEPT(ID, MSG) ERRMSG("CON", "Concept Error", ID, MSG)
+>>>>>>> 08a62756 (Refactor error messages codes. Update deps)
 DECLSPEC_DLL extern const ErrorMessage INVALID_CONCEPT_CASTING = ERR_CONCEPT(1, "Invalid concept conversion from '%s' to '%s'.");
 DECLSPEC_DLL extern const ErrorMessage MISSING_TRANSACTION = ERR_CONCEPT(2, "Transaction cannot be null.");
 DECLSPEC_DLL extern const ErrorMessage MISSING_IID = ERR_CONCEPT(3, "IID cannot be null or empty.");
@@ -62,7 +70,11 @@ DECLSPEC_DLL extern const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, 
 
 namespace QueryError {
 
+<<<<<<< HEAD
 #define ERR_QUERY(ID, MSG) ERRMSG("CCQR", "Query Error", ID, MSG)
+=======
+#define ERR_QUERY(ID, MSG) ERRMSG("QRY", "Query Error", ID, MSG)
+>>>>>>> 08a62756 (Refactor error messages codes. Update deps)
 DECLSPEC_DLL extern const ErrorMessage VARIABLE_DOES_NOT_EXIST = ERR_QUERY(1, "The variable '%s' does not exist.");
 DECLSPEC_DLL extern const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty.");
 #undef ERR_QUERY
