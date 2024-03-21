@@ -52,14 +52,11 @@ namespace TypeDB.Driver.Concept
                 Pinvoke.typedb_driver.concept_map_get_variables(NativeObject));
         }
     
-        public IEnumerable<IConcept> Concepts
+        public IEnumerable<IConcept> GetConcepts()
         {
-            get
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.concept_map_get_values(NativeObject))
-                    .Select(obj => ConceptOf(obj));
-            }
+            return new NativeEnumerable<Pinvoke.Concept>(
+                Pinvoke.typedb_driver.concept_map_get_values(NativeObject))
+                .Select(obj => ConceptOf(obj));
         }
     
         public Dictionary<string, IConcept> GetMap()

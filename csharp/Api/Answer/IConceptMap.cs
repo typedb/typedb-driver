@@ -45,10 +45,10 @@ namespace TypeDB.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.Concepts;
+         * conceptMap.GetConcepts();
          * </pre>
          */
-        IEnumerable<IConcept> Concepts { get; }
+        IEnumerable<IConcept> GetConcepts();
     
         /**
          * Returns the inner <code>Dictionary</code> (<code>Map</code> as a common TypeDB term)
