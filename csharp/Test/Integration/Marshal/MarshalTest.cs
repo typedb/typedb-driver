@@ -94,7 +94,7 @@ namespace TypeDB.Driver.Test.Integration
     }
 
     [TestFixture]
-    public class MemoryTestFixture
+    public class MarshalTestFixture
     {
         [Test]
         public void SendArraysToNativeSide()
