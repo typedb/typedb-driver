@@ -11,7 +11,7 @@ TypeDB user information
 [#_void_TypeDB_Driver_Api_IUser_UpdatePassword___string_passwordOld__string_passwordNew_]
 ==== UpdatePassword
 
-[source,cs]
+[source,csharp]
 ----
 void TypeDB.Driver.Api.IUser.UpdatePassword(string passwordOld, string passwordNew)
 ----

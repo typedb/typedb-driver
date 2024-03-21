@@ -11,7 +11,7 @@ Provides access to all user management methods.
 [#_bool_TypeDB_Driver_Api_IUserManager_Contains___string_username_]
 ==== Contains
 
-[source,cs]
+[source,csharp]
 ----
 bool TypeDB.Driver.Api.IUserManager.Contains(string username)
 ----
@@ -37,7 +37,7 @@ a| `username` a| The user name to be checked a|
 [#_void_TypeDB_Driver_Api_IUserManager_Create___string_username__string_password_]
 ==== Create
 
-[source,cs]
+[source,csharp]
 ----
 void TypeDB.Driver.Api.IUserManager.Create(string username, string password)
 ----
@@ -64,7 +64,7 @@ a| `password` a| The password of the user to be created a|
 [#_void_TypeDB_Driver_Api_IUserManager_Delete___string_username_]
 ==== Delete
 
-[source,cs]
+[source,csharp]
 ----
 void TypeDB.Driver.Api.IUserManager.Delete(string username)
 ----
@@ -90,7 +90,7 @@ a| `username` a| The name of the user to be deleted a|
 [#_IUser_TypeDB_Driver_Api_IUserManager_Get___string_username_]
 ==== Get
 
-[source,cs]
+[source,csharp]
 ----
 IUser? TypeDB.Driver.Api.IUserManager.Get(string username)
 ----
@@ -116,7 +116,7 @@ a| `username` a| The name of the user to retrieve a|
 [#_ISet__IUser___TypeDB_Driver_Api_IUserManager_GetAll___]
 ==== GetAll
 
-[source,cs]
+[source,csharp]
 ----
 ISet< IUser > TypeDB.Driver.Api.IUserManager.GetAll()
 ----
@@ -133,7 +133,7 @@ Retrieves all users which exist on the TypeDB server.
 [#_void_TypeDB_Driver_Api_IUserManager_SetPassword___string_username__string_password_]
 ==== SetPassword
 
-[source,cs]
+[source,csharp]
 ----
 void TypeDB.Driver.Api.IUserManager.SetPassword(string username, string password)
 ----

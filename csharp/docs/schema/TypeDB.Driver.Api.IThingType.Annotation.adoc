@@ -11,7 +11,7 @@ Annotation
 [#_override_bool_TypeDB_Driver_Api_IThingType_Annotation_Equals___object_obj_]
 ==== Equals
 
-[source,cs]
+[source,csharp]
 ----
 override bool TypeDB.Driver.Api.IThingType.Annotation.Equals(object? obj)
 ----
@@ -37,7 +37,7 @@ a| `obj` a| Object to compare with a|
 [#_override_int_TypeDB_Driver_Api_IThingType_Annotation_GetHashCode___]
 ==== GetHashCode
 
-[source,cs]
+[source,csharp]
 ----
 override int TypeDB.Driver.Api.IThingType.Annotation.GetHashCode()
 ----
@@ -53,7 +53,7 @@ override int TypeDB.Driver.Api.IThingType.Annotation.GetHashCode()
 [#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsKey___]
 ==== IsKey
 
-[source,cs]
+[source,csharp]
 ----
 bool TypeDB.Driver.Api.IThingType.Annotation.IsKey()
 ----
@@ -70,7 +70,7 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 [#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsUnique___]
 ==== IsUnique
 
-[source,cs]
+[source,csharp]
 ----
 bool TypeDB.Driver.Api.IThingType.Annotation.IsUnique()
 ----
@@ -87,7 +87,7 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 [#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewKey___]
 ==== NewKey
 
-[source,cs]
+[source,csharp]
 ----
 static Annotation TypeDB.Driver.Api.IThingType.Annotation.NewKey()
 ----
@@ -104,7 +104,7 @@ Produces a ``@key`` annotation.
 [#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewUnique___]
 ==== NewUnique
 
-[source,cs]
+[source,csharp]
 ----
 static Annotation TypeDB.Driver.Api.IThingType.Annotation.NewUnique()
 ----
@@ -121,7 +121,7 @@ Produces a ``@unique`` annotation.
 [#_override_string_TypeDB_Driver_Api_IThingType_Annotation_ToString___]
 ==== ToString
 
-[source,cs]
+[source,csharp]
 ----
 override string TypeDB.Driver.Api.IThingType.Annotation.ToString()
 ----

@@ -11,7 +11,7 @@ Contains a mapping of variables to concepts.
 [#_IConcept_TypeDB_Driver_Api_IConceptMap_Get___string_variable_]
 ==== Get
 
-[source,cs]
+[source,csharp]
 ----
 IConcept TypeDB.Driver.Api.IConceptMap.Get(string variable)
 ----
@@ -34,10 +34,27 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `IConcept`
 
+[#_IEnumerable__IConcept___TypeDB_Driver_Api_IConceptMap_GetConcepts___]
+==== GetConcepts
+
+[source,csharp]
+----
+IEnumerable< IConcept > TypeDB.Driver.Api.IConceptMap.GetConcepts()
+----
+
+
+
+Returns a collection of all concepts in this ``IConceptMap``.
+
+
+[caption=""]
+.Returns
+`IEnumerable< IConcept >`
+
 [#_Dictionary__string__IConcept___TypeDB_Driver_Api_IConceptMap_GetMap___]
 ==== GetMap
 
-[source,cs]
+[source,csharp]
 ----
 Dictionary< string, IConcept > TypeDB.Driver.Api.IConceptMap.GetMap()
 ----
@@ -54,7 +71,7 @@ Returns the inner ``Dictionary`` (``Map`` as a common TypeDB term) where keys ar
 [#_IEnumerable__string___TypeDB_Driver_Api_IConceptMap_GetVariables___]
 ==== GetVariables
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< string > TypeDB.Driver.Api.IConceptMap.GetVariables()
 ----

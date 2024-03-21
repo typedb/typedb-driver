@@ -11,7 +11,7 @@ The metadata and state of an individual raft replica of a database.
 [#_bool_TypeDB_Driver_Api_IDatabase_IReplica_IsPreferred___]
 ==== IsPreferred
 
-[source,cs]
+[source,csharp]
 ----
 bool TypeDB.Driver.Api.IDatabase.IReplica.IsPreferred()
 ----
@@ -27,7 +27,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 [#_bool_TypeDB_Driver_Api_IDatabase_IReplica_IsPrimary___]
 ==== IsPrimary
 
-[source,cs]
+[source,csharp]
 ----
 bool TypeDB.Driver.Api.IDatabase.IReplica.IsPrimary()
 ----

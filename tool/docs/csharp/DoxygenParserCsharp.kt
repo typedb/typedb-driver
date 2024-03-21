@@ -83,7 +83,7 @@ class DoxygenParserCsharp : Callable<Unit> {
         }
 
         classes.forEach { parsedClass ->
-            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cs")
+            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("csharp")
             val outputFile = getFile(docsDir, "${generateFilename(parsedClass.name)}.adoc")
             outputFile.writeText(parsedClassAsciiDoc)
         }
@@ -108,22 +108,36 @@ class DoxygenParserCsharp : Callable<Unit> {
         val idToAnchor: MutableMap<String, String> = HashMap()
         document.select("table.memberdecls").forEach { table ->
             val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.attr("name")
+            println(heading)
             val members: MutableList<Element> = ArrayList()
             table.select("tr").filter { element ->
                 element.className().matches(Regex("memitem:[a-f0-9]+"))
             }.forEach { element ->
                 val id = element.className().substringAfter("memitem:")
-                val methodDetails =
+                val type = element.selectFirst("td.memItemLeft")?.text()
+                if (type == "enum") {
+                    println("ENUM! $element")
+                    val memberDetails =
+                        document.selectFirst("div.contents > a#$id")?.nextElementSibling()?.nextElementSibling()
+
+                    val typeAndName = memberDetails?.selectFirst("div.memitem > div.memproto > table.memname > tbody > tr > td.memname")?.text()?.split(" ")
+                    if (typeAndName != null && typeAndName.size > 1 && typeAndName[0] == "enum") { // ENUM!
+                        println("Details: $memberDetails, typeAndName: ${typeAndName}")
+                    }
+                }
+
+                val memberDetails =
                     document.selectFirst("div.contents > a#$id")?.nextElementSibling()?.nextElementSibling()
-                if (methodDetails == null) {
+
+                if (memberDetails == null) {
                     missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
                 } else {
-                    members.add(methodDetails)
-                    idToAnchor[id] = replaceSymbolsForAnchor(methodDetails.select("table.memname").text())
+                    members.add(memberDetails)
+                    idToAnchor[id] = replaceSymbolsForAnchor(memberDetails.select("table.memname").text())
                 }
             }
             map[heading] = members
-            print("Result for now: $map")
+//            print("Result for now: $map")
         }
 
         if (missingDeclarations.isNotEmpty()) {
@@ -139,6 +153,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             .replace(Regex("Class(?: Template)? Reference.*"), "").trim()
         val packagePath = fullyQualifiedName.substringBeforeLast("::")
         val className = fullyQualifiedName.substringAfterLast("::")
+//        println(packagePath, className)
         val classAnchor = replaceSymbolsForAnchor(className)
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
         val superClasses = document.select("tr.inherit_header")

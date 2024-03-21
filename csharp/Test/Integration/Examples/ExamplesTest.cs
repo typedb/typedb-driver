@@ -40,7 +40,7 @@ namespace TypeDB.Driver.Test.Integration
 
             var result = results[0];
             Assert.AreEqual(2, result.GetVariables().Count());
-            Assert.AreEqual(2, result.Concepts.Count());
+            Assert.AreEqual(2, result.GetConcepts().Count());
 
             var entity = result.Get(variableName);
             Assert.IsNotNull(entity);

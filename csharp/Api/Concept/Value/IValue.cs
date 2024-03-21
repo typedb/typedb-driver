@@ -176,6 +176,14 @@ namespace TypeDB.Driver.Api
          */
         System.DateTime AsDateTime();
 
+        /**
+         * chefkjlawlfawawfafawf
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * value.vafjwfflw();
+         * </pre>
+         */
         public enum ValueType
         {
             Object = Pinvoke.ValueType.Object,
@@ -187,6 +195,14 @@ namespace TypeDB.Driver.Api
         }
     }
 
+        /**
+         * !!!!
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * value.??FAWL:F
+         * </pre>
+         */
     public static class ValueTypeExtensions
     {
         /**

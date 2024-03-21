@@ -11,7 +11,7 @@ Provides methods for executing TypeQL queries in the transaction.
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define___string_query_]
 ==== Define
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Define(string query)
 ----
@@ -35,7 +35,7 @@ Performs a TypeQL Define query with default options.
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define___string_query__TypeDBOptions_options_]
 ==== Define
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Define(string query, TypeDBOptions options)
 ----
@@ -62,7 +62,7 @@ a| `options` a| Specify query options a|
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete___string_query_]
 ==== Delete
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Delete(string query)
 ----
@@ -86,7 +86,7 @@ Performs a TypeQL Delete query with default options.
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete___string_query__TypeDBOptions_options_]
 ==== Delete
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Delete(string query, TypeDBOptions options)
 ----
@@ -113,7 +113,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IExplanation___TypeDB_Driver_Api_IQueryManager_Explain___IConceptMap_IExplainable_explainable_]
 ==== Explain
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IExplanation > TypeDB.Driver.Api.IQueryManager.Explain(IConceptMap.IExplainable explainable)
 ----
@@ -137,7 +137,7 @@ Performs a TypeQL Explain query with default options.
 [#_IEnumerable__IExplanation___TypeDB_Driver_Api_IQueryManager_Explain___IConceptMap_IExplainable_explainable__TypeDBOptions_options_]
 ==== Explain
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IExplanation > TypeDB.Driver.Api.IQueryManager.Explain(IConceptMap.IExplainable explainable, TypeDBOptions options)
 ----
@@ -164,7 +164,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__JObject___TypeDB_Driver_Api_IQueryManager_Fetch___string_query_]
 ==== Fetch
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< JObject > TypeDB.Driver.Api.IQueryManager.Fetch(string query)
 ----
@@ -188,7 +188,7 @@ Performs a TypeQL Fetch (Fetch) with default options.
 [#_IEnumerable__JObject___TypeDB_Driver_Api_IQueryManager_Fetch___string_query__TypeDBOptions_options_]
 ==== Fetch
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< JObject > TypeDB.Driver.Api.IQueryManager.Fetch(string query, TypeDBOptions options)
 ----
@@ -215,7 +215,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Get___string_query_]
 ==== Get
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Get(string query)
 ----
@@ -239,7 +239,7 @@ Performs a TypeQL Get (Get) with default options.
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Get___string_query__TypeDBOptions_options_]
 ==== Get
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Get(string query, TypeDBOptions options)
 ----
@@ -266,7 +266,7 @@ a| `options` a| Specify query options a|
 [#_Promise__IValue___TypeDB_Driver_Api_IQueryManager_GetAggregate___string_query_]
 ==== GetAggregate
 
-[source,cs]
+[source,csharp]
 ----
 Promise< IValue > TypeDB.Driver.Api.IQueryManager.GetAggregate(string query)
 ----
@@ -290,7 +290,7 @@ Performs a TypeQL Get Aggregate query with default options.
 [#_Promise__IValue___TypeDB_Driver_Api_IQueryManager_GetAggregate___string_query__TypeDBOptions_options_]
 ==== GetAggregate
 
-[source,cs]
+[source,csharp]
 ----
 Promise< IValue > TypeDB.Driver.Api.IQueryManager.GetAggregate(string query, TypeDBOptions options)
 ----
@@ -317,7 +317,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IConceptMapGroup___TypeDB_Driver_Api_IQueryManager_GetGroup___string_query_]
 ==== GetGroup
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMapGroup > TypeDB.Driver.Api.IQueryManager.GetGroup(string query)
 ----
@@ -341,7 +341,7 @@ Performs a TypeQL Get Group query with default options.
 [#_IEnumerable__IConceptMapGroup___TypeDB_Driver_Api_IQueryManager_GetGroup___string_query__TypeDBOptions_options_]
 ==== GetGroup
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMapGroup > TypeDB.Driver.Api.IQueryManager.GetGroup(string query, TypeDBOptions options)
 ----
@@ -368,7 +368,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IValueGroup___TypeDB_Driver_Api_IQueryManager_GetGroupAggregate___string_query_]
 ==== GetGroupAggregate
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IValueGroup > TypeDB.Driver.Api.IQueryManager.GetGroupAggregate(string query)
 ----
@@ -392,7 +392,7 @@ Performs a TypeQL Get Group Aggregate query with default options.
 [#_IEnumerable__IValueGroup___TypeDB_Driver_Api_IQueryManager_GetGroupAggregate___string_query__TypeDBOptions_options_]
 ==== GetGroupAggregate
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IValueGroup > TypeDB.Driver.Api.IQueryManager.GetGroupAggregate(string query, TypeDBOptions options)
 ----
@@ -419,7 +419,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Insert___string_query_]
 ==== Insert
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Insert(string query)
 ----
@@ -443,7 +443,7 @@ Performs a TypeQL Insert query with default options.
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Insert___string_query__TypeDBOptions_options_]
 ==== Insert
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Insert(string query, TypeDBOptions options)
 ----
@@ -470,7 +470,7 @@ a| `options` a| Specify query options a|
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine___string_query_]
 ==== Undefine
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Undefine(string query)
 ----
@@ -494,7 +494,7 @@ Performs a TypeQL Undefine query with default options.
 [#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine___string_query__TypeDBOptions_options_]
 ==== Undefine
 
-[source,cs]
+[source,csharp]
 ----
 VoidPromise TypeDB.Driver.Api.IQueryManager.Undefine(string query, TypeDBOptions options)
 ----
@@ -521,7 +521,7 @@ a| `options` a| Specify query options a|
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Update___string_query_]
 ==== Update
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Update(string query)
 ----
@@ -545,7 +545,7 @@ Performs a TypeQL Update query with default options.
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Update___string_query__TypeDBOptions_options_]
 ==== Update
 
-[source,cs]
+[source,csharp]
 ----
 IEnumerable< IConceptMap > TypeDB.Driver.Api.IQueryManager.Update(string query, TypeDBOptions options)
 ----
