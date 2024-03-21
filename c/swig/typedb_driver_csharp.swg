@@ -618,17 +618,41 @@
 
 %typemap(ctype) char ** "char**"
 %typemap(cstype) char ** "string[]"
-%typemap(
-    imtype,
-    inattributes = "[
-        global::System.Runtime.InteropServices.In,
-        global::System.Runtime.InteropServices.Out,
-        global::System.Runtime.InteropServices.MarshalAs(
-            global::System.Runtime.InteropServices.UnmanagedType.LPArray,
-            ArraySubType=global::System.Runtime.InteropServices.UnmanagedType.LPStr)]"
-    ) char ** "string[]"
+%typemap(imtype) char ** "global::System.IntPtr"
 
-%typemap(csin) char ** "$csinput"
+%typemap(
+    csin,
+    pre="
+        int arraySize = $csinput.Length;
+        global::System.IntPtr unmanaged$csinput = System.Runtime.InteropServices.Marshal.AllocHGlobal(
+            (arraySize + 1) * System.Runtime.InteropServices.Marshal.SizeOf<global::System.IntPtr>());
+
+        unsafe
+        {
+            global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanaged$csinput.ToPointer();
+
+            int i = 0;
+            for (; i < arraySize; i++)
+            {
+                arrayPtr[i] = global::System.Runtime.InteropServices.Marshal.StringToCoTaskMemAnsi($csinput[i]);
+            }
+
+            arrayPtr[i] = global::System.IntPtr.Zero;
+        }",
+    post="
+        unsafe
+        {
+            global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanaged$csinput.ToPointer();
+
+            for (int i = 0; i < arraySize; i++)
+            {
+                global::System.Runtime.InteropServices.Marshal.FreeHGlobal(arrayPtr[i]);
+            }
+        }
+
+        global::System.Runtime.InteropServices.Marshal.FreeHGlobal(unmanaged$csinput);"
+) char ** "unmanaged$csinput"
+
 %typemap(csout) char **
 {
     return $imcall;
