@@ -40,6 +40,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Entity >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+entityType.create(transaction).get();
+----
+
 [#_ConceptIterable__Entity___TypeDBEntityTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
@@ -66,6 +73,13 @@ a| `transitivity` a| ``Transitivity::EXPLICIT`` for direct instances only, ``Tra
 [caption=""]
 .Returns
 `ConceptIterable< Entity >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+entityType.getInstances(transaction, transitivity);
+----
 
 [#_ConceptIterable__EntityType___TypeDBEntityTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -94,6 +108,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< EntityType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+entityType.getSubtypes(transaction, transitivity);
+----
+
 [#_VoidFuture_TypeDBEntityTypesetSupertype___Transaction__transaction__EntityType__ptr__superEntityType_]
 ==== setSupertype
 
@@ -120,6 +141,13 @@ a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``Ent
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+entityType.setSupertype(transaction, entityType).get();
+----
 
 // end::methods[]
 

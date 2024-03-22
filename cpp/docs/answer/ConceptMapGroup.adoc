@@ -25,6 +25,13 @@ Retrieves the ``ConceptMap``s of the group.
 .Returns
 `ConceptMapIterable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMapGroup.conceptMaps();
+----
+
 [#_stdunique_ptr__Concept___TypeDBConceptMapGroupowner___]
 ==== owner
 
@@ -41,6 +48,13 @@ Retrieves the concept that is the group owner.
 [caption=""]
 .Returns
 `std::unique_ptr< Concept >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMapGroup.owner();
+----
 
 [#_stdstring_TypeDBConceptMapGrouptoString___]
 ==== toString

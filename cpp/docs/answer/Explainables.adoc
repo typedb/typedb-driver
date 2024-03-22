@@ -34,6 +34,13 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `Explainable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().attribute(variable);
+----
+
 [#_StringIterable_TypeDBExplainablesattributes___]
 ==== attributes
 
@@ -50,6 +57,13 @@ Retrieves all of this ``ConceptMap``’s explainable attributes.
 [caption=""]
 .Returns
 `StringIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().attributes();
+----
 
 [#_Explainable_TypeDBExplainablesownership___stdstring__owner__stdstring__attribute_]
 ==== ownership
@@ -78,6 +92,13 @@ a| `attribute` a| The string representation of the attribute variable a|
 .Returns
 `Explainable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().ownership(owner, attribute);
+----
+
 [#_OwnerAttributePairIterable_TypeDBExplainablesownerships___]
 ==== ownerships
 
@@ -94,6 +115,13 @@ Retrieves all of this ``ConceptMap``’s explainable ownerships.
 [caption=""]
 .Returns
 `OwnerAttributePairIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().ownerships();
+----
 
 [#_Explainable_TypeDBExplainablesrelation___stdstring__variable_]
 ==== relation
@@ -121,6 +149,13 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `Explainable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().relation(variable);
+----
+
 [#_StringIterable_TypeDBExplainablesrelations___]
 ==== relations
 
@@ -137,6 +172,13 @@ Retrieves all of this ``ConceptMap``’s explainable relations.
 [caption=""]
 .Returns
 `StringIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables().relations();
+----
 
 [#_stdstring_TypeDBExplainablestoString___]
 ==== toString

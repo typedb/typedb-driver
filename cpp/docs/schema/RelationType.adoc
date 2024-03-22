@@ -42,6 +42,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Relation >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.create(transaction).get();
+----
+
 [#_ConceptIterable__Relation___TypeDBRelationTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
@@ -68,6 +75,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect instan
 [caption=""]
 .Returns
 `ConceptIterable< Relation >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getInstances(transaction, transitivity)
+----
 
 [#_ConceptIterable__RoleType___TypeDBRelationTypegetRelates___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getRelates
@@ -96,6 +110,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and inherited relat
 .Returns
 `ConceptIterable< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getRelates(transaction, transitivity);
+----
+
 [#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelates___Transaction__transaction__const_stdstring__roleLabel_]
 ==== getRelates
 
@@ -122,6 +143,13 @@ a| `roleLabel` a| Label of the role we wish to retrieve a|
 [caption=""]
 .Returns
 `ConceptPtrFuture< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getRelates(transaction, roleLabel).get();
+----
 
 [#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelatesOverridden___Transaction__transaction__RoleType__ptr__roleType_]
 ==== getRelatesOverridden
@@ -150,6 +178,13 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getRelatesOverridden(transaction, roleLabel).get();
+----
+
 [#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelatesOverridden___Transaction__transaction__const_stdstring__roleLabel_]
 ==== getRelatesOverridden
 
@@ -177,6 +212,13 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getRelatesOverridden(transaction, roleLabel).get();
+----
+
 [#_ConceptIterable__RelationType___TypeDBRelationTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
@@ -203,6 +245,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 [caption=""]
 .Returns
 `ConceptIterable< RelationType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.getSubtypes(transaction, transitivity);
+----
 
 [#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel_]
 ==== setRelates
@@ -264,6 +313,14 @@ a| `overriddenLabel` a| The label being overridden, if applicable a|
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.setRelates(transaction, roleLabel).get();
+relationType.setRelates(transaction, roleLabel, overriddenLabel).get();
+----
+
 [#_VoidFuture_TypeDBRelationTypesetSupertype___Transaction__transaction__RelationType__ptr__superRelationType_]
 ==== setSupertype
 
@@ -290,6 +347,13 @@ a| `superRelationType` a| The ``RelationType`` to set as the supertype of this `
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.setSupertype(transaction, superRelationType).get();
+----
 
 [#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__RoleType__ptr__roleType_]
 ==== unsetRelates
@@ -333,6 +397,13 @@ a| `roleLabel` a| The role to not relate to the relation type. a|
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relationType.unsetRelates(transaction, roleLabel).get();
+----
 
 // end::methods[]
 

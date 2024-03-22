@@ -27,6 +27,13 @@ Produces a new ``Options`` object.
 .Returns
 `TypeDB::Options::Options`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+TypeDBOptions options = TypeDBOptions();
+----
+
 [#_stdoptional__bool___TypeDBOptionsexplain___]
 ==== explain
 
@@ -43,6 +50,13 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.explain();
+----
 
 [#_Options__TypeDBOptionsexplain___bool_explain_]
 ==== explain
@@ -70,6 +84,13 @@ a| `explain` a| Explicitly enable or disable explanations a|
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.explain(explain);
+----
+
 [#_stdoptional__bool___TypeDBOptionsinfer___]
 ==== infer
 
@@ -86,6 +107,13 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.infer();
+----
 
 [#_Options__TypeDBOptionsinfer___bool_infer_]
 ==== infer
@@ -113,6 +141,13 @@ a| `infer` a| Explicitly enable or disable inference a|
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.infer(infer);
+----
+
 [#_stdoptional__bool___TypeDBOptionsparallel___]
 ==== parallel
 
@@ -129,6 +164,13 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.parallel();
+----
 
 [#_Options__TypeDBOptionsparallel___bool_parallel_]
 ==== parallel
@@ -156,6 +198,13 @@ a| `parallel` a| Explicitly enable or disable parallel execution a|
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.parallel(parallel);
+----
+
 [#_stdoptional__bool___TypeDBOptionsprefetch___]
 ==== prefetch
 
@@ -172,6 +221,13 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetch();
+----
 
 [#_Options__TypeDBOptionsprefetch___bool_prefetch_]
 ==== prefetch
@@ -199,6 +255,13 @@ a| `prefetch` a| Explicitly enable or disable prefetching a|
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetch(prefetch);
+----
+
 [#_stdoptional__int32_t___TypeDBOptionsprefetchSize___]
 ==== prefetchSize
 
@@ -215,6 +278,13 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 [caption=""]
 .Returns
 `std::optional< int32_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetchSize();
+----
 
 [#_Options__TypeDBOptionsprefetchSize___int32_t_prefetchSize_]
 ==== prefetchSize
@@ -242,6 +312,13 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetchSize(prefetchSize);
+----
+
 [#_stdoptional__bool___TypeDBOptionsreadAnyReplica___]
 ==== readAnyReplica
 
@@ -258,6 +335,13 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.readAnyReplica();
+----
 
 [#_Options__TypeDBOptionsreadAnyReplica___bool_readAnyReplica_]
 ==== readAnyReplica
@@ -285,6 +369,13 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.readAnyReplica(readAnyReplica);
+----
+
 [#_stdoptional__int64_t___TypeDBOptionsschemaLockAcquireTimeoutMillis___]
 ==== schemaLockAcquireTimeoutMillis
 
@@ -301,6 +392,13 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 [caption=""]
 .Returns
 `std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.schemaLockAcquireTimeoutMillis();
+----
 
 [#_Options__TypeDBOptionsschemaLockAcquireTimeoutMillis___int64_t_timeoutMillis_]
 ==== schemaLockAcquireTimeoutMillis
@@ -328,6 +426,13 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
 [#_stdoptional__int64_t___TypeDBOptionssessionIdleTimeoutMillis___]
 ==== sessionIdleTimeoutMillis
 
@@ -344,6 +449,13 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 [caption=""]
 .Returns
 `std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.sessionIdleTimeoutMillis();
+----
 
 [#_Options__TypeDBOptionssessionIdleTimeoutMillis___int64_t_timeoutMillis_]
 ==== sessionIdleTimeoutMillis
@@ -371,6 +483,13 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.sessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
+----
+
 [#_stdoptional__bool___TypeDBOptionstraceInference___]
 ==== traceInference
 
@@ -387,6 +506,13 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 [caption=""]
 .Returns
 `std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.traceInference();
+----
 
 [#_Options__TypeDBOptionstraceInference___bool_traceInference_]
 ==== traceInference
@@ -414,6 +540,13 @@ a| `traceInference` a| Explicitly enable or disable reasoning tracing a|
 .Returns
 `Options&`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.traceInference(traceInference);
+----
+
 [#_stdoptional__int64_t___TypeDBOptionstransactionTimeoutMillis___]
 ==== transactionTimeoutMillis
 
@@ -430,6 +563,13 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 [caption=""]
 .Returns
 `std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.transactionTimeoutMillis();
+----
 
 [#_Options__TypeDBOptionstransactionTimeoutMillis___int64_t_timeoutMillis_]
 ==== transactionTimeoutMillis
@@ -456,6 +596,13 @@ a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically 
 [caption=""]
 .Returns
 `Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.transactionTimeoutMillis(transactionTimeoutMillis);
+----
 
 // end::methods[]
 

@@ -45,6 +45,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `virtual VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.deleteType(transaction).get();
+----
+
 [#_virtual_stdstring_TypeDBRoleTypegetLabel___]
 ==== getLabel
 
@@ -66,6 +73,13 @@ Implements TypeDB::Type.
 .Returns
 `virtual std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getLabel();
+----
+
 [#_stdstring_TypeDBRoleTypegetName___]
 ==== getName
 
@@ -82,6 +96,13 @@ Returns the name of this role type's label.
 [caption=""]
 .Returns
 `std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+label.getName();
+----
 
 [#_ConceptIterable__Thing___TypeDBRoleTypegetPlayerInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlayerInstances
@@ -110,6 +131,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect playin
 .Returns
 `ConceptIterable< Thing >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getPlayerInstances(transaction, transitivity);
+----
+
 [#_ConceptIterable__ThingType___TypeDBRoleTypegetPlayerTypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlayerTypes
 
@@ -136,6 +164,13 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 [caption=""]
 .Returns
 `ConceptIterable< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getPlayerTypes(transaction, transitivity)
+----
 
 [#_ConceptIterable__Relation___TypeDBRoleTypegetRelationInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getRelationInstances
@@ -164,6 +199,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect relati
 .Returns
 `ConceptIterable< Relation >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationInstances(transaction, transitivity)
+----
+
 [#_ConceptPtrFuture__RelationType___TypeDBRoleTypegetRelationType___Transaction__transaction_]
 ==== getRelationType
 
@@ -189,6 +231,13 @@ a| `transaction` a| The current transaction a|
 [caption=""]
 .Returns
 `ConceptPtrFuture< RelationType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationType(transaction).get();
+----
 
 [#_ConceptIterable__RelationType___TypeDBRoleTypegetRelationTypes___Transaction__transaction_]
 ==== getRelationTypes
@@ -216,6 +265,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RelationType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationTypes(transaction);
+----
+
 [#_stdstring_TypeDBRoleTypegetScope___]
 ==== getScope
 
@@ -232,6 +288,13 @@ Returns the scope part of this role type's label.
 [caption=""]
 .Returns
 `std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+label.getScope();
+----
 
 [#_ConceptIterable__RoleType___TypeDBRoleTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -260,6 +323,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSubtypes(transaction, transitivity);
+----
+
 [#_ConceptPtrFuture__RoleType___TypeDBRoleTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
 
@@ -285,6 +355,13 @@ a| `transaction` a| The current transaction a|
 [caption=""]
 .Returns
 `ConceptPtrFuture< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSupertype(transaction).get();
+----
 
 [#_ConceptIterable__RoleType___TypeDBRoleTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
@@ -312,6 +389,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSupertypes(transaction);
+----
+
 [#_virtual_bool_TypeDBRoleTypeisAbstract___]
 ==== isAbstract
 
@@ -332,6 +416,13 @@ Implements TypeDB::Type.
 [caption=""]
 .Returns
 `virtual bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isAbstract();
+----
 
 [#_virtual_BoolFuture_TypeDBRoleTypeisDeleted___Transaction__transaction_]
 ==== isDeleted
@@ -363,6 +454,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `virtual BoolFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isDeleted(transaction).get();
+----
+
 [#_bool_TypeDBRoleTypeisRoot___]
 ==== isRoot
 
@@ -379,6 +477,13 @@ Checks if the type is a root type.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isRoot();
+----
 
 [#_virtual_VoidFuture_TypeDBRoleTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
 ==== setLabel
@@ -410,6 +515,13 @@ a| `label` a| The new ``Label`` to be given to the type. a|
 [caption=""]
 .Returns
 `virtual VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.setLabel(transaction, newLabel).get();
+----
 
 // end::methods[]
 

@@ -41,6 +41,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< Thing >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attribute.getOwners(transaction);
+----
+
 [#_ConceptIterable__Thing___TypeDBAttributegetOwners___Transaction__transaction__const_ThingType__ptr__ownerType_]
 ==== getOwners
 
@@ -68,6 +75,13 @@ a| `ownerType` a| Filter results for only owners of the given type a|
 .Returns
 `ConceptIterable< Thing >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attribute.getOwners(transaction, ownerType);
+----
+
 [#_stdunique_ptr__AttributeType___TypeDBAttributegetType___]
 ==== getType
 
@@ -85,6 +99,13 @@ Retrieves the type which this ``Attribute`` belongs to.
 .Returns
 `std::unique_ptr< AttributeType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attribute.getType();
+----
+
 [#_stdunique_ptr__Value___TypeDBAttributegetValue___]
 ==== getValue
 
@@ -101,6 +122,13 @@ Retrieves the value which the ``Attribute`` instance holds.
 [caption=""]
 .Returns
 `std::unique_ptr< Value >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attribute.getValue();
+----
 
 // end::methods[]
 

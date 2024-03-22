@@ -25,6 +25,13 @@ Closes the session. Before opening a new session, the session currently open sho
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.close();
+----
+
 [#_stdstring_TypeDBSessiondatabaseName_____const]
 ==== databaseName
 
@@ -42,6 +49,13 @@ Returns the name of the database of the session.
 .Returns
 `std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.databaseName();
+----
+
 [#_bool_TypeDBSessionisOpen_____const]
 ==== isOpen
 
@@ -58,6 +72,13 @@ Checks whether this session is open.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.isOpen();
+----
 
 [#_void_TypeDBSessiononClose___stdfunction__void____callback_]
 ==== onClose
@@ -85,6 +106,13 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.onClose(function)
+----
+
 [#_void_TypeDBSessiononReopen___stdfunction__void____callback_]
 ==== onReopen
 
@@ -110,6 +138,13 @@ a| `function` a| The callback function. a|
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.onReopen(function)
+----
 
 [#_Transaction_TypeDBSessiontransaction___TransactionType_type__const_Options__options__Options_____const]
 ==== transaction
@@ -137,6 +172,13 @@ a| `options` a| Options for the session a|
 [caption=""]
 .Returns
 `Transaction`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+session.transaction(transactionType, options);
+----
 
 [#_SessionType_TypeDBSessiontype_____const]
 ==== type

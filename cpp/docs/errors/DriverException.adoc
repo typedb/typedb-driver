@@ -25,6 +25,16 @@ Retrieves the error code.
 .Returns
 `const std::string_view`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+try { ... }
+catch (TypeDB::DriverException& e){
+    if ("[CXN11]" == e.code()) { ... }
+}
+----
+
 [#_const_stdstring_view_TypeDBDriverExceptionmessage___]
 ==== message
 
@@ -41,6 +51,17 @@ Retrieves the descriptive error message.
 [caption=""]
 .Returns
 `const std::string_view`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+try { ... }
+catch (TypeDB::DriverException& e){
+    logError(e.message());
+    throw e;
+}
+----
 
 // end::methods[]
 

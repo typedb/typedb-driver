@@ -43,6 +43,13 @@ a| `player` a| The thing to play the role a|
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.addPlayer(transaction, roleType, player).get();
+----
+
 [#_stdmap__stdunique_ptr__RoleType____stdunique_ptr__Thing_____TypeDBRelationgetPlayers___Transaction__transaction_]
 ==== getPlayers
 
@@ -68,6 +75,13 @@ a| `transaction` a| The current transaction a|
 [caption=""]
 .Returns
 `std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.getPlayers(transaction)
+----
 
 [#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes_]
 ==== getPlayersByRoleType
@@ -95,6 +109,13 @@ a| `roleTypes` a| 0 or more role types a|
 [caption=""]
 .Returns
 `ConceptIterable< Thing >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.getPlayersByRoleType(transaction, roleTypes);
+----
 
 [#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
 ==== getPlayersByRoleType
@@ -138,6 +159,13 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.getRelating(transaction);
+----
+
 [#_stdunique_ptr__RelationType___TypeDBRelationgetType___]
 ==== getType
 
@@ -154,6 +182,13 @@ Retrieves the type which this ``Relation`` belongs to.
 [caption=""]
 .Returns
 `std::unique_ptr< RelationType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.getType();
+----
 
 [#_VoidFuture_TypeDBRelationremovePlayer___Transaction__transaction__RoleType__ptr__roleType__Thing__ptr__player_]
 ==== removePlayer
@@ -182,6 +217,13 @@ a| `player` a| The instance to no longer play the role in this ``Relation`` a|
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+relation.removePlayer(transaction, roleType, player).get();
+----
 
 // end::methods[]
 
