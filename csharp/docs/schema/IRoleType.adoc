@@ -1,0 +1,238 @@
+[#_IRoleType]
+=== IRoleType
+
+*Package*: `TypeDB.Driver.Api`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.IType`
+* `TypeDB.Driver.Api.IConcept`
+
+
+
+Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type. Roles allow a schema to enforce logical constraints on types of role players.
+
+// tag::methods[]
+[#_IRoleType_IConcept__TypeDB_Driver_Api_IRoleType_AsRoleType___]
+==== AsRoleType
+
+[source,csharp]
+----
+IRoleType IConcept. AsRoleType()
+----
+
+
+
+Casts the concept to ``IRoleType``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`IRoleType IConcept.`
+
+[#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction_]
+==== GetPlayerInstances
+
+[source,csharp]
+----
+IEnumerable< IThing > GetPlayerInstances(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves the ``Thing`` instances that play this role.
+
+ 
+  See also
+ 
+ 
+  <<#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction_,IRoleType::GetPlayerInstances>>(ITypeDBTransaction, IConcept.Transitivity)
+ 
+
+
+[caption=""]
+.Returns
+`IEnumerable< IThing >`
+
+[#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+==== GetPlayerInstances
+
+[source,csharp]
+----
+IEnumerable< IThing > GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+----
+
+
+
+Retrieves the ``Thing`` instances that play this role.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| 
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IThing >`
+
+[#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction_]
+==== GetPlayerTypes
+
+[source,csharp]
+----
+IEnumerable< IThingType > GetPlayerTypes(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves the ``ThingType``s whose instances play this role. Equivalent to ``GetPlayerTypes(transaction, Transitive)``.
+
+ 
+  See also
+ 
+ 
+  <<#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction_,IRoleType::GetPlayerTypes>>(ITypeDBTransaction, IConcept.Transitivity)
+ 
+
+
+[caption=""]
+.Returns
+`IEnumerable< IThingType >`
+
+[#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+==== GetPlayerTypes
+
+[source,csharp]
+----
+IEnumerable< IThingType > GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+----
+
+
+
+Retrieves the ``ThingType``s whose instances play this role.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| 
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IThingType >`
+
+[#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction_]
+==== GetRelationInstances
+
+[source,csharp]
+----
+IEnumerable< IRelation > GetRelationInstances(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves the ``Relation`` instances that this role is related to. Equivalent to ``GetRelationInstances(transaction, Transitive)``
+
+ 
+  See also
+ 
+ 
+  <<#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction_,IRoleType::GetRelationInstances>>(ITypeDBTransaction, IConcept.Transitivity)
+ 
+
+
+[caption=""]
+.Returns
+`IEnumerable< IRelation >`
+
+[#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+==== GetRelationInstances
+
+[source,csharp]
+----
+IEnumerable< IRelation > GetRelationInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+----
+
+
+
+Retrieves the ``Relation`` instances that this role is related to.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| 
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IRelation >`
+
+[#_IEnumerable__IRelationType___TypeDB_Driver_Api_IRoleType_GetRelationTypes___ITypeDBTransaction_transaction_]
+==== GetRelationTypes
+
+[source,csharp]
+----
+IEnumerable< IRelationType > GetRelationTypes(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IRelationType >`
+
+[#_bool_IConcept__TypeDB_Driver_Api_IRoleType_IsRoleType___]
+==== IsRoleType
+
+[source,csharp]
+----
+bool IConcept. IsRoleType()
+----
+
+
+
+Checks if the concept is a ``IRoleType``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
+// end::methods[]
+

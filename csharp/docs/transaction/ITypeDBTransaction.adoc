@@ -1,0 +1,102 @@
+[#_ITypeDBTransaction]
+=== ITypeDBTransaction
+
+*Package*: `TypeDB.Driver.Api`
+
+// tag::methods[]
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close___]
+==== Close
+
+[source,csharp]
+----
+void Close()
+----
+
+
+
+Closes the transaction.
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Commit___]
+==== Commit
+
+[source,csharp]
+----
+void Commit()
+----
+
+
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is committed successfully, it gets closed after the commit call.
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_bool_TypeDB_Driver_Api_ITypeDBTransaction_IsOpen___]
+==== IsOpen
+
+[source,csharp]
+----
+bool IsOpen()
+----
+
+
+
+Checks whether this transaction is open.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_OnClose___Action__Exception___function_]
+==== OnClose
+
+[source,csharp]
+----
+void OnClose(Action< Exception > function)
+----
+
+
+
+Registers a callback function which will be executed when this transaction is closed.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback___]
+==== Rollback
+
+[source,csharp]
+----
+void Rollback()
+----
+
+
+
+Rolls back the uncommitted changes made via this transaction.
+
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

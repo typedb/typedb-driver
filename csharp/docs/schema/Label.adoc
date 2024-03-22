@@ -1,0 +1,152 @@
+[#_Label]
+=== Label
+
+*Package*: `TypeDB.Driver.Common`
+
+
+
+A ``Label`` holds the uniquely identifying name of a type.
+
+It consists of an optional ``scope``, and a ``name``, represented ``scope:name``. The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `readonly string TypeDB.Driver.Common.Label.Name` a| `readonly string TypeDB.Driver.Common.Label.Name` a| Returns the name of this Label.
+Examples
+[source,java]
+----
+label.Name;
+
+----
+
+a| `readonly? string TypeDB.Driver.Common.Label.Scope` a| `readonly? string TypeDB.Driver.Common.Label.Scope` a| Returns the scope of this Label.
+Examples
+[source,java]
+----
+label.Scope;
+
+----
+
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_override_bool_TypeDB_Driver_Common_Label_Equals___object_obj_]
+==== Equals
+
+[source,csharp]
+----
+override bool Equals(object? obj)
+----
+
+
+
+Checks if this Label is equal to another object.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| 
+|===
+
+[caption=""]
+.Returns
+`override bool`
+
+[#_override_int_TypeDB_Driver_Common_Label_GetHashCode___]
+==== GetHashCode
+
+[source,csharp]
+----
+override int GetHashCode()
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`override int`
+
+[#_TypeDB_Driver_Common_Label_Label___string_scope__string_name_]
+==== Label
+
+[source,csharp]
+----
+Label(string? scope, string name)
+----
+
+
+
+Creates a Label from a specified scope and name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `scope` a| Label scope a| 
+a| `name` a| Label name a| 
+|===
+
+[caption=""]
+.Returns
+`Label`
+
+[#_TypeDB_Driver_Common_Label_Label___string_name_]
+==== Label
+
+[source,csharp]
+----
+Label(string name)
+----
+
+
+
+Creates a Label from a specified name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| Label name a| 
+|===
+
+[caption=""]
+.Returns
+`Label`
+
+[#_override_string_TypeDB_Driver_Common_Label_ToString___]
+==== ToString
+
+[source,csharp]
+----
+override string ToString()
+----
+
+
+
+Returns the string representation of the scoped name.
+
+
+[caption=""]
+.Returns
+`override string`
+
+// end::methods[]
+

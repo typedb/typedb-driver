@@ -1,0 +1,9 @@
+[#_IExplainable]
+=== IExplainable
+
+*Package*: `TypeDB.Driver.Api.IConceptMap`
+
+
+
+Contains an explainable object.
+

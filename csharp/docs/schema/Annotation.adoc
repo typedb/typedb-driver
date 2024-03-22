@@ -1,0 +1,139 @@
+[#_Annotation]
+=== Annotation
+
+*Package*: `TypeDB.Driver.Api.IThingType`
+
+
+
+Annotation
+
+// tag::methods[]
+[#_override_bool_TypeDB_Driver_Api_IThingType_Annotation_Equals___object_obj_]
+==== Equals
+
+[source,csharp]
+----
+override bool Equals(object? obj)
+----
+
+
+
+Checks if this ``Annotation`` is equal to another object.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| 
+|===
+
+[caption=""]
+.Returns
+`override bool`
+
+[#_override_int_TypeDB_Driver_Api_IThingType_Annotation_GetHashCode___]
+==== GetHashCode
+
+[source,csharp]
+----
+override int GetHashCode()
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`override int`
+
+[#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsKey___]
+==== IsKey
+
+[source,csharp]
+----
+bool IsKey()
+----
+
+
+
+Checks if this ``Annotation`` is a ``@key`` annotation.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsUnique___]
+==== IsUnique
+
+[source,csharp]
+----
+bool IsUnique()
+----
+
+
+
+Checks if this ``Annotation`` is a ``@unique`` annotation.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewKey___]
+==== NewKey
+
+[source,csharp]
+----
+static Annotation NewKey()
+----
+
+
+
+Produces a ``@key`` annotation.
+
+
+[caption=""]
+.Returns
+`static Annotation`
+
+[#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewUnique___]
+==== NewUnique
+
+[source,csharp]
+----
+static Annotation NewUnique()
+----
+
+
+
+Produces a ``@unique`` annotation.
+
+
+[caption=""]
+.Returns
+`static Annotation`
+
+[#_override_string_TypeDB_Driver_Api_IThingType_Annotation_ToString___]
+==== ToString
+
+[source,csharp]
+----
+override string ToString()
+----
+
+
+
+Retrieves a string representation of this ``Annotation``.
+
+
+[caption=""]
+.Returns
+`override string`
+
+// end::methods[]
+

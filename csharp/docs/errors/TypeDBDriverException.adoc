@@ -1,0 +1,93 @@
+[#_TypeDBDriverException]
+=== TypeDBDriverException
+
+*Package*: `TypeDB.Driver.Common`
+
+
+
+Exceptions raised by the driver.
+
+// tag::methods[]
+[#_bool_TypeDB_Driver_Common_TypeDBDriverException_Contains___string_subString_]
+==== Contains
+
+[source,csharp]
+----
+bool Contains(string subString)
+----
+
+
+
+Checks whether a substring is a part of this exception's message.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___ErrorMessage_error__params_object___errorParams_]
+==== TypeDBDriverException
+
+[source,csharp]
+----
+TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___string_message_]
+==== TypeDBDriverException
+
+[source,csharp]
+----
+TypeDBDriverException(string message)
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___SystemException_error_]
+==== TypeDBDriverException
+
+[source,csharp]
+----
+TypeDBDriverException(System::Exception error)
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___PinvokeError_nativeError_]
+==== TypeDBDriverException
+
+[source,csharp]
+----
+TypeDBDriverException(Pinvoke::Error nativeError)
+----
+
+
+
+@hidden
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+// end::methods[]
+

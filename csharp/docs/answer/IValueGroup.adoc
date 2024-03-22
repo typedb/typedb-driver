@@ -1,0 +1,9 @@
+[#_IValueGroup]
+=== IValueGroup
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Contains an element of the group aggregate query result.
+

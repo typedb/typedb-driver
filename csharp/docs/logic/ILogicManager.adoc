@@ -1,0 +1,83 @@
+[#_ILogicManager]
+=== ILogicManager
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Provides methods for manipulating rules in the database.
+
+// tag::methods[]
+[#_Promise__IRule___TypeDB_Driver_Api_ILogicManager_GetRule___string_label_]
+==== GetRule
+
+[source,csharp]
+----
+Promise< IRule > GetRule(string label)
+----
+
+
+
+Retrieves the Rule that has the given label.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`Promise< IRule >`
+
+[#_IEnumerable__IRule___TypeDB_Driver_Api_ILogicManager_GetRules___]
+==== GetRules
+
+[source,csharp]
+----
+IEnumerable< IRule > GetRules()
+----
+
+
+
+Retrieves all rules.
+
+
+[caption=""]
+.Returns
+`IEnumerable< IRule >`
+
+[#_Promise__IRule___TypeDB_Driver_Api_ILogicManager_PutRule___string_label__string_when__string_then_]
+==== PutRule
+
+[source,csharp]
+----
+Promise< IRule > PutRule(string label, string when, string then)
+----
+
+
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the IRule to create or replace a| 
+a| `when` a| The when body of the rule to create a| 
+a| `then` a| The then body of the rule to create a| 
+|===
+
+[caption=""]
+.Returns
+`Promise< IRule >`
+
+// end::methods[]
+
