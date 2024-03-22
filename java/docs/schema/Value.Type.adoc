@@ -3,6 +3,16 @@
 
 *Package*: `com.vaticle.typedb.driver.api.concept.value`
 
+Used to specify the type of the value. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+thingType.getOwns(transaction, Value.Type.STRING);
+----
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]

@@ -177,11 +177,11 @@ namespace TypeDB.Driver.Api
         System.DateTime AsDateTime();
 
         /**
-         * chefkjlawlfawawfafawf
+         * Used to specify the type of the value.
          *
          * <h3>Examples</h3>
          * <pre>
-         * value.vafjwfflw();
+         * thingType.GetOwns(transaction, IValue.ValueType.String);
          * </pre>
          */
         public enum ValueType
@@ -195,14 +195,9 @@ namespace TypeDB.Driver.Api
         }
     }
 
-        /**
-         * !!!!
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * value.??FAWL:F
-         * </pre>
-         */
+    /**
+     * Extension class with additional methods describing characteristics of ValueType enum values. // TODO: Is not generated in doxygen
+     */
     public static class ValueTypeExtensions
     {
         /**

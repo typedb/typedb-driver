@@ -1,9 +1,0 @@
-[#_TypeDB_Driver_Api_IValueGroup_Interface_Reference]
-=== TypeDB.Driver.Api.IValueGroup Interface Reference
-
-*Package*: `TypeDB.Driver.Api.IValueGroup Interface Reference`
-
-
-
-Contains an element of the group aggregate query result.
-

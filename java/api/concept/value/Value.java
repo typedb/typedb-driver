@@ -176,6 +176,14 @@ public interface Value extends Concept {
      */
     LocalDateTime asDateTime();
 
+    /**
+     * Used to specify the type of the value.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getOwns(transaction, Value.Type.STRING);
+     * </pre>
+     */
     enum Type {
         OBJECT(Object.class, false, false, com.vaticle.typedb.driver.jni.ValueType.Object),
         BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.driver.jni.ValueType.Boolean),
