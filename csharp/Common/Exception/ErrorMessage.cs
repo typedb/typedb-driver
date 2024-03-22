@@ -50,7 +50,7 @@ namespace TypeDB.Driver.Common
     {
         public class Driver : ErrorMessage
         {
-            private const string CODE_PREFIX = "DRI";
+            private const string CODE_PREFIX = "CSDR";
             private const string MESSAGE_PREFIX = "Driver Error";
 
             public Driver(int codeNumber, string message)
@@ -76,7 +76,7 @@ namespace TypeDB.Driver.Common
 
         public class Concept : ErrorMessage
         {
-            private const string CODE_PREFIX = "CON";
+            private const string CODE_PREFIX = "CSCO";
             private const string MESSAGE_PREFIX = "Concept Error";
 
             public Concept(int codeNumber, string message)
@@ -106,7 +106,7 @@ namespace TypeDB.Driver.Common
 
         public class Query : ErrorMessage
         {
-            private const string CODE_PREFIX = "QRY";
+            private const string CODE_PREFIX = "CSQR";
             private const string MESSAGE_PREFIX = "Query Error";
 
             public Query(int codeNumber, string message)
@@ -122,7 +122,7 @@ namespace TypeDB.Driver.Common
 
         public class Internal : ErrorMessage
         {
-            private const string CODE_PREFIX = "INT";
+            private const string CODE_PREFIX = "CSIN";
             private const string MESSAGE_PREFIX = "C# Internal Error";
 
             public Internal(int codeNumber, string message)
