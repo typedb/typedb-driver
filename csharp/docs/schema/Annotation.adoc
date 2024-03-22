@@ -11,7 +11,7 @@ Annotation
 [#_override_bool_TypeDB_Driver_Api_IThingType_Annotation_Equals___object_obj_]
 ==== Equals
 
-[source,csharp]
+[source,cs]
 ----
 override bool Equals(object? obj)
 ----
@@ -34,10 +34,17 @@ a| `obj` a| Object to compare with a|
 .Returns
 `override bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+annotation.Equals(obj);
+----
+
 [#_override_int_TypeDB_Driver_Api_IThingType_Annotation_GetHashCode___]
 ==== GetHashCode
 
-[source,csharp]
+[source,cs]
 ----
 override int GetHashCode()
 ----
@@ -53,7 +60,7 @@ override int GetHashCode()
 [#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsKey___]
 ==== IsKey
 
-[source,csharp]
+[source,cs]
 ----
 bool IsKey()
 ----
@@ -67,10 +74,17 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+annotation.IsKey();
+----
+
 [#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsUnique___]
 ==== IsUnique
 
-[source,csharp]
+[source,cs]
 ----
 bool IsUnique()
 ----
@@ -84,10 +98,17 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+annotation.IsUnique();
+----
+
 [#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewKey___]
 ==== NewKey
 
-[source,csharp]
+[source,cs]
 ----
 static Annotation NewKey()
 ----
@@ -101,10 +122,18 @@ Produces a ``@key`` annotation.
 .Returns
 `static Annotation`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+using static TypeDB.Driver.Api.IThingType.Annotation;
+NewKey();
+----
+
 [#_static_Annotation_TypeDB_Driver_Api_IThingType_Annotation_NewUnique___]
 ==== NewUnique
 
-[source,csharp]
+[source,cs]
 ----
 static Annotation NewUnique()
 ----
@@ -118,10 +147,17 @@ Produces a ``@unique`` annotation.
 .Returns
 `static Annotation`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+Annotation.NewUnique();
+----
+
 [#_override_string_TypeDB_Driver_Api_IThingType_Annotation_ToString___]
 ==== ToString
 
-[source,csharp]
+[source,cs]
 ----
 override string ToString()
 ----
@@ -134,6 +170,13 @@ Retrieves a string representation of this ``Annotation``.
 [caption=""]
 .Returns
 `override string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+annotation.ToString();
+----
 
 // end::methods[]
 

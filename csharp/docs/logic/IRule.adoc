@@ -11,7 +11,7 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 [#_VoidPromise_TypeDB_Driver_Api_IRule_Delete___ITypeDBTransaction_transaction_]
 ==== Delete
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise Delete(ITypeDBTransaction transaction)
 ----
@@ -34,10 +34,17 @@ a| `transaction` a| The current ``Transaction`` a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.Delete(transaction).Resolve();
+----
+
 [#_Promise__bool___TypeDB_Driver_Api_IRule_IsDeleted___ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
-[source,csharp]
+[source,cs]
 ----
 Promise< bool > IsDeleted(ITypeDBTransaction transaction)
 ----
@@ -60,10 +67,17 @@ a| `transaction` a| The current ``Transaction`` a|
 .Returns
 `Promise< bool >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.IsDeleted(transaction).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IRule_SetLabel___ITypeDBTransaction_transaction__string_label_]
 ==== SetLabel
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
 ----
@@ -86,6 +100,13 @@ a| `label` a| The new label to be given to the rule a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.SetLabel(transaction, newLabel).Resolve();
+----
 
 // end::methods[]
 

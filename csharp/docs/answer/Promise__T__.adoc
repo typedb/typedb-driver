@@ -15,7 +15,7 @@ The request it represents is performed immediately. The response is only retriev
 [#_static_Promise__TTo___TypeDB_Driver_Common_Promise__T___Map__TFrom__TTo_____Func__TFrom__resolver__Func__TFrom__TTo___selector_]
 ==== Map< TFrom, TTo >
 
-[source,csharp]
+[source,cs]
 ----
 static Promise< TTo > TypeDB.Driver.Common.Promise< T >.Map< TFrom, TTo >(Func< TFrom?> resolver, Func< TFrom, TTo > selector)
 ----
@@ -39,10 +39,17 @@ a| `fn` a| The mapping function a|
 .Returns
 `static Promise< TTo >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+Promise<TFrom>.Map<TTo, T>(supplier, selector);
+----
+
 [#_TypeDB_Driver_Common_Promise__T___Promise___Func__T__resolver_]
 ==== Promise
 
-[source,csharp]
+[source,cs]
 ----
 TypeDB.Driver.Common.Promise< T Promise(Func< T?> resolver)
 ----
@@ -65,10 +72,17 @@ a| `promise` a| The function to wrap into the promise a|
 .Returns
 `TypeDB.Driver.Common.Promise< T`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+new Promise(supplier);
+----
+
 [#_T_TypeDB_Driver_Common_Promise__T___Resolve___]
 ==== Resolve
 
-[source,csharp]
+[source,cs]
 ----
 T? TypeDB.Driver.Common.Promise< T Resolve()
 ----
@@ -81,6 +95,13 @@ Retrieves the result of the Promise.
 [caption=""]
 .Returns
 `T? TypeDB.Driver.Common.Promise< T`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+promise.Resolve();
+----
 
 // end::methods[]
 

@@ -7,7 +7,7 @@
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close___]
 ==== Close
 
-[source,csharp]
+[source,cs]
 ----
 void Close()
 ----
@@ -21,10 +21,17 @@ Closes the transaction.
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Close();
+----
+
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Commit___]
 ==== Commit
 
-[source,csharp]
+[source,cs]
 ----
 void Commit()
 ----
@@ -38,10 +45,17 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Commit();
+----
+
 [#_bool_TypeDB_Driver_Api_ITypeDBTransaction_IsOpen___]
 ==== IsOpen
 
-[source,csharp]
+[source,cs]
 ----
 bool IsOpen()
 ----
@@ -55,10 +69,17 @@ Checks whether this transaction is open.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.IsOpen();
+----
+
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_OnClose___Action__Exception___function_]
 ==== OnClose
 
-[source,csharp]
+[source,cs]
 ----
 void OnClose(Action< Exception > function)
 ----
@@ -81,10 +102,17 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.OnClose(function);
+----
+
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback___]
 ==== Rollback
 
-[source,csharp]
+[source,cs]
 ----
 void Rollback()
 ----
@@ -97,6 +125,13 @@ Rolls back the uncommitted changes made via this transaction.
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Rollback();
+----
 
 // end::methods[]
 

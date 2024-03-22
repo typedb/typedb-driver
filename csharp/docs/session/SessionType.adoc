@@ -10,7 +10,7 @@ Used to specify the type of the session.
 
 [caption=""]
 .Examples
-[source,csharp]
+[source,cs]
 ----
 driver.Session(database, SessionType.Schema);
 ----

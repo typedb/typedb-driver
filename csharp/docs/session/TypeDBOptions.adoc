@@ -11,7 +11,7 @@ TypeDB session and transaction options. ``TypeDBOptions`` object can be used to 
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_Explain___]
 ==== Explain
 
-[source,csharp]
+[source,cs]
 ----
 bool? Explain()
 ----
@@ -25,10 +25,17 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Explain();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Explain___bool_explain_]
 ==== Explain
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions Explain(bool explain)
 ----
@@ -51,10 +58,17 @@ a| `explain` a| Explicitly enable or disable explanations a|
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Explain(explain);
+----
+
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_Infer___]
 ==== Infer
 
-[source,csharp]
+[source,cs]
 ----
 bool? Infer()
 ----
@@ -68,10 +82,17 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Infer();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Infer___bool_infer_]
 ==== Infer
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions Infer(bool infer)
 ----
@@ -94,10 +115,17 @@ a| `infer` a| Explicitly enable or disable inference a|
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Infer(infer);
+----
+
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_Parallel___]
 ==== Parallel
 
-[source,csharp]
+[source,cs]
 ----
 bool? Parallel()
 ----
@@ -111,10 +139,17 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Parallel();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Parallel___bool_parallel_]
 ==== Parallel
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions Parallel(bool parallel)
 ----
@@ -137,10 +172,17 @@ a| `parallel` a| Explicitly enable or disable parallel execution a|
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Parallel(parallel);
+----
+
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_Prefetch___]
 ==== Prefetch
 
-[source,csharp]
+[source,cs]
 ----
 bool? Prefetch()
 ----
@@ -154,10 +196,17 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Prefetch();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Prefetch___bool_prefetch_]
 ==== Prefetch
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions Prefetch(bool prefetch)
 ----
@@ -180,10 +229,17 @@ a| `prefetch` a| Explicitly enable or disable prefetching a|
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Prefetch(prefetch);
+----
+
 [#_int_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___]
 ==== PrefetchSize
 
-[source,csharp]
+[source,cs]
 ----
 int? PrefetchSize()
 ----
@@ -197,10 +253,17 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 .Returns
 `int?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.PrefetchSize();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___int_prefetchSize_]
 ==== PrefetchSize
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions PrefetchSize(int prefetchSize)
 ----
@@ -223,10 +286,17 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.PrefetchSize(prefetchSize);
+----
+
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___]
 ==== ReadAnyReplica
 
-[source,csharp]
+[source,cs]
 ----
 bool? ReadAnyReplica()
 ----
@@ -240,10 +310,17 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.ReadAnyReplica();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___bool_readAnyReplica_]
 ==== ReadAnyReplica
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions ReadAnyReplica(bool readAnyReplica)
 ----
@@ -266,10 +343,17 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.ReadAnyReplica(readAnyReplica);
+----
+
 [#_int_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___]
 ==== SchemaLockAcquireTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 int? SchemaLockAcquireTimeoutMillis()
 ----
@@ -283,10 +367,17 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 .Returns
 `int?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SchemaLockAcquireTimeoutMillis();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___int_schemaLockAcquireTimeoutMillis_]
 ==== SchemaLockAcquireTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions SchemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis)
 ----
@@ -309,10 +400,17 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
 [#_int_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___]
 ==== SessionIdleTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 int? SessionIdleTimeoutMillis()
 ----
@@ -326,10 +424,17 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 .Returns
 `int?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SessionIdleTimeoutMillis();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___int_sessionIdleTimeoutMillis_]
 ==== SessionIdleTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions SessionIdleTimeoutMillis(int sessionIdleTimeoutMillis)
 ----
@@ -352,10 +457,17 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
+----
+
 [#_bool_TypeDB_Driver_Api_TypeDBOptions_TraceInference___]
 ==== TraceInference
 
-[source,csharp]
+[source,cs]
 ----
 bool? TraceInference()
 ----
@@ -369,10 +481,17 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 .Returns
 `bool?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TraceInference();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TraceInference___bool_traceInference_]
 ==== TraceInference
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions TraceInference(bool traceInference)
 ----
@@ -395,10 +514,17 @@ a| `traceInference` a| Explicitly enable or disable reasoning tracing a|
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TraceInference(traceInference);
+----
+
 [#_int_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___]
 ==== TransactionTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 int? TransactionTimeoutMillis()
 ----
@@ -412,10 +538,17 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 .Returns
 `int?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TransactionTimeoutMillis();
+----
+
 [#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___int_transactionTimeoutMillis_]
 ==== TransactionTimeoutMillis
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions TransactionTimeoutMillis(int transactionTimeoutMillis)
 ----
@@ -438,10 +571,17 @@ a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically.
 .Returns
 `TypeDBOptions`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TransactionTimeoutMillis(transactionTimeoutMillis);
+----
+
 [#_TypeDB_Driver_Api_TypeDBOptions_TypeDBOptions___]
 ==== TypeDBOptions
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBOptions()
 ----
@@ -454,6 +594,13 @@ Produces a new ``TypeDBOptions`` object.
 [caption=""]
 .Returns
 `TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDBOptions options = TypeDBOptions();
+----
 
 // end::methods[]
 

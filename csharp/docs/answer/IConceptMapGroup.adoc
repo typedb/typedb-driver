@@ -11,7 +11,7 @@ Contains an element of the group query result.
 [#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IConceptMapGroup_GetConceptMaps___]
 ==== GetConceptMaps
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IConceptMap > GetConceptMaps()
 ----
@@ -24,6 +24,13 @@ Retrieves the ``IConceptMap``s of the group.
 [caption=""]
 .Returns
 `IEnumerable< IConceptMap >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMapGroup.GetConceptMaps();
+----
 
 // end::methods[]
 

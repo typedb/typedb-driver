@@ -7,7 +7,7 @@
 [#_void_TypeDB_Driver_Api_ITypeDBDriver_Close___]
 ==== Close
 
-[source,csharp]
+[source,cs]
 ----
 void Close()
 ----
@@ -21,10 +21,17 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Close();
+----
+
 [#_IUser_TypeDB_Driver_Api_ITypeDBDriver_GetCurrentUser___]
 ==== GetCurrentUser
 
-[source,csharp]
+[source,cs]
 ----
 IUser GetCurrentUser()
 ----
@@ -38,10 +45,17 @@ Returns the logged-in user for the connection. Only for TypeDB Cloud.
 .Returns
 `IUser`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.GetCurrentUser();
+----
+
 [#_bool_TypeDB_Driver_Api_ITypeDBDriver_IsOpen___]
 ==== IsOpen
 
-[source,csharp]
+[source,cs]
 ----
 bool IsOpen()
 ----
@@ -55,10 +69,17 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.IsOpen();
+----
+
 [#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session___string_database__SessionType_type_]
 ==== Session
 
-[source,csharp]
+[source,cs]
 ----
 ITypeDBSession Session(string database, SessionType type)
 ----
@@ -82,7 +103,7 @@ Opens a session to the given database with default options.
 [#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session___string_database__SessionType_type__TypeDBOptions_options_]
 ==== Session
 
-[source,csharp]
+[source,cs]
 ----
 ITypeDBSession Session(string database, SessionType type, TypeDBOptions options)
 ----
@@ -106,6 +127,13 @@ a| `options` a| ``TypeDBOptions`` for the session a|
 [caption=""]
 .Returns
 `ITypeDBSession`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Session(database, sessionType, options);
+----
 
 // end::methods[]
 

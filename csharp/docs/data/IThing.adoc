@@ -11,7 +11,7 @@
 [#_IThing_IConcept__TypeDB_Driver_Api_IThing_AsThing___]
 ==== AsThing
 
-[source,csharp]
+[source,cs]
 ----
 IThing IConcept. AsThing()
 ----
@@ -27,10 +27,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IThing IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.AsThing();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThing_Delete___ITypeDBTransaction_transaction_]
 ==== Delete
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise Delete(ITypeDBTransaction transaction)
 ----
@@ -53,10 +60,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.Delete(transaction).Resolve();
+----
+
 [#_IEnumerable__IAttribute___TypeDB_Driver_Api_IThing_GetHas___ITypeDBTransaction_transaction__params_IAttributeType___attributeTypes_]
 ==== GetHas
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttribute > GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
 ----
@@ -80,10 +94,18 @@ a| `attributeTypes` a| The ``IAttributeType``s to filter the attributes by a|
 .Returns
 `IEnumerable< IAttribute >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.GetHas(transaction);
+thing.GetHas(transaction, attributeType);
+----
+
 [#_IEnumerable__IAttribute___TypeDB_Driver_Api_IThing_GetHas___ITypeDBTransaction_transaction__ICollection__Annotation___annotations_]
 ==== GetHas
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttribute > GetHas(ITypeDBTransaction transaction, ICollection< Annotation > annotations)
 ----
@@ -107,10 +129,18 @@ a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a|
 .Returns
 `IEnumerable< IAttribute >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.GetHas(transaction);
+thing.GetHas(transaction, new []{NewKey()});
+----
+
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IThing_GetPlaying___ITypeDBTransaction_transaction_]
 ==== GetPlaying
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetPlaying(ITypeDBTransaction transaction)
 ----
@@ -133,10 +163,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `IEnumerable< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.GetPlaying(transaction);
+----
+
 [#_IEnumerable__IRelation___TypeDB_Driver_Api_IThing_GetRelations___ITypeDBTransaction_transaction__params_IRoleType___roleTypes_]
 ==== GetRelations
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRelation > GetRelations(ITypeDBTransaction transaction, params IRoleType[] roleTypes)
 ----
@@ -160,10 +197,17 @@ a| `roleTypes` a| The array of roles to filter the relations by. a|
 .Returns
 `IEnumerable< IRelation >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.GetRelations(transaction, roleTypes);
+----
+
 [#_Promise__bool___TypeDB_Driver_Api_IThing_IsDeleted___ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
-[source,csharp]
+[source,cs]
 ----
 Promise< bool > IsDeleted(ITypeDBTransaction transaction)
 ----
@@ -186,10 +230,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< bool >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.IsDeleted(transaction).Resolve();
+----
+
 [#_bool_TypeDB_Driver_Api_IThing_IsInferred___]
 ==== IsInferred
 
-[source,csharp]
+[source,cs]
 ----
 bool IsInferred()
 ----
@@ -203,10 +254,17 @@ Checks if this ``IThing`` is inferred by a [Reasoning Rule].
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.IsInferred();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IThing_IsThing___]
 ==== IsThing
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsThing()
 ----
@@ -222,10 +280,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.IsThing();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThing_SetHas___ITypeDBTransaction_transaction__IAttribute_attribute_]
 ==== SetHas
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetHas(ITypeDBTransaction transaction, IAttribute attribute)
 ----
@@ -249,10 +314,17 @@ a| `attribute` a| The ``IAttribute`` to be owned by this ``IThing``. a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.SetHas(transaction, attribute).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThing_UnsetHas___ITypeDBTransaction_transaction__IAttribute_attribute_]
 ==== UnsetHas
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetHas(ITypeDBTransaction transaction, IAttribute attribute)
 ----
@@ -275,6 +347,13 @@ a| `attribute` a| The ``IAttribute`` to be disowned from this ``IThing``. a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.UnsetHas(transaction, attribute).Resolve();
+----
 
 // end::methods[]
 

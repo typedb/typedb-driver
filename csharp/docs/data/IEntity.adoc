@@ -16,7 +16,7 @@ Instance of data of an entity type, representing a standalone object that exists
 [#_IEntity_IConcept__TypeDB_Driver_Api_IEntity_AsEntity___]
 ==== AsEntity
 
-[source,csharp]
+[source,cs]
 ----
 IEntity IConcept. AsEntity()
 ----
@@ -32,10 +32,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IEntity IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+entity.AsEntity();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IEntity_IsEntity___]
 ==== IsEntity
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsEntity()
 ----
@@ -50,6 +57,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+entity.IsEntity();
+----
 
 // end::methods[]
 

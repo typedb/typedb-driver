@@ -10,7 +10,7 @@ Used to specify the type of transaction.
 
 [caption=""]
 .Examples
-[source,csharp]
+[source,cs]
 ----
 session.Transaction(TransactionType.Read);
 ----

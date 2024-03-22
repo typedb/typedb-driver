@@ -16,7 +16,7 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 [#_VoidPromise_TypeDB_Driver_Api_IRelation_AddPlayer___ITypeDBTransaction_transaction__IRoleType_roleType__IThing_player_]
 ==== AddPlayer
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise AddPlayer(ITypeDBTransaction transaction, IRoleType roleType, IThing player)
 ----
@@ -41,10 +41,17 @@ a| `player` a| The thing to play the role a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.AddPlayer(transaction, roleType, player).Resolve();
+----
+
 [#_IRelation_IConcept__TypeDB_Driver_Api_IRelation_AsRelation___]
 ==== AsRelation
 
-[source,csharp]
+[source,cs]
 ----
 IRelation IConcept. AsRelation()
 ----
@@ -60,10 +67,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IRelation IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.AsRelation();
+----
+
 [#_Dictionary__IRoleType__ICollection__IThing_____TypeDB_Driver_Api_IRelation_GetPlayers___ITypeDBTransaction_transaction_]
 ==== GetPlayers
 
-[source,csharp]
+[source,cs]
 ----
 Dictionary< IRoleType, ICollection< IThing > > GetPlayers(ITypeDBTransaction transaction)
 ----
@@ -86,10 +100,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Dictionary< IRoleType, ICollection< IThing > >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.GetPlayers(transaction)
+----
+
 [#_IEnumerable__IThing___TypeDB_Driver_Api_IRelation_GetPlayersByRoleType___ITypeDBTransaction_transaction__params_IRoleType___roleTypes_]
 ==== GetPlayersByRoleType
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IThing > GetPlayersByRoleType(ITypeDBTransaction transaction, params IRoleType[] roleTypes)
 ----
@@ -113,10 +134,17 @@ a| `roleTypes` a| 0 or more role types a|
 .Returns
 `IEnumerable< IThing >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.GetPlayersByRoleType(transaction, roleTypes);
+----
+
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelation_GetRelating___ITypeDBTransaction_transaction_]
 ==== GetRelating
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetRelating(ITypeDBTransaction transaction)
 ----
@@ -139,10 +167,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `IEnumerable< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.GetRelating(transaction);
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IRelation_IsRelation___]
 ==== IsRelation
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsRelation()
 ----
@@ -158,10 +193,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.IsRelation();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IRelation_RemovePlayer___ITypeDBTransaction_transaction__IRoleType_roleType__IThing_player_]
 ==== RemovePlayer
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise RemovePlayer(ITypeDBTransaction transaction, IRoleType roleType, IThing player)
 ----
@@ -185,6 +227,13 @@ a| `player` a| The instance to no longer play the role in this ``IRelation`` a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+relation.RemovePlayer(transaction, roleType, player).Resolve();
+----
 
 // end::methods[]
 

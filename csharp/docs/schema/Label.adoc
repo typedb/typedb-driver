@@ -39,7 +39,7 @@ label.Scope;
 [#_override_bool_TypeDB_Driver_Common_Label_Equals___object_obj_]
 ==== Equals
 
-[source,csharp]
+[source,cs]
 ----
 override bool Equals(object? obj)
 ----
@@ -62,10 +62,17 @@ a| `obj` a| Object to compare with a|
 .Returns
 `override bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+label.Equals(obj);
+----
+
 [#_override_int_TypeDB_Driver_Common_Label_GetHashCode___]
 ==== GetHashCode
 
-[source,csharp]
+[source,cs]
 ----
 override int GetHashCode()
 ----
@@ -81,7 +88,7 @@ override int GetHashCode()
 [#_TypeDB_Driver_Common_Label_Label___string_scope__string_name_]
 ==== Label
 
-[source,csharp]
+[source,cs]
 ----
 Label(string? scope, string name)
 ----
@@ -105,10 +112,17 @@ a| `name` a| Label name a|
 .Returns
 `Label`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+new Label("relation", "role");
+----
+
 [#_TypeDB_Driver_Common_Label_Label___string_name_]
 ==== Label
 
-[source,csharp]
+[source,cs]
 ----
 Label(string name)
 ----
@@ -131,10 +145,17 @@ a| `name` a| Label name a|
 .Returns
 `Label`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+new Label("entity");
+----
+
 [#_override_string_TypeDB_Driver_Common_Label_ToString___]
 ==== ToString
 
-[source,csharp]
+[source,cs]
 ----
 override string ToString()
 ----
@@ -147,6 +168,13 @@ Returns the string representation of the scoped name.
 [caption=""]
 .Returns
 `override string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+label.ToString();
+----
 
 // end::methods[]
 

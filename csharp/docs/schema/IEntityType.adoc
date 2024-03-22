@@ -17,7 +17,7 @@ Entity types represent the classification of independent objects in the data mod
 [#_IEntityType_IConcept__TypeDB_Driver_Api_IEntityType_AsEntityType___]
 ==== AsEntityType
 
-[source,csharp]
+[source,cs]
 ----
 IEntityType IConcept. AsEntityType()
 ----
@@ -35,10 +35,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IEntityType IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntityType();
+----
+
 [#_Promise__IEntity___TypeDB_Driver_Api_IEntityType_Create___ITypeDBTransaction_transaction_]
 ==== Create
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IEntity > Create(ITypeDBTransaction transaction)
 ----
@@ -61,10 +68,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< IEntity >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+entityType.Create(transaction).Resolve();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IEntityType_IsEntityType___]
 ==== IsEntityType
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsEntityType()
 ----
@@ -82,10 +96,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntityType();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IEntityType_SetSupertype___ITypeDBTransaction_transaction__IEntityType_superEntityType_]
 ==== SetSupertype
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType superEntityType)
 ----
@@ -108,6 +129,13 @@ a| `superEntityType` a| The ``IEntityType`` to set as the supertype of this ``IE
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+entityType.SetSupertype(transaction, entityType).Resolve();
+----
 
 // end::methods[]
 

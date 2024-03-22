@@ -11,7 +11,7 @@ Provides access to all database management methods.
 [#_bool_TypeDB_Driver_Api_IDatabaseManager_Contains___string_name_]
 ==== Contains
 
-[source,csharp]
+[source,cs]
 ----
 bool Contains(string name)
 ----
@@ -34,10 +34,17 @@ a| `name` a| The database name to be checked a|
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases.Contains(name);
+----
+
 [#_void_TypeDB_Driver_Api_IDatabaseManager_Create___string_name_]
 ==== Create
 
-[source,csharp]
+[source,cs]
 ----
 void Create(string name)
 ----
@@ -60,10 +67,17 @@ a| `name` a| The name of the database to be created a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases.Create(name);
+----
+
 [#_IDatabase_TypeDB_Driver_Api_IDatabaseManager_Get___string_name_]
 ==== Get
 
-[source,csharp]
+[source,cs]
 ----
 IDatabase Get(string name)
 ----
@@ -86,10 +100,17 @@ a| `name` a| The name of the database to retrieve a|
 .Returns
 `IDatabase`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases.Get(name);
+----
+
 [#_IList__IDatabase___TypeDB_Driver_Api_IDatabaseManager_GetAll___]
 ==== GetAll
 
-[source,csharp]
+[source,cs]
 ----
 IList< IDatabase > GetAll()
 ----
@@ -102,6 +123,13 @@ Retrieves all databases present on the TypeDB server.
 [caption=""]
 .Returns
 `IList< IDatabase >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases.GetAll();
+----
 
 // end::methods[]
 

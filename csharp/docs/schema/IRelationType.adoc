@@ -17,7 +17,7 @@ Relation types (or subtypes of the relation root type) represent relationships b
 [#_IRelationType_IConcept__TypeDB_Driver_Api_IRelationType_AsRelationType___]
 ==== AsRelationType
 
-[source,csharp]
+[source,cs]
 ----
 IRelationType IConcept. AsRelationType()
 ----
@@ -35,10 +35,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IRelationType IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelationType();
+----
+
 [#_Promise__IRelation___TypeDB_Driver_Api_IRelationType_Create___ITypeDBTransaction_transaction_]
 ==== Create
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRelation > Create(ITypeDBTransaction transaction)
 ----
@@ -61,10 +68,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< IRelation >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.Create(transaction).Resolve();
+----
+
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction_]
 ==== GetRelates
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetRelates(ITypeDBTransaction transaction)
 ----
@@ -88,7 +102,7 @@ Retrieves roles that this ``IRelationType`` relates to directly or via inheritan
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
 ==== GetRelates
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
 ----
@@ -112,10 +126,17 @@ a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit
 .Returns
 `IEnumerable< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.GetRelates(transaction, transitivity);
+----
+
 [#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
 ==== GetRelates
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRoleType > GetRelates(ITypeDBTransaction transaction, string roleLabel)
 ----
@@ -139,10 +160,17 @@ a| `roleLabel` a| Label of the role we wish to retrieve a|
 .Returns
 `Promise< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.GetRelates(transaction, roleLabel).Resolve();
+----
+
 [#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelatesOverridden___ITypeDBTransaction_transaction__IRoleType_roleType_]
 ==== GetRelatesOverridden
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRoleType > GetRelatesOverridden(ITypeDBTransaction transaction, IRoleType roleType)
 ----
@@ -166,7 +194,7 @@ Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``
 [#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelatesOverridden___ITypeDBTransaction_transaction__string_roleLabel_]
 ==== GetRelatesOverridden
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRoleType > GetRelatesOverridden(ITypeDBTransaction transaction, string roleLabel)
 ----
@@ -190,10 +218,17 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a|
 .Returns
 `Promise< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.GetRelatesOverridden(transaction, roleLabel).Resolve();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IRelationType_IsRelationType___]
 ==== IsRelationType
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsRelationType()
 ----
@@ -211,10 +246,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelationType();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
 ==== SetRelates
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel)
 ----
@@ -238,7 +280,7 @@ Sets the new role that this ``IRelationType`` relates to.
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel__IRoleType_overriddenType_]
 ==== SetRelates
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, IRoleType overriddenType)
 ----
@@ -262,7 +304,7 @@ Sets the new role that this ``IRelationType`` relates to.
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel__string_overriddenLabel_]
 ==== SetRelates
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, string? overriddenLabel)
 ----
@@ -287,10 +329,18 @@ a| `overriddenLabel` a| The label being overridden, if applicable a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.SetRelates(transaction, roleLabel).Resolve();
+relationType.SetRelates(transaction, roleLabel, overriddenLabel).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetSupertype___ITypeDBTransaction_transaction__IRelationType_superRelationType_]
 ==== SetSupertype
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetSupertype(ITypeDBTransaction transaction, IRelationType superRelationType)
 ----
@@ -314,10 +364,17 @@ a| `superRelationType` a| The ``IRelationType`` to set as the supertype of this 
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.SetSupertype(transaction, superRelationType).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates___ITypeDBTransaction_transaction__IRoleType_roleType_]
 ==== UnsetRelates
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetRelates(ITypeDBTransaction transaction, IRoleType roleType)
 ----
@@ -341,7 +398,7 @@ Disallows this ``IRelationType`` from relating to the given role.
 [#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
 ==== UnsetRelates
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetRelates(ITypeDBTransaction transaction, string roleLabel)
 ----
@@ -364,6 +421,13 @@ a| `roleLabel` a| The role to not relate to the relation type. a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+relationType.UnsetRelates(transaction, roleLabel).Resolve();
+----
 
 // end::methods[]
 

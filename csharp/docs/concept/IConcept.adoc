@@ -7,7 +7,7 @@
 [#_IAttribute_TypeDB_Driver_Api_IConcept_AsAttribute___]
 ==== AsAttribute
 
-[source,csharp]
+[source,cs]
 ----
 IAttribute AsAttribute()
 ----
@@ -23,10 +23,17 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 .Returns
 `IAttribute`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttribute();
+----
+
 [#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType___]
 ==== AsAttributeType
 
-[source,csharp]
+[source,cs]
 ----
 IAttributeType AsAttributeType()
 ----
@@ -42,10 +49,17 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 .Returns
 `IAttributeType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttributeType();
+----
+
 [#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity___]
 ==== AsEntity
 
-[source,csharp]
+[source,cs]
 ----
 IEntity AsEntity()
 ----
@@ -61,10 +75,17 @@ Implemented in TypeDB.Driver.Api.IEntity.
 .Returns
 `IEntity`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntity();
+----
+
 [#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType___]
 ==== AsEntityType
 
-[source,csharp]
+[source,cs]
 ----
 IEntityType AsEntityType()
 ----
@@ -80,10 +101,17 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 .Returns
 `IEntityType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntityType();
+----
+
 [#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation___]
 ==== AsRelation
 
-[source,csharp]
+[source,cs]
 ----
 IRelation AsRelation()
 ----
@@ -99,10 +127,17 @@ Implemented in TypeDB.Driver.Api.IRelation.
 .Returns
 `IRelation`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelation();
+----
+
 [#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType___]
 ==== AsRelationType
 
-[source,csharp]
+[source,cs]
 ----
 IRelationType AsRelationType()
 ----
@@ -118,10 +153,17 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 .Returns
 `IRelationType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelationType();
+----
+
 [#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType___]
 ==== AsRoleType
 
-[source,csharp]
+[source,cs]
 ----
 IRoleType AsRoleType()
 ----
@@ -137,10 +179,17 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 .Returns
 `IRoleType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRoleType();
+----
+
 [#_IThing_TypeDB_Driver_Api_IConcept_AsThing___]
 ==== AsThing
 
-[source,csharp]
+[source,cs]
 ----
 IThing AsThing()
 ----
@@ -156,10 +205,17 @@ Implemented in TypeDB.Driver.Api.IThing.
 .Returns
 `IThing`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsThing();
+----
+
 [#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType___]
 ==== AsThingType
 
-[source,csharp]
+[source,cs]
 ----
 IThingType AsThingType()
 ----
@@ -175,10 +231,17 @@ Implemented in TypeDB.Driver.Api.IThingType.
 .Returns
 `IThingType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsThingType();
+----
+
 [#_IType_TypeDB_Driver_Api_IConcept_AsType___]
 ==== AsType
 
-[source,csharp]
+[source,cs]
 ----
 IType AsType()
 ----
@@ -194,10 +257,17 @@ Implemented in TypeDB.Driver.Api.IType.
 .Returns
 `IType`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType();
+----
+
 [#_IValue_TypeDB_Driver_Api_IConcept_AsValue___]
 ==== AsValue
 
-[source,csharp]
+[source,cs]
 ----
 IValue AsValue()
 ----
@@ -213,10 +283,17 @@ Implemented in TypeDB.Driver.Api.IValue.
 .Returns
 `IValue`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttribute___]
 ==== IsAttribute
 
-[source,csharp]
+[source,cs]
 ----
 bool IsAttribute()
 ----
@@ -232,10 +309,17 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttribute();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType___]
 ==== IsAttributeType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsAttributeType()
 ----
@@ -251,10 +335,17 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttributeType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntity___]
 ==== IsEntity
 
-[source,csharp]
+[source,cs]
 ----
 bool IsEntity()
 ----
@@ -270,10 +361,17 @@ Implemented in TypeDB.Driver.Api.IEntity.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntity();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntityType___]
 ==== IsEntityType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsEntityType()
 ----
@@ -289,10 +387,17 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntityType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelation___]
 ==== IsRelation
 
-[source,csharp]
+[source,cs]
 ----
 bool IsRelation()
 ----
@@ -308,10 +413,17 @@ Implemented in TypeDB.Driver.Api.IRelation.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelation();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelationType___]
 ==== IsRelationType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsRelationType()
 ----
@@ -327,10 +439,17 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelationType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsRoleType___]
 ==== IsRoleType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsRoleType()
 ----
@@ -346,10 +465,17 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRoleType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsThing___]
 ==== IsThing
 
-[source,csharp]
+[source,cs]
 ----
 bool IsThing()
 ----
@@ -365,10 +491,17 @@ Implemented in TypeDB.Driver.Api.IThing.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsThing();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsThingType___]
 ==== IsThingType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsThingType()
 ----
@@ -384,10 +517,17 @@ Implemented in TypeDB.Driver.Api.IThingType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsThingType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsType___]
 ==== IsType
 
-[source,csharp]
+[source,cs]
 ----
 bool IsType()
 ----
@@ -403,10 +543,17 @@ Implemented in TypeDB.Driver.Api.IType.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType();
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_IsValue___]
 ==== IsValue
 
-[source,csharp]
+[source,cs]
 ----
 bool IsValue()
 ----
@@ -421,6 +568,13 @@ Implemented in TypeDB.Driver.Api.IValue.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue();
+----
 
 // end::methods[]
 

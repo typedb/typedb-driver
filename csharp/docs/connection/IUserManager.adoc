@@ -11,7 +11,7 @@ Provides access to all user management methods.
 [#_bool_TypeDB_Driver_Api_IUserManager_Contains___string_username_]
 ==== Contains
 
-[source,csharp]
+[source,cs]
 ----
 bool Contains(string username)
 ----
@@ -34,10 +34,17 @@ a| `username` a| The user name to be checked a|
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Contains(username);
+----
+
 [#_void_TypeDB_Driver_Api_IUserManager_Create___string_username__string_password_]
 ==== Create
 
-[source,csharp]
+[source,cs]
 ----
 void Create(string username, string password)
 ----
@@ -61,10 +68,17 @@ a| `password` a| The password of the user to be created a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Create(username, password);
+----
+
 [#_void_TypeDB_Driver_Api_IUserManager_Delete___string_username_]
 ==== Delete
 
-[source,csharp]
+[source,cs]
 ----
 void Delete(string username)
 ----
@@ -87,10 +101,17 @@ a| `username` a| The name of the user to be deleted a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Delete(username);
+----
+
 [#_IUser_TypeDB_Driver_Api_IUserManager_Get___string_username_]
 ==== Get
 
-[source,csharp]
+[source,cs]
 ----
 IUser? Get(string username)
 ----
@@ -113,10 +134,17 @@ a| `username` a| The name of the user to retrieve a|
 .Returns
 `IUser?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Get(username);
+----
+
 [#_ISet__IUser___TypeDB_Driver_Api_IUserManager_GetAll___]
 ==== GetAll
 
-[source,csharp]
+[source,cs]
 ----
 ISet< IUser > GetAll()
 ----
@@ -130,10 +158,17 @@ Retrieves all users which exist on the TypeDB server.
 .Returns
 `ISet< IUser >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.GetAll();
+----
+
 [#_void_TypeDB_Driver_Api_IUserManager_SetPassword___string_username__string_password_]
 ==== SetPassword
 
-[source,csharp]
+[source,cs]
 ----
 void SetPassword(string username, string password)
 ----
@@ -156,6 +191,13 @@ a| `password` a| The new password a|
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.SetPassword(username, password);
+----
 
 // end::methods[]
 

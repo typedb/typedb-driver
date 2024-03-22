@@ -11,7 +11,7 @@
 [#_bool_TypeDB_Driver_Api_IValue_AsBool___]
 ==== AsBool
 
-[source,csharp]
+[source,cs]
 ----
 bool AsBool()
 ----
@@ -25,10 +25,17 @@ Returns a ``bool`` value of this value concept. If the value has another type, r
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsBool();
+----
+
 [#_System_DateTime_TypeDB_Driver_Api_IValue_AsDateTime___]
 ==== AsDateTime
 
-[source,csharp]
+[source,cs]
 ----
 System.DateTime AsDateTime()
 ----
@@ -42,10 +49,17 @@ Returns a ``datetime`` value of this value concept. This value contains raw date
 .Returns
 `System.DateTime`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsDateTime();
+----
+
 [#_double_TypeDB_Driver_Api_IValue_AsDouble___]
 ==== AsDouble
 
-[source,csharp]
+[source,cs]
 ----
 double AsDouble()
 ----
@@ -59,10 +73,17 @@ Returns a ``double`` value of this value concept. If the value has another type,
 .Returns
 `double`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsDouble();
+----
+
 [#_long_TypeDB_Driver_Api_IValue_AsLong___]
 ==== AsLong
 
-[source,csharp]
+[source,cs]
 ----
 long AsLong()
 ----
@@ -76,10 +97,17 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 .Returns
 `long`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsLong();
+----
+
 [#_string_TypeDB_Driver_Api_IValue_AsString___]
 ==== AsString
 
-[source,csharp]
+[source,cs]
 ----
 string AsString()
 ----
@@ -93,10 +121,17 @@ Returns a ``string`` value of this value concept. If the value has another type,
 .Returns
 `string`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsString();
+----
+
 [#_object_TypeDB_Driver_Api_IValue_AsUntyped___]
 ==== AsUntyped
 
-[source,csharp]
+[source,cs]
 ----
 object AsUntyped()
 ----
@@ -110,10 +145,17 @@ Returns an untyped ``object`` value of this value concept. This is useful for va
 .Returns
 `object`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsUntyped();
+----
+
 [#_IValue_IConcept__TypeDB_Driver_Api_IValue_AsValue___]
 ==== AsValue
 
-[source,csharp]
+[source,cs]
 ----
 IValue IConcept. AsValue()
 ----
@@ -131,10 +173,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IValue IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue();
+----
+
 [#_bool_TypeDB_Driver_Api_IValue_IsBool___]
 ==== IsBool
 
-[source,csharp]
+[source,cs]
 ----
 bool IsBool()
 ----
@@ -148,10 +197,17 @@ Returns ``True`` if the value which this value concept holds is of type ``bool``
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsBool();
+----
+
 [#_bool_TypeDB_Driver_Api_IValue_IsDateTime___]
 ==== IsDateTime
 
-[source,csharp]
+[source,cs]
 ----
 bool IsDateTime()
 ----
@@ -165,10 +221,17 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsDateTime();
+----
+
 [#_bool_TypeDB_Driver_Api_IValue_IsDouble___]
 ==== IsDouble
 
-[source,csharp]
+[source,cs]
 ----
 bool IsDouble()
 ----
@@ -182,10 +245,17 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsDouble();
+----
+
 [#_bool_TypeDB_Driver_Api_IValue_IsLong___]
 ==== IsLong
 
-[source,csharp]
+[source,cs]
 ----
 bool IsLong()
 ----
@@ -199,10 +269,17 @@ Returns ``True`` if the value which this value concept holds is of type ``long``
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsLong();
+----
+
 [#_bool_TypeDB_Driver_Api_IValue_IsString___]
 ==== IsString
 
-[source,csharp]
+[source,cs]
 ----
 bool IsString()
 ----
@@ -216,10 +293,17 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsString();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IValue_IsValue___]
 ==== IsValue
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsValue()
 ----
@@ -236,6 +320,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue();
+----
 
 // end::methods[]
 

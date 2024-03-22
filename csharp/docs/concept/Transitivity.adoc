@@ -10,7 +10,7 @@ This class is used for specifying whether we need explicit or transitive subtypi
 
 [caption=""]
 .Examples
-[source,csharp]
+[source,cs]
 ----
 attributeType.GetOwners(transaction, annotation, Explicit);
 ----

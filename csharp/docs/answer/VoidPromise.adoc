@@ -19,7 +19,7 @@ A ``VoidPromise`` represents a ``Promise`` without an operation's result.
 [#_void_TypeDB_Driver_Common_VoidPromise_Resolve___]
 ==== Resolve
 
-[source,csharp]
+[source,cs]
 ----
 void Resolve()
 ----
@@ -33,10 +33,17 @@ Retrieves the result of the Promise.
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+promise.Resolve();
+----
+
 [#_TypeDB_Driver_Common_VoidPromise_VoidPromise___Action_resolver_]
 ==== VoidPromise
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise(Action resolver)
 ----
@@ -58,6 +65,13 @@ a| `promise` a| The function to wrap into the promise a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+new Promise(action);
+----
 
 // end::methods[]
 

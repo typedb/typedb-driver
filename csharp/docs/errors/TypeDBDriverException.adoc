@@ -11,7 +11,7 @@ Exceptions raised by the driver.
 [#_bool_TypeDB_Driver_Common_TypeDBDriverException_Contains___string_subString_]
 ==== Contains
 
-[source,csharp]
+[source,cs]
 ----
 bool Contains(string subString)
 ----
@@ -25,10 +25,31 @@ Checks whether a substring is a part of this exception's message.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+try
+{
+    ...
+}
+catch (TypeDBDriverException e)
+{
+    if (e.Contains("CSCO01"))
+    {
+        ...
+    }
+    else
+    {
+        ...
+    }
+}
+----
+
 [#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___ErrorMessage_error__params_object___errorParams_]
 ==== TypeDBDriverException
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
 ----
@@ -44,7 +65,7 @@ TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
 [#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___string_message_]
 ==== TypeDBDriverException
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBDriverException(string message)
 ----
@@ -60,7 +81,7 @@ TypeDBDriverException(string message)
 [#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___SystemException_error_]
 ==== TypeDBDriverException
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBDriverException(System::Exception error)
 ----
@@ -76,7 +97,7 @@ TypeDBDriverException(System::Exception error)
 [#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException___PinvokeError_nativeError_]
 ==== TypeDBDriverException
 
-[source,csharp]
+[source,cs]
 ----
 TypeDBDriverException(Pinvoke::Error nativeError)
 ----

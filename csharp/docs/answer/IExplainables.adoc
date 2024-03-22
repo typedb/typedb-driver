@@ -11,7 +11,7 @@ Contains explainable objects.
 [#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Attribute___string_variable_]
 ==== Attribute
 
-[source,csharp]
+[source,cs]
 ----
 IExplainable Attribute(string variable)
 ----
@@ -34,10 +34,17 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `IExplainable`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.Attribute(variable);
+----
+
 [#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetAttributes___]
 ==== GetAttributes
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< KeyValuePair< string, IExplainable > > GetAttributes()
 ----
@@ -51,10 +58,17 @@ Retrieves all of this ``IConceptMap``’s explainable attributes.
 .Returns
 `IEnumerable< KeyValuePair< string, IExplainable > >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.GetAttributes();
+----
+
 [#_IEnumerable__KeyValuePair__KeyValuePair__string__string____IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetOwnerships___]
 ==== GetOwnerships
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< KeyValuePair< KeyValuePair< string, string >, IExplainable > > GetOwnerships()
 ----
@@ -68,10 +82,17 @@ Retrieves all of this ``IConceptMap``’s explainable ownerships.
 .Returns
 `IEnumerable< KeyValuePair< KeyValuePair< string, string >, IExplainable > >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.GetOwnerships();
+----
+
 [#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetRelations___]
 ==== GetRelations
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< KeyValuePair< string, IExplainable > > GetRelations()
 ----
@@ -85,10 +106,17 @@ Retrieves all of this ``IConceptMap``’s explainable relations.
 .Returns
 `IEnumerable< KeyValuePair< string, IExplainable > >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.GetRelations();
+----
+
 [#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Ownership___string_owner__string_attribute_]
 ==== Ownership
 
-[source,csharp]
+[source,cs]
 ----
 IExplainable Ownership(string owner, string attribute)
 ----
@@ -112,10 +140,17 @@ a| `attribute` a| The string representation of the attribute variable a|
 .Returns
 `IExplainable`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.Ownership(owner, attribute);
+----
+
 [#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Relation___string_variable_]
 ==== Relation
 
-[source,csharp]
+[source,cs]
 ----
 IExplainable Relation(string variable)
 ----
@@ -137,6 +172,13 @@ a| `variable` a| The string representation of a variable a|
 [caption=""]
 .Returns
 `IExplainable`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables.Relation(variable);
+----
 
 // end::methods[]
 

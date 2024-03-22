@@ -7,7 +7,7 @@
 [#_void_TypeDB_Driver_Api_ITypeDBSession_Close___]
 ==== Close
 
-[source,csharp]
+[source,cs]
 ----
 void Close()
 ----
@@ -21,10 +21,17 @@ Closes the session. Before opening a new session, the session currently open sho
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Close();
+----
+
 [#_bool_TypeDB_Driver_Api_ITypeDBSession_IsOpen___]
 ==== IsOpen
 
-[source,csharp]
+[source,cs]
 ----
 bool IsOpen()
 ----
@@ -38,10 +45,17 @@ Checks whether this session is open.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.IsOpen();
+----
+
 [#_void_TypeDB_Driver_Api_ITypeDBSession_OnClose___Action_function_]
 ==== OnClose
 
-[source,csharp]
+[source,cs]
 ----
 void OnClose(Action function)
 ----
@@ -64,10 +78,17 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.OnClose(function);
+----
+
 [#_void_TypeDB_Driver_Api_ITypeDBSession_OnReopen___Action_function_]
 ==== OnReopen
 
-[source,csharp]
+[source,cs]
 ----
 void OnReopen(Action function)
 ----
@@ -90,10 +111,17 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.OnReopen(function);
+----
+
 [#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type_]
 ==== Transaction
 
-[source,csharp]
+[source,cs]
 ----
 ITypeDBTransaction Transaction(TransactionType type)
 ----
@@ -117,7 +145,7 @@ Opens a transaction on the database connected to the session with default option
 [#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type__TypeDBOptions_options_]
 ==== Transaction
 
-[source,csharp]
+[source,cs]
 ----
 ITypeDBTransaction Transaction(TransactionType type, TypeDBOptions options)
 ----
@@ -140,6 +168,13 @@ a| `options` a| Options for the session a|
 [caption=""]
 .Returns
 `ITypeDBTransaction`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Transaction(transactionType, options);
+----
 
 // end::methods[]
 

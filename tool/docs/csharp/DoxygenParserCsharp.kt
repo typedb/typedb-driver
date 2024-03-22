@@ -78,7 +78,7 @@ class DoxygenParserCsharp : Callable<Unit> {
                 classes += parsedEnums
             }
 
-        // class files
+        // Class (Interface, Struct) files
         File(inputDirectoryName).walkTopDown().filter {
             (it.toString().startsWith(htmlDocsDirectoryName + "class_type_")
                     || it.toString().startsWith(htmlDocsDirectoryName + "interface_type_")
@@ -90,13 +90,14 @@ class DoxygenParserCsharp : Callable<Unit> {
             val parsed = Jsoup.parse(html)
 
             val (parsedClass, nestedParsedClasses) = parseClass(parsed)
-
-            if (parsedClass.isNotEmpty()) classes.add(parsedClass)
+            if (parsedClass.isNotEmpty()) {
+                classes.add(parsedClass)
+            }
             nestedParsedClasses.forEach{ element -> classes.add(element) }
         }
 
         classes.forEach { parsedClass ->
-            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("csharp")
+            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cs")
             val outputFile = getFile(docsDir, "${generateFilename(parsedClass.name)}.adoc")
             outputFile.writeText(parsedClassAsciiDoc)
         }
@@ -141,8 +142,11 @@ class DoxygenParserCsharp : Callable<Unit> {
                         missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
                     }
                     else {
-                        if (type == "enum") {
-                            nestedClasses.add(parseEnum(element, memberDetails))
+                        if (type == "enum") { // Enums that are members of a class
+                            val parsedEnum = parseEnum(element, memberDetails)
+                            if (parsedEnum.isNotEmpty()) {
+                                nestedClasses.add(parsedEnum)
+                            }
                         }
                         else {
                             members.add(memberDetails)
@@ -241,7 +245,7 @@ class DoxygenParserCsharp : Callable<Unit> {
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"), idToAnchor)) } ?: listOf()
-        val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
+        val methodExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {

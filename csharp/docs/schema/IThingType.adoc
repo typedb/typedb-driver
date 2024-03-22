@@ -12,7 +12,7 @@
 [#_IThingType_IConcept__TypeDB_Driver_Api_IThingType_AsThingType___]
 ==== AsThingType
 
-[source,csharp]
+[source,cs]
 ----
 IThingType IConcept. AsThingType()
 ----
@@ -30,10 +30,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IThingType IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsThingType();
+----
+
 [#_IEnumerable__IThing___TypeDB_Driver_Api_IThingType_GetInstances___ITypeDBTransaction_transaction_]
 ==== GetInstances
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IThing > GetInstances(ITypeDBTransaction transaction)
 ----
@@ -57,7 +64,7 @@ Retrieves all ``IThing`` objects that are instances of this ``IThingType`` or it
 [#_IEnumerable__IThing___TypeDB_Driver_Api_IThingType_GetInstances___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
 ==== GetInstances
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IThing > GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
 ----
@@ -81,10 +88,18 @@ a| `transitivity` a| ``Explicit`` for direct instances only, ``Transitive`` to i
 .Returns
 `IEnumerable< IThing >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetInstances(transaction);
+thingType.GetInstances(transaction, Explicit);
+----
+
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction)
 ----
@@ -108,7 +123,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__IValue_ValueType_valueType_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
 ----
@@ -132,7 +147,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__ICollection__Annotation___annotations_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, ICollection< Annotation > annotations)
 ----
@@ -156,7 +171,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__IValue_ValueType_valueType__ICollection__Annotation___annotations_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection< Annotation > annotations)
 ----
@@ -180,7 +195,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
 ----
@@ -204,7 +219,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__IValue_ValueType_valueType__IConcept_Transitivity_transitivity_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, IValue.ValueType? valueType, IConcept.Transitivity transitivity)
 ----
@@ -228,7 +243,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__ICollection__Annotation___annotations__IConcept_Transitivity_transitivity_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, ICollection< Annotation > annotations, IConcept.Transitivity transitivity)
 ----
@@ -252,7 +267,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
 [#_IEnumerable__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwns___ITypeDBTransaction_transaction__IValue_ValueType_valueType__ICollection__Annotation___annotations__IConcept_Transitivity_transitivity_]
 ==== GetOwns
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IAttributeType > GetOwns(ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection< Annotation > annotations, IConcept.Transitivity transitivity)
 ----
@@ -278,10 +293,18 @@ a| `annotations` a| Only retrieve attribute types owned with annotations. a|
 .Returns
 `IEnumerable< IAttributeType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetOwns(transaction);
+thingType.GetOwns(transaction, valueType, Explicit, new []{NewKey()}));
+----
+
 [#_Promise__IAttributeType___TypeDB_Driver_Api_IThingType_GetOwnsOverridden___ITypeDBTransaction_transaction__IAttributeType_attributeType_]
 ==== GetOwnsOverridden
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IAttributeType > GetOwnsOverridden(ITypeDBTransaction transaction, IAttributeType attributeType)
 ----
@@ -305,10 +328,17 @@ a| `attributeType` a| The ``IAttributeType`` that overrides requested ``IAttribu
 .Returns
 `Promise< IAttributeType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetOwnsOverridden(transaction, attributeType).Resolve();
+----
+
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IThingType_GetPlays___ITypeDBTransaction_transaction_]
 ==== GetPlays
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetPlays(ITypeDBTransaction transaction)
 ----
@@ -332,7 +362,7 @@ Retrieves all direct and inherited roles that are allowed to be played by the in
 [#_IEnumerable__IRoleType___TypeDB_Driver_Api_IThingType_GetPlays___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
 ==== GetPlays
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IRoleType > GetPlays(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
 ----
@@ -356,10 +386,18 @@ a| `transitivity` a| transitivity: ``Transitive`` for direct and indirect playin
 .Returns
 `IEnumerable< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetPlays(transaction).Resolve();
+thingType.GetPlays(transaction, Explicit).Resolve();
+----
+
 [#_Promise__IRoleType___TypeDB_Driver_Api_IThingType_GetPlaysOverridden___ITypeDBTransaction_transaction__IRoleType_roleType_]
 ==== GetPlaysOverridden
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRoleType > GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType)
 ----
@@ -383,10 +421,17 @@ a| `roleType` a| The ``IRoleType`` that overrides an inherited role a|
 .Returns
 `Promise< IRoleType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetPlaysOverridden(transaction, roleType).Resolve();
+----
+
 [#_Promise__string___TypeDB_Driver_Api_IThingType_GetSyntax___ITypeDBTransaction_transaction_]
 ==== GetSyntax
 
-[source,csharp]
+[source,cs]
 ----
 Promise< string > GetSyntax(ITypeDBTransaction transaction)
 ----
@@ -409,10 +454,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< string >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.GetSyntax(transaction).Resolve();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IThingType_IsThingType___]
 ==== IsThingType
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsThingType()
 ----
@@ -430,10 +482,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsThingType();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetAbstract___ITypeDBTransaction_transaction_]
 ==== SetAbstract
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetAbstract(ITypeDBTransaction transaction)
 ----
@@ -456,10 +515,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.SetAbstract(transaction).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetOwns___ITypeDBTransaction_transaction__IAttributeType_attributeType__IAttributeType_overriddenType__ICollection__Annotation___annotations_]
 ==== SetOwns
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType? overriddenType, ICollection< Annotation > annotations)
 ----
@@ -485,10 +551,18 @@ a| `annotations` a| Adds annotations to the ownership. a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.SetOwns(transaction, attributeType).Resolve();
+thingType.SetOwns(transaction, attributeType, overriddenType, new []{NewKey()}).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetOwns___ITypeDBTransaction_transaction__IAttributeType_attributeType__IAttributeType_overriddenType_]
 ==== SetOwns
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType)
 ----
@@ -512,7 +586,7 @@ Allows the instances of this ``IThingType`` to own the given ``IAttributeType``,
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetOwns___ITypeDBTransaction_transaction__IAttributeType_attributeType__ICollection__Annotation___annotations_]
 ==== SetOwns
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, ICollection< Annotation > annotations)
 ----
@@ -536,7 +610,7 @@ Allows the instances of this ``IThingType`` to own the given ``IAttributeType``.
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetOwns___ITypeDBTransaction_transaction__IAttributeType_attributeType_]
 ==== SetOwns
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
 ----
@@ -560,7 +634,7 @@ Allows the instances of this ``IThingType`` to own the given ``IAttributeType``.
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetPlays___ITypeDBTransaction_transaction__IRoleType_roleType_]
 ==== SetPlays
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType)
 ----
@@ -584,7 +658,7 @@ Allows the instances of this ``IThingType`` to play the given role.
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_SetPlays___ITypeDBTransaction_transaction__IRoleType_roleType__IRoleType_overriddenType_]
 ==== SetPlays
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType, IRoleType overriddenType)
 ----
@@ -609,10 +683,18 @@ a| `overriddenType` a| The role type that this role overrides, if applicable a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.SetPlays(transaction, roleType).Resolve();
+thingType.SetPlays(transaction, roleType, overriddenType).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_UnsetAbstract___ITypeDBTransaction_transaction_]
 ==== UnsetAbstract
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetAbstract(ITypeDBTransaction transaction)
 ----
@@ -635,10 +717,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.UnsetAbstract(transaction).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_UnsetOwns___ITypeDBTransaction_transaction__IAttributeType_attributeType_]
 ==== UnsetOwns
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
 ----
@@ -662,10 +751,17 @@ a| `attributeType` a| The ``IAttributeType`` to not be owned by the type. a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.UnsetOwns(transaction, attributeType).Resolve();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IThingType_UnsetPlays___ITypeDBTransaction_transaction__IRoleType_roleType_]
 ==== UnsetPlays
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType)
 ----
@@ -688,6 +784,13 @@ a| `roleType` a| The role to not be played by the instances of this type. a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+thingType.UnsetPlays(transaction, roleType).Resolve();
+----
 
 // end::methods[]
 

@@ -11,7 +11,7 @@ Provides access for all Concept API methods.
 [#_Promise__IAttribute___TypeDB_Driver_Api_IConceptManager_GetAttribute___string_iid_]
 ==== GetAttribute
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IAttribute > GetAttribute(string iid)
 ----
@@ -34,10 +34,17 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve. a|
 .Returns
 `Promise< IAttribute >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetAttribute(iid).Resolve();
+----
+
 [#_Promise__IAttributeType___TypeDB_Driver_Api_IConceptManager_GetAttributeType___string_label_]
 ==== GetAttributeType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IAttributeType > GetAttributeType(string label)
 ----
@@ -60,10 +67,17 @@ a| `label` a| The label of the ``AttributeType`` to retrieve. a|
 .Returns
 `Promise< IAttributeType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetAttributeType(label).Resolve();
+----
+
 [#_Promise__IEntity___TypeDB_Driver_Api_IConceptManager_GetEntity___string_iid_]
 ==== GetEntity
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IEntity > GetEntity(string iid)
 ----
@@ -86,10 +100,17 @@ a| `iid` a| The iid of the ``Entity`` to retrieve. a|
 .Returns
 `Promise< IEntity >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetEntity(iid).Resolve();
+----
+
 [#_Promise__IEntityType___TypeDB_Driver_Api_IConceptManager_GetEntityType___string_label_]
 ==== GetEntityType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IEntityType > GetEntityType(string label)
 ----
@@ -112,10 +133,17 @@ a| `label` a| The label of the ``IEntityType`` to retrieve. a|
 .Returns
 `Promise< IEntityType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetEntityType(label).Resolve();
+----
+
 [#_Promise__IRelation___TypeDB_Driver_Api_IConceptManager_GetRelation___string_iid_]
 ==== GetRelation
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRelation > GetRelation(string iid)
 ----
@@ -138,10 +166,17 @@ a| `iid` a| The iid of the ``Relation`` to retrieve. a|
 .Returns
 `Promise< IRelation >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetRelation(iid).Resolve();
+----
+
 [#_Promise__IRelationType___TypeDB_Driver_Api_IConceptManager_GetRelationType___string_label_]
 ==== GetRelationType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRelationType > GetRelationType(string label)
 ----
@@ -164,10 +199,17 @@ a| `label` a| The label of the ``IRelationType`` to retrieve. a|
 .Returns
 `Promise< IRelationType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetRelationType(label).Resolve();
+----
+
 [#_IList__TypeDBException___TypeDB_Driver_Api_IConceptManager_GetSchemaExceptions___]
 ==== GetSchemaExceptions
 
-[source,csharp]
+[source,cs]
 ----
 IList< TypeDBException > GetSchemaExceptions()
 ----
@@ -181,10 +223,17 @@ A list of all schema exceptions for the current transaction.
 .Returns
 `IList< TypeDBException >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.GetSchemaExceptions();
+----
+
 [#_Promise__IAttributeType___TypeDB_Driver_Api_IConceptManager_PutAttributeType___string_label__IValue_ValueType_valueType_]
 ==== PutAttributeType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IAttributeType > PutAttributeType(string label, IValue.ValueType valueType)
 ----
@@ -208,10 +257,17 @@ a| `valueType` a| The value type of the ``IAttributeType`` to create. a|
 .Returns
 `Promise< IAttributeType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+await transaction.Concepts.PutAttributeType(label, valueType).Resolve();
+----
+
 [#_Promise__IEntityType___TypeDB_Driver_Api_IConceptManager_PutEntityType___string_label_]
 ==== PutEntityType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IEntityType > PutEntityType(string label)
 ----
@@ -234,10 +290,17 @@ a| `label` a| The label of the ``IEntityType`` to create or retrieve. a|
 .Returns
 `Promise< IEntityType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.PutEntityType(label).Resolve();
+----
+
 [#_Promise__IRelationType___TypeDB_Driver_Api_IConceptManager_PutRelationType___string_label_]
 ==== PutRelationType
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IRelationType > PutRelationType(string label)
 ----
@@ -259,6 +322,13 @@ a| `label` a| The label of the ``IRelationType`` to create or retrieve. a|
 [caption=""]
 .Returns
 `Promise< IRelationType >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.PutRelationType(label).Resolve();
+----
 
 // end::methods[]
 

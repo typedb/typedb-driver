@@ -10,7 +10,7 @@ Used to specify the type of the value.
 
 [caption=""]
 .Examples
-[source,csharp]
+[source,cs]
 ----
 thingType.GetOwns(transaction, IValue.ValueType.String);
 ----

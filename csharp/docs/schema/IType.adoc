@@ -11,7 +11,7 @@
 [#_IType_IConcept__TypeDB_Driver_Api_IType_AsType___]
 ==== AsType
 
-[source,csharp]
+[source,cs]
 ----
 IType IConcept. AsType()
 ----
@@ -29,10 +29,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IType IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IType_Delete___ITypeDBTransaction_transaction_]
 ==== Delete
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise Delete(ITypeDBTransaction transaction)
 ----
@@ -55,10 +62,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `VoidPromise`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.Delete(transaction).Resolve();
+----
+
 [#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction_]
 ==== GetSubtypes
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IType > GetSubtypes(ITypeDBTransaction transaction)
 ----
@@ -82,7 +96,7 @@ Retrieves all direct and indirect subtypes of the type. Equivalent to ``GetSubty
 [#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
 ==== GetSubtypes
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IType > GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
 ----
@@ -106,10 +120,18 @@ a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit
 .Returns
 `IEnumerable< IType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSubtypes(transaction);
+type.GetSubtypes(transaction, Explicit);
+----
+
 [#_Promise__IType___TypeDB_Driver_Api_IType_GetSupertype___ITypeDBTransaction_transaction_]
 ==== GetSupertype
 
-[source,csharp]
+[source,cs]
 ----
 Promise< IType > GetSupertype(ITypeDBTransaction transaction)
 ----
@@ -132,10 +154,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< IType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSupertype(transaction).Resolve();
+----
+
 [#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSupertypes___ITypeDBTransaction_transaction_]
 ==== GetSupertypes
 
-[source,csharp]
+[source,cs]
 ----
 IEnumerable< IType > GetSupertypes(ITypeDBTransaction transaction)
 ----
@@ -158,10 +187,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `IEnumerable< IType >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSupertypes(transaction);
+----
+
 [#_bool_TypeDB_Driver_Api_IType_IsAbstract___]
 ==== IsAbstract
 
-[source,csharp]
+[source,cs]
 ----
 bool IsAbstract()
 ----
@@ -175,10 +211,17 @@ Checks if the type is prevented from having data instances (i.e., ``abstract``).
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsAbstract();
+----
+
 [#_Promise__bool___TypeDB_Driver_Api_IType_IsDeleted___ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
-[source,csharp]
+[source,cs]
 ----
 Promise< bool > IsDeleted(ITypeDBTransaction transaction)
 ----
@@ -201,10 +244,17 @@ a| `transaction` a| The current transaction a|
 .Returns
 `Promise< bool >`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsDeleted(transaction).Resolve();
+----
+
 [#_bool_TypeDB_Driver_Api_IType_IsRoot___]
 ==== IsRoot
 
-[source,csharp]
+[source,cs]
 ----
 bool IsRoot()
 ----
@@ -218,10 +268,17 @@ Checks if the type is a root type.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsRoot();
+----
+
 [#_bool_IConcept__TypeDB_Driver_Api_IType_IsType___]
 ==== IsType
 
-[source,csharp]
+[source,cs]
 ----
 bool IConcept. IsType()
 ----
@@ -239,10 +296,17 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType();
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IType_SetLabel___ITypeDBTransaction_transaction__string_label_]
 ==== SetLabel
 
-[source,csharp]
+[source,cs]
 ----
 VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
 ----
@@ -265,6 +329,13 @@ a| `label` a| The new ``Label`` to be given to the type. a|
 [caption=""]
 .Returns
 `VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.SetLabel(transaction, newLabel).Resolve();
+----
 
 // end::methods[]
 
