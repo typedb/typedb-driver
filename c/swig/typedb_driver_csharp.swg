@@ -598,13 +598,12 @@
         {
             global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanagedArray.ToPointer();
 
-            int i = 0;
-            for (; i < arraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 arrayPtr[i] = Type.getCPtr(input[i]).Handle;
             }
 
-            arrayPtr[i] = global::System.IntPtr.Zero;
+            arrayPtr[arraySize] = global::System.IntPtr.Zero;
         }
 
         return unmanagedArray;
@@ -631,13 +630,12 @@
         {
             global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanaged$csinput.ToPointer();
 
-            int i = 0;
-            for (; i < arraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 arrayPtr[i] = global::System.Runtime.InteropServices.Marshal.StringToCoTaskMemAnsi($csinput[i]);
             }
 
-            arrayPtr[i] = global::System.IntPtr.Zero;
+            arrayPtr[arraySize] = global::System.IntPtr.Zero;
         }",
     post="
         unsafe

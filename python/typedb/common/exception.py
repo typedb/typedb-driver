@@ -85,7 +85,7 @@ class DriverErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(DriverErrorMessage, self).__init__(code_prefix="DRI", code_number=code, message_prefix="Driver Error",
+        super(DriverErrorMessage, self).__init__(code_prefix="PDR", code_number=code, message_prefix="Driver Error",
                                                  message_body=message)
 
 
@@ -104,7 +104,7 @@ class ConceptErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(ConceptErrorMessage, self).__init__(code_prefix="CON", code_number=code,
+        super(ConceptErrorMessage, self).__init__(code_prefix="PCO", code_number=code,
                                                   message_prefix="Concept Error", message_body=message)
 
 
@@ -128,7 +128,7 @@ class QueryErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(QueryErrorMessage, self).__init__(code_prefix="QRY", code_number=code,
+        super(QueryErrorMessage, self).__init__(code_prefix="PQR", code_number=code,
                                                 message_prefix="Query Error", message_body=message)
 
 
@@ -142,7 +142,7 @@ class InternalErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(InternalErrorMessage, self).__init__(code_prefix="INT", code_number=code,
+        super(InternalErrorMessage, self).__init__(code_prefix="PIN", code_number=code,
                                                    message_prefix="Python Internal Error", message_body=message)
 
 
