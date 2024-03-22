@@ -27,7 +27,7 @@ Any error encountered will throw a `TypeDB::DriverException`. Note that methods 
 
 ## Build TypeDB Driver for C++ from Source
 
-1. Make sure you have [Bazel](https://docs.bazel.build/versions/master/install.html) installed on your machine:
+1. Make sure you have [Bazel](https://docs.bazel.build/versions/master/install.html) installed on your machine.
 2. Build the shared-library:
 
    a) Building just the shared library:

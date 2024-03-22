@@ -204,6 +204,30 @@ a| `roleTypes` a| The array of roles to filter the relations by. a|
 thing.GetRelations(transaction, roleTypes);
 ----
 
+[#_string_TypeDB_Driver_Api_IThing_IID]
+==== IID
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IThing.IID
+----
+
+
+
+The unique id of the ``IThing``.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.IID;
+----
+
 [#_Promise__bool___TypeDB_Driver_Api_IThing_IsDeleted___ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
@@ -319,6 +343,30 @@ a| `attribute` a| The ``IAttribute`` to be owned by this ``IThing``. a|
 [source,cs]
 ----
 thing.SetHas(transaction, attribute).Resolve();
+----
+
+[#_IThingType_TypeDB_Driver_Api_IThing_Type]
+==== Type
+
+[source,cs]
+----
+IThingType TypeDB.Driver.Api.IThing.Type
+----
+
+
+
+The type which this ``IThing`` belongs to.
+
+
+[caption=""]
+.Returns
+`IThingType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+thing.Type;
 ----
 
 [#_VoidPromise_TypeDB_Driver_Api_IThing_UnsetHas___ITypeDBTransaction_transaction__IAttribute_attribute_]

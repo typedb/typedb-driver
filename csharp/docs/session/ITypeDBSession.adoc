@@ -28,6 +28,30 @@ Closes the session. Before opening a new session, the session currently open sho
 session.Close();
 ----
 
+[#_string_TypeDB_Driver_Api_ITypeDBSession_DatabaseName]
+==== DatabaseName
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ITypeDBSession.DatabaseName
+----
+
+
+
+Returns the name of the database of the session.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.DatabaseName;
+----
+
 [#_bool_TypeDB_Driver_Api_ITypeDBSession_IsOpen___]
 ==== IsOpen
 
@@ -118,6 +142,30 @@ a| `function` a| The callback function. a|
 session.OnReopen(function);
 ----
 
+[#_TypeDBOptions_TypeDB_Driver_Api_ITypeDBSession_Options]
+==== Options
+
+[source,cs]
+----
+TypeDBOptions TypeDB.Driver.Api.ITypeDBSession.Options
+----
+
+
+
+Gets the options for the session.
+
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Options;
+----
+
 [#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type_]
 ==== Transaction
 
@@ -174,6 +222,30 @@ a| `options` a| Options for the session a|
 [source,cs]
 ----
 session.Transaction(transactionType, options);
+----
+
+[#_SessionType_TypeDB_Driver_Api_ITypeDBSession_Type]
+==== Type
+
+[source,cs]
+----
+SessionType TypeDB.Driver.Api.ITypeDBSession.Type
+----
+
+
+
+The current session’s type (Schema or Data).
+
+
+[caption=""]
+.Returns
+`SessionType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Type;
 ----
 
 // end::methods[]

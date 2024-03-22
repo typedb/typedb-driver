@@ -28,66 +28,10 @@ using TypeDB.Driver.Common;
 namespace TypeDB.Driver.Test.Integration
 {
     [TestFixture]
-    public class QuickstartTestFixture
+    public class CoreExamplesTestFixture
     {
-        private void ProcessPersonInsertResult(
-            IConceptMap[] results,
-            string variableName,
-            string expectedVariableTypeLabel,
-            string expectedAttributeValue)
-        {
-            Assert.AreEqual(1, results.Length);
-
-            var result = results[0];
-            Assert.AreEqual(2, result.GetVariables().Count());
-            Assert.AreEqual(2, result.GetConcepts().Count());
-
-            var entity = result.Get(variableName);
-            Assert.IsNotNull(entity);
-            Assert.IsTrue(entity.IsEntity());
-
-            var entityType = entity.AsEntity().Type;
-            Assert.IsNotNull(entityType);
-            Assert.IsTrue(entityType.IsType() && entityType.IsEntityType());
-            Assert.AreEqual(expectedVariableTypeLabel, entityType.Label.ToString());
-
-            var attribute = result.Get("_0");
-            Assert.IsNotNull(attribute);
-            Assert.IsTrue(attribute.IsAttribute());
-
-            var attributeValue = attribute.AsAttribute().Value;
-            Assert.IsNotNull(attributeValue);
-            Assert.IsTrue(attributeValue.IsString());
-            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
-        }
-
-        private void ProcessPersonMatchResult(
-            IConceptMap[] results,
-            string variableName,
-            string expectedVariableTypeLabel,
-            string expectedAttributeValue)
-        {
-            Assert.AreEqual(1, results.Length); // Only one insert has been committed
-
-            var result = results[0];
-
-            var attribute = result.Get(variableName);
-            Assert.IsNotNull(attribute);
-            Assert.IsTrue(attribute.IsAttribute());
-
-            var attributeValue = attribute.AsAttribute().Value;
-            Assert.IsNotNull(attributeValue);
-            Assert.IsTrue(attributeValue.IsString());
-            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
-
-            var attributeType = attribute.AsAttribute().Type;
-            Assert.IsNotNull(attributeType);
-            Assert.IsTrue(attributeType.IsType() && attributeType.IsAttributeType());
-            Assert.AreEqual(expectedVariableTypeLabel, attributeType.Label.ToString());
-        }
-
         [Test]
-        public void Usings()
+        public void UsingsExample()
         {
             string dbName = "access-management-db";
             string serverAddr = "127.0.0.1:1729";
@@ -157,7 +101,7 @@ namespace TypeDB.Driver.Test.Integration
         }
         
         [Test]
-        public void Manual()
+        public void ManualExample()
         {
             string dbName = "access-management-db";
             string serverAddr = "127.0.0.1:1729";
@@ -281,7 +225,7 @@ namespace TypeDB.Driver.Test.Integration
                             var resultName = matchResults[0].Get("n");
                             Console.WriteLine($"Found the first name: {resultName.AsAttribute().Value.AsString()}");
 
-                            if (matchResults.Length > 1) // Will work only if the previous transaction is committed.
+                            if (matchResults.Length > 1) // Will work only if the previous transaction is committed
                             {
                                 Console.WriteLine($"Found the second name as concept: {matchResults[1]}");
                             }
@@ -296,6 +240,62 @@ namespace TypeDB.Driver.Test.Integration
                 Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
                 // ...
             }
+        }
+
+        private void ProcessPersonInsertResult(
+            IConceptMap[] results,
+            string variableName,
+            string expectedVariableTypeLabel,
+            string expectedAttributeValue)
+        {
+            Assert.AreEqual(1, results.Length);
+
+            var result = results[0];
+            Assert.AreEqual(2, result.GetVariables().Count());
+            Assert.AreEqual(2, result.GetConcepts().Count());
+
+            var entity = result.Get(variableName);
+            Assert.IsNotNull(entity);
+            Assert.IsTrue(entity.IsEntity());
+
+            var entityType = entity.AsEntity().Type;
+            Assert.IsNotNull(entityType);
+            Assert.IsTrue(entityType.IsType() && entityType.IsEntityType());
+            Assert.AreEqual(expectedVariableTypeLabel, entityType.Label.ToString());
+
+            var attribute = result.Get("_0");
+            Assert.IsNotNull(attribute);
+            Assert.IsTrue(attribute.IsAttribute());
+
+            var attributeValue = attribute.AsAttribute().Value;
+            Assert.IsNotNull(attributeValue);
+            Assert.IsTrue(attributeValue.IsString());
+            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
+        }
+
+        private void ProcessPersonMatchResult(
+            IConceptMap[] results,
+            string variableName,
+            string expectedVariableTypeLabel,
+            string expectedAttributeValue)
+        {
+            Assert.AreEqual(1, results.Length); // Only one insert has been committed
+
+            var result = results[0];
+
+            var attribute = result.Get(variableName);
+            Assert.IsNotNull(attribute);
+            Assert.IsTrue(attribute.IsAttribute());
+
+            var attributeValue = attribute.AsAttribute().Value;
+            Assert.IsNotNull(attributeValue);
+            Assert.IsTrue(attributeValue.IsString());
+            Assert.AreEqual(expectedAttributeValue, attributeValue.AsString());
+
+            var attributeType = attribute.AsAttribute().Type;
+            Assert.IsNotNull(attributeType);
+            Assert.IsTrue(attributeType.IsType() && attributeType.IsAttributeType());
+            Assert.AreEqual(expectedVariableTypeLabel, attributeType.Label.ToString());
         }
     }
 }

@@ -83,8 +83,8 @@ class DoxygenParserCsharp : Callable<Unit> {
             (it.toString().startsWith(htmlDocsDirectoryName + "class_type_")
                     || it.toString().startsWith(htmlDocsDirectoryName + "interface_type_")
                     || it.toString().startsWith(htmlDocsDirectoryName + "struct_type_"))
-                && it.toString().endsWith(".html")
-                && !it.toString().contains("-members")
+                    && it.toString().endsWith(".html")
+                    && !it.toString().contains("-members")
         }.forEach {
             val html = File(it.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
@@ -93,7 +93,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             if (parsedClass.isNotEmpty()) {
                 classes.add(parsedClass)
             }
-            nestedParsedClasses.forEach{ element -> classes.add(element) }
+            nestedParsedClasses.forEach { element -> classes.add(element) }
         }
 
         classes.forEach { parsedClass ->
@@ -125,12 +125,11 @@ class DoxygenParserCsharp : Callable<Unit> {
 
         document.select("table.memberdecls").forEach { table ->
             val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.attr("name")
-            println(heading)
             val members: MutableList<Element> = ArrayList()
 
             table.select("tr")
                 .filter { element ->
-                   element.className().matches(Regex("memitem:[a-f0-9]+"))
+                    element.className().matches(Regex("memitem:[a-f0-9]+"))
                 }.forEach { element ->
                     val id = element.className().substringAfter("memitem:")
                     val type = element.selectFirst("td.memItemLeft")?.text()
@@ -140,15 +139,13 @@ class DoxygenParserCsharp : Callable<Unit> {
 
                     if (memberDetails == null) {
                         missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
-                    }
-                    else {
+                    } else {
                         if (type == "enum") { // Enums that are members of a class
                             val parsedEnum = parseEnum(element, memberDetails)
                             if (parsedEnum.isNotEmpty()) {
                                 nestedClasses.add(parsedEnum)
                             }
-                        }
-                        else {
+                        } else {
                             members.add(memberDetails)
                             idToAnchor[id] = replaceSymbolsForAnchor(memberDetails.select("table.memname").text())
                         }
@@ -184,7 +181,8 @@ class DoxygenParserCsharp : Callable<Unit> {
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }
         val methods: List<Method> = (
                 memberDecls.getOrDefault("pub-methods", listOf()) +
-                        memberDecls.getOrDefault("pub-static-methods", listOf())
+                        memberDecls.getOrDefault("pub-static-methods", listOf()) +
+                        memberDecls.getOrDefault("properties", listOf())
                 ).map {
                 parseMethod(it, idToAnchor)
             }
@@ -198,13 +196,15 @@ class DoxygenParserCsharp : Callable<Unit> {
                 fields = fields,
                 methods = methods,
                 packagePath = packagePath,
-                superClasses = superClasses),
-            nestedClasses)
+                superClasses = superClasses
+            ),
+            nestedClasses
+        )
     }
 
     private fun parseEnum(constantsElement: Element, detailsElement: Element): Class {
         val typeAndName = detailsElement
-            ?.selectFirst("div.memitem > div.memproto > table.memname > tbody > tr > td.memname")
+            .selectFirst("div.memitem > div.memproto > table.memname > tbody > tr > td.memname")
             ?.text()?.split(" ")!!
         assert(typeAndName.size > 1)
 
@@ -219,10 +219,10 @@ class DoxygenParserCsharp : Callable<Unit> {
         val classExamples = detailsElement.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
 
         val enumConstantsText = constantsElement
-            ?.selectFirst("td.memItemRight")
+            .selectFirst("td.memItemRight")
             ?.text()!!
         val enumConstants = Regex("[A-Za-z]+ = [A-Za-z.]+")
-            .findAll(enumConstantsText).map{ EnumConstant(it.value.substringBefore(" ")) }.toList()
+            .findAll(enumConstantsText).map { EnumConstant(it.value.substringBefore(" ")) }.toList()
 
         return Class(
             name = className,
@@ -267,7 +267,6 @@ class DoxygenParserCsharp : Callable<Unit> {
             examples = methodExamples,
             returnType = methodReturnType,
         )
-
     }
 
     private fun parseField(element: Element, idToAnchor: Map<String, String>): Variable {

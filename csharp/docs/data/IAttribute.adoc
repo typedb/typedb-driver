@@ -134,5 +134,29 @@ Implements TypeDB.Driver.Api.IConcept.
 attribute.IsAttribute();
 ----
 
+[#_IValue_TypeDB_Driver_Api_IAttribute_Value]
+==== Value
+
+[source,cs]
+----
+IValue TypeDB.Driver.Api.IAttribute.Value
+----
+
+
+
+Retrieves the value which the ``IAttribute`` instance holds.
+
+
+[caption=""]
+.Returns
+`IValue`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.Value;
+----
+
 // end::methods[]
 

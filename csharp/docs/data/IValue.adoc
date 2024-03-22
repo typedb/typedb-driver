@@ -328,5 +328,29 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.IsValue();
 ----
 
+[#_ValueType_TypeDB_Driver_Api_IValue_Type]
+==== Type
+
+[source,cs]
+----
+ValueType TypeDB.Driver.Api.IValue.Type
+----
+
+
+
+Retrieves the ``IValue.ValueType`` of this value concept.
+
+
+[caption=""]
+.Returns
+`ValueType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.Type;
+----
+
 // end::methods[]
 

@@ -152,6 +152,30 @@ a| `name` a| Label name a|
 new Label("entity");
 ----
 
+[#_string_TypeDB_Driver_Common_Label_ScopedName]
+==== ScopedName
+
+[source,cs]
+----
+string TypeDB.Driver.Common.Label.ScopedName
+----
+
+
+
+Returns the string representation of the scoped name.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+label.ScopedName;
+----
+
 [#_override_string_TypeDB_Driver_Common_Label_ToString___]
 ==== ToString
 

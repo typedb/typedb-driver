@@ -32,5 +32,29 @@ Retrieves the ``IConceptMap``s of the group.
 conceptMapGroup.GetConceptMaps();
 ----
 
+[#_IConcept_TypeDB_Driver_Api_IConceptMapGroup_Owner]
+==== Owner
+
+[source,cs]
+----
+IConcept TypeDB.Driver.Api.IConceptMapGroup.Owner
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+
+[caption=""]
+.Returns
+`IConcept`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMapGroup.Owner;
+----
+
 // end::methods[]
 

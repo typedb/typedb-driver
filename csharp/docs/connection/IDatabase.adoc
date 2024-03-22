@@ -124,5 +124,77 @@ The types in the schema as a valid TypeQL define query string.
 database.GetTypeSchema();
 ----
 
+[#_string_TypeDB_Driver_Api_IDatabase_Name]
+==== Name
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IDatabase.Name
+----
+
+
+
+The database name as a string.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+database.Name;
+----
+
+[#_IReplica_TypeDB_Driver_Api_IDatabase_PreferredReplica]
+==== PreferredReplica
+
+[source,cs]
+----
+IReplica? TypeDB.Driver.Api.IDatabase.PreferredReplica
+----
+
+
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
+
+
+[caption=""]
+.Returns
+`IReplica?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+database.PreferredReplica;
+----
+
+[#_IReplica_TypeDB_Driver_Api_IDatabase_PrimaryReplica]
+==== PrimaryReplica
+
+[source,cs]
+----
+IReplica? TypeDB.Driver.Api.IDatabase.PrimaryReplica
+----
+
+
+
+Returns the primary replica for this database. _Only works in TypeDB Cloud_
+
+
+[caption=""]
+.Returns
+`IReplica?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+database.PrimaryReplica;
+----
+
 // end::methods[]
 

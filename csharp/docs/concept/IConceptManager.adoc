@@ -330,5 +330,77 @@ a| `label` a| The label of the ``IRelationType`` to create or retrieve. a|
 transaction.Concepts.PutRelationType(label).Resolve();
 ----
 
+[#_IAttributeType_TypeDB_Driver_Api_IConceptManager_RootAttributeType]
+==== RootAttributeType
+
+[source,cs]
+----
+IAttributeType TypeDB.Driver.Api.IConceptManager.RootAttributeType
+----
+
+
+
+The root ``IAttributeType``, “attribute”.
+
+
+[caption=""]
+.Returns
+`IAttributeType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.RootAttributeType;
+----
+
+[#_IEntityType_TypeDB_Driver_Api_IConceptManager_RootEntityType]
+==== RootEntityType
+
+[source,cs]
+----
+IEntityType TypeDB.Driver.Api.IConceptManager.RootEntityType
+----
+
+
+
+The root ``IEntityType``, “entity”.
+
+
+[caption=""]
+.Returns
+`IEntityType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.RootEntityType;
+----
+
+[#_IRelationType_TypeDB_Driver_Api_IConceptManager_RootRelationType]
+==== RootRelationType
+
+[source,cs]
+----
+IRelationType TypeDB.Driver.Api.IConceptManager.RootRelationType
+----
+
+
+
+The root ``IRelationType``, “relation”.
+
+
+[caption=""]
+.Returns
+`IRelationType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+transaction.Concepts.RootRelationType;
+----
+
 // end::methods[]
 

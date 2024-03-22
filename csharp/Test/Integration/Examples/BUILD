@@ -21,8 +21,21 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_integration_test(
-    name = "test",
-    srcs = ["ExamplesTest.cs"],
+    name = "test-core",
+    srcs = ["CoreExamplesTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+
+csharp_integration_test(
+    name = "test-cloud",
+    srcs = ["CloudExamplesTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",

@@ -8,6 +8,54 @@
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
 // tag::methods[]
+[#_IConceptMap_TypeDB_Driver_Api_IExplanation_Conclusion]
+==== Conclusion
+
+[source,cs]
+----
+IConceptMap TypeDB.Driver.Api.IExplanation.Conclusion
+----
+
+
+
+Retrieves the Conclusion for this Explanation.
+
+
+[caption=""]
+.Returns
+`IConceptMap`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+explanation.Conclusion
+----
+
+[#_IConceptMap_TypeDB_Driver_Api_IExplanation_Condition]
+==== Condition
+
+[source,cs]
+----
+IConceptMap TypeDB.Driver.Api.IExplanation.Condition
+----
+
+
+
+Retrieves the Condition for this Explanation.
+
+
+[caption=""]
+.Returns
+`IConceptMap`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+explanation.Condition
+----
+
 [#_ISet__string___TypeDB_Driver_Api_IExplanation_GetQueryVariables___]
 ==== GetQueryVariables
 
@@ -63,6 +111,30 @@ a| `variable` a| The query variable to map to rule variables. a|
 [source,cs]
 ----
 explanation.VariableMapping(variable)
+----
+
+[#_IRule_TypeDB_Driver_Api_IExplanation_Rule]
+==== Rule
+
+[source,cs]
+----
+IRule TypeDB.Driver.Api.IExplanation.Rule
+----
+
+
+
+Retrieves the Rule for this Explanation.
+
+
+[caption=""]
+.Returns
+`IRule`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+explanation.Rule;
 ----
 
 // end::methods[]

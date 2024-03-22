@@ -28,6 +28,30 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.Close();
 ----
 
+[#_IDatabaseManager_TypeDB_Driver_Api_ITypeDBDriver_Databases]
+==== Databases
+
+[source,cs]
+----
+IDatabaseManager TypeDB.Driver.Api.ITypeDBDriver.Databases
+----
+
+
+
+The ``IDatabaseManager`` for this connection, providing access to database management methods.
+
+
+[caption=""]
+.Returns
+`IDatabaseManager`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases;
+----
+
 [#_IUser_TypeDB_Driver_Api_ITypeDBDriver_GetCurrentUser___]
 ==== GetCurrentUser
 
@@ -133,6 +157,30 @@ a| `options` a| ``TypeDBOptions`` for the session a|
 [source,cs]
 ----
 driver.Session(database, sessionType, options);
+----
+
+[#_IUserManager_TypeDB_Driver_Api_ITypeDBDriver_Users]
+==== Users
+
+[source,cs]
+----
+IUserManager TypeDB.Driver.Api.ITypeDBDriver.Users
+----
+
+
+
+The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+
+
+[caption=""]
+.Returns
+`IUserManager`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users;
 ----
 
 // end::methods[]

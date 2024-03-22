@@ -303,6 +303,30 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.IsType();
 ----
 
+[#_Label_TypeDB_Driver_Api_IType_Label]
+==== Label
+
+[source,cs]
+----
+Label TypeDB.Driver.Api.IType.Label
+----
+
+
+
+The unique label of the type.
+
+
+[caption=""]
+.Returns
+`Label`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.Label;
+----
+
 [#_VoidPromise_TypeDB_Driver_Api_IType_SetLabel___ITypeDBTransaction_transaction__string_label_]
 ==== SetLabel
 

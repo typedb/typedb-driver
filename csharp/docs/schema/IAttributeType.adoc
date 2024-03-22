@@ -945,5 +945,29 @@ a| `transaction` a| The current transaction a|
 attributeType.UnsetRegex(transaction).Resolve();
 ----
 
+[#_IValue_ValueType_TypeDB_Driver_Api_IAttributeType_ValueType]
+==== ValueType
+
+[source,cs]
+----
+IValue.ValueType TypeDB.Driver.Api.IAttributeType.ValueType
+----
+
+
+
+The ``IValue.ValueType`` of this ``IAttributeType``.
+
+
+[caption=""]
+.Returns
+`IValue.ValueType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attributeType.ValueType;
+----
+
 // end::methods[]
 

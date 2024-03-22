@@ -8,6 +8,30 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
+[#_IExplainables_TypeDB_Driver_Api_IConceptMap_AllExplainables]
+==== AllExplainables
+
+[source,cs]
+----
+IExplainables TypeDB.Driver.Api.IConceptMap.AllExplainables
+----
+
+
+
+Gets the ``IExplainables`` object for this ``IConceptMap``, exposing which of the concepts in this ``IConceptMap`` are explainable.
+
+
+[caption=""]
+.Returns
+`IExplainables`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables;
+----
+
 [#_IConcept_TypeDB_Driver_Api_IConceptMap_Get___string_variable_]
 ==== Get
 

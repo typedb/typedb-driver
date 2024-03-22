@@ -74,6 +74,22 @@ a| `transaction` a| The current ``Transaction`` a|
 rule.IsDeleted(transaction).Resolve();
 ----
 
+[#_string_TypeDB_Driver_Api_IRule_Label]
+==== Label
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.Label
+----
+
+
+
+Retrieves the unique label of the rule.
+
+[caption=""]
+.Returns
+`string`
+
 [#_VoidPromise_TypeDB_Driver_Api_IRule_SetLabel___ITypeDBTransaction_transaction__string_label_]
 ==== SetLabel
 
@@ -107,6 +123,38 @@ a| `label` a| The new label to be given to the rule a|
 ----
 rule.SetLabel(transaction, newLabel).Resolve();
 ----
+
+[#_string_TypeDB_Driver_Api_IRule_Then]
+==== Then
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.Then
+----
+
+
+
+The single statement that constitutes the ‘then’ of the rule.
+
+[caption=""]
+.Returns
+`string`
+
+[#_string_TypeDB_Driver_Api_IRule_When]
+==== When
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.When
+----
+
+
+
+The statements that constitute the ‘when’ of the rule.
+
+[caption=""]
+.Returns
+`string`
 
 // end::methods[]
 
