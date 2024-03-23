@@ -63,7 +63,9 @@ public abstract class ConnectionStepsBase {
     );
 
     public static final Map<String, String> serverOptions = map(
-            pair("--diagnostics.reporting.errors", "false")
+            pair("--diagnostics.reporting.errors", "false"),
+            pair("--diagnostics.reporting.statistics", "false"),
+            pair("--diagnostics.monitoring.monitoring", "false")
     );
 
     public static TypeDBTransaction tx() {
