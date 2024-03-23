@@ -47,7 +47,9 @@ def _rule_implementation(ctx):
                 --server.peers.peer-3.address=localhost:31729 \
                 --server.peers.peer-3.internal-address.zeromq=localhost:31730 \
                 --server.peers.peer-3.internal-address.grpc=localhost:31731 \
-                --server.encryption.enable=true
+                --server.encryption.enable=true \
+                --diagnostics.reporting.errors=false \
+                --diagnostics.monitoring.enable=false
             }
             if test -d typedb_distribution; then
              echo Existing distribution detected. Cleaning.

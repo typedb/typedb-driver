@@ -74,7 +74,7 @@ public class DriverQueryTest {
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         Map<String, String> options = new HashMap<>();
-        options.put("--diagnostics.reporting.enable", "false");
+        options.put("--diagnostics.reporting.errors", "false");
         typedb = new TypeDBCoreRunner(options);
         typedb.start();
         typedbDriver = TypeDB.coreDriver(typedb.address());

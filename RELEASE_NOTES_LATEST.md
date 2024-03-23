@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@2.27.0-rc0
+cargo add typedb-driver@2.27.0
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.27.0-rc0</version>
+        <version>2.27.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.27.0rc0
+pip install typedb-driver==2.27.0
 ```
 
 ### NodeJS driver
@@ -51,16 +51,16 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
 ```
-npm install typedb-driver@2.27.0-rc0
+npm install typedb-driver@2.27.0
 ```
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.27.0-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.27.0
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.27.0-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.27.0
 Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 
@@ -74,6 +74,7 @@ Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 
 ## Other Improvements
+
 - **Enable deploy-snapshot jobs on development**
 
 - **Add -y to apt udpate, and replaced apt-get with apt**

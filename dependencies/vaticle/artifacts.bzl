@@ -29,7 +29,7 @@ def vaticle_typedb_artifact():
         artifact_name = "typedb-server-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],
         commit_source = deployment["artifact"]["snapshot"]["download"],
-        commit = "66d8deeea813ac8a0f0aa42d6117b600ce62fe6f",
+        tag = "2.27.0-rc0",
     )
 
 def vaticle_typedb_cloud_artifact():
@@ -39,10 +39,10 @@ def vaticle_typedb_cloud_artifact():
         artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
         tag_source = deployment_private["artifact"]["release"]["download"],
         commit_source = deployment_private["artifact"]["snapshot"]["download"],
-        commit = "ff7170c2ced9870fbc079f2499694c0dee1d3389",
+        tag = "2.27.0-rc0",
     )
 
 maven_artifacts = {
-    'com.vaticle.typedb:typedb-runner': '240c3c108f8cbf6e620e52c4df8730431ec13e3f',
-    'com.vaticle.typedb:typedb-cloud-runner': '54c3f23385f356d830e1ab1bb66345acfce103e7',
+    'com.vaticle.typedb:typedb-runner': '0.0.0-fee8e9c5a8c17a58b4639b91e23458e715e0d3a3',
+    'com.vaticle.typedb:typedb-cloud-runner': '0.0.0-2c96925694c196be3c898aa3ffc0f56ccc84f400',
 }

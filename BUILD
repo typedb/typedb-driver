@@ -64,6 +64,7 @@ release_validate_deps(
         "@vaticle_typeql",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail
+    version_file = ":VERSION",
 )
 
 # Force tools to be built during `build //...`

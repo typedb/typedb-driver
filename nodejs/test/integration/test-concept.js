@@ -211,6 +211,9 @@ async function run() {
         await person.setAbstract(tx);
         await person.setOwns(tx, email, [Annotation.KEY]);
         man = await tx.concepts.getEntityType("man");
+        fathership = await tx.concepts.getRelationType("fathership");
+        father = await fathership.getRelatesForRoleLabel(tx, "father");
+        await man.unsetPlays(tx, father);
         await man.setSupertype(tx, await tx.concepts.getRootEntityType());
         await person.setOwns(tx, age);
         await lion.setOwns(tx, age);
