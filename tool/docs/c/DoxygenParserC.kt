@@ -63,6 +63,8 @@ class DoxygenParserC : Callable<Unit> {
     @CommandLine.Option(names = ["--forcefile", "-f"], required = true)
     private lateinit var unnormalisedFilenameOverrides: MutableMap<String, String>
 
+    private var recreatedFiles: MutableSet<File> = mutableSetOf()
+
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
@@ -138,7 +140,13 @@ class DoxygenParserC : Callable<Unit> {
         if (!fileDir.toFile().exists()) {
             Files.createDirectory(fileDir)
         }
+
         val outputFile = fileDir.resolve(filename).toFile()
+        if (!recreatedFiles.contains(outputFile)) {
+            recreatedFiles.add(outputFile)
+            outputFile.delete()
+        }
+
         outputFile.createNewFile()
         return outputFile
     }
