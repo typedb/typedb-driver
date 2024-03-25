@@ -58,6 +58,7 @@ dir_mapping = {
     "IAttribute.adoc": "data",
     "IValue.adoc": "data",
     "ValueType.adoc": "data",
+    "ValueTypeExtensions.adoc": "data",
     "IThing.adoc": "data",
     "ITypeDBSession.adoc": "session",
     "SessionType.adoc": "session",

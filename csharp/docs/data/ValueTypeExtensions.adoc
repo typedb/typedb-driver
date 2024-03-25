@@ -1,0 +1,84 @@
+[#_ValueTypeExtensions]
+=== ValueTypeExtensions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Extension class with additional methods describing characteristics of ``ValueType`` enum values.
+
+// tag::methods[]
+[#_static_System_Type_TypeDB_Driver_Api_ValueTypeExtensions_GetValueClass___this_IValueValueType_valueType_]
+==== GetValueClass
+
+[source,cs]
+----
+static System.Type GetValueClass(this IValue::ValueType valueType)
+----
+
+
+
+Returns a ``System.Type`` equivalent of this value concept for this programming language.
+
+
+[caption=""]
+.Returns
+`static System.Type`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+valueType.GetValueClass();
+----
+
+[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsKeyable___this_ValueType_valueType_]
+==== IsKeyable
+
+[source,cs]
+----
+static bool IsKeyable(this ValueType valueType)
+----
+
+
+
+Returns ``true`` if this value concept can be used as a key via the @key annotation. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`static bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+valueType.IsKeyable();
+----
+
+[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsWritable___this_IValueValueType_valueType_]
+==== IsWritable
+
+[source,cs]
+----
+static bool IsWritable(this IValue::ValueType valueType)
+----
+
+
+
+Returns ``true`` if this value concept can be written to a database. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`static bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+valueType.IsWritable();
+----
+
+// end::methods[]
+

@@ -196,7 +196,7 @@ namespace TypeDB.Driver.Api
     }
 
     /**
-     * Extension class with additional methods describing characteristics of ValueType enum values. // TODO: Is not generated in doxygen
+     * Extension class with additional methods describing characteristics of <code>ValueType</code> enum values.
      */
     public static class ValueTypeExtensions
     {

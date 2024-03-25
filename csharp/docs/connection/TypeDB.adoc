@@ -1,0 +1,109 @@
+[#_TypeDB]
+=== TypeDB
+
+*Package*: `TypeDB.Driver`
+
+// tag::methods[]
+[#_static_ITypeDBDriver_TypeDB_Driver_TypeDB_CloudDriver___string_address__TypeDBCredential_credential_]
+==== CloudDriver
+
+[source,cs]
+----
+static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| 
+a| `credential` a| The credential to connect with a| 
+|===
+
+[caption=""]
+.Returns
+`static ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDB.CloudDriver(address, credential);
+----
+
+[#_static_ITypeDBDriver_TypeDB_Driver_TypeDB_CloudDriver___ICollection__string___addresses__TypeDBCredential_credential_]
+==== CloudDriver
+
+[source,cs]
+----
+static ITypeDBDriver CloudDriver(ICollection< string > addresses, TypeDBCredential credential)
+----
+
+
+
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The address(es) of the TypeDB server(s) a| 
+a| `credential` a| The credential to connect with a| 
+|===
+
+[caption=""]
+.Returns
+`static ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDB.CloudDriver(addresses, credential);
+----
+
+[#_static_ITypeDBDriver_TypeDB_Driver_TypeDB_CoreDriver___string_address_]
+==== CoreDriver
+
+[source,cs]
+----
+static ITypeDBDriver CoreDriver(string address)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| 
+|===
+
+[caption=""]
+.Returns
+`static ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDB.CoreDriver(address);
+----
+
+// end::methods[]
+
