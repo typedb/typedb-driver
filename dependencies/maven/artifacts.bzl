@@ -51,7 +51,6 @@ artifacts = [
   "org.hamcrest:hamcrest-all",
   "org.hamcrest:hamcrest-core",
   "org.hamcrest:hamcrest-library",
-  "org.mockito:mockito-core",
   "org.slf4j:jcl-over-slf4j",
   "org.slf4j:slf4j-api",
   "org.slf4j:log4j-over-slf4j",

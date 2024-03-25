@@ -53,7 +53,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Driver MISSING_DB_NAME =
                 new Driver(12, "Database name cannot be null.");
 
-        private static final String codePrefix = "JCL";
+        private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
 
         Driver(int number, String message) {
@@ -79,7 +79,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
                 new Concept(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
         public static final Concept UNRECOGNISED_ANNOTATION =
-                new Concept(9, "The annotation '%s' is not recognised");
+                new Concept(9, "The annotation '%s' is not recognised.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
@@ -93,9 +93,9 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Query VARIABLE_DOES_NOT_EXIST =
                 new Query(1, "The variable '%s' does not exist.");
         public static final Query MISSING_QUERY =
-                new Query(2, "Query cannot be null or empty");
+                new Query(2, "Query cannot be null or empty.");
 
-        private static final String codePrefix = "JQY";
+        private static final String codePrefix = "JQR";
         private static final String messagePrefix = "Query Error";
 
         Query(int number, String message) {

@@ -78,8 +78,6 @@
         jthrowable throwable = (jthrowable)jenv->NewObject(exceptionClass, ctor, jerror, true);
 
         jenv->Throw(throwable);
-
-        return $null;
     }
 }
 
@@ -316,6 +314,7 @@
 %nojavaexception relation_remove_role_player;
 %nojavaexception thing_type_is_deleted;
 %nojavaexception thing_type_delete;
+%nojavaexception thing_type_get_label;
 %nojavaexception thing_type_set_label;
 %nojavaexception thing_type_set_abstract;
 %nojavaexception thing_type_unset_abstract;
@@ -393,6 +392,15 @@
         }
     }
 %}
+%typemap(javadestruct, methodname="delete", methodmodifiers="public synchronized") Type ## Promise %{{
+    if (swigCPtr != 0) {
+        if (swigCMemOwn) {
+            swigCMemOwn = false;
+            get();
+        }
+        swigCPtr = 0;
+    }
+}%}
 %enddef
 
 %promise(Concept, concept)
@@ -527,7 +535,6 @@
 
 %array(Annotation)
 %array(Concept)
-%array(ValueType)
 
 /* char** needs special handling */
 %typemap(in) char ** (jint size) {

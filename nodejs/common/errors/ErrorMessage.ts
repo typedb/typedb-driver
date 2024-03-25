@@ -76,7 +76,7 @@ export abstract class ErrorMessage {
 export namespace ErrorMessage {
     export class Driver extends ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {
-            super("DRI", code, "Driver Error", message)
+            super("NDR", code, "Driver Error", message)
         }
     }
 
@@ -108,7 +108,7 @@ export namespace ErrorMessage {
 
     export class Concept extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("CON", code, "Concept Error", message)
+            super("NCO", code, "Concept Error", message)
         }
     }
 
@@ -126,7 +126,7 @@ export namespace ErrorMessage {
 
     export class Query extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("QRY", code, "Query Error", message)
+            super("NQR", code, "Query Error", message)
         }
     }
 
@@ -140,7 +140,7 @@ export namespace ErrorMessage {
 
     export class Internal extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("INT", code, "Internal Error", message)
+            super("NIN", code, "Internal Error", message)
         }
     }
 

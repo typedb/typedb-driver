@@ -84,9 +84,6 @@ public class QuerySteps {
 
     @Given("the integrity is validated")
     public void integrity_is_validated() {
-
-        // TODO
-
     }
 
     @Given("typeql define")
@@ -122,23 +119,23 @@ public class QuerySteps {
     }
 
     @Given("typeql insert")
-    public Stream<ConceptMap> typeql_insert(String insertQueryStatements) {
+    public List<ConceptMap> typeql_insert(String insertQueryStatements) {
         TypeQLInsert typeQLQuery = TypeQL.parseQuery(String.join("\n", insertQueryStatements));
-        return tx().query().insert(String.join("\n", insertQueryStatements));
+        return tx().query().insert(String.join("\n", insertQueryStatements)).collect(Collectors.toList());
     }
 
     @Given("typeql insert; throws exception")
     @SuppressWarnings("ReturnValueIgnored")
     public void typeql_insert_throws(String insertQueryStatements) {
         //noinspection ResultOfMethodCallIgnored
-        assertThrows(() -> typeql_insert(insertQueryStatements).collect(Collectors.toList()));
+        assertThrows(() -> typeql_insert(insertQueryStatements));
     }
 
     @Given("typeql insert; throws exception containing {string}")
     @SuppressWarnings("ReturnValueIgnored")
     public void typeql_insert_throws_exception(String exception, String insertQueryStatements) {
         //noinspection ResultOfMethodCallIgnored
-        assertThrowsWithMessage(() -> typeql_insert(insertQueryStatements).collect(Collectors.toList()), exception);
+        assertThrowsWithMessage(() -> typeql_insert(insertQueryStatements), exception);
     }
 
     @Given("typeql delete")
@@ -158,19 +155,19 @@ public class QuerySteps {
     }
 
     @Given("typeql update")
-    public Stream<ConceptMap> typeql_update(String updateQueryStatements) {
+    public List<ConceptMap> typeql_update(String updateQueryStatements) {
         TypeQLUpdate typeQLQuery = TypeQL.parseQuery(String.join("\n", updateQueryStatements));
-        return tx().query().update(String.join("\n", updateQueryStatements));
+        return tx().query().update(String.join("\n", updateQueryStatements)).collect(Collectors.toList());
     }
 
     @Given("typeql update; throws exception")
     public void typeql_update_throws(String updateQueryStatements) {
-        assertThrows(() -> typeql_update(updateQueryStatements).iterator().next());
+        assertThrows(() -> typeql_update(updateQueryStatements));
     }
 
     @Given("typeql update; throws exception containing {string}")
     public void typeql_update_throws_exception(String exception, String updateQueryStatements) {
-        assertThrowsWithMessage(() -> typeql_update(updateQueryStatements).iterator().next(), exception);
+        assertThrowsWithMessage(() -> typeql_update(updateQueryStatements), exception);
     }
 
     private void clearAnswers() {

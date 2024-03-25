@@ -239,7 +239,7 @@ class Value(Concept, ABC):
     @abstractmethod
     def as_datetime(self) -> datetime:
         """
-        Returns a ``datetime`` value of this value concept. If the value has
+        Returns a timezone naive ``datetime`` value of this value concept. If the value has
         another type, raises an exception.
 
         :return:

@@ -177,7 +177,7 @@ class AttributeType(ThingType, ABC):
         Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
         :param transaction: The current transaction
-        :param value: New ``Attribute``'s value
+        :param value: New ``Attribute``'s value (datetime values are treated as timezone naive, with tzinfo being ignored)
         :return:
 
         Examples

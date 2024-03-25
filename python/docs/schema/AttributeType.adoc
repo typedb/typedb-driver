@@ -359,7 +359,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+a| `value` a| New ``Attribute``’s value (datetime values are treated as timezone naive, with tzinfo being ignored) a| `Value \| bool \| int \| float \| str \| datetime` a| 
 |===
 
 [caption=""]

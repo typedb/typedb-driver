@@ -85,8 +85,6 @@
 @maven//:io_perfmark_perfmark_api_0_25_0
 @maven//:javax_annotation_javax_annotation_api_1_3_2
 @maven//:junit_junit_4_12
-@maven//:net_bytebuddy_byte_buddy_1_10_5
-@maven//:net_bytebuddy_byte_buddy_agent_1_10_5
 @maven//:net_jcip_jcip_annotations_1_0
 @maven//:org_antlr_antlr4_runtime_4_8
 @maven//:org_apache_commons_commons_compress_1_21
@@ -100,8 +98,6 @@
 @maven//:org_hamcrest_hamcrest_library_1_3
 @maven//:org_jetbrains_compose_compiler_compiler_1_5_7
 @maven//:org_jsoup_jsoup_1_16_1
-@maven//:org_mockito_mockito_core_3_2_4
-@maven//:org_objenesis_objenesis_2_6
 @maven//:org_slf4j_jcl_over_slf4j_2_0_0
 @maven//:org_slf4j_log4j_over_slf4j_2_0_0
 @maven//:org_slf4j_slf4j_api_2_0_0

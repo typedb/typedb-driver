@@ -35,7 +35,7 @@ value.as_boolean()
 as_datetime() -> datetime
 ----
 
-Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception.
+Returns a timezone naive ``datetime`` value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
