@@ -24,6 +24,7 @@ checkstyle_test(
     exclude = glob([
         "paket.csharp_deps.bzl",
         "paket.csharp_deps_extension.bzl",
+        "paket.lock",
     ]),
     license_type = "apache-header",
 )
