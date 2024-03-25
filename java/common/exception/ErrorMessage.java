@@ -79,7 +79,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Concept UNRECOGNISED_ANNOTATION =
                 new Concept(9, "The annotation '%s' is not recognised.");
 
-        private static final String codePrefix = "CON";
+        private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
 
         Concept(int number, String message) {
@@ -93,11 +93,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Query MISSING_QUERY =
                 new Query(2, "Query cannot be null or empty.");
 
-<<<<<<< HEAD
         private static final String codePrefix = "JQR";
-=======
-        private static final String codePrefix = "QRY";
->>>>>>> 08a62756 (Refactor error messages codes. Update deps)
         private static final String messagePrefix = "Query Error";
 
         Query(int number, String message) {
@@ -115,7 +111,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Internal NULL_NATIVE_VALUE =
                 new Internal(4, "Unhandled null pointer to a native object encountered!");
 
-        private static final String codePrefix = "INT";
+        private static final String codePrefix = "JIN";
         private static final String messagePrefix = "Java Internal Error";
 
         Internal(int number, String message) {
