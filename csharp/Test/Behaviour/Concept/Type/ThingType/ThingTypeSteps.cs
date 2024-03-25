@@ -567,6 +567,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [Given(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set plays role: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
         [When(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set plays role: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
+        [Then(@"(entity|attribute|relation|thing)\(([a-zA-Z0-9-_]+)\) set plays role: ([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)")]
         public void ThingTypeSetPlaysRole(string rootLabel, string typeLabel, string roleLabelData)
         {
             Label roleLabel = GetScopedLabel(roleLabelData);
