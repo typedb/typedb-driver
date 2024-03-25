@@ -33,6 +33,19 @@ export interface EntityType extends ThingType {
 
     /** @inheritDoc */
     getSupertype(transaction: TypeDBTransaction): Promise<EntityType>;
+
+    /**
+     * Sets the supplied <code>EntityType</code> as the supertype of the current <code>EntityType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * entityType.setSupertype(transaction, superEntityType).resolve();
+     * ```
+     *
+     * @param transaction The current transaction
+     * @param superEntityType The <code>EntityType</code> to set as the supertype of this <code>EntityType</code>
+     */
     setSupertype(transaction: TypeDBTransaction, superEntityType: EntityType): Promise<void>;
 
     /** @inheritDoc */

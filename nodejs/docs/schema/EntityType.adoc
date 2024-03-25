@@ -1425,7 +1425,7 @@ thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, over
 setSupertype(transaction, superEntityType): Promise<void>
 ----
 
-
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 
 [caption=""]
 .Input parameters
@@ -1433,13 +1433,20 @@ setSupertype(transaction, superEntityType): Promise<void>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a|  a| `TypeDBTransaction`
-a| `superEntityType` a|  a| `EntityType`
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType`
 |===
 
 [caption=""]
 .Returns
 `Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+entityType.setSupertype(transaction, superEntityType).resolve();
+----
 
 [#_EntityType_unsetAbstract__transaction_TypeDBTransaction]
 ==== unsetAbstract
