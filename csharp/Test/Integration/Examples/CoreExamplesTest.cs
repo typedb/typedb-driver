@@ -97,6 +97,7 @@ namespace TypeDB.Driver.Test.Integration
             {
                 Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
                 // ...
+                Assert.Fail("You can handle exceptions here. However, we do not expect exceptions in CI, so we fail.");
             }
         }
         
@@ -158,6 +159,7 @@ namespace TypeDB.Driver.Test.Integration
             {
                 Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
                 // ...
+                Assert.Fail("You can handle exceptions here. However, we do not expect exceptions in CI, so we fail.");
             }
         }
 
@@ -239,6 +241,7 @@ namespace TypeDB.Driver.Test.Integration
             {
                 Console.WriteLine($"Caught TypeDB Driver Exception: {e}");
                 // ...
+                Assert.Fail("You can handle exceptions here. However, we do not expect exceptions in CI, so we fail.");
             }
         }
 
