@@ -686,7 +686,7 @@ jobs:
           bazel-arch: amd64
       - run: |
           apt update -y && apt install -y software-properties-common
-          add-apt-repository ppa:deadsnakes/ppa
+          add-apt-repository -y ppa:deadsnakes/ppa
           apt update -y && apt install -y python3.9 python3.9-distutils python3-pip software-properties-common
           python3.9 -m pip install -U cffi
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
