@@ -55,6 +55,7 @@ csharp_library(
         "//csharp/Connection:connection",
         "//csharp:typedb_driver_pinvoke",
     ],
+    out = "TypeDB.Driver",
     visibility = ["//visibility:public"],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

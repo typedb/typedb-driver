@@ -18,10 +18,10 @@
 load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
 
 
-def swig_native_csharp_library(name, nullable_context, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
+def swig_native_csharp_library(name, namespace, nullable_context, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
     swig_csharp(
         name = "__" + name,
-        shared_lib_name = name,
+        namespace = namespace,
         nullable_context = nullable_context,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,

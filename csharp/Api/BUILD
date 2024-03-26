@@ -31,6 +31,7 @@ csharp_library(
         "//csharp:typedb_driver_pinvoke",
         "@paket.csharp_deps//newtonsoft.json",
     ],
+    out = "TypeDB.Driver.Api",
     runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,

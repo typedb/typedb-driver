@@ -26,6 +26,7 @@ csharp_library(
     name = "common",
     srcs = glob(["*.cs", "*/*.cs"]),
     deps = ["//csharp:typedb_driver_pinvoke"],
+    out = "TypeDB.Driver.Common",
     runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,

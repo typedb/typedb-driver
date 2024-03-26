@@ -31,6 +31,7 @@ csharp_library(
         "//csharp/Concept:concept",
         "//csharp:typedb_driver_pinvoke",
     ],
+    out = "TypeDB.Driver.Logic",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

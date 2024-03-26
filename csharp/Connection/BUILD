@@ -35,6 +35,7 @@ csharp_library(
         "//csharp/User:user",
         "//csharp:typedb_driver_pinvoke",
     ],
+    out = "TypeDB.Driver.Connection",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

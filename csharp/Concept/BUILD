@@ -30,6 +30,7 @@ csharp_library(
         "//csharp/Common:common",
         "//csharp:typedb_driver_pinvoke",
     ],
+    out = "TypeDB.Driver.Concept",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
