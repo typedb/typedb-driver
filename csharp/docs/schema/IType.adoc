@@ -82,11 +82,14 @@ IEnumerable< IType > GetSubtypes(ITypeDBTransaction transaction)
 Retrieves all direct and indirect subtypes of the type. Equivalent to ``GetSubtypes(transaction, Transitive)``
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
- 
+---- 
 
 
 [caption=""]

@@ -88,11 +88,14 @@ IEnumerable< IRoleType > GetRelates(ITypeDBTransaction transaction)
 Retrieves roles that this ``IRelationType`` relates to directly or via inheritance.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRelationType::getRelates(ITypeDBTransaction, IConcept.Transitivity)
- 
+---- 
 
 
 [caption=""]
@@ -180,11 +183,14 @@ Promise< IRoleType > GetRelatesOverridden(ITypeDBTransaction transaction, IRoleT
 Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
- 
+---- 
 
 
 [caption=""]
@@ -266,11 +272,14 @@ VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel)
 Sets the new role that this ``IRelationType`` relates to.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRelationType::SetRelates(ITypeDBTransaction, string, string)
- 
+---- 
 
 
 [caption=""]
@@ -290,11 +299,14 @@ VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, IRoleTy
 Sets the new role that this ``IRelationType`` relates to.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRelationType::SetRelates(ITypeDBTransaction, string, string)
- 
+---- 
 
 
 [caption=""]
@@ -384,11 +396,14 @@ VoidPromise UnsetRelates(ITypeDBTransaction transaction, IRoleType roleType)
 Disallows this ``IRelationType`` from relating to the given role.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRelationType::UnsetRelates(ITypeDBTransaction, string)
- 
+---- 
 
 
 [caption=""]

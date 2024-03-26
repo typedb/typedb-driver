@@ -113,11 +113,14 @@ ITypeDBSession Session(string database, SessionType type)
 Opens a session to the given database with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   ITypeDBDriver::Session(string, SessionType, TypeDBOptions);
- 
+---- 
 
 
 [caption=""]

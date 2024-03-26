@@ -8,11 +8,14 @@
 A ``VoidPromise`` represents a ``Promise`` without an operation's result.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   Promise
- 
+---- 
 
 
 // tag::methods[]

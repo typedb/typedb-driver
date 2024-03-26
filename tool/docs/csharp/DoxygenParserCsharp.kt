@@ -309,20 +309,45 @@ class DoxygenParserCsharp : Callable<Unit> {
     }
 
     private fun reformatTextWithCode(html: String, idToAnchor: Map<String, String>): String {
-        return replaceAngleBracketCodes(
-            removeHyperlinkFormatting(
-                removeAllTags(
-                    replaceLocalLinks(
-                        idToAnchor,
-                        replaceEmTags(
-                            replacePreTags(
-                                replaceCodeTags(html)
+        return formatSeeAlso(
+                replaceAngleBracketCodes(
+                removeHyperlinkFormatting(
+                    removeAllTags(
+                        replaceLocalLinks(
+                            idToAnchor,
+                            replaceEmTags(
+                                replacePreTags(
+                                    replaceCodeTags(html)
+                                )
                             )
                         )
                     )
                 )
             )
         )
+    }
+
+    private fun formatSeeAlso(html: String): String {
+        val oldSeeAlso = "  See also"
+
+        var updatedHtml = html
+        var seeAlsoIndex = -1
+
+        while (true) {
+            seeAlsoIndex = updatedHtml.indexOf(oldSeeAlso, seeAlsoIndex + 1)
+            if (seeAlsoIndex == -1) {
+                break
+            }
+
+            val seeTargetEnd = Regex("([^\\s])+\n").find(updatedHtml, seeAlsoIndex + oldSeeAlso.length)
+            val seeTargetEndIndex = seeTargetEnd?.range?.endInclusive
+            if (seeTargetEndIndex != null ) {
+                updatedHtml = StringBuilder(updatedHtml).apply { insert(seeTargetEndIndex + 1, "----") }.toString()
+                seeAlsoIndex = seeTargetEndIndex + "----".length
+            }
+        }
+
+        return updatedHtml.replace(oldSeeAlso, "\nSee also\n[source,cs]\n----")
     }
 
     private fun removeHyperlinkFormatting(html: String): String {

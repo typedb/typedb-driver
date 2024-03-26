@@ -21,11 +21,14 @@ VoidPromise Define(string query)
 Performs a TypeQL Define query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Define(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -79,11 +82,14 @@ VoidPromise Delete(string query)
 Performs a TypeQL Delete query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Delete(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -137,11 +143,14 @@ IEnumerable< IExplanation > IExplainable explainable)
 Performs a TypeQL Explain query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Explain(IConceptMap.IExplainable, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -195,11 +204,14 @@ IEnumerable< JObject > Fetch(string query)
 Performs a TypeQL Fetch (Fetch) with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Fetch(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -253,11 +265,14 @@ IEnumerable< IConceptMap > Get(string query)
 Performs a TypeQL Get (Get) with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Get(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -311,11 +326,14 @@ Promise< IValue > GetAggregate(string query)
 Performs a TypeQL Get Aggregate query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::GetAggregate(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -369,11 +387,14 @@ IEnumerable< IConceptMapGroup > GetGroup(string query)
 Performs a TypeQL Get Group query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::GetGroup(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -427,11 +448,14 @@ IEnumerable< IValueGroup > GetGroupAggregate(string query)
 Performs a TypeQL Get Group Aggregate query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::GetGroupAggregate(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -485,11 +509,14 @@ IEnumerable< IConceptMap > Insert(string query)
 Performs a TypeQL Insert query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Insert(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -543,11 +570,14 @@ VoidPromise Undefine(string query)
 Performs a TypeQL Undefine query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Undefine(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
@@ -601,11 +631,14 @@ IEnumerable< IConceptMap > Update(string query)
 Performs a TypeQL Update query with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IQueryManager::Update(string, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]

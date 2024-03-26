@@ -54,11 +54,14 @@ IEnumerable< IThing > GetPlayerInstances(ITypeDBTransaction transaction)
 Retrieves the ``Thing`` instances that play this role.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
- 
+---- 
 
 
 [caption=""]
@@ -112,11 +115,14 @@ IEnumerable< IThingType > GetPlayerTypes(ITypeDBTransaction transaction)
 Retrieves the ``ThingType``s whose instances play this role. Equivalent to ``GetPlayerTypes(transaction, Transitive)``.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
- 
+---- 
 
 
 [caption=""]
@@ -170,11 +176,14 @@ IEnumerable< IRelation > GetRelationInstances(ITypeDBTransaction transaction)
 Retrieves the ``Relation`` instances that this role is related to. Equivalent to ``GetRelationInstances(transaction, Transitive)``
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
- 
+---- 
 
 
 [caption=""]

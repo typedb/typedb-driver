@@ -179,11 +179,14 @@ ITypeDBTransaction Transaction(TransactionType type)
 Opens a transaction on the database connected to the session with default options.
 
  
-  See also
+
+See also
+[source,cs]
+----
  
  
   ITypeDBSession::Transaction(TransactionType, TypeDBOptions)
- 
+---- 
 
 
 [caption=""]
