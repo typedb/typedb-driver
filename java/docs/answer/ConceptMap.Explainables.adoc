@@ -19,7 +19,7 @@ Retrieves the explainable attribute with the given variable name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -73,7 +73,7 @@ Retrieves the explainable attribute ownership with the pair of (owner, attribute
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -127,7 +127,7 @@ Retrieves the explainable relation with the given variable name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

@@ -21,7 +21,7 @@ Creates and returns a new instance of this ``EntityType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -76,7 +76,7 @@ Retrieves all direct and indirect (or direct only) ``Entity`` objects that are i
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -114,7 +114,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType`
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -151,7 +151,7 @@ Retrieves the most immediate supertype of the ``EntityType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -205,7 +205,7 @@ Retrieves all supertypes of the ``EntityType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -242,7 +242,7 @@ Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

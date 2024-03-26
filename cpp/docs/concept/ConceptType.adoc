@@ -10,7 +10,7 @@ The exact type of a Concept object. Use for downcasting to the appropriate type.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

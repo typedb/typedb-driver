@@ -247,7 +247,12 @@ class DoxygenParserCpp : Callable<Unit> {
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
-        val argsMap = argsList.toMap()
+        val argsMap = argsList.associate { (first, second) ->
+            Pair(
+                addZeroWidthWhitespaces(first),
+                addZeroWidthWhitespaces(second)
+            )
+        }
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
@@ -259,9 +264,9 @@ class DoxygenParserCpp : Callable<Unit> {
                 val argName = it.child(0).text()
                 assert(argsMap.contains(argName))
                 Variable(
-                    name = argName,
-                    type = argsMap[argName],
+                    name = addZeroWidthWhitespaces(argName),
                     description = reformatTextWithCode(it.child(1).html(), idToAnchor),
+                    type = argsMap[argName],
                 )
             }
 
@@ -282,9 +287,9 @@ class DoxygenParserCpp : Callable<Unit> {
         val name = element.selectFirst("td.memname")!!.text().substringAfterLast("::")
         val descr = reformatTextWithCode(element.selectFirst("div.memdoc")!!.html(), idToAnchor)
         return Variable(
-            name = name,
+            name = addZeroWidthWhitespaces(name),
             description = descr,
-            type = type,
+            type = addZeroWidthWhitespaces(type),
         )
     }
 

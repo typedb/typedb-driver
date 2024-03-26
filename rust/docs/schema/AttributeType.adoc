@@ -21,7 +21,7 @@ Multiple types can own the same attribute type, and different instances of the s
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

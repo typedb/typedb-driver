@@ -18,7 +18,7 @@ attributeType.GetOwners(transaction, annotation, Explicit);
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

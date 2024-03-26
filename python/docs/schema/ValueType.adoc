@@ -6,7 +6,7 @@ TypeQL value types for attributes and value concepts.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols=","]
 [options="header"]
 |===
 |Name |Value

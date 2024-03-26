@@ -18,7 +18,7 @@ Roles allow a schema to enforce logical constraints on types of role players.
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

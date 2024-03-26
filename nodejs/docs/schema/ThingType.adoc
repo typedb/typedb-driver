@@ -8,7 +8,7 @@
 [caption=""]
 .Namespace variables
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -260,7 +260,7 @@ Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -290,7 +290,7 @@ Checks if this concept is equal to the argument ``concept``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -313,7 +313,7 @@ Retrieves all direct and indirect ``Thing`` objects that are instances of this `
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -343,7 +343,7 @@ Retrieves all direct and indirect (or direct only) ``Thing`` objects that are in
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -374,7 +374,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -404,7 +404,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -435,7 +435,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -466,7 +466,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -498,7 +498,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -529,7 +529,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -561,7 +561,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -593,7 +593,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -626,7 +626,7 @@ Retrieves an ``AttributeType``, ownership of which is overridden for this ``Thin
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -657,7 +657,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -687,7 +687,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -718,7 +718,7 @@ Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -749,7 +749,7 @@ Retrieves all direct and indirect subtypes of the ``ThingType``. Equivalent to g
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -779,7 +779,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -810,7 +810,7 @@ Retrieves the most immediate supertype of the ``ThingType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -840,7 +840,7 @@ Retrieves all supertypes of the ``ThingType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -870,7 +870,7 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -942,7 +942,7 @@ Check if the concept has been deleted
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1154,7 +1154,7 @@ Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1184,7 +1184,7 @@ Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1215,7 +1215,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1246,7 +1246,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1278,7 +1278,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1310,7 +1310,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1343,7 +1343,7 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1374,7 +1374,7 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1406,7 +1406,7 @@ Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1436,7 +1436,7 @@ Disallows the instances of this ``ThingType`` from owning the given ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1467,7 +1467,7 @@ Disallows the instances of this ``ThingType`` from playing the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

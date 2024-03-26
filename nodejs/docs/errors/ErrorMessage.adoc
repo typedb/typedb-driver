@@ -30,7 +30,7 @@ Generates the error message by substituting ``args`` into the messageTemplate
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -53,7 +53,7 @@ new ErrorMessage(codePrefix, codeNumber, messagePrefix, messageBody): ErrorMessa
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

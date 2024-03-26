@@ -83,12 +83,12 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -144,12 +144,12 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -205,12 +205,12 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -239,7 +239,7 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

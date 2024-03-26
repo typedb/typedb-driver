@@ -6,7 +6,7 @@ Interface for TypeDBOptions. Use TypeDBOptions instead.
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

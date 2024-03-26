@@ -95,7 +95,7 @@ Registers a callback function which will be executed when this session is closed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -128,7 +128,7 @@ Registers a callback function which will be executed when this session is reopen
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -161,7 +161,7 @@ Opens a transaction to perform read or write queries on the database connected t
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

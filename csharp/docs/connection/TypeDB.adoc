@@ -19,7 +19,7 @@ Open a TypeDB Driver to a TypeDB Cloud server available at the provided address,
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -53,7 +53,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -87,7 +87,7 @@ Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

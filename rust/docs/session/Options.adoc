@@ -13,7 +13,7 @@ TypeDB session and transaction options. ``TypeDBOptions`` object can be used to 
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

@@ -18,7 +18,7 @@ thingType.GetOwns(transaction, IValue.ValueType.String);
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

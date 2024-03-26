@@ -73,7 +73,7 @@ Explicitly enables or disables explanations. If set to ``true``, enables explana
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -130,7 +130,7 @@ Explicitly enables or disables inference. Only settable at transaction level and
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -187,7 +187,7 @@ Explicitly enables or disables parallel execution. If set to ``true``, the serve
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -244,7 +244,7 @@ Explicitly enables or disables prefetching. If set to ``true``, the first batch 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -301,7 +301,7 @@ Explicitly sets a prefetch size. If set, specifies a guideline number of answers
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -358,7 +358,7 @@ Explicitly enables or disables reading data from any replica. If set to ``True``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -415,7 +415,7 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -472,7 +472,7 @@ Explicitly sets a session idle timeout. If set, specifies a timeout that allows 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -529,7 +529,7 @@ Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -586,7 +586,7 @@ Explicitly set a transaction timeout. If set, specifies a timeout for killing tr
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

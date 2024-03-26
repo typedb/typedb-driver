@@ -240,7 +240,12 @@ class DoxygenParserCsharp : Callable<Unit> {
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = updateSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
-        val argsMap = argsList.toMap()
+        val argsMap = argsList.associate { (first, second) ->
+            Pair(
+                addZeroWidthWhitespaces(first),
+                addZeroWidthWhitespaces(second)
+            )
+        }
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
@@ -252,9 +257,9 @@ class DoxygenParserCsharp : Callable<Unit> {
                 val argName = it.child(0).text()
                 assert(argsMap.contains(argName))
                 Variable(
-                    name = argName,
-                    type = argsMap[argName],
+                    name = addZeroWidthWhitespaces(argName),
                     description = reformatTextWithCode(it.child(1).html(), idToAnchor),
+                    type = argsMap[argName],
                 )
             }
 
@@ -274,14 +279,14 @@ class DoxygenParserCsharp : Callable<Unit> {
         val name = element.selectFirst("td.memname")!!.text().substringAfterLast("::")
         val descr = reformatTextWithCode(element.selectFirst("div.memdoc")!!.html(), idToAnchor)
         return Variable(
-            name = name,
+            name = addZeroWidthWhitespaces(name),
             description = descr,
-            type = type,
+            type = addZeroWidthWhitespaces(type),
         )
     }
 
     private fun getArgsFromSignature(methodSignature: String): List<Pair<String, String>> {
-        var splittedArgsAndTypes = methodSignature
+        val splittedArgsAndTypes = methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
             .split(",\\s".toRegex()).toMutableList()
@@ -295,8 +300,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             if (splittedArgsAndTypes[i].contains("<") && !splittedArgsAndTypes[i].contains(">")) {
                 splittedArgsAndTypes[i] = splittedArgsAndTypes[i] + ", " + splittedArgsAndTypes[i + 1]
                 splittedArgsAndTypes.removeAt(i + 1)
-            }
-            else {
+            } else {
                 ++i
             }
         }
@@ -309,7 +313,7 @@ class DoxygenParserCsharp : Callable<Unit> {
 
     private fun reformatTextWithCode(html: String, idToAnchor: Map<String, String>): String {
         return formatSeeAlso(
-                replaceAngleBracketCodes(
+            replaceHtmlSymbols(
                 removeHyperlinkFormatting(
                     removeAllTags(
                         replaceLocalLinks(
@@ -341,7 +345,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             val seeAlsoEndIndex = seeAlsoIndex + oldSeeAlso.length
             val seeTargetEnd = Regex("([^\\s])+\n").find(updatedHtml, seeAlsoEndIndex)
             val seeTargetEndIndex = seeTargetEnd?.range?.endInclusive
-            if (seeTargetEndIndex != null ) {
+            if (seeTargetEndIndex != null) {
                 updatedHtml = StringBuilder(updatedHtml).apply { insert(seeTargetEndIndex + 1, "----") }.toString()
                 seeAlsoIndex = seeTargetEndIndex + "----".length
 
@@ -359,12 +363,11 @@ class DoxygenParserCsharp : Callable<Unit> {
         var updatedHtml = html
 
         val regex = Regex("<<#_[a-zA-Z_]+,.*>>")
-        regex.findAll(html).map{ it.value }.forEach{
+        regex.findAll(html).map { it.value }.forEach {
             val newValue = it
                 .substringAfter("<<#_")
                 .substringBeforeLast(">>")
-                .split(",")
-                .let { it.drop(1).joinToString(",") }
+                .split(",").drop(1).joinToString(",")
             updatedHtml = updatedHtml.replace(it, newValue)
         }
 
@@ -375,10 +378,6 @@ class DoxygenParserCsharp : Callable<Unit> {
         return html.replace("<pre>", "[source,cs]\n----\n").replace("</pre>", "\n----\n")
     }
 
-    private fun replaceAngleBracketCodes(html: String): String {
-        return html.replace("&lt;", "<").replace("&gt;", ">")
-    }
-
     private fun updateSignature(signature: String): String {
         var enhanced = replaceSpaces(signature)
         enhanced = enhanced
@@ -386,7 +385,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             .replace("< ", "<")
             .replace(" >", ">")
         enhanced = Regex("\\s([()*&])").replace(enhanced, "$1")
-        var splitted = enhanced.split(" ").toMutableList()
+        val splitted = enhanced.split(" ").toMutableList()
         val methodNameIndex = splitted.indexOfFirst { it.contains('(') }
         if (methodNameIndex != -1) {
             splitted[methodNameIndex] = splitted[methodNameIndex].substringAfterLast(".")

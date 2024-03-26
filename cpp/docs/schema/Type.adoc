@@ -29,7 +29,7 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -88,7 +88,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -123,7 +123,7 @@ Retrieves the most immediate supertype of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -156,7 +156,7 @@ Retrieves all supertypes of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -217,7 +217,7 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -252,7 +252,7 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

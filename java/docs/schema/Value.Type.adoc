@@ -16,7 +16,7 @@ thingType.getOwns(transaction, Value.Type.STRING);
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -126,7 +126,7 @@ Returns the enum constant of this type with the specified name. The string must 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

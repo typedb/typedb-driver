@@ -63,7 +63,7 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -97,7 +97,7 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -131,7 +131,7 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -165,7 +165,7 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -199,7 +199,7 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -233,12 +233,12 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `value` a| ``IAttribute``’s value a| `System.DateTime`
+a| `value` a| ``IAttribute``’s value a| `System​.DateTime`
 |===
 
 [caption=""]
@@ -267,7 +267,7 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType`` directl
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -300,7 +300,7 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``, filter
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -334,12 +334,12 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -368,13 +368,13 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``, filter
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``IAttributeType`` with all given ``Annotation``s a| `ICollection< Annotation >`
-a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -403,7 +403,7 @@ Retrieves the regular expression that is defined for this ``IAttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -436,12 +436,12 @@ Retrieves all direct and indirect subtypes of this ``IAttributeType`` with given
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue.ValueType`
+a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue​.ValueType`
 |===
 
 [caption=""]
@@ -470,13 +470,13 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``IAttribute
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue.ValueType`
-a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit`` for direct subtypes only a| `IConcept.Transitivity`
+a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue​.ValueType`
+a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit`` for direct subtypes only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -653,7 +653,7 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given val
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -687,7 +687,7 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``s
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -721,7 +721,7 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``l
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -755,7 +755,7 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``d
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -789,7 +789,7 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``b
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -823,12 +823,12 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``D
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `value` a| New ``IAttribute``’s value a| `System.DateTime`
+a| `value` a| New ``IAttribute``’s value a| `System​.DateTime`
 |===
 
 [caption=""]
@@ -859,7 +859,7 @@ Can only be applied for ``IAttributeType``s with a ``string`` value type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -893,7 +893,7 @@ Sets the supplied ``IAttributeType`` as the supertype of the current ``IAttribut
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -927,7 +927,7 @@ Removes the regular expression that is defined for this ``IAttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

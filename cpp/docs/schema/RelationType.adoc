@@ -31,7 +31,7 @@ Creates and returns an instance of this ``RelationType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -64,7 +64,7 @@ Retrieves ``Relation``s that are instances of this exact ``RelationType``, OR th
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -98,7 +98,7 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -132,7 +132,7 @@ Retrieves the role with the specified label that this ``RelationType`` relates t
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -166,7 +166,7 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -200,7 +200,7 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -234,7 +234,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RelationTyp
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -300,7 +300,7 @@ Sets the new role that this ``RelationType`` relates to. If we are setting an ov
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -336,7 +336,7 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -386,7 +386,7 @@ Disallows this ``RelationType`` from relating to the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

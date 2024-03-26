@@ -13,7 +13,7 @@ attribute_type.get_owners(transaction, annotations=annotations, transitivity=Tra
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols=","]
 [options="header"]
 |===
 |Name |Value

@@ -23,7 +23,7 @@ Checks if a user with the given name exists.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -51,12 +51,12 @@ void Create(string username, string password)
 
 
 
-Creates a user with the given name &amp; password.
+Creates a user with the given name & password.
 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -90,7 +90,7 @@ Deletes a user with the given name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -123,7 +123,7 @@ Retrieves a user with the given name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -180,7 +180,7 @@ Sets a new password for a user. This operation can only be performed by administ
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

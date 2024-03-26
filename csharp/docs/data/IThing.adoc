@@ -49,7 +49,7 @@ Deletes this ``IThing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -82,7 +82,7 @@ Retrieves the ``IAttribute``s that this ``IThing`` owns, optionally filtered by 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -117,7 +117,7 @@ Retrieves the ``IAttribute``s that this ``IThing`` owns, filtered by ``Annotatio
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -152,7 +152,7 @@ Retrieves the roles that this ``IThing`` is currently playing.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -185,7 +185,7 @@ Retrieves all the ``Relations`` which this ``IThing`` plays a role in, optionall
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -243,7 +243,7 @@ Checks if this ``IThing`` is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -326,7 +326,7 @@ Assigns an ``IAttribute`` to be owned by this ``IThing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -384,7 +384,7 @@ Unassigns an ``IAttribute`` from this ``IThing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

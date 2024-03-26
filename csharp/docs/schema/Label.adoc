@@ -12,11 +12,11 @@ It consists of an optional ``scope``, and a ``name``, represented ``scope:name``
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
-a| `readonly string TypeDB.Driver.Common.Label.Name` a| `readonly string TypeDB.Driver.Common.Label.Name` a| Returns the name of this Label.
+a| `readonly string TypeDB​.Driver​.Common​.Label​.Name` a| `readonly string TypeDB​.Driver​.Common​.Label​.Name` a| Returns the name of this Label.
 Examples
 [source,cs]
 ----
@@ -24,7 +24,7 @@ label.Name;
 
 ----
 
-a| `readonly? string TypeDB.Driver.Common.Label.Scope` a| `readonly? string TypeDB.Driver.Common.Label.Scope` a| Returns the scope of this Label.
+a| `readonly? string TypeDB​.Driver​.Common​.Label​.Scope` a| `readonly? string TypeDB​.Driver​.Common​.Label​.Scope` a| Returns the scope of this Label.
 Examples
 [source,cs]
 ----
@@ -51,7 +51,7 @@ Checks if this Label is equal to another object.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -84,7 +84,7 @@ Creates a Label from a specified scope and name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -118,7 +118,7 @@ Creates a Label from a specified name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

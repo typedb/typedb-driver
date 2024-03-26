@@ -57,7 +57,7 @@ Creates and returns a new instance of this ``IEntityType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -118,7 +118,7 @@ Sets the supplied ``IEntityType`` as the supertype of the current ``IEntityType`
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

@@ -57,7 +57,7 @@ Creates and returns an instance of this ``IRelationType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -117,12 +117,12 @@ Retrieves roles that this ``IRelationType`` relates to directly or via inheritan
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit`` for direct relates only a| `IConcept.Transitivity`
+a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit`` for direct relates only a| `IConcept​.Transitivity`
 |===
 
 [caption=""]
@@ -151,7 +151,7 @@ Retrieves roles that this ``IRelationType`` relates to directly or via inheritan
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -212,7 +212,7 @@ Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -328,7 +328,7 @@ Sets the new role that this ``IRelationType`` relates to. If we are setting an o
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -364,7 +364,7 @@ Sets the supplied ``IRelationType`` as the supertype of the current ``IRelationT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -425,7 +425,7 @@ Disallows this ``IRelationType`` from relating to the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
