@@ -56,7 +56,7 @@ See also
 ----
  
  
-  IThingType::GetInstances(ITypeDBTransaction, IConcept.Transitivity)
+IThingType::GetInstances(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 
@@ -118,7 +118,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -145,7 +145,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -172,7 +172,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -199,7 +199,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -226,7 +226,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -253,7 +253,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -280,7 +280,7 @@ See also
 ----
  
  
-  IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
+IThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection<Annotation>, IConcept.Transitivity)
 ---- 
 
 
@@ -378,7 +378,7 @@ See also
 ----
  
  
-  IThingType::GetPlays(ITypeDBTransaction, IConcept.Transitivity)
+IThingType::GetPlays(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 
@@ -605,7 +605,7 @@ See also
 ----
  
  
-  IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
 ---- 
 
 
@@ -632,7 +632,7 @@ See also
 ----
  
  
-  IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
 ---- 
 
 
@@ -659,7 +659,7 @@ See also
 ----
  
  
-  IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+IThingType::SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
 ---- 
 
 
@@ -686,7 +686,7 @@ See also
 ----
  
  
-  IThingType::SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
+IThingType::SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
 ---- 
 
 

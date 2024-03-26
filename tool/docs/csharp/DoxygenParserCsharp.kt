@@ -155,7 +155,7 @@ class DoxygenParserCsharp : Callable<Unit> {
             map[heading] = members
         }
 
-        if (missingDeclarations.isNotEmpty()) {
+        if (missingDeclarations.isNotEmpty()) { // Ignore the methods that are @private.
             println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
 
@@ -258,7 +258,6 @@ class DoxygenParserCsharp : Callable<Unit> {
                 )
             }
 
-        println("METHOD: " + methodDescr)
         return Method(
             name = methodName,
             signature = methodSignature,
@@ -339,11 +338,17 @@ class DoxygenParserCsharp : Callable<Unit> {
                 break
             }
 
-            val seeTargetEnd = Regex("([^\\s])+\n").find(updatedHtml, seeAlsoIndex + oldSeeAlso.length)
+            val seeAlsoEndIndex = seeAlsoIndex + oldSeeAlso.length
+            val seeTargetEnd = Regex("([^\\s])+\n").find(updatedHtml, seeAlsoEndIndex)
             val seeTargetEndIndex = seeTargetEnd?.range?.endInclusive
             if (seeTargetEndIndex != null ) {
                 updatedHtml = StringBuilder(updatedHtml).apply { insert(seeTargetEndIndex + 1, "----") }.toString()
                 seeAlsoIndex = seeTargetEndIndex + "----".length
+
+                val seeTargetStart = Regex("\n  [^\\s\\n]+").find(updatedHtml, seeAlsoEndIndex)
+                if (seeTargetStart != null) {
+                    updatedHtml = updatedHtml.replace(seeTargetStart.value, seeTargetStart.value.replace("  ", ""))
+                }
             }
         }
 

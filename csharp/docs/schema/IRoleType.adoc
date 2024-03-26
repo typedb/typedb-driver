@@ -60,7 +60,7 @@ See also
 ----
  
  
-  IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
+IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 
@@ -121,7 +121,7 @@ See also
 ----
  
  
-  IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
+IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 
@@ -182,7 +182,7 @@ See also
 ----
  
  
-  IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
+IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 

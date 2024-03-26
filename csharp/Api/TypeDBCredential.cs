@@ -34,7 +34,7 @@ namespace TypeDB.Driver.Api
      * TypeDBCredential credential = new TypeDBCredential(username, password, true);
      *
      * // Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
-     * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
+     * TypeDBCredential credential = new TypeDBCredential(username, password, Environment.GetEnvironmentVariable("ROOT_CA")!);
      * </pre>
      */
     public class TypeDBCredential : NativeObjectWrapper<Pinvoke.Credential>

@@ -94,7 +94,7 @@ See also
 ----
  
  
-  IRelationType::getRelates(ITypeDBTransaction, IConcept.Transitivity)
+IRelationType::getRelates(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 
@@ -189,7 +189,7 @@ See also
 ----
  
  
-  IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
+IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
 ---- 
 
 
@@ -278,7 +278,7 @@ See also
 ----
  
  
-  IRelationType::SetRelates(ITypeDBTransaction, string, string)
+IRelationType::SetRelates(ITypeDBTransaction, string, string)
 ---- 
 
 
@@ -305,7 +305,7 @@ See also
 ----
  
  
-  IRelationType::SetRelates(ITypeDBTransaction, string, string)
+IRelationType::SetRelates(ITypeDBTransaction, string, string)
 ---- 
 
 
@@ -402,7 +402,7 @@ See also
 ----
  
  
-  IRelationType::UnsetRelates(ITypeDBTransaction, string)
+IRelationType::UnsetRelates(ITypeDBTransaction, string)
 ---- 
 
 

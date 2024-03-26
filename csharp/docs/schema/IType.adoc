@@ -88,7 +88,7 @@ See also
 ----
  
  
-  IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
+IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
 ---- 
 
 

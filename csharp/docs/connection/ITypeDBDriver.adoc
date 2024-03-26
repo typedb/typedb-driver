@@ -119,7 +119,7 @@ See also
 ----
  
  
-  ITypeDBDriver::Session(string, SessionType, TypeDBOptions);
+ITypeDBDriver::Session(string, SessionType, TypeDBOptions);
 ---- 
 
 

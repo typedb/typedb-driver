@@ -185,7 +185,7 @@ See also
 ----
  
  
-  ITypeDBSession::Transaction(TransactionType, TypeDBOptions)
+ITypeDBSession::Transaction(TransactionType, TypeDBOptions)
 ---- 
 
 
