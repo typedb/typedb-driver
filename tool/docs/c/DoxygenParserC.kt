@@ -241,7 +241,7 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun replacePreTags(html: String): String {
-        return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
+        return html.replace("<pre>", "[source,c]\n----\n").replace("</pre>", "\n----\n")
     }
 
     private fun enhanceSignature(signature: String): String {

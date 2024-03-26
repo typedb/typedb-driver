@@ -30,7 +30,7 @@ Helper function to map promises.
 |===
 |Name |Description |Type
 a| `resolver` a| The function to wrap into the promise a| `Func< TFrom?>`
-a| `selector` a| The mapping (like Select from Linq) function a| `TTo >`
+a| `selector` a| The mapping (like Select from Linq) function a| `Func< TFrom, TTo >`
 |===
 
 [caption=""]

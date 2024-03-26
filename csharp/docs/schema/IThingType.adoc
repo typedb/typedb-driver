@@ -112,7 +112,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
  
 
 
@@ -136,7 +136,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
  
 
 
@@ -160,7 +160,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
  
 
 
@@ -184,7 +184,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection, IConcept.Transitivity)
  
 
 
@@ -208,7 +208,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
  
 
 
@@ -232,7 +232,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection, IConcept.Transitivity)
  
 
 
@@ -256,7 +256,7 @@ Retrieves ``IAttributeType`` that the instances of this ``IThingType`` are allow
   See also
  
  
-  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+  ThingType::GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
  
 
 

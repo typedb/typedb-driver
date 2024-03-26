@@ -240,7 +240,9 @@ class DoxygenParserCsharp : Callable<Unit> {
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = updateSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
+        println("RETURN ARGS LIST: " + argsList)
         val argsMap = argsList.toMap()
+        println("RETURN ARGS: " + argsMap)
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
@@ -281,21 +283,55 @@ class DoxygenParserCsharp : Callable<Unit> {
     }
 
     private fun getArgsFromSignature(methodSignature: String): List<Pair<String, String>> {
-        return methodSignature
+        println("METHOD: " + methodSignature)
+
+        var v = methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
-            .split(",\\s".toRegex()).map { arg ->
-                arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
-            }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
+            .split(",\\s".toRegex()).toMutableList()
+
+        var i = 0
+        while (true) {
+            if (i >= v.lastIndex) {
+                break
+            }
+
+            if (v[i].contains("<") && !v[i].contains(">")) {
+                v[i] = v[i] + ", " + v[i + 1]
+                v.removeAt(i + 1)
+            }
+            else {
+                ++i
+            }
+        }
+
+        return v.map { arg ->
+            arg.split("\\s".toRegex()).let { it.last() to it.dropLast(1).joinToString(" ") }
+        }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
     }
 
     private fun reformatTextWithCode(html: String, idToAnchor: Map<String, String>): String {
-        return removeAllTags(replaceLocalLinks(idToAnchor, replaceEmTags(replacePreTags(replaceCodeTags(html)))))
+        return removeAllTags(
+            replaceLocalLinks(
+                idToAnchor,
+                replaceEmTags(
+                    replacePreTags(
+                        replaceCodeTags(
+                            replaceAngleBracketCodes(html)
+                        )
+                    )
+                )
+            )
+        )
     }
 
     private fun replacePreTags(html: String): String {
-        return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
+        return html.replace("<pre>", "[source,cs]\n----\n").replace("</pre>", "\n----\n")
+    }
+
+    private fun replaceAngleBracketCodes(html: String): String {
+        return html.replace("&lt;", "<").replace("&gt;", ">")
     }
 
     private fun updateSignature(signature: String): String {
