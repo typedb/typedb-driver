@@ -51,7 +51,7 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| 
+a| `username` a| The user name to be checked a| `const std::string&`
 |===
 
 [caption=""]
@@ -84,8 +84,8 @@ Creates a user with the given name &amp; password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be created a| 
-a| `password` a| The password of the user to be created a| 
+a| `username` a| The name of the user to be created a| `const std::string&`
+a| `password` a| The password of the user to be created a| `const std::string&`
 |===
 
 [caption=""]
@@ -118,7 +118,7 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be deleted a| 
+a| `username` a| The name of the user to be deleted a| `const std::string&`
 |===
 
 [caption=""]
@@ -151,7 +151,7 @@ Retrieves a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to retrieve a| 
+a| `username` a| The name of the user to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -184,8 +184,8 @@ Sets a new password for a user. This operation can only be performed by administ
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to set the password of a| 
-a| `password` a| The new password a| 
+a| `username` a| The name of the user to set the password of a| `const std::string&`
+a| `password` a| The new password a| `const std::string&`
 |===
 
 [caption=""]

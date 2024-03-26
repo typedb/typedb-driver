@@ -23,8 +23,8 @@ Open a TypeDB Driver to a TypeDB Cloud server available at the provided address,
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address of the TypeDB server a| 
-a| `credential` a| The credential to connect with a| 
+a| `address` a| The address of the TypeDB server a| `string`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
 |===
 
 [caption=""]
@@ -57,8 +57,8 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| The address(es) of the TypeDB server(s) a| 
-a| `credential` a| The credential to connect with a| 
+a| `addresses` a| The address(es) of the TypeDB server(s) a| `ICollection< string >`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
 |===
 
 [caption=""]
@@ -91,7 +91,7 @@ Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address of the TypeDB server a| 
+a| `address` a| The address of the TypeDB server a| `string`
 |===
 
 [caption=""]

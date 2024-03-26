@@ -39,8 +39,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `Value*`
 |===
 
 [caption=""]
@@ -73,8 +73,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `const std::string&`
 |===
 
 [caption=""]
@@ -107,8 +107,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `int64_t`
 |===
 
 [caption=""]
@@ -141,8 +141,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `double`
 |===
 
 [caption=""]
@@ -175,8 +175,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `bool`
 |===
 
 [caption=""]
@@ -209,8 +209,8 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `DateTime`
 |===
 
 [caption=""]
@@ -244,7 +244,7 @@ Retrieves all direct and indirect ``Attributes`` that are instances of this ``At
 |===
 |Name |Description |Type
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
@@ -282,7 +282,7 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
@@ -316,8 +316,8 @@ Variant of <<#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Trans
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `const std::vector< Annotation >&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
@@ -373,7 +373,7 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
@@ -406,7 +406,7 @@ Retrieves all direct and indirect subtypes of this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
@@ -441,8 +441,8 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `valueType` a| ``Value.Type`` for retrieving subtypes a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `ValueType`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
@@ -500,8 +500,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `Value*`
 |===
 
 [caption=""]
@@ -534,8 +534,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``Str
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `const std::string&`
 |===
 
 [caption=""]
@@ -568,8 +568,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``lon
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `int64_t`
 |===
 
 [caption=""]
@@ -602,8 +602,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``dou
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `double`
 |===
 
 [caption=""]
@@ -636,8 +636,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``boo
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `bool`
 |===
 
 [caption=""]
@@ -670,8 +670,8 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``Dat
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `DateTime`
 |===
 
 [caption=""]
@@ -706,8 +706,8 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `regex` a| Regular expression a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `regex` a| Regular expression a| `const std::string&`
 |===
 
 [caption=""]
@@ -740,8 +740,8 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType*`
 |===
 
 [caption=""]
@@ -774,7 +774,7 @@ Removes the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]

@@ -99,7 +99,7 @@ Retrieves the rule variables corresponding to the query variable var for this ``
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The query variable to map to rule variables. a| 
+a| `variable` a| The query variable to map to rule variables. a| `string`
 |===
 
 [caption=""]

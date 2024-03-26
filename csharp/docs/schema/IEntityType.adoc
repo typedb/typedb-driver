@@ -61,7 +61,7 @@ Creates and returns a new instance of this ``IEntityType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -122,8 +122,8 @@ Sets the supplied ``IEntityType`` as the supertype of the current ``IEntityType`
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `superEntityType` a| The ``IEntityType`` to set as the supertype of this ``IEntityType`` a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `superEntityType` a| The ``IEntityType`` to set as the supertype of this ``IEntityType`` a| `IEntityType`
 |===
 
 [caption=""]

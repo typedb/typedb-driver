@@ -31,7 +31,7 @@ Deletes this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
@@ -64,7 +64,7 @@ Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation`
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| 
 |===
 
@@ -115,8 +115,8 @@ Retrieves the ``Attribute``s of the specified ``AttributeType``s that this ``Thi
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `const std::vector< std::unique_ptr< AttributeType > >&`
 |===
 
 [caption=""]
@@ -205,7 +205,7 @@ Retrieves the roles that this ``Thing`` is currently playing.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
@@ -238,7 +238,7 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `roleTypes` a| The array of roles to filter the relations by. a| 
 |===
 
@@ -313,7 +313,7 @@ Checks if this ``Thing`` is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
@@ -370,8 +370,8 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute*`
 |===
 
 [caption=""]
@@ -404,8 +404,8 @@ Unassigns an ``Attribute`` from this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute*`
 |===
 
 [caption=""]

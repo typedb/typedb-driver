@@ -27,7 +27,7 @@ Checks if a database with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The database name to be checked a| 
+a| `name` a| The database name to be checked a| `string`
 |===
 
 [caption=""]
@@ -60,7 +60,7 @@ Create a database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to be created a| 
+a| `name` a| The name of the database to be created a| `string`
 |===
 
 [caption=""]
@@ -93,7 +93,7 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| 
+a| `name` a| The name of the database to retrieve a| `string`
 |===
 
 [caption=""]

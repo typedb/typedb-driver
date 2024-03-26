@@ -64,7 +64,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 |===
 |Name |Description |Type
 a| `addresses` a| The address(es) of the TypeDB server(s) a| 
-a| `credential` a| The Credential to connect with a| 
+a| `credential` a| The Credential to connect with a| `const Credential&`
 |===
 
 [caption=""]
@@ -178,7 +178,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database with which the session connects a| 
+a| `database` a| The name of the database with which the session connects a| `const std::string&`
 a| `type` a| The type of session to be created (DATA or SCHEMA) a| 
 a| `options` a| ``TypeDBOptions`` for the session a| 
 |===

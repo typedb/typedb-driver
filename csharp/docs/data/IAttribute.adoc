@@ -60,7 +60,7 @@ Retrieves the instances that own this ``IAttribute``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -93,8 +93,8 @@ Retrieves the instances that own this ``IAttribute``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `ownerType` a| Filter results for only owners of the given type a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `ownerType` a| Filter results for only owners of the given type a| `IThingType`
 |===
 
 [caption=""]

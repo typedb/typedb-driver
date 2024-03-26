@@ -51,7 +51,7 @@ Retrieves a concept for a given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| 
+a| `variable` a| The string representation of a variable a| `string`
 |===
 
 [caption=""]

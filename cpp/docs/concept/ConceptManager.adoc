@@ -27,7 +27,7 @@ Retrieves an ``Attribute`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve a| 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -60,7 +60,7 @@ Retrieves an ``AttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve a| 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -93,7 +93,7 @@ Retrieves an ``Entity`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve a| 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -126,7 +126,7 @@ Retrieves an ``EntityType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to retrieve a| 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -159,7 +159,7 @@ Retrieves a ``Relation`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve a| 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -192,7 +192,7 @@ Retrieves a ``RelationType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to retrieve a| 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -321,8 +321,8 @@ Creates a new ``AttributeType`` if none exists with the given label, or retrieve
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to create or retrieve a| 
-a| `valueType` a| The value type of the ``AttributeType`` to create a| 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `const std::string&`
+a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueType`
 |===
 
 [caption=""]
@@ -355,7 +355,7 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to create or retrieve a| 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `const std::string&`
 |===
 
 [caption=""]
@@ -388,7 +388,7 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to create or retrieve a| 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `const std::string&`
 |===
 
 [caption=""]

@@ -27,7 +27,7 @@ Checks if this ``Annotation`` is equal to another object.
 [options="header"]
 |===
 |Name |Description |Type
-a| `obj` a| Object to compare with a| 
+a| `obj` a| Object to compare with a| `object?`
 |===
 
 [caption=""]
@@ -40,22 +40,6 @@ a| `obj` a| Object to compare with a|
 ----
 annotation.Equals(obj);
 ----
-
-[#_override_int_TypeDB_Driver_Api_IThingType_Annotation_GetHashCode___]
-==== GetHashCode
-
-[source,cs]
-----
-override int GetHashCode()
-----
-
-
-
-@hidden
-
-[caption=""]
-.Returns
-`override int`
 
 [#_bool_TypeDB_Driver_Api_IThingType_Annotation_IsKey___]
 ==== IsKey

@@ -77,7 +77,7 @@ Retrieves the rule variables corresponding to the query variable var for this ``
 [options="header"]
 |===
 |Name |Description |Type
-a| `var` a| The query variable to map to rule variables. a| 
+a| `var` a| The query variable to map to rule variables. a| `const std::string&`
 |===
 
 [caption=""]

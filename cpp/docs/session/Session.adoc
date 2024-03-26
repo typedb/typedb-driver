@@ -165,7 +165,7 @@ Opens a transaction to perform read or write queries on the database connected t
 [options="header"]
 |===
 |Name |Description |Type
-a| `type` a| The type of transaction to be created (READ or WRITE) a| 
+a| `type` a| The type of transaction to be created (READ or WRITE) a| `TransactionType`
 a| `options` a| Options for the session a| 
 |===
 

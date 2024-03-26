@@ -27,7 +27,7 @@ namespace TypeDB.Driver.Common
     /**
      * A <code>Promise</code> represents an asynchronous network operation.
      * <p>The request it represents is performed immediately. The response is only retrieved
-     * once the <code>Promise</code> is <code>Resolve</code>d.</p>.
+     * once the <code>Promise</code> is <code>Resolve</code>d.</p>
      */
     public class Promise<T>
     {
@@ -41,7 +41,7 @@ namespace TypeDB.Driver.Common
          * new Promise(supplier);
          * </pre>
          *
-         * @param promise The function to wrap into the promise
+         * @param resolver The function to wrap into the promise
          */
         public Promise(Func<T?> resolver)
         {
@@ -76,8 +76,8 @@ namespace TypeDB.Driver.Common
          * Promise&lt;TFrom&gt;.Map&lt;TTo, T&gt;(supplier, selector);
          * </pre>
          *
-         * @param promise The function to wrap into the promise
-         * @param fn The mapping function
+         * @param resolver The function to wrap into the promise
+         * @param selector The mapping (like Select from Linq) function
          */
         public static Promise<TTo> Map<TFrom, TTo>(Func<TFrom?> resolver, Func<TFrom, TTo> selector)
         {

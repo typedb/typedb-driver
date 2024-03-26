@@ -231,7 +231,7 @@ class DoxygenParserC : Callable<Unit> {
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
             .split(",\\s".toRegex()).map { arg ->
-                arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
+                arg.split("\\s".toRegex()).let { it.last() to it.dropLast(1).joinToString(" ") }
             }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
     }

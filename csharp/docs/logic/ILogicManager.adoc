@@ -27,7 +27,7 @@ Retrieves the Rule that has the given label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or retrieve a| 
+a| `label` a| The label of the Rule to create or retrieve a| `string`
 |===
 
 [caption=""]
@@ -84,9 +84,9 @@ Creates a new Rule if none exists with the given label, or replaces the existing
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the IRule to create or replace a| 
-a| `when` a| The when body of the rule to create a| 
-a| `then` a| The then body of the rule to create a| 
+a| `label` a| The label of the IRule to create or replace a| `string`
+a| `when` a| The when body of the rule to create a| `string`
+a| `then` a| The then body of the rule to create a| `string`
 |===
 
 [caption=""]

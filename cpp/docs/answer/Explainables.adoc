@@ -27,7 +27,7 @@ Retrieves the explainable attribute with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| 
+a| `variable` a| The string representation of a variable a| `std::string&`
 |===
 
 [caption=""]
@@ -84,8 +84,8 @@ Retrieves the explainable attribute ownership with the pair of (owner, attribute
 [options="header"]
 |===
 |Name |Description |Type
-a| `owner` a| The string representation of the owner variable a| 
-a| `attribute` a| The string representation of the attribute variable a| 
+a| `owner` a| The string representation of the owner variable a| `std::string&`
+a| `attribute` a| The string representation of the attribute variable a| `std::string&`
 |===
 
 [caption=""]
@@ -142,7 +142,7 @@ Retrieves the explainable relation with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| 
+a| `variable` a| The string representation of a variable a| `std::string&`
 |===
 
 [caption=""]

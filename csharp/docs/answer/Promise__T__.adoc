@@ -9,8 +9,6 @@ A ``Promise`` represents an asynchronous network operation.
 
 The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``Resolve``d.
 
-.
-
 // tag::methods[]
 [#_static_Promise__TTo___TypeDB_Driver_Common_Promise__T___Map__TFrom__TTo_____Func__TFrom__resolver__Func__TFrom__TTo___selector_]
 ==== Map< TFrom, TTo >
@@ -31,8 +29,8 @@ Helper function to map promises.
 [options="header"]
 |===
 |Name |Description |Type
-a| `promise` a| The function to wrap into the promise a| 
-a| `fn` a| The mapping function a| 
+a| `resolver` a| The function to wrap into the promise a| `Func< TFrom?>`
+a| `selector` a| The mapping (like Select from Linq) function a| `TTo >`
 |===
 
 [caption=""]
@@ -65,7 +63,7 @@ Promise constructor
 [options="header"]
 |===
 |Name |Description |Type
-a| `promise` a| The function to wrap into the promise a| 
+a| `resolver` a| The function to wrap into the promise a| `Func< T?>`
 |===
 
 [caption=""]

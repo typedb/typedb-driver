@@ -51,7 +51,7 @@ Explicitly enables or disables explanations. If set to ``true``, enables explana
 [options="header"]
 |===
 |Name |Description |Type
-a| `explain` a| Explicitly enable or disable explanations a| 
+a| `explain` a| Explicitly enable or disable explanations a| `bool`
 |===
 
 [caption=""]
@@ -108,7 +108,7 @@ Explicitly enables or disables inference. Only settable at transaction level and
 [options="header"]
 |===
 |Name |Description |Type
-a| `infer` a| Explicitly enable or disable inference a| 
+a| `infer` a| Explicitly enable or disable inference a| `bool`
 |===
 
 [caption=""]
@@ -165,7 +165,7 @@ Explicitly enables or disables parallel execution. If set to ``true``, the serve
 [options="header"]
 |===
 |Name |Description |Type
-a| `parallel` a| Explicitly enable or disable parallel execution a| 
+a| `parallel` a| Explicitly enable or disable parallel execution a| `bool`
 |===
 
 [caption=""]
@@ -222,7 +222,7 @@ Explicitly enables or disables prefetching. If set to ``true``, the first batch 
 [options="header"]
 |===
 |Name |Description |Type
-a| `prefetch` a| Explicitly enable or disable prefetching a| 
+a| `prefetch` a| Explicitly enable or disable prefetching a| `bool`
 |===
 
 [caption=""]
@@ -279,7 +279,7 @@ Explicitly sets a prefetch size. If set, specifies a guideline number of answers
 [options="header"]
 |===
 |Name |Description |Type
-a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| 
+a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| `int`
 |===
 
 [caption=""]
@@ -336,7 +336,7 @@ Explicitly enables or disables reading data from any replica. If set to ``True``
 [options="header"]
 |===
 |Name |Description |Type
-a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| 
+a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `bool`
 |===
 
 [caption=""]
@@ -393,7 +393,7 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 [options="header"]
 |===
 |Name |Description |Type
-a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock. a| 
+a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock. a| `int`
 |===
 
 [caption=""]
@@ -450,7 +450,7 @@ Explicitly sets a session idle timeout. If set, specifies a timeout that allows 
 [options="header"]
 |===
 |Name |Description |Type
-a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. a| 
+a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. a| `int`
 |===
 
 [caption=""]
@@ -507,7 +507,7 @@ Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning 
 [options="header"]
 |===
 |Name |Description |Type
-a| `traceInference` a| Explicitly enable or disable reasoning tracing a| 
+a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `bool`
 |===
 
 [caption=""]
@@ -564,7 +564,7 @@ Explicitly set a transaction timeout. If set, specifies a timeout for killing tr
 [options="header"]
 |===
 |Name |Description |Type
-a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically. a| 
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically. a| `int`
 |===
 
 [caption=""]

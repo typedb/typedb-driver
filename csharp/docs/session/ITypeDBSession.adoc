@@ -95,7 +95,7 @@ Registers a callback function which will be executed when this session is closed
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| 
+a| `function` a| The callback function. a| `Action`
 |===
 
 [caption=""]
@@ -128,7 +128,7 @@ Registers a callback function which will be executed when this session is reopen
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| 
+a| `function` a| The callback function. a| `Action`
 |===
 
 [caption=""]
@@ -209,8 +209,8 @@ Opens a transaction to perform read or write queries on the database connected t
 [options="header"]
 |===
 |Name |Description |Type
-a| `type` a| The type of transaction to be created (Read or Write) a| 
-a| `options` a| Options for the session a| 
+a| `type` a| The type of transaction to be created (Read or Write) a| `TransactionType`
+a| `options` a| Options for the session a| `TypeDBOptions`
 |===
 
 [caption=""]

@@ -335,7 +335,7 @@ namespace TypeDB.Driver.Api
         public class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
         {
             /**
-             * @hidden
+             * @private
              */
             private readonly int _hash;
 
@@ -439,7 +439,7 @@ namespace TypeDB.Driver.Api
             }
 
             /**
-             * @hidden
+             * @private
              */
             public override int GetHashCode()
             {

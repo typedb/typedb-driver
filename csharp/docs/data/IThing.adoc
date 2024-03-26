@@ -53,7 +53,7 @@ Deletes this ``IThing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -86,8 +86,8 @@ Retrieves the ``IAttribute``s that this ``IThing`` owns, optionally filtered by 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeTypes` a| The ``IAttributeType``s to filter the attributes by a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `attributeTypes` a| The ``IAttributeType``s to filter the attributes by a| `params IAttributeType[]`
 |===
 
 [caption=""]
@@ -121,8 +121,8 @@ Retrieves the ``IAttribute``s that this ``IThing`` owns, filtered by ``Annotatio
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `ICollection< Annotation >`
 |===
 
 [caption=""]
@@ -156,7 +156,7 @@ Retrieves the roles that this ``IThing`` is currently playing.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -189,8 +189,8 @@ Retrieves all the ``Relations`` which this ``IThing`` plays a role in, optionall
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `roleTypes` a| The array of roles to filter the relations by. a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `roleTypes` a| The array of roles to filter the relations by. a| `params IRoleType[]`
 |===
 
 [caption=""]
@@ -247,7 +247,7 @@ Checks if this ``IThing`` is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -330,8 +330,8 @@ Assigns an ``IAttribute`` to be owned by this ``IThing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``IAttribute`` to be owned by this ``IThing``. a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `attribute` a| The ``IAttribute`` to be owned by this ``IThing``. a| `IAttribute`
 |===
 
 [caption=""]
@@ -388,8 +388,8 @@ Unassigns an ``IAttribute`` from this ``IThing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``IAttribute`` to be disowned from this ``IThing``. a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `attribute` a| The ``IAttribute`` to be disowned from this ``IThing``. a| `IAttribute`
 |===
 
 [caption=""]

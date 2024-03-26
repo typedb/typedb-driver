@@ -51,8 +51,8 @@ Performs a TypeQL Define query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Define query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Define query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -109,8 +109,8 @@ Performs a TypeQL Delete query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Delete query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Delete query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -167,8 +167,8 @@ Performs a TypeQL Explain query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `explainable` a| The IExplainable to be explained a| 
-a| `options` a| Specify query options a| 
+a| `explainable` a| The IExplainable to be explained a| `IEnumerable< IExplanation > IExplainable`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -225,8 +225,8 @@ Performs a TypeQL Fetch (Fetch) query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Fetch (Fetch) query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Fetch (Fetch) query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -283,8 +283,8 @@ Performs a TypeQL Get (Get) query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Get (Get) query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Get (Get) query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -341,8 +341,8 @@ Performs a TypeQL Get Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Get Aggregate query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Get Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -399,8 +399,8 @@ Performs a TypeQL Get Group query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Get Group query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Get Group query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -457,8 +457,8 @@ Performs a TypeQL Get Group Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Get Group Aggregate query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Get Group Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -515,8 +515,8 @@ Performs a TypeQL Insert query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Insert query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Insert query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -573,8 +573,8 @@ Performs a TypeQL Undefine query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Undefine query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Undefine query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]
@@ -631,8 +631,8 @@ Performs a TypeQL Update query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Update query to be executed a| 
-a| `options` a| Specify query options a| 
+a| `query` a| The TypeQL Update query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
 [caption=""]

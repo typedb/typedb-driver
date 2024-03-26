@@ -50,7 +50,7 @@ namespace TypeDB.Driver.Common
         public readonly string Name;
 
         /**
-         * @hidden
+         * @private
          */
         private readonly int _hash;
 
@@ -141,7 +141,7 @@ namespace TypeDB.Driver.Common
         }
 
         /**
-         * @hidden
+         * @private
          */
         public override int GetHashCode()
         {

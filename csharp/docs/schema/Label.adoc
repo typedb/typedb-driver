@@ -55,7 +55,7 @@ Checks if this Label is equal to another object.
 [options="header"]
 |===
 |Name |Description |Type
-a| `obj` a| Object to compare with a| 
+a| `obj` a| Object to compare with a| `object?`
 |===
 
 [caption=""]
@@ -68,22 +68,6 @@ a| `obj` a| Object to compare with a|
 ----
 label.Equals(obj);
 ----
-
-[#_override_int_TypeDB_Driver_Common_Label_GetHashCode___]
-==== GetHashCode
-
-[source,cs]
-----
-override int GetHashCode()
-----
-
-
-
-@hidden
-
-[caption=""]
-.Returns
-`override int`
 
 [#_TypeDB_Driver_Common_Label_Label___string_scope__string_name_]
 ==== Label
@@ -104,8 +88,8 @@ Creates a Label from a specified scope and name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `scope` a| Label scope a| 
-a| `name` a| Label name a| 
+a| `scope` a| Label scope a| `string?`
+a| `name` a| Label name a| `string`
 |===
 
 [caption=""]
@@ -138,7 +122,7 @@ Creates a Label from a specified name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| Label name a| 
+a| `name` a| Label name a| `string`
 |===
 
 [caption=""]

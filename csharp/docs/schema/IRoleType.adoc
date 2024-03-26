@@ -84,8 +84,8 @@ Retrieves the ``Thing`` instances that play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -142,8 +142,8 @@ Retrieves the ``ThingType``s whose instances play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -200,8 +200,8 @@ Retrieves the ``Relation`` instances that this role is related to.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -234,7 +234,7 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]

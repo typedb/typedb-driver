@@ -143,9 +143,9 @@ Opens a communication tunnel (session) to the given database on the running Type
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database with which the session connects a| 
-a| `type` a| The type of session to be created (Data or Schema) a| 
-a| `options` a| ``TypeDBOptions`` for the session a| 
+a| `database` a| The name of the database with which the session connects a| `string`
+a| `type` a| The type of session to be created (Data or Schema) a| `SessionType`
+a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions`
 |===
 
 [caption=""]

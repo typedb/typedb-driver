@@ -61,7 +61,7 @@ Creates and returns an instance of this ``IRelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -118,8 +118,8 @@ Retrieves roles that this ``IRelationType`` relates to directly or via inheritan
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit`` for direct relates only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit`` for direct relates only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -152,8 +152,8 @@ Retrieves roles that this ``IRelationType`` relates to directly or via inheritan
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `roleLabel` a| Label of the role we wish to retrieve a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `roleLabel` a| Label of the role we wish to retrieve a| `string`
 |===
 
 [caption=""]
@@ -210,8 +210,8 @@ Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `roleLabel` a| Label of the role that overrides an inherited role a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `roleLabel` a| Label of the role that overrides an inherited role a| `string`
 |===
 
 [caption=""]
@@ -320,9 +320,9 @@ Sets the new role that this ``IRelationType`` relates to. If we are setting an o
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `roleLabel` a| The new role for the ``IRelationType`` to relate to a| 
-a| `overriddenLabel` a| The label being overridden, if applicable a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `roleLabel` a| The new role for the ``IRelationType`` to relate to a| `string`
+a| `overriddenLabel` a| The label being overridden, if applicable a| `string?`
 |===
 
 [caption=""]
@@ -356,8 +356,8 @@ Sets the supplied ``IRelationType`` as the supertype of the current ``IRelationT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `superRelationType` a| The ``IRelationType`` to set as the supertype of this ``IRelationType`` a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `superRelationType` a| The ``IRelationType`` to set as the supertype of this ``IRelationType`` a| `IRelationType`
 |===
 
 [caption=""]
@@ -414,8 +414,8 @@ Disallows this ``IRelationType`` from relating to the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `roleLabel` a| The role to not relate to the relation type. a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `roleLabel` a| The role to not relate to the relation type. a| `string`
 |===
 
 [caption=""]

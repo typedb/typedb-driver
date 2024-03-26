@@ -67,8 +67,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `IValue`
 |===
 
 [caption=""]
@@ -101,8 +101,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `string`
 |===
 
 [caption=""]
@@ -135,8 +135,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `long`
 |===
 
 [caption=""]
@@ -169,8 +169,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `double`
 |===
 
 [caption=""]
@@ -203,8 +203,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `bool`
 |===
 
 [caption=""]
@@ -237,8 +237,8 @@ Retrieves an ``IAttribute`` of this ``IAttributeType`` with the given value if s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| ``IAttribute``’s value a| `System.DateTime`
 |===
 
 [caption=""]
@@ -271,7 +271,7 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType`` directl
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -304,8 +304,8 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``, filter
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``IAttributeType`` with all given ``Annotation``s a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``IAttributeType`` with all given ``Annotation``s a| `ICollection< Annotation >`
 |===
 
 [caption=""]
@@ -338,8 +338,8 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -372,9 +372,9 @@ Retrieve all ``Things`` that own an attribute of this ``IAttributeType``, filter
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``IAttributeType`` with all given ``Annotation``s a| 
-a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``IAttributeType`` with all given ``Annotation``s a| `ICollection< Annotation >`
+a| `transitivity` a| ``Transitive`` for direct and inherited ownership, ``Explicit`` for direct ownership only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -407,7 +407,7 @@ Retrieves the regular expression that is defined for this ``IAttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]
@@ -440,8 +440,8 @@ Retrieves all direct and indirect subtypes of this ``IAttributeType`` with given
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue.ValueType`
 |===
 
 [caption=""]
@@ -474,9 +474,9 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``IAttribute
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| 
-a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit`` for direct subtypes only a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `valueType` a| ``IValue.ValueType`` for retrieving subtypes a| `IValue.ValueType`
+a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit`` for direct subtypes only a| `IConcept.Transitivity`
 |===
 
 [caption=""]
@@ -657,8 +657,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given val
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `IValue`
 |===
 
 [caption=""]
@@ -691,8 +691,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``s
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `string`
 |===
 
 [caption=""]
@@ -725,8 +725,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``l
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `long`
 |===
 
 [caption=""]
@@ -759,8 +759,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``d
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `double`
 |===
 
 [caption=""]
@@ -793,8 +793,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``b
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `bool`
 |===
 
 [caption=""]
@@ -827,8 +827,8 @@ Adds and returns an ``IAttribute`` of this ``IAttributeType`` with the given ``D
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``IAttribute``’s value a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `value` a| New ``IAttribute``’s value a| `System.DateTime`
 |===
 
 [caption=""]
@@ -863,8 +863,8 @@ Can only be applied for ``IAttributeType``s with a ``string`` value type.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `regex` a| Regular expression a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `regex` a| Regular expression a| `string`
 |===
 
 [caption=""]
@@ -897,8 +897,8 @@ Sets the supplied ``IAttributeType`` as the supertype of the current ``IAttribut
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeType` a| The ``IAttributeType`` to set as the supertype of this ``IAttributeType`` a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `attributeType` a| The ``IAttributeType`` to set as the supertype of this ``IAttributeType`` a| `IAttributeType`
 |===
 
 [caption=""]
@@ -931,7 +931,7 @@ Removes the regular expression that is defined for this ``IAttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 |===
 
 [caption=""]

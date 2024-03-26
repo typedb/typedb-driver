@@ -27,7 +27,7 @@ Retrieves an ``IAttribute`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve. a| 
+a| `iid` a| The iid of the ``Attribute`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -60,7 +60,7 @@ Retrieves an ``IAttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve. a| 
+a| `label` a| The label of the ``AttributeType`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -93,7 +93,7 @@ Retrieves an ``IEntity`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve. a| 
+a| `iid` a| The iid of the ``Entity`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -126,7 +126,7 @@ Retrieves an ``IEntityType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``IEntityType`` to retrieve. a| 
+a| `label` a| The label of the ``IEntityType`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -159,7 +159,7 @@ Retrieves a ``IRelation`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve. a| 
+a| `iid` a| The iid of the ``Relation`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -192,7 +192,7 @@ Retrieves a ``IRelationType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``IRelationType`` to retrieve. a| 
+a| `label` a| The label of the ``IRelationType`` to retrieve. a| `string`
 |===
 
 [caption=""]
@@ -249,8 +249,8 @@ Creates a new ``IAttributeType`` if none exists with the given label, or retriev
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``IAttributeType`` to create or retrieve. a| 
-a| `valueType` a| The value type of the ``IAttributeType`` to create. a| 
+a| `label` a| The label of the ``IAttributeType`` to create or retrieve. a| `string`
+a| `valueType` a| The value type of the ``IAttributeType`` to create. a| `IValue.ValueType`
 |===
 
 [caption=""]
@@ -283,7 +283,7 @@ Creates a new ``IEntityType`` if none exists with the given label, otherwise ret
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``IEntityType`` to create or retrieve. a| 
+a| `label` a| The label of the ``IEntityType`` to create or retrieve. a| `string`
 |===
 
 [caption=""]
@@ -316,7 +316,7 @@ Creates a new ``IRelationType`` if none exists with the given label, otherwise r
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``IRelationType`` to create or retrieve. a| 
+a| `label` a| The label of the ``IRelationType`` to create or retrieve. a| `string`
 |===
 
 [caption=""]

@@ -61,8 +61,8 @@ Updates the password for this user.
 [options="header"]
 |===
 |Name |Description |Type
-a| `passwordOld` a| The current password of this user a| 
-a| `passwordNew` a| The new password a| 
+a| `passwordOld` a| The current password of this user a| `string`
+a| `passwordNew` a| The new password a| `string`
 |===
 
 [caption=""]
