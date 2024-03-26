@@ -29,7 +29,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 
 [caption=""]
 .Returns
-`static ITypeDBDriver`
+`ITypeDBDriver`
 
 [caption=""]
 .Code examples
@@ -63,7 +63,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 
 [caption=""]
 .Returns
-`static ITypeDBDriver`
+`ITypeDBDriver`
 
 [caption=""]
 .Code examples
@@ -96,7 +96,7 @@ a| `address` a| The address of the TypeDB server a| `string`
 
 [caption=""]
 .Returns
-`static ITypeDBDriver`
+`ITypeDBDriver`
 
 [caption=""]
 .Code examples

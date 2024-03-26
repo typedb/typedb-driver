@@ -85,7 +85,7 @@ Retrieves all direct and indirect subtypes of the type. Equivalent to ``GetSubty
   See also
  
  
-  Type::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
+  IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
  
 
 

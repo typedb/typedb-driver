@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * new Promise(supplier);
+         * new Promise(resolver);
          * </pre>
          *
          * @param resolver The function to wrap into the promise
@@ -73,7 +73,7 @@ namespace TypeDB.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * Promise&lt;TFrom&gt;.Map&lt;TTo, T&gt;(supplier, selector);
+         * Promise&lt;TFrom&gt;.Map&lt;TFrom, TTo&gt;(resolver, selector);
          * </pre>
          *
          * @param resolver The function to wrap into the promise

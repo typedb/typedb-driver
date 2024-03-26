@@ -23,7 +23,7 @@ Returns a ``System.Type`` equivalent of this value concept for this programming 
 
 [caption=""]
 .Returns
-`static System.Type`
+`System.Type`
 
 [caption=""]
 .Code examples
@@ -47,7 +47,7 @@ Returns ``true`` if this value concept can be used as a key via the @key annotat
 
 [caption=""]
 .Returns
-`static bool`
+`bool`
 
 [caption=""]
 .Code examples
@@ -71,7 +71,7 @@ Returns ``true`` if this value concept can be written to a database. Otherwise, 
 
 [caption=""]
 .Returns
-`static bool`
+`bool`
 
 [caption=""]
 .Code examples

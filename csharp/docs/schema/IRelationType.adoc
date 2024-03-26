@@ -183,7 +183,7 @@ Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``
   See also
  
  
-  <<#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelatesOverridden___ITypeDBTransaction_transaction__string_roleLabel_,IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)>>
+  IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
  
 
 
@@ -387,7 +387,7 @@ Disallows this ``IRelationType`` from relating to the given role.
   See also
  
  
-  <<#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates___ITypeDBTransaction_transaction__string_roleLabel_,IRelationType::UnsetRelates(ITypeDBTransaction, string)>>
+  IRelationType::UnsetRelates(ITypeDBTransaction, string)
  
 
 

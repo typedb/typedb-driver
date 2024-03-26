@@ -116,7 +116,7 @@ Opens a session to the given database with default options.
   See also
  
  
-  TypeDBDriver::Session(string, SessionType, TypeDBOptions);
+  ITypeDBDriver::Session(string, SessionType, TypeDBOptions);
  
 
 

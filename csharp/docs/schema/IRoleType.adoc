@@ -57,7 +57,7 @@ Retrieves the ``Thing`` instances that play this role.
   See also
  
  
-  <<#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction_,IRoleType::GetPlayerInstances>>(ITypeDBTransaction, IConcept.Transitivity)
+  IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
  
 
 
@@ -115,7 +115,7 @@ Retrieves the ``ThingType``s whose instances play this role. Equivalent to ``Get
   See also
  
  
-  <<#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction_,IRoleType::GetPlayerTypes>>(ITypeDBTransaction, IConcept.Transitivity)
+  IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
  
 
 
@@ -173,7 +173,7 @@ Retrieves the ``Relation`` instances that this role is related to. Equivalent to
   See also
  
  
-  <<#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction_,IRoleType::GetRelationInstances>>(ITypeDBTransaction, IConcept.Transitivity)
+  IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
  
 
 

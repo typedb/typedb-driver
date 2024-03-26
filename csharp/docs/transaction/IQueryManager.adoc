@@ -24,7 +24,7 @@ Performs a TypeQL Define query with default options.
   See also
  
  
-  <<#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define___string_query__TypeDBOptions_options_,IQueryManager::Define(string, TypeDBOptions)>>
+  IQueryManager::Define(string, TypeDBOptions)
  
 
 
@@ -82,7 +82,7 @@ Performs a TypeQL Delete query with default options.
   See also
  
  
-  <<#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete___string_query__TypeDBOptions_options_,IQueryManager::Delete(string, TypeDBOptions)>>
+  IQueryManager::Delete(string, TypeDBOptions)
  
 
 
@@ -140,7 +140,7 @@ Performs a TypeQL Explain query with default options.
   See also
  
  
-  <<#_IEnumerable__IExplanation___TypeDB_Driver_Api_IQueryManager_Explain___IConceptMap_IExplainable_explainable_,IQueryManager::Explain>>(IConceptMap.IExplainable, TypeDBOptions)
+  IQueryManager::Explain(IConceptMap.IExplainable, TypeDBOptions)
  
 
 
@@ -198,7 +198,7 @@ Performs a TypeQL Fetch (Fetch) with default options.
   See also
  
  
-  <<#_IEnumerable__JObject___TypeDB_Driver_Api_IQueryManager_Fetch___string_query__TypeDBOptions_options_,IQueryManager::Fetch(string, TypeDBOptions)>>
+  IQueryManager::Fetch(string, TypeDBOptions)
  
 
 
@@ -256,7 +256,7 @@ Performs a TypeQL Get (Get) with default options.
   See also
  
  
-  <<#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Get___string_query__TypeDBOptions_options_,IQueryManager::Get(string, TypeDBOptions)>>
+  IQueryManager::Get(string, TypeDBOptions)
  
 
 
@@ -314,7 +314,7 @@ Performs a TypeQL Get Aggregate query with default options.
   See also
  
  
-  <<#_Promise__IValue___TypeDB_Driver_Api_IQueryManager_GetAggregate___string_query__TypeDBOptions_options_,IQueryManager::GetAggregate(string, TypeDBOptions)>>
+  IQueryManager::GetAggregate(string, TypeDBOptions)
  
 
 
@@ -372,7 +372,7 @@ Performs a TypeQL Get Group query with default options.
   See also
  
  
-  <<#_IEnumerable__IConceptMapGroup___TypeDB_Driver_Api_IQueryManager_GetGroup___string_query__TypeDBOptions_options_,IQueryManager::GetGroup(string, TypeDBOptions)>>
+  IQueryManager::GetGroup(string, TypeDBOptions)
  
 
 
@@ -430,7 +430,7 @@ Performs a TypeQL Get Group Aggregate query with default options.
   See also
  
  
-  <<#_IEnumerable__IValueGroup___TypeDB_Driver_Api_IQueryManager_GetGroupAggregate___string_query__TypeDBOptions_options_,IQueryManager::GetGroupAggregate(string, TypeDBOptions)>>
+  IQueryManager::GetGroupAggregate(string, TypeDBOptions)
  
 
 
@@ -488,7 +488,7 @@ Performs a TypeQL Insert query with default options.
   See also
  
  
-  <<#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Insert___string_query__TypeDBOptions_options_,IQueryManager::Insert(string, TypeDBOptions)>>
+  IQueryManager::Insert(string, TypeDBOptions)
  
 
 
@@ -546,7 +546,7 @@ Performs a TypeQL Undefine query with default options.
   See also
  
  
-  <<#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine___string_query__TypeDBOptions_options_,IQueryManager::Undefine(string, TypeDBOptions)>>
+  IQueryManager::Undefine(string, TypeDBOptions)
  
 
 
@@ -604,7 +604,7 @@ Performs a TypeQL Update query with default options.
   See also
  
  
-  <<#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Update___string_query__TypeDBOptions_options_,IQueryManager::Update(string, TypeDBOptions)>>
+  IQueryManager::Update(string, TypeDBOptions)
  
 
 

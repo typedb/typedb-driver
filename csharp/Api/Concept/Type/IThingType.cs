@@ -48,7 +48,7 @@ namespace TypeDB.Driver.Api
          * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.
          * Equivalent to <code>GetInstances(transaction, Transitive)</code>
          *
-         * @see ThingType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
+         * @see IThingType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
         IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
 
@@ -95,7 +95,7 @@ namespace TypeDB.Driver.Api
         /**
          * Allows the instances of this <code>IThingType</code> to play the given role.
          *
-         * @see ThingType#SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
+         * @see IThingType#SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
          */
         VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType);
 
@@ -139,7 +139,7 @@ namespace TypeDB.Driver.Api
         /**
          * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>,
          *
-         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         * @see IThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
         VoidPromise SetOwns(
             ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType);
@@ -147,14 +147,14 @@ namespace TypeDB.Driver.Api
         /**
          * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
          *
-         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         * @see IThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
         VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<Annotation> annotations);
 
         /**
          * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
          *
-         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         * @see IThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
         VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
 
@@ -162,7 +162,7 @@ namespace TypeDB.Driver.Api
          * Retrieves all direct and inherited roles that are allowed
          * to be played by the instances of this <code>IThingType</code>.
          *
-         * @see ThingType#GetPlays(ITypeDBTransaction, IConcept.Transitivity)
+         * @see IThingType#GetPlays(ITypeDBTransaction, IConcept.Transitivity)
          */
         IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction);
 
@@ -200,7 +200,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction);
 
@@ -208,7 +208,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType);
 
@@ -216,7 +216,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
 
@@ -224,7 +224,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<Annotation> annotations);
@@ -233,7 +233,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
@@ -241,7 +241,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType?, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, IConcept.Transitivity transitivity);
@@ -250,7 +250,7 @@ namespace TypeDB.Driver.Api
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
+         * @see IThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection&lt;Annotation&gt;, IConcept.Transitivity)
          */
         IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<Annotation> annotations, IConcept.Transitivity transitivity);

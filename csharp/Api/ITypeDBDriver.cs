@@ -69,7 +69,7 @@ namespace TypeDB.Driver.Api
         /**
          * Opens a session to the given database with default options.
          *
-         * @see TypeDBDriver#Session(string, SessionType, TypeDBOptions);
+         * @see ITypeDBDriver#Session(string, SessionType, TypeDBOptions);
          */
         ITypeDBSession Session(string database, SessionType type);
 
