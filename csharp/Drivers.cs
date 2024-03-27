@@ -34,7 +34,7 @@ namespace TypeDB.Driver
          *
          * <h3>Examples</h3>
          * <pre>
-         * TypeDB.CoreDriver(address);
+         * Drivers.CoreDriver(address);
          * </pre>
          *
          * @param address The address of the TypeDB server
@@ -50,7 +50,7 @@ namespace TypeDB.Driver
          *
          * <h3>Examples</h3>
          * <pre>
-         * TypeDB.CloudDriver(address, credential);
+         * Drivers.CloudDriver(address, credential);
          * </pre>
          *
          * @param address The address of the TypeDB server
@@ -67,7 +67,7 @@ namespace TypeDB.Driver
          *
          * <h3>Examples</h3>
          * <pre>
-         * TypeDB.CloudDriver(addresses, credential);
+         * Drivers.CloudDriver(addresses, credential);
          * </pre>
          *
          * @param addresses The address(es) of the TypeDB server(s)

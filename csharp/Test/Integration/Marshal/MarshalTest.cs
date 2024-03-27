@@ -34,7 +34,7 @@ namespace TypeDB.Driver.Test.Integration
     {
         public static ITypeDBDriver OpenConnection()
         {
-            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
+            ITypeDBDriver driver = Drivers.CoreDriver(TypeDB.DEFAULT_ADDRESS);
             Assert.IsNotNull(driver);
             Assert.True(driver.IsOpen());
 

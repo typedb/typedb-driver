@@ -38,7 +38,7 @@ namespace TypeDB.Driver.Test.Integration
 
             try
             {
-                using (ITypeDBDriver driver = TypeDB.CoreDriver(serverAddr))
+                using (ITypeDBDriver driver = Drivers.CoreDriver(serverAddr))
                 {
                     driver.Databases.Create(dbName);
                     IDatabase database = driver.Databases.Get(dbName);
@@ -109,7 +109,7 @@ namespace TypeDB.Driver.Test.Integration
 
             try
             {
-                ITypeDBDriver driver = TypeDB.CoreDriver(serverAddr);
+                ITypeDBDriver driver = Drivers.CoreDriver(serverAddr);
                 driver.Databases.Create(dbName);
 
                 IDatabase database = driver.Databases.Get(dbName);
@@ -171,7 +171,7 @@ namespace TypeDB.Driver.Test.Integration
 
             try
             {
-                using (ITypeDBDriver driver = TypeDB.CoreDriver(serverAddr))
+                using (ITypeDBDriver driver = Drivers.CoreDriver(serverAddr))
                 {
                     driver.Databases.Create(dbName);
                     IDatabase database = driver.Databases.Get(dbName);

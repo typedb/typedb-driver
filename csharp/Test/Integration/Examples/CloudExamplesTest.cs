@@ -47,7 +47,7 @@ namespace TypeDB.Driver.Test.Integration
                     "password",
                     Environment.GetEnvironmentVariable("ROOT_CA")!);
 
-                using (ITypeDBDriver driver = TypeDB.CloudDriver(serverAddrs, connectCredential))
+                using (ITypeDBDriver driver = Drivers.CloudDriver(serverAddrs, connectCredential))
                 {
                     driver.Databases.Create(dbName);
                     IDatabase database = driver.Databases.Get(dbName);

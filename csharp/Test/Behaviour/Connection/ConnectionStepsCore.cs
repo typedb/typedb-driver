@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-            return TypeDB.CoreDriver(address);
+            return Drivers.CoreDriver(address);
         }
 
         [Given(@"typedb starts")]

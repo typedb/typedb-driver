@@ -2,10 +2,10 @@
 The C# driver is based on the cross-platform .NET 6 framework.
 
 ## Use TypeDB Driver for C#
-The driver will be distributed as a [Nuget](https://www.nuget.org/) package. More information will be provided in the next release!
+The driver is distributed as a [Nuget](https://www.nuget.org/) package. Just choose the latest version
 
 ## API Reference
-Will be added to [the docs](https://typedb.com/docs/drivers/overview) in the next release. The general layout (of classes, their methods and intended usage) resembles the [Java Driver API](https://typedb.com/docs/drivers/java/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using Driver Java, refer to the [API Reference](https://typedb.com/docs/drivers/overview) in the next release. The general layout (of classes, their methods and intended usage) resembles the [Java Driver API](https://typedb.com/docs/drivers/java/api-reference).
 
 ## Driver Architecture
 The C# driver is a thin wrapper around the TypeDB Rust driver, introducing classes for a more intuitive interface. Mostly each C# object holds a reference to the corresponding native Rust object, using an FFI ([SWIG for C#](https://www.swig.org/Doc4.2/SWIGDocumentation.html#CSharp)) for the native object wrappers generation and resource management.

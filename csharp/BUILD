@@ -17,9 +17,9 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@vaticle_bazel_distribution//nuget:nuget_pack.bzl", "nuget_pack")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
-load(":nuget_pack.bzl", "nuget_pack")
 load(":rules.bzl", "swig_native_csharp_library")
 load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
@@ -98,7 +98,7 @@ nuget_pack(
 
 filegroup(
     name = "docs_source_files",
-    srcs = [":TypeDB.cs"],
+    srcs = [":Drivers.cs"],
 )
 
 

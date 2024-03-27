@@ -31,7 +31,7 @@ dir_mapping = {
     "IValueGroup.adoc": "answer",
     "Promise__T__.adoc": "answer",
     "VoidPromise.adoc": "answer",
-    "TypeDB.adoc": "connection",
+    "Drivers.adoc": "connection",
     "ITypeDBDriver.adoc": "connection",
     "TypeDBCredential.adoc": "connection",
     "IUserManager.adoc": "connection",
