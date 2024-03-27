@@ -19,6 +19,7 @@ See the table below for links to README files, documentation, and source code.
 | Java    | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
 | C       | [README](https://github.com/vaticle/typedb-driver/tree/development/c/README.md)      | -                                                                | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)           |
 | C++     | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)       |
+| C#      | [README](https://github.com/vaticle/typedb-driver/tree/development/csharp/README.md) | (Coming soon!)                                                   | [`csharp/`](https://github.com/vaticle/typedb-driver/tree/development/csharp) |
 
 ### Package hosting
 
