@@ -18,7 +18,8 @@
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load(":build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
+load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
+load(":nuget_pack.bzl", "nuget_pack")
 load(":rules.bzl", "swig_native_csharp_library")
 load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
@@ -59,6 +60,39 @@ csharp_library(
     visibility = ["//visibility:public"],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+)
+
+
+nuget_pack(
+    name = "driver-csharp-pack",
+    files = {
+#        "//common/images:selenium_logo_small.png": "icon.png",
+        ":typedb_driver_native": "libtypedb_driver.dylib",
+        "libtypedb_driver.so": "libtypedb_driver.so",
+        "typedb_driver.dll": "typedb_driver.dll",
+    },
+    id = "TypeDB.Driver",
+    libs = {
+        ":driver-csharp": "TypeDB.Driver",
+        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
+        "//csharp/Api:api": "TypeDB.Driver.Api",
+        "//csharp/Common:common": "TypeDB.Driver.Common",
+        "//csharp/Connection:connection": "TypeDB.Driver.Connection",
+        "//csharp/Concept:concept": "TypeDB.Driver.Concept",
+        "//csharp/Logic:logic": "TypeDB.Driver.Logic",
+        "//csharp/Query:query": "TypeDB.Driver.Query",
+        "//csharp/User:user": "TypeDB.Driver.User",
+    },
+    osx_native_lib = "libtypedb_driver.dylib",
+    linux_native_lib = "libtypedb_driver.so",
+    win_native_lib = "typedb_driver.dll",
+    target_framework = target_framework,
+    nuspec_template = "TypeDB.Driver.nuspec",
+    tags = [
+#        "block-network",
+    ],
+    version = "0.0.1",
+    visibility = ["//visibility:public"],
 )
 
 

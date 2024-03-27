@@ -25,7 +25,7 @@ using TypeDB.Driver.Connection;
 
 namespace TypeDB.Driver
 {
-    public static class TypeDB
+    public static class Drivers
     {
         public const string DEFAULT_ADDRESS = "localhost:1729";
 

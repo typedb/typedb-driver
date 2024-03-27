@@ -29,6 +29,7 @@ def swig_native_csharp_library(name, namespace, nullable_context, target_framewo
         **kwargs,
     )
 
+
     native.alias(
         name = name,
         actual = "__" + name,
