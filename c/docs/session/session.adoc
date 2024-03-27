@@ -1,6 +1,41 @@
 [#_methods__session__session]
 === session
 
+[#_Struct_Session]
+==== Struct Session
+
+
+
+A session with a TypeDB database.
+
+[#_Struct_SessionType]
+==== Struct SessionType
+
+
+
+This enum is used to specify the type of the session.
+
+
+[#_Enum_SessionType]
+==== Enum SessionType
+
+
+
+This enum is used to specify the type of the session.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `Data = 0`
+a| `Schema = 1`
+|===
+// end::enum_constants[]
+
 [#_session_close]
 ==== session_close
 

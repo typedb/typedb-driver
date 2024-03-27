@@ -1,6 +1,27 @@
 [#_methods__connection__database]
 === database
 
+[#_Struct_Database]
+==== Struct Database
+
+
+
+A TypeDB database
+
+[#_Struct_DatabaseIterator]
+==== Struct DatabaseIterator
+
+
+
+An ``Iterator`` over databases present on the TypeDB server
+
+[#_Struct_DatabaseManager]
+==== Struct DatabaseManager
+
+
+
+Provides access to all database management methods.
+
 [#_database_close]
 ==== database_close
 

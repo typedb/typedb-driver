@@ -1,6 +1,27 @@
 [#_methods__logic__rule]
 === rule
 
+[#_Struct_Rule]
+==== Struct Rule
+
+
+
+Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+[#_Struct_RuleIterator]
+==== Struct RuleIterator
+
+
+
+An iterator over ``Rule``s in the database
+
+[#_Struct_RulePromise]
+==== Struct RulePromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use rule_promise_resolve(RulePromise*) to wait for and retrieve the resulting ``Rule``.
+
 [#_rule_delete]
 ==== rule_delete
 

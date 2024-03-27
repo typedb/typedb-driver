@@ -1,6 +1,20 @@
 [#_methods__answer__valuegroup]
 === valuegroup
 
+[#_Struct_ValueGroup]
+==== Struct ValueGroup
+
+
+
+Contains an element of a TypeQL Get Group Aggregate query result.
+
+[#_Struct_ValueGroupIterator]
+==== Struct ValueGroupIterator
+
+
+
+Iterator over the ``ValueGroup``s in the result of the Get Group Aggregate query.
+
 [#_value_group_drop]
 ==== value_group_drop
 

@@ -1,6 +1,14 @@
 [#_methods__session__options]
 === options
 
+[#_Struct_Options]
+==== Struct Options
+
+
+
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options are specified using properties assignment.
+
+
 [#_options_drop]
 ==== options_drop
 

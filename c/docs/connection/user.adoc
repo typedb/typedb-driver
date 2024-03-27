@@ -1,6 +1,27 @@
 [#_methods__connection__user]
 === user
 
+[#_Struct_User]
+==== Struct User
+
+
+
+User information
+
+[#_Struct_UserIterator]
+==== Struct UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_Struct_UserManager]
+==== Struct UserManager
+
+
+
+Provides access to all user management methods.
+
 [#_user_drop]
 ==== user_drop
 

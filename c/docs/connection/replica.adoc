@@ -1,6 +1,20 @@
 [#_methods__connection__replica]
 === replica
 
+[#_Struct_ReplicaInfo]
+==== Struct ReplicaInfo
+
+
+
+The metadata and state of an individual raft replica of a database.
+
+[#_Struct_ReplicaInfoIterator]
+==== Struct ReplicaInfoIterator
+
+
+
+Iterator over the ``ReplicaInfo`` corresponding to each replica of a TypeDB cloud database.
+
 [#_replica_info_drop]
 ==== replica_info_drop
 

@@ -20,6 +20,13 @@ Enables logging in the TypeDB driver.
 [#_methods__connection__connection]
 === connection
 
+[#_Struct_Connection]
+==== Struct Connection
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
 [#_connection_close]
 ==== connection_close
 

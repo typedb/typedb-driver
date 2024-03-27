@@ -1,6 +1,13 @@
 [#_methods__schema__annotation]
 === annotation
 
+[#_Struct_Annotation]
+==== Struct Annotation
+
+
+
+Annotations are used to specify extra schema constraints.
+
 [#_annotation_drop]
 ==== annotation_drop
 

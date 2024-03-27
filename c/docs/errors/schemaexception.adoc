@@ -1,6 +1,20 @@
 [#_methods__errors__schemaexception]
 === schemaexception
 
+[#_Struct_SchemaException]
+==== Struct SchemaException
+
+
+
+Represents invalid schema constructs discovered during schema validation.
+
+[#_Struct_SchemaExceptionIterator]
+==== Struct SchemaExceptionIterator
+
+
+
+Iterator over the ``SchemaException``s in the result of concepts_get_schema_exceptions(Transaction*).
+
 [#_schema_exception_code]
 ==== schema_exception_code
 

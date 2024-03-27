@@ -1,6 +1,13 @@
 [#_methods__errors__error]
 === error
 
+[#_Struct_Error]
+==== Struct Error
+
+
+
+Represents errors encountered during operation.
+
 [#_error_code]
 ==== error_code
 

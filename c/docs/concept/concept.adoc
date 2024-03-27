@@ -1,6 +1,27 @@
 [#_methods__concept__concept]
 === concept
 
+[#_Struct_Concept]
+==== Struct Concept
+
+
+
+The fundamental TypeQL object. A Concept is either a Type, Thing, or Value. To use subtype specific methods, the Concept must be of the expected subtype.
+
+[#_Struct_ConceptIterator]
+==== Struct ConceptIterator
+
+
+
+Iterator over the ``Concepts``s returned by an API method or query.
+
+[#_Struct_ConceptPromise]
+==== Struct ConceptPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
+
 [#_concept_drop]
 ==== concept_drop
 
