@@ -64,9 +64,8 @@ csharp_library(
 
 
 nuget_pack(
-    name = "driver-csharp-pack",
+    name = "driver-csharp-pack-osx",
     files = {
-#        "//common/images:selenium_logo_small.png": "icon.png",
         "libtypedb_driver.dylib": "libtypedb_driver.dylib",
         "libtypedb_driver.so": "libtypedb_driver.so",
         "typedb_driver.dll": "typedb_driver.dll",
@@ -84,7 +83,65 @@ nuget_pack(
         "//csharp/User:user": "TypeDB.Driver.User",
     },
     osx_native_lib = "libtypedb_driver.dylib",
+    target_framework = target_framework,
+    nuspec_template = "TypeDB.Driver.nuspec",
+    tags = [
+#        "block-network",
+    ],
+    version = "0.0.1",
+    visibility = ["//visibility:public"],
+)
+
+
+nuget_pack(
+    name = "driver-csharp-pack-linux",
+    files = {
+        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
+        "libtypedb_driver.so": "libtypedb_driver.so",
+        "typedb_driver.dll": "typedb_driver.dll",
+    },
+    id = "TypeDB.Driver",
+    libs = {
+        ":driver-csharp": "TypeDB.Driver",
+        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
+        "//csharp/Api:api": "TypeDB.Driver.Api",
+        "//csharp/Common:common": "TypeDB.Driver.Common",
+        "//csharp/Connection:connection": "TypeDB.Driver.Connection",
+        "//csharp/Concept:concept": "TypeDB.Driver.Concept",
+        "//csharp/Logic:logic": "TypeDB.Driver.Logic",
+        "//csharp/Query:query": "TypeDB.Driver.Query",
+        "//csharp/User:user": "TypeDB.Driver.User",
+    },
     linux_native_lib = "libtypedb_driver.so",
+    target_framework = target_framework,
+    nuspec_template = "TypeDB.Driver.nuspec",
+    tags = [
+#        "block-network",
+    ],
+    version = "0.0.1",
+    visibility = ["//visibility:public"],
+)
+
+
+nuget_pack(
+    name = "driver-csharp-pack-win",
+    files = {
+        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
+        "libtypedb_driver.so": "libtypedb_driver.so",
+        "typedb_driver.dll": "typedb_driver.dll",
+    },
+    id = "TypeDB.Driver",
+    libs = {
+        ":driver-csharp": "TypeDB.Driver",
+        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
+        "//csharp/Api:api": "TypeDB.Driver.Api",
+        "//csharp/Common:common": "TypeDB.Driver.Common",
+        "//csharp/Connection:connection": "TypeDB.Driver.Connection",
+        "//csharp/Concept:concept": "TypeDB.Driver.Concept",
+        "//csharp/Logic:logic": "TypeDB.Driver.Logic",
+        "//csharp/Query:query": "TypeDB.Driver.Query",
+        "//csharp/User:user": "TypeDB.Driver.User",
+    },
     win_native_lib = "typedb_driver.dll",
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.nuspec",
