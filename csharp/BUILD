@@ -67,7 +67,7 @@ nuget_pack(
     name = "driver-csharp-pack",
     files = {
 #        "//common/images:selenium_logo_small.png": "icon.png",
-        ":typedb_driver_native": "libtypedb_driver.dylib",
+        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
         "libtypedb_driver.so": "libtypedb_driver.so",
         "typedb_driver.dll": "typedb_driver.dll",
     },
