@@ -1,3 +1,6 @@
+[#_methods__concept__thing]
+=== thing
+
 [#_thing_delete]
 ==== thing_delete
 

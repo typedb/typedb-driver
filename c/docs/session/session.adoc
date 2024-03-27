@@ -1,3 +1,6 @@
+[#_methods__session__session]
+=== session
+
 [#_session_close]
 ==== session_close
 

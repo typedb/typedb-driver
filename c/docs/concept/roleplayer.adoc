@@ -1,3 +1,6 @@
+[#_methods__concept__roleplayer]
+=== roleplayer
+
 [#_role_player_drop]
 ==== role_player_drop
 

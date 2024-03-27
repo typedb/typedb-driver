@@ -1,3 +1,6 @@
+[#_methods__schema__attributetype]
+=== attributetype
+
 [#_attribute_type_get]
 ==== attribute_type_get
 

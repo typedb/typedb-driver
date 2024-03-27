@@ -1,3 +1,6 @@
+[#_methods__schema__relationtype]
+=== relationtype
+
 [#_relation_type_create]
 ==== relation_type_create
 

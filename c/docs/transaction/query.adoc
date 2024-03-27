@@ -1,3 +1,6 @@
+[#_methods__transaction__query]
+=== query
+
 [#_query_define]
 ==== query_define
 

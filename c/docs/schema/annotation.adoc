@@ -1,3 +1,6 @@
+[#_methods__schema__annotation]
+=== annotation
+
 [#_annotation_drop]
 ==== annotation_drop
 

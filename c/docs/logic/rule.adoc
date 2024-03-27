@@ -1,3 +1,6 @@
+[#_methods__logic__rule]
+=== rule
+
 [#_rule_delete]
 ==== rule_delete
 

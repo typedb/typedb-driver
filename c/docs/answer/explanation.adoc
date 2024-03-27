@@ -1,3 +1,6 @@
+[#_methods__answer__explanation]
+=== explanation
+
 [#_explainable_drop]
 ==== explainable_drop
 
@@ -189,6 +192,9 @@ A string representation of this ``Explainables`` object
 [caption=""]
 .Returns
 `char*`
+
+[#_methods__answer__explanation]
+=== explanation
 
 [#_explanation_drop]
 ==== explanation_drop

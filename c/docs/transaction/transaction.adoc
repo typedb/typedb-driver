@@ -1,3 +1,6 @@
+[#_methods__transaction__transaction]
+=== transaction
+
 [#_transaction_close]
 ==== transaction_close
 

@@ -1,3 +1,6 @@
+[#_methods__errors__schemaexception]
+=== schemaexception
+
 [#_schema_exception_code]
 ==== schema_exception_code
 

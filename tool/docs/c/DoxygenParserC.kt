@@ -125,6 +125,8 @@ class DoxygenParserC : Callable<Unit> {
             // Write to files
             typeFileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val outputFile = createFile(docsDir.resolve(entry.key), "types.adoc")
+                outputFile.appendText("[#_methods__{$entry.key}__structs]\n")
+                outputFile.appendText("=== Structs\n\n")
                 entry.value.forEach { outputFile.appendText(it) }
             }
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
@@ -132,6 +134,8 @@ class DoxygenParserC : Callable<Unit> {
                 val filename = filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
                 val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
                 val fileContent = entry.value
+                outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+                outputFile.appendText("=== $filename\n\n")
                 fileContent.forEach { outputFile.appendText(it) }
             }
         }

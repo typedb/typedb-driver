@@ -1,3 +1,6 @@
+[#_methods__connection__database]
+=== database
+
 [#_database_close]
 ==== database_close
 

@@ -1,3 +1,6 @@
+[#_methods__answer__primitives]
+=== primitives
+
 [#_string_free]
 ==== string_free
 
@@ -110,6 +113,9 @@ Waits for and returns the result of the operation represented by the ``BoolPromi
 .Returns
 `char*`
 
+[#_methods__answer__primitives]
+=== primitives
+
 [#_bool_promise_resolve]
 ==== bool_promise_resolve
 
@@ -125,6 +131,9 @@ Waits for and returns the result of the operation represented by the ``BoolPromi
 [caption=""]
 .Returns
 `bool`
+
+[#_methods__answer__primitives]
+=== primitives
 
 [#_void_promise_resolve]
 ==== void_promise_resolve

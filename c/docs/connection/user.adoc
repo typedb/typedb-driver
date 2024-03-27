@@ -1,3 +1,6 @@
+[#_methods__connection__user]
+=== user
+
 [#_user_drop]
 ==== user_drop
 

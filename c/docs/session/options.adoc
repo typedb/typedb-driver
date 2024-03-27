@@ -1,3 +1,6 @@
+[#_methods__session__options]
+=== options
+
 [#_options_drop]
 ==== options_drop
 

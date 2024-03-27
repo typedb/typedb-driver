@@ -1,3 +1,6 @@
+[#_methods__logic__logic]
+=== logic
+
 [#_logic_manager_get_rule]
 ==== logic_manager_get_rule
 
