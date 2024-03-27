@@ -196,7 +196,7 @@ class DoxygenParserC : Callable<Unit> {
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
-            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
+            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h").substringBefore("<dl class=\"params\">"))) } ?: listOf()
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {

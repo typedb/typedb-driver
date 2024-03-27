@@ -26,20 +26,6 @@ struct ConceptIterator* relation_get_players_by_role_type(struct Transaction* tr
 
 Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     role_types
-     a null-terminated array of ``RoleType``s to include.
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters

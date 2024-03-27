@@ -426,20 +426,6 @@ void options_set_prefetch_size(struct Options* options, int32_t prefetch_size)
 
 Explicitly sets a prefetch size. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     prefetchSize
-     Number of answers that the server should send before the driver issues a fresh request
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters

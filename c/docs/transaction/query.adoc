@@ -42,24 +42,6 @@ struct ExplanationIterator* query_explain(struct Transaction* transaction, const
 
 Performs a TypeQL Explain query in the transaction.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     explainable
-     The Explainable to be explained
-    
-    
-     options
-     Specify query options
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters

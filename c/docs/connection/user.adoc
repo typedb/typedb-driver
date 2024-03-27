@@ -122,32 +122,6 @@ void user_password_update(struct User* user, const struct UserManager* user_mana
 
 Updates the password for the current authenticated user.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     user
-     The user to update the password of - must be the current user.
-    
-    
-     user_manager
-     The ``UserManager`` object on this connection.
-    
-    
-     password_old
-     The current password of this user
-    
-    
-     password_new
-     The new password
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
@@ -272,28 +246,6 @@ void users_set_password(const struct UserManager* user_manager, const char* user
 
 
 Sets a new password for a user. This operation can only be performed by administrators.
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     user_manager
-     The UserManager object to be used. This must be on a connection opened by an administrator.
-    
-    
-     username
-     The name of the user to set the password of
-    
-    
-     password
-     The new password
-    
-   
-  
- 
 
 
 [caption=""]

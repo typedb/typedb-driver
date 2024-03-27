@@ -26,32 +26,6 @@ struct ConceptIterator* thing_get_has(struct Transaction* transaction, const str
 
 Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     transaction
-     The current transaction
-    
-    
-     thing
-     The thing to get owned attributes of
-    
-    
-     attribute_types
-     a null-terminated array holding the attribute-types to include
-    
-    
-     annotations
-     a null-terminated array of annotations - If non-empty, Only retrieves attributes with all given ``Annotation``s
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
@@ -128,20 +102,6 @@ struct ConceptIterator* thing_get_relations(struct Transaction* transaction, con
 
 
 Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     role_types
-     a null-terminated array of ``RoleType``s to include.
-    
-   
-  
- 
 
 
 [caption=""]
@@ -232,20 +192,6 @@ struct ConceptIterator* thing_type_get_owns(const struct Transaction* transactio
 
 
 Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance. Specify ``Explicit`` to only include directly owned types, or ``Transitive`` to include inherited
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     annotations
-     a null-terminated array of ``Annotation``s - If non-empty, Only retrieves attribute types owned with all specified annotations.
-    
-   
-  
- 
 
 
 [caption=""]
@@ -416,36 +362,6 @@ struct VoidPromise* thing_type_set_owns(const struct Transaction* transaction, s
 
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``. Optionally, overriding a previously declared ownership. With the specified annotations to the ownership.
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     transaction
-     The current transaction
-    
-    
-     thing_type
-     The thing type which is to own the specified attribute
-    
-    
-     attribute_type
-     The attribute type which is to be owned by the specified thing type
-    
-    
-     overridden_attribute_type
-     Optional, The attribute whose ownership must be overridden
-    
-    
-     annotations
-     A null-terminated array of ``Annotation``s to be added to the ownership
-    
-   
-  
- 
 
 
 [caption=""]

@@ -42,28 +42,6 @@ struct RulePromise* logic_manager_put_rule(struct Transaction* transaction, cons
 
 Creates a new Rule if none exists with the given label, or replaces the existing one.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     label
-     The label of the Rule to create or replace
-    
-    
-     when
-     The when body of the rule to create
-    
-    
-     then
-     The then body of the rule to create
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters

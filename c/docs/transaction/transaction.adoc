@@ -74,24 +74,6 @@ struct Transaction* transaction_new(const struct Session* session, enum Transact
 
 Opens a transaction to perform read or write queries on the database connected to the session.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     type_
-     The type of transaction to be created (Write or Read).
-    
-    
-     options
-     Options for the transaction
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
@@ -118,28 +100,6 @@ void transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, 
 
 
 Registers a callback function which will be executed when this transaction is closed.
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     txn
-     The transaction on which to register the callback
-    
-    
-     callback_id
-     The argument to be passed to the callback function when it is executed.
-    
-    
-     callback
-     The function to be called
-    
-   
-  
- 
 
 
 [caption=""]
