@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 package(default_visibility = ["//visibility:public"])
 
@@ -252,7 +248,7 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
-    exclude = [".clang-format", "README.md"] + glob(["docs/**/*.adoc"]),
+    exclude = [".clang-format", "README.md", "Cargo.lock", "Cargo.toml"] + glob(["docs/**/*.adoc"]),
     license_type = "apache-header",
 )
 
