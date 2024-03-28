@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <PackageId>NugetApplicationTest</PackageId>
+    <Title>NugetApplicationTest</Title>
+    <Description>
+      This test checks that our TypeDB Driver Nuget package works correctly will all the transitive dependencies!
+    </Description>
+    <Authors>TypeDB</Authors>
+    <Company>TypeDB</Company>
+    <Copyright>Copyright © 2024 Vaticle</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://typedb.com</PackageProjectUrl>
+    <PackageTags>Database TypeDB TypeQL Test</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/vaticle/typedb-driver</RepositoryUrl>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>No</PackageReleaseNotes>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RestoreSources>$(RestoreSources);TestPackages;https://api.nuget.org/v3/index.json</RestoreSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TypeDB.Driver" Version="0.0.1" />
+<!--   No need to specify transitive dependencies like Newtonsoft.Json for dotnet run   -->
+    <PackageReference Include="xunit" Version="2.7.0" />
+  </ItemGroup>
+
+</Project>
