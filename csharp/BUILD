@@ -17,7 +17,7 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
-load("@vaticle_bazel_distribution//nuget:nuget_pack.bzl", "nuget_pack")
+load("@vaticle_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
 load(":rules.bzl", "swig_native_csharp_library")
@@ -36,13 +36,6 @@ swig_native_csharp_library(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
     visibility = ["//visibility:public"],
-#    platforms = { # TODO: We'll need to build for different platforms?
-#        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
-#        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",
-#        "@vaticle_bazel_distribution//platform:is_mac_arm64": "macosx-arm64",
-#        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "macosx-x86_64",
-#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
-#    },
 )
 
 
@@ -57,18 +50,16 @@ csharp_library(
         "//csharp:typedb_driver_pinvoke",
     ],
     out = "TypeDB.Driver",
-    visibility = ["//visibility:public"],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+    visibility = ["//visibility:public"],
 )
 
 
 nuget_pack(
-    name = "driver-csharp-pack-osx",
+    name = "driver-csharp-pack",
     files = {
         "libtypedb_driver.dylib": "libtypedb_driver.dylib",
-        "libtypedb_driver.so": "libtypedb_driver.so",
-        "typedb_driver.dll": "typedb_driver.dll",
     },
     id = "TypeDB.Driver",
     libs = {
@@ -82,12 +73,9 @@ nuget_pack(
         "//csharp/Query:query": "TypeDB.Driver.Query",
         "//csharp/User:user": "TypeDB.Driver.User",
     },
-    osx_native_lib = "libtypedb_driver.dylib",
+    mac_native_lib = "libtypedb_driver.dylib",
     target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.nuspec",
-    tags = [
-#        "block-network",
-    ],
+    nuspec_template = "TypeDB.Driver.nuspec.template",
     version = "0.0.1",
     visibility = ["//visibility:public"],
 )
@@ -96,9 +84,7 @@ nuget_pack(
 nuget_pack(
     name = "driver-csharp-pack-linux",
     files = {
-        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
         "libtypedb_driver.so": "libtypedb_driver.so",
-        "typedb_driver.dll": "typedb_driver.dll",
     },
     id = "TypeDB.Driver",
     libs = {
@@ -114,10 +100,7 @@ nuget_pack(
     },
     linux_native_lib = "libtypedb_driver.so",
     target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.nuspec",
-    tags = [
-#        "block-network",
-    ],
+    nuspec_template = "TypeDB.Driver.nuspec.template",
     version = "0.0.1",
     visibility = ["//visibility:public"],
 )
@@ -126,8 +109,6 @@ nuget_pack(
 nuget_pack(
     name = "driver-csharp-pack-win",
     files = {
-        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
-        "libtypedb_driver.so": "libtypedb_driver.so",
         "typedb_driver.dll": "typedb_driver.dll",
     },
     id = "TypeDB.Driver",
@@ -144,12 +125,17 @@ nuget_pack(
     },
     win_native_lib = "typedb_driver.dll",
     target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.nuspec",
-    tags = [
-#        "block-network",
-    ],
+    nuspec_template = "TypeDB.Driver.nuspec.template",
     version = "0.0.1",
     visibility = ["//visibility:public"],
+)
+
+
+nuget_push(
+    name = "driver-csharp-push-mac",
+    src = ":driver-csharp-pack-mac",
+#    package_repository_url = "https://api.nuget.org/v3/index.json",
+    package_repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
 )
 
 

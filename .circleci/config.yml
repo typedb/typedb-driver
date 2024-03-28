@@ -353,49 +353,49 @@ commands:
   # C# deployment steps #
   #########################
 
-  install-nuget-mac:
+  install-dotnet-mac:
     steps:
-      - run: brew install nuget
+      - run: brew install dotnet@6
 
-  install-nuget-mac-rosetta:
+  install-dotnet-mac-rosetta:
     steps:
       - install-brew-rosetta
-      - run: /usr/local/bin/brew install nuget
+      - run: /usr/local/bin/brew install dotnet@6
 
-  install-nuget-linux:
+  install-dotnet-linux:
     steps:
-      - run: yum install -y nuget
+      - run: yum install -y dotnet-sdk-6.0
 
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_PASSWORD
+          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:deploy-nuget -- snapshot
 
   test-nuget-snapshot-unix:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/test/deployment/pom.xml
-          cat csharp/test/deployment/pom.xml
-          (cd csharp/test/deployment && mvn test)
+          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
+          cat csharp/Test/Deployment/NugetApplicationTest.csproj
+          (cd csharp/Test/Deployment && dotnet run NugetApplicationTest.csproj)
           tool/test/stop-core-server.sh
 
   test-nuget-snapshot-mac-rosetta:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/test/deployment/pom.xml
-          cat csharp/test/deployment/pom.xml
-          (cd csharp/test/deployment && /usr/local/bin/mvn test)
+          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
+          cat csharp/Test/Deployment/NugetApplicationTest.csproj
+          (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
           tool/test/stop-core-server.sh
 
   deploy-nuget-release-unix:
     steps:
       - run: |
           export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_PASSWORD
+          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //csharp:deploy-nuget --compilation_mode=opt -- release
 
   #########################
@@ -479,9 +479,7 @@ jobs:
       - test-cpp-assembly-linux:
           target-arch: arm64
 
-      - deploy-csharp-snapshot-unix
-      - test-csharp-assembly-linux:
-          target-arch: arm64
+      - deploy-nuget-snapshot-unix
 
   deploy-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -502,9 +500,7 @@ jobs:
       - test-cpp-assembly-linux:
           target-arch: x86_64
 
-      - deploy-csharp-snapshot-unix
-      - test-csharp-assembly-linux:
-          target-arch: x86_64
+      - deploy-nuget-snapshot-unix
 
   deploy-snapshot-mac-arm64:
     executor: mac-arm64
@@ -527,9 +523,7 @@ jobs:
       - test-cpp-assembly-mac:
           target-arch: arm64
 
-      - deploy-csharp-snapshot-unix
-      - test-csharp-assembly-mac:
-          target-arch: arm64
+      - deploy-nuget-snapshot-unix
 
   deploy-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -553,9 +547,7 @@ jobs:
       - test-cpp-assembly-mac:
           target-arch: x86_64
 
-      - deploy-csharp-snapshot-unix
-      - test-csharp-assembly-mac:
-          target-arch: x86_64
+      - deploy-nuget-snapshot-unix
 
   deploy-snapshot-windows-x86_64:
     executor:
@@ -589,6 +581,7 @@ jobs:
       - deploy-maven-snapshot-unix
       - install-npm-apt
       - deploy-npm-snapshot-unix
+      - deploy-nuget-snapshot-unix # TODO: Need here?
 
   test-snapshot-linux-arm64:
     executor: linux-arm64-amazonlinux-2
@@ -599,6 +592,8 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
+      - install-dotnet-linux
+      - test-nuget-snapshot-unix
 
   test-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -609,6 +604,8 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
+      - install-dotnet-linux
+      - test-nuget-snapshot-unix
 
   test-snapshot-mac-arm64:
     executor: mac-arm64
@@ -619,6 +616,8 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-mac
       - test-maven-snapshot-unix
+      - install-dotnet-mac
+      - test-nuget-snapshot-unix
 
   test-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -630,6 +629,8 @@ jobs:
       - test-pip-snapshot-mac-rosetta
       - install-maven-mac-rosetta
       - test-maven-snapshot-mac-rosetta
+      - install-dotnet-mac-rosetta
+      - test-nuget-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
     executor:
@@ -667,7 +668,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-csharp-release-unix
+      - deploy-nuget-release-unix
 
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -679,7 +680,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-csharp-release-unix
+      - deploy-nuget-release-unix
 
   deploy-release-mac-arm64:
     executor: mac-arm64
@@ -691,7 +692,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-csharp-release-unix
+      - deploy-nuget-release-unix
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -704,7 +705,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-csharp-release-unix
+      - deploy-nuget-release-unix
 
   deploy-release-windows-x86_64:
     executor:
@@ -731,6 +732,7 @@ jobs:
       - deploy-maven-release-unix
       - install-npm-apt
       - deploy-npm-release-unix
+      - deploy-nuget-release-unix # TODO: Need here?
 
   deploy-github:
     executor: linux-x86_64-ubuntu-2204
