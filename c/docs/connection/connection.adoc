@@ -1,3 +1,6 @@
+[#_methods__connection__connection]
+=== connection
+
 [#_init_logging]
 ==== init_logging
 
@@ -13,6 +16,16 @@ Enables logging in the TypeDB driver.
 [caption=""]
 .Returns
 `void`
+
+[#_methods__connection__connection]
+=== connection
+
+[#_Struct_Connection]
+==== Struct Connection
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
 
 [#_connection_close]
 ==== connection_close
@@ -74,24 +87,6 @@ struct Connection* connection_open_cloud(const char*const* addresses, const stru
 
 Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     addresses
-     a null-terminated array holding the address(es) of the TypeDB server(s)
-    
-    
-     credential
-     The ``Credential`` to connect with
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
@@ -118,20 +113,6 @@ struct Connection* connection_open_core(const char* address)
 
 
 Open a TypeDB Driver to a TypeDB Core server available at the provided address.
-
- 
-  Parameters
- 
- 
-  
-   
-    
-     address
-     The address of the TypeDB server
-    
-   
-  
- 
 
 
 [caption=""]

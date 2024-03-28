@@ -1,3 +1,20 @@
+[#_methods__answer__explanation]
+=== explanation
+
+[#_Struct_Explainable]
+==== Struct Explainable
+
+
+
+Contains an explainable object.
+
+[#_Struct_Explainables]
+==== Struct Explainables
+
+
+
+Contains explainable objects.
+
 [#_explainable_drop]
 ==== explainable_drop
 
@@ -189,6 +206,23 @@ A string representation of this ``Explainables`` object
 [caption=""]
 .Returns
 `char*`
+
+[#_methods__answer__explanation]
+=== explanation
+
+[#_Struct_Explanation]
+==== Struct Explanation
+
+
+
+An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
+
+[#_Struct_ExplanationIterator]
+==== Struct ExplanationIterator
+
+
+
+Iterator over the ``Explanation``s in the result of the explain query.
 
 [#_explanation_drop]
 ==== explanation_drop
