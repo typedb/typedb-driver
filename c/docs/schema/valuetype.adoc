@@ -1,47 +1,15 @@
-[#_Annotation]
-=== Annotation
+[#_methods__schema__valuetype]
+=== valuetype
 
-
-
-Annotations are used to specify extra schema constraints.
-
-[#_Transitivity]
-=== Transitivity
-
-
-
-Used for specifying whether we need explicit or transitive subtyping, instances, etc.
-
-
-[#_ValueType]
-=== ValueType
+[#_Struct_ValueType]
+==== Struct ValueType
 
 
 
 Represents the type of primitive value is held by a Value or Attribute.
 
-[#_Transitivity]
-=== Transitivity
-
-
-
-Used for specifying whether we need explicit or transitive subtyping, instances, etc.
-
-
-[caption=""]
-.Enum constants
-// tag::enum_constants[]
-[cols="~"]
-[options="header"]
-|===
-|Name
-a| `Explicit`
-a| `Transitive`
-|===
-// end::enum_constants[]
-
-[#_ValueType]
-=== ValueType
+[#_Enum_ValueType]
+==== Enum ValueType
 
 
 
@@ -63,8 +31,8 @@ a| `String`
 |===
 // end::enum_constants[]
 
-[#_ValueType]
-=== ValueType
+[#_Enum_ValueType]
+==== Enum ValueType
 
 
 

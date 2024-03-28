@@ -1,3 +1,20 @@
+[#_methods__concept__roleplayer]
+=== roleplayer
+
+[#_Struct_RolePlayer]
+==== Struct RolePlayer
+
+
+
+A pair representing the concept and the role it plays in a relation. The result of relation_get_role_players(Transaction*, Concept*)
+
+[#_Struct_RolePlayerIterator]
+==== Struct RolePlayerIterator
+
+
+
+An iterator over ``RolePlayer`` pairs returned by relation_get_role_players(Transaction*, Concept*)
+
 [#_role_player_drop]
 ==== role_player_drop
 

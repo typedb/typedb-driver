@@ -61,11 +61,11 @@ data class Class(
                 || superClasses.isNotEmpty()
     }
 
-    fun toAsciiDoc(language: String, mergeWith: Class? = null): String {
+    fun toAsciiDoc(language: String, mergeWith: Class? = null, headerLevel: Int = 3): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(3, this.name)
+        result += builder.header(headerLevel, this.name)
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 

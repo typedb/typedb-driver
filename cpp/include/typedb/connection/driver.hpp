@@ -149,6 +149,9 @@ private:
  *
  * <h3>Examples</h3>
  * <pre>
+ * // Creates a credential with username & password over a plain-text connection.
+ * Credential credential(username, password, false);
+ *
  * // Creates a credential as above, but the connection will be made over TLS.
  * Credential credential(username, password, true);
  *

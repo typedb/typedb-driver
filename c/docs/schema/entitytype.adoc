@@ -1,3 +1,6 @@
+[#_methods__schema__entitytype]
+=== entitytype
+
 [#_entity_type_create]
 ==== entity_type_create
 
