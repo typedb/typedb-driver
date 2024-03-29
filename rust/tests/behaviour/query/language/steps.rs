@@ -209,6 +209,15 @@ generic_step_impl! {
         Ok(())
     }
 
+    #[step(expr = "get answers of templated typeql get")]
+    async fn get_answers_of_templated_typeql_get(context: &mut Context, step: &Step) {
+        if context.answer.len() > 1 {
+            panic!("Can only retrieve answers of templated typeql get given 1 previous answer.")
+        }
+        let answer = context.answer.get(0).unwrap();
+        context.answer = match_templated_answer(context, step, &answer).await.unwrap();
+    }
+
     #[step(expr = "templated typeql get; throws exception")]
     async fn templated_typeql_get_throws(context: &mut Context, step: &Step) {
         for answer in &context.answer {

@@ -515,6 +515,19 @@ public class QuerySteps {
         }
     }
 
+    @Then("get answers of templated typeql get")
+    public void get_answers_of_templated_typeql_get(String templatedTypeQLQuery) {
+        if (answers.size() != 1) {
+            throw new ScenarioDefinitionException("Can only retrieve answers of templated typeql get given 1 previous answer");
+        }
+        String templatedQuery = String.join("\n", templatedTypeQLQuery);
+
+        ConceptMap answer = answers.get(0);
+        String queryString = applyQueryTemplate(templatedQuery, answer);
+        clearAnswers();
+        answers = tx().query().get(String.join("\n", queryString)).collect(Collectors.toList());
+    }
+
     @Then("templated typeql get; throws exception")
     public void templated_typeql_get_throws_exception(String templatedTypeQLQuery) {
         String templatedQuery = String.join("\n", templatedTypeQLQuery);

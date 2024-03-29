@@ -532,6 +532,21 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
+        [Then(@"get answers of templated typeql get")]
+        public void GetAnswersOfTemplatedTypeqlGet(DocString templatedQuery)
+        {
+            if (_answers!.Count != 1)
+            {
+                throw new BehaviourTestException("Can only retrieve answers of templated typeql get given 1 previous answer");
+            }
+
+            IConceptMap answer = _answers![0];
+
+            string query = ApplyQueryTemplate(templatedQuery.Content, answer);
+            ClearAnswers();
+            _answers = Tx.Query.Get(query).ToList();
+        }
+
         [Then(@"templated typeql get; throws exception")]
         public void TemplatedTypeqlGetThrowsException(DocString templatedQuery)
         {
