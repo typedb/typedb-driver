@@ -175,6 +175,16 @@ cucumber_bdd::StepCollection<Context> querySteps = {
         assert(context.lastValueGroupResult.size() == 1);  // STEP REQUIRES ONE VALUE
         ASSERT_FALSE(context.lastValueGroupResult[0].value().has_value());
     }),
+    BDD_STEP("get answers of templated typeql get", {
+        std::string queryTemplate = step.argument->doc_string->content;
+        std::vector<std::string> varNames = extractVarsFromQueryTemplate(queryTemplate);
+        if (context.lastConceptMapResult.size() != 1) {
+            throw std::runtime_error("Can only retrieve answers of templated typeql get given 1 previous answer");
+        }
+        ConceptMap& cm = context.lastConceptMapResult[0];
+        std::string substitutedQuery = applyTemplate(queryTemplate, varNames, cm);
+        context.setResult(context.transaction().query.get(substitutedQuery, TypeDB::Options()));
+    }),
     BDD_STEP("templated typeql get; throws exception", {
         std::string queryTemplate = step.argument->doc_string->content;
         std::vector<std::string> varNames = extractVarsFromQueryTemplate(queryTemplate);
