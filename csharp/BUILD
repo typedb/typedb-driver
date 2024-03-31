@@ -57,7 +57,7 @@ csharp_library(
 
 
 nuget_pack(
-    name = "driver-csharp-pack",
+    name = "driver-csharp-pack-mac",
     files = {
         "libtypedb_driver.dylib": "libtypedb_driver.dylib",
     },
@@ -134,8 +134,8 @@ nuget_pack(
 nuget_push(
     name = "driver-csharp-push-mac",
     src = ":driver-csharp-pack-mac",
-#    package_repository_url = "https://api.nuget.org/v3/index.json",
-    package_repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+#    repository_url = "https://api.nuget.org/v3/index.json",
+    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
 )
 
 
