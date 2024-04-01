@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>$packageid$</id>
+    <version>$version$</version>
+    <authors>TypeDB</authors>
+    <copyright>Copyright © 2024 Vaticle</copyright>
+    <owners>TypeDB</owners>
+    <title>TypeDB Driver</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>The TypeDB driver was developed by Vaticle to enable TypeDB support for C# software and developers.</summary>
+    <description>
+      TypeDB is a polymorphic database with a conceptual data model, a strong subtyping system, a symbolic reasoning engine, and a beautiful and elegant type-theoretic language: TypeQL.
+    </description>
+    <projectUrl>https://typedb.com</projectUrl>
+    <repository type="GitHub" url="https://github.com/vaticle/typedb-driver" />
+    <license type="expression">Apache-2.0</license>
+    <iconUrl>https://typedb.com/assets/logo/typedb.svg</iconUrl>
+    <tags>Database TypeDB TypeQL</tags>
+    <releaseNotes>
+      See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver. TODO: Changelog?
+    </releaseNotes>
+    <dependencies>
+      <group targetFramework="$target_framework$">
+        <dependency id="Newtonsoft.Json" version="13.0.3" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib/$target_framework$/TypeDB.Driver.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Api.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Api.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Api.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Common.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Common.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Common.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Connection.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Connection.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Connection.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Concept.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Concept.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Concept.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Logic.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Logic.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Logic.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Query.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Query.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Query.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.User.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.User.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.User.xml" target="lib/$target_framework$" />
+$native_lib_files$
+
+  </files>
+</package>

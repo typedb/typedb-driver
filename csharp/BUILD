@@ -57,6 +57,22 @@ csharp_library(
 
 
 nuget_pack(
+    name = "driver-csharp-pinvoke-pack-mac",
+    files = {
+        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
+    },
+    id = "TypeDB.Driver.Pinvoke",
+    libs = {
+        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
+    },
+    mac_native_lib = "libtypedb_driver.dylib",
+    target_framework = target_framework,
+    nuspec_template = "TypeDB.Driver.Pinvoke.nuspec.template",
+    version = "0.0.1",
+    visibility = ["//visibility:public"],
+)
+
+nuget_pack(
     name = "driver-csharp-pack-mac",
     files = {
         "libtypedb_driver.dylib": "libtypedb_driver.dylib",
@@ -76,6 +92,26 @@ nuget_pack(
     mac_native_lib = "libtypedb_driver.dylib",
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.nuspec.template",
+    version = "0.0.1",
+    visibility = ["//visibility:public"],
+)
+
+
+nuget_pack(
+    name = "driver-csharp-pack-noruntime",
+    id = "TypeDB.Driver.NoRuntime",
+    libs = {
+        ":driver-csharp": "TypeDB.Driver",
+        "//csharp/Api:api": "TypeDB.Driver.Api",
+        "//csharp/Common:common": "TypeDB.Driver.Common",
+        "//csharp/Connection:connection": "TypeDB.Driver.Connection",
+        "//csharp/Concept:concept": "TypeDB.Driver.Concept",
+        "//csharp/Logic:logic": "TypeDB.Driver.Logic",
+        "//csharp/Query:query": "TypeDB.Driver.Query",
+        "//csharp/User:user": "TypeDB.Driver.User",
+    },
+    target_framework = target_framework,
+    nuspec_template = "TypeDB.Driver.NoRuntime.nuspec.template",
     version = "0.0.1",
     visibility = ["//visibility:public"],
 )
@@ -132,8 +168,22 @@ nuget_pack(
 
 
 nuget_push(
+    name = "driver-csharp-pinvoke-push-mac",
+    src = ":driver-csharp-pinvoke-pack-mac",
+#    repository_url = "https://api.nuget.org/v3/index.json",
+    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+)
+
+nuget_push(
     name = "driver-csharp-push-mac",
     src = ":driver-csharp-pack-mac",
+#    repository_url = "https://api.nuget.org/v3/index.json",
+    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+)
+
+nuget_push(
+    name = "driver-csharp-push-noruntime",
+    src = ":driver-csharp-pack-noruntime",
 #    repository_url = "https://api.nuget.org/v3/index.json",
     repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
 )

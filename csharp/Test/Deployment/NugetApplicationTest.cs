@@ -93,7 +93,7 @@ namespace TypeDB.Driver.Test.Deployment
                 }
             }
 
-            Console.WriteLine("Ending test...");
+            Console.WriteLine("Success!");
         }
     }
 }
