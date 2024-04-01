@@ -369,9 +369,11 @@ commands:
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:deploy-nuget -- snapshot
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_USERNAME
+#          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
+#          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-mac -- snapshot
+#          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-linux -- snapshot
 
   test-nuget-snapshot-unix:
     steps:
@@ -394,9 +396,12 @@ commands:
   deploy-nuget-release-unix:
     steps:
       - run: |
-          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:deploy-nuget --compilation_mode=opt -- release
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_USERNAME
+#          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
+#          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
+
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-mac -- release
+#          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-linux -- release
 
   #########################
   # Rust deployment steps #

@@ -18,6 +18,7 @@
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load("@vaticle_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
 load(":rules.bzl", "swig_native_csharp_library")
@@ -71,6 +72,7 @@ nuget_pack(
     version = "0.0.1",
     visibility = ["//visibility:public"],
 )
+
 
 nuget_pack(
     name = "driver-csharp-pack-mac",
@@ -170,22 +172,24 @@ nuget_pack(
 nuget_push(
     name = "driver-csharp-pinvoke-push-mac",
     src = ":driver-csharp-pinvoke-pack-mac",
-#    repository_url = "https://api.nuget.org/v3/index.json",
-    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+    snapshot_url = deployment['nuget']['snapshot'],
+    release_url = deployment['nuget']['release'],
 )
+
 
 nuget_push(
     name = "driver-csharp-push-mac",
     src = ":driver-csharp-pack-mac",
-#    repository_url = "https://api.nuget.org/v3/index.json",
-    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+    snapshot_url = deployment['nuget']['snapshot'],
+    release_url = deployment['nuget']['release'],
 )
+
 
 nuget_push(
     name = "driver-csharp-push-noruntime",
     src = ":driver-csharp-pack-noruntime",
-#    repository_url = "https://api.nuget.org/v3/index.json",
-    repository_url = "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+    snapshot_url = deployment['nuget']['snapshot'],
+    release_url = deployment['nuget']['release'],
 )
 
 

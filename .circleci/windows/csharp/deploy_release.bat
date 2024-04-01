@@ -24,9 +24,10 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_NUGET_USERNAME=%REPO_TYPEDB_USERNAME%
-SET DEPLOY_NUGET_PASSWORD=%REPO_TYPEDB_PASSWORD%
+SET DEPLOY_NUGET_API_KEY=%REPO_TYPEDB_USERNAME%
+@REM SET DEPLOY_NUGET_USERNAME=%REPO_TYPEDB_USERNAME%
+@REM SET DEPLOY_NUGET_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //csharp:deploy-nuget --compilation_mode=opt -- release
+bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //csharp:driver-csharp-push-win --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
