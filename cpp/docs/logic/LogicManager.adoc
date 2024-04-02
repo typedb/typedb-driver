@@ -34,13 +34,6 @@ a| `label` a| The label of the Rule to create or retrieve a| `const std::string&
 .Returns
 `OptionalRuleFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.logic.getRule(label).get();
-----
-
 [#_RuleIterable_TypeDBLogicManagergetRules_____const]
 ==== getRules
 
@@ -57,13 +50,6 @@ Retrieves all rules.
 [caption=""]
 .Returns
 `RuleIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.logic.getRules()
-----
 
 [#_RuleFuture_TypeDBLogicManagerputRule___const_stdstring__label__const_stdstring__when__const_stdstring__then___const]
 ==== putRule
@@ -92,13 +78,6 @@ a| `then` a| The then body of the rule to create a| `const std::string&`
 [caption=""]
 .Returns
 `RuleFuture`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.logic.putRule(label, when, then).get();
-----
 
 // end::methods[]
 

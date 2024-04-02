@@ -36,13 +36,6 @@ a| `transaction` a| The current ``Transaction`` a| `Transaction&`
 .Returns
 `VoidFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-rule.deleteRule(transaction).get();
-----
-
 [#_BoolFuture_TypeDBRuleisDeleted___Transaction__transaction_]
 ==== isDeleted
 
@@ -68,13 +61,6 @@ a| `transaction` a| The current ``Transaction`` a| `Transaction&`
 [caption=""]
 .Returns
 `BoolFuture`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-rule.isDeleted(transaction).get();
-----
 
 [#_stdstring_TypeDBRulelabel___]
 ==== label
@@ -118,13 +104,6 @@ a| `label` a| The new label to be given to the rule a| `const std::string&`
 [caption=""]
 .Returns
 `VoidFuture`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-rule.setLabel(transaction, newLabel).get();
-----
 
 [#_stdstring_TypeDBRulethen___]
 ==== then

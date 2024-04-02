@@ -25,13 +25,6 @@ Retrieves the subquery of the original query that is actually being explained.
 .Returns
 `std::string`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-explainable.conjunction();
-----
-
 [#_int64_t_TypeDBExplainableexplainableId___]
 ==== explainableId
 
@@ -48,13 +41,6 @@ Retrieves the unique ID that identifies this ``Explainable``.
 [caption=""]
 .Returns
 `int64_t`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-explainable.id();
-----
 
 // end::methods[]
 

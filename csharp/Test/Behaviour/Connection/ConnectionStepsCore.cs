@@ -48,7 +48,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+            Driver = CreateTypeDBDriver(Drivers.DEFAULT_ADDRESS);
         }
 
         [Given(@"connection opens with authentication: {}, {}")]

@@ -1,0 +1,289 @@
+[#_methods__connection__user]
+=== user
+
+[#_Struct_User]
+==== Struct User
+
+
+
+User information
+
+[#_Struct_UserIterator]
+==== Struct UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_Struct_UserManager]
+==== Struct UserManager
+
+
+
+Provides access to all user management methods.
+
+[#_user_drop]
+==== user_drop
+
+[source,cpp]
+----
+void user_drop(struct User* user)
+----
+
+
+
+Frees the native rust ``User`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_user_get_password_expiry_seconds]
+==== user_get_password_expiry_seconds
+
+[source,cpp]
+----
+int64_t user_get_password_expiry_seconds(struct User* user)
+----
+
+
+
+Returns the number of seconds remaining till this user’s current password expires.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_user_get_username]
+==== user_get_username
+
+[source,cpp]
+----
+char* user_get_username(struct User* user)
+----
+
+
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_user_iterator_drop]
+==== user_iterator_drop
+
+[source,cpp]
+----
+void user_iterator_drop(struct UserIterator* it)
+----
+
+
+
+Frees the native rust ``UserIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_user_iterator_next]
+==== user_iterator_next
+
+[source,cpp]
+----
+struct User* user_iterator_next(struct UserIterator* it)
+----
+
+
+
+Forwards the ``UserIterator`` and returns the next ``User`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct User*`
+
+[#_user_manager_drop]
+==== user_manager_drop
+
+[source,cpp]
+----
+void user_manager_drop(struct UserManager* user_manager)
+----
+
+
+
+Frees the native rust ``UserManager`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_user_manager_new]
+==== user_manager_new
+
+[source,cpp]
+----
+struct UserManager* user_manager_new(const struct Connection* connection)
+----
+
+
+
+Creates a ``UserManager`` on the specified connection
+
+[caption=""]
+.Returns
+`struct UserManager*`
+
+[#_user_password_update]
+==== user_password_update
+
+[source,cpp]
+----
+void user_password_update(struct User* user, const struct UserManager* user_manager, const char* password_old, const char* password_new)
+----
+
+
+
+Updates the password for the current authenticated user.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `user` a| The user to update the password of - must be the current user. a| `struct User*`
+a| `user_manager` a| The ``UserManager`` object on this connection. a| `const struct UserManager*`
+a| `password_old` a| The current password of this user a| `const char*`
+a| `password_new` a| The new password a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_users_all]
+==== users_all
+
+[source,cpp]
+----
+struct UserIterator* users_all(const struct UserManager* user_manager)
+----
+
+
+
+Retrieves all users which exist on the TypeDB server.
+
+[caption=""]
+.Returns
+`struct UserIterator*`
+
+[#_users_contains]
+==== users_contains
+
+[source,cpp]
+----
+bool users_contains(const struct UserManager* user_manager, const char* username)
+----
+
+
+
+Checks if a user with the given name exists.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_users_create]
+==== users_create
+
+[source,cpp]
+----
+void users_create(const struct UserManager* user_manager, const char* username, const char* password)
+----
+
+
+
+Creates a user with the given name &amp; password.
+
+[caption=""]
+.Returns
+`void`
+
+[#_users_current_user]
+==== users_current_user
+
+[source,cpp]
+----
+struct User* users_current_user(const struct UserManager* user_manager)
+----
+
+
+
+Retrieves the user who opened this connection
+
+[caption=""]
+.Returns
+`struct User*`
+
+[#_users_delete]
+==== users_delete
+
+[source,cpp]
+----
+void users_delete(const struct UserManager* user_manager, const char* username)
+----
+
+
+
+Deletes the user with the given username.
+
+[caption=""]
+.Returns
+`void`
+
+[#_users_get]
+==== users_get
+
+[source,cpp]
+----
+struct User* users_get(const struct UserManager* user_manager, const char* username)
+----
+
+
+
+Retrieves a user with the given name.
+
+[caption=""]
+.Returns
+`struct User*`
+
+[#_users_set_password]
+==== users_set_password
+
+[source,cpp]
+----
+void users_set_password(const struct UserManager* user_manager, const char* username, const char* password)
+----
+
+
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `user_manager` a| The UserManager object to be used. This must be on a connection opened by an administrator. a| `const struct UserManager*`
+a| `username` a| The name of the user to set the password of a| `const char*`
+a| `password` a| The new password a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`void`
+

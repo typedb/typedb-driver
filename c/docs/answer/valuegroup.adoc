@@ -1,0 +1,129 @@
+[#_methods__answer__valuegroup]
+=== valuegroup
+
+[#_Struct_ValueGroup]
+==== Struct ValueGroup
+
+
+
+Contains an element of a TypeQL Get Group Aggregate query result.
+
+[#_Struct_ValueGroupIterator]
+==== Struct ValueGroupIterator
+
+
+
+Iterator over the ``ValueGroup``s in the result of the Get Group Aggregate query.
+
+[#_value_group_drop]
+==== value_group_drop
+
+[source,cpp]
+----
+void value_group_drop(struct ValueGroup* value_group)
+----
+
+
+
+Frees the native rust ``ValueGroup`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_value_group_equals]
+==== value_group_equals
+
+[source,cpp]
+----
+bool value_group_equals(const struct ValueGroup* lhs, const struct ValueGroup* rhs)
+----
+
+
+
+Checks whether the provided ``ValueGroup`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_value_group_get_owner]
+==== value_group_get_owner
+
+[source,cpp]
+----
+struct Concept* value_group_get_owner(struct ValueGroup* value_group)
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_group_get_value]
+==== value_group_get_value
+
+[source,cpp]
+----
+struct Concept* value_group_get_value(struct ValueGroup* value_group)
+----
+
+
+
+Retrieves the ``Value`` answer of the group.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_value_group_iterator_drop]
+==== value_group_iterator_drop
+
+[source,cpp]
+----
+void value_group_iterator_drop(struct ValueGroupIterator* it)
+----
+
+
+
+Frees the native rust ``ValueGroupIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_value_group_iterator_next]
+==== value_group_iterator_next
+
+[source,cpp]
+----
+struct ValueGroup* value_group_iterator_next(struct ValueGroupIterator* it)
+----
+
+
+
+Forwards the ``ValueGroupIterator`` and returns the next ``ValueGroup`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ValueGroup*`
+
+[#_value_group_to_string]
+==== value_group_to_string
+
+[source,cpp]
+----
+char* value_group_to_string(const struct ValueGroup* value_group)
+----
+
+
+
+A string representation of this ``ValueGroup`` object
+
+[caption=""]
+.Returns
+`char*`
+

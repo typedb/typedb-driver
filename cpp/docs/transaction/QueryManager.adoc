@@ -35,13 +35,6 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.define(query, options).get()
-----
-
 [#_ExplanationIterable_TypeDBQueryManagerexplain___const_Explainable__explainable__const_Options___Options_____const]
 ==== explain
 
@@ -68,13 +61,6 @@ a| `options` a| Specify query options a|
 [caption=""]
 .Returns
 `ExplanationIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.explain(explainable, options)
-----
 
 [#_JSONIterable_TypeDBQueryManagerfetch___const_stdstring__query__const_Options__options__Options_____const]
 ==== fetch
@@ -103,13 +89,6 @@ a| `options` a| Specify query options a|
 .Returns
 `JSONIterable`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.fetch(query, options)
-----
-
 [#_ConceptMapIterable_TypeDBQueryManagerget___const_stdstring__query__const_Options__options__Options_____const]
 ==== get
 
@@ -136,13 +115,6 @@ a| `options` a| Specify query options a|
 [caption=""]
 .Returns
 `ConceptMapIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.get(query, options)
-----
 
 [#_AggregateFuture_TypeDBQueryManagergetAggregate___const_stdstring__query__const_Options___Options_____const]
 ==== getAggregate
@@ -171,13 +143,6 @@ a| `options` a| Specify query options a|
 .Returns
 `AggregateFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.getAggregate(query, options).get()
-----
-
 [#_ConceptMapGroupIterable_TypeDBQueryManagergetGroup___const_stdstring__query__const_Options___Options_____const]
 ==== getGroup
 
@@ -204,13 +169,6 @@ a| `options` a| Specify query options a|
 [caption=""]
 .Returns
 `ConceptMapGroupIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.getGroup(query, options)
-----
 
 [#_ValueGroupIterable_TypeDBQueryManagergetGroupAggregate___const_stdstring__query__const_Options___Options_____const]
 ==== getGroupAggregate
@@ -239,13 +197,6 @@ a| `options` a| Specify query options a|
 .Returns
 `ValueGroupIterable`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.getGroupAggregate(query, options)
-----
-
 [#_ConceptMapIterable_TypeDBQueryManagerinsert___const_stdstring__query__const_Options__options__Options_____const]
 ==== insert
 
@@ -272,13 +223,6 @@ a| `options` a| Specify query options a|
 [caption=""]
 .Returns
 `ConceptMapIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.insert(query, options)
-----
 
 [#_VoidFuture_TypeDBQueryManagermatchDelete___const_stdstring__query__const_Options__options__Options_____const]
 ==== matchDelete
@@ -307,13 +251,6 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.matchDelete(query, options).get()
-----
-
 [#_VoidFuture_TypeDBQueryManagerundefine___const_stdstring__query__const_Options__options__Options_____const]
 ==== undefine
 
@@ -341,13 +278,6 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.undefine(query, options).get()
-----
-
 [#_ConceptMapIterable_TypeDBQueryManagerupdate___const_stdstring__query__const_Options___Options_____const]
 ==== update
 
@@ -374,13 +304,6 @@ a| `options` a| Specify query options a|
 [caption=""]
 .Returns
 `ConceptMapIterable`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.query.update(query, options)
-----
 
 // end::methods[]
 

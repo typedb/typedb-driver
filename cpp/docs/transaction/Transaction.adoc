@@ -38,13 +38,6 @@ Closes the transaction.
 .Returns
 `void`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.close()
-----
-
 [#_void_TypeDBTransactioncommit___]
 ==== commit
 
@@ -61,13 +54,6 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.commit()
-----
 
 [#_void_TypeDBTransactionforceClose___]
 ==== forceClose
@@ -86,13 +72,6 @@ Closes the transaction.
 .Returns
 `void`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.close()
-----
-
 [#_bool_TypeDBTransactionisOpen_____const]
 ==== isOpen
 
@@ -109,13 +88,6 @@ Checks whether this transaction is open.
 [caption=""]
 .Returns
 `bool`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.isOpen();
-----
 
 [#_void_TypeDBTransactiononClose___stdfunction__void_const_stdoptional__DriverException______callback_]
 ==== onClose
@@ -143,13 +115,6 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.onClose(function);
-----
-
 [#_void_TypeDBTransactionrollback___]
 ==== rollback
 
@@ -166,13 +131,6 @@ Rolls back the uncommitted changes made via this transaction.
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-transaction.rollback()
-----
 
 [#_TypeDBTransactionType_TypeDBTransactiontype_____const]
 ==== type

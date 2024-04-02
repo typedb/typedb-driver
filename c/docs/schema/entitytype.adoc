@@ -1,0 +1,99 @@
+[#_methods__schema__entitytype]
+=== entitytype
+
+[#_entity_type_create]
+==== entity_type_create
+
+[source,cpp]
+----
+struct ConceptPromise* entity_type_create(struct Transaction* transaction, const struct Concept* entity_type)
+----
+
+
+
+Creates and returns a new instance of this ``EntityType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_entity_type_get_instances]
+==== entity_type_get_instances
+
+[source,cpp]
+----
+struct ConceptIterator* entity_type_get_instances(struct Transaction* transaction, const struct Concept* entity_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all ``Entity`` objects that are instances of this ``EntityType`` or its subtypes. Specify ``Transitive`` for instances of this EntityType and subtypes, Or ``Explicit`` of this EntityType only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_entity_type_get_subtypes]
+==== entity_type_get_subtypes
+
+[source,cpp]
+----
+struct ConceptIterator* entity_type_get_subtypes(struct Transaction* transaction, const struct Concept* entity_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the given EntityType. Specify ``Transitive`` for direct and indirect subtypes, Or ``Explicit`` for directly subtypes only.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_entity_type_get_supertype]
+==== entity_type_get_supertype
+
+[source,cpp]
+----
+struct ConceptPromise* entity_type_get_supertype(struct Transaction* transaction, const struct Concept* entity_type)
+----
+
+
+
+Retrieves the most immediate supertype of the given ``EntityType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_entity_type_get_supertypes]
+==== entity_type_get_supertypes
+
+[source,cpp]
+----
+struct ConceptIterator* entity_type_get_supertypes(struct Transaction* transaction, const struct Concept* entity_type)
+----
+
+
+
+Retrieves all supertypes of the given EntityType.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_entity_type_set_supertype]
+==== entity_type_set_supertype
+
+[source,cpp]
+----
+struct VoidPromise* entity_type_set_supertype(struct Transaction* transaction, struct Concept* entity_type, const struct Concept* supertype)
+----
+
+
+
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

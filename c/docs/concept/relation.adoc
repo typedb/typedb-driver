@@ -1,0 +1,109 @@
+[#_methods__concept__relation]
+=== relation
+
+[#_relation_add_role_player]
+==== relation_add_role_player
+
+[source,cpp]
+----
+struct VoidPromise* relation_add_role_player(struct Transaction* transaction, struct Concept* relation, const struct Concept* role_type, const struct Concept* player)
+----
+
+
+
+Adds a new role player to play the given role in this ``Relation``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_relation_get_players_by_role_type]
+==== relation_get_players_by_role_type
+
+[source,cpp]
+----
+struct ConceptIterator* relation_get_players_by_role_type(struct Transaction* transaction, const struct Concept* relation, const struct Concept*const* role_types)
+----
+
+
+
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `role_types` a| a null-terminated array of ``RoleType``s to include. a| `const struct Concept*const*`
+|===
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_get_relating]
+==== relation_get_relating
+
+[source,cpp]
+----
+struct ConceptIterator* relation_get_relating(struct Transaction* transaction, const struct Concept* relation)
+----
+
+
+
+Retrieves all role types currently played in this ``Relation``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_get_role_players]
+==== relation_get_role_players
+
+[source,cpp]
+----
+struct RolePlayerIterator* relation_get_role_players(struct Transaction* transaction, const struct Concept* relation)
+----
+
+
+
+Retrieves all instance involved in the ``Relation``, each paired with the role it plays.
+
+[caption=""]
+.Returns
+`struct RolePlayerIterator*`
+
+[#_relation_get_type]
+==== relation_get_type
+
+[source,cpp]
+----
+struct Concept* relation_get_type(const struct Concept* relation)
+----
+
+
+
+Retrieves the type which this ``Relation`` belongs to.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_relation_remove_role_player]
+==== relation_remove_role_player
+
+[source,cpp]
+----
+struct VoidPromise* relation_remove_role_player(struct Transaction* transaction, struct Concept* relation, const struct Concept* role_type, const struct Concept* player)
+----
+
+
+
+Removes the association of the given instance that plays the given role in this ``Relation``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

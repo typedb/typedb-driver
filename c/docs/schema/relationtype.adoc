@@ -1,0 +1,179 @@
+[#_methods__schema__relationtype]
+=== relationtype
+
+[#_relation_type_create]
+==== relation_type_create
+
+[source,cpp]
+----
+struct ConceptPromise* relation_type_create(struct Transaction* transaction, const struct Concept* relation_type)
+----
+
+
+
+Creates and returns a new instance of this ``RelationType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_relation_type_get_instances]
+==== relation_type_get_instances
+
+[source,cpp]
+----
+struct ConceptIterator* relation_type_get_instances(struct Transaction* transaction, const struct Concept* relation_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all ``Relation`` objects that are instances of this ``RelationType`` or its subtypes. Specify ``Transitive`` for instances of this RelationType and subtypes, Or ``Explicit`` of this RelationType only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_type_get_relates]
+==== relation_type_get_relates
+
+[source,cpp]
+----
+struct ConceptIterator* relation_type_get_relates(struct Transaction* transaction, const struct Concept* relation_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance. Specify ``Transitive`` for direct and inherited relates Or ``Explicit`` for direct relates only
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_type_get_relates_for_role_label]
+==== relation_type_get_relates_for_role_label
+
+[source,cpp]
+----
+struct ConceptPromise* relation_type_get_relates_for_role_label(struct Transaction* transaction, const struct Concept* relation_type, const char* role_label)
+----
+
+
+
+Retrieves the role with the specified label that this ``RelationType`` relates to, directly or via inheritance.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_relation_type_get_relates_overridden]
+==== relation_type_get_relates_overridden
+
+[source,cpp]
+----
+struct ConceptPromise* relation_type_get_relates_overridden(struct Transaction* transaction, const struct Concept* relation_type, const char* overridden_role_label)
+----
+
+
+
+Retrieves the ``RoleType`` that is overridden by the role with the ``role_label``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_relation_type_get_subtypes]
+==== relation_type_get_subtypes
+
+[source,cpp]
+----
+struct ConceptIterator* relation_type_get_subtypes(struct Transaction* transaction, const struct Concept* relation_type, enum Transitivity transitivity)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the given RelationType. Specify ``Transitive`` for direct and indirect subtypes, Or ``Explicit`` for directly subtypes only.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_type_get_supertype]
+==== relation_type_get_supertype
+
+[source,cpp]
+----
+struct ConceptPromise* relation_type_get_supertype(struct Transaction* transaction, const struct Concept* relation_type)
+----
+
+
+
+Retrieves the most immediate supertype of the given ``RelationType``.
+
+[caption=""]
+.Returns
+`struct ConceptPromise*`
+
+[#_relation_type_get_supertypes]
+==== relation_type_get_supertypes
+
+[source,cpp]
+----
+struct ConceptIterator* relation_type_get_supertypes(struct Transaction* transaction, const struct Concept* relation_type)
+----
+
+
+
+Retrieves all supertypes of the given RelationType.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_relation_type_set_relates]
+==== relation_type_set_relates
+
+[source,cpp]
+----
+struct VoidPromise* relation_type_set_relates(struct Transaction* transaction, struct Concept* relation_type, const char* role_label, const char* overridden_role_label)
+----
+
+
+
+Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass overridden_role_label.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_relation_type_set_supertype]
+==== relation_type_set_supertype
+
+[source,cpp]
+----
+struct VoidPromise* relation_type_set_supertype(struct Transaction* transaction, struct Concept* relation_type, const struct Concept* supertype)
+----
+
+
+
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+
+[#_relation_type_unset_relates]
+==== relation_type_unset_relates
+
+[source,cpp]
+----
+struct VoidPromise* relation_type_unset_relates(struct Transaction* transaction, struct Concept* relation_type, const char* role_label)
+----
+
+
+
+Disallows this ``RelationType`` from relating to the given role.
+
+[caption=""]
+.Returns
+`struct VoidPromise*`
+

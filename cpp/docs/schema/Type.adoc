@@ -40,13 +40,6 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `virtual VoidFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.deleteType(transaction).get();
-----
-
 [#_virtual_stdstring_TypeDBTypegetLabel___]
 ==== getLabel
 
@@ -65,13 +58,6 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 [caption=""]
 .Returns
 `virtual std::string`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.getLabel();
-----
 
 [#_ConceptIterable__Type___TypeDBTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -100,14 +86,6 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< Type >`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.getSubtypes(transaction);
-type.getSubtypes(transaction, Transitivity.EXPLICIT);
-----
-
 [#_ConceptPtrFuture__Type___TypeDBTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
 
@@ -133,13 +111,6 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Type >`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.getSupertype(transaction).get();
-----
 
 [#_ConceptIterable__Type___TypeDBTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
@@ -167,13 +138,6 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `ConceptIterable< Type >`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.getSupertypes(transaction);
-----
-
 [#_virtual_bool_TypeDBTypeisAbstract___]
 ==== isAbstract
 
@@ -192,13 +156,6 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 [caption=""]
 .Returns
 `virtual bool`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.isAbstract();
-----
 
 [#_virtual_BoolFuture_TypeDBTypeisDeleted___Transaction__transaction_]
 ==== isDeleted
@@ -228,13 +185,6 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `virtual BoolFuture`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.isDeleted(transaction).get();
-----
-
 [#_virtual_VoidFuture_TypeDBTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
 ==== setLabel
 
@@ -263,13 +213,6 @@ a| `label` a| The new ``Label`` to be given to the type. a|
 [caption=""]
 .Returns
 `virtual VoidFuture`
-
-[caption=""]
-.Code examples
-[source,cpp]
-----
-type.setLabel(transaction, newLabel).get();
-----
 
 // end::methods[]
 

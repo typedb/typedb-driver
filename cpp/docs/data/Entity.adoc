@@ -32,12 +32,5 @@ Retrieves the type which this ``Entity`` belongs to.
 .Returns
 `std::unique_ptr< EntityType >`
 
-[caption=""]
-.Code examples
-[source,cpp]
-----
-entity.getType();
-----
-
 // end::methods[]
 
