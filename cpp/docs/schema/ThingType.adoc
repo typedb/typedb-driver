@@ -43,6 +43,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `virtual VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.deleteType(transaction).get();
+----
+
 [#_virtual_stdstring_TypeDBThingTypegetLabel___]
 ==== getLabel
 
@@ -63,6 +70,13 @@ Implements TypeDB::Type.
 [caption=""]
 .Returns
 `virtual std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getLabel();
+----
 
 [#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
@@ -175,6 +189,14 @@ a| `annotations` a| Only retrieve attribute types owned with annotations. a| `co
 .Returns
 `ConceptIterable< AttributeType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.getOwns(transaction);
+thingType.getOwns(transaction, valueType, Transitivity::EXPLICIT, Collections.singleton(Annotation.key()));
+----
+
 [#_ConceptPtrFuture__AttributeType___TypeDBThingTypegetOwnsOverridden___Transaction__transaction__AttributeType__ptr__attributeType_]
 ==== getOwnsOverridden
 
@@ -201,6 +223,13 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 [caption=""]
 .Returns
 `ConceptPtrFuture< AttributeType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.getOwnsOverridden(transaction, attributeType).get();
+----
 
 [#_ConceptIterable__RoleType___TypeDBThingTypegetPlays___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlays
@@ -229,6 +258,14 @@ a| `transitivity` a| transitivity: ``Transitivity::TRANSITIVE`` for direct and i
 .Returns
 `ConceptIterable< RoleType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.getPlays(transaction).get();
+thingType.getPlays(transaction, Transitivity::EXPLICIT).get();
+----
+
 [#_ConceptPtrFuture__RoleType___TypeDBThingTypegetPlaysOverridden___Transaction__transaction__RoleType__ptr__roleType_]
 ==== getPlaysOverridden
 
@@ -255,6 +292,13 @@ a| `roleType` a| The ``RoleType`` that overrides an inherited role a| `RoleType*
 [caption=""]
 .Returns
 `ConceptPtrFuture< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.getPlaysOverridden(transaction, roleType).get();
+----
 
 [#_ConceptIterable__ThingType___TypeDBThingTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -285,6 +329,14 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< ThingType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getSubtypes(transaction);
+type.getSubtypes(transaction, Transitivity.EXPLICIT);
+----
+
 [#_ConceptPtrFuture__ThingType___TypeDBThingTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
 
@@ -312,6 +364,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `ConceptPtrFuture< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getSupertype(transaction).get();
+----
 
 [#_ConceptIterable__ThingType___TypeDBThingTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
@@ -341,6 +400,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `ConceptIterable< ThingType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getSupertypes(transaction);
+----
+
 [#_StringFuture_TypeDBThingTypegetSyntax___Transaction__transaction_]
 ==== getSyntax
 
@@ -367,6 +433,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `StringFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.getSyntax(transaction).get();
+----
+
 [#_virtual_bool_TypeDBThingTypeisAbstract___]
 ==== isAbstract
 
@@ -387,6 +460,13 @@ Implements TypeDB::Type.
 [caption=""]
 .Returns
 `virtual bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isAbstract();
+----
 
 [#_virtual_BoolFuture_TypeDBThingTypeisDeleted___Transaction__transaction_]
 ==== isDeleted
@@ -418,6 +498,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `virtual BoolFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isDeleted(transaction).get();
+----
+
 [#_bool_TypeDBThingTypeisRoot___]
 ==== isRoot
 
@@ -434,6 +521,13 @@ Checks if the type is a root type.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isRoot();
+----
 
 [#_VoidFuture_TypeDBThingTypesetAbstract___Transaction__transaction_]
 ==== setAbstract
@@ -460,6 +554,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.setAbstract(transaction).get();
+----
 
 [#_virtual_VoidFuture_TypeDBThingTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
 ==== setLabel
@@ -491,6 +592,13 @@ a| `label` a| The new ``Label`` to be given to the type. a|
 [caption=""]
 .Returns
 `virtual VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.setLabel(transaction, newLabel).get();
+----
 
 [#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__const_stdinitializer_list__Annotation____annotations___]
 ==== setOwns
@@ -571,6 +679,14 @@ a| `annotations` a| Adds annotations to the ownership. a| `const std::vector< An
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.setOwns(transaction, attributeType).get();
+thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).get();
+----
+
 [#_VoidFuture_TypeDBThingTypesetPlays___Transaction__transaction__RoleType__ptr__roleType_]
 ==== setPlays
 
@@ -615,6 +731,14 @@ a| `overriddenType` a| The role type that this role overrides, if applicable a|
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.setPlays(transaction, roleType).get();
+thingType.setPlays(transaction, roleType, overriddenType).get();
+----
+
 [#_VoidFuture_TypeDBThingTypeunsetAbstract___Transaction__transaction_]
 ==== unsetAbstract
 
@@ -640,6 +764,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.unsetAbstract(transaction).get();
+----
 
 [#_VoidFuture_TypeDBThingTypeunsetOwns___Transaction__transaction__AttributeType__ptr__attributeType_]
 ==== unsetOwns
@@ -668,6 +799,13 @@ a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `Att
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.unsetOwns(transaction, attributeType).get();
+----
+
 [#_VoidFuture_TypeDBThingTypeunsetPlays___Transaction__transaction__RoleType__ptr__roleType_]
 ==== unsetPlays
 
@@ -694,6 +832,13 @@ a| `roleType` a| The role to not be played by the instances of this type. a| `Ro
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thingType.unsetPlays(transaction, roleType).get();
+----
 
 // end::methods[]
 

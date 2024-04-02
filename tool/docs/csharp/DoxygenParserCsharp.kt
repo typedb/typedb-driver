@@ -249,7 +249,7 @@ class DoxygenParserCsharp : Callable<Unit> {
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
-            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"), idToAnchor)) } ?: listOf()
+            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h").substringBefore("<dl class=\"params\">"), idToAnchor)) } ?: listOf()
         val methodExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")

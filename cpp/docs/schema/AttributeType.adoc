@@ -47,6 +47,13 @@ a| `value` a| ``Attribute``’s value a| `Value*`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__const_stdstring__value_]
 ==== get
 
@@ -73,6 +80,13 @@ a| `value` a| ``Attribute``’s value a| `const std::string&`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__int64_t_value_]
 ==== get
@@ -101,6 +115,13 @@ a| `value` a| ``Attribute``’s value a| `int64_t`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__double_value_]
 ==== get
 
@@ -127,6 +148,13 @@ a| `value` a| ``Attribute``’s value a| `double`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__bool_value_]
 ==== get
@@ -155,6 +183,13 @@ a| `value` a| ``Attribute``’s value a| `bool`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__DateTime_value_]
 ==== get
 
@@ -181,6 +216,13 @@ a| `value` a| ``Attribute``’s value a| `DateTime`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptIterable__Attribute___TypeDBAttributeTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
@@ -209,6 +251,18 @@ a| `transaction` a| The current transaction a| `Transaction&`
 .Returns
 `ConceptIterable< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getInstances(transaction);
+attributeType.getInstances(transaction, transitivity);
+ Parameters 
+  
+    transitivity Transitivity::TRANSITIVE for direct and indirect subtypes, Transitivity::EXPLICIT for direct subtypes only 
+    transaction The current transaction
+----
+
 [#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
 
@@ -235,6 +289,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 [caption=""]
 .Returns
 `ConceptIterable< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getOwners(transaction);
+----
 
 [#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
@@ -264,6 +325,35 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< ThingType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getOwners(transaction, {Annotation::key()}, transitivity);
+ */
+ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
+
+/**
+   Retrieve all Things that own an attribute of this AttributeType,
+   filtered by Annotations, directly or through inheritance.
+
+   Examples
+----
+
+[source,cpp]
+----
+attributeType.getOwners(transaction, annotations);
+----
+
+[source,cpp]
+----
+Parameters 
+  
+    transaction The current transaction 
+    annotations Only retrieve ThingTypes that have an attribute of this AttributeType with all given Annotations 
+    transitivity Transitivity::TRANSITIVE for direct and indirect subtypes, Transitivity::EXPLICIT for direct subtypes only
+----
+
 [#_OptionalStringFuture_TypeDBAttributeTypegetRegex___Transaction__transaction_]
 ==== getRegex
 
@@ -289,6 +379,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `OptionalStringFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getRegex(transaction).get();
+----
 
 [#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -316,6 +413,14 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getSubtypes(transaction);
+attributeType.getSubtypes(transaction, transitivity);
+----
 
 [#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -345,6 +450,13 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< AttributeType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getSubtypes(transaction, valueType, transitivity);
+----
+
 [#_ValueType_TypeDBAttributeTypegetValueType___]
 ==== getValueType
 
@@ -361,6 +473,13 @@ Retrieves the ``Value.Type`` of this ``AttributeType``.
 [caption=""]
 .Returns
 `ValueType`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getValueType();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__Value__ptr__value_]
 ==== put
@@ -389,6 +508,13 @@ a| `value` a| New ``Attribute``’s value a| `Value*`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__const_stdstring__value_]
 ==== put
 
@@ -415,6 +541,13 @@ a| `value` a| New ``Attribute``’s value a| `const std::string&`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__int64_t_value_]
 ==== put
@@ -443,6 +576,13 @@ a| `value` a| New ``Attribute``’s value a| `int64_t`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__double_value_]
 ==== put
 
@@ -469,6 +609,13 @@ a| `value` a| New ``Attribute``’s value a| `double`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__bool_value_]
 ==== put
@@ -497,6 +644,13 @@ a| `value` a| New ``Attribute``’s value a| `bool`
 .Returns
 `ConceptPtrFuture< Attribute >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__DateTime_value_]
 ==== put
 
@@ -523,6 +677,13 @@ a| `value` a| New ``Attribute``’s value a| `DateTime`
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_VoidFuture_TypeDBAttributeTypesetRegex___Transaction__transaction__const_stdstring__regex_]
 ==== setRegex
@@ -553,6 +714,13 @@ a| `regex` a| Regular expression a| `const std::string&`
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.setRegex(transaction, regex).get();
+----
+
 [#_VoidFuture_TypeDBAttributeTypesetSupertype___Transaction__transaction__AttributeType__ptr__attributeType_]
 ==== setSupertype
 
@@ -580,6 +748,13 @@ a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``At
 .Returns
 `VoidFuture`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.setSupertype(transaction, superType).get();
+----
+
 [#_VoidFuture_TypeDBAttributeTypeunsetRegex___Transaction__transaction_]
 ==== unsetRegex
 
@@ -605,6 +780,13 @@ a| `transaction` a| The current transaction a| `Transaction&`
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.unsetRegex(transaction).get();
+----
 
 // end::methods[]
 

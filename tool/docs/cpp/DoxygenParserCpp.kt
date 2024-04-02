@@ -257,7 +257,7 @@ class DoxygenParserCpp : Callable<Unit> {
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h").substringBefore("<dl class=\"params\">"), idToAnchor)) } ?: listOf()
-        val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
+        val methodExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {
