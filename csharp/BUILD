@@ -68,7 +68,6 @@ swig_native_nuget_pack(
     native_libs = ["typedb_driver"],
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.Pinvoke.nuspec",
-    version = "0.0.1",
     visibility= ["//visibility:public"],
     platforms = {
         "@vaticle_bazel_distribution//platform:is_mac_arm64": "osx-arm64",
@@ -103,7 +102,6 @@ nuget_pack(
     },
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.nuspec",
-    version = "0.0.1",
     visibility = ["//visibility:public"],
 )
 

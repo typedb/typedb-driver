@@ -38,19 +38,19 @@ def swig_native_csharp_library(name, native_lib_name, namespace, nullable_contex
     )
 
 
-def swig_native_nuget_pack(name, id, version, libs, native_libs, target_framework, nuspec_template, platforms, visibility, files={}, **kwargs):
+def swig_native_nuget_pack(name, id, libs, native_libs, target_framework, nuspec_template, platforms, visibility, files={}, **kwargs):
     # generate identical libraries with different maven coordinate tags, since we can't 'select' tags
     for platform in platforms.values():
         nuget_pack(
             name = "_{}_as_{}_do_not_reference".format(name, platform),
             id = id,
-            version = version,
             files = files,
             libs = libs,
             native_libs = native_libs,
             target_framework = target_framework,
             nuspec_template = nuspec_template,
             platform = platform,
+            **kwargs,
         )
 
     native.alias(
