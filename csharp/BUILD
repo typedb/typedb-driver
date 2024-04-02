@@ -66,7 +66,6 @@ swig_native_nuget_pack(
         ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
     },
     native_libs = ["typedb_driver"],
-    platform = "osx-x64",
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.Pinvoke.nuspec",
     version = "0.0.1",
