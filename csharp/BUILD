@@ -21,13 +21,14 @@ load("@vaticle_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
-load(":rules.bzl", "swig_native_csharp_library")
+load(":rules.bzl", "swig_native_csharp_library", "swig_native_nuget_pack")
 load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
 
 
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
+    native_lib_name = "typedb_driver",
     lib = "//c:typedb_driver_clib_headers",
     namespace = "TypeDB.Driver.Pinvoke",
     interface = "//c:typedb_driver.i",
@@ -57,54 +58,34 @@ csharp_library(
 )
 
 
-nuget_pack(
-    name = "driver-csharp-runtime-pack-mac",
-    files = {
-        "libtypedb_driver.dylib": "libtypedb_driver.dylib",
-    },
+swig_native_nuget_pack(
+    name = "driver-csharp-runtime-pack",
+    id = "TypeDB.Driver.Pinvoke",
+    files = {},
     libs = {
         ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
     },
-    id = "TypeDB.Driver.Runtime",
-    mac_native_lib = "libtypedb_driver.dylib",
+    native_libs = ["typedb_driver"],
+    platform = "osx-x64",
     target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.Runtime.nuspec",
+    nuspec_template = "TypeDB.Driver.Pinvoke.nuspec",
     version = "0.0.1",
-    visibility = ["//visibility:public"],
+    visibility= ["//visibility:public"],
+    platforms = {
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "osx-arm64",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "osx-x64",
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x64",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x64",
+    },
 )
 
 
-nuget_pack(
-    name = "driver-csharp-runtime-pack-linux",
-    files = {
-        "libtypedb_driver.so": "libtypedb_driver.so",
-    },
-    libs = {
-        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
-    },
-    id = "TypeDB.Driver.Runtime",
-    linux_native_lib = "libtypedb_driver.so",
-    target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.Runtime.nuspec",
-    version = "0.0.1",
-    visibility = ["//visibility:public"],
-)
-
-
-nuget_pack(
-    name = "driver-csharp-runtime-pack-win",
-    files = {
-        "typedb_driver.dll": "typedb_driver.dll",
-    },
-    libs = {
-        ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
-    },
-    id = "TypeDB.Driver.Runtime",
-    win_native_lib = "typedb_driver.dll",
-    target_framework = target_framework,
-    nuspec_template = "TypeDB.Driver.Runtime.nuspec",
-    version = "0.0.1",
-    visibility = ["//visibility:public"],
+nuget_push(
+    name = "driver-csharp-runtime-push",
+    src = ":driver-csharp-runtime-pack",
+    snapshot_url = deployment['nuget']['snapshot'],
+    release_url = deployment['nuget']['release'],
 )
 
 
@@ -125,30 +106,6 @@ nuget_pack(
     nuspec_template = "TypeDB.Driver.nuspec",
     version = "0.0.1",
     visibility = ["//visibility:public"],
-)
-
-
-nuget_push(
-    name = "driver-csharp-runtime-push-mac",
-    src = ":driver-csharp-runtime-pack-mac",
-    snapshot_url = deployment['nuget']['snapshot'],
-    release_url = deployment['nuget']['release'],
-)
-
-
-nuget_push(
-    name = "driver-csharp-runtime-push-linux",
-    src = ":driver-csharp-runtime-pack-linux",
-    snapshot_url = deployment['nuget']['snapshot'],
-    release_url = deployment['nuget']['release'],
-)
-
-
-nuget_push(
-    name = "driver-csharp-runtime-push-win",
-    src = ":driver-csharp-runtime-pack-win",
-    snapshot_url = deployment['nuget']['snapshot'],
-    release_url = deployment['nuget']['release'],
 )
 
 

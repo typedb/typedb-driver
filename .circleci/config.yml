@@ -364,16 +364,19 @@ commands:
 
   install-dotnet-linux:
     steps:
-      - run: yum install -y dotnet-sdk-6.0
+      - run: yum install -y dotnet-runtime-6.0
+
+  deploy-nuget-runtime-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_USERNAME
-#          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-#          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-mac -- snapshot
-#          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-linux -- snapshot
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
   test-nuget-snapshot-unix:
     steps:
@@ -393,15 +396,19 @@ commands:
           (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
           tool/test/stop-core-server.sh
 
+  deploy-nuget-runtime-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
+
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- release
+
   deploy-nuget-release-unix:
     steps:
       - run: |
-          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_USERNAME
-#          export DEPLOY_NUGET_USERNAME=$REPO_TYPEDB_USERNAME
-#          export DEPLOY_NUGET_PASSWORD=$REPO_TYPEDB_PASSWORD
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
 
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-mac -- release
-#          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push-linux -- release
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push -- release
 
   #########################
   # Rust deployment steps #
@@ -484,7 +491,7 @@ jobs:
       - test-cpp-assembly-linux:
           target-arch: arm64
 
-      - deploy-nuget-snapshot-unix
+      - deploy-nuget-runtime-snapshot-unix
 
   deploy-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -505,7 +512,7 @@ jobs:
       - test-cpp-assembly-linux:
           target-arch: x86_64
 
-      - deploy-nuget-snapshot-unix
+      - deploy-nuget-runtime-snapshot-unix
 
   deploy-snapshot-mac-arm64:
     executor: mac-arm64
@@ -528,7 +535,7 @@ jobs:
       - test-cpp-assembly-mac:
           target-arch: arm64
 
-      - deploy-nuget-snapshot-unix
+      - deploy-nuget-runtime-snapshot-unix
 
   deploy-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -552,7 +559,7 @@ jobs:
       - test-cpp-assembly-mac:
           target-arch: x86_64
 
-      - deploy-nuget-snapshot-unix
+      - deploy-nuget-runtime-snapshot-unix
 
   deploy-snapshot-windows-x86_64:
     executor:
@@ -586,7 +593,7 @@ jobs:
       - deploy-maven-snapshot-unix
       - install-npm-apt
       - deploy-npm-snapshot-unix
-      - deploy-nuget-snapshot-unix # TODO: Need here?
+      - deploy-nuget-snapshot-unix
 
   test-snapshot-linux-arm64:
     executor: linux-arm64-amazonlinux-2
@@ -673,7 +680,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-nuget-release-unix
+      - deploy-nuget-runtime-release-unix
 
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -685,7 +692,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-nuget-release-unix
+      - deploy-nuget-runtime-release-unix
 
   deploy-release-mac-arm64:
     executor: mac-arm64
@@ -697,7 +704,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-nuget-release-unix
+      - deploy-nuget-runtime-release-unix
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -710,7 +717,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - deploy-nuget-release-unix
+      - deploy-nuget-runtime-release-unix
 
   deploy-release-windows-x86_64:
     executor:
@@ -737,7 +744,7 @@ jobs:
       - deploy-maven-release-unix
       - install-npm-apt
       - deploy-npm-release-unix
-      - deploy-nuget-release-unix # TODO: Need here?
+      - deploy-nuget-release-unix
 
   deploy-github:
     executor: linux-x86_64-ubuntu-2204
@@ -784,28 +791,28 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [development, master] # TODO: Remove csharp-docs-deployment
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64

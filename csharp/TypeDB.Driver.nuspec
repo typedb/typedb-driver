@@ -70,7 +70,7 @@ under the License.
     <file src="lib/$target_framework$/TypeDB.Driver.User.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.xml" target="lib/$target_framework$" />
-$native_lib_files$
+$native_lib_declrs$
 
   </files>
 </package>

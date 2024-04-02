@@ -1,6 +1,4 @@
 @echo off
-REM Copyright (C) 2022 Vaticle
-REM
 REM Licensed to the Apache Software Foundation (ASF) under one
 REM or more contributor license agreements.  See the NOTICE file
 REM distributed with this work for additional information
@@ -17,9 +15,8 @@ REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 REM KIND, either express or implied.  See the License for the
 REM specific language governing permissions and limitations
 REM under the License.
-REM
 
-choco install nuget.commandline --limit-output --yes --no-progress
+choco install dotnet-6.0-runtime --limit-output --yes --no-progress
 choco install 7zip.portable --limit-output --yes --no-progress
 CALL refreshenv
 
@@ -30,10 +27,10 @@ RD /S /Q typedb-server-windows
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
 START /B "" typedb-server-windows\typedb server
 
-powershell -Command "(gc csharp\test\deployment\pom.xml) -replace 'DRIVER_CSHARP_VERSION_MARKER', '0.0.0-%CIRCLE_SHA1%' | Out-File -encoding ASCII csharp\test\deployment\pom.xml"
-type csharp\test\deployment\pom.xml
-cd csharp\test\deployment
-CALL dotnet run ...
+powershell -Command "(gc csharp\Test\Deployment\NugetApplicationTest.csproj) -replace 'DRIVER_CSHARP_VERSION_MARKER', '0.0.0-%CIRCLE_SHA1%' | Out-File -encoding ASCII csharp\Test\Deployment\NugetApplicationTest.csproj"
+type csharp\Test\Deployment\NugetApplicationTest.csproj
+cd csharp\Test\Deployment
+CALL dotnet run NugetApplicationTest.csproj
 SET IS_ERROR=%ERRORLEVEL%
 
 REM kill typedb server
