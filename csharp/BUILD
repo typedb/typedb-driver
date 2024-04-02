@@ -76,7 +76,7 @@ swig_native_nuget_pack(
         "@vaticle_bazel_distribution//platform:is_mac_x86_64": "osx-x64",
         "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
         "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x64",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x64",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "win-x64",
     },
 )
 
