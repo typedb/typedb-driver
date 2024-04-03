@@ -381,9 +381,7 @@ commands:
 
   install-libicu-linux:
     steps:
-      - run: |
-#          rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-          yum install -y libicu60
+      - run: yum install -y libicu60
 
   deploy-dotnet-runtime-snapshot-unix:
     steps:
