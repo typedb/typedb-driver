@@ -50,7 +50,7 @@ under the License.
     <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="DRIVER_CSHARP_VERSION_MARKER" />
     <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="DRIVER_CSHARP_VERSION_MARKER" />
     <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="DRIVER_CSHARP_VERSION_MARKER" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-arm64" Version="DRIVER_CSHARP_VERSION_MARKER" />
+<!--     <PackageReference Include="TypeDB.Driver.Pinvoke.win-arm64" Version="DRIVER_CSHARP_VERSION_MARKER" /> TODO return-->
 
 <!--   No need to specify transitive dependencies like Newtonsoft.Json for dotnet run   -->
     <PackageReference Include="xunit" Version="2.7.0" />

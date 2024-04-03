@@ -61,11 +61,13 @@ csharp_library(
 swig_native_nuget_pack(
     name = "driver-csharp-runtime-pack",
     id = "TypeDB.Driver.Pinvoke",
-    files = {},
     libs = {
         ":typedb_driver_pinvoke": "TypeDB.Driver.Pinvoke",
     },
     native_libs = ["typedb_driver"],
+    files = {
+        "README.md": "README.md",
+    },
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.Pinvoke.nuspec",
     visibility= ["//visibility:public"],
@@ -99,6 +101,9 @@ nuget_pack(
         "//csharp/Logic:logic": "TypeDB.Driver.Logic",
         "//csharp/Query:query": "TypeDB.Driver.Query",
         "//csharp/User:user": "TypeDB.Driver.User",
+    },
+    files = {
+        "README.md": "README.md",
     },
     target_framework = target_framework,
     nuspec_template = "TypeDB.Driver.nuspec",

@@ -41,8 +41,11 @@ under the License.
     <releaseNotes>
       See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver/releases.
     </releaseNotes>
+    <readme>docs/README.md</readme>
   </metadata>
   <files>
+    <file src="README.md" target="docs/" />
+
     <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.xml" target="lib/$target_framework$" />
