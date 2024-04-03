@@ -27,9 +27,11 @@ under the License.
     <owners>TypeDB</owners>
     <title>TypeDB Driver</title>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>The TypeDB driver was developed by Vaticle to enable TypeDB support for C# software and developers.</summary>
+    <summary>This package enables TypeDB support for C#.</summary>
     <description>
       TypeDB is a polymorphic database with a conceptual data model, a strong subtyping system, a symbolic reasoning engine, and a beautiful and elegant type-theoretic language: TypeQL.
+      To use this package, include a runtime library TypeDB.Driver.Pinvoke for your platform into your project as well: https://www.nuget.org/packages?q=TypeDB.Driver.Pinvoke.
+      It is also possible to reference a number of runtime packages for the driver in order to build a platform-independent application.
     </description>
     <projectUrl>https://typedb.com</projectUrl>
     <repository type="GitHub" url="https://github.com/vaticle/typedb-driver" />
@@ -37,7 +39,7 @@ under the License.
     <iconUrl>https://typedb.com/assets/logo/typedb.svg</iconUrl>
     <tags>Database TypeDB TypeQL</tags>
     <releaseNotes>
-      See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver. TODO: Changelog?
+      See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver/releases.
     </releaseNotes>
     <dependencies>
       <group targetFramework="$target_framework$">
