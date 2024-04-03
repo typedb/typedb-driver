@@ -372,14 +372,14 @@ commands:
       - run: |
           export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push  --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
 
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
           export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
 
   test-nuget-snapshot-unix:
     steps:
@@ -404,14 +404,14 @@ commands:
       - run: |
           export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
 
   deploy-nuget-release-unix:
     steps:
       - run: |
           export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
 
   #########################
   # Rust deployment steps #
