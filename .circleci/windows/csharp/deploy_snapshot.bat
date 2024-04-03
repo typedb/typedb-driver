@@ -24,5 +24,5 @@ SET DEPLOY_NUGET_API_KEY=%REPO_TYPEDB_PASSWORD%
 
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //csharp:driver-csharp-push -- snapshot
+bazel --output_user_root=C:/bazel run --verbose_failures --define version=0.0.0-%VER% //csharp:driver-csharp-push -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
