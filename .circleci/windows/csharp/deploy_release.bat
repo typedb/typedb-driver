@@ -25,5 +25,5 @@ SET DEPLOY_NUGET_API_KEY=%REPO_TYPEDB_PASSWORD%
 @REM TODO: Add new key for nuget as a new variable!
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //csharp:driver-csharp-push --compilation_mode=opt -- release
+bazel --output_user_root=C:/b run --verbose_failures --define version=%VER% //csharp:driver-csharp-push --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
