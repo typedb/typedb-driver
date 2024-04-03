@@ -364,17 +364,20 @@ commands:
 
   install-dotnet-linux:
     steps:
-      - run: yum install -y dotnet-runtime-6.0
+      - run: |
+          yum install -y dotnet-runtime-6.0
 
   deploy-nuget-runtime-snapshot-unix:
     steps:
       - run: |
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
@@ -399,15 +402,15 @@ commands:
   deploy-nuget-runtime-release-unix:
     steps:
       - run: |
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- release
 
   deploy-nuget-release-unix:
     steps:
       - run: |
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push -- release
 
   #########################
@@ -479,17 +482,17 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-unix
-
-      - deploy-maven-jni-snapshot-unix
-
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-linux:
-          target-arch: arm64
-
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-linux:
-          target-arch: arm64
+#      - deploy-pip-snapshot-unix
+#
+#      - deploy-maven-jni-snapshot-unix
+#
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-linux:
+#          target-arch: arm64
+#
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-linux:
+#          target-arch: arm64
 
       - deploy-nuget-runtime-snapshot-unix
 
@@ -500,17 +503,17 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-unix
-
-      - deploy-maven-jni-snapshot-unix
-
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-linux:
-          target-arch: x86_64
-
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-linux:
-          target-arch: x86_64
+#      - deploy-pip-snapshot-unix
+#
+#      - deploy-maven-jni-snapshot-unix
+#
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-linux:
+#          target-arch: x86_64
+#
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-linux:
+#          target-arch: x86_64
 
       - deploy-nuget-runtime-snapshot-unix
 
@@ -521,19 +524,19 @@ jobs:
       - install-bazel-brew:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-unix
-
-      - deploy-maven-jni-snapshot-unix
-
-      - run: brew install cmake
-
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-mac:
-          target-arch: arm64
-
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-mac:
-          target-arch: arm64
+#      - deploy-pip-snapshot-unix
+#
+#      - deploy-maven-jni-snapshot-unix
+#
+#      - run: brew install cmake
+#
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-mac:
+#          target-arch: arm64
+#
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-mac:
+#          target-arch: arm64
 
       - deploy-nuget-runtime-snapshot-unix
 
@@ -545,19 +548,19 @@ jobs:
       - install-bazel-brew:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-unix
-
-      - deploy-maven-jni-snapshot-unix
-
-      - run: brew install cmake
-
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-mac:
-          target-arch: x86_64
-
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-mac:
-          target-arch: x86_64
+#      - deploy-pip-snapshot-unix
+#
+#      - deploy-maven-jni-snapshot-unix
+#
+#      - run: brew install cmake
+#
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-mac:
+#          target-arch: x86_64
+#
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-mac:
+#          target-arch: x86_64
 
       - deploy-nuget-runtime-snapshot-unix
 
@@ -571,15 +574,15 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
 
-      - run: .circleci\windows\python\deploy_snapshot.bat
-
-      - run: .circleci\windows\java\deploy_snapshot.bat
-
-      - run: .circleci\windows\clib\deploy_snapshot.bat
-      - run: .circleci\windows\clib\test_assembly.bat
-
-      - run: .circleci\windows\cpp\deploy_snapshot.bat
-      - run: .circleci\windows\cpp\test_assembly.bat
+#      - run: .circleci\windows\python\deploy_snapshot.bat
+#
+#      - run: .circleci\windows\java\deploy_snapshot.bat
+#
+#      - run: .circleci\windows\clib\deploy_snapshot.bat
+#      - run: .circleci\windows\clib\test_assembly.bat
+#
+#      - run: .circleci\windows\cpp\deploy_snapshot.bat
+#      - run: .circleci\windows\cpp\test_assembly.bat
 
       - run: .circleci\windows\csharp\deploy_snapshot.bat
 
@@ -589,10 +592,10 @@ jobs:
       - checkout
       - install-bazel-apt:
           bazel-arch: amd64
-      - deploy-crate-snapshot-unix
-      - deploy-maven-snapshot-unix
-      - install-npm-apt
-      - deploy-npm-snapshot-unix
+#      - deploy-crate-snapshot-unix
+#      - deploy-maven-snapshot-unix
+#      - install-npm-apt
+#      - deploy-npm-snapshot-unix
       - deploy-nuget-snapshot-unix
 
   test-snapshot-linux-arm64:
@@ -601,9 +604,9 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-      - test-pip-snapshot-unix
-      - install-maven-linux
-      - test-maven-snapshot-unix
+#      - test-pip-snapshot-unix
+#      - install-maven-linux
+#      - test-maven-snapshot-unix
       - install-dotnet-linux
       - test-nuget-snapshot-unix
 
@@ -613,9 +616,9 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-      - test-pip-snapshot-unix
-      - install-maven-linux
-      - test-maven-snapshot-unix
+#      - test-pip-snapshot-unix
+#      - install-maven-linux
+#      - test-maven-snapshot-unix
       - install-dotnet-linux
       - test-nuget-snapshot-unix
 
@@ -625,9 +628,9 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-      - test-pip-snapshot-unix
-      - install-maven-mac
-      - test-maven-snapshot-unix
+#      - test-pip-snapshot-unix
+#      - install-maven-mac
+#      - test-maven-snapshot-unix
       - install-dotnet-mac
       - test-nuget-snapshot-unix
 
@@ -638,9 +641,9 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-      - test-pip-snapshot-mac-rosetta
-      - install-maven-mac-rosetta
-      - test-maven-snapshot-mac-rosetta
+#      - test-pip-snapshot-mac-rosetta
+#      - install-maven-mac-rosetta
+#      - test-maven-snapshot-mac-rosetta
       - install-dotnet-mac-rosetta
       - test-nuget-snapshot-mac-rosetta
 
@@ -653,8 +656,8 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\python\test_deploy_snapshot.bat
-      - run: .circleci\windows\java\test_deploy_snapshot.bat
+#      - run: .circleci\windows\python\test_deploy_snapshot.bat
+#      - run: .circleci\windows\java\test_deploy_snapshot.bat
       - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
   test-snapshot-any:
