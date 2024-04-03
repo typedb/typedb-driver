@@ -368,21 +368,19 @@ commands:
     steps:
       - run: |
           rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-          yum install -y dotnet-sdk-7.0
+          yum install -y dotnet-sdk-6.0
 
   deploy-dotnet-runtime-snapshot-unix:
     steps:
       - run: |
-          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-dotnet-snapshot-unix:
     steps:
       - run: |
-          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 -- snapshot
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
   test-dotnet-snapshot-unix:
     steps:
@@ -405,16 +403,14 @@ commands:
   deploy-dotnet-runtime-release-unix:
     steps:
       - run: |
-          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --compilation_mode=opt  -- release
 
   deploy-dotnet-release-unix:
     steps:
       - run: |
-          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --host_action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --action_env=DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 --compilation_mode=opt  -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --compilation_mode=opt  -- release
 
   #########################
   # Rust deployment steps #
