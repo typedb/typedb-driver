@@ -357,20 +357,33 @@ commands:
     steps:
       - run: |
           brew install dotnet@6
+          find / -name dotnet 
           ln -s /usr/local/share/dotnet/dotnet /usr/local/bin/
+          ln -s /opt/homebrew/opt/dotnet@6/dotnet /usr/local/bin/
+          export DOTNET_ROOT="/opt/homebrew/opt/dotnet@6/libexec"
 
   install-dotnet-mac-rosetta:
     steps:
       - install-brew-rosetta
       - run: |
           /usr/local/bin/brew install dotnet@6
+          find / -name dotnet 
           ln -s /usr/local/share/dotnet/x64/dotnet /usr/local/bin/
+          ln -s /usr/local/share/dotnet/dotnet /usr/local/bin/
+          ln -s /usr/local/opt/dotnet@6/dotnet /usr/local/bin/
+          export DOTNET_ROOT="/usr/local/opt/dotnet@6/libexec"
 
   install-dotnet-linux:
     steps:
       - run: |
           rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
           yum install -y dotnet-sdk-6.0
+
+  install-libicu-linux:
+    steps:
+      - run: |
+#          rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+          yum install -y libicu60
 
   deploy-dotnet-runtime-snapshot-unix:
     steps:
@@ -495,7 +508,8 @@ jobs:
 #      - test-cpp-assembly-linux:
 #          target-arch: arm64
 
-      - install-dotnet-linux # Needed for libicu deps
+#      - install-dotnet-linux # Needed for libicu deps
+      - install-libicu-linux
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-linux-x86_64:
@@ -517,7 +531,8 @@ jobs:
 #      - test-cpp-assembly-linux:
 #          target-arch: x86_64
 
-      - install-dotnet-linux # Needed for libicu deps
+#      - install-dotnet-linux # Needed for libicu deps
+      - install-libicu-linux
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-arm64:
