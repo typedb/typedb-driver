@@ -370,16 +370,16 @@ commands:
   deploy-nuget-runtime-snapshot-unix:
     steps:
       - run: |
-          apt install libicu-dev
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
+          DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-nuget-snapshot-unix:
     steps:
       - run: |
-          apt install libicu-dev
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
+          DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
   test-nuget-snapshot-unix:
     steps:
@@ -402,16 +402,16 @@ commands:
   deploy-nuget-runtime-release-unix:
     steps:
       - run: |
-          apt install libicu-dev
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push -- release
+          DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push -- release
 
   deploy-nuget-release-unix:
     steps:
       - run: |
-          apt install libicu-dev
+          export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD # TODO: Add new key for nuget as a new variable!
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push -- release
+          DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push -- release
 
   #########################
   # Rust deployment steps #
