@@ -357,12 +357,14 @@ commands:
     steps:
       - run: |
           brew install dotnet@6
-          export DOTNET_ROOT="/usr/local/opt/dotnet/libexec"
+          ln -s /usr/local/share/dotnet/dotnet /usr/local/bin/
 
   install-dotnet-mac-rosetta:
     steps:
       - install-brew-rosetta
-      - run: /usr/local/bin/brew install dotnet@6
+      - run: |
+          /usr/local/bin/brew install dotnet@6
+          ln -s /usr/local/share/dotnet/x64/dotnet /usr/local/bin/
 
   install-dotnet-linux:
     steps:
