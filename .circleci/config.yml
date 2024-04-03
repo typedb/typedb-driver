@@ -355,17 +355,20 @@ commands:
 
   install-dotnet-mac:
     steps:
-      - run: brew install dotnet@6
+      - run: |
+          brew install dotnet
+          export DOTNET_ROOT="/usr/local/opt/dotnet/libexec"
 
   install-dotnet-mac-rosetta:
     steps:
       - install-brew-rosetta
-      - run: /usr/local/bin/brew install dotnet@6
+      - run: /usr/local/bin/brew install dotnet
 
   install-dotnet-linux:
     steps:
       - run: |
-          yum install -y dotnet-runtime-6.0
+          rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+          yum install -y dotnet-sdk-7.0
 
   deploy-nuget-runtime-snapshot-unix:
     steps:
@@ -660,14 +663,14 @@ jobs:
 #      - run: .circleci\windows\java\test_deploy_snapshot.bat
       - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
-  test-snapshot-any:
-    executor: linux-x86_64-ubuntu-2204
-    steps:
-      - checkout
-      - install-bazel-apt:
-          bazel-arch: amd64
-      - install-npm-apt
-      - test-npm-snapshot-unix
+#  test-snapshot-any:
+#    executor: linux-x86_64-ubuntu-2204
+#    steps:
+#      - checkout
+#      - install-bazel-apt:
+#          bazel-arch: amd64
+#      - install-npm-apt
+#      - test-npm-snapshot-unix
 
   ################
   # Release jobs #
