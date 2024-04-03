@@ -663,14 +663,14 @@ jobs:
 #      - run: .circleci\windows\java\test_deploy_snapshot.bat
       - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
-#  test-snapshot-any:
-#    executor: linux-x86_64-ubuntu-2204
-#    steps:
-#      - checkout
-#      - install-bazel-apt:
-#          bazel-arch: amd64
-#      - install-npm-apt
-#      - test-npm-snapshot-unix
+  test-snapshot-any:
+    executor: linux-x86_64-ubuntu-2204
+    steps:
+      - checkout
+      - install-bazel-apt:
+          bazel-arch: amd64
+      - install-npm-apt
+      - test-npm-snapshot-unix
 
   ################
   # Release jobs #
@@ -862,12 +862,12 @@ workflows:
 #            - deploy-snapshot-windows-x86_64
 #            - deploy-snapshot-any
 
-      - test-snapshot-any:
-          filters:
-            branches:
-              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-          requires:
-            - deploy-snapshot-any
+#      - test-snapshot-any:
+#          filters:
+#            branches:
+#              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#          requires:
+#            - deploy-snapshot-any
 
   release:
     jobs:
