@@ -867,7 +867,7 @@ workflows:
           filters:
             branches:
               only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-          requires:
+#          requires:
 #            - deploy-snapshot-windows-x86_64
 #            - deploy-snapshot-any
 
