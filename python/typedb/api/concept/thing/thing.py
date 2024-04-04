@@ -182,7 +182,7 @@ class Thing(Concept, ABC):
         optionally filtered by one or more given roles.
 
         :param transaction: The current transaction
-        :param role_types: The list of roles to filter the relations by.
+        :param role_types: 0 or more role types to filter the relations by.
 
         :return:
 

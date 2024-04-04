@@ -143,12 +143,12 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing.get_playing(transaction)
 ----
 
-[#_Thing_get_relations__transaction_TypeDBTransaction__role_types_list_RoleType_]
+[#_Thing_get_relations__transaction_TypeDBTransaction__role_types_RoleType]
 ==== get_relations
 
 [source,python]
 ----
-get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]
+get_relations(transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Relation]
 ----
 
 Retrieves all the ``Relation``s which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
@@ -160,7 +160,7 @@ Retrieves all the ``Relation``s which this ``Thing`` plays a role in, optionally
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `role_types` a| The list of roles to filter the relations by. a| `list[RoleType]` a| `None`
+a| `role_types` a| 0 or more role types to filter the relations by. a| `RoleType` a| 
 |===
 
 [caption=""]
