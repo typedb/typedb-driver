@@ -17,8 +17,29 @@
  * under the License.
  */
 
-mod common;
-mod logic;
-mod network;
-mod queries;
-mod runtimes;
+use std::path::PathBuf;
+
+use serial_test::serial;
+use typedb_driver::{Connection, Credential};
+
+#[test]
+#[serial]
+fn address_translation() {
+    Connection::new_cloud_address_map(
+        [
+            ("localhost:11729", "localhost:11729"),
+            ("localhost:21729", "localhost:21729"),
+            ("localhost:31729", "localhost:31729"),
+        ]
+        .into(),
+        Credential::with_tls(
+            "admin",
+            "password",
+            Some(&PathBuf::from(
+                std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
+            )),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+}
