@@ -30,11 +30,15 @@ import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.user.UserManagerImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_cloud;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_cloud_translated;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core;
 
 public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.Connection> implements TypeDBDriver {
@@ -47,6 +51,10 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     public TypeDBDriverImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBDriverException {
         this(openCloud(initAddresses, credential));
+    }
+
+    public TypeDBDriverImpl(Map<String, String> addresses, TypeDBCredential credential) throws TypeDBDriverException {
+        this(openCloud(addresses, credential));
     }
 
     private TypeDBDriverImpl(com.vaticle.typedb.driver.jni.Connection connection) {
@@ -66,6 +74,24 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
     private static com.vaticle.typedb.driver.jni.Connection openCloud(Set<String> initAddresses, TypeDBCredential credential) {
         try {
             return connection_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    private static com.vaticle.typedb.driver.jni.Connection openCloud(Map<String, String> addresses, TypeDBCredential credential) {
+        try {
+            List<String> advertised = new ArrayList();
+            List<String> translated = new ArrayList();
+            for (Map.Entry<String, String> entry: addresses.entrySet()) {
+                advertised.add(entry.getKey());
+                translated.add(entry.getValue());
+            }
+            return connection_open_cloud_translated(
+                advertised.toArray(new String[0]),
+                translated.toArray(new String[0]),
+                credential.nativeObject
+            );
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
