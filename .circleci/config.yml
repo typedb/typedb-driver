@@ -356,7 +356,6 @@ commands:
   install-dotnet-mac:
     steps:
       - run: |
-#          brew install dotnet@6
           curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
           chmod a+x dotnet-install.sh
           ./dotnet-install.sh --version 6.0.125
@@ -366,7 +365,6 @@ commands:
     steps:
       - install-brew-rosetta
       - run: |
-#          /usr/local/bin/brew install dotnet@6
           curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
           chmod a+x dotnet-install.sh
           ./dotnet-install.sh --version 6.0.125
