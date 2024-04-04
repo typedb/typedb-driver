@@ -74,7 +74,7 @@ build:
         tool/docs/update.sh
         git add $DOCS_DIRS
         git diff --exit-code HEAD $DOCS_DIRS
-
+# TODO: Return tests before merging!
 #    test-rust-unit-integration:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
