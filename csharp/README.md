@@ -11,10 +11,10 @@ The driver is distributed as a series of [Nuget](https://www.nuget.org) packages
 If you aim to build a platform-independent package, reference all the needed runtimes (it will affect the size of your application by downloading a respective set of platform-specific dynamic libraries):
 ```xml
 <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version={VERSION} />
-<PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version={VERSION} />
-<PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version={VERSION} />
 <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version={VERSION} />
-...
+<PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version={VERSION} />
 ```
 
 See [Examples](#examples) and [API Reference](#api-reference) to set up your first application with the TypeDB driver.

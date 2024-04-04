@@ -21,20 +21,17 @@ load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "target
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 filegroup(
     name = "steps-core",
     srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCore.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 
-
 filegroup(
     name = "steps-cloud",
     srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCloud.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
 
 checkstyle_test(
     name = "checkstyle",

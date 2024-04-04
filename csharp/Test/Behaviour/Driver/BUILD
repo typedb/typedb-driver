@@ -19,7 +19,6 @@ package(default_visibility = ["//csharp/Test/Behaviour/Driver:__subpackages__"])
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

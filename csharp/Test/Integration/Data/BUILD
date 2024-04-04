@@ -19,7 +19,6 @@ load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "target
 load("//csharp/Test:rules.bzl", "csharp_integration_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 csharp_integration_test(
     name = "test",
     srcs = ["DataTest.cs"],
@@ -32,7 +31,6 @@ csharp_integration_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 
 checkstyle_test(
     name = "checkstyle",

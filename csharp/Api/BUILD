@@ -17,11 +17,9 @@
 
 package(default_visibility = ["//visibility:public"])
 
-
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
 
 csharp_library(
     name = "api",
@@ -38,13 +36,11 @@ csharp_library(
     targeting_packs = targeting_packs,
 )
 
-
 filegroup(
     name = "docs_source_files",
     srcs = glob(["*.cs", "*/*.cs", "*/*/*.cs"]),
     visibility = ["//csharp:__pkg__"],
 )
-
 
 checkstyle_test(
     name = "checkstyle",

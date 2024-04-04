@@ -24,7 +24,7 @@ load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_pack
 load(":rules.bzl", "swig_native_csharp_library", "swig_native_nuget_pack")
 load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
-
+load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
 
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
@@ -39,7 +39,6 @@ swig_native_csharp_library(
     targeting_packs = targeting_packs,
     visibility = ["//visibility:public"],
 )
-
 
 csharp_library(
     name = "driver-csharp",
@@ -56,7 +55,6 @@ csharp_library(
     targeting_packs = targeting_packs,
     visibility = ["//visibility:public"],
 )
-
 
 swig_native_nuget_pack(
     name = "driver-csharp-runtime-pack",
@@ -80,14 +78,12 @@ swig_native_nuget_pack(
     },
 )
 
-
 nuget_push(
     name = "driver-csharp-runtime-push",
     src = ":driver-csharp-runtime-pack",
     snapshot_url = deployment['nuget']['snapshot'],
     release_url = deployment['nuget']['release'],
 )
-
 
 nuget_pack(
     name = "driver-csharp-pack",
@@ -110,7 +106,6 @@ nuget_pack(
     visibility = ["//visibility:public"],
 )
 
-
 nuget_push(
     name = "driver-csharp-push",
     src = ":driver-csharp-pack",
@@ -118,22 +113,23 @@ nuget_push(
     release_url = deployment['nuget']['release'],
 )
 
-
 filegroup(
     name = "docs_source_files",
     srcs = [":Drivers.cs"],
 )
 
-
 # TODO: Not hermetic - requires doxygen on the host
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C# Driver",
-    sources = [":docs_source_files", "//csharp/Api:docs_source_files", "//csharp/Common:docs_source_files"],
+    sources = [
+        ":docs_source_files",
+        "//csharp/Api:docs_source_files",
+        "//csharp/Common:docs_source_files"
+    ],
     main_page_md = ":README.md",
     tags = ["manual"],
 )
-
 
 doxygen_csharp_to_adoc(
     name = "docs_adoc",
@@ -142,7 +138,6 @@ doxygen_csharp_to_adoc(
     output_dir = 'csharp/docs',
     tags = ["manual"]
 )
-
 
 checkstyle_test(
     name = "checkstyle",

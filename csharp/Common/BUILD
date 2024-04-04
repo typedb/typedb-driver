@@ -21,7 +21,6 @@ load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "target
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 csharp_library(
     name = "common",
     srcs = glob(["*.cs", "*/*.cs"]),
@@ -33,13 +32,11 @@ csharp_library(
     targeting_packs = targeting_packs,
 )
 
-
 filegroup(
     name = "docs_source_files",
     srcs = ["Label.cs", "Promise/Promise.cs", "Promise/VoidPromise.cs", "Exception/TypeDBDriverException.cs"],
     visibility = ["//csharp:__pkg__"],
 )
-
 
 checkstyle_test(
     name = "checkstyle",

@@ -22,7 +22,6 @@ load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
-
 csharp_library(
     name = "util",
     srcs = glob(["*.cs"]),
@@ -33,19 +32,16 @@ csharp_library(
     targeting_packs = targeting_packs,
 )
 
-
 exports_files(
     ["TestRunner.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
 
 filegroup(
     name = "steps",
     srcs = ["UtilSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
 
 checkstyle_test(
     name = "checkstyle",
