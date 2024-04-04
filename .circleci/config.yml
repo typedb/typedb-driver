@@ -697,6 +697,8 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
+
+      - install-libicu-linux
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-linux-x86_64:
@@ -709,6 +711,8 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
+
+      - install-libicu-linux
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-mac-arm64:
