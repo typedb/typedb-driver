@@ -620,27 +620,27 @@
 %typemap(
     csin,
     pre="
-        int arraySize = $csinput.Length;
+        int arraySize$csinput = $csinput.Length;
         global::System.IntPtr unmanaged$csinput = System.Runtime.InteropServices.Marshal.AllocHGlobal(
-            (arraySize + 1) * System.Runtime.InteropServices.Marshal.SizeOf<global::System.IntPtr>());
+            (arraySize$csinput + 1) * System.Runtime.InteropServices.Marshal.SizeOf<global::System.IntPtr>());
 
         unsafe
         {
             global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanaged$csinput.ToPointer();
 
-            for (int i = 0; i < arraySize; i++)
+            for (int i = 0; i < arraySize$csinput; i++)
             {
                 arrayPtr[i] = global::System.Runtime.InteropServices.Marshal.StringToCoTaskMemAnsi($csinput[i]);
             }
 
-            arrayPtr[arraySize] = global::System.IntPtr.Zero;
+            arrayPtr[arraySize$csinput] = global::System.IntPtr.Zero;
         }",
     post="
         unsafe
         {
             global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanaged$csinput.ToPointer();
 
-            for (int i = 0; i < arraySize; i++)
+            for (int i = 0; i < arraySize$csinput; i++)
             {
                 global::System.Runtime.InteropServices.Marshal.FreeHGlobal(arrayPtr[i]);
             }
