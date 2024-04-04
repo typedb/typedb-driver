@@ -356,17 +356,21 @@ commands:
   install-dotnet-mac:
     steps:
       - run: |
-          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
-          chmod a+x dotnet-install.sh
-          ./dotnet-install.sh --version 6.0.125
+           brew install dotnet@6
+#          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
+#          chmod a+x dotnet-install.sh
+#          ./dotnet-install.sh --version 6.0.125
+          ln -s /opt/homebrew/Cellar/dotnet@6/6.0.125/bin/dotnet /usr/local/bin/
 
   install-dotnet-mac-rosetta:
     steps:
       - install-brew-rosetta
       - run: |
-          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
-          chmod a+x dotnet-install.sh
-          ./dotnet-install.sh --version 6.0.125
+           /usr/local/bin/brew install dotnet@6
+#          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
+#          chmod a+x dotnet-install.sh
+#          ./dotnet-install.sh --version 6.0.125
+          ln -s /usr/local/Cellar/dotnet@6/6.0.125/bin/dotnet /usr/local/bin/
 
   install-dotnet-linux:
     steps:
@@ -809,29 +813,29 @@ workflows:
 #          filters:
 #            branches:
 #              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-      - deploy-snapshot-mac-arm64:
-          filters:
-            branches:
-              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-      - deploy-snapshot-mac-x86_64:
-          filters:
-            branches:
-              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-      - deploy-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-
-      - deploy-snapshot-any:
-          filters:
-            branches:
-              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-          requires:
-#            - deploy-snapshot-linux-arm64
-#            - deploy-snapshot-linux-x86_64
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-mac-x86_64
-#            - deploy-snapshot-windows-x86_64 # TODO: Return
+#      - deploy-snapshot-mac-arm64:
+#          filters:
+#            branches:
+#              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#      - deploy-snapshot-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#      - deploy-snapshot-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#
+#      - deploy-snapshot-any:
+#          filters:
+#            branches:
+#              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#          requires:
+##            - deploy-snapshot-linux-arm64
+##            - deploy-snapshot-linux-x86_64
+#            - deploy-snapshot-mac-arm64
+#            - deploy-snapshot-mac-x86_64
+##            - deploy-snapshot-windows-x86_64 # TODO: Return
 
 #      - test-snapshot-linux-arm64:
 #          filters:
@@ -852,15 +856,15 @@ workflows:
             branches:
               only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
           requires:
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-any
+#            - deploy-snapshot-mac-arm64
+#            - deploy-snapshot-any
       - test-snapshot-mac-x86_64:
           filters:
             branches:
               only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
           requires:
-            - deploy-snapshot-mac-x86_64
-            - deploy-snapshot-any
+#            - deploy-snapshot-mac-x86_64
+#            - deploy-snapshot-any
 #      - test-snapshot-windows-x86_64:
 #          filters:
 #            branches:
