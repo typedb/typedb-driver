@@ -57,7 +57,6 @@ use crate::{
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
 #[derive(Clone)]
 pub struct Connection {
-    server_addresses: HashMap<String, Address>,
     server_connections: HashMap<String, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
@@ -80,7 +79,7 @@ impl Connection {
         let name = address.as_ref().to_owned();
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), name, address.clone())?;
+        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), name, address)?;
 
         let advertised_name = server_connection
             .servers_all()?
@@ -92,8 +91,7 @@ impl Connection {
 
         match server_connection.validate() {
             Ok(()) => Ok(Self {
-                server_connections: [(advertised_name.clone(), server_connection)].into(),
-                server_addresses: [(advertised_name, address)].into(),
+                server_connections: [(advertised_name, server_connection)].into(),
                 background_runtime,
                 username: None,
                 is_cloud: false,
@@ -183,15 +181,10 @@ impl Connection {
         credential: Credential,
     ) -> Result<Self> {
         let server_connections: HashMap<String, ServerConnection> = server_addresses
-            .iter()
+            .into_iter()
             .map(|(name, address)| {
-                ServerConnection::new_cloud(
-                    background_runtime.clone(),
-                    name.clone(),
-                    address.clone(),
-                    credential.clone(),
-                )
-                .map(|server_connection| (name.clone(), server_connection))
+                ServerConnection::new_cloud(background_runtime.clone(), name.clone(), address, credential.clone())
+                    .map(|server_connection| (name, server_connection))
             })
             .try_collect()?;
 
@@ -203,7 +196,6 @@ impl Connection {
             })?
         } else {
             Ok(Self {
-                server_addresses,
                 server_connections,
                 background_runtime,
                 username: Some(credential.username().to_string()),
@@ -287,10 +279,8 @@ impl Connection {
         self.server_connections.keys().map(|name| name.as_str())
     }
 
-    pub(crate) fn connection(&self, address: &str) -> Result<&ServerConnection> {
-        self.server_connections
-            .get(address)
-            .ok_or_else(|| InternalError::UnknownConnection { name: address.to_owned() }.into())
+    pub(crate) fn connection(&self, address: &str) -> Option<&ServerConnection> {
+        self.server_connections.get(address)
     }
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = &ServerConnection> + '_ {

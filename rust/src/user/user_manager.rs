@@ -190,7 +190,7 @@ impl UserManager {
             DatabaseManager::new(self.connection.clone())
                 .get(Self::SYSTEM_DB)
                 .await?
-                .run_failsafe(|_, server_connection| task(server_connection))
+                .run_failsafe(|database| task(database.connection().clone()))
                 .await
         }
     }

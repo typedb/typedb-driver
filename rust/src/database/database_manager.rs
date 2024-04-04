@@ -112,7 +112,10 @@ impl DatabaseManager {
         for server_connection in self.connection.connections() {
             match server_connection.all_databases().await {
                 Ok(list) => {
-                    return list.into_iter().map(|db_info| Database::new(db_info, self.connection.clone())).collect()
+                    return Ok(list
+                        .into_iter()
+                        .map(|db_info| Database::new(db_info, self.connection.clone()))
+                        .collect())
                 }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.name(), err)),
             }
@@ -133,9 +136,9 @@ impl DatabaseManager {
                 Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
                     return Database::get(name, self.connection.clone())
                         .await?
-                        .run_on_primary_replica(|database, server_connection| {
+                        .run_on_primary_replica(|database| {
                             let task = &task;
-                            async move { task(server_connection, database.name().to_owned()).await }
+                            async move { task(database.connection().clone(), database.name().to_owned()).await }
                         })
                         .await
                 }
