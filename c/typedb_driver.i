@@ -343,6 +343,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject connection_open_core;
 %newobject connection_open_cloud;
+%newobject connection_open_cloud_translated;
 
 %newobject credential_new;
 
