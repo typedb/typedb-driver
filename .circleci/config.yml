@@ -819,10 +819,10 @@ workflows:
 #          filters:
 #            branches:
 #              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-#      - deploy-snapshot-windows-x86_64:
-#          filters:
-#            branches:
-#              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+      - deploy-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [development, master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
 #
 #      - deploy-snapshot-any:
 #          filters:
@@ -867,9 +867,9 @@ workflows:
           filters:
             branches:
               only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
-#          requires:
-#            - deploy-snapshot-windows-x86_64
-#            - deploy-snapshot-any
+          requires:
+            - deploy-snapshot-windows-x86_64
+            - deploy-snapshot-any
 
 #      - test-snapshot-any:
 #          filters:
