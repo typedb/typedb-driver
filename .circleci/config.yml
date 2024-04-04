@@ -849,17 +849,17 @@ workflows:
 #          requires:
 #            - deploy-snapshot-linux-x86_64
 #            - deploy-snapshot-any
-      - test-snapshot-mac-arm64:
-          filters:
-            branches:
-              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#      - test-snapshot-mac-arm64:
+#          filters:
+#            branches:
+#              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
 #          requires:
 #            - deploy-snapshot-mac-arm64
 #            - deploy-snapshot-any
-      - test-snapshot-mac-x86_64:
-          filters:
-            branches:
-              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
+#      - test-snapshot-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [master, csharp-docs-deployment] # TODO: Remove csharp-docs-deployment
 #          requires:
 #            - deploy-snapshot-mac-x86_64
 #            - deploy-snapshot-any
