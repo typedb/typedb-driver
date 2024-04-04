@@ -869,12 +869,12 @@ workflows:
 #            - deploy-snapshot-windows-x86_64
 #            - deploy-snapshot-any
 
-      - test-snapshot-any:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-any
+#      - test-snapshot-any:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-any
 
   release:
     jobs:
