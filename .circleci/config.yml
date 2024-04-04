@@ -396,6 +396,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
+          sleep 3
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && dotnet run NugetApplicationTest.csproj)
@@ -405,6 +406,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
+          sleep 3
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
