@@ -359,7 +359,7 @@ commands:
           curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
           chmod a+x dotnet-install.sh
           ./dotnet-install.sh --version 6.0.125
-          find / -name dotnet 
+          ln -s /Users/distiller/.dotnet/dotnet /usr/local/bin/
 
   install-dotnet-mac-rosetta:
     steps:
@@ -368,7 +368,7 @@ commands:
           curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
           chmod a+x dotnet-install.sh
           ./dotnet-install.sh --version 6.0.125
-          find / -name dotnet 
+          ln -s /Users/distiller/.dotnet/dotnet /usr/local/bin/
 
   install-dotnet-linux:
     steps:
