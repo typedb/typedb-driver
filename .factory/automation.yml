@@ -95,7 +95,8 @@ build:
         source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
             --test_arg=integration::queries::cloud \
-            --test_arg=integration::runtimes &&
+            --test_arg=integration::runtimes \
+            --test_arg=integration::network &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
         if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
