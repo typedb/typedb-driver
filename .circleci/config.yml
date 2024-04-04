@@ -799,7 +799,6 @@ jobs:
           apt install -y git
           git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
 
-
 workflows:
   typedb-driver-snapshot:
     jobs:
@@ -846,7 +845,7 @@ workflows:
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
-            -
+
       - test-snapshot-linux-x86_64:
           filters:
             branches:
@@ -854,7 +853,7 @@ workflows:
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
-            -
+
       - test-snapshot-mac-arm64:
           filters:
             branches:
@@ -862,7 +861,7 @@ workflows:
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
-            -
+
       - test-snapshot-mac-x86_64:
           filters:
             branches:
@@ -870,7 +869,7 @@ workflows:
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
-            -
+
       - test-snapshot-windows-x86_64:
           filters:
             branches:
