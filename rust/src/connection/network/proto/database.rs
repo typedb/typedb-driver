@@ -38,7 +38,7 @@ impl TryFromProto<DatabaseProto> for DatabaseInfo {
 impl TryFromProto<ReplicaProto> for ReplicaInfo {
     fn try_from_proto(proto: ReplicaProto) -> Result<Self> {
         Ok(Self {
-            address: proto.address.parse()?,
+            server_name: proto.address,
             is_primary: proto.primary,
             is_preferred: proto.preferred,
             term: proto.term,

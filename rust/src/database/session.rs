@@ -143,7 +143,7 @@ impl Session {
     pub fn force_close(&self) -> Result {
         if self.is_open.compare_exchange(true, false).is_ok() {
             let session_info = self.server_session_info.write().unwrap();
-            let connection = self.database.connection().connection(&session_info.address).unwrap();
+            let connection = self.database.connection().connection(&session_info.server_name).unwrap();
             connection.close_session(session_info.session_id.clone())?;
         }
         Ok(())
@@ -222,8 +222,9 @@ impl Session {
             return Err(ConnectionError::SessionIsClosed.into());
         }
 
-        let SessionInfo { address, session_id, network_latency, .. } = self.server_session_info.read().unwrap().clone();
-        let server_connection = &self.database.connection().connection(&address)?;
+        let SessionInfo { server_name, session_id, network_latency, .. } =
+            self.server_session_info.read().unwrap().clone();
+        let server_connection = &self.database.connection().connection(&server_name)?;
 
         let (transaction_stream, transaction_shutdown_sink) = match server_connection
             .open_transaction(session_id.clone(), transaction_type, options, network_latency)

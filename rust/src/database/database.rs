@@ -26,7 +26,6 @@ use log::{debug, error};
 
 use crate::{
     common::{
-        address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
@@ -183,11 +182,11 @@ impl Database {
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
+            match task(replica.database.clone(), self.connection.connection(&replica.server_name)?.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.server_name);
                 }
                 res => return res,
             }
@@ -205,8 +204,11 @@ impl Database {
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
 
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(primary_replica.database.clone(), self.connection.connection(&primary_replica.address)?.clone())
-                .await
+            match task(
+                primary_replica.database.clone(),
+                self.connection.connection(&primary_replica.server_name)?.clone(),
+            )
+            .await
             {
                 Err(Error::Connection(
                     ConnectionError::CloudReplicaNotPrimary
@@ -260,8 +262,8 @@ impl fmt::Debug for Database {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
-    /// Retrieves address of the server hosting this replica
-    address: Address,
+    /// Retrieves the name of the server hosting this replica
+    server_name: String,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -277,7 +279,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            address: metadata.address,
+            server_name: metadata.server_name,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -291,7 +293,7 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.address)?.clone();
+                let server_connection = connection.connection(&replica.server_name)?.clone();
                 Ok(Self::new(database_info.name.clone(), replica, server_connection))
             })
             .try_collect()
@@ -299,7 +301,7 @@ impl Replica {
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            address: self.address.clone(),
+            server_name: self.server_name.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -322,7 +324,7 @@ impl Replica {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name,
-                        server_connection.address()
+                        server_connection.name()
                     );
                 }
                 Err(err) => return Err(err),
@@ -335,7 +337,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("address", &self.address)
+            .field("address", &self.server_name)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)
