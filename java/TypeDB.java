@@ -23,6 +23,7 @@ import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBCredential;
 import com.vaticle.typedb.driver.connection.TypeDBDriverImpl;
 
+import java.util.Map;
 import java.util.Set;
 
 import static com.vaticle.typedb.common.collection.Collections.set;
@@ -74,5 +75,22 @@ public class TypeDB {
      */
     public static TypeDBDriver cloudDriver(Set<String> addresses, TypeDBCredential credential) {
         return new TypeDBDriverImpl(addresses, credential);
+    }
+
+    /**
+     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+     * the provided credential.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * TypeDB.cloudDriver(addresses, credential);
+     * </pre>
+     *
+     * @param addresses Translation map from addresses received from the TypeDB server(s)
+     * to addresses to be used by the driver for connection
+     * @param credential The credential to connect with
+     */
+    public static TypeDBDriver cloudDriver(Map<String, String> addressesTranslation, TypeDBCredential credential) {
+        return new TypeDBDriverImpl(addressesTranslation, credential);
     }
 }
