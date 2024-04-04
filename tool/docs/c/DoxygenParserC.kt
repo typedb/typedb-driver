@@ -63,6 +63,8 @@ class DoxygenParserC : Callable<Unit> {
     @CommandLine.Option(names = ["--forcefile", "-f"], required = true)
     private lateinit var unnormalisedFilenameOverrides: MutableMap<String, String>
 
+    private var recreatedFiles: MutableSet<File> = mutableSetOf()
+
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
@@ -138,7 +140,13 @@ class DoxygenParserC : Callable<Unit> {
         if (!fileDir.toFile().exists()) {
             Files.createDirectory(fileDir)
         }
+
         val outputFile = fileDir.resolve(filename).toFile()
+        if (!recreatedFiles.contains(outputFile)) {
+            recreatedFiles.add(outputFile)
+            outputFile.delete()
+        }
+
         outputFile.createNewFile()
         return outputFile
     }
@@ -190,7 +198,12 @@ class DoxygenParserC : Callable<Unit> {
         val methodAnchor = replaceSymbolsForAnchor(methodName)
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
-        val argsMap = argsList.toMap()
+        val argsMap = argsList.associate { (first, second) ->
+            Pair(
+                addZeroWidthWhitespaces(first),
+                addZeroWidthWhitespaces(second)
+            )
+        }
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
@@ -201,9 +214,9 @@ class DoxygenParserC : Callable<Unit> {
                 val argName = it.child(0).text()
                 assert(argsMap.contains(argName))
                 Variable(
-                    name = argName,
-                    type = argsMap[argName],
+                    name = addZeroWidthWhitespaces(argName),
                     description = reformatTextWithCode(it.child(1).html()),
+                    type = argsMap[argName],
                 )
             }
 
@@ -223,7 +236,7 @@ class DoxygenParserC : Callable<Unit> {
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
             .split(",\\s".toRegex()).map { arg ->
-                arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
+                arg.split("\\s".toRegex()).let { it.last() to it.dropLast(1).joinToString(" ") }
             }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
     }
@@ -233,7 +246,7 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun replacePreTags(html: String): String {
-        return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
+        return html.replace("<pre>", "[source,c]\n----\n").replace("</pre>", "\n----\n")
     }
 
     private fun enhanceSignature(signature: String): String {

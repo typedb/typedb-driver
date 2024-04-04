@@ -350,6 +350,81 @@ commands:
           bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
   #########################
+  # C# deployment steps #
+  #########################
+
+  install-dotnet-mac:
+    steps:
+      - run: |
+          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
+          chmod a+x dotnet-install.sh
+          ./dotnet-install.sh --version 6.0.125
+          ln -s /Users/distiller/.dotnet/dotnet /usr/local/bin/
+
+  install-dotnet-mac-rosetta:
+    steps:
+      - install-brew-rosetta
+      - run: |
+          curl -OL "https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh"
+          chmod a+x dotnet-install.sh
+          ./dotnet-install.sh --version 6.0.125
+          ln -s /Users/distiller/.dotnet/dotnet /usr/local/bin/
+
+  install-dotnet-linux:
+    steps:
+      - run: |
+          rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+          yum install -y dotnet-sdk-6.0
+
+  install-libicu-linux:
+    steps:
+      - run: yum install -y libicu60
+
+  deploy-dotnet-runtime-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
+
+  deploy-dotnet-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
+
+  test-dotnet-snapshot-unix:
+    steps:
+      - run: |
+          tool/test/start-core-server.sh
+          sleep 3
+          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
+          cat csharp/Test/Deployment/NugetApplicationTest.csproj
+          (cd csharp/Test/Deployment && dotnet run NugetApplicationTest.csproj)
+          tool/test/stop-core-server.sh
+
+  test-dotnet-snapshot-mac-rosetta:
+    steps:
+      - run: |
+          tool/test/start-core-server.sh
+          sleep 3
+          sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
+          cat csharp/Test/Deployment/NugetApplicationTest.csproj
+          (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
+          tool/test/stop-core-server.sh
+
+  deploy-dotnet-runtime-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_NUGET_TOKEN
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
+
+  deploy-dotnet-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_NUGET_API_KEY=$REPO_NUGET_TOKEN
+          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --compilation_mode=opt -- release
+
+  #########################
   # Rust deployment steps #
   #########################
 
@@ -430,6 +505,9 @@ jobs:
       - test-cpp-assembly-linux:
           target-arch: arm64
 
+      - install-libicu-linux
+      - deploy-dotnet-runtime-snapshot-unix
+
   deploy-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
     steps:
@@ -448,6 +526,9 @@ jobs:
       - deploy-cpp-snapshot-unix
       - test-cpp-assembly-linux:
           target-arch: x86_64
+
+      - install-libicu-linux
+      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-arm64:
     executor: mac-arm64
@@ -469,6 +550,8 @@ jobs:
       - deploy-cpp-snapshot-unix
       - test-cpp-assembly-mac:
           target-arch: arm64
+
+      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -492,6 +575,8 @@ jobs:
       - test-cpp-assembly-mac:
           target-arch: x86_64
 
+      - deploy-dotnet-runtime-snapshot-unix
+
   deploy-snapshot-windows-x86_64:
     executor:
       name: win/default
@@ -512,6 +597,8 @@ jobs:
       - run: .circleci\windows\cpp\deploy_snapshot.bat
       - run: .circleci\windows\cpp\test_assembly.bat
 
+      - run: .circleci\windows\csharp\deploy_snapshot.bat
+
   deploy-snapshot-any:
     executor: linux-x86_64-ubuntu-2204
     steps:
@@ -522,6 +609,7 @@ jobs:
       - deploy-maven-snapshot-unix
       - install-npm-apt
       - deploy-npm-snapshot-unix
+      - deploy-dotnet-snapshot-unix
 
   test-snapshot-linux-arm64:
     executor: linux-arm64-amazonlinux-2
@@ -532,6 +620,9 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
+      - install-dotnet-linux
+      - install-libicu-linux
+      - test-dotnet-snapshot-unix
 
   test-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -542,6 +633,8 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
+      - install-dotnet-linux
+      - test-dotnet-snapshot-unix
 
   test-snapshot-mac-arm64:
     executor: mac-arm64
@@ -552,6 +645,8 @@ jobs:
       - test-pip-snapshot-unix
       - install-maven-mac
       - test-maven-snapshot-unix
+      - install-dotnet-mac
+      - test-dotnet-snapshot-unix
 
   test-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -563,6 +658,8 @@ jobs:
       - test-pip-snapshot-mac-rosetta
       - install-maven-mac-rosetta
       - test-maven-snapshot-mac-rosetta
+      - install-dotnet-mac-rosetta
+      - test-dotnet-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
     executor:
@@ -575,6 +672,7 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\test_deploy_snapshot.bat
       - run: .circleci\windows\java\test_deploy_snapshot.bat
+      - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
   test-snapshot-any:
     executor: linux-x86_64-ubuntu-2204
@@ -600,6 +698,9 @@ jobs:
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
+      - install-libicu-linux
+      - deploy-dotnet-runtime-release-unix
+
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
     steps:
@@ -611,6 +712,9 @@ jobs:
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
+      - install-libicu-linux
+      - deploy-dotnet-runtime-release-unix
+
   deploy-release-mac-arm64:
     executor: mac-arm64
     steps:
@@ -621,6 +725,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
+      - deploy-dotnet-runtime-release-unix
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -633,6 +738,7 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
+      - deploy-dotnet-runtime-release-unix
 
   deploy-release-windows-x86_64:
     executor:
@@ -647,6 +753,7 @@ jobs:
       - run: .circleci\windows\java\deploy_release.bat
       - run: .circleci\windows\clib\deploy_release.bat
       - run: .circleci\windows\cpp\deploy_release.bat
+      - run: .circleci\windows\csharp\deploy_release.bat
 
   deploy-release-any:
     executor: linux-x86_64-ubuntu-2204
@@ -658,6 +765,7 @@ jobs:
       - deploy-maven-release-unix
       - install-npm-apt
       - deploy-npm-release-unix
+      - deploy-dotnet-release-unix
 
   deploy-github:
     executor: linux-x86_64-ubuntu-2204
@@ -697,7 +805,6 @@ jobs:
           apt install -y git
           git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
 
-
 workflows:
   typedb-driver-snapshot:
     jobs:
@@ -705,18 +812,22 @@ workflows:
           filters:
             branches:
               only: [development, master]
+
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
               only: [development, master]
+
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
               only: [development, master]
+
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
               only: [development, master]
+
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
@@ -740,6 +851,7 @@ workflows:
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
+
       - test-snapshot-linux-x86_64:
           filters:
             branches:
@@ -747,6 +859,7 @@ workflows:
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
+
       - test-snapshot-mac-arm64:
           filters:
             branches:
@@ -754,6 +867,7 @@ workflows:
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
+
       - test-snapshot-mac-x86_64:
           filters:
             branches:
@@ -761,6 +875,7 @@ workflows:
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
+
       - test-snapshot-windows-x86_64:
           filters:
             branches:

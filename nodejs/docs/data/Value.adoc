@@ -8,7 +8,7 @@
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -366,7 +366,7 @@ Checks if this concept is equal to the argument ``concept``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

@@ -17,13 +17,13 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     exclude = glob([
         "paket.csharp_deps.bzl",
         "paket.csharp_deps_extension.bzl",
+        "paket.lock",
     ]),
     license_type = "apache-header",
 )

@@ -21,7 +21,6 @@ load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 csharp_library(
     name = "user",
     srcs = glob(["*.cs"], exclude=["test/**"]),
@@ -30,11 +29,11 @@ csharp_library(
         "//csharp/Common:common",
         "//csharp:typedb_driver_pinvoke",
     ],
+    out = "TypeDB.Driver.User",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 
 checkstyle_test(
     name = "checkstyle",

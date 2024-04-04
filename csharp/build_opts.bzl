@@ -16,5 +16,6 @@
 # under the License.
 
 nullable_context = "enable"
-target_frameworks = ["net6.0"]
+target_framework = "net6.0"
+target_frameworks = [target_framework]
 targeting_packs = ["@paket.rules_dotnet_nuget_packages//microsoft.netcore.app.ref"]

@@ -1,0 +1,76 @@
+[#_IReplica]
+=== IReplica
+
+*Package*: `TypeDB.Driver.Api.IDatabase`
+
+
+
+The metadata and state of an individual raft replica of a database.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_IDatabase_IReplica_Address]
+==== Address
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IDatabase.IReplica.Address
+----
+
+
+
+Retrieves the address of the server hosting this replica.
+
+[caption=""]
+.Returns
+`string`
+
+[#_bool_TypeDB_Driver_Api_IDatabase_IReplica_IsPreferred___]
+==== IsPreferred
+
+[source,cs]
+----
+bool IsPreferred()
+----
+
+
+
+Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_IDatabase_IReplica_IsPrimary___]
+==== IsPrimary
+
+[source,cs]
+----
+bool IsPrimary()
+----
+
+
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_long_TypeDB_Driver_Api_IDatabase_IReplica_Term]
+==== Term
+
+[source,cs]
+----
+long TypeDB.Driver.Api.IDatabase.IReplica.Term
+----
+
+
+
+The raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

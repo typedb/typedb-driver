@@ -97,4 +97,3 @@ Cargo.toml
 
 # Temporary paket files for C#
 paket-files/
-paket.lock

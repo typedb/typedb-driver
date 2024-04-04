@@ -25,6 +25,13 @@ Retrieves all users which exist on the TypeDB server.
 .Returns
 `UserIterable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.all();
+----
+
 [#_bool_TypeDBUserManagercontains___const_stdstring__username___const]
 ==== contains
 
@@ -40,16 +47,23 @@ Checks if a user with the given name exists.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| 
+a| `username` a| The user name to be checked a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.contains(username);
+----
 
 [#_void_TypeDBUserManagercreate___const_stdstring__username__const_stdstring__password___const]
 ==== create
@@ -66,17 +80,24 @@ Creates a user with the given name &amp; password.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be created a| 
-a| `password` a| The password of the user to be created a| 
+a| `username` a| The name of the user to be created a| `const std::string&`
+a| `password` a| The password of the user to be created a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.create(username, password);
+----
 
 [#_void_TypeDBUserManagerdeleteUser___const_stdstring__username___const]
 ==== deleteUser
@@ -93,16 +114,23 @@ Deletes a user with the given name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be deleted a| 
+a| `username` a| The name of the user to be deleted a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.deleteUser(username);
+----
 
 [#_stdunique_ptr__User___TypeDBUserManagerget___const_stdstring__username___const]
 ==== get
@@ -119,16 +147,23 @@ Retrieves a user with the given name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to retrieve a| 
+a| `username` a| The name of the user to retrieve a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `std::unique_ptr< User >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.get(username);
+----
 
 [#_void_TypeDBUserManagerpasswordSet___const_stdstring__username__const_stdstring__password___const]
 ==== passwordSet
@@ -145,17 +180,24 @@ Sets a new password for a user. This operation can only be performed by administ
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to set the password of a| 
-a| `password` a| The new password a| 
+a| `username` a| The name of the user to set the password of a| `const std::string&`
+a| `password` a| The new password a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.passwordSet(username, password);
+----
 
 // end::methods[]
 

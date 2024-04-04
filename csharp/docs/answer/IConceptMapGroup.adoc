@@ -1,0 +1,60 @@
+[#_IConceptMapGroup]
+=== IConceptMapGroup
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Contains an element of the group query result.
+
+// tag::methods[]
+[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IConceptMapGroup_GetConceptMaps___]
+==== GetConceptMaps
+
+[source,cs]
+----
+IEnumerable< IConceptMap > GetConceptMaps()
+----
+
+
+
+Retrieves the ``IConceptMap``s of the group.
+
+
+[caption=""]
+.Returns
+`IEnumerable< IConceptMap >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMapGroup.GetConceptMaps();
+----
+
+[#_IConcept_TypeDB_Driver_Api_IConceptMapGroup_Owner]
+==== Owner
+
+[source,cs]
+----
+IConcept TypeDB.Driver.Api.IConceptMapGroup.Owner
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+
+[caption=""]
+.Returns
+`IConcept`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMapGroup.Owner;
+----
+
+// end::methods[]
+

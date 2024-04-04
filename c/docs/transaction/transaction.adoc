@@ -27,7 +27,7 @@ This enum is used to specify the type of transaction.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -115,12 +115,12 @@ Opens a transaction to perform read or write queries on the database connected t
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `type_` a| The type of transaction to be created (Write or Read). a| 
-a| `options` a| Options for the transaction a| 
+a| `type_` a| The type of transaction to be created (Write or Read). a| `enum TransactionType`
+a| `options` a| Options for the transaction a| `const struct Options*`
 |===
 
 [caption=""]
@@ -142,12 +142,12 @@ Registers a callback function which will be executed when this transaction is cl
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `txn` a| The transaction on which to register the callback a| 
-a| `callback_id` a| The argument to be passed to the callback function when it is executed. a| 
+a| `txn` a| The transaction on which to register the callback a| `const struct Transaction*`
+a| `callback_id` a| The argument to be passed to the callback function when it is executed. a| `uintptr_t`
 a| `callback` a| The function to be called a| 
 |===
 

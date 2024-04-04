@@ -440,7 +440,7 @@ Explicitly sets a prefetch size. If set, specifies a guideline number of answers
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

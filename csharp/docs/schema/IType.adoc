@@ -1,0 +1,368 @@
+[#_IType]
+=== IType
+
+*Package*: `TypeDB.Driver.Api`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.IConcept`
+
+// tag::methods[]
+[#_IType_IConcept__TypeDB_Driver_Api_IType_AsType___]
+==== AsType
+
+[source,cs]
+----
+IType IConcept. AsType()
+----
+
+
+
+Casts the concept to ``IType``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`IType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType();
+----
+
+[#_VoidPromise_TypeDB_Driver_Api_IType_Delete___ITypeDBTransaction_transaction_]
+==== Delete
+
+[source,cs]
+----
+VoidPromise Delete(ITypeDBTransaction transaction)
+----
+
+
+
+Deletes this type from the database.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.Delete(transaction).Resolve();
+----
+
+[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction_]
+==== GetSubtypes
+
+[source,cs]
+----
+IEnumerable< IType > GetSubtypes(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves all direct and indirect subtypes of the type. Equivalent to ``GetSubtypes(transaction, Transitive)``
+
+ 
+
+See also
+[source,cs]
+----
+ 
+ 
+IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
+---- 
+
+
+[caption=""]
+.Returns
+`IEnumerable< IType >`
+
+[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+==== GetSubtypes
+
+[source,cs]
+----
+IEnumerable< IType > GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the type.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `transitivity` a| ``Transitive`` for direct and indirect subtypes, ``Explicit`` for direct subtypes only a| `IConcept​.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IType >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSubtypes(transaction);
+type.GetSubtypes(transaction, Explicit);
+----
+
+[#_Promise__IType___TypeDB_Driver_Api_IType_GetSupertype___ITypeDBTransaction_transaction_]
+==== GetSupertype
+
+[source,cs]
+----
+Promise< IType > GetSupertype(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves the most immediate supertype of the type.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise< IType >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSupertype(transaction).Resolve();
+----
+
+[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSupertypes___ITypeDBTransaction_transaction_]
+==== GetSupertypes
+
+[source,cs]
+----
+IEnumerable< IType > GetSupertypes(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves all supertypes of the type.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IType >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.GetSupertypes(transaction);
+----
+
+[#_bool_TypeDB_Driver_Api_IType_IsAbstract___]
+==== IsAbstract
+
+[source,cs]
+----
+bool IsAbstract()
+----
+
+
+
+Checks if the type is prevented from having data instances (i.e., ``abstract``).
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsAbstract();
+----
+
+[#_Promise__bool___TypeDB_Driver_Api_IType_IsDeleted___ITypeDBTransaction_transaction_]
+==== IsDeleted
+
+[source,cs]
+----
+Promise< bool > IsDeleted(ITypeDBTransaction transaction)
+----
+
+
+
+Check if the concept has been deleted.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise< bool >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsDeleted(transaction).Resolve();
+----
+
+[#_bool_TypeDB_Driver_Api_IType_IsRoot___]
+==== IsRoot
+
+[source,cs]
+----
+bool IsRoot()
+----
+
+
+
+Checks if the type is a root type.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.IsRoot();
+----
+
+[#_bool_IConcept__TypeDB_Driver_Api_IType_IsType___]
+==== IsType
+
+[source,cs]
+----
+bool IConcept. IsType()
+----
+
+
+
+Checks if the concept is a ``IType``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType();
+----
+
+[#_Label_TypeDB_Driver_Api_IType_Label]
+==== Label
+
+[source,cs]
+----
+Label TypeDB.Driver.Api.IType.Label
+----
+
+
+
+The unique label of the type.
+
+
+[caption=""]
+.Returns
+`Label`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.Label;
+----
+
+[#_VoidPromise_TypeDB_Driver_Api_IType_SetLabel___ITypeDBTransaction_transaction__string_label_]
+==== SetLabel
+
+[source,cs]
+----
+VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
+----
+
+
+
+Renames the label of the type. The new label must remain unique.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `label` a| The new ``Label`` to be given to the type. a| `string`
+|===
+
+[caption=""]
+.Returns
+`VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+type.SetLabel(transaction, newLabel).Resolve();
+----
+
+// end::methods[]
+

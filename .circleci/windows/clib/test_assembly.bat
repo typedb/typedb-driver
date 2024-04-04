@@ -21,12 +21,12 @@ choco install 7zip.portable --limit-output --yes --no-progress
 choco install cmake.install --version 3.27.0 --installargs '"ADD_CMAKE_TO_PATH=User"' --limit-output --yes --no-progress
 CALL refreshenv
 
-bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows-x86_64//file
+bazel --output_user_root=C:\b build @vaticle_typedb_artifact_windows-x86_64//file
 powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
 7z x typedb-server-windows.zip
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
 
-bazel --output_user_root=C:\bazel build //c:assemble-windows-x86_64-zip
+bazel --output_user_root=C:\b build //c:assemble-windows-x86_64-zip
 mkdir test_assembly_clib
 pushd test_assembly_clib
 7z x ..\bazel-bin\c\typedb-driver-clib-windows-x86_64.zip

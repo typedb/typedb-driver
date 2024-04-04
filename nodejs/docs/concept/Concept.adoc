@@ -245,7 +245,7 @@ Checks if this concept is equal to the argument ``concept``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

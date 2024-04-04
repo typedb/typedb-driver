@@ -176,13 +176,13 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_relations(self, transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]:
+    def get_relations(self, transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Relation]:
         """
         Retrieves all the ``Relation``\ s which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.
 
         :param transaction: The current transaction
-        :param role_types: The list of roles to filter the relations by.
+        :param role_types: 0 or more role types to filter the relations by.
 
         :return:
 

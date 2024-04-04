@@ -10,7 +10,7 @@ A connection to a TypeDB server which serves as the starting point for all inter
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -37,6 +37,13 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.close()
+----
+
 [#_static_Driver_TypeDBDrivercloudDriver___const_stdvector__stdstring____cloudAddresses__const_Credential__credential_]
 ==== cloudDriver
 
@@ -52,17 +59,24 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `addresses` a| The address(es) of the TypeDB server(s) a| 
-a| `credential` a| The Credential to connect with a| 
+a| `credential` a| The Credential to connect with a| `const Credential&`
 |===
 
 [caption=""]
 .Returns
 `static Driver`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+Driver::cloudDriver(addresses, credential);
+----
 
 [#_static_Driver_TypeDBDrivercoreDriver___const_stdstring__coreAddress_]
 ==== coreDriver
@@ -79,7 +93,7 @@ Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -89,6 +103,13 @@ a| `address` a| The address of the TypeDB server a|
 [caption=""]
 .Returns
 `static Driver`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+Driver::coreDriver(address);
+----
 
 [#_static_void_TypeDBDriverinitLogging___]
 ==== initLogging
@@ -107,6 +128,13 @@ Enables logging in the TypeDB driver.
 .Returns
 `static void`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+Driver::initLogging();
+----
+
 [#_bool_TypeDBDriverisOpen___]
 ==== isOpen
 
@@ -124,6 +152,13 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.isOpen();
+----
+
 [#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options__Options___]
 ==== session
 
@@ -139,11 +174,11 @@ Opens a communication tunnel (session) to the given database on the running Type
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database with which the session connects a| 
+a| `database` a| The name of the database with which the session connects a| `const std::string&`
 a| `type` a| The type of session to be created (DATA or SCHEMA) a| 
 a| `options` a| ``TypeDBOptions`` for the session a| 
 |===
@@ -151,6 +186,13 @@ a| `options` a| ``TypeDBOptions`` for the session a|
 [caption=""]
 .Returns
 `Session`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.session(database, sessionType, options);
+----
 
 [#_User_TypeDBDriveruser___]
 ==== user
@@ -168,6 +210,13 @@ Returns the logged-in user for the connection. Only for TypeDB Cloud.
 [caption=""]
 .Returns
 `User`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.user();
+----
 
 // end::methods[]
 

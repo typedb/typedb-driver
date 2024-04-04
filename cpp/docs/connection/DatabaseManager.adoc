@@ -25,6 +25,13 @@ Retrieves all databases present on the TypeDB server
 .Returns
 `DatabaseIterable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.databases.all()
+----
+
 [#_bool_TypeDBDatabaseManagercontains___const_stdstring____const]
 ==== contains
 
@@ -40,7 +47,7 @@ Checks if a database with the given name exists
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -50,6 +57,13 @@ a| `name` a| The database name to be checked a|
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.databases.contains(name)
+----
 
 [#_void_TypeDBDatabaseManagercreate___const_stdstring____const]
 ==== create
@@ -66,7 +80,7 @@ Create a database with the given name
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -76,6 +90,13 @@ a| `name` a| The name of the database to be created a|
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.databases.create(name)
+----
 
 [#_Database_TypeDBDatabaseManagerget___const_stdstring____const]
 ==== get
@@ -92,7 +113,7 @@ Retrieve the database with the given name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -102,6 +123,13 @@ a| `name` a| The name of the database to retrieve a|
 [caption=""]
 .Returns
 `Database`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.databases.get(name)
+----
 
 // end::methods[]
 

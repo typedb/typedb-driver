@@ -6,7 +6,7 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 [caption=""]
 .Properties
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -29,7 +29,7 @@ Deletes this rule.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -59,7 +59,7 @@ Check if this rule has been deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -89,7 +89,7 @@ Renames the label of the rule. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

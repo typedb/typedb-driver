@@ -40,7 +40,7 @@ Performs a TypeQL Define query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -130,7 +130,7 @@ Performs a TypeQL Delete query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -220,7 +220,7 @@ Performs a TypeQL Explain query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -273,7 +273,7 @@ Performs a TypeQL Fetch (Fetch) query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -363,7 +363,7 @@ Performs a TypeQL Get (Get) query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -453,7 +453,7 @@ Performs a TypeQL Get Aggregate query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -506,7 +506,7 @@ Performs a TypeQL Get Group query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -559,7 +559,7 @@ Performs a TypeQL Get Group Aggregate query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -721,7 +721,7 @@ Performs a TypeQL Insert query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -809,7 +809,7 @@ Performs a TypeQL Undefine query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -897,7 +897,7 @@ Performs a TypeQL Update query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

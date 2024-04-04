@@ -16,7 +16,7 @@ transaction_options.explain = True
 [caption=""]
 .Properties
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

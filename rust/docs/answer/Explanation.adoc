@@ -12,7 +12,7 @@ An explanation of which rule was used for inferring the explained concept, the c
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

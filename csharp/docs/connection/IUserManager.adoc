@@ -1,0 +1,203 @@
+[#_IUserManager]
+=== IUserManager
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Provides access to all user management methods.
+
+// tag::methods[]
+[#_bool_TypeDB_Driver_Api_IUserManager_Contains___string_username_]
+==== Contains
+
+[source,cs]
+----
+bool Contains(string username)
+----
+
+
+
+Checks if a user with the given name exists.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The user name to be checked a| `string`
+|===
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Contains(username);
+----
+
+[#_void_TypeDB_Driver_Api_IUserManager_Create___string_username__string_password_]
+==== Create
+
+[source,cs]
+----
+void Create(string username, string password)
+----
+
+
+
+Creates a user with the given name & password.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| `string`
+a| `password` a| The password of the user to be created a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Create(username, password);
+----
+
+[#_void_TypeDB_Driver_Api_IUserManager_Delete___string_username_]
+==== Delete
+
+[source,cs]
+----
+void Delete(string username)
+----
+
+
+
+Deletes a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be deleted a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Delete(username);
+----
+
+[#_IUser_TypeDB_Driver_Api_IUserManager_Get___string_username_]
+==== Get
+
+[source,cs]
+----
+IUser? Get(string username)
+----
+
+
+
+Retrieves a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| `string`
+|===
+
+[caption=""]
+.Returns
+`IUser?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Get(username);
+----
+
+[#_ISet__IUser___TypeDB_Driver_Api_IUserManager_GetAll___]
+==== GetAll
+
+[source,cs]
+----
+ISet< IUser > GetAll()
+----
+
+
+
+Retrieves all users which exist on the TypeDB server.
+
+
+[caption=""]
+.Returns
+`ISet< IUser >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.GetAll();
+----
+
+[#_void_TypeDB_Driver_Api_IUserManager_SetPassword___string_username__string_password_]
+==== SetPassword
+
+[source,cs]
+----
+void SetPassword(string username, string password)
+----
+
+
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to set the password of a| `string`
+a| `password` a| The new password a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.SetPassword(username, password);
+----
+
+// end::methods[]
+

@@ -22,7 +22,6 @@ load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 csharp_behaviour_test(
     name = "test-core",
     test_files = ["InsertTest.cs"],
@@ -45,7 +44,6 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 
 csharp_behaviour_test(
     name = "test-cloud",
@@ -70,7 +68,6 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 
 checkstyle_test(
     name = "checkstyle",

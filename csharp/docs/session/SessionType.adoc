@@ -1,0 +1,29 @@
+[#_SessionType]
+=== SessionType
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Used to specify the type of the session.
+
+
+[caption=""]
+.Examples
+[source,cs]
+----
+driver.Session(database, SessionType.Schema);
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Data`
+a| `Schema`
+|===
+// end::enum_constants[]
+

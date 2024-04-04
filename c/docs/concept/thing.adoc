@@ -32,14 +32,14 @@ Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `thing` a| The thing to get owned attributes of a| 
-a| `attribute_types` a| a null-terminated array holding the attribute-types to include a| 
-a| `annotations` a| a null-terminated array of annotations - If non-empty, Only retrieves attributes with all given ``Annotation``s a| 
+a| `transaction` a| The current transaction a| `struct Transaction*`
+a| `thing` a| The thing to get owned attributes of a| `const struct Concept*`
+a| `attribute_types` a| a null-terminated array holding the attribute-types to include a| `const struct Concept*const*`
+a| `annotations` a| a null-terminated array of annotations - If non-empty, Only retrieves attributes with all given ``Annotation``s a| `const struct Annotation*const*`
 |===
 
 [caption=""]
@@ -109,11 +109,11 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `role_types` a| a null-terminated array of ``RoleType``s to include. a| 
+a| `role_types` a| a null-terminated array of ``RoleType``s to include. a| `const struct Concept*const*`
 |===
 
 [caption=""]
@@ -199,11 +199,11 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves attribute types owned with all specified annotations. a| 
+a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves attribute types owned with all specified annotations. a| `const struct Annotation*const*`
 |===
 
 [caption=""]
@@ -369,15 +369,15 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``. O
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `thing_type` a| The thing type which is to own the specified attribute a| 
-a| `attribute_type` a| The attribute type which is to be owned by the specified thing type a| 
-a| `overridden_attribute_type` a| Optional, The attribute whose ownership must be overridden a| 
-a| `annotations` a| A null-terminated array of ``Annotation``s to be added to the ownership a| 
+a| `transaction` a| The current transaction a| `const struct Transaction*`
+a| `thing_type` a| The thing type which is to own the specified attribute a| `struct Concept*`
+a| `attribute_type` a| The attribute type which is to be owned by the specified thing type a| `const struct Concept*`
+a| `overridden_attribute_type` a| Optional, The attribute whose ownership must be overridden a| `const struct Concept*`
+a| `annotations` a| A null-terminated array of ``Annotation``s to be added to the ownership a| `const struct Annotation*const*`
 |===
 
 [caption=""]

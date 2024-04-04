@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-            return TypeDB.CoreDriver(address);
+            return Drivers.CoreDriver(address);
         }
 
         [Given(@"typedb starts")]
@@ -48,7 +48,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+            Driver = CreateTypeDBDriver(Drivers.DEFAULT_ADDRESS);
         }
 
         [Given(@"connection opens with authentication: {}, {}")]

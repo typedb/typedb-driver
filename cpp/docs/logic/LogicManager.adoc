@@ -23,16 +23,23 @@ Retrieves the Rule that has the given label.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or retrieve a| 
+a| `label` a| The label of the Rule to create or retrieve a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `OptionalRuleFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.logic.getRule(label).get();
+----
 
 [#_RuleIterable_TypeDBLogicManagergetRules_____const]
 ==== getRules
@@ -51,6 +58,13 @@ Retrieves all rules.
 .Returns
 `RuleIterable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.logic.getRules()
+----
+
 [#_RuleFuture_TypeDBLogicManagerputRule___const_stdstring__label__const_stdstring__when__const_stdstring__then___const]
 ==== putRule
 
@@ -66,18 +80,25 @@ Creates a new Rule if none exists with the given label, or replaces the existing
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or replace a| 
-a| `when` a| The when body of the rule to create a| 
-a| `then` a| The then body of the rule to create a| 
+a| `label` a| The label of the Rule to create or replace a| `const std::string&`
+a| `when` a| The when body of the rule to create a| `const std::string&`
+a| `then` a| The then body of the rule to create a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `RuleFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.logic.putRule(label, when, then).get();
+----
 
 // end::methods[]
 

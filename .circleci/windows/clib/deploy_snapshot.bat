@@ -25,5 +25,5 @@ SET DEPLOY_ARTIFACT_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:\bazel run --verbose_failures --define version=%VER% //c:deploy-windows-x86_64-zip -- snapshot
+bazel --output_user_root=C:\b run --verbose_failures --define version=%VER% //c:deploy-windows-x86_64-zip -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

@@ -90,12 +90,12 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| a null-terminated array holding the address(es) of the TypeDB server(s) a| 
-a| `credential` a| The ``Credential`` to connect with a| 
+a| `addresses` a| a null-terminated array holding the address(es) of the TypeDB server(s) a| `const char*const*`
+a| `credential` a| The ``Credential`` to connect with a| `const struct Credential*`
 |===
 
 [caption=""]
@@ -117,11 +117,11 @@ Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address of the TypeDB server a| 
+a| `address` a| The address of the TypeDB server a| `const char*`
 |===
 
 [caption=""]

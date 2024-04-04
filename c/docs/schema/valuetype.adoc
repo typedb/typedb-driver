@@ -18,7 +18,7 @@ Represents the type of primitive value is held by a Value or Attribute.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -41,7 +41,7 @@ Retrieves the ``ValueType`` of this ``AttributeType``.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

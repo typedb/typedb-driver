@@ -10,7 +10,7 @@ The metadata and state of an individual raft replica of a database.
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

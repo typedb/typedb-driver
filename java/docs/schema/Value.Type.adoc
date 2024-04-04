@@ -3,10 +3,20 @@
 
 *Package*: `com.vaticle.typedb.driver.api.concept.value`
 
+Used to specify the type of the value. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+thingType.getOwns(transaction, Value.Type.STRING);
+----
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -116,7 +126,7 @@ Returns the enum constant of this type with the specified name. The string must 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

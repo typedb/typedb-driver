@@ -49,6 +49,10 @@ fun replaceSymbolsForAnchor(name: String): String {
         .removeSuffix("_")
 }
 
+fun addZeroWidthWhitespaces(html: String): String {
+    return html.replace(".", "\u200B.")
+}
+
 fun escape(text: String): String {
     return text.replace("|", "\\|")
 }

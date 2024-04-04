@@ -4,7 +4,7 @@
 [caption=""]
 .Namespace variables
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -25,7 +25,7 @@ Creates a connection to TypeDB Cloud, authenticating with the provided credentia
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -52,7 +52,7 @@ Creates a connection to TypeDB.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

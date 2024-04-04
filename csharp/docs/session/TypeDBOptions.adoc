@@ -1,0 +1,606 @@
+[#_TypeDBOptions]
+=== TypeDBOptions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour.
+
+// tag::methods[]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Explain___]
+==== Explain
+
+[source,cs]
+----
+bool? Explain()
+----
+
+
+
+Returns the value set for the explanation in this ``TypeDBOptions`` object. If set to ``true``, explanations for queries are enabled.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Explain();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Explain___bool_explain_]
+==== Explain
+
+[source,cs]
+----
+TypeDBOptions Explain(bool explain)
+----
+
+
+
+Explicitly enables or disables explanations. If set to ``true``, enables explanations for queries. Only affects read transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explain` a| Explicitly enable or disable explanations a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Explain(explain);
+----
+
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Infer___]
+==== Infer
+
+[source,cs]
+----
+bool? Infer()
+----
+
+
+
+Returns the value set for the inference in this ``TypeDBOptions`` object.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Infer();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Infer___bool_infer_]
+==== Infer
+
+[source,cs]
+----
+TypeDBOptions Infer(bool infer)
+----
+
+
+
+Explicitly enables or disables inference. Only settable at transaction level and above. Only affects read transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `infer` a| Explicitly enable or disable inference a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Infer(infer);
+----
+
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Parallel___]
+==== Parallel
+
+[source,cs]
+----
+bool? Parallel()
+----
+
+
+
+Returns the value set for the parallel execution in this ``TypeDBOptions`` object. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Parallel();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Parallel___bool_parallel_]
+==== Parallel
+
+[source,cs]
+----
+TypeDBOptions Parallel(bool parallel)
+----
+
+
+
+Explicitly enables or disables parallel execution. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `parallel` a| Explicitly enable or disable parallel execution a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Parallel(parallel);
+----
+
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Prefetch___]
+==== Prefetch
+
+[source,cs]
+----
+bool? Prefetch()
+----
+
+
+
+Returns the value set for the prefetching in this ``TypeDBOptions`` object. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Prefetch();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Prefetch___bool_prefetch_]
+==== Prefetch
+
+[source,cs]
+----
+TypeDBOptions Prefetch(bool prefetch)
+----
+
+
+
+Explicitly enables or disables prefetching. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetch` a| Explicitly enable or disable prefetching a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.Prefetch(prefetch);
+----
+
+[#_int_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___]
+==== PrefetchSize
+
+[source,cs]
+----
+int? PrefetchSize()
+----
+
+
+
+Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+
+[caption=""]
+.Returns
+`int?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.PrefetchSize();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___int_prefetchSize_]
+==== PrefetchSize
+
+[source,cs]
+----
+TypeDBOptions PrefetchSize(int prefetchSize)
+----
+
+
+
+Explicitly sets a prefetch size. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| `int`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.PrefetchSize(prefetchSize);
+----
+
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___]
+==== ReadAnyReplica
+
+[source,cs]
+----
+bool? ReadAnyReplica()
+----
+
+
+
+Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.ReadAnyReplica();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___bool_readAnyReplica_]
+==== ReadAnyReplica
+
+[source,cs]
+----
+TypeDBOptions ReadAnyReplica(bool readAnyReplica)
+----
+
+
+
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.ReadAnyReplica(readAnyReplica);
+----
+
+[#_int_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___]
+==== SchemaLockAcquireTimeoutMillis
+
+[source,cs]
+----
+int? SchemaLockAcquireTimeoutMillis()
+----
+
+
+
+Returns the value set for the schema lock acquire timeout in this ``TypeDBOptions`` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+
+[caption=""]
+.Returns
+`int?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SchemaLockAcquireTimeoutMillis();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___int_schemaLockAcquireTimeoutMillis_]
+==== SchemaLockAcquireTimeoutMillis
+
+[source,cs]
+----
+TypeDBOptions SchemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis)
+----
+
+
+
+Explicitly sets schema lock acquire timeout. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock. a| `int`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
+[#_int_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___]
+==== SessionIdleTimeoutMillis
+
+[source,cs]
+----
+int? SessionIdleTimeoutMillis()
+----
+
+
+
+Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+
+[caption=""]
+.Returns
+`int?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SessionIdleTimeoutMillis();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___int_sessionIdleTimeoutMillis_]
+==== SessionIdleTimeoutMillis
+
+[source,cs]
+----
+TypeDBOptions SessionIdleTimeoutMillis(int sessionIdleTimeoutMillis)
+----
+
+
+
+Explicitly sets a session idle timeout. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. a| `int`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.SessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
+----
+
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_TraceInference___]
+==== TraceInference
+
+[source,cs]
+----
+bool? TraceInference()
+----
+
+
+
+Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory.
+
+
+[caption=""]
+.Returns
+`bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TraceInference();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TraceInference___bool_traceInference_]
+==== TraceInference
+
+[source,cs]
+----
+TypeDBOptions TraceInference(bool traceInference)
+----
+
+
+
+Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `bool`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TraceInference(traceInference);
+----
+
+[#_int_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___]
+==== TransactionTimeoutMillis
+
+[source,cs]
+----
+int? TransactionTimeoutMillis()
+----
+
+
+
+Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+
+[caption=""]
+.Returns
+`int?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TransactionTimeoutMillis();
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___int_transactionTimeoutMillis_]
+==== TransactionTimeoutMillis
+
+[source,cs]
+----
+TypeDBOptions TransactionTimeoutMillis(int transactionTimeoutMillis)
+----
+
+
+
+Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically. a| `int`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.TransactionTimeoutMillis(transactionTimeoutMillis);
+----
+
+[#_TypeDB_Driver_Api_TypeDBOptions_TypeDBOptions___]
+==== TypeDBOptions
+
+[source,cs]
+----
+TypeDBOptions()
+----
+
+
+
+Produces a new ``TypeDBOptions`` object.
+
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDBOptions options = TypeDBOptions();
+----
+
+// end::methods[]
+

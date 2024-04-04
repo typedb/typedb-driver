@@ -15,7 +15,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

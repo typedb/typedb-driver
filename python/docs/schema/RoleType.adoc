@@ -43,7 +43,7 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -74,7 +74,7 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -105,7 +105,7 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -136,7 +136,7 @@ Retrieves the ``RelationType`` that this role is directly related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -166,7 +166,7 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -196,7 +196,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -227,7 +227,7 @@ Retrieves the most immediate supertype of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -257,7 +257,7 @@ Retrieves all supertypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

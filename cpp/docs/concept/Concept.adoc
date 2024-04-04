@@ -25,6 +25,13 @@ Casts the concept to ``Attribute``.
 .Returns
 `Attribute*`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asAttribute();
+----
+
 [#_AttributeType__ptr__TypeDBConceptasAttributeType___]
 ==== asAttributeType
 
@@ -41,6 +48,13 @@ Casts the concept to ``EntityType``.
 [caption=""]
 .Returns
 `AttributeType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntityType();
+----
 
 [#_Entity__ptr__TypeDBConceptasEntity___]
 ==== asEntity
@@ -59,6 +73,13 @@ Casts the concept to ``Entity``.
 .Returns
 `Entity*`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntity();
+----
+
 [#_EntityType__ptr__TypeDBConceptasEntityType___]
 ==== asEntityType
 
@@ -75,6 +96,13 @@ Casts the concept to ``EntityType``.
 [caption=""]
 .Returns
 `EntityType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntityType();
+----
 
 [#_Relation__ptr__TypeDBConceptasRelation___]
 ==== asRelation
@@ -93,6 +121,13 @@ Casts the concept to ``Relation``.
 .Returns
 `Relation*`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRelation();
+----
+
 [#_RelationType__ptr__TypeDBConceptasRelationType___]
 ==== asRelationType
 
@@ -109,6 +144,13 @@ Casts the concept to ``RelationType``.
 [caption=""]
 .Returns
 `RelationType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRelationType();
+----
 
 [#_RoleType__ptr__TypeDBConceptasRoleType___]
 ==== asRoleType
@@ -127,6 +169,13 @@ Casts the concept to ``RoleType``.
 .Returns
 `RoleType*`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRoleType();
+----
+
 [#_Thing__ptr__TypeDBConceptasThing___]
 ==== asThing
 
@@ -143,6 +192,13 @@ Casts the concept to ``Thing``.
 [caption=""]
 .Returns
 `Thing*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asThing();
+----
 
 [#_ThingType__ptr__TypeDBConceptasThingType___]
 ==== asThingType
@@ -161,6 +217,13 @@ Casts the concept to ``ThingType``.
 .Returns
 `ThingType*`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asThingType();
+----
+
 [#_Value__ptr__TypeDBConceptasValue___]
 ==== asValue
 
@@ -177,6 +240,13 @@ Casts the concept to ``Value``.
 [caption=""]
 .Returns
 `Value*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asValue();
+----
 
 [#_static_bool_TypeDBConceptequals___Concept__ptr__first__Concept__ptr__second_]
 ==== equals
@@ -211,6 +281,13 @@ Returns the ConceptType of this concept.
 .Returns
 `ConceptType`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+switch(concept.getConceptType()) { ... }
+----
+
 [#_bool_TypeDBConceptisAttribute___]
 ==== isAttribute
 
@@ -227,6 +304,13 @@ Checks if the concept is a ``Relation``.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRelation();
+----
 
 [#_bool_TypeDBConceptisAttributeType___]
 ==== isAttributeType
@@ -245,6 +329,13 @@ Checks if the concept is an ``AttributeType``.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isAttributeType();
+----
+
 [#_bool_TypeDBConceptisEntity___]
 ==== isEntity
 
@@ -261,6 +352,13 @@ Checks if the concept is an ``Entity``.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isEntity();
+----
 
 [#_bool_TypeDBConceptisEntityType___]
 ==== isEntityType
@@ -279,6 +377,13 @@ Checks if the concept is an ``EntityType``.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isEntityType();
+----
+
 [#_bool_TypeDBConceptisRelation___]
 ==== isRelation
 
@@ -295,6 +400,13 @@ Checks if the concept is a ``Value``.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isValue();
+----
 
 [#_bool_TypeDBConceptisRelationType___]
 ==== isRelationType
@@ -313,6 +425,13 @@ Checks if the concept is a ``RelationType``.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRelationType();
+----
+
 [#_bool_TypeDBConceptisRoleType___]
 ==== isRoleType
 
@@ -329,6 +448,13 @@ Checks if the concept is a ``RoleType``.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRoleType();
+----
 
 [#_bool_TypeDBConceptisThing___]
 ==== isThing
@@ -347,6 +473,13 @@ Checks if the concept is a ``Thing``.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isThing();
+----
+
 [#_bool_TypeDBConceptisThingType___]
 ==== isThingType
 
@@ -364,6 +497,13 @@ Checks if the concept is a ``ThingType``.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isThingType();
+----
+
 [#_bool_TypeDBConceptisValue___]
 ==== isValue
 
@@ -380,6 +520,13 @@ Checks if the concept is a ``Value``.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isValue();
+----
 
 [#_bool_TypeDBConceptoperator___const_Concept__other_]
 ==== operator==

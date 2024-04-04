@@ -96,7 +96,7 @@ Creates a new TypeDB Cloud connection.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -140,7 +140,7 @@ Creates a new TypeDB Server connection.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

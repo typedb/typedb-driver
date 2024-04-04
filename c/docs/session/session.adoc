@@ -27,7 +27,7 @@ This enum is used to specify the type of the session.
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -115,14 +115,14 @@ Opens a session to the given database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `databases` a| The ``DatabaseManager`` object on this connection. a| 
-a| `database_name` a| The name of the database with which the session connects a| 
-a| `session_type` a| The type of session to be created (Schema or Data) a| 
-a| `options` a| ``Options`` for this session a| 
+a| `databases` a| The ``DatabaseManager`` object on this connection. a| `struct DatabaseManager*`
+a| `database_name` a| The name of the database with which the session connects a| `const char*`
+a| `session_type` a| The type of session to be created (Schema or Data) a| `enum SessionType`
+a| `options` a| ``Options`` for this session a| `const struct Options*`
 |===
 
 [caption=""]
@@ -144,12 +144,12 @@ Registers a callback function which will be executed when this session is closed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `session` a| The session on which to register the callback a| 
-a| `data` a| The argument to be passed to the callback function when it is executed a| 
+a| `session` a| The session on which to register the callback a| `const struct Session*`
+a| `data` a| The argument to be passed to the callback function when it is executed a| `void*`
 a| `callback` a| The function to be called a| 
 a| `finished` a| A function which will be executed when the session is destroyed, allowing cleanup a| 
 |===
@@ -173,12 +173,12 @@ Registers a callback function which will be executed when this session is reopen
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `session` a| The session on which to register the callback a| 
-a| `data` a| The argument to be passed to the callback function when it is executed a| 
+a| `session` a| The session on which to register the callback a| `const struct Session*`
+a| `data` a| The argument to be passed to the callback function when it is executed a| `void*`
 a| `callback` a| The function to be called a| 
 a| `finished` a| A function which will be executed when the session is destroyed, allowing cleanup a| 
 |===

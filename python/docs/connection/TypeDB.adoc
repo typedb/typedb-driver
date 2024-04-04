@@ -14,7 +14,7 @@ Creates a connection to TypeDB Cloud, authenticating with the provided credentia
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -38,7 +38,7 @@ Creates a connection to TypeDB.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

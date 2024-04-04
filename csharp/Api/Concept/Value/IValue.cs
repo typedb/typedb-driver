@@ -176,6 +176,14 @@ namespace TypeDB.Driver.Api
          */
         System.DateTime AsDateTime();
 
+        /**
+         * Used to specify the type of the value.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetOwns(transaction, IValue.ValueType.String);
+         * </pre>
+         */
         public enum ValueType
         {
             Object = Pinvoke.ValueType.Object,
@@ -187,6 +195,9 @@ namespace TypeDB.Driver.Api
         }
     }
 
+    /**
+     * Extension class with additional methods describing characteristics of <code>ValueType</code> enum values.
+     */
     public static class ValueTypeExtensions
     {
         /**

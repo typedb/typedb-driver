@@ -10,7 +10,7 @@ Roles are special internal types used by relations. We can not create an instanc
 [caption=""]
 .Namespace variables
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -262,7 +262,7 @@ Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -292,7 +292,7 @@ Checks if this concept is equal to the argument ``concept``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -315,7 +315,7 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -345,7 +345,7 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -376,7 +376,7 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -406,7 +406,7 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -437,7 +437,7 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -467,7 +467,7 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -498,7 +498,7 @@ Retrieves the ``RelationType`` that this role is directly related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -528,7 +528,7 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -558,7 +558,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -588,7 +588,7 @@ Retrieves the most immediate supertype of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -618,7 +618,7 @@ Retrieves all supertypes of the type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -690,7 +690,7 @@ Check if the concept has been deleted
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -902,7 +902,7 @@ Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

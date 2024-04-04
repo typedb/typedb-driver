@@ -149,14 +149,14 @@ Updates the password for the current authenticated user.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `user` a| The user to update the password of - must be the current user. a| 
-a| `user_manager` a| The ``UserManager`` object on this connection. a| 
-a| `password_old` a| The current password of this user a| 
-a| `password_new` a| The new password a| 
+a| `user` a| The user to update the password of - must be the current user. a| `struct User*`
+a| `user_manager` a| The ``UserManager`` object on this connection. a| `const struct UserManager*`
+a| `password_old` a| The current password of this user a| `const char*`
+a| `password_new` a| The new password a| `const char*`
 |===
 
 [caption=""]
@@ -274,13 +274,13 @@ Sets a new password for a user. This operation can only be performed by administ
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `user_manager` a| The UserManager object to be used. This must be on a connection opened by an administrator. a| 
-a| `username` a| The name of the user to set the password of a| 
-a| `password` a| The new password a| 
+a| `user_manager` a| The UserManager object to be used. This must be on a connection opened by an administrator. a| `const struct UserManager*`
+a| `username` a| The name of the user to set the password of a| `const char*`
+a| `password` a| The new password a| `const char*`
 |===
 
 [caption=""]

@@ -114,7 +114,7 @@ namespace TypeDB.Driver.Api
          * Retrieves all direct and indirect subtypes of the type.
          * Equivalent to <code>GetSubtypes(transaction, Transitive)</code>
          *
-         * @see Type#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
+         * @see IType#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
         IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction);
 

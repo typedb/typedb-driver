@@ -20,7 +20,7 @@ Used for specifying whether we need explicit or transitive subtyping, instances,
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

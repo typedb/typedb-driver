@@ -6,7 +6,7 @@ Contains a mapping of variables to concepts.
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -48,7 +48,7 @@ Retrieves a concept for a given variable name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

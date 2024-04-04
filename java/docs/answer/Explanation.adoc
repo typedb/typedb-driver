@@ -63,7 +63,7 @@ Retrieves the rule variables corresponding to the query variable var for this ``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

@@ -23,7 +23,7 @@ Retrieves an ``Attribute`` by its iid.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -77,7 +77,7 @@ Retrieves an ``AttributeType`` by its label.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -128,7 +128,7 @@ Retrieves an ``Entity`` by its iid.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -182,7 +182,7 @@ Retrieves an ``EntityType`` by its label.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -236,7 +236,7 @@ Retrieves a ``Relation`` by its iid.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -290,7 +290,7 @@ Retrieves a ``RelationType`` by its label.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -371,7 +371,7 @@ Creates a new ``AttributeType`` if none exists with the given label, or retrieve
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -426,7 +426,7 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -480,7 +480,7 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

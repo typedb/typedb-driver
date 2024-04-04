@@ -21,7 +21,6 @@ load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-
 csharp_library(
     name = "query",
     srcs = glob(["*.cs"]),
@@ -33,11 +32,11 @@ csharp_library(
         "//csharp:typedb_driver_pinvoke",
         "@paket.csharp_deps//newtonsoft.json",
     ],
+    out = "TypeDB.Driver.Query",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 
 checkstyle_test(
     name = "checkstyle",

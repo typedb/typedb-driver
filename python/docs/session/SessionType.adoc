@@ -13,7 +13,7 @@ driver.session(database, SessionType.SCHEMA)
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols=","]
 [options="header"]
 |===
 |Name |Value

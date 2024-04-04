@@ -24,10 +24,13 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Common
 {
+    /**
+     * Exceptions raised by the driver.
+     */
     public class TypeDBDriverException : System.Exception
     {
         /**
-         * @hidden
+         * @private
          */
         public TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
             : base(error.ToString(errorParams))
@@ -35,7 +38,7 @@ namespace TypeDB.Driver.Common
         }
 
         /**
-         * @hidden
+         * @private
          */
         public TypeDBDriverException(string message)
             : base(message)
@@ -43,7 +46,7 @@ namespace TypeDB.Driver.Common
         }
 
         /**
-         * @hidden
+         * @private
          */
         public TypeDBDriverException(System.Exception error)
             : base(error.Message)
@@ -51,7 +54,7 @@ namespace TypeDB.Driver.Common
         }
 
         /**
-         * @hidden
+         * @private
          */
         public TypeDBDriverException(Pinvoke.Error nativeError)
             : base(nativeError.Message)

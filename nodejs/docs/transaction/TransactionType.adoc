@@ -6,7 +6,7 @@ This class is used to specify the type of transaction.
 [caption=""]
 .Namespace variables
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

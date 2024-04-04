@@ -1,0 +1,29 @@
+[#_Transitivity]
+=== Transitivity
+
+*Package*: `TypeDB.Driver.Api.IConcept`
+
+
+
+This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
+
+
+[caption=""]
+.Examples
+[source,cs]
+----
+attributeType.GetOwners(transaction, annotation, Explicit);
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Explicit`
+a| `Transitive`
+|===
+// end::enum_constants[]
+

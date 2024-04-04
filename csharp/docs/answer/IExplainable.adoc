@@ -1,0 +1,60 @@
+[#_IExplainable]
+=== IExplainable
+
+*Package*: `TypeDB.Driver.Api.IConceptMap`
+
+
+
+Contains an explainable object.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_IConceptMap_IExplainable_Conjunction]
+==== Conjunction
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IConceptMap.IExplainable.Conjunction
+----
+
+
+
+Retrieves the subquery of the original query that is actually being explained.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+explainable.Conjunction;
+----
+
+[#_long_TypeDB_Driver_Api_IConceptMap_IExplainable_Id]
+==== Id
+
+[source,cs]
+----
+long TypeDB.Driver.Api.IConceptMap.IExplainable.Id
+----
+
+
+
+Retrieves the unique ID that identifies this ``IExplainable``.
+
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+explainable.Id;
+----
+
+// end::methods[]
+

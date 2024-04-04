@@ -48,11 +48,11 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations. a| 
+a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations. a| `const struct Annotation*const*`
 |===
 
 [caption=""]

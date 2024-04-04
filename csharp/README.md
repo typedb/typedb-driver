@@ -2,10 +2,25 @@
 The C# driver is based on the cross-platform .NET 6 framework.
 
 ## Use TypeDB Driver for C#
-The driver will be distributed as a [Nuget](https://www.nuget.org/) package. More information will be provided in the next release!
+The driver is distributed as a series of [Nuget](https://www.nuget.org) packages. To use the driver, import the latest versions of [the driver](https://www.nuget.org/packages/TypeDB.Driver) and its [Pinvoke runtime](https://www.nuget.org/packages?q=TypeDB.Driver.Pinvoke) suitable for your platform. Here is an example from a `.csproj` for MacOS x86-64:
+```xml
+<PackageReference Include="TypeDB.Driver" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version={VERSION} />
+```
+
+If you aim to build a platform-independent package, reference all the needed runtimes (it will affect the size of your application by downloading a respective set of platform-specific dynamic libraries):
+```xml
+<PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version={VERSION} />
+<PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version={VERSION} />
+```
+
+See [Examples](#examples) and [API Reference](#api-reference) to set up your first application with the TypeDB driver.
 
 ## API Reference
-Will be added to [the docs](https://typedb.com/docs/drivers/overview) in the next release. The general layout (of classes, their methods and intended usage) resembles the [Java Driver API](https://typedb.com/docs/drivers/java/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using the C# driver, refer to the [API Reference](https://typedb.com/docs/drivers/csharp/api-reference).
 
 ## Driver Architecture
 The C# driver is a thin wrapper around the TypeDB Rust driver, introducing classes for a more intuitive interface. Mostly each C# object holds a reference to the corresponding native Rust object, using an FFI ([SWIG for C#](https://www.swig.org/Doc4.2/SWIGDocumentation.html#CSharp)) for the native object wrappers generation and resource management.
@@ -21,7 +36,8 @@ Any error encountered will throw a `TypeDBDriverException`. Note that methods wh
    ```
    bazel build //csharp:driver-csharp
    ```
-   The C# library will be produced at: `bazel-bin/csharp/driver-csharp/{target_framework}/driver-csharp.dll`
+   All the needed C# libraries will be produced at: `bazel-bin/csharp/`, with the main one being: `bazel-bin/csharp/driver-csharp/{target_framework}/TypeDB.Driver.dll`. 
+3. Examples of building and using Bazel-based C# applications with the produced dependencies can be found in `csharp/Test/Integration/Examples`.
 
 ## Examples
 ### TypeDB Core

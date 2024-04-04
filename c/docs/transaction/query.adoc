@@ -48,12 +48,12 @@ Performs a TypeQL Explain query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `explainable` a| The Explainable to be explained a| 
-a| `options` a| Specify query options a| 
+a| `explainable` a| The Explainable to be explained a| `const struct Explainable*`
+a| `options` a| Specify query options a| `const struct Options*`
 |===
 
 [caption=""]

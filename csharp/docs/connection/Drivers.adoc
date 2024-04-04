@@ -1,0 +1,109 @@
+[#_Drivers]
+=== Drivers
+
+*Package*: `TypeDB.Driver`
+
+// tag::methods[]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver___string_address__TypeDBCredential_credential_]
+==== CloudDriver
+
+[source,cs]
+----
+static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| `string`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+Drivers.CloudDriver(address, credential);
+----
+
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver___ICollection__string___addresses__TypeDBCredential_credential_]
+==== CloudDriver
+
+[source,cs]
+----
+static ITypeDBDriver CloudDriver(ICollection< string > addresses, TypeDBCredential credential)
+----
+
+
+
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The address(es) of the TypeDB server(s) a| `ICollection< string >`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+Drivers.CloudDriver(addresses, credential);
+----
+
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CoreDriver___string_address_]
+==== CoreDriver
+
+[source,cs]
+----
+static ITypeDBDriver CoreDriver(string address)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| `string`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+Drivers.CoreDriver(address);
+----
+
+// end::methods[]
+

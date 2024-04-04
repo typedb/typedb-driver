@@ -25,6 +25,13 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+annotation.isKey();
+----
+
 [#_bool_TypeDBAnnotationisUnique___]
 ==== isUnique
 
@@ -42,6 +49,13 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+annotation.isUnique();
+----
+
 [#_static_Annotation_TypeDBAnnotationkey___]
 ==== key
 
@@ -58,6 +72,13 @@ Produces a ``@key`` annotation.
 [caption=""]
 .Returns
 `static Annotation`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+ThingType.Annotation.key();
+----
 
 [#_stdstring_TypeDBAnnotationtoString___]
 ==== toString
@@ -91,6 +112,13 @@ Produces a ``@unique`` annotation.
 [caption=""]
 .Returns
 `static Annotation`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+Annotation.unique();
+----
 
 // end::methods[]
 

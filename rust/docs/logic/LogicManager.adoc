@@ -21,7 +21,7 @@ Retrieves the Rule that has the given label.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -101,7 +101,7 @@ Creates a new Rule if none exists with the given label, or replaces the existing
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
