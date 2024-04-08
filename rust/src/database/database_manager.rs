@@ -117,7 +117,7 @@ impl DatabaseManager {
                         .map(|db_info| Database::new(db_info, self.connection.clone()))
                         .collect())
                 }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.name(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -143,7 +143,7 @@ impl DatabaseManager {
                         .await
                 }
                 err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.name(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?

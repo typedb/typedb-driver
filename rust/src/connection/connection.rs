@@ -76,7 +76,6 @@ impl Connection {
     /// Connection::new_core("127.0.0.1:1729")
     /// ```
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        let name = address.as_ref().to_owned();
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let mut server_connection = ServerConnection::new_core(background_runtime.clone(), name, address)?;
@@ -128,63 +127,11 @@ impl Connection {
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         let addresses = Self::fetch_current_addresses(background_runtime.clone(), init_addresses, credential.clone())?;
 
-        Self::new_cloud_impl(
-            background_runtime,
-            addresses.into_iter().map(|addr| (addr.to_string(), addr)).collect(),
-            credential,
-        )
-    }
-
-    /// Creates a new TypeDB Cloud connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `addresses` -- Translation map from addresses received from the TypeDB server(s) to
-    /// addresses to be used by the driver for connection
-    /// * `credential` -- User credential and TLS encryption setting
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// Connection::new_cloud(
-    ///     &["localhost:11729", "localhost:21729", "localhost:31729"],
-    ///     Credential::with_tls(
-    ///         "admin",
-    ///         "password",
-    ///         Some(&PathBuf::from(
-    ///             std::env::var("ROOT_CA")
-    ///                 .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
-    ///         )),
-    ///     )?,
-    /// )
-    /// ```
-    pub fn new_cloud_address_map<T: AsRef<str> + Sync, U: AsRef<str> + Sync>(
-        addresses: HashMap<T, U>,
-        credential: Credential,
-    ) -> Result<Self> {
-        let background_runtime = Arc::new(BackgroundRuntime::new()?);
-
-        let server_addresses: HashMap<_, _> = addresses
+        let server_connections: HashMap<Address, ServerConnection> = addresses
             .into_iter()
-            .map(|(name, address)| {
-                let name = name.as_ref().to_owned();
-                address.as_ref().parse::<Address>().map(|address| (name, address))
-            })
-            .try_collect()?;
-
-        Self::new_cloud_impl(background_runtime, server_addresses, credential)
-    }
-
-    fn new_cloud_impl(
-        background_runtime: Arc<BackgroundRuntime>,
-        server_addresses: HashMap<String, Address>,
-        credential: Credential,
-    ) -> Result<Self> {
-        let server_connections: HashMap<String, ServerConnection> = server_addresses
-            .into_iter()
-            .map(|(name, address)| {
-                ServerConnection::new_cloud(background_runtime.clone(), name.clone(), address, credential.clone())
-                    .map(|server_connection| (name, server_connection))
+            .map(|address| {
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone())
+                    .map(|server_connection| (address, server_connection))
             })
             .try_collect()?;
 
@@ -210,12 +157,8 @@ impl Connection {
         credential: Credential,
     ) -> Result<HashSet<Address>> {
         for address in &addresses {
-            let server_connection = ServerConnection::new_cloud(
-                background_runtime.clone(),
-                address.to_string(),
-                address.clone(),
-                credential.clone(),
-            );
+            let server_connection =
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -275,12 +218,14 @@ impl Connection {
         self.server_connections.len()
     }
 
-    pub(crate) fn server_names(&self) -> impl Iterator<Item = &str> {
-        self.server_connections.keys().map(|name| name.as_str())
+    pub(crate) fn addresses(&self) -> impl Iterator<Item = &Address> {
+        self.server_connections.keys()
     }
 
-    pub(crate) fn connection(&self, address: &str) -> Option<&ServerConnection> {
-        self.server_connections.get(address)
+    pub(crate) fn connection(&self, address: &Address) -> Result<&ServerConnection> {
+        self.server_connections
+            .get(address)
+            .ok_or_else(|| InternalError::UnknownConnectionAddress { address: address.clone() }.into())
     }
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = &ServerConnection> + '_ {
@@ -292,7 +237,9 @@ impl Connection {
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailedStatusError { error: self.server_names().join(", ") })
+        Error::Connection(ConnectionError::ServerConnectionFailedStatusError {
+            error: self.addresses().map(Address::to_string).collect::<Vec<_>>().join(", "),
+        })
     }
 }
 
@@ -304,26 +251,22 @@ impl fmt::Debug for Connection {
 
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
-    name: String,
+    address: Address,
     background_runtime: Arc<BackgroundRuntime>,
     open_sessions: Arc<Mutex<HashMap<SessionID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
 }
 
 impl ServerConnection {
-    fn new_core(background_runtime: Arc<BackgroundRuntime>, name: String, address: Address) -> Result<Self> {
-        let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
-        Ok(Self { name, background_runtime, open_sessions: Default::default(), request_transmitter })
+    fn new_core(background_runtime: Arc<BackgroundRuntime>, address: Address) -> Result<Self> {
+        let request_transmitter = Arc::new(RPCTransmitter::start_core(address.clone(), &background_runtime)?);
+        Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    fn new_cloud(
-        background_runtime: Arc<BackgroundRuntime>,
-        name: String,
-        address: Address,
-        credential: Credential,
-    ) -> Result<Self> {
-        let request_transmitter = Arc::new(RPCTransmitter::start_cloud(address, credential, &background_runtime)?);
-        Ok(Self { name, background_runtime, open_sessions: Default::default(), request_transmitter })
+    fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> Result<Self> {
+        let request_transmitter =
+            Arc::new(RPCTransmitter::start_cloud(address.clone(), credential, &background_runtime)?);
+        Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
     pub(crate) fn validate(&self) -> Result {
@@ -333,12 +276,12 @@ impl ServerConnection {
         }
     }
 
-    fn set_name(&mut self, name: String) {
-        self.name = name;
+    fn set_address(&mut self, address: Address) {
+        self.address = address;
     }
 
-    pub(crate) fn name(&self) -> &str {
-        &self.name
+    pub(crate) fn address(&self) -> &Address {
+        &self.address
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -452,7 +395,7 @@ impl ServerConnection {
                     pulse_shutdown_source,
                 ));
                 Ok(SessionInfo {
-                    server_name: self.name.clone(),
+                    address: self.address.clone(),
                     session_id,
                     network_latency: start.elapsed().saturating_sub(server_duration),
                     on_close_register_sink,
@@ -567,7 +510,7 @@ impl ServerConnection {
 impl fmt::Debug for ServerConnection {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("ServerConnection")
-            .field("name", &self.name)
+            .field("address", &self.address)
             .field("open_sessions", &self.open_sessions)
             .finish()
     }

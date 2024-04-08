@@ -25,6 +25,7 @@ use log::{debug, error};
 
 use crate::{
     common::{
+        address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
@@ -181,15 +182,11 @@ impl Database {
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
-            let Some(database) = replica.database.clone() else {
-                debug!("Skipping replica @ {} (address translation not found)", replica.server_name);
-                continue;
-            };
-            match task(database).await {
+            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.server_name);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
                 }
                 res => return res,
             }
@@ -207,11 +204,9 @@ impl Database {
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
 
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            let Some(database) = primary_replica.database.clone() else {
-                error!("Address translation not found for primary replica @ {} ", primary_replica.server_name);
-                return Err(self.connection.unable_to_connect_error());
-            };
-            match task(database).await {
+            match task(primary_replica.database.clone(), self.connection.connection(&primary_replica.address)?.clone())
+                .await
+            {
                 Err(Error::Connection(
                     ConnectionError::CloudReplicaNotPrimary
                     | ConnectionError::ServerConnectionFailedStatusError { .. }
@@ -264,8 +259,8 @@ impl fmt::Debug for Database {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
-    /// Retrieves the name of the server hosting this replica
-    server_name: String,
+    /// Retrieves address of the server hosting this replica
+    address: Address,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -281,7 +276,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: Option<ServerConnection>) -> Self {
         Self {
-            server_name: metadata.server_name,
+            address: metadata.address,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -295,15 +290,15 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.server_name).cloned();
-                Self::new(database_info.name.clone(), replica, server_connection)
+                let server_connection = connection.connection(&replica.address)?.clone();
+                Ok(Self::new(database_info.name.clone(), replica, server_connection))
             })
             .collect()
     }
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            server_name: self.server_name.clone(),
+            address: self.address.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -326,7 +321,7 @@ impl Replica {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name,
-                        server_connection.name()
+                        server_connection.address()
                     );
                 }
                 Err(err) => return Err(err),
@@ -339,7 +334,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("address", &self.server_name)
+            .field("address", &self.address)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)

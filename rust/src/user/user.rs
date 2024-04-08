@@ -58,7 +58,7 @@ impl User {
                 .await
             {
                 Ok(()) => return Ok(()),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.name(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
         Err(ConnectionError::CloudAllNodesFailed { errors: error_buffer.join("\n") })?
