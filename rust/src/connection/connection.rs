@@ -76,22 +76,22 @@ impl Connection {
     /// Connection::new_core("127.0.0.1:1729")
     /// ```
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        let name = address.as_ref().to_string();
-        let address: Address = name.parse()?;
+        let id = address.as_ref().to_string();
+        let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), name, address)?;
+        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), id, address)?;
 
-        let advertised_name = server_connection
+        let advertised_id = server_connection
             .servers_all()?
             .into_iter()
             .exactly_one()
             .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?
             .to_string();
-        server_connection.set_name(advertised_name.clone());
+        server_connection.set_id(advertised_id.clone());
 
         match server_connection.validate() {
             Ok(()) => Ok(Self {
-                server_connections: [(advertised_name, server_connection)].into(),
+                server_connections: [(advertised_id, server_connection)].into(),
                 background_runtime,
                 username: None,
                 is_cloud: false,
@@ -151,7 +151,7 @@ impl Connection {
             Ok(Self {
                 server_connections,
                 background_runtime,
-                username: Some(credential.username().to_string()),
+                username: Some(credential.username().to_owned()),
                 is_cloud: true,
             })
         }
@@ -243,7 +243,7 @@ impl Connection {
     }
 
     pub(crate) fn username(&self) -> Option<&str> {
-        self.username.as_ref().map(|s| s.as_ref())
+        self.username.as_deref()
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
@@ -261,26 +261,26 @@ impl fmt::Debug for Connection {
 
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
-    name: String,
+    id: String,
     background_runtime: Arc<BackgroundRuntime>,
     open_sessions: Arc<Mutex<HashMap<SessionID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
 }
 
 impl ServerConnection {
-    fn new_core(background_runtime: Arc<BackgroundRuntime>, name: String, address: Address) -> Result<Self> {
+    fn new_core(background_runtime: Arc<BackgroundRuntime>, id: String, address: Address) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
-        Ok(Self { name, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self { id, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
     fn new_cloud(
         background_runtime: Arc<BackgroundRuntime>,
-        name: String,
+        id: String,
         address: Address,
         credential: Credential,
     ) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_cloud(address, credential, &background_runtime)?);
-        Ok(Self { name, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self { id, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
     pub(crate) fn validate(&self) -> Result {
@@ -290,12 +290,12 @@ impl ServerConnection {
         }
     }
 
-    fn set_name(&mut self, name: String) {
-        self.name = name;
+    fn set_id(&mut self, id: String) {
+        self.id = id;
     }
 
-    pub(crate) fn address(&self) -> &str {
-        &self.name
+    pub(crate) fn id(&self) -> &str {
+        &self.id
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -409,7 +409,7 @@ impl ServerConnection {
                     pulse_shutdown_source,
                 ));
                 Ok(SessionInfo {
-                    server_name: self.name.clone(),
+                    server_id: self.id.clone(),
                     session_id,
                     network_latency: start.elapsed().saturating_sub(server_duration),
                     on_close_register_sink,
@@ -523,10 +523,7 @@ impl ServerConnection {
 
 impl fmt::Debug for ServerConnection {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("ServerConnection")
-            .field("address", &self.name)
-            .field("open_sessions", &self.open_sessions)
-            .finish()
+        f.debug_struct("ServerConnection").field("id", &self.id).field("open_sessions", &self.open_sessions).finish()
     }
 }
 

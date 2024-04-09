@@ -185,7 +185,7 @@ impl Database {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.server_name);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.server_id);
                 }
                 res => return res,
             }
@@ -256,8 +256,8 @@ impl fmt::Debug for Database {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
-    /// Retrieves address of the server hosting this replica
-    server_name: String,
+    /// Retrieves id of the server hosting this replica
+    server_id: String,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -273,7 +273,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            server_name: metadata.server_name,
+            server_id: metadata.server_id,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -287,7 +287,7 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.server_name)?.clone();
+                let server_connection = connection.connection(&replica.server_id)?.clone();
                 Ok(Self::new(database_info.name.clone(), replica, server_connection))
             })
             .collect()
@@ -295,7 +295,7 @@ impl Replica {
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            server_name: self.server_name.clone(),
+            server_id: self.server_id.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -318,7 +318,7 @@ impl Replica {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name,
-                        server_connection.address()
+                        server_connection.id()
                     );
                 }
                 Err(err) => return Err(err),
@@ -331,7 +331,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("address", &self.server_name)
+            .field("server_id", &self.server_id)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)
