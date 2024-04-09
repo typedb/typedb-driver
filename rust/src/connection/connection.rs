@@ -156,9 +156,9 @@ impl Connection {
             .try_collect()?;
 
         let translated: HashSet<String> = server_to_address.keys().cloned().collect();
-        let unmapped = &servers - &translated;
         let unknown = &translated - &servers;
-        if !unmapped.is_empty() && !unknown.is_empty() {
+        let unmapped = &servers - &translated;
+        if !unknown.is_empty() && !unmapped.is_empty() {
             return Err(ConnectionError::AddressTranslationMismatch { unknown, unmapped }.into());
         }
 
