@@ -137,6 +137,33 @@ impl Connection {
         Self::new_cloud_impl(server_to_address, background_runtime, credential)
     }
 
+    /// Creates a new TypeDB Cloud connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `address_translation` -- Translation map from addresses received from the TypeDB server(s)
+    /// to addresses to be used by the driver for connection
+    /// * `credential` -- User credential and TLS encryption setting
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// Connection::new_cloud(
+    ///     [
+    ///         ("typedb-cloud.ext:11729", "localhost:11729"), 
+    ///         ("typedb-cloud.ext:21729", "localhost:21729"), 
+    ///         ("typedb-cloud.ext:31729", "localhost:31729"),
+    ///     ].into(),
+    ///     Credential::with_tls(
+    ///         "admin",
+    ///         "password",
+    ///         Some(&PathBuf::from(
+    ///             std::env::var("ROOT_CA")
+    ///                 .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
+    ///         )),
+    ///     )?,
+    /// )
+    /// ```
     pub fn new_cloud_address_map<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
     where
         T: AsRef<str> + Sync,
