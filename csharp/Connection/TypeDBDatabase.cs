@@ -169,7 +169,7 @@ namespace TypeDB.Driver.Connection
 
         public class Replica : NativeObjectWrapper<Pinvoke.ReplicaInfo>, IDatabase.IReplica
         {
-            private string? _address;
+            private string? _serverID;
             private long? _term;
 
             public Replica(Pinvoke.ReplicaInfo replicaInfo)
@@ -186,9 +186,9 @@ namespace TypeDB.Driver.Connection
                 return Pinvoke.typedb_driver.replica_info_is_preferred(NativeObject);
             }
 
-            public string Address
+            public string ServerID
             {
-                get { return _address ?? (_address = Pinvoke.typedb_driver.replica_info_get_server_id(NativeObject)); }
+                get { return _serverID ?? (_serverID = Pinvoke.typedb_driver.replica_info_get_server_id(NativeObject)); }
             }
 
             public long Term

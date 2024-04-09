@@ -114,7 +114,7 @@ namespace TypeDB.Driver.Api
             /**
              * Retrieves the address of the server hosting this replica.
              */
-            public string Address { get; }
+            public string ServerID { get; }
 
             /**
              * The raft protocol ‘term’ of this replica.
