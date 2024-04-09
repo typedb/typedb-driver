@@ -28,8 +28,6 @@ import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
