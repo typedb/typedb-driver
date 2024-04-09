@@ -19,13 +19,16 @@
 
 use std::path::PathBuf;
 
+use futures::StreamExt;
 use serial_test::serial;
-use typedb_driver::{Connection, Credential};
+use typedb_driver::{Connection, Credential, DatabaseManager, Session, SessionType::Data, TransactionType::Write};
 
-#[test]
+use super::common;
+
+#[tokio::test]
 #[serial]
-fn address_translation() {
-    Connection::new_cloud_address_map(
+async fn address_translation() {
+    let connection = Connection::new_cloud_address_map(
         [
             ("localhost:11729", "localhost:11729"),
             ("localhost:21729", "localhost:21729"),
@@ -42,4 +45,16 @@ fn address_translation() {
         .unwrap(),
     )
     .unwrap();
+
+    common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await.unwrap();
+    let databases = DatabaseManager::new(connection);
+    assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
+
+    let session = Session::new(databases.get(common::TEST_DATABASE).await.unwrap(), Data).await.unwrap();
+    let transaction = session.transaction(Write).await.unwrap();
+    let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
+    let results: Vec<_> = answer_stream.collect().await;
+    transaction.commit().await.unwrap();
+    assert_eq!(results.len(), 5);
+    assert!(results.into_iter().all(|res| res.is_ok()));
 }
