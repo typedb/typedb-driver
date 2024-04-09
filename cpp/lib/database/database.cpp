@@ -33,7 +33,7 @@ ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
 
 std::string ReplicaInfo::address() {
     CHECK_NATIVE(replicaInfoNative);
-    return Utils::stringFromNative(_native::replica_info_get_address(replicaInfoNative.get()));
+    return Utils::stringFromNative(_native::replica_info_get_server_id(replicaInfoNative.get()));
 }
 
 bool ReplicaInfo::isPrimary() {

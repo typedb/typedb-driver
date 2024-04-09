@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Connection
 
             public string Address
             {
-                get { return _address ?? (_address = Pinvoke.typedb_driver.replica_info_get_address(NativeObject)); }
+                get { return _address ?? (_address = Pinvoke.typedb_driver.replica_info_get_server_id(NativeObject)); }
             }
 
             public long Term

@@ -136,7 +136,7 @@
 %nojavaexception user_get_username;
 %nojavaexception user_get_password_expiry_seconds;
 
-%nojavaexception replica_info_get_address;
+%nojavaexception replica_info_get_server_id;
 %nojavaexception replica_info_is_primary;
 %nojavaexception replica_info_is_preferred;
 %nojavaexception replica_info_get_term;
