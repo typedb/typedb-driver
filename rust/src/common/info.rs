@@ -39,7 +39,7 @@ pub(crate) struct DatabaseInfo {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Debug)]
 pub struct ReplicaInfo {
-    /// The address of the server hosting this replica
+    /// The server hosting this replica
     pub server_id: String,
     /// Whether this is the primary replica of the raft cluster.
     pub is_primary: bool,
