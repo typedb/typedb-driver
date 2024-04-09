@@ -17,8 +17,9 @@
  * under the License.
  */
 
-use std::{collections::HashMap, ffi::c_char, path::Path};
+use std::{ffi::c_char, path::Path};
 
+use itertools::Itertools;
 use typedb_driver::{Connection, Credential};
 
 use super::{
@@ -62,8 +63,7 @@ pub extern "C" fn connection_open_cloud_translated(
     translated_addresses: *const *const c_char,
     credential: *const Credential,
 ) -> *mut Connection {
-    let addresses: HashMap<&str, &str> =
-        string_array_view(advertised_addresses).zip(string_array_view(translated_addresses)).collect();
+    let addresses = string_array_view(advertised_addresses).zip_eq(string_array_view(translated_addresses)).collect();
     try_release(Connection::new_cloud_address_map(addresses, borrow(credential).clone()))
 }
 
