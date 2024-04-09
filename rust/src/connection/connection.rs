@@ -150,8 +150,8 @@ impl Connection {
     /// ```rust
     /// Connection::new_cloud_with_translation(
     ///     [
-    ///         ("typedb-cloud.ext:11729", "localhost:11729"), 
-    ///         ("typedb-cloud.ext:21729", "localhost:21729"), 
+    ///         ("typedb-cloud.ext:11729", "localhost:11729"),
+    ///         ("typedb-cloud.ext:21729", "localhost:21729"),
     ///         ("typedb-cloud.ext:31729", "localhost:31729"),
     ///     ].into(),
     ///     Credential::with_tls(
@@ -294,10 +294,8 @@ impl Connection {
         self.server_connections.keys().map(String::as_str)
     }
 
-    pub(crate) fn connection(&self, id: &str) -> Result<&ServerConnection> {
-        self.server_connections
-            .get(id)
-            .ok_or_else(|| InternalError::UnknownConnectionAddress { address: id.to_owned() }.into())
+    pub(crate) fn connection(&self, id: &str) -> Option<&ServerConnection> {
+        self.server_connections.get(id)
     }
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = (&str, &ServerConnection)> + '_ {

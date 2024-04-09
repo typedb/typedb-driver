@@ -30,6 +30,7 @@ use crate::{
         Error, Result,
     },
     connection::ServerConnection,
+    error::InternalError,
     Connection,
 };
 
@@ -283,8 +284,10 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.server_id)?.clone();
-                Ok(Self::new(database_info.name.clone(), replica, server_connection))
+                let server_connection = connection
+                    .connection(&replica.server_id)
+                    .ok_or_else(|| InternalError::UnknownServer { server_id: replica.server_id.clone() })?;
+                Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
             })
             .collect()
     }
