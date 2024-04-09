@@ -28,7 +28,7 @@ use super::common;
 #[tokio::test]
 #[serial]
 async fn address_translation() {
-    let connection = Connection::new_cloud_address_map(
+    let connection = Connection::new_cloud_with_translation(
         [
             ("localhost:11729", "localhost:11729"),
             ("localhost:21729", "localhost:21729"),

@@ -148,7 +148,7 @@ impl Connection {
     /// # Examples
     ///
     /// ```rust
-    /// Connection::new_cloud(
+    /// Connection::new_cloud_with_translation(
     ///     [
     ///         ("typedb-cloud.ext:11729", "localhost:11729"), 
     ///         ("typedb-cloud.ext:21729", "localhost:21729"), 
@@ -164,7 +164,7 @@ impl Connection {
     ///     )?,
     /// )
     /// ```
-    pub fn new_cloud_address_map<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
+    pub fn new_cloud_with_translation<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
     where
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,

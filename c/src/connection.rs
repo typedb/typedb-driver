@@ -64,7 +64,7 @@ pub extern "C" fn connection_open_cloud_translated(
     credential: *const Credential,
 ) -> *mut Connection {
     let addresses = string_array_view(advertised_addresses).zip_eq(string_array_view(translated_addresses)).collect();
-    try_release(Connection::new_cloud_address_map(addresses, borrow(credential).clone()))
+    try_release(Connection::new_cloud_with_translation(addresses, borrow(credential).clone()))
 }
 
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
