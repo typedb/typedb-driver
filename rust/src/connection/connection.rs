@@ -79,7 +79,7 @@ impl Connection {
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), id, address)?;
+        let server_connection = ServerConnection::new_core(background_runtime.clone(), address)?;
 
         let advertised_id = server_connection
             .servers_all()?
@@ -87,7 +87,6 @@ impl Connection {
             .exactly_one()
             .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?
             .to_string();
-        server_connection.set_id(advertised_id.clone());
 
         match server_connection.validate() {
             Ok(()) => Ok(Self {
@@ -131,13 +130,42 @@ impl Connection {
         let server_connections: HashMap<String, ServerConnection> = addresses
             .into_iter()
             .map(|address| {
-                ServerConnection::new_cloud(
-                    background_runtime.clone(),
-                    address.to_string(),
-                    address.clone(),
-                    credential.clone(),
-                )
-                .map(|server_connection| (address.to_string(), server_connection))
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone())
+                    .map(|server_connection| (address.to_string(), server_connection))
+            })
+            .try_collect()?;
+
+        let errors: Vec<Error> =
+            server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
+        if errors.len() == server_connections.len() {
+            Err(ConnectionError::CloudAllNodesFailed {
+                errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
+            })?
+        } else {
+            Ok(Self {
+                server_connections,
+                background_runtime,
+                username: Some(credential.username().to_owned()),
+                is_cloud: true,
+            })
+        }
+    }
+
+    pub fn new_cloud_address_map<T, U>(init_addresses: HashMap<T, U>, credential: Credential) -> Result<Self>
+    where
+        T: AsRef<str> + Sync,
+        U: AsRef<str> + Sync,
+    {
+        let background_runtime = Arc::new(BackgroundRuntime::new()?);
+
+        let init_addresses = init_addresses.values().map(|addr| addr.as_ref().parse()).try_collect()?;
+        let addresses = Self::fetch_current_addresses(background_runtime.clone(), init_addresses, credential.clone())?;
+
+        let server_connections: HashMap<String, ServerConnection> = addresses
+            .into_iter()
+            .map(|address| {
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone())
+                    .map(|server_connection| (address.to_string(), server_connection))
             })
             .try_collect()?;
 
@@ -163,12 +191,8 @@ impl Connection {
         credential: Credential,
     ) -> Result<HashSet<Address>> {
         for address in &addresses {
-            let server_connection = ServerConnection::new_cloud(
-                background_runtime.clone(),
-                address.to_string(),
-                address.clone(),
-                credential.clone(),
-            );
+            let server_connection =
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -238,8 +262,8 @@ impl Connection {
             .ok_or_else(|| InternalError::UnknownConnectionAddress { address: id.to_owned() }.into())
     }
 
-    pub(crate) fn connections(&self) -> impl Iterator<Item = &ServerConnection> + '_ {
-        self.server_connections.values()
+    pub(crate) fn connections(&self) -> impl Iterator<Item = (&str, &ServerConnection)> + '_ {
+        self.server_connections.iter().map(|(id, conn)| (id.as_str(), conn))
     }
 
     pub(crate) fn username(&self) -> Option<&str> {
@@ -261,26 +285,20 @@ impl fmt::Debug for Connection {
 
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
-    id: String,
     background_runtime: Arc<BackgroundRuntime>,
     open_sessions: Arc<Mutex<HashMap<SessionID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
 }
 
 impl ServerConnection {
-    fn new_core(background_runtime: Arc<BackgroundRuntime>, id: String, address: Address) -> Result<Self> {
+    fn new_core(background_runtime: Arc<BackgroundRuntime>, address: Address) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
-        Ok(Self { id, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    fn new_cloud(
-        background_runtime: Arc<BackgroundRuntime>,
-        id: String,
-        address: Address,
-        credential: Credential,
-    ) -> Result<Self> {
+    fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_cloud(address, credential, &background_runtime)?);
-        Ok(Self { id, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
     pub(crate) fn validate(&self) -> Result {
@@ -288,14 +306,6 @@ impl ServerConnection {
             Response::ConnectionOpen => Ok(()),
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
-    }
-
-    fn set_id(&mut self, id: String) {
-        self.id = id;
-    }
-
-    pub(crate) fn id(&self) -> &str {
-        &self.id
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -409,7 +419,6 @@ impl ServerConnection {
                     pulse_shutdown_source,
                 ));
                 Ok(SessionInfo {
-                    server_id: self.id.clone(),
                     session_id,
                     network_latency: start.elapsed().saturating_sub(server_duration),
                     on_close_register_sink,
@@ -523,7 +532,7 @@ impl ServerConnection {
 
 impl fmt::Debug for ServerConnection {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("ServerConnection").field("id", &self.id).field("open_sessions", &self.open_sessions).finish()
+        f.debug_struct("ServerConnection").field("open_sessions", &self.open_sessions).finish()
     }
 }
 

@@ -25,7 +25,6 @@ use super::{Callback, SessionID};
 
 #[derive(Clone, Debug)]
 pub(crate) struct SessionInfo {
-    pub(crate) server_id: String,
     pub(crate) session_id: SessionID,
     pub(crate) network_latency: Duration,
     pub(crate) on_close_register_sink: UnboundedSender<Callback>,

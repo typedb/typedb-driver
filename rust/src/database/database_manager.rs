@@ -109,12 +109,12 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<Database>> {
         let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
+        for (server_id, server_connection) in self.connection.connections() {
             match server_connection.all_databases().await {
                 Ok(list) => {
                     return list.into_iter().map(|db_info| Database::new(db_info, self.connection.clone())).collect()
                 }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.id(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -127,7 +127,7 @@ impl DatabaseManager {
         P: Future<Output = Result<R>>,
     {
         let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
+        for (server_id, server_connection) in self.connection.connections() {
             match task(server_connection.clone(), name.clone()).await {
                 Ok(res) => return Ok(res),
                 Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
@@ -140,7 +140,7 @@ impl DatabaseManager {
                         .await
                 }
                 err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.id(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?

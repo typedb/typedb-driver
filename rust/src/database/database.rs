@@ -102,10 +102,6 @@ impl Database {
         self.preferred_replica().map(|replica| replica.to_info())
     }
 
-    pub(super) fn connection(&self) -> &Connection {
-        &self.connection
-    }
-
     /// Deletes this database.
     ///
     /// # Examples
@@ -304,7 +300,7 @@ impl Replica {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_all(name: String, connection: Connection) -> Result<Vec<Self>> {
-        for server_connection in connection.connections() {
+        for (server_id, server_connection) in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(info) => {
@@ -317,8 +313,7 @@ impl Replica {
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
-                        name,
-                        server_connection.id()
+                        name, server_id
                     );
                 }
                 Err(err) => return Err(err),
