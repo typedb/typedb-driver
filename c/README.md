@@ -5,24 +5,22 @@ It also serves as the base on which the other wrapper drivers are built.
 ## Usage
 The driver is distributed as an archive containing the headers & a shared library.
 ```
-|- README.md
 |- include/
 |  |- typedb_driver.h
-|  |- ...
 |
 |- lib/
-   |- typedb-driver-clib-<platform>.<ext>
+   |- typedb_driver_clib.<ext>
 ```
 
-As usual, Add the include paths to your compile step & the library to your link step. For windows, the 'import-lib' `typedb-driver-cpp-<platform>.if.lib` is provided to link against.
-A [sample `CMakeLists`](https://github.com/vaticle/typedb-driver/blob/master/c/tests/assembly/CMakeLists.txt) is available on the TypeDB Driver repository.
+As usual, add the include paths to your compile step & the library to your link step. For Windows, the 'import-lib' `typedb_driver_clib.dll.lib` is provided to link against.
+A sample [CMakeLists.txt](https://github.com/vaticle/typedb-driver/blob/master/c/tests/assembly/CMakeLists.txt) file is available in the TypeDB Driver repository.
 Code examples can be found in the [integration tests](https://github.com/vaticle/typedb-driver/blob/master/c/tests/integration/driver_test.c). 
 
 ## Architecture
 ### Interface
 `typedb_driver.h` is a single header containing all the functions needed for a complete TypeDB driver.
 
-Functions parameters & return values are either primitives or pointers to opaque `struct`s. e.g.:
+Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
 Connection *connection_open_core(const char *address);
 ``` 
