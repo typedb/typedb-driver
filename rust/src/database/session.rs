@@ -34,9 +34,7 @@ type Callback = Box<dyn FnMut() + Send>;
 /// A session with a TypeDB database.
 pub struct Session {
     database: Database,
-
     server_session: RwLock<ServerSession>,
-
     session_type: SessionType,
     is_open: Arc<AtomicCell<bool>>,
     on_close: Arc<Mutex<Vec<Callback>>>,
