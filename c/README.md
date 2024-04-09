@@ -9,7 +9,7 @@ The driver is distributed as an archive containing the headers & a shared librar
 |  |- typedb_driver.h
 |
 |- lib/
-   |- typedb_driver_clib.<ext>
+   |- libtypedb_driver_clib.<ext>
 ```
 
 As usual, add the include paths to your compile step & the library to your link step. For Windows, the 'import-lib' `typedb_driver_clib.dll.lib` is provided to link against.
