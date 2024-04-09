@@ -24,6 +24,8 @@
 #include "typedb/user/user_manager.hpp"
 
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 // The namespace comment is needed to document enums.
 /**
@@ -72,7 +74,7 @@ public:
      *
      * @param address The address of the TypeDB server
      */
-    static Driver coreDriver(const std::string& coreAddress);
+    static Driver coreDriver(const std::string& address);
 
     /**
      * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
@@ -86,7 +88,22 @@ public:
      * @param addresses The address(es) of the TypeDB server(s)
      * @param credential The Credential to connect with
      */
-    static Driver cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential);
+    static Driver cloudDriver(const std::vector<std::string>& addresses, const Credential& credential);
+
+    /**
+     * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
+     * the provided credential.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * TypeDB.cloudDriver(addresses, credential);
+     * </pre>
+     *
+     * @param addressTranslation Translation map from addresses received from the TypeDB server(s)
+     * to addresses to be used by the driver for connection
+     * @param credential The credential to connect with
+     */
+    static Driver cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential);
 
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;

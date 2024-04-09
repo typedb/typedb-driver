@@ -78,7 +78,7 @@ public class TypeDB {
     }
 
     /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+     * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
      * the provided credential.
      *
      * <h3>Examples</h3>
