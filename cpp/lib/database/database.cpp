@@ -31,7 +31,7 @@ namespace TypeDB {
 ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
     : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
 
-std::string ReplicaInfo::address() {
+std::string ReplicaInfo::serverID() {
     CHECK_NATIVE(replicaInfoNative);
     return Utils::stringFromNative(_native::replica_info_get_server_id(replicaInfoNative.get()));
 }
