@@ -133,7 +133,7 @@ impl RPCTransmitter {
                 rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
             Request::DatabasesAll => {
-                rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+                rpc.databases_all(request.try_into_proto()?).await.map(Response::from_proto)
             }
 
             Request::DatabaseDelete { .. } => {

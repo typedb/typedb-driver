@@ -267,18 +267,18 @@ impl FromProto<database_manager::create::Res> for Response {
 impl TryFromProto<database_manager::get::Res> for Response {
     fn try_from_proto(proto: database_manager::get::Res) -> Result<Self> {
         Ok(Self::DatabaseGet {
-            database: DatabaseInfo::try_from_proto(
+            database: DatabaseInfo::from_proto(
                 proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
-            )?,
+            ),
         })
     }
 }
 
-impl TryFromProto<database_manager::all::Res> for Response {
-    fn try_from_proto(proto: database_manager::all::Res) -> Result<Self> {
-        Ok(Self::DatabasesAll {
-            databases: proto.databases.into_iter().map(DatabaseInfo::try_from_proto).try_collect()?,
-        })
+impl FromProto<database_manager::all::Res> for Response {
+    fn from_proto(proto: database_manager::all::Res) -> Self {
+        Self::DatabasesAll {
+            databases: proto.databases.into_iter().map(DatabaseInfo::from_proto).collect(),
+        }
     }
 }
 

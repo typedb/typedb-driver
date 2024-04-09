@@ -22,7 +22,7 @@ use std::{error::Error as StdError, fmt};
 use tonic::{Code, Status};
 use typeql::error_messages;
 
-use super::{address::Address, RequestID};
+use super::RequestID;
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
@@ -84,7 +84,7 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}.",
-    UnknownConnectionAddress { address: Address } =
+    UnknownConnectionAddress { address: String } =
         5: "Received unrecognized address from the server: {address}.",
     EnumOutOfBounds { value: i32, enum_name: &'static str } =
         6: "Value '{value}' is out of bounds for enum '{enum_name}'.",

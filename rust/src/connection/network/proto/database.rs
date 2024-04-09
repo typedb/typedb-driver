@@ -17,31 +17,19 @@
  * under the License.
  */
 
-use itertools::Itertools;
 use typedb_protocol::{database_replicas::Replica as ReplicaProto, DatabaseReplicas as DatabaseProto};
 
-use super::TryFromProto;
-use crate::{
-    common::info::{DatabaseInfo, ReplicaInfo},
-    Result,
-};
+use super::FromProto;
+use crate::common::info::{DatabaseInfo, ReplicaInfo};
 
-impl TryFromProto<DatabaseProto> for DatabaseInfo {
-    fn try_from_proto(proto: DatabaseProto) -> Result<Self> {
-        Ok(Self {
-            name: proto.name,
-            replicas: proto.replicas.into_iter().map(ReplicaInfo::try_from_proto).try_collect()?,
-        })
+impl FromProto<DatabaseProto> for DatabaseInfo {
+    fn from_proto(proto: DatabaseProto) -> Self {
+        Self { name: proto.name, replicas: proto.replicas.into_iter().map(ReplicaInfo::from_proto).collect() }
     }
 }
 
-impl TryFromProto<ReplicaProto> for ReplicaInfo {
-    fn try_from_proto(proto: ReplicaProto) -> Result<Self> {
-        Ok(Self {
-            address: proto.address.parse()?,
-            is_primary: proto.primary,
-            is_preferred: proto.preferred,
-            term: proto.term,
-        })
+impl FromProto<ReplicaProto> for ReplicaInfo {
+    fn from_proto(proto: ReplicaProto) -> Self {
+        Self { server_name: proto.address, is_primary: proto.primary, is_preferred: proto.preferred, term: proto.term }
     }
 }

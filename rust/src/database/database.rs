@@ -25,7 +25,6 @@ use log::{debug, error};
 
 use crate::{
     common::{
-        address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
@@ -46,10 +45,10 @@ impl Database {
     const FETCH_REPLICAS_MAX_RETRIES: usize = 10;
     const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
 
-    pub(super) fn new(database_info: DatabaseInfo, connection: Connection) -> Self {
+    pub(super) fn new(database_info: DatabaseInfo, connection: Connection) -> Result<Self> {
         let name = database_info.name.clone();
-        let replicas = RwLock::new(Replica::try_from_info(database_info, &connection));
-        Self { name, replicas, connection }
+        let replicas = RwLock::new(Replica::try_from_info(database_info, &connection)?);
+        Ok(Self { name, replicas, connection })
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -182,11 +181,11 @@ impl Database {
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
+            match task(replica.database.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.server_name);
                 }
                 res => return res,
             }
@@ -204,9 +203,7 @@ impl Database {
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
 
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(primary_replica.database.clone(), self.connection.connection(&primary_replica.address)?.clone())
-                .await
-            {
+            match task(primary_replica.database.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::CloudReplicaNotPrimary
                     | ConnectionError::ServerConnectionFailedStatusError { .. }
@@ -260,7 +257,7 @@ impl fmt::Debug for Database {
 #[derive(Clone)]
 pub(super) struct Replica {
     /// Retrieves address of the server hosting this replica
-    address: Address,
+    server_name: String,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -270,27 +267,27 @@ pub(super) struct Replica {
     /// Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
     is_preferred: bool,
     /// Retrieves the database for which this is a replica
-    database: Option<ServerDatabase>,
+    database: ServerDatabase,
 }
 
 impl Replica {
-    fn new(name: String, metadata: ReplicaInfo, server_connection: Option<ServerConnection>) -> Self {
+    fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            address: metadata.address,
+            server_name: metadata.server_name,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
             is_preferred: metadata.is_preferred,
-            database: server_connection.map(|server_connection| ServerDatabase::new(name, server_connection)),
+            database: ServerDatabase::new(name, server_connection),
         }
     }
 
-    fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Vec<Self> {
+    fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
         database_info
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.address)?.clone();
+                let server_connection = connection.connection(&replica.server_name)?.clone();
                 Ok(Self::new(database_info.name.clone(), replica, server_connection))
             })
             .collect()
@@ -298,7 +295,7 @@ impl Replica {
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            address: self.address.clone(),
+            server_name: self.server_name.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -311,7 +308,7 @@ impl Replica {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(info) => {
-                    return Ok(Self::try_from_info(info, &connection));
+                    return Self::try_from_info(info, &connection);
                 }
                 Err(Error::Connection(
                     ConnectionError::DatabaseDoesNotExist { .. }
@@ -334,7 +331,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("address", &self.address)
+            .field("address", &self.server_name)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)
