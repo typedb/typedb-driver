@@ -26,7 +26,12 @@ use typedb_driver::{Connection, Credential};
 #[serial]
 fn address_translation() {
     Connection::new_cloud_address_map(
-        [("localhost:21729", "localhost:21729")].into(),
+        [
+            ("localhost:11729", "localhost:11729"),
+            ("localhost:21729", "localhost:21729"),
+            ("localhost:31729", "localhost:31729"),
+        ]
+        .into(),
         Credential::with_tls(
             "admin",
             "password",
