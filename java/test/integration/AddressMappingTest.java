@@ -61,7 +61,8 @@ public class AddressMappingTest {
     public void testAllNodesMapped() {
         TypeDBCloudRunner typedb = TypeDBCloudRunner.create(Paths.get("."), 3, serverOptions);
         typedb.start();
-        Map<String, String> addresses = typedb.externalAddresses().stream().map(address -> pair(address, address)).collect(Collectors.toMap(Pair::first, Pair::second));
+        Map<String, String> addresses = typedb.externalAddresses().stream().map(address -> pair(address, address))
+                .collect(Collectors.toMap(Pair::first, Pair::second));
         TypeDBDriver driver = TypeDB.cloudDriver(addresses, credential);
         driver.databases().create("typedb");
         TypeDBSession session = driver.session("typedb", TypeDBSession.Type.DATA);
