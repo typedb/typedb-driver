@@ -245,10 +245,10 @@ impl FromProto<connection::open::Res> for Response {
     }
 }
 
-impl TryFromProto<server_manager::all::Res> for Response {
-    fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
-        let servers = proto.servers.into_iter().map(|server| server.address.parse()).try_collect()?;
-        Ok(Self::ServersAll { servers })
+impl FromProto<server_manager::all::Res> for Response {
+    fn from_proto(proto: server_manager::all::Res) -> Self {
+        let servers = proto.servers.into_iter().map(|server| server.address).collect();
+        Self::ServersAll { servers }
     }
 }
 
@@ -276,9 +276,7 @@ impl TryFromProto<database_manager::get::Res> for Response {
 
 impl FromProto<database_manager::all::Res> for Response {
     fn from_proto(proto: database_manager::all::Res) -> Self {
-        Self::DatabasesAll {
-            databases: proto.databases.into_iter().map(DatabaseInfo::from_proto).collect(),
-        }
+        Self::DatabasesAll { databases: proto.databases.into_iter().map(DatabaseInfo::from_proto).collect() }
     }
 }
 

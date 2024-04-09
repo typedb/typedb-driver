@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt};
+use std::{collections::HashSet, error::Error as StdError, fmt};
 
 use tonic::{Code, Status};
 use typeql::error_messages;
@@ -72,6 +72,8 @@ error_messages! { ConnectionError
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         23: "Invalid URL '{address}': missing port.",
+    AddressTranslationMismatch { unknown: HashSet<String>, unmapped: HashSet<String> } =
+        24: "Address translation map does not match the advertised server list. Mapped servers not known to the remote server: {unknown:?}. Servers not mapped to addresses: {unmapped:?}.",
 }
 
 error_messages! { InternalError
