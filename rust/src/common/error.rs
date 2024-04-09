@@ -73,7 +73,7 @@ error_messages! { ConnectionError
     MissingPort { address: String } =
         23: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<String>, unmapped: HashSet<String> } =
-        24: "Address translation map does not match the advertised server list. Mapped servers not known to the remote server: {unknown:?}. Servers not mapped to addresses: {unmapped:?}.",
+        24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
 }
 
 error_messages! { InternalError
