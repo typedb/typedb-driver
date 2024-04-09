@@ -49,7 +49,7 @@ pub extern "C" fn connection_open_cloud(
     try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
 }
 
-/// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+/// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
 /// the provided credential.
 ///
 /// @param advertised_addresses a null-terminated array holding the address(es) the TypeDB server(s)
