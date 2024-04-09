@@ -53,8 +53,8 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
         this(openCloud(initAddresses, credential));
     }
 
-    public TypeDBDriverImpl(Map<String, String> addresses, TypeDBCredential credential) throws TypeDBDriverException {
-        this(openCloud(addresses, credential));
+    public TypeDBDriverImpl(Map<String, String> addressTranslation, TypeDBCredential credential) throws TypeDBDriverException {
+        this(openCloud(addressTranslation, credential));
     }
 
     private TypeDBDriverImpl(com.vaticle.typedb.driver.jni.Connection connection) {
@@ -79,11 +79,11 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
         }
     }
 
-    private static com.vaticle.typedb.driver.jni.Connection openCloud(Map<String, String> addresses, TypeDBCredential credential) {
+    private static com.vaticle.typedb.driver.jni.Connection openCloud(Map<String, String> addressTranslation, TypeDBCredential credential) {
         try {
             List<String> advertised = new ArrayList();
             List<String> translated = new ArrayList();
-            for (Map.Entry<String, String> entry: addresses.entrySet()) {
+            for (Map.Entry<String, String> entry: addressTranslation.entrySet()) {
                 advertised.add(entry.getKey());
                 translated.add(entry.getValue());
             }
