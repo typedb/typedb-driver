@@ -77,5 +77,23 @@ namespace TypeDB.Driver
         {
             return new TypeDBDriver(addresses, credential);
         }
+
+        /**
+         * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
+         * the provided credential.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * TypeDB.cloudDriver(addressTranslation, credential);
+         * </pre>
+         *
+         * @param addressTranslation Translation map from addresses received from the TypeDB server(s)
+         * to addresses to be used by the driver for connection
+         * @param credential The credential to connect with
+         */
+        public static ITypeDBDriver CloudDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+        {
+            return new TypeDBDriver(addressTranslation, credential);
+        }
     }
 }

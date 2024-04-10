@@ -41,6 +41,10 @@ namespace TypeDB.Driver.Connection
             : this(OpenCloud(initAddresses, credential))
         {}
 
+        public TypeDBDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+            : this(OpenCloud(addressTranslation, credential))
+        {}
+
         private TypeDBDriver(Pinvoke.Connection connection)
             : base(connection)
         {
@@ -65,6 +69,27 @@ namespace TypeDB.Driver.Connection
             try
             {
                 return Pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        private static Pinvoke.Connection OpenCloud(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+        {
+            try
+            {
+                string[] advertisedAddresses = new string[addressTranslation.Count];
+                string[] translatedAddresses = new string[addressTranslation.Count];
+                int index = 0;
+                foreach (KeyValuePair<string, string> translation in addressTranslation)
+                {
+                    advertisedAddresses[index] = translation.Key;
+                    translatedAddresses[index] = translation.Value;
+                    index++;
+                }
+                return Pinvoke.typedb_driver.connection_open_cloud_translated(advertisedAddresses, translatedAddresses, credential.NativeObject);
             }
             catch (Pinvoke.Error e)
             {
