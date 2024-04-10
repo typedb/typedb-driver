@@ -15,7 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import Iterable, Union
+from collections.abc import Iterable, Mapping
+from typing import Union
 
 from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
@@ -67,7 +68,7 @@ class TypeDB:
         return _Driver([address])
 
     @staticmethod
-    def cloud_driver(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
+    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
         """
         Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
 
@@ -77,5 +78,7 @@ class TypeDB:
         """
         if isinstance(addresses, str):
             return _Driver([addresses], credential)
+        elif isinstance(addresses, Mapping):
+            return _Driver(dict(addresses), credential)
         else:
             return _Driver(list(addresses), credential)
