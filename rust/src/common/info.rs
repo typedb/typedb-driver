@@ -40,7 +40,7 @@ pub(crate) struct DatabaseInfo {
 #[derive(Debug)]
 pub struct ReplicaInfo {
     /// The server hosting this replica
-    pub server_id: String,
+    pub server: String,
     /// Whether this is the primary replica of the raft cluster.
     pub is_primary: bool,
     /// Whether this is the preferred replica of the raft cluster.

@@ -270,7 +270,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            server_id: metadata.server_id,
+            server_id: metadata.server,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -285,8 +285,8 @@ impl Replica {
             .into_iter()
             .map(|replica| {
                 let server_connection = connection
-                    .connection(&replica.server_id)
-                    .ok_or_else(|| InternalError::UnknownServer { server_id: replica.server_id.clone() })?;
+                    .connection(&replica.server)
+                    .ok_or_else(|| InternalError::UnknownServer { server_id: replica.server.clone() })?;
                 Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
             })
             .collect()
@@ -294,7 +294,7 @@ impl Replica {
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            server_id: self.server_id.clone(),
+            server: self.server_id.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,

@@ -30,6 +30,6 @@ impl FromProto<DatabaseProto> for DatabaseInfo {
 
 impl FromProto<ReplicaProto> for ReplicaInfo {
     fn from_proto(proto: ReplicaProto) -> Self {
-        Self { server_id: proto.address, is_primary: proto.primary, is_preferred: proto.preferred, term: proto.term }
+        Self { server: proto.address, is_primary: proto.primary, is_preferred: proto.preferred, term: proto.term }
     }
 }

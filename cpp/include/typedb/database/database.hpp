@@ -41,7 +41,7 @@ public:
     /**
      * Retrieves the server hosting this replica
      */
-    std::string serverID();
+    std::string server();
 
     /**
      * Checks whether this is the primary replica of the raft cluster.

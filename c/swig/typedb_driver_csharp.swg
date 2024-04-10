@@ -191,7 +191,7 @@
 %noexception user_get_username;
 %noexception user_get_password_expiry_seconds;
 
-%noexception replica_info_get_server_id;
+%noexception replica_info_get_server;
 %noexception replica_info_is_primary;
 %noexception replica_info_is_preferred;
 %noexception replica_info_get_term;
