@@ -83,7 +83,7 @@ public class TypeDB {
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.cloudDriver(addresses, credential);
+     * TypeDB.cloudDriver(addressTranslation, credential);
      * </pre>
      *
      * @param addressTranslation Translation map from addresses received from the TypeDB server(s)
