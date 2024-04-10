@@ -34,6 +34,21 @@ cc_test(
     linkstatic = True
 )
 
+cc_test(
+    name = "test-cpp-driver-cloud",
+    srcs = ["test_cloud.cpp"],
+    deps = [
+        "//cpp:typedb-driver-cpp-import",
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
+    ],
+    copts = cxxopts,
+    includes = ["include"],
+    env = {"RUST_BACKTRACE": "full"},
+    linkstatic = True
+)
+
 clang_format_test(
     name = "clang_format",
     include = glob(["*"]),
