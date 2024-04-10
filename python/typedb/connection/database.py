@@ -105,7 +105,7 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         def database(self) -> Database:
             pass
 
-        def address(self) -> str:
+        def server(self) -> str:
             return replica_info_get_server(self._info)
 
         def is_primary(self) -> bool:

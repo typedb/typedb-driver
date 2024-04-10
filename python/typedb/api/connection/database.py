@@ -154,9 +154,9 @@ class Replica(ABC):
         pass
 
     @abstractmethod
-    def address(self) -> str:
+    def server(self) -> str:
         """
-        Retrieves address of the server hosting this replica
+        Retrieves the server hosting this replica
 
         :return:
         """
