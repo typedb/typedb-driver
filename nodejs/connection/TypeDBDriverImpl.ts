@@ -37,12 +37,13 @@ import CLOUD_UNABLE_TO_CONNECT = ErrorMessage.Driver.CLOUD_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import MISSING_PORT = ErrorMessage.Driver.MISSING_PORT;
+import ADDRESS_TRANSLATION_MISMATCH = ErrorMessage.Driver.ADDRESS_TRANSLATION_MISMATCH;
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
     private readonly _isCloud: boolean;
 
-    private readonly _initAddresses: string[];
+    private readonly _initAddresses: string[] | Record<string, string>;
     private readonly _credential: TypeDBCredential;
     private _userManager: UserManagerImpl;
 
@@ -53,10 +54,10 @@ export class TypeDBDriverImpl implements TypeDBDriver {
 
     private readonly _sessions: { [id: string]: TypeDBSessionImpl };
 
-    constructor(addresses: string | string[], credential?: TypeDBCredential) {
+    constructor(addresses: string | string[] | Record<string, string>, credential?: TypeDBCredential) {
         if (typeof addresses === 'string') addresses = [addresses];
 
-        for (const address of addresses)
+        for (const [_, address] of Object.entries(addresses))
             if (!/:\d+/.test(address))
                 throw new TypeDBDriverError(MISSING_PORT.message(address));
 
@@ -77,7 +78,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     private async openCore(): Promise<TypeDBDriver> {
-        const serverAddress = this._initAddresses[0];
+        const serverAddress = (this._initAddresses as string[])[0];
         const serverStub = new TypeDBStubImpl(serverAddress, this._credential);
         await serverStub.open();
         const advertisedAddress = (await serverStub.serversAll(RequestBuilder.ServerManager.allReq())).servers[0].address;
@@ -89,10 +90,38 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     private async openCloud(): Promise<TypeDBDriver> {
         const serverAddresses = await this.fetchCloudServerAddresses();
         const openReqs: Promise<void>[] = []
-        for (const addr of serverAddresses) {
-            const serverStub = new TypeDBStubImpl(addr, this._credential);
+
+        let addressTranslation: Record<string, string>;
+        if (Array.isArray(this._initAddresses)) {
+            addressTranslation = {};
+            for (const address of serverAddresses) {
+                addressTranslation[address] = address;
+            }
+        } else {
+            addressTranslation = this._initAddresses;
+            const unknown = [];
+            for (const [advertised, _] of Object.entries(addressTranslation)) {
+                if (serverAddresses.indexOf(advertised) === -1) {
+                    unknown.push(advertised);
+                }
+            }
+            const unmapped = [];
+            for (const advertisedAddress of serverAddresses) {
+                if (!(advertisedAddress in addressTranslation)) {
+                    unmapped.push(advertisedAddress);
+                }
+            }
+            if (unknown.length > 0 || unmapped.length > 0) {
+                throw new TypeDBDriverError(
+                    ADDRESS_TRANSLATION_MISMATCH.message(unknown.join(", "), unmapped.join(", "))
+                );
+            }
+        }
+
+        for (const [serverID, address] of Object.entries(addressTranslation)) {
+            const serverStub = new TypeDBStubImpl(address, this._credential);
             openReqs.push(serverStub.open());
-            this.serverDrivers.set(addr, new ServerDriver(addr, serverStub));
+            this.serverDrivers.set(serverID, new ServerDriver(address, serverStub));
         }
         try {
             await Promise.any(openReqs);
@@ -105,7 +134,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     private async fetchCloudServerAddresses(): Promise<string[]> {
-        for (const address of this._initAddresses) {
+        for (const [_, address] of Object.entries(this._initAddresses)) {
             try {
                 const stub = new TypeDBStubImpl(address, this._credential);
                 await stub.open();
@@ -116,7 +145,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 console.error(`Fetching cloud servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
+        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(Object.values(this._initAddresses).join(",")));
     }
 
     isOpen(): boolean {
