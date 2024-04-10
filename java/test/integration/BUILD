@@ -45,8 +45,8 @@ typedb_java_test(
 )
 
 typedb_java_test(
-    name = "test-address-mapping",
-    srcs = ["AddressMappingTest.java"],
+    name = "test-address-translation",
+    srcs = ["AddressTranslationTest.java"],
     server_artifacts = {
         "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
         "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
@@ -54,7 +54,7 @@ typedb_java_test(
         "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
         "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
     },
-    test_class = "com.vaticle.typedb.driver.test.integration.AddressMappingTest",
+    test_class = "com.vaticle.typedb.driver.test.integration.AddressTranslationTest",
     deps = [
         # Internal dependencies
         "//java:driver-java",

@@ -44,8 +44,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
-public class AddressMappingTest {
-    private static final Logger LOG = LoggerFactory.getLogger(AddressMappingTest.class);
+public class AddressTranslationTest {
+    private static final Logger LOG = LoggerFactory.getLogger(AddressTranslationTest.class);
 
     private static final Map<String, String> serverOptions = map(
             pair("--diagnostics.reporting.errors", "false"),
@@ -55,7 +55,7 @@ public class AddressMappingTest {
     private static final TypeDBCredential credential = new TypeDBCredential("admin", "password", false);
 
     @Test
-    public void testAllNodesMapped() {
+    public void testAddressTranslation() {
         TypeDBCloudRunner typedb = TypeDBCloudRunner.create(Paths.get("."), 3, serverOptions);
         typedb.start();
         Map<String, String> addresses = typedb.externalAddresses().stream().map(address -> pair(address, address))
