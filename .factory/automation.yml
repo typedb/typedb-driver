@@ -524,15 +524,14 @@ build:
         - test-java-behaviour-cloud
         - test-python-behaviour-core
         - test-python-behaviour-cloud
-        - test-python-integration-core
+        - test-python-integration
         - test-nodejs-integration
-        - test-nodejs-cloud-failover
         - test-nodejs-behaviour-core
         - test-nodejs-behaviour-cloud
-        - test-cpp-integration-core
+        - test-cpp-integration
         - test-cpp-behaviour-core
         - test-cpp-behaviour-cloud
-        - test-csharp-integration-core
+        - test-csharp-integration
         - test-csharp-behaviour-core
         - test-csharp-behaviour-cloud
       command: |
