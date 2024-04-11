@@ -102,6 +102,34 @@ a| `credential` a| The ``Credential`` to connect with a| `const struct Credentia
 .Returns
 `struct Connection*`
 
+[#_connection_open_cloud_translated]
+==== connection_open_cloud_translated
+
+[source,cpp]
+----
+struct Connection* connection_open_cloud_translated(const char*const* advertised_addresses, const char*const* translated_addresses, const struct Credential* credential)
+----
+
+
+
+Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `advertised_addresses` a| a null-terminated array holding the address(es) the TypeDB server(s) are configured to advertise a| `const char*const*`
+a| `translated_addresses` a| a null-terminated array holding the address(es) of the TypeDB server(s) the driver will connect to a| `const char*const*`
+a| `credential` a| The ``Credential`` to connect with a| `const struct Credential*`
+|===
+
+[caption=""]
+.Returns
+`struct Connection*`
+
 [#_connection_open_core]
 ==== connection_open_core
 

@@ -2,12 +2,12 @@
 === TypeDB
 
 // tag::methods[]
-[#_TypeDB_cloud_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
+[#_TypeDB_cloud_driver__addresses_Mapping_str__str___Iterable_str___str__credential_TypeDBCredential]
 ==== cloud_driver
 
 [source,python]
 ----
-static cloud_driver(addresses: Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
+static cloud_driver(addresses: Mapping[str, str] | Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
 ----
 
 Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
@@ -18,7 +18,7 @@ Creates a connection to TypeDB Cloud, authenticating with the provided credentia
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `addresses` a|  – a| `Iterable[str] \| str` a| 
+a| `addresses` a|  – a| `Mapping[str, str] \| Iterable[str] \| str` a| 
 a| `credential` a|  – a| `TypeDBCredential` a| 
 |===
 

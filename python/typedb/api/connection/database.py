@@ -156,7 +156,7 @@ class Replica(ABC):
     @abstractmethod
     def server(self) -> str:
         """
-        Retrieves the server hosting this replica
+        The server hosting this replica
 
         :return:
         """

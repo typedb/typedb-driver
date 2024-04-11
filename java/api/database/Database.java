@@ -116,7 +116,7 @@ public interface Database {
     interface Replica {
 
         /**
-         * Retrieves the server hosting this replica
+         * The server hosting this replica
          */
         @CheckReturnValue
         String serverID();

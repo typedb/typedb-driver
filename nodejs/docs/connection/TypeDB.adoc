@@ -13,7 +13,7 @@ a| `DEFAULT_ADDRESS`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDB_cloudDriver__addresses_string__string____credential_TypeDBCredential]
+[#_TypeDB_cloudDriver__addresses_string__string____Record_string__string___credential_TypeDBCredential]
 ==== cloudDriver
 
 [source,nodejs]
@@ -29,7 +29,7 @@ Creates a connection to TypeDB Cloud, authenticating with the provided credentia
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| List of addresses of the individual TypeDB Cloud servers. As long one specified address is provided, the driver will discover the other addresses from that server. a| `string \| string[]`
+a| `addresses` a| List of addresses of the individual TypeDB Cloud servers. As long one specified address is provided, the driver will discover the other addresses from that server. a| `string \| string[] \| Record<string, string>`
 a| `credential` a| The credentials to log in, and encryption settings. See ``TypeDBCredential``
 Examples
 ``const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));

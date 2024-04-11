@@ -39,7 +39,7 @@ public:
     ReplicaInfo& operator=(ReplicaInfo&&) = default;
 
     /**
-     * Retrieves the server hosting this replica
+     * The server hosting this replica
      */
     std::string server();
 

@@ -112,7 +112,7 @@ namespace TypeDB.Driver.Api
         public interface IReplica
         {
             /**
-             * Retrieves the address of the server hosting this replica.
+             * The server hosting this replica.
              */
             public string Server { get; }
 
