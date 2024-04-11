@@ -86,8 +86,8 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}.",
-    UnknownServer { server_id: String } =
-        5: "Received replica at unrecognized server: {server_id}.",
+    UnknownServer { server: String } =
+        5: "Received replica at unrecognized server: {server}.",
     EnumOutOfBounds { value: i32, enum_name: &'static str } =
         6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
 }

@@ -182,7 +182,7 @@ impl Database {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.server_id);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.server);
                 }
                 res => return res,
             }
@@ -253,8 +253,8 @@ impl fmt::Debug for Database {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
-    /// Retrieves id of the server hosting this replica
-    server_id: String,
+    /// The server hosting this replica
+    server: String,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -270,7 +270,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            server_id: metadata.server,
+            server: metadata.server,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -286,7 +286,7 @@ impl Replica {
             .map(|replica| {
                 let server_connection = connection
                     .connection(&replica.server)
-                    .ok_or_else(|| InternalError::UnknownServer { server_id: replica.server.clone() })?;
+                    .ok_or_else(|| InternalError::UnknownServer { server: replica.server.clone() })?;
                 Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
             })
             .collect()
@@ -294,7 +294,7 @@ impl Replica {
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            server: self.server_id.clone(),
+            server: self.server.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -303,7 +303,7 @@ impl Replica {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_all(name: String, connection: Connection) -> Result<Vec<Self>> {
-        for (server_id, server_connection) in connection.connections() {
+        for (server, server_connection) in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(info) => {
@@ -316,7 +316,7 @@ impl Replica {
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
-                        name, server_id
+                        name, server
                     );
                 }
                 Err(err) => return Err(err),
@@ -329,7 +329,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("server_id", &self.server_id)
+            .field("server", &self.server)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)
