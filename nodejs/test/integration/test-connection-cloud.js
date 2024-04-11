@@ -24,8 +24,8 @@ async function run() {
     try {
         const driver = await TypeDB.cloudDriver(
             {
-                "localhost:1729": "localhost:11729",
-                "localhost:21729": "localhost:1729",
+                "localhost:11729": "localhost:11729",
+                "localhost:21729": "localhost:21729",
                 "localhost:31729": "localhost:31729",
             },
             new TypeDBCredential("admin", "password", process.env.ROOT_CA)

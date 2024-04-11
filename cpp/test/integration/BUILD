@@ -20,8 +20,8 @@ load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_test(
-    name = "test-cpp-driver",
-    srcs = ["test.cpp"],
+    name = "test-cpp-driver-core",
+    srcs = ["test_core.cpp"],
     deps = [
         "//cpp:typedb-driver-cpp-import",
         # External
