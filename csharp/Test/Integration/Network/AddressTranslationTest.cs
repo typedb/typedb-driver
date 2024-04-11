@@ -41,7 +41,7 @@ namespace TypeDB.Driver.Test.Integration
                 IDictionary<string, string> addressTranslation = new Dictionary<string, string>() {
                     {"localhost:11729", "localhost:11729"},
                     {"localhost:21729", "localhost:21729"},
-                    {"localhost:1729", "localhost:31729"},
+                    {"localhost:31729", "localhost:31729"},
                 };
 
                 TypeDBCredential connectCredential = new TypeDBCredential(
