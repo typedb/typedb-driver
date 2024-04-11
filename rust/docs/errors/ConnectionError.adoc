@@ -8,6 +8,7 @@
 [options="header"]
 |===
 |Variant
+a| `AddressTranslationMismatch`
 a| `BrokenPipe`
 a| `CloudAllNodesFailed`
 a| `CloudEndpointEncrypted`

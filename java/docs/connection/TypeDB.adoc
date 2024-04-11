@@ -95,6 +95,39 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 TypeDB.cloudDriver(addresses, credential);
 ----
 
+[#_TypeDB_cloudDriver__java_util_Map_java_lang_String_​java_lang_String___TypeDBCredential]
+==== cloudDriver
+
+[source,java]
+----
+public static TypeDBDriver cloudDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
+                                       TypeDBCredential credential)
+----
+
+Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credential. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addressTranslation` a| Translation map from addresses received from the TypeDB server(s) to addresses to be used by the driver for connection a| `java.util.Map<java.lang.String,​java.lang.String>`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
+|===
+
+[caption=""]
+.Returns
+`public static TypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.cloudDriver(addressTranslation, credential);
+----
+
 [#_TypeDB_coreDriver__java_lang_String]
 ==== coreDriver
 

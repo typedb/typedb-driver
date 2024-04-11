@@ -128,7 +128,7 @@ export class TypeDBDatabaseImpl implements Database {
     async runOnAnyReplica<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase) => Promise<T>): Promise<T> {
         for (const replica of this.replicas) {
             try {
-                return await task(this._driver.serverDrivers.get(replica.address), replica.database);
+                return await task(this._driver.serverDrivers.get(replica.server), replica.database);
             } catch (e) {
                 if (e instanceof TypeDBDriverError && UNABLE_TO_CONNECT === e.messageTemplate) {
                     // TODO log
@@ -144,7 +144,7 @@ export class TypeDBDatabaseImpl implements Database {
         }
         for (const _ of Array(PRIMARY_REPLICA_TASK_MAX_RETRIES)) {
             try {
-                return await task(this._driver.serverDrivers.get(this.primaryReplica.address), this.primaryReplica.database);
+                return await task(this._driver.serverDrivers.get(this.primaryReplica.server), this.primaryReplica.database);
             } catch (e) {
                 if (e instanceof TypeDBDriverError &&
                     (UNABLE_TO_CONNECT === e.messageTemplate || CLOUD_REPLICA_NOT_PRIMARY === e.messageTemplate)
@@ -176,14 +176,14 @@ export class TypeDBDatabaseImpl implements Database {
 }
 
 export class Replica implements Database.Replica {
-    private readonly _address: string;
+    private readonly _server: string;
     private readonly _database: ServerDatabase;
     private readonly _term: number;
     private readonly _isPrimary: boolean;
     private readonly _isPreferred: boolean;
 
-    private constructor(database: ServerDatabase, address: string, term: number, isPrimary: boolean, isPreferred: boolean) {
-        this._address = address;
+    private constructor(database: ServerDatabase, server: string, term: number, isPrimary: boolean, isPreferred: boolean) {
+        this._server = server;
         this._database = database;
         this._term = term;
         this._isPrimary = isPrimary;
@@ -198,8 +198,8 @@ export class Replica implements Database.Replica {
         return this._database;
     }
 
-    get address(): string {
-        return this._address;
+    get server(): string {
+        return this._server;
     }
 
     get databaseName(): string {
@@ -219,7 +219,7 @@ export class Replica implements Database.Replica {
     }
 
     toString(): string {
-        return `${this._address}/${this.databaseName}:${this._isPrimary ? "P" : "S"}:${this._term}`;
+        return `${this._server}/${this.databaseName}:${this._isPrimary ? "P" : "S"}:${this._term}`;
     }
 }
 

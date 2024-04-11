@@ -31,17 +31,17 @@ Frees the native rust ``ReplicaInfo`` object
 .Returns
 `void`
 
-[#_replica_info_get_address]
-==== replica_info_get_address
+[#_replica_info_get_server]
+==== replica_info_get_server
 
 [source,cpp]
 ----
-char* replica_info_get_address(const struct ReplicaInfo* replica_info)
+char* replica_info_get_server(const struct ReplicaInfo* replica_info)
 ----
 
 
 
-Retrieves the address of the server hosting this replica
+The server hosting this replica
 
 [caption=""]
 .Returns

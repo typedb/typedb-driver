@@ -70,12 +70,18 @@ namespace TypeDB.Driver
          * Drivers.CloudDriver(addresses, credential);
          * </pre>
          *
-         * @param addresses The address(es) of the TypeDB server(s)
+         * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses
+         * received from the TypeDB server(s) to addresses to be used by the driver for connection
          * @param credential The credential to connect with
          */
         public static ITypeDBDriver CloudDriver(ICollection<string> addresses, TypeDBCredential credential)
         {
             return new TypeDBDriver(addresses, credential);
+        }
+
+        public static ITypeDBDriver CloudDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+        {
+            return new TypeDBDriver(addressTranslation, credential);
         }
     }
 }

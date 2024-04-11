@@ -8,22 +8,6 @@
 The metadata and state of an individual raft replica of a database.
 
 // tag::methods[]
-[#_stdstring_TypeDBReplicaInfoaddress___]
-==== address
-
-[source,cpp]
-----
-std::string TypeDB::ReplicaInfo::address()
-----
-
-
-
-Retrieves the address of the server hosting this replica
-
-[caption=""]
-.Returns
-`std::string`
-
 [#_bool_TypeDBReplicaInfoisPreferred___]
 ==== isPreferred
 
@@ -55,6 +39,22 @@ Checks whether this is the primary replica of the raft cluster.
 [caption=""]
 .Returns
 `bool`
+
+[#_stdstring_TypeDBReplicaInfoserver___]
+==== server
+
+[source,cpp]
+----
+std::string TypeDB::ReplicaInfo::server()
+----
+
+
+
+The server hosting this replica
+
+[caption=""]
+.Returns
+`std::string`
 
 [#_int64_t_TypeDBReplicaInfoterm___]
 ==== term

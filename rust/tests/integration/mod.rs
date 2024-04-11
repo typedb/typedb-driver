@@ -19,5 +19,6 @@
 
 mod common;
 mod logic;
+mod network;
 mod queries;
 mod runtimes;

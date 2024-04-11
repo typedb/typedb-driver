@@ -116,10 +116,10 @@ public interface Database {
     interface Replica {
 
         /**
-         * Retrieves the address of the server hosting this replica
+         * The server hosting this replica
          */
         @CheckReturnValue
-        String address();
+        String server();
 
         /**
          * Checks whether this is the primary replica of the raft cluster.

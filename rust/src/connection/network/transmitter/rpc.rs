@@ -121,7 +121,7 @@ impl RPCTransmitter {
         match request {
             Request::ConnectionOpen => rpc.connection_open(request.try_into_proto()?).await.map(Response::from_proto),
 
-            Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
+            Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.map(Response::from_proto),
 
             Request::DatabasesContains { .. } => {
                 rpc.databases_contains(request.try_into_proto()?).await.map(Response::from_proto)
@@ -132,9 +132,7 @@ impl RPCTransmitter {
             Request::DatabaseGet { .. } => {
                 rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
-            Request::DatabasesAll => {
-                rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)
-            }
+            Request::DatabasesAll => rpc.databases_all(request.try_into_proto()?).await.map(Response::from_proto),
 
             Request::DatabaseDelete { .. } => {
                 rpc.database_delete(request.try_into_proto()?).await.map(Response::from_proto)

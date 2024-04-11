@@ -107,10 +107,10 @@ pub extern "C" fn replica_info_drop(replica_info: *mut ReplicaInfo) {
     free(replica_info);
 }
 
-/// Retrieves the address of the server hosting this replica
+/// The server hosting this replica
 #[no_mangle]
-pub extern "C" fn replica_info_get_address(replica_info: *const ReplicaInfo) -> *mut c_char {
-    release_string(borrow(replica_info).address.to_string())
+pub extern "C" fn replica_info_get_server(replica_info: *const ReplicaInfo) -> *mut c_char {
+    release_string(borrow(replica_info).server.to_string())
 }
 
 /// Checks whether this is the primary replica of the raft cluster.

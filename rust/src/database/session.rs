@@ -25,6 +25,7 @@ use log::warn;
 
 use crate::{
     common::{error::ConnectionError, info::SessionInfo, Result, SessionType, TransactionType},
+    connection::ServerConnection,
     Database, Options, Transaction,
 };
 
@@ -33,11 +34,17 @@ type Callback = Box<dyn FnMut() + Send>;
 /// A session with a TypeDB database.
 pub struct Session {
     database: Database,
-    server_session_info: RwLock<SessionInfo>,
+    server_session: RwLock<ServerSession>,
     session_type: SessionType,
     is_open: Arc<AtomicCell<bool>>,
     on_close: Arc<Mutex<Vec<Callback>>>,
     on_reopen: Mutex<Vec<Callback>>,
+}
+
+#[derive(Clone, Debug)]
+struct ServerSession {
+    connection: ServerConnection,
+    info: SessionInfo,
 }
 
 impl fmt::Debug for Session {
@@ -45,7 +52,7 @@ impl fmt::Debug for Session {
         f.debug_struct("Session")
             .field("database", &self.database)
             .field("session_type", &self.session_type)
-            .field("server_session_info", &self.server_session_info)
+            .field("server_session", &self.server_session)
             .field("is_open", &self.is_open)
             .finish()
     }
@@ -83,9 +90,11 @@ impl Session {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_with_options(database: Database, session_type: SessionType, options: Options) -> Result<Self> {
-        let server_session_info = database
-            .run_failsafe(|database, _| async move {
-                database.connection().open_session(database.name().to_owned(), session_type, options).await
+        let server_session = database
+            .run_failsafe(|database| async move {
+                let session_info =
+                    database.connection().open_session(database.name().to_owned(), session_type, options).await?;
+                Ok(ServerSession { connection: database.connection().clone(), info: session_info })
             })
             .await?;
 
@@ -94,12 +103,12 @@ impl Session {
             let is_open = is_open.clone();
             move || is_open.store(false)
         })]));
-        register_persistent_on_close(&server_session_info, on_close.clone());
+        register_persistent_on_close(&server_session.info, on_close.clone());
 
         Ok(Self {
             database,
             session_type,
-            server_session_info: RwLock::new(server_session_info),
+            server_session: RwLock::new(server_session),
             is_open,
             on_close,
             on_reopen: Mutex::default(),
@@ -142,9 +151,8 @@ impl Session {
     /// ```
     pub fn force_close(&self) -> Result {
         if self.is_open.compare_exchange(true, false).is_ok() {
-            let session_info = self.server_session_info.write().unwrap();
-            let connection = self.database.connection().connection(&session_info.address).unwrap();
-            connection.close_session(session_info.session_id.clone())?;
+            let server_session = self.server_session.write().unwrap();
+            server_session.connection.close_session(server_session.info.session_id.clone())?;
         }
         Ok(())
     }
@@ -165,8 +173,8 @@ impl Session {
     }
 
     fn on_server_session_close(&self, callback: impl FnOnce() + Send + 'static) {
-        let session_info = self.server_session_info.write().unwrap();
-        session_info.on_close_register_sink.send(Box::new(callback)).ok();
+        let server_session = self.server_session.write().unwrap();
+        server_session.info.on_close_register_sink.send(Box::new(callback)).ok();
     }
 
     /// Registers a callback function which will be executed when this session is reopened.
@@ -188,8 +196,8 @@ impl Session {
 
     fn reopened(&self) {
         self.on_reopen.lock().unwrap().iter_mut().for_each(|callback| (callback)());
-        let session_info = self.server_session_info.write().unwrap();
-        register_persistent_on_close(&session_info, self.on_close.clone());
+        let server_session = self.server_session.write().unwrap();
+        register_persistent_on_close(&server_session.info, self.on_close.clone());
     }
 
     /// Opens a transaction to perform read or write queries on the database connected to the session.
@@ -222,8 +230,8 @@ impl Session {
             return Err(ConnectionError::SessionIsClosed.into());
         }
 
-        let SessionInfo { address, session_id, network_latency, .. } = self.server_session_info.read().unwrap().clone();
-        let server_connection = &self.database.connection().connection(&address)?;
+        let ServerSession { connection: server_connection, info: SessionInfo { session_id, network_latency, .. } } =
+            self.server_session.read().unwrap().clone();
 
         let (transaction_stream, transaction_shutdown_sink) = match server_connection
             .open_transaction(session_id.clone(), transaction_type, options, network_latency)
@@ -234,16 +242,16 @@ impl Session {
                 self.is_open.store(false);
                 server_connection.close_session(session_id).ok();
 
-                let (session_info, (transaction_stream, transaction_shutdown_sink)) = self
+                let (server_session, (transaction_stream, transaction_shutdown_sink)) = self
                     .database
-                    .run_failsafe(|database, _| {
+                    .run_failsafe(|database| {
                         let session_type = self.session_type;
                         async move {
                             let connection = database.connection();
                             let database_name = database.name().to_owned();
                             let session_info = connection.open_session(database_name, session_type, options).await?;
                             Ok((
-                                session_info.clone(),
+                                ServerSession { connection: connection.clone(), info: session_info.clone() },
                                 connection
                                     .open_transaction(
                                         session_info.session_id,
@@ -256,7 +264,7 @@ impl Session {
                         }
                     })
                     .await?;
-                *self.server_session_info.write().unwrap() = session_info;
+                *self.server_session.write().unwrap() = server_session;
                 self.is_open.store(true);
                 self.reopened();
                 (transaction_stream, transaction_shutdown_sink)

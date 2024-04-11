@@ -19,6 +19,7 @@
 
 use std::{ffi::c_char, path::Path};
 
+use itertools::Itertools;
 use typedb_driver::{Connection, Credential};
 
 use super::{
@@ -46,6 +47,24 @@ pub extern "C" fn connection_open_cloud(
 ) -> *mut Connection {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
     try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
+}
+
+/// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
+/// the provided credential.
+///
+/// @param advertised_addresses A null-terminated array holding the address(es) the TypeDB server(s)
+/// are configured to advertise
+/// @param translated_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
+/// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
+/// @param credential The <code>Credential</code> to connect with
+#[no_mangle]
+pub extern "C" fn connection_open_cloud_translated(
+    advertised_addresses: *const *const c_char,
+    translated_addresses: *const *const c_char,
+    credential: *const Credential,
+) -> *mut Connection {
+    let addresses = string_array_view(advertised_addresses).zip_eq(string_array_view(translated_addresses)).collect();
+    try_release(Connection::new_cloud_with_translation(addresses, borrow(credential).clone()))
 }
 
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.

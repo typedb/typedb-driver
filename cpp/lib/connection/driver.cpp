@@ -30,18 +30,36 @@ void Driver::initLogging() {
     _native::init_logging();
 }
 
-Driver Driver::coreDriver(const std::string& coreAddress) {
-    auto p = _native::connection_open_core(coreAddress.c_str());
+Driver Driver::coreDriver(const std::string& address) {
+    auto p = _native::connection_open_core(address.c_str());
     DriverException::check_and_throw();
     return Driver(p);
 }
 
-Driver Driver::cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential) {
+Driver Driver::cloudDriver(const std::vector<std::string>& addresses, const Credential& credential) {
     std::vector<const char*> addressesNative;
-    for (auto& addr : cloudAddresses)
+    for (auto& addr : addresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
     auto p = _native::connection_open_cloud(addressesNative.data(), credential.getNative());
+    DriverException::check_and_throw();
+    return Driver(p);
+}
+
+Driver Driver::cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential) {
+    std::vector<const char*> advertisedAddressesNative;
+    std::vector<const char*> translatedAddressesNative;
+    for (auto& [advertised, translated] : addressTranslation) {
+        advertisedAddressesNative.push_back(advertised.c_str());
+        translatedAddressesNative.push_back(translated.c_str());
+    }
+    advertisedAddressesNative.push_back(nullptr);
+    translatedAddressesNative.push_back(nullptr);
+    auto p = _native::connection_open_cloud_translated(
+        advertisedAddressesNative.data(),
+        translatedAddressesNative.data(),
+        credential.getNative()
+    );
     DriverException::check_and_throw();
     return Driver(p);
 }

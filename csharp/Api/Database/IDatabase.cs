@@ -112,9 +112,9 @@ namespace TypeDB.Driver.Api
         public interface IReplica
         {
             /**
-             * Retrieves the address of the server hosting this replica.
+             * The server hosting this replica.
              */
-            public string Address { get; }
+            public string Server { get; }
 
             /**
              * The raft protocol ‘term’ of this replica.

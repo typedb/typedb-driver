@@ -26,7 +26,7 @@ use typeql::pattern::{Conjunction, Statement};
 
 use crate::{
     answer::{readable_concept, ConceptMap, ConceptMapGroup, ValueGroup},
-    common::{address::Address, info::DatabaseInfo, RequestID, SessionID, IID},
+    common::{info::DatabaseInfo, RequestID, SessionID, IID},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
         Thing, ThingType, Transitivity, Value, ValueType,
@@ -73,7 +73,7 @@ pub(super) enum Response {
     ConnectionOpen,
 
     ServersAll {
-        servers: Vec<Address>,
+        servers: Vec<String>,
     },
 
     DatabasesContains {

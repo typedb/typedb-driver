@@ -21,17 +21,16 @@
 use std::future::Future;
 use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
 
-use itertools::Itertools;
 use log::{debug, error};
 
 use crate::{
     common::{
-        address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
     },
     connection::ServerConnection,
+    error::InternalError,
     Connection,
 };
 
@@ -104,10 +103,6 @@ impl Database {
         self.preferred_replica().map(|replica| replica.to_info())
     }
 
-    pub(super) fn connection(&self) -> &Connection {
-        &self.connection
-    }
-
     /// Deletes this database.
     ///
     /// # Examples
@@ -118,7 +113,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
-        self.run_on_primary_replica(|database, _| database.delete()).await
+        self.run_on_primary_replica(|database| database.delete()).await
     }
 
     /// Returns a full schema text as a valid TypeQL define query string.
@@ -131,7 +126,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _| async move { database.schema().await }).await
+        self.run_failsafe(|database| async move { database.schema().await }).await
     }
 
     /// Returns the types in the schema as a valid TypeQL define query string.
@@ -144,7 +139,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _| async move { database.type_schema().await }).await
+        self.run_failsafe(|database| async move { database.type_schema().await }).await
     }
 
     /// Returns the rules in the schema as a valid TypeQL define query string.
@@ -157,13 +152,13 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn rule_schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _| async move { database.rule_schema().await }).await
+        self.run_failsafe(|database| async move { database.rule_schema().await }).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection) -> P,
+        F: Fn(ServerDatabase) -> P,
         P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
@@ -178,16 +173,16 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection) -> P,
+        F: Fn(ServerDatabase) -> P,
         P: Future<Output = Result<R>>,
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
+            match task(replica.database.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
+                    debug!("Unable to connect to {}. Attempting next server.", replica.server);
                 }
                 res => return res,
             }
@@ -198,16 +193,14 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection) -> P,
+        F: Fn(ServerDatabase) -> P,
         P: Future<Output = Result<R>>,
     {
         let mut primary_replica =
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
 
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(primary_replica.database.clone(), self.connection.connection(&primary_replica.address)?.clone())
-                .await
-            {
+            match task(primary_replica.database.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::CloudReplicaNotPrimary
                     | ConnectionError::ServerConnectionFailedStatusError { .. }
@@ -260,8 +253,8 @@ impl fmt::Debug for Database {
 /// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
-    /// Retrieves address of the server hosting this replica
-    address: Address,
+    /// The server hosting this replica
+    server: String,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.
@@ -277,7 +270,7 @@ pub(super) struct Replica {
 impl Replica {
     fn new(name: String, metadata: ReplicaInfo, server_connection: ServerConnection) -> Self {
         Self {
-            address: metadata.address,
+            server: metadata.server,
             database_name: name.clone(),
             is_primary: metadata.is_primary,
             term: metadata.term,
@@ -291,15 +284,17 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection.connection(&replica.address)?.clone();
-                Ok(Self::new(database_info.name.clone(), replica, server_connection))
+                let server_connection = connection
+                    .connection(&replica.server)
+                    .ok_or_else(|| InternalError::UnknownServer { server: replica.server.clone() })?;
+                Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
             })
-            .try_collect()
+            .collect()
     }
 
     fn to_info(&self) -> ReplicaInfo {
         ReplicaInfo {
-            address: self.address.clone(),
+            server: self.server.clone(),
             is_primary: self.is_primary,
             is_preferred: self.is_preferred,
             term: self.term,
@@ -308,7 +303,7 @@ impl Replica {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_all(name: String, connection: Connection) -> Result<Vec<Self>> {
-        for server_connection in connection.connections() {
+        for (server, server_connection) in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(info) => {
@@ -321,8 +316,7 @@ impl Replica {
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
-                        name,
-                        server_connection.address()
+                        name, server
                     );
                 }
                 Err(err) => return Err(err),
@@ -335,7 +329,7 @@ impl Replica {
 impl fmt::Debug for Replica {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Replica")
-            .field("address", &self.address)
+            .field("server", &self.server)
             .field("database_name", &self.database_name)
             .field("is_primary", &self.is_primary)
             .field("term", &self.term)
@@ -359,7 +353,7 @@ impl ServerDatabase {
         self.name.as_str()
     }
 
-    pub(super) fn connection(&self) -> &ServerConnection {
+    pub(crate) fn connection(&self) -> &ServerConnection {
         &self.connection
     }
 

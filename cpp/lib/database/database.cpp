@@ -31,9 +31,9 @@ namespace TypeDB {
 ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
     : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
 
-std::string ReplicaInfo::address() {
+std::string ReplicaInfo::server() {
     CHECK_NATIVE(replicaInfoNative);
-    return Utils::stringFromNative(_native::replica_info_get_address(replicaInfoNative.get()));
+    return Utils::stringFromNative(_native::replica_info_get_server(replicaInfoNative.get()));
 }
 
 bool ReplicaInfo::isPrimary() {

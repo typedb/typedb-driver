@@ -52,13 +52,13 @@ impl User {
         let password_old = password_old.into();
         let password_new = password_new.into();
         let mut error_buffer = Vec::with_capacity(connection.server_count());
-        for server_connection in connection.connections() {
+        for (server_id, server_connection) in connection.connections() {
             match server_connection
                 .update_user_password(self.username.clone(), password_old.clone(), password_new.clone())
                 .await
             {
                 Ok(()) => return Ok(()),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::CloudAllNodesFailed { errors: error_buffer.join("\n") })?

@@ -95,7 +95,8 @@ build:
         source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
             --test_arg=integration::queries::cloud \
-            --test_arg=integration::runtimes &&
+            --test_arg=integration::runtimes \
+            --test_arg=integration::network &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
         if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
@@ -272,7 +273,7 @@ build:
         tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
-    test-python-integration-core:
+    test-python-integration:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -285,29 +286,18 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-core-server.sh &&
-          bazel test //python/tests/integration:test_connection --test_output=streamed --jobs=1 &&
           bazel test //python/tests/integration:test_stream --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-#    test-python-integration-cloud-failover:
-#      machine: 4-core-16-gb
-#      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
-#      type: foreground
-#      command: |
-#        export PATH="$HOME/.local/bin:$PATH"
-#        sudo apt-get update
-#        sudo apt install python3-pip -y
-#        python3 -m pip install -U pip
-#        python3 -m pip install -r python/requirements_dev.txt
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel test //python/tests/integration:test_cloud_failover --test_output=errors
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+          bazel test //python/tests/integration:test_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          # TODO currently broken test
+          # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
+        tool/test/stop-cloud-servers.sh
+        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-nodejs-integration:
       image: vaticle-ubuntu-22.04
@@ -322,29 +312,18 @@ build:
         cp -rL bazel-bin/nodejs/dist nodejs/.
         tool/test/start-core-server.sh &&
           node nodejs/test/integration/test-concept.js &&
-          node nodejs/test/integration/test-connection.js &&
           node nodejs/test/integration/test-query.js &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          node nodejs/test/integration/test-connection-core.js &&
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-    test-nodejs-cloud-failover:
-      machine: 4-core-16-gb
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel build //nodejs/...
-        cp -rL bazel-bin/nodejs/node_modules nodejs/.
-        cp -rL bazel-bin/nodejs/dist nodejs/.
         source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+          node nodejs/test/integration/test-connection-cloud.js &&
           node nodejs/test/integration/test-cloud-failover.js &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-nodejs-behaviour-core:
       image: vaticle-ubuntu-22.04
@@ -385,7 +364,7 @@ build:
         tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
-    test-cpp-integration-core:
+    test-cpp-integration:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -398,10 +377,16 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh &&
-          bazel test //cpp/test/integration/... --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          bazel test //cpp/test/integration:test-cpp-driver-core --test_output=streamed --jobs=1 &&
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
+
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+          bazel test //cpp/test/integration:test-cpp-driver-cloud --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
+        tool/test/stop-cloud-servers.sh
+        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-cpp-behaviour-core:
       image: vaticle-ubuntu-22.04
@@ -448,7 +433,7 @@ build:
         tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
-    test-csharp-integration-core:
+    test-csharp-integration:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -463,25 +448,16 @@ build:
           bazel test //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
           bazel test //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-    test-csharp-integration-cloud:
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        source tool/test/start-cloud-servers.sh &&
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+          bazel test //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cloud.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-csharp-behaviour-core:
       image: vaticle-ubuntu-22.04

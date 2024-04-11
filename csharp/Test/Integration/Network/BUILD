@@ -15,49 +15,25 @@
 # specific language governing permissions and limitations
 # under the License.
 
+load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
+load("//csharp/Test:rules.bzl", "csharp_integration_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
-load("//cpp:build_opts.bzl", "cxxopts")
 
-cc_test(
-    name = "test-cpp-driver-core",
-    srcs = ["test_core.cpp"],
+csharp_integration_test(
+    name = "address-translation-cloud",
+    srcs = ["AddressTranslationTest.cs"],
     deps = [
-        "//cpp:typedb-driver-cpp-import",
-        # External
-        "@gtest//:gtest",
-        "@gtest//:gtest_main"
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
     ],
-    copts = cxxopts,
-    includes = ["include"],
-    env = {"RUST_BACKTRACE": "full"},
-    linkstatic = True
-)
-
-cc_test(
-    name = "test-cpp-driver-cloud",
-    srcs = ["test_cloud.cpp"],
-    deps = [
-        "//cpp:typedb-driver-cpp-import",
-        # External
-        "@gtest//:gtest",
-        "@gtest//:gtest_main"
-    ],
-    copts = cxxopts,
-    includes = ["include"],
-    env = {"RUST_BACKTRACE": "full"},
-    linkstatic = True
-)
-
-clang_format_test(
-    name = "clang_format",
-    include = glob(["*"]),
-    exclude = ["BUILD"]
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
 
 checkstyle_test(
     name = "checkstyle",
-    size = "small",
     include = glob(["*"]),
     license_type = "apache-header",
 )
+
