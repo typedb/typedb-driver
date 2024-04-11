@@ -291,7 +291,7 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //python/tests/integration:test_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           # TODO currently broken test
           # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -318,7 +318,7 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           node nodejs/test/integration/test-connection-cloud.js &&
           node nodejs/test/integration/test-cloud-failover.js &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
@@ -382,7 +382,7 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //cpp/test/integration:test-cpp-driver-cloud --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
@@ -452,7 +452,7 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cloud.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
