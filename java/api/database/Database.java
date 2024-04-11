@@ -119,7 +119,7 @@ public interface Database {
          * The server hosting this replica
          */
         @CheckReturnValue
-        String serverID();
+        String server();
 
         /**
          * Checks whether this is the primary replica of the raft cluster.

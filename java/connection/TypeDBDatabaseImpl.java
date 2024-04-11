@@ -127,7 +127,7 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.j
         }
 
         @Override
-        public String serverID() {
+        public String server() {
             return replica_info_get_server(nativeObject);
         }
 

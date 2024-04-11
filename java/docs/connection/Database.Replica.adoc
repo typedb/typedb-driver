@@ -36,13 +36,13 @@ Checks whether this is the primary replica of the raft cluster.
 .Returns
 `boolean`
 
-[#_Database_Replica_serverID__]
-==== serverID
+[#_Database_Replica_server__]
+==== server
 
 [source,java]
 ----
 @CheckReturnValue
-java.lang.String serverID()
+java.lang.String server()
 ----
 
 The server hosting this replica
