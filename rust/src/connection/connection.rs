@@ -154,14 +154,7 @@ impl Connection {
     ///         ("typedb-cloud.ext:21729", "localhost:21729"),
     ///         ("typedb-cloud.ext:31729", "localhost:31729"),
     ///     ].into(),
-    ///     Credential::with_tls(
-    ///         "admin",
-    ///         "password",
-    ///         Some(&PathBuf::from(
-    ///             std::env::var("ROOT_CA")
-    ///                 .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
-    ///         )),
-    ///     )?,
+    ///     credential,
     /// )
     /// ```
     pub fn new_cloud_with_translation<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
