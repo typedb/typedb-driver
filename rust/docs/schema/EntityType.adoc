@@ -17,7 +17,7 @@ Entity types represent the classification of independent objects in the data mod
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

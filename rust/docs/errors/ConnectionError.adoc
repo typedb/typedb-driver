@@ -4,10 +4,11 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Variant
+a| `AddressTranslationMismatch`
 a| `BrokenPipe`
 a| `CloudAllNodesFailed`
 a| `CloudEndpointEncrypted`

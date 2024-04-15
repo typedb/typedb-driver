@@ -1,6 +1,3 @@
-REM
-REM Copyright (C) 2022 Vaticle
-REM
 REM Licensed to the Apache Software Foundation (ASF) under one
 REM or more contributor license agreements.  See the NOTICE file
 REM distributed with this work for additional information
@@ -17,7 +14,6 @@ REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 REM KIND, either express or implied.  See the License for the
 REM specific language governing permissions and limitations
 REM under the License.
-REM
 
 REM needs to be called such that software installed
 REM by Chocolatey in prepare.bat is accessible
@@ -25,12 +21,12 @@ choco install 7zip.portable --limit-output --yes --no-progress
 choco install cmake.install --version 3.27.0 --installargs '"ADD_CMAKE_TO_PATH=User"' --limit-output --yes --no-progress
 CALL refreshenv
 
-bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows-x86_64//file
+bazel --output_user_root=C:\b build @vaticle_typedb_artifact_windows-x86_64//file
 powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
 7z x typedb-server-windows.zip
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
 
-bazel --output_user_root=C:\bazel build //c:assemble-windows-x86_64-zip
+bazel --output_user_root=C:\b build //c:assemble-windows-x86_64-zip
 mkdir test_assembly_clib
 pushd test_assembly_clib
 7z x ..\bazel-bin\c\typedb-driver-clib-windows-x86_64.zip

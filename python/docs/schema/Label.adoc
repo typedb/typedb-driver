@@ -8,7 +8,7 @@ It consists of an optional ``scope``, and a ``name``, represented ``scope:name``
 [caption=""]
 .Properties
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -30,7 +30,7 @@ Creates a Label from a specified name, or scoped name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 workspace(name = "vaticle_typedb_driver")
 
@@ -63,6 +59,23 @@ rules_antlr_dependencies(antlr_version, JAVA)
 # Load //builder/cpp
 load("@vaticle_dependencies//builder/cpp:deps.bzl", cpp_deps = "deps")
 cpp_deps()
+
+# Load //builder/csharp
+load("@vaticle_dependencies//builder/csharp:deps.bzl", dotnet_deps = "deps")
+dotnet_deps()
+load(
+    "@rules_dotnet//dotnet:repositories.bzl",
+    "dotnet_register_toolchains",
+    "rules_dotnet_dependencies",
+)
+rules_dotnet_dependencies()
+dotnet_register_toolchains("dotnet", "6.0.413")
+load("@rules_dotnet//dotnet:paket.rules_dotnet_nuget_packages.bzl", "rules_dotnet_nuget_packages")
+rules_dotnet_nuget_packages()
+load("@rules_dotnet//dotnet:paket.paket2bazel_dependencies.bzl", "paket2bazel_dependencies")
+paket2bazel_dependencies()
+load("//csharp/nuget:paket.csharp_deps.bzl", csharp_deps = "csharp_deps")
+csharp_deps()
 
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")

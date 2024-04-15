@@ -4,7 +4,7 @@
 [caption=""]
 .Properties
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -68,7 +68,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

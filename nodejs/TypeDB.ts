@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -52,7 +50,7 @@ export namespace TypeDB {
      * const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
      * ```
      */
-    export function cloudDriver(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBDriver> {
+    export function cloudDriver(addresses: string | string[] | Record<string, string>, credential: TypeDBCredential): Promise<TypeDBDriver> {
         if (typeof addresses === 'string') addresses = [addresses];
         return new TypeDBDriverImpl(addresses, credential).open();
     }

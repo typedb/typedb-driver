@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -247,10 +245,10 @@ impl FromProto<connection::open::Res> for Response {
     }
 }
 
-impl TryFromProto<server_manager::all::Res> for Response {
-    fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
-        let servers = proto.servers.into_iter().map(|server| server.address.parse()).try_collect()?;
-        Ok(Self::ServersAll { servers })
+impl FromProto<server_manager::all::Res> for Response {
+    fn from_proto(proto: server_manager::all::Res) -> Self {
+        let servers = proto.servers.into_iter().map(|server| server.address).collect();
+        Self::ServersAll { servers }
     }
 }
 
@@ -269,18 +267,16 @@ impl FromProto<database_manager::create::Res> for Response {
 impl TryFromProto<database_manager::get::Res> for Response {
     fn try_from_proto(proto: database_manager::get::Res) -> Result<Self> {
         Ok(Self::DatabaseGet {
-            database: DatabaseInfo::try_from_proto(
+            database: DatabaseInfo::from_proto(
                 proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
-            )?,
+            ),
         })
     }
 }
 
-impl TryFromProto<database_manager::all::Res> for Response {
-    fn try_from_proto(proto: database_manager::all::Res) -> Result<Self> {
-        Ok(Self::DatabasesAll {
-            databases: proto.databases.into_iter().map(DatabaseInfo::try_from_proto).try_collect()?,
-        })
+impl FromProto<database_manager::all::Res> for Response {
+    fn from_proto(proto: database_manager::all::Res) -> Self {
+        Self::DatabasesAll { databases: proto.databases.into_iter().map(DatabaseInfo::from_proto).collect() }
     }
 }
 

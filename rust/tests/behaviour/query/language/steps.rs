@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -209,6 +207,15 @@ generic_step_impl! {
             assert_eq!(answer.len(), 1);
         }
         Ok(())
+    }
+
+    #[step(expr = "get answers of templated typeql get")]
+    async fn get_answers_of_templated_typeql_get(context: &mut Context, step: &Step) {
+        if context.answer.len() > 1 {
+            panic!("Can only retrieve answers of templated typeql get given 1 previous answer.")
+        }
+        let answer = context.answer.get(0).unwrap();
+        context.answer = match_templated_answer(context, step, &answer).await.unwrap();
     }
 
     #[step(expr = "templated typeql get; throws exception")]

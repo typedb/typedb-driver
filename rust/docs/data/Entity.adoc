@@ -17,7 +17,7 @@ Instance of data of an entity type, representing a standalone object that exists
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

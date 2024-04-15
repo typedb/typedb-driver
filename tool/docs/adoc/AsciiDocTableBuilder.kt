@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -34,7 +32,7 @@ class AsciiDocTableBuilder(private val headers: List<String>) {
     }
 
     private fun header(): String {
-        return "[cols=\"~" + ",~".repeat(this.headers.size - 1) +
+        return "[cols=\"" + ",".repeat(this.headers.size - 1) +
                 "\"]\n[options=\"header\"]\n" +
                 "|===\n|" +
                 headers.joinToString(" |") + "\n"

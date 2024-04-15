@@ -35,17 +35,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `Value*`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__const_stdstring__value_]
 ==== get
@@ -62,17 +69,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__int64_t_value_]
 ==== get
@@ -89,17 +103,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `int64_t`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__double_value_]
 ==== get
@@ -116,17 +137,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `double`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__bool_value_]
 ==== get
@@ -143,17 +171,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `bool`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__DateTime_value_]
 ==== get
@@ -170,17 +205,24 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| ``Attribute``’s value a| `DateTime`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.get(transaction, value).get();
+----
 
 [#_ConceptIterable__Attribute___TypeDBAttributeTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
@@ -197,17 +239,29 @@ Retrieves all direct and indirect ``Attributes`` that are instances of this ``At
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getInstances(transaction);
+attributeType.getInstances(transaction, transitivity);
+ Parameters 
+  
+    transitivity Transitivity::TRANSITIVE for direct and indirect subtypes, Transitivity::EXPLICIT for direct subtypes only 
+    transaction The current transaction
+----
 
 [#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
@@ -224,17 +278,24 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getOwners(transaction);
+----
 
 [#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
@@ -251,18 +312,47 @@ Variant of <<#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Trans
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `const std::vector< Annotation >&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getOwners(transaction, {Annotation::key()}, transitivity);
+ */
+ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
+
+/**
+   Retrieve all Things that own an attribute of this AttributeType,
+   filtered by Annotations, directly or through inheritance.
+
+   Examples
+----
+
+[source,cpp]
+----
+attributeType.getOwners(transaction, annotations);
+----
+
+[source,cpp]
+----
+Parameters 
+  
+    transaction The current transaction 
+    annotations Only retrieve ThingTypes that have an attribute of this AttributeType with all given Annotations 
+    transitivity Transitivity::TRANSITIVE for direct and indirect subtypes, Transitivity::EXPLICIT for direct subtypes only
+----
 
 [#_OptionalStringFuture_TypeDBAttributeTypegetRegex___Transaction__transaction_]
 ==== getRegex
@@ -279,16 +369,23 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `OptionalStringFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getRegex(transaction).get();
+----
 
 [#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -305,17 +402,25 @@ Retrieves all direct and indirect subtypes of this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getSubtypes(transaction);
+attributeType.getSubtypes(transaction, transitivity);
+----
 
 [#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
@@ -332,18 +437,25 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `valueType` a| ``Value.Type`` for retrieving subtypes a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `ValueType`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getSubtypes(transaction, valueType, transitivity);
+----
 
 [#_ValueType_TypeDBAttributeTypegetValueType___]
 ==== getValueType
@@ -362,6 +474,13 @@ Retrieves the ``Value.Type`` of this ``AttributeType``.
 .Returns
 `ValueType`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.getValueType();
+----
+
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__Value__ptr__value_]
 ==== put
 
@@ -377,17 +496,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `Value*`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__const_stdstring__value_]
 ==== put
@@ -404,17 +530,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``Str
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__int64_t_value_]
 ==== put
@@ -431,17 +564,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``lon
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `int64_t`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__double_value_]
 ==== put
@@ -458,17 +598,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``dou
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `double`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__bool_value_]
 ==== put
@@ -485,17 +632,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``boo
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `bool`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__DateTime_value_]
 ==== put
@@ -512,17 +666,24 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``Dat
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `value` a| New ``Attribute``’s value a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `value` a| New ``Attribute``’s value a| `DateTime`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.put(transaction, value).get();
+----
 
 [#_VoidFuture_TypeDBAttributeTypesetRegex___Transaction__transaction__const_stdstring__regex_]
 ==== setRegex
@@ -541,17 +702,24 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `regex` a| Regular expression a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `regex` a| Regular expression a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.setRegex(transaction, regex).get();
+----
 
 [#_VoidFuture_TypeDBAttributeTypesetSupertype___Transaction__transaction__AttributeType__ptr__attributeType_]
 ==== setSupertype
@@ -568,17 +736,24 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType*`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.setSupertype(transaction, superType).get();
+----
 
 [#_VoidFuture_TypeDBAttributeTypeunsetRegex___Transaction__transaction_]
 ==== unsetRegex
@@ -595,16 +770,23 @@ Removes the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+attributeType.unsetRegex(transaction).get();
+----
 
 // end::methods[]
 

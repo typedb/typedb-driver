@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,11 +19,7 @@
 
 package com.vaticle.typedb.driver.api;
 
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-
 import javax.annotation.CheckReturnValue;
-
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {
 
@@ -55,7 +49,7 @@ public interface TypeDBSession extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    String database_name();
+    String databaseName();
 
     /**
      * Gets the options for the session
@@ -142,15 +136,6 @@ public interface TypeDBSession extends AutoCloseable {
             this.nativeObject = nativeObject;
 
             this.isSchema = nativeObject == com.vaticle.typedb.driver.jni.SessionType.Schema;
-        }
-
-        public static Type of(com.vaticle.typedb.driver.jni.SessionType sessionType) {
-            for (Type type : Type.values()) {
-                if (type.nativeObject == sessionType) {
-                    return type;
-                }
-            }
-            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {

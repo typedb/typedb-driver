@@ -250,7 +250,7 @@ Retrieves the instances that own this ``Attribute``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -283,7 +283,7 @@ Retrieves the instances that own this ``Attribute``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

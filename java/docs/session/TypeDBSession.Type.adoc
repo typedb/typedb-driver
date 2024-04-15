@@ -16,7 +16,7 @@ driver.session(database, TypeDBSession.Type.SCHEMA);
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -68,20 +68,6 @@ public boolean isSchema()
 .Returns
 `public boolean`
 
-[#_TypeDBSession_Type_of__com_vaticle_typedb_driver_jni_SessionType]
-==== of
-
-[source,java]
-----
-public static TypeDBSession.Type of​(com.vaticle.typedb.driver.jni.SessionType sessionType)
-----
-
-
-
-[caption=""]
-.Returns
-`public static TypeDBSession.Type`
-
 [#_TypeDBSession_Type_valueOf__java_lang_String]
 ==== valueOf
 
@@ -94,7 +80,7 @@ Returns the enum constant of this type with the specified name. The string must 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

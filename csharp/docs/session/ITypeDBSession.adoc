@@ -1,0 +1,255 @@
+[#_ITypeDBSession]
+=== ITypeDBSession
+
+*Package*: `TypeDB.Driver.Api`
+
+// tag::methods[]
+[#_void_TypeDB_Driver_Api_ITypeDBSession_Close___]
+==== Close
+
+[source,cs]
+----
+void Close()
+----
+
+
+
+Closes the session. Before opening a new session, the session currently open should first be closed.
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Close();
+----
+
+[#_string_TypeDB_Driver_Api_ITypeDBSession_DatabaseName]
+==== DatabaseName
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ITypeDBSession.DatabaseName
+----
+
+
+
+Returns the name of the database of the session.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.DatabaseName;
+----
+
+[#_bool_TypeDB_Driver_Api_ITypeDBSession_IsOpen___]
+==== IsOpen
+
+[source,cs]
+----
+bool IsOpen()
+----
+
+
+
+Checks whether this session is open.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.IsOpen();
+----
+
+[#_void_TypeDB_Driver_Api_ITypeDBSession_OnClose___Action_function_]
+==== OnClose
+
+[source,cs]
+----
+void OnClose(Action function)
+----
+
+
+
+Registers a callback function which will be executed when this session is closed.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| `Action`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.OnClose(function);
+----
+
+[#_void_TypeDB_Driver_Api_ITypeDBSession_OnReopen___Action_function_]
+==== OnReopen
+
+[source,cs]
+----
+void OnReopen(Action function)
+----
+
+
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| `Action`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.OnReopen(function);
+----
+
+[#_TypeDBOptions_TypeDB_Driver_Api_ITypeDBSession_Options]
+==== Options
+
+[source,cs]
+----
+TypeDBOptions TypeDB.Driver.Api.ITypeDBSession.Options
+----
+
+
+
+Gets the options for the session.
+
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Options;
+----
+
+[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type_]
+==== Transaction
+
+[source,cs]
+----
+ITypeDBTransaction Transaction(TransactionType type)
+----
+
+
+
+Opens a transaction on the database connected to the session with default options.
+
+ 
+
+See also
+[source,cs]
+----
+ 
+ 
+ITypeDBSession::Transaction(TransactionType, TypeDBOptions)
+---- 
+
+
+[caption=""]
+.Returns
+`ITypeDBTransaction`
+
+[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type__TypeDBOptions_options_]
+==== Transaction
+
+[source,cs]
+----
+ITypeDBTransaction Transaction(TransactionType type, TypeDBOptions options)
+----
+
+
+
+Opens a transaction to perform read or write queries on the database connected to the session.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `type` a| The type of transaction to be created (Read or Write) a| `TransactionType`
+a| `options` a| Options for the session a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBTransaction`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Transaction(transactionType, options);
+----
+
+[#_SessionType_TypeDB_Driver_Api_ITypeDBSession_Type]
+==== Type
+
+[source,cs]
+----
+SessionType TypeDB.Driver.Api.ITypeDBSession.Type
+----
+
+
+
+The current session’s type (Schema or Data).
+
+
+[caption=""]
+.Returns
+`SessionType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+session.Type;
+----
+
+// end::methods[]
+

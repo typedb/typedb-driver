@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,6 +31,19 @@ export interface EntityType extends ThingType {
 
     /** @inheritDoc */
     getSupertype(transaction: TypeDBTransaction): Promise<EntityType>;
+
+    /**
+     * Sets the supplied <code>EntityType</code> as the supertype of the current <code>EntityType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * entityType.setSupertype(transaction, superEntityType).resolve();
+     * ```
+     *
+     * @param transaction The current transaction
+     * @param superEntityType The <code>EntityType</code> to set as the supertype of this <code>EntityType</code>
+     */
     setSupertype(transaction: TypeDBTransaction, superEntityType: EntityType): Promise<void>;
 
     /** @inheritDoc */

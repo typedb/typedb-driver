@@ -36,33 +36,15 @@ void TypeDB::User::passwordUpdate(const UserManager& userManager, const std::str
 
 Updates the password for this user.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     passwordOld
-     The current password of this user
-    
-    
-     passwordNew
-     The new password
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `passwordOld` a| The current password of this user a| 
-a| `passwordNew` a| The new password a| 
+a| `passwordOld` a| The current password of this user a| `const std::string&`
+a| `passwordNew` a| The new password a| `const std::string&`
 |===
 
 [caption=""]

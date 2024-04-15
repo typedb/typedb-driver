@@ -13,7 +13,7 @@ Contains an element of the TypeQL Get Group query result.
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

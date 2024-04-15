@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -135,7 +133,7 @@ public class SessionSteps {
         Iterator<TypeDBSession> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().database_name());
+            assertEquals(name, sessionIter.next().databaseName());
         }
     }
 
@@ -148,7 +146,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database_name());
+                assertEquals(name, session.databaseName());
                 return null;
             });
         }

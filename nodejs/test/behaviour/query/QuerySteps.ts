@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -478,7 +476,6 @@ Then("group aggregate answer value is empty", async () => {
     assert(!valueAnswerGroups[0].value);
 });
 
-
 function variableFromTemplatePlaceholder(placeholder: string): string {
     if (placeholder.endsWith(".iid")) return placeholder.replace(".iid", "").replace("answer.", "");
     else throw new Error("Cannot replace template not based on IID.");
@@ -510,6 +507,17 @@ Then("each answer satisfies", async (template: string) => {
         const query = applyQueryTemplate(template, answer);
         assert.strictEqual((await tx().query.get(query).collect()).length, 1);
     }
+});
+
+Then("get answers of templated typeql get", async (template: string) => {
+    if (answers.length != 1) {
+        throw new Error("Can only retrieve answers of templated typeql get given 1 previous answer");
+    }
+    const answer = answers[0];
+    const query = applyQueryTemplate(template, answer);
+
+    clearAnswers();
+    answers = await tx().query.get(query).collect();
 });
 
 Then("templated typeql get; throws exception", async (template: string) => {

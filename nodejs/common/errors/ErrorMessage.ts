@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -76,7 +74,7 @@ export abstract class ErrorMessage {
 export namespace ErrorMessage {
     export class Driver extends ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {
-            super("DRI", code, "Driver Error", message)
+            super("NDR", code, "Driver Error", message)
         }
     }
 
@@ -104,11 +102,12 @@ export namespace ErrorMessage {
         export const CLOUD_INVALID_ROOT_CA_PATH = new Driver(21, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
         export const UNRECOGNISED_SESSION_TYPE = new Driver(22, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
         export const MISSING_PORT = new Driver(23, (args: Stringable[]) => `Invalid URL '${args[1]}': missing port.`);
+        export const ADDRESS_TRANSLATION_MISMATCH = new Driver(24, (args: Stringable[]) => `Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {${args[0]}}. Advertised servers not mapped by user: {${args[1]}}.`);
     }
 
     export class Concept extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("CON", code, "Concept Error", message)
+            super("NCO", code, "Concept Error", message)
         }
     }
 
@@ -126,7 +125,7 @@ export namespace ErrorMessage {
 
     export class Query extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("QRY", code, "Query Error", message)
+            super("NQR", code, "Query Error", message)
         }
     }
 
@@ -140,7 +139,7 @@ export namespace ErrorMessage {
 
     export class Internal extends ErrorMessage {
         constructor(code: number, message: (args: Stringable[]) => string) {
-            super("INT", code, "Internal Error", message)
+            super("NIN", code, "Internal Error", message)
         }
     }
 

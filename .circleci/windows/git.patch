@@ -1,10 +1,10 @@
 diff --git a/WORKSPACE b/WORKSPACE
-index 7b30ef2e..145bc0ce 100644
+index a6df7ba2..420f8397 100644
 --- a/WORKSPACE
 +++ b/WORKSPACE
-@@ -19,7 +19,7 @@
+@@ -15,7 +15,7 @@
+ # specific language governing permissions and limitations
  # under the License.
- #
  
 -workspace(name = "vaticle_typedb_driver")
 +workspace(name = "v")

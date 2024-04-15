@@ -47,7 +47,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -78,7 +78,7 @@ Retrieves all direct and indirect (or direct only) ``Attributes`` that are insta
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -110,7 +110,7 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optiona
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -143,7 +143,7 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -173,7 +173,7 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -354,12 +354,12 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+a| `value` a| New ``Attribute``’s value (datetime values are treated as timezone naive, with tzinfo being ignored) a| `Value \| bool \| int \| float \| str \| datetime` a| 
 |===
 
 [caption=""]
@@ -387,7 +387,7 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -418,7 +418,7 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -449,7 +449,7 @@ Removes the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

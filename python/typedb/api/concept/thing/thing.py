@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 from __future__ import annotations
 
@@ -180,13 +176,13 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_relations(self, transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]:
+    def get_relations(self, transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Relation]:
         """
         Retrieves all the ``Relation``\ s which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.
 
         :param transaction: The current transaction
-        :param role_types: The list of roles to filter the relations by.
+        :param role_types: 0 or more role types to filter the relations by.
 
         :return:
 

@@ -25,6 +25,13 @@ Deletes this database.
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.deleteDatabase()
+----
+
 [#_stdstring_TypeDBDatabasename_____const]
 ==== name
 
@@ -58,6 +65,13 @@ Returns the preferred replica for this database. Operations which can be run on 
 .Returns
 `std::optional< ReplicaInfo >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.preferredReplica()
+----
+
 [#_stdoptional__ReplicaInfo___TypeDBDatabaseprimaryReplica___]
 ==== primaryReplica
 
@@ -74,6 +88,13 @@ Returns the primary replica for this database. _Only works in TypeDB Cloud_
 [caption=""]
 .Returns
 `std::optional< ReplicaInfo >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.primaryReplica()
+----
 
 [#_ReplicaInfoIterable_TypeDBDatabasereplicas___]
 ==== replicas
@@ -92,6 +113,13 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 .Returns
 `ReplicaInfoIterable`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.replicas()
+----
+
 [#_stdstring_TypeDBDatabaseruleSchema___]
 ==== ruleSchema
 
@@ -108,6 +136,13 @@ The rules in the schema as a valid TypeQL define query string.
 [caption=""]
 .Returns
 `std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.ruleSchema()
+----
 
 [#_stdstring_TypeDBDatabaseschema___]
 ==== schema
@@ -126,6 +161,13 @@ A full schema text as a valid TypeQL define query string.
 .Returns
 `std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.schema()
+----
+
 [#_stdstring_TypeDBDatabasetypeSchema___]
 ==== typeSchema
 
@@ -142,6 +184,13 @@ The types in the schema as a valid TypeQL define query string.
 [caption=""]
 .Returns
 `std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+database.typeSchema()
+----
 
 // end::methods[]
 

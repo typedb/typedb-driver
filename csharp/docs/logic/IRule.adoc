@@ -1,0 +1,160 @@
+[#_IRule]
+=== IRule
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+// tag::methods[]
+[#_VoidPromise_TypeDB_Driver_Api_IRule_Delete___ITypeDBTransaction_transaction_]
+==== Delete
+
+[source,cs]
+----
+VoidPromise Delete(ITypeDBTransaction transaction)
+----
+
+
+
+Deletes this rule.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.Delete(transaction).Resolve();
+----
+
+[#_Promise__bool___TypeDB_Driver_Api_IRule_IsDeleted___ITypeDBTransaction_transaction_]
+==== IsDeleted
+
+[source,cs]
+----
+Promise< bool > IsDeleted(ITypeDBTransaction transaction)
+----
+
+
+
+Check if this rule has been deleted.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise< bool >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.IsDeleted(transaction).Resolve();
+----
+
+[#_string_TypeDB_Driver_Api_IRule_Label]
+==== Label
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.Label
+----
+
+
+
+Retrieves the unique label of the rule.
+
+[caption=""]
+.Returns
+`string`
+
+[#_VoidPromise_TypeDB_Driver_Api_IRule_SetLabel___ITypeDBTransaction_transaction__string_label_]
+==== SetLabel
+
+[source,cs]
+----
+VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
+----
+
+
+
+Renames the label of the rule. The new label must remain unique.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| `ITypeDBTransaction`
+a| `label` a| The new label to be given to the rule a| `string`
+|===
+
+[caption=""]
+.Returns
+`VoidPromise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+rule.SetLabel(transaction, newLabel).Resolve();
+----
+
+[#_string_TypeDB_Driver_Api_IRule_Then]
+==== Then
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.Then
+----
+
+
+
+The single statement that constitutes the ‘then’ of the rule.
+
+[caption=""]
+.Returns
+`string`
+
+[#_string_TypeDB_Driver_Api_IRule_When]
+==== When
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IRule.When
+----
+
+
+
+The statements that constitute the ‘when’ of the rule.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

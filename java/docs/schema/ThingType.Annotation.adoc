@@ -19,7 +19,7 @@ Checks if this ``Annotation`` is equal to another object.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

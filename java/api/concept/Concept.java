@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -38,7 +36,6 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import javax.annotation.CheckReturnValue;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public interface Concept {
@@ -333,15 +330,6 @@ public interface Concept {
 
         Transitivity(com.vaticle.typedb.driver.jni.Transitivity nativeObject) {
             this.nativeObject = nativeObject;
-        }
-
-        public static Transitivity of(com.vaticle.typedb.driver.jni.Transitivity transitivity) {
-            for (Transitivity value : Transitivity.values()) {
-                if (value.nativeObject == transitivity) {
-                    return value;
-                }
-            }
-            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
     }
 }

@@ -23,7 +23,7 @@ Adds a new role player to play the given role in this ``Relation``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -80,7 +80,7 @@ Retrieves all role players of this ``Relation``, optionally filtered by given ro
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -117,7 +117,7 @@ Retrieves all role types currently played in this ``Relation``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -153,7 +153,7 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -192,7 +192,7 @@ Removes the association of the given instance that plays the given role in this 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

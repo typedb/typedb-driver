@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -71,7 +69,7 @@ export namespace Database {
          * If true, Operations which can be run on any replica will prefer to use this replica.
          */
         readonly preferred: boolean;
-        /** The address of the server hosting this replica */
-        readonly address: string;
+        /** The server hosting this replica */
+        readonly server: string;
     }
 }

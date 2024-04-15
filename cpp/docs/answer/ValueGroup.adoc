@@ -25,6 +25,13 @@ Retrieves the concept that is the group owner.
 .Returns
 `std::unique_ptr< Concept >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMapGroup.owner()
+----
+
 [#_stdstring_TypeDBValueGrouptoString___]
 ==== toString
 
@@ -57,6 +64,13 @@ Retrieves the ``Value`` answer of the group.
 [caption=""]
 .Returns
 `AggregateResult`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+valueGroup.value();
+----
 
 // end::methods[]
 

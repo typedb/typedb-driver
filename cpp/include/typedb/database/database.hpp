@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -41,9 +39,9 @@ public:
     ReplicaInfo& operator=(ReplicaInfo&&) = default;
 
     /**
-     * Retrieves the address of the server hosting this replica
+     * The server hosting this replica
      */
-    std::string address();
+    std::string server();
 
     /**
      * Checks whether this is the primary replica of the raft cluster.

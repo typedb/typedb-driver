@@ -3,10 +3,20 @@
 
 *Package*: `com.vaticle.typedb.driver.api.concept.value`
 
+Used to specify the type of the value. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+thingType.getOwns(transaction, Value.Type.STRING);
+----
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -29,11 +39,19 @@ a| `STRING`
 public boolean isKeyable()
 ----
 
+Returns ``true`` if this value concept can be used as a key via the @key annotation. Otherwise, returns ``false``. 
 
 
 [caption=""]
 .Returns
 `public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+valueType.isKeyable();
+----
 
 [#_Value_Type_isWritable__]
 ==== isWritable
@@ -44,11 +62,19 @@ public boolean isKeyable()
 public boolean isWritable()
 ----
 
+Returns ``true`` if this value concept can be written to a database. Otherwise, returns ``false``. 
 
 
 [caption=""]
 .Returns
 `public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+valueType.isWritable();
+----
 
 [#_Value_Type_of__com_vaticle_typedb_driver_jni_ValueType]
 ==== of
@@ -74,11 +100,19 @@ public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType
 public java.lang.Class<?> valueClass()
 ----
 
+Returns a ``Class`` equivalent of this value concept for this programming language. 
 
 
 [caption=""]
 .Returns
 `public java.lang.Class<?>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+valueType.valueClass();
+----
 
 [#_Value_Type_valueOf__java_lang_String]
 ==== valueOf
@@ -92,7 +126,7 @@ Returns the enum constant of this type with the specified name. The string must 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

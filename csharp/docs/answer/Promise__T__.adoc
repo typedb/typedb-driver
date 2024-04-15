@@ -1,0 +1,105 @@
+[#_Promise__T_]
+=== Promise< T >
+
+*Package*: `TypeDB.Driver.Common`
+
+
+
+A ``Promise`` represents an asynchronous network operation.
+
+The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``Resolve``d.
+
+// tag::methods[]
+[#_static_Promise__TTo___TypeDB_Driver_Common_Promise__T___Map__TFrom__TTo_____Func__TFrom__resolver__Func__TFrom__TTo___selector_]
+==== Map< TFrom, TTo >
+
+[source,cs]
+----
+static Promise< TTo > TypeDB.Driver.Common.Promise< T >.Map< TFrom, TTo >(Func< TFrom? > resolver, Func< TFrom, TTo > selector)
+----
+
+
+
+Helper function to map promises.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `resolver` a| The function to wrap into the promise a| `Func< TFrom? >`
+a| `selector` a| The mapping (like Select from Linq) function a| `Func< TFrom, TTo >`
+|===
+
+[caption=""]
+.Returns
+`Promise< TTo >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+Promise<TFrom>.Map<TFrom, TTo>(resolver, selector);
+----
+
+[#_TypeDB_Driver_Common_Promise__T___Promise___Func__T__resolver_]
+==== Promise
+
+[source,cs]
+----
+Promise(Func< T? > resolver)
+----
+
+
+
+Promise constructor
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `resolver` a| The function to wrap into the promise a| `Func< T? >`
+|===
+
+[caption=""]
+.Returns
+`Promise`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+new Promise(resolver);
+----
+
+[#_T_TypeDB_Driver_Common_Promise__T___Resolve___]
+==== Resolve
+
+[source,cs]
+----
+T? Resolve()
+----
+
+
+
+Retrieves the result of the Promise.
+
+
+[caption=""]
+.Returns
+`T?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+promise.Resolve();
+----
+
+// end::methods[]
+

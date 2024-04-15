@@ -30,13 +30,13 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close();
 ----
 
-[#_TypeDBSession_database_name__]
-==== database_name
+[#_TypeDBSession_databaseName__]
+==== databaseName
 
 [source,java]
 ----
 @CheckReturnValue
-java.lang.String database_name()
+java.lang.String databaseName()
 ----
 
 Returns the name of the database of the session. 
@@ -89,7 +89,7 @@ Registers a callback function which will be executed when this session is closed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -120,7 +120,7 @@ Registers a callback function which will be executed when this session is reopen
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -187,7 +187,7 @@ Opens a transaction to perform read or write queries on the database connected t
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

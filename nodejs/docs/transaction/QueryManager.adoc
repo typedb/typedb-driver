@@ -16,7 +16,7 @@ Performs a TypeQL Define query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -47,7 +47,7 @@ Performs a TypeQL Delete query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -78,7 +78,7 @@ Performs a TypeQL Explain query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -111,7 +111,7 @@ Returns a stream of JSON Objects of strings to JSON. JSON can be: Arrays of JSON
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -142,7 +142,7 @@ Performs a TypeQL Get query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -173,7 +173,7 @@ Performs a TypeQL Get Aggregate query in the transaction. Returns an empty promi
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -204,7 +204,7 @@ Performs a TypeQL Get Group query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -235,7 +235,7 @@ Performs a TypeQL Get Group Aggregate query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -266,7 +266,7 @@ Performs a TypeQL Insert query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -297,7 +297,7 @@ Performs a TypeQL Undefine query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -328,7 +328,7 @@ Performs a TypeQL Update query in the transaction.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

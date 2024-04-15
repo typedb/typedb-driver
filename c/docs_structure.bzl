@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,14 +14,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 # Used to map types/functions in the code to a directory & file.
 # Keys of dir_mapping are a prefix of the normalised type or function name.
 # A name is stripped of underscores, made lowercase  resolved to the longest matching key.
 # This key is used as the filename of the file their documentation will be appended to (unless `force_file` overrides it)
 # The value is the corresponding directory in which the file must sit.
-# The exception is that types follow this process to determine the directory, but they will always be documeted in 'types.adoc'.
 dir_mapping = {
 
     "connection": "connection",

@@ -1,0 +1,162 @@
+[#_IAttribute]
+=== IAttribute
+
+*Package*: `TypeDB.Driver.Api`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.IThing`
+* `TypeDB.Driver.Api.IConcept`
+
+
+
+Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
+
+Attributes can be uniquely addressed by their type and value.
+
+// tag::methods[]
+[#_IAttribute_IConcept__TypeDB_Driver_Api_IAttribute_AsAttribute___]
+==== AsAttribute
+
+[source,cs]
+----
+IAttribute IConcept. AsAttribute()
+----
+
+
+
+Casts the concept to ``IAttribute``.
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`IAttribute IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.AsAttribute();
+----
+
+[#_IEnumerable__IThing___TypeDB_Driver_Api_IAttribute_GetOwners___ITypeDBTransaction_transaction_]
+==== GetOwners
+
+[source,cs]
+----
+IEnumerable< IThing > GetOwners(ITypeDBTransaction transaction)
+----
+
+
+
+Retrieves the instances that own this ``IAttribute``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IThing >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.GetOwners(transaction);
+----
+
+[#_IEnumerable__IThing___TypeDB_Driver_Api_IAttribute_GetOwners___ITypeDBTransaction_transaction__IThingType_ownerType_]
+==== GetOwners
+
+[source,cs]
+----
+IEnumerable< IThing > GetOwners(ITypeDBTransaction transaction, IThingType ownerType)
+----
+
+
+
+Retrieves the instances that own this ``IAttribute``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `ITypeDBTransaction`
+a| `ownerType` a| Filter results for only owners of the given type a| `IThingType`
+|===
+
+[caption=""]
+.Returns
+`IEnumerable< IThing >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.GetOwners(transaction, ownerType);
+----
+
+[#_bool_IConcept__TypeDB_Driver_Api_IAttribute_IsAttribute___]
+==== IsAttribute
+
+[source,cs]
+----
+bool IConcept. IsAttribute()
+----
+
+
+
+Checks if the concept is an ``IAttribute``.
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.IsAttribute();
+----
+
+[#_IValue_TypeDB_Driver_Api_IAttribute_Value]
+==== Value
+
+[source,cs]
+----
+IValue TypeDB.Driver.Api.IAttribute.Value
+----
+
+
+
+Retrieves the value which the ``IAttribute`` instance holds.
+
+
+[caption=""]
+.Returns
+`IValue`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+attribute.Value;
+----
+
+// end::methods[]
+

@@ -1,3 +1,6 @@
+[#_methods__schema__attributetype]
+=== attributetype
+
 [#_attribute_type_get]
 ==== attribute_type_get
 
@@ -42,28 +45,14 @@ struct ConceptIterator* attribute_type_get_owners(struct Transaction* transactio
 
 Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly or through inheritance. Specify ``Transitive`` for direct and inherited ownership, or ``Explicit`` for direct ownership only
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     annotations
-     a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations.
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations. a| 
+a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, Only retrieves thing types of ownerships with all specified annotations. a| `const struct Annotation*const*`
 |===
 
 [caption=""]

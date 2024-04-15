@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>$packageid$</id>
+    <version>$version$</version>
+    <authors>TypeDB</authors>
+    <copyright>Copyright © 2024 Vaticle</copyright>
+    <owners>TypeDB</owners>
+    <title>TypeDB Driver Runtime</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Runtime part of the library for TypeDB C# support.</summary>
+    <description>
+      TypeDB is a polymorphic database with a conceptual data model, a strong subtyping system, a symbolic reasoning engine, and a beautiful and elegant type-theoretic language: TypeQL.
+      This package contains a runtime library for the TypeDB driver: https://www.nuget.org/packages/TypeDB.Driver.
+      Check all the available platform-dependent runtime libraries here: https://www.nuget.org/packages?q=TypeDB.Driver.Pinvoke.
+    </description>
+    <projectUrl>https://typedb.com</projectUrl>
+    <repository type="GitHub" url="https://github.com/vaticle/typedb-driver" />
+    <license type="expression">Apache-2.0</license>
+    <iconUrl>https://typedb.com/favicon.ico</iconUrl>
+    <tags>Database TypeDB TypeQL Runtime</tags>
+    <releaseNotes>
+      See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver/releases.
+    </releaseNotes>
+    <readme>docs/README.md</readme>
+  </metadata>
+  <files>
+    <file src="README.md" target="docs/" />
+
+    <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Pinvoke.xml" target="lib/$target_framework$" />
+$native_lib_declrs$
+
+  </files>
+</package>

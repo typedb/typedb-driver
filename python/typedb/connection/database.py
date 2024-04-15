@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,14 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 from __future__ import annotations
 
 from typing import Optional
 
 from typedb.native_driver_wrapper import database_get_name, database_schema, database_delete, database_rule_schema, \
-    database_type_schema, ReplicaInfo, replica_info_get_address, replica_info_is_primary, replica_info_is_preferred, \
+    database_type_schema, ReplicaInfo, replica_info_get_server, replica_info_is_primary, replica_info_is_preferred, \
     replica_info_get_term, database_get_replicas_info, database_get_primary_replica_info, \
     database_get_preferred_replica_info, replica_info_iterator_next, Database as NativeDatabase, \
     TypeDBDriverExceptionNative
@@ -109,8 +105,8 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         def database(self) -> Database:
             pass
 
-        def address(self) -> str:
-            return replica_info_get_address(self._info)
+        def server(self) -> str:
+            return replica_info_get_server(self._info)
 
         def is_primary(self) -> bool:
             return replica_info_is_primary(self._info)

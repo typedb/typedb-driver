@@ -4,7 +4,7 @@
 [caption=""]
 .Properties
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
@@ -89,7 +89,7 @@ Registers a callback function which will be executed when this session is closed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -119,7 +119,7 @@ Registers a callback function which will be executed when this session is reopen
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value
@@ -149,7 +149,7 @@ Opens a transaction to perform read or write queries on the database connected t
 
 [caption=""]
 .Input parameters
-[cols="~,~,~,~"]
+[cols=",,,"]
 [options="header"]
 |===
 |Name |Description |Type |Default Value

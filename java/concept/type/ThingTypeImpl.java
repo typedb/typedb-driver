@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -94,11 +92,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public Label getLabel() {
-        try {
-            return Label.of(thing_type_get_label(nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Label.of(thing_type_get_label(nativeObject));
     }
 
     @Override

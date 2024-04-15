@@ -1,0 +1,580 @@
+[#_IConcept]
+=== IConcept
+
+*Package*: `TypeDB.Driver.Api`
+
+// tag::methods[]
+[#_IAttribute_TypeDB_Driver_Api_IConcept_AsAttribute___]
+==== AsAttribute
+
+[source,cs]
+----
+IAttribute AsAttribute()
+----
+
+
+
+Casts the concept to ``IAttribute``.
+
+
+Implemented in TypeDB.Driver.Api.IAttribute.
+
+[caption=""]
+.Returns
+`IAttribute`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttribute();
+----
+
+[#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType___]
+==== AsAttributeType
+
+[source,cs]
+----
+IAttributeType AsAttributeType()
+----
+
+
+
+Casts the concept to ``IAttributeType``.
+
+
+Implemented in TypeDB.Driver.Api.IAttributeType.
+
+[caption=""]
+.Returns
+`IAttributeType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttributeType();
+----
+
+[#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity___]
+==== AsEntity
+
+[source,cs]
+----
+IEntity AsEntity()
+----
+
+
+
+Casts the concept to ``IEntity``.
+
+
+Implemented in TypeDB.Driver.Api.IEntity.
+
+[caption=""]
+.Returns
+`IEntity`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntity();
+----
+
+[#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType___]
+==== AsEntityType
+
+[source,cs]
+----
+IEntityType AsEntityType()
+----
+
+
+
+Casts the concept to ``IEntityType``.
+
+
+Implemented in TypeDB.Driver.Api.IEntityType.
+
+[caption=""]
+.Returns
+`IEntityType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntityType();
+----
+
+[#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation___]
+==== AsRelation
+
+[source,cs]
+----
+IRelation AsRelation()
+----
+
+
+
+Casts the concept to ``IRelation``.
+
+
+Implemented in TypeDB.Driver.Api.IRelation.
+
+[caption=""]
+.Returns
+`IRelation`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelation();
+----
+
+[#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType___]
+==== AsRelationType
+
+[source,cs]
+----
+IRelationType AsRelationType()
+----
+
+
+
+Casts the concept to ``IRelationType``.
+
+
+Implemented in TypeDB.Driver.Api.IRelationType.
+
+[caption=""]
+.Returns
+`IRelationType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelationType();
+----
+
+[#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType___]
+==== AsRoleType
+
+[source,cs]
+----
+IRoleType AsRoleType()
+----
+
+
+
+Casts the concept to ``IRoleType``.
+
+
+Implemented in TypeDB.Driver.Api.IRoleType.
+
+[caption=""]
+.Returns
+`IRoleType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRoleType();
+----
+
+[#_IThing_TypeDB_Driver_Api_IConcept_AsThing___]
+==== AsThing
+
+[source,cs]
+----
+IThing AsThing()
+----
+
+
+
+Casts the concept to ``IThing``.
+
+
+Implemented in TypeDB.Driver.Api.IThing.
+
+[caption=""]
+.Returns
+`IThing`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsThing();
+----
+
+[#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType___]
+==== AsThingType
+
+[source,cs]
+----
+IThingType AsThingType()
+----
+
+
+
+Casts the concept to ``IThingType``.
+
+
+Implemented in TypeDB.Driver.Api.IThingType.
+
+[caption=""]
+.Returns
+`IThingType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsThingType();
+----
+
+[#_IType_TypeDB_Driver_Api_IConcept_AsType___]
+==== AsType
+
+[source,cs]
+----
+IType AsType()
+----
+
+
+
+Casts the concept to ``IType``.
+
+
+Implemented in TypeDB.Driver.Api.IType.
+
+[caption=""]
+.Returns
+`IType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType();
+----
+
+[#_IValue_TypeDB_Driver_Api_IConcept_AsValue___]
+==== AsValue
+
+[source,cs]
+----
+IValue AsValue()
+----
+
+
+
+Casts the concept to ``IValue``.
+
+
+Implemented in TypeDB.Driver.Api.IValue.
+
+[caption=""]
+.Returns
+`IValue`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsAttribute___]
+==== IsAttribute
+
+[source,cs]
+----
+bool IsAttribute()
+----
+
+
+
+Checks if the concept is an ``IAttribute``.
+
+
+Implemented in TypeDB.Driver.Api.IAttribute.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttribute();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType___]
+==== IsAttributeType
+
+[source,cs]
+----
+bool IsAttributeType()
+----
+
+
+
+Checks if the concept is an ``IAttributeType``.
+
+
+Implemented in TypeDB.Driver.Api.IAttributeType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttributeType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsEntity___]
+==== IsEntity
+
+[source,cs]
+----
+bool IsEntity()
+----
+
+
+
+Checks if the concept is an ``IEntity``.
+
+
+Implemented in TypeDB.Driver.Api.IEntity.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntity();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsEntityType___]
+==== IsEntityType
+
+[source,cs]
+----
+bool IsEntityType()
+----
+
+
+
+Checks if the concept is an ``IEntityType``.
+
+
+Implemented in TypeDB.Driver.Api.IEntityType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntityType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsRelation___]
+==== IsRelation
+
+[source,cs]
+----
+bool IsRelation()
+----
+
+
+
+Checks if the concept is a ``IRelation``.
+
+
+Implemented in TypeDB.Driver.Api.IRelation.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelation();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsRelationType___]
+==== IsRelationType
+
+[source,cs]
+----
+bool IsRelationType()
+----
+
+
+
+Checks if the concept is a ``IRelationType``.
+
+
+Implemented in TypeDB.Driver.Api.IRelationType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelationType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsRoleType___]
+==== IsRoleType
+
+[source,cs]
+----
+bool IsRoleType()
+----
+
+
+
+Checks if the concept is a ``IRoleType``.
+
+
+Implemented in TypeDB.Driver.Api.IRoleType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRoleType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsThing___]
+==== IsThing
+
+[source,cs]
+----
+bool IsThing()
+----
+
+
+
+Checks if the concept is a ``IThing``.
+
+
+Implemented in TypeDB.Driver.Api.IThing.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsThing();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsThingType___]
+==== IsThingType
+
+[source,cs]
+----
+bool IsThingType()
+----
+
+
+
+Checks if the concept is a ``IThingType``.
+
+
+Implemented in TypeDB.Driver.Api.IThingType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsThingType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsType___]
+==== IsType
+
+[source,cs]
+----
+bool IsType()
+----
+
+
+
+Checks if the concept is a ``IType``.
+
+
+Implemented in TypeDB.Driver.Api.IType.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType();
+----
+
+[#_bool_TypeDB_Driver_Api_IConcept_IsValue___]
+==== IsValue
+
+[source,cs]
+----
+bool IsValue()
+----
+
+
+
+Checks if the concept is a ``IValue``.
+
+
+Implemented in TypeDB.Driver.Api.IValue.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue();
+----
+
+// end::methods[]
+

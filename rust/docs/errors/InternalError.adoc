@@ -4,7 +4,7 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Variant
@@ -13,7 +13,7 @@ a| `RecvError`
 a| `SendError`
 a| `UnexpectedRequestType`
 a| `UnexpectedResponseType`
-a| `UnknownConnectionAddress`
+a| `UnknownServer`
 |===
 // end::enum_constants[]
 

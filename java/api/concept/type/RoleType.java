@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -179,7 +177,7 @@ public interface RoleType extends Type {
     /**
      * Retrieves the <code>Thing</code> instances that play this role.
      *
-     * @see RoleType#getPlayerTypes(TypeDBTransaction, Transitivity)
+     * @see RoleType#getPlayerInstances(TypeDBTransaction, Transitivity)
      */
     @CheckReturnValue
     Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction);

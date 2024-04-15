@@ -1,0 +1,141 @@
+[#_IConceptMap]
+=== IConceptMap
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Contains a mapping of variables to concepts.
+
+// tag::methods[]
+[#_IExplainables_TypeDB_Driver_Api_IConceptMap_AllExplainables]
+==== AllExplainables
+
+[source,cs]
+----
+IExplainables TypeDB.Driver.Api.IConceptMap.AllExplainables
+----
+
+
+
+Gets the ``IExplainables`` object for this ``IConceptMap``, exposing which of the concepts in this ``IConceptMap`` are explainable.
+
+
+[caption=""]
+.Returns
+`IExplainables`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.AllExplainables;
+----
+
+[#_IConcept_TypeDB_Driver_Api_IConceptMap_Get___string_variable_]
+==== Get
+
+[source,cs]
+----
+IConcept Get(string variable)
+----
+
+
+
+Retrieves a concept for a given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `string`
+|===
+
+[caption=""]
+.Returns
+`IConcept`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.Get(variable);
+----
+
+[#_IEnumerable__IConcept___TypeDB_Driver_Api_IConceptMap_GetConcepts___]
+==== GetConcepts
+
+[source,cs]
+----
+IEnumerable< IConcept > GetConcepts()
+----
+
+
+
+Returns a collection of all concepts in this ``IConceptMap``.
+
+
+[caption=""]
+.Returns
+`IEnumerable< IConcept >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.GetConcepts();
+----
+
+[#_Dictionary__string__IConcept___TypeDB_Driver_Api_IConceptMap_GetMap___]
+==== GetMap
+
+[source,cs]
+----
+Dictionary< string, IConcept > GetMap()
+----
+
+
+
+Returns the inner ``Dictionary`` (``Map`` as a common TypeDB term) where keys are query variables, and values are concepts.
+
+
+[caption=""]
+.Returns
+`Dictionary< string, IConcept >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.GetMap();
+----
+
+[#_IEnumerable__string___TypeDB_Driver_Api_IConceptMap_GetVariables___]
+==== GetVariables
+
+[source,cs]
+----
+IEnumerable< string > GetVariables()
+----
+
+
+
+Returns a collection of all variables in this ``IConceptMap``.
+
+
+[caption=""]
+.Returns
+`IEnumerable< string >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptMap.GetVariables();
+----
+
+// end::methods[]
+

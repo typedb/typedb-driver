@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -226,7 +224,7 @@ public class RelationTypeSteps {
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes do not contain:")
     public void relation_type_get_role_type_get_subtypes_do_not_contain(String relationLabel, String roleLabel, List<Label> subLabels) {
         Set<Label> actuals = relation_type_get_role_type_get_subtypes(relationLabel, roleLabel);
-        System.out.println(actuals);
+
         for (Label subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }

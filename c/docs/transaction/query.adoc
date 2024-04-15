@@ -1,3 +1,6 @@
+[#_methods__transaction__query]
+=== query
+
 [#_query_define]
 ==== query_define
 
@@ -42,33 +45,15 @@ struct ExplanationIterator* query_explain(struct Transaction* transaction, const
 
 Performs a TypeQL Explain query in the transaction.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     explainable
-     The Explainable to be explained
-    
-    
-     options
-     Specify query options
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `explainable` a| The Explainable to be explained a| 
-a| `options` a| Specify query options a| 
+a| `explainable` a| The Explainable to be explained a| `const struct Explainable*`
+a| `options` a| Specify query options a| `const struct Options*`
 |===
 
 [caption=""]

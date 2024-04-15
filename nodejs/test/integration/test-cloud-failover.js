@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -117,7 +115,7 @@ async function run() {
             );
             primaryReplica = await seekPrimaryReplica(driver.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
-            const port = primaryReplica.address.substring(10,15);
+            const port = primaryReplica.server.substring(10,15);
             const primaryReplicaServerPID = getServerPID(port);
             console.info(`Primary replica is hosted by server with PID ${primaryReplicaServerPID}`);
             spawnSync("kill", ["-9", primaryReplicaServerPID]);
@@ -131,7 +129,7 @@ async function run() {
             console.info(`Retrieved entity type with label '${person.label.scopedName}' from new primary replica`);
             assert(person.label.scopedName === "person");
             await session.close();
-            const idx = primaryReplica.address[10];
+            const idx = primaryReplica.server[10];
             serverStart(idx);
             await new Promise(resolve => setTimeout(resolve, 20000));
             const spawned = getServerPID(`${idx}1729`);

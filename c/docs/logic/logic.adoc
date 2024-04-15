@@ -1,3 +1,6 @@
+[#_methods__logic__logic]
+=== logic
+
 [#_logic_manager_get_rule]
 ==== logic_manager_get_rule
 
@@ -42,38 +45,16 @@ struct RulePromise* logic_manager_put_rule(struct Transaction* transaction, cons
 
 Creates a new Rule if none exists with the given label, or replaces the existing one.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     label
-     The label of the Rule to create or replace
-    
-    
-     when
-     The when body of the rule to create
-    
-    
-     then
-     The then body of the rule to create
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or replace a| 
-a| `when` a| The when body of the rule to create a| 
-a| `then` a| The then body of the rule to create a| 
+a| `label` a| The label of the Rule to create or replace a| `const char*`
+a| `when` a| The when body of the rule to create a| `const char*`
+a| `then` a| The then body of the rule to create a| `const char*`
 |===
 
 [caption=""]

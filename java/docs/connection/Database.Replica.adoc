@@ -6,21 +6,6 @@
 The metadata and state of an individual raft replica of a database.
 
 // tag::methods[]
-[#_Database_Replica_address__]
-==== address
-
-[source,java]
-----
-@CheckReturnValue
-java.lang.String address()
-----
-
-Retrieves the address of the server hosting this replica
-
-[caption=""]
-.Returns
-`java.lang.String`
-
 [#_Database_Replica_isPreferred__]
 ==== isPreferred
 
@@ -50,6 +35,21 @@ Checks whether this is the primary replica of the raft cluster.
 [caption=""]
 .Returns
 `boolean`
+
+[#_Database_Replica_server__]
+==== server
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String server()
+----
+
+The server hosting this replica
+
+[caption=""]
+.Returns
+`java.lang.String`
 
 [#_Database_Replica_term__]
 ==== term

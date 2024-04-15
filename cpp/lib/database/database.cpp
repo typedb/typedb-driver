@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,9 +31,9 @@ namespace TypeDB {
 ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
     : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
 
-std::string ReplicaInfo::address() {
+std::string ReplicaInfo::server() {
     CHECK_NATIVE(replicaInfoNative);
-    return Utils::stringFromNative(_native::replica_info_get_address(replicaInfoNative.get()));
+    return Utils::stringFromNative(_native::replica_info_get_server(replicaInfoNative.get()));
 }
 
 bool ReplicaInfo::isPrimary() {

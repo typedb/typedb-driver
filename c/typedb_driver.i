@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,6 +33,10 @@ extern "C" {
 
 #ifdef SWIGPYTHON
 %include "swig/typedb_driver_python.swg"
+#endif
+
+#ifdef SWIGCSHARP
+%include "swig/typedb_driver_csharp.swg"
 #endif
 
 %nodefaultctor;
@@ -341,6 +343,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject connection_open_core;
 %newobject connection_open_cloud;
+%newobject connection_open_cloud_translated;
 
 %newobject credential_new;
 
@@ -355,7 +358,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject database_get_primary_replica_info;
 %newobject database_get_replicas_info;
 
-%newobject replica_info_get_address;
+%newobject replica_info_get_server;
 %newobject replica_info_iterator_next;
 
 %newobject databases_all;

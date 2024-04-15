@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -44,7 +42,19 @@ export interface RelationType extends ThingType {
 
     /** @inheritDoc */
     getSupertype(transaction: TypeDBTransaction): Promise<RelationType | null>;
-    /** @inheritDoc */
+
+    /**
+     * Sets the supplied <code>RelationType</code> as the supertype of the current <code>RelationType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relationType.setSupertype(transaction, superRelationType).resolve();
+     * ```
+     *
+     * @param transaction The current transaction
+     * @param superRelationType The <code>RelationType</code> to set as the supertype of this <code>RelationType</code>
+     */
     setSupertype(transaction: TypeDBTransaction, type: RelationType): Promise<void>;
 
     /** @inheritDoc */

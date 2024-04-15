@@ -1,0 +1,71 @@
+[#_IUser]
+=== IUser
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+TypeDB user information
+
+// tag::methods[]
+[#_long_TypeDB_Driver_Api_IUser_PasswordExpirySeconds]
+==== PasswordExpirySeconds
+
+[source,cs]
+----
+long? TypeDB.Driver.Api.IUser.PasswordExpirySeconds
+----
+
+
+
+Returns the number of seconds remaining till this user’s current password expires.
+
+[caption=""]
+.Returns
+`long?`
+
+[#_void_TypeDB_Driver_Api_IUser_UpdatePassword___string_passwordOld__string_passwordNew_]
+==== UpdatePassword
+
+[source,cs]
+----
+void UpdatePassword(string passwordOld, string passwordNew)
+----
+
+
+
+Updates the password for this user.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `passwordOld` a| The current password of this user a| `string`
+a| `passwordNew` a| The new password a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_TypeDB_Driver_Api_IUser_Username]
+==== Username
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IUser.Username
+----
+
+
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

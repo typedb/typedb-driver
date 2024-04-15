@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 artifacts = [
   "ch.qos.logback:logback-classic",
@@ -51,7 +47,6 @@ artifacts = [
   "org.hamcrest:hamcrest-all",
   "org.hamcrest:hamcrest-core",
   "org.hamcrest:hamcrest-library",
-  "org.mockito:mockito-core",
   "org.slf4j:jcl-over-slf4j",
   "org.slf4j:slf4j-api",
   "org.slf4j:log4j-over-slf4j",

@@ -1,3 +1,27 @@
+[#_methods__connection__user]
+=== user
+
+[#_Struct_User]
+==== Struct User
+
+
+
+User information
+
+[#_Struct_UserIterator]
+==== Struct UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_Struct_UserManager]
+==== Struct UserManager
+
+
+
+Provides access to all user management methods.
+
 [#_user_drop]
 ==== user_drop
 
@@ -122,43 +146,17 @@ void user_password_update(struct User* user, const struct UserManager* user_mana
 
 Updates the password for the current authenticated user.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     user
-     The user to update the password of - must be the current user.
-    
-    
-     user_manager
-     The ``UserManager`` object on this connection.
-    
-    
-     password_old
-     The current password of this user
-    
-    
-     password_new
-     The new password
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `user` a| The user to update the password of - must be the current user. a| 
-a| `user_manager` a| The ``UserManager`` object on this connection. a| 
-a| `password_old` a| The current password of this user a| 
-a| `password_new` a| The new password a| 
+a| `user` a| The user to update the password of - must be the current user. a| `struct User*`
+a| `user_manager` a| The ``UserManager`` object on this connection. a| `const struct UserManager*`
+a| `password_old` a| The current password of this user a| `const char*`
+a| `password_new` a| The new password a| `const char*`
 |===
 
 [caption=""]
@@ -273,38 +271,16 @@ void users_set_password(const struct UserManager* user_manager, const char* user
 
 Sets a new password for a user. This operation can only be performed by administrators.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     user_manager
-     The UserManager object to be used. This must be on a connection opened by an administrator.
-    
-    
-     username
-     The name of the user to set the password of
-    
-    
-     password
-     The new password
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `user_manager` a| The UserManager object to be used. This must be on a connection opened by an administrator. a| 
-a| `username` a| The name of the user to set the password of a| 
-a| `password` a| The new password a| 
+a| `user_manager` a| The UserManager object to be used. This must be on a connection opened by an administrator. a| `const struct UserManager*`
+a| `username` a| The name of the user to set the password of a| `const char*`
+a| `password` a| The new password a| `const char*`
 |===
 
 [caption=""]

@@ -51,7 +51,7 @@ Checks whether a condition is satisfied by ALL answers in this stream.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -74,7 +74,7 @@ Returns a new stream from this stream consisting only of elements which satisfy 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -114,7 +114,7 @@ Given a function which accepts a single element of this stream and returns a new
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -137,7 +137,7 @@ Executes the given function for each element in the stream.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -174,7 +174,7 @@ map<U>(mapper): Stream<U>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -211,7 +211,7 @@ Checks whether a condition is satisfied by ANY answer in this stream.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

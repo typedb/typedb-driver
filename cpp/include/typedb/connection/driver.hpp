@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,6 +24,8 @@
 #include "typedb/user/user_manager.hpp"
 
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 // The namespace comment is needed to document enums.
 /**
@@ -74,7 +74,7 @@ public:
      *
      * @param address The address of the TypeDB server
      */
-    static Driver coreDriver(const std::string& coreAddress);
+    static Driver coreDriver(const std::string& address);
 
     /**
      * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
@@ -85,10 +85,12 @@ public:
      * Driver::cloudDriver(addresses, credential);
      * </pre>
      *
-     * @param addresses The address(es) of the TypeDB server(s)
+     * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses
+     * received from the TypeDB server(s) to addresses to be used by the driver for connection
      * @param credential The Credential to connect with
      */
-    static Driver cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential);
+    static Driver cloudDriver(const std::vector<std::string>& addresses, const Credential& credential);
+    static Driver cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential);
 
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;
@@ -151,6 +153,9 @@ private:
  *
  * <h3>Examples</h3>
  * <pre>
+ * // Creates a credential with username & password over a plain-text connection.
+ * Credential credential(username, password, false);
+ *
  * // Creates a credential as above, but the connection will be made over TLS.
  * Credential credential(username, password, true);
  *

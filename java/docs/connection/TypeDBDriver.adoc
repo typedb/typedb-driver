@@ -104,7 +104,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -133,11 +133,19 @@ driver.session(database, sessionType, options);
 User user()
 ----
 
-The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+Returns the logged-in user for the connection. Only for TypeDB Cloud. 
+
 
 [caption=""]
 .Returns
 `User`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.user();
+----
 
 [#_TypeDBDriver_users__]
 ==== users
@@ -148,7 +156,7 @@ The ``UserManager`` instance for this connection, providing access to user manag
 UserManager users()
 ----
 
-Returns the logged-in user for the connection. Only for TypeDB Cloud. 
+The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud. 
 
 
 [caption=""]
@@ -159,7 +167,7 @@ Returns the logged-in user for the connection. Only for TypeDB Cloud.
 .Code examples
 [source,java]
 ----
-driver.user();
+driver.users();
 ----
 
 // end::methods[]

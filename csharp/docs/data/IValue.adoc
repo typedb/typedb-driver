@@ -1,0 +1,356 @@
+[#_IValue]
+=== IValue
+
+*Package*: `TypeDB.Driver.Api`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.IConcept`
+
+// tag::methods[]
+[#_bool_TypeDB_Driver_Api_IValue_AsBool___]
+==== AsBool
+
+[source,cs]
+----
+bool AsBool()
+----
+
+
+
+Returns a ``bool`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsBool();
+----
+
+[#_System_DateTime_TypeDB_Driver_Api_IValue_AsDateTime___]
+==== AsDateTime
+
+[source,cs]
+----
+System.DateTime AsDateTime()
+----
+
+
+
+Returns a ``datetime`` value of this value concept. This value contains raw date and time without considering your time zone (Kind = Unspecified). If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`System.DateTime`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsDateTime();
+----
+
+[#_double_TypeDB_Driver_Api_IValue_AsDouble___]
+==== AsDouble
+
+[source,cs]
+----
+double AsDouble()
+----
+
+
+
+Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`double`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsDouble();
+----
+
+[#_long_TypeDB_Driver_Api_IValue_AsLong___]
+==== AsLong
+
+[source,cs]
+----
+long AsLong()
+----
+
+
+
+Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsLong();
+----
+
+[#_string_TypeDB_Driver_Api_IValue_AsString___]
+==== AsString
+
+[source,cs]
+----
+string AsString()
+----
+
+
+
+Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsString();
+----
+
+[#_object_TypeDB_Driver_Api_IValue_AsUntyped___]
+==== AsUntyped
+
+[source,cs]
+----
+object AsUntyped()
+----
+
+
+
+Returns an untyped ``object`` value of this value concept. This is useful for value equality or printing without having to switch on the actual contained value.
+
+
+[caption=""]
+.Returns
+`object`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.AsUntyped();
+----
+
+[#_IValue_IConcept__TypeDB_Driver_Api_IValue_AsValue___]
+==== AsValue
+
+[source,cs]
+----
+IValue IConcept. AsValue()
+----
+
+
+
+Casts the concept to ``IValue``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`IValue IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue();
+----
+
+[#_bool_TypeDB_Driver_Api_IValue_IsBool___]
+==== IsBool
+
+[source,cs]
+----
+bool IsBool()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``bool``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsBool();
+----
+
+[#_bool_TypeDB_Driver_Api_IValue_IsDateTime___]
+==== IsDateTime
+
+[source,cs]
+----
+bool IsDateTime()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsDateTime();
+----
+
+[#_bool_TypeDB_Driver_Api_IValue_IsDouble___]
+==== IsDouble
+
+[source,cs]
+----
+bool IsDouble()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsDouble();
+----
+
+[#_bool_TypeDB_Driver_Api_IValue_IsLong___]
+==== IsLong
+
+[source,cs]
+----
+bool IsLong()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsLong();
+----
+
+[#_bool_TypeDB_Driver_Api_IValue_IsString___]
+==== IsString
+
+[source,cs]
+----
+bool IsString()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.IsString();
+----
+
+[#_bool_IConcept__TypeDB_Driver_Api_IValue_IsValue___]
+==== IsValue
+
+[source,cs]
+----
+bool IConcept. IsValue()
+----
+
+
+
+Checks if the concept is a ``IValue``.
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue();
+----
+
+[#_ValueType_TypeDB_Driver_Api_IValue_Type]
+==== Type
+
+[source,cs]
+----
+ValueType TypeDB.Driver.Api.IValue.Type
+----
+
+
+
+Retrieves the ``IValue.ValueType`` of this value concept.
+
+
+[caption=""]
+.Returns
+`ValueType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+value.Type;
+----
+
+// end::methods[]
+

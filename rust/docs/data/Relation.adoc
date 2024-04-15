@@ -17,7 +17,7 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description

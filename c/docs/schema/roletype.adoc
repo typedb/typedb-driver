@@ -1,3 +1,6 @@
+[#_methods__schema__roletype]
+=== roletype
+
 [#_role_type_delete]
 ==== role_type_delete
 

@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -38,6 +36,7 @@ import java.util.*
 import java.util.concurrent.Callable
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.io.path.name
 import kotlin.system.exitProcess
 
 
@@ -63,6 +62,8 @@ class DoxygenParserC : Callable<Unit> {
 
     @CommandLine.Option(names = ["--forcefile", "-f"], required = true)
     private lateinit var unnormalisedFilenameOverrides: MutableMap<String, String>
+
+    private var recreatedFiles: MutableSet<File> = mutableSetOf()
 
     @Override
     override fun call() {
@@ -108,30 +109,28 @@ class DoxygenParserC : Callable<Unit> {
                 .map { memItemElement -> parseMethod(memItemElement) }
 
             // Write to lists
-            val typeFileContents: MutableMap<String, MutableList<String>> = HashMap()
-            dirs.values.forEach { typeFileContents[it] = ArrayList() }
-            typedefs.map {
-                typeFileContents[dirs[resolveKey(it.name)]]!!.add(it.toAsciiDoc("cpp"))
-            }
-            enums.forEach {
-                typeFileContents[dirs[resolveKey(it.name)]]!!.add(it.toAsciiDoc("cpp"))
-            }
             val fileContents: MutableMap<String, MutableList<String>> = HashMap()
             dirs.keys.forEach { fileContents[resolveKey(it)] = ArrayList() }
+            typedefs.map {
+                println("Resolving ${it.name}")
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp", headerLevel = 4))
+                println("Done Resolving ${it.name}")
+            }
+            enums.forEach {
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp", headerLevel = 4))
+            }
             functions.forEach {
                 fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp"))
             }
 
             // Write to files
-            typeFileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
-                val outputFile = createFile(docsDir.resolve(entry.key), "types.adoc")
-                entry.value.forEach { outputFile.appendText(it) }
-            }
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val resolvedKey = resolveKey(entry.key)
                 val filename = filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
                 val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
                 val fileContent = entry.value
+                outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+                outputFile.appendText("=== $filename\n\n")
                 fileContent.forEach { outputFile.appendText(it) }
             }
         }
@@ -141,7 +140,13 @@ class DoxygenParserC : Callable<Unit> {
         if (!fileDir.toFile().exists()) {
             Files.createDirectory(fileDir)
         }
+
         val outputFile = fileDir.resolve(filename).toFile()
+        if (!recreatedFiles.contains(outputFile)) {
+            recreatedFiles.add(outputFile)
+            outputFile.delete()
+        }
+
         outputFile.createNewFile()
         return outputFile
     }
@@ -151,11 +156,12 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun resolveKey(key: String): String {
-        return sortedDirsLongest.first { normaliseKey(key).startsWith(it.first) }.first
+        val key_root = key.substringAfter("Struct ").substringAfter("Enum ")
+        return sortedDirsLongest.first { normaliseKey(key_root).startsWith(it.first) }.first
     }
 
     private fun parseTypeDef(element: Element): Class {
-        val name = element.previousElementSibling()!!.text().substringAfter(" ")
+        val name = "Struct " + element.previousElementSibling()!!.text().substringAfter(" ")
         val desc: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         return Class(
@@ -167,7 +173,7 @@ class DoxygenParserC : Callable<Unit> {
 
     private fun parseEnum(element: Element): Class {
         val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
-        val className = element.select("td.memname > a").text()
+        val className = "Enum " + element.select("td.memname > a").text()
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -192,20 +198,25 @@ class DoxygenParserC : Callable<Unit> {
         val methodAnchor = replaceSymbolsForAnchor(methodName)
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
-        val argsMap = argsList.toMap()
+        val argsMap = argsList.associate { (first, second) ->
+            Pair(
+                addZeroWidthWhitespaces(first),
+                addZeroWidthWhitespaces(second)
+            )
+        }
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
-            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
+            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h").substringBefore("<dl class=\"params\">"))) } ?: listOf()
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {
                 val argName = it.child(0).text()
                 assert(argsMap.contains(argName))
                 Variable(
-                    name = argName,
-                    type = argsMap[argName],
+                    name = addZeroWidthWhitespaces(argName),
                     description = reformatTextWithCode(it.child(1).html()),
+                    type = argsMap[argName],
                 )
             }
 
@@ -225,7 +236,7 @@ class DoxygenParserC : Callable<Unit> {
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
             .split(",\\s".toRegex()).map { arg ->
-                arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
+                arg.split("\\s".toRegex()).let { it.last() to it.dropLast(1).joinToString(" ") }
             }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
     }
@@ -235,7 +246,7 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun replacePreTags(html: String): String {
-        return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
+        return html.replace("<pre>", "[source,c]\n----\n").replace("</pre>", "\n----\n")
     }
 
     private fun enhanceSignature(signature: String): String {

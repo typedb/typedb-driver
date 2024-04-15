@@ -244,7 +244,7 @@ java.util.stream.Stream<? extends Thing> getPlayerInstances​(TypeDBTransaction
 Retrieves the ``Thing`` instances that play this role.
 
 
-See also: <<#_getPlayerTypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getPlayerTypes(TypeDBTransaction, Transitivity)``>>
+See also: <<#_getPlayerInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getPlayerInstances(TypeDBTransaction, Transitivity)``>>
 
 
 [caption=""]
@@ -266,7 +266,7 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -319,7 +319,7 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -372,7 +372,7 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -405,7 +405,7 @@ Retrieves the ``RelationType`` that this role is directly related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -437,7 +437,7 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -489,7 +489,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -522,7 +522,7 @@ Retrieves the most immediate supertype of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -554,7 +554,7 @@ Retrieves all supertypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -21,7 +18,7 @@
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
-load("@vaticle_bazel_distribution//docs:cpp/rules.bzl", "doxygen_docs")
+load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")

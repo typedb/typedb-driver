@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 from __future__ import annotations
 
@@ -85,7 +81,7 @@ class DriverErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(DriverErrorMessage, self).__init__(code_prefix="DRI", code_number=code, message_prefix="Driver Error",
+        super(DriverErrorMessage, self).__init__(code_prefix="PDR", code_number=code, message_prefix="Driver Error",
                                                  message_body=message)
 
 
@@ -104,7 +100,7 @@ class ConceptErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(ConceptErrorMessage, self).__init__(code_prefix="CON", code_number=code,
+        super(ConceptErrorMessage, self).__init__(code_prefix="PCO", code_number=code,
                                                   message_prefix="Concept Error", message_body=message)
 
 
@@ -118,7 +114,7 @@ NONEXISTENT_EXPLAINABLE_OWNERSHIP = ConceptErrorMessage(7, "The ownership by own
                                                         "is not explainable.")
 GET_HAS_WITH_MULTIPLE_FILTERS = ConceptErrorMessage(8, "Only one filter can be applied at a time to get_has. "
                                                     "The possible filters are: [attribute_type, attribute_types, "
-                                                    "annotations]")
+                                                    "annotations].")
 UNRECOGNISED_ANNOTATION = ConceptErrorMessage(9, "The annotation '%s' is not recognised.")
 
 
@@ -128,7 +124,7 @@ class QueryErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(QueryErrorMessage, self).__init__(code_prefix="QRY", code_number=code,
+        super(QueryErrorMessage, self).__init__(code_prefix="PQR", code_number=code,
                                                 message_prefix="Query Error", message_body=message)
 
 

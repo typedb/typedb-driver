@@ -25,16 +25,23 @@ Deletes this rule.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| 
+a| `transaction` a| The current ``Transaction`` a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+rule.deleteRule(transaction).get();
+----
 
 [#_BoolFuture_TypeDBRuleisDeleted___Transaction__transaction_]
 ==== isDeleted
@@ -51,16 +58,23 @@ Check if this rule has been deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| 
+a| `transaction` a| The current ``Transaction`` a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `BoolFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+rule.isDeleted(transaction).get();
+----
 
 [#_stdstring_TypeDBRulelabel___]
 ==== label
@@ -93,17 +107,24 @@ Renames the label of the rule. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| 
-a| `label` a| The new label to be given to the rule a| 
+a| `transaction` a| The current ``Transaction`` a| `Transaction&`
+a| `label` a| The new label to be given to the rule a| `const std::string&`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+rule.setLabel(transaction, newLabel).get();
+----
 
 [#_stdstring_TypeDBRulethen___]
 ==== then

@@ -10,7 +10,7 @@ Attribute types represent properties that other types can own. Attribute types h
 [caption=""]
 .Namespace variables
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name
@@ -262,7 +262,7 @@ Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -292,7 +292,7 @@ Checks if this concept is equal to the argument ``concept``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -315,7 +315,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -346,7 +346,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -377,7 +377,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -408,7 +408,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -439,7 +439,7 @@ Retrieves all direct and indirect (or direct only) ``Attributes`` that are insta
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -470,7 +470,7 @@ Retrieves all direct and indirect (or direct only) ``Thing`` objects that are in
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -500,7 +500,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -531,7 +531,7 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optiona
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -563,7 +563,7 @@ getOwners(transaction): Stream<ThingType>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -586,7 +586,7 @@ getOwners(transaction, annotations): Stream<ThingType>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -610,7 +610,7 @@ getOwners(transaction, transitivity): Stream<ThingType>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -634,7 +634,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -664,7 +664,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -695,7 +695,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -726,7 +726,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -758,7 +758,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -789,7 +789,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -821,7 +821,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -853,7 +853,7 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -886,7 +886,7 @@ Retrieves an ``AttributeType``, ownership of which is overridden for this ``Thin
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -917,7 +917,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -947,7 +947,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -978,7 +978,7 @@ Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1009,7 +1009,7 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1039,7 +1039,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1070,7 +1070,7 @@ Retrieves all direct and indirect subtypes of the ``ThingType``. Equivalent to g
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1100,7 +1100,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1131,7 +1131,7 @@ getSubtypes(transaction, transitivity): Stream<AttributeType>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1155,7 +1155,7 @@ getSubtypes(transaction, valueType, transitivity): Stream<AttributeType>
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1180,7 +1180,7 @@ Retrieves the most immediate supertype of the ``ThingType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1210,7 +1210,7 @@ Retrieves all supertypes of the ``ThingType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1240,7 +1240,7 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1312,7 +1312,7 @@ Check if the concept has been deleted
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1524,7 +1524,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1555,7 +1555,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1586,7 +1586,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1617,7 +1617,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1648,7 +1648,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1679,7 +1679,7 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1710,7 +1710,7 @@ Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1740,7 +1740,7 @@ Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1771,7 +1771,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1802,7 +1802,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1834,7 +1834,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1866,7 +1866,7 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1899,7 +1899,7 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1930,7 +1930,7 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1962,7 +1962,7 @@ Sets a regular expression as a constraint for this ``AttributeType``. ``Values``
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -1989,21 +1989,28 @@ attributeType.setRegex(transaction, regex)
 setSupertype(transaction, type): Promise<void>
 ----
 
-
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a|  a| `TypeDBTransaction`
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `type` a|  a| `AttributeType`
 |===
 
 [caption=""]
 .Returns
 `Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.setSupertype(transaction, superAttributeType).resolve();
+----
 
 [#_AttributeType_unsetAbstract__transaction_TypeDBTransaction]
 ==== unsetAbstract
@@ -2017,7 +2024,7 @@ Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -2047,7 +2054,7 @@ Disallows the instances of this ``ThingType`` from owning the given ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -2078,7 +2085,7 @@ Disallows the instances of this ``ThingType`` from playing the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -2109,7 +2116,7 @@ Removes the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

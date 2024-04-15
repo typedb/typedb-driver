@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -23,8 +20,23 @@ load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_test(
-    name = "test-cpp-driver",
-    srcs = ["test.cpp"],
+    name = "test-cpp-driver-core",
+    srcs = ["test_core.cpp"],
+    deps = [
+        "//cpp:typedb-driver-cpp-import",
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
+    ],
+    copts = cxxopts,
+    includes = ["include"],
+    env = {"RUST_BACKTRACE": "full"},
+    linkstatic = True
+)
+
+cc_test(
+    name = "test-cpp-driver-cloud",
+    srcs = ["test_cloud.cpp"],
     deps = [
         "//cpp:typedb-driver-cpp-import",
         # External

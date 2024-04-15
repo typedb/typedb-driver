@@ -10,7 +10,7 @@ Specifies the exact type of this JSON object
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -96,6 +94,19 @@ export interface AttributeType extends ThingType {
 
     /** @inheritdoc */
     getSupertype(transaction: TypeDBTransaction): Promise<AttributeType>;
+
+    /**
+     * Sets the supplied <code>AttributeType</code> as the supertype of the current <code>AttributeType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * attributeType.setSupertype(transaction, superAttributeType).resolve();
+     * ```
+     *
+     * @param transaction The current transaction
+     * @param superAttributeType The <code>AttributeType</code> to set as the supertype of this <code>AttributeType</code>
+     */
     setSupertype(transaction: TypeDBTransaction, type: AttributeType): Promise<void>;
 
     /** @inheritdoc */

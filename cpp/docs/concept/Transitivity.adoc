@@ -10,7 +10,7 @@ Used in ConceptAPI to specify whether to query only explicit schema constraints 
 [caption=""]
 .Enum constants
 // tag::enum_constants[]
-[cols="~"]
+[cols=""]
 [options="header"]
 |===
 |Name

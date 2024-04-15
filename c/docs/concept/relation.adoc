@@ -1,3 +1,6 @@
+[#_methods__concept__relation]
+=== relation
+
 [#_relation_add_role_player]
 ==== relation_add_role_player
 
@@ -26,28 +29,14 @@ struct ConceptIterator* relation_get_players_by_role_type(struct Transaction* tr
 
 Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     role_types
-     a null-terminated array of ``RoleType``s to include.
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `role_types` a| a null-terminated array of ``RoleType``s to include. a| 
+a| `role_types` a| a null-terminated array of ``RoleType``s to include. a| `const struct Concept*const*`
 |===
 
 [caption=""]

@@ -21,7 +21,7 @@ Checks if this Label is equal to another object.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -74,7 +74,7 @@ Creates a Label from a specified name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -106,7 +106,7 @@ Creates a Label from a specified scope and name.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -166,7 +166,7 @@ Returns the string representation of the scoped name.
 .Code examples
 [source,java]
 ----
-label.scoped_name();
+label.scopedName();
 ----
 
 [#_Label_toString__]
@@ -188,7 +188,7 @@ Returns the string representation of the scoped name.
 .Code examples
 [source,java]
 ----
-label.scoped_name();
+label.toString();
 ----
 
 // end::methods[]

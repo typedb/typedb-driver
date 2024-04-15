@@ -34,16 +34,23 @@ Implements TypeDB::Type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `virtual VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.deleteType(transaction).get();
+----
 
 [#_virtual_stdstring_TypeDBRoleTypegetLabel___]
 ==== getLabel
@@ -66,6 +73,13 @@ Implements TypeDB::Type.
 .Returns
 `virtual std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.getLabel();
+----
+
 [#_stdstring_TypeDBRoleTypegetName___]
 ==== getName
 
@@ -83,6 +97,13 @@ Returns the name of this role type's label.
 .Returns
 `std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+label.getName();
+----
+
 [#_ConceptIterable__Thing___TypeDBRoleTypegetPlayerInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlayerInstances
 
@@ -98,17 +119,24 @@ Retrieves the ``Thing`` instances that play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect playing, ``Transitivity::EXPLICIT`` for direct playing only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Thing >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getPlayerInstances(transaction, transitivity);
+----
 
 [#_ConceptIterable__ThingType___TypeDBRoleTypegetPlayerTypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlayerTypes
@@ -125,17 +153,24 @@ Retrieves the ``ThingType``s whose instances play this role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getPlayerTypes(transaction, transitivity)
+----
 
 [#_ConceptIterable__Relation___TypeDBRoleTypegetRelationInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getRelationInstances
@@ -152,17 +187,24 @@ Retrieves the ``Relation`` instances that this role is related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect relation, ``Transitivity::EXPLICIT`` for direct relation only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Relation >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationInstances(transaction, transitivity)
+----
 
 [#_ConceptPtrFuture__RelationType___TypeDBRoleTypegetRelationType___Transaction__transaction_]
 ==== getRelationType
@@ -179,16 +221,23 @@ Retrieves the ``RelationType`` that this role is directly related to.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< RelationType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationType(transaction).get();
+----
 
 [#_ConceptIterable__RelationType___TypeDBRoleTypegetRelationTypes___Transaction__transaction_]
 ==== getRelationTypes
@@ -205,16 +254,23 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< RelationType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getRelationTypes(transaction);
+----
 
 [#_stdstring_TypeDBRoleTypegetScope___]
 ==== getScope
@@ -233,6 +289,13 @@ Returns the scope part of this role type's label.
 .Returns
 `std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+label.getScope();
+----
+
 [#_ConceptIterable__RoleType___TypeDBRoleTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
@@ -248,17 +311,24 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSubtypes(transaction, transitivity);
+----
 
 [#_ConceptPtrFuture__RoleType___TypeDBRoleTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
@@ -275,16 +345,23 @@ Retrieves the most immediate supertype of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptPtrFuture< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSupertype(transaction).get();
+----
 
 [#_ConceptIterable__RoleType___TypeDBRoleTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
@@ -301,16 +378,23 @@ Retrieves all supertypes of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+roleType.getSupertypes(transaction);
+----
 
 [#_virtual_bool_TypeDBRoleTypeisAbstract___]
 ==== isAbstract
@@ -333,6 +417,13 @@ Implements TypeDB::Type.
 .Returns
 `virtual bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isAbstract();
+----
+
 [#_virtual_BoolFuture_TypeDBRoleTypeisDeleted___Transaction__transaction_]
 ==== isDeleted
 
@@ -352,16 +443,23 @@ Implements TypeDB::Type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `virtual BoolFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isDeleted(transaction).get();
+----
 
 [#_bool_TypeDBRoleTypeisRoot___]
 ==== isRoot
@@ -379,6 +477,13 @@ Checks if the type is a root type.
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.isRoot();
+----
 
 [#_virtual_VoidFuture_TypeDBRoleTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
 ==== setLabel
@@ -399,17 +504,24 @@ Implements TypeDB::Type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `label` a| The new ``Label`` to be given to the type. a| 
 |===
 
 [caption=""]
 .Returns
 `virtual VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+type.setLabel(transaction, newLabel).get();
+----
 
 // end::methods[]
 

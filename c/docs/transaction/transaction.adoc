@@ -1,3 +1,41 @@
+[#_methods__transaction__transaction]
+=== transaction
+
+[#_Struct_Transaction]
+==== Struct Transaction
+
+
+
+A transaction with a TypeDB database.
+
+[#_Struct_TransactionType]
+==== Struct TransactionType
+
+
+
+This enum is used to specify the type of transaction.
+
+
+[#_Enum_TransactionType]
+==== Enum TransactionType
+
+
+
+This enum is used to specify the type of transaction.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Read = 0`
+a| `Write = 1`
+|===
+// end::enum_constants[]
+
 [#_transaction_close]
 ==== transaction_close
 
@@ -74,33 +112,15 @@ struct Transaction* transaction_new(const struct Session* session, enum Transact
 
 Opens a transaction to perform read or write queries on the database connected to the session.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     type_
-     The type of transaction to be created (Write or Read).
-    
-    
-     options
-     Options for the transaction
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `type_` a| The type of transaction to be created (Write or Read). a| 
-a| `options` a| Options for the transaction a| 
+a| `type_` a| The type of transaction to be created (Write or Read). a| `enum TransactionType`
+a| `options` a| Options for the transaction a| `const struct Options*`
 |===
 
 [caption=""]
@@ -119,37 +139,15 @@ void transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, 
 
 Registers a callback function which will be executed when this transaction is closed.
 
- 
-  Parameters
- 
- 
-  
-   
-    
-     txn
-     The transaction on which to register the callback
-    
-    
-     callback_id
-     The argument to be passed to the callback function when it is executed.
-    
-    
-     callback
-     The function to be called
-    
-   
-  
- 
-
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `txn` a| The transaction on which to register the callback a| 
-a| `callback_id` a| The argument to be passed to the callback function when it is executed. a| 
+a| `txn` a| The transaction on which to register the callback a| `const struct Transaction*`
+a| `callback_id` a| The argument to be passed to the callback function when it is executed. a| `uintptr_t`
 a| `callback` a| The function to be called a| 
 |===
 

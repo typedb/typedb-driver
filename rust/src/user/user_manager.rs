@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -192,7 +190,7 @@ impl UserManager {
             DatabaseManager::new(self.connection.clone())
                 .get(Self::SYSTEM_DB)
                 .await?
-                .run_failsafe(|_, server_connection| task(server_connection))
+                .run_failsafe(|database| task(database.connection().clone()))
                 .await
         }
     }

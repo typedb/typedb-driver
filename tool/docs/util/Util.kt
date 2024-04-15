@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -49,6 +47,10 @@ fun replaceSymbolsForAnchor(name: String): String {
         .replace("*", "_ptr_")
         .replace("&", "_amp_")
         .removeSuffix("_")
+}
+
+fun addZeroWidthWhitespaces(html: String): String {
+    return html.replace(".", "\u200B.")
 }
 
 fun escape(text: String): String {

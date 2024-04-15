@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -78,8 +76,6 @@
         jthrowable throwable = (jthrowable)jenv->NewObject(exceptionClass, ctor, jerror, true);
 
         jenv->Throw(throwable);
-
-        return $null;
     }
 }
 
@@ -140,7 +136,7 @@
 %nojavaexception user_get_username;
 %nojavaexception user_get_password_expiry_seconds;
 
-%nojavaexception replica_info_get_address;
+%nojavaexception replica_info_get_server;
 %nojavaexception replica_info_is_primary;
 %nojavaexception replica_info_is_preferred;
 %nojavaexception replica_info_get_term;
@@ -316,6 +312,7 @@
 %nojavaexception relation_remove_role_player;
 %nojavaexception thing_type_is_deleted;
 %nojavaexception thing_type_delete;
+%nojavaexception thing_type_get_label;
 %nojavaexception thing_type_set_label;
 %nojavaexception thing_type_set_abstract;
 %nojavaexception thing_type_unset_abstract;
@@ -393,6 +390,15 @@
         }
     }
 %}
+%typemap(javadestruct, methodname="delete", methodmodifiers="public synchronized") Type ## Promise %{{
+    if (swigCPtr != 0) {
+        if (swigCMemOwn) {
+            swigCMemOwn = false;
+            get();
+        }
+        swigCPtr = 0;
+    }
+}%}
 %enddef
 
 %promise(Concept, concept)
@@ -527,7 +533,6 @@
 
 %array(Annotation)
 %array(Concept)
-%array(ValueType)
 
 /* char** needs special handling */
 %typemap(in) char ** (jint size) {

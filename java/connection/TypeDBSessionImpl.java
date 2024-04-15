@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -71,7 +69,7 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
     }
 
     @Override
-    public String database_name() {
+    public String databaseName() {
         return session_get_database_name(nativeObject);
     }
 

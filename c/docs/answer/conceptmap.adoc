@@ -1,3 +1,34 @@
+[#_methods__answer__conceptmap]
+=== conceptmap
+
+[#_Struct_ConceptMap]
+==== Struct ConceptMap
+
+
+
+Contains a mapping of variables to concepts.
+
+[#_Struct_ConceptMapGroup]
+==== Struct ConceptMapGroup
+
+
+
+Contains an element of the TypeQL Get Group query result.
+
+[#_Struct_ConceptMapGroupIterator]
+==== Struct ConceptMapGroupIterator
+
+
+
+Iterator over the ``ConceptMapGroup``s in the result of the TypeQL Get Group query.
+
+[#_Struct_ConceptMapIterator]
+==== Struct ConceptMapIterator
+
+
+
+Iterator over the ``ConceptMap``s in the result of a TypeQL Get query.
+
 [#_concept_map_drop]
 ==== concept_map_drop
 

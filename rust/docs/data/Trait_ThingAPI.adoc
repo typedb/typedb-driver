@@ -23,7 +23,7 @@ Deletes this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -79,7 +79,7 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -118,7 +118,7 @@ Retrieves the roles that this ``Thing`` is currently playing.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -155,7 +155,7 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -216,7 +216,7 @@ Checks if this ``Thing`` is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -295,7 +295,7 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
@@ -351,7 +351,7 @@ Unassigns an ``Attribute`` from this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type

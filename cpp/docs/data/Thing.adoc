@@ -27,16 +27,23 @@ Deletes this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.deleteThing(transaction).get();
+----
 
 [#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___]
 ==== getHas
@@ -53,17 +60,25 @@ Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation`
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getHas(transaction);
+thing.getHas(transaction, {Annotation.key()}));
+----
 
 [#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_AttributeType__ptr__attribute_]
 ==== getHas
@@ -96,17 +111,24 @@ Retrieves the ``Attribute``s of the specified ``AttributeType``s that this ``Thi
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `const std::vector< std::unique_ptr< AttributeType > >&`
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getHas(transaction, attributeTypes);
+----
 
 [#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__const_AttributeType__ptr_____attributeTypes_]
 ==== getHas
@@ -157,6 +179,13 @@ Retrieves the unique id of the ``Thing``.
 .Returns
 `std::string`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getIID();
+----
+
 [#_ConceptIterable__RoleType___TypeDBThinggetPlaying___Transaction__transaction_]
 ==== getPlaying
 
@@ -172,16 +201,23 @@ Retrieves the roles that this ``Thing`` is currently playing.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getPlaying(transaction);
+----
 
 [#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes___]
 ==== getRelations
@@ -198,17 +234,25 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 a| `roleTypes` a| The array of roles to filter the relations by. a| 
 |===
 
 [caption=""]
 .Returns
 `ConceptIterable< Relation >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getRelations(transaction);
+thing.getRelations(transaction, roleTypes);
+----
 
 [#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
 ==== getRelations
@@ -243,6 +287,13 @@ Retrieves the type which this ``Thing`` belongs to.
 .Returns
 `std::unique_ptr< ThingType >`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getType();
+----
+
 [#_BoolFuture_TypeDBThingisDeleted___Transaction__transaction_]
 ==== isDeleted
 
@@ -258,16 +309,23 @@ Checks if this ``Thing`` is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
+a| `transaction` a| The current transaction a| `Transaction&`
 |===
 
 [caption=""]
 .Returns
 `BoolFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.isDeleted(transaction).get();
+----
 
 [#_bool_TypeDBThingisInferred___]
 ==== isInferred
@@ -286,6 +344,13 @@ Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.isInferred();
+----
+
 [#_VoidFuture_TypeDBThingsetHas___Transaction__transaction__Attribute__ptr__attribute_]
 ==== setHas
 
@@ -301,17 +366,24 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute*`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.setHas(transaction, attribute).get();
+----
 
 [#_VoidFuture_TypeDBThingunsetHas___Transaction__transaction__Attribute__ptr__attribute_]
 ==== unsetHas
@@ -328,17 +400,24 @@ Unassigns an ``Attribute`` from this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| 
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| 
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute*`
 |===
 
 [caption=""]
 .Returns
 `VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.unsetHas(transaction, attribute).get();
+----
 
 // end::methods[]
 

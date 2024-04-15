@@ -1,6 +1,3 @@
-#
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 import json
 import re
 from collections import defaultdict
@@ -566,6 +562,16 @@ def step_impl(context: Context):
     for answer in context.answers:
         query = apply_query_template(template=context.text, answer=answer)
         assert_that(list(context.tx().query.get(query)), has_length(1))
+
+
+@step("get answers of templated typeql get")
+def step_impl(context: Context):
+    if len(context.answers) > 1:
+        raise ValueError("Can only retrieve answers of templated typeql get given 1 previous answer")
+    answer = context.answers[0]
+    query = apply_query_template(template=context.text, answer=answer)
+    context.clear_answers()
+    context.answers = [answer for answer in context.tx().query.get(query=query)]
 
 
 @step("templated typeql get; throws exception")

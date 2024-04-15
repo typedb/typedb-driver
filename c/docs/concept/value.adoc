@@ -1,3 +1,6 @@
+[#_methods__concept__value]
+=== value
+
 [#_value_get_boolean]
 ==== value_get_boolean
 

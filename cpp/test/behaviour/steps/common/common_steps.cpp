@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2022 Vaticle
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -32,7 +30,7 @@ cucumber_bdd::StepCollection<Context> commonSteps = {
     BDD_STEP("wait (\\d+) seconds", {
         std::this_thread::sleep_for(std::chrono::seconds(atoi(matches[1].str().c_str())));
     }),
-    BDD_NOOP("set time-zone is: (.*)"),
+    BDD_NOOP("set time-zone is: (.*)"), // TODO: Decide if we want to implement (can be changed only for POSIX).
     BDD_NOOP("typedb has configuration"),
 };
 

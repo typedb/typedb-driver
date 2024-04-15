@@ -14,7 +14,7 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 [caption=""]
 .Fields
 // tag::properties[]
-[cols="~,~,~"]
+[cols=",,"]
 [options="header"]
 |===
 |Name |Type |Description
