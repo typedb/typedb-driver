@@ -122,7 +122,7 @@ commands:
           tool/test/start-core-server.sh
           python3.8 -m pip install wheel 
           python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
-          sleep 3
+          sleep 5
           pushd python/tests/deployment/
             python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -139,7 +139,7 @@ commands:
           /usr/local/bin/python3.8 -m pip install pip==21.3.1
           /usr/local/bin/python3.8 -m pip install -r python/requirements_dev.txt
           /usr/local/bin/python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
-          sleep 3
+          sleep 5
           pushd python/tests/deployment/
             /usr/local/bin/python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -248,7 +248,7 @@ commands:
             cmake3 --build . --config release
           popd
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           pushd test_assembly_clib
             LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -271,7 +271,7 @@ commands:
             cmake --build . --config release
           popd
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           pushd test_assembly_clib
             DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -312,7 +312,7 @@ commands:
             cmake3 --build . --config release
           popd
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           pushd test_assembly_cpp
             LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -335,7 +335,7 @@ commands:
             cmake --build . --config release
           popd
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           pushd test_assembly_cpp
             DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
@@ -396,7 +396,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && dotnet run NugetApplicationTest.csproj)
@@ -406,7 +406,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sleep 3
+          sleep 5
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
