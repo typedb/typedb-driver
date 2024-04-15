@@ -26,11 +26,12 @@ JAVA_HOME=$BAZEL_JAVA_HOME ./typedb-all/typedb server --diagnostics.reporting.er
 
 set +e
 POLL_INTERVAL_SECS=0.5
-RETRY_NUM=10
+RETRY_NUM=20
 while [[ $RETRY_NUM -gt 0 ]]; do
   lsof -i :1729 > /dev/null
   if [ $? -eq 0 ]; then exit 0; fi
   ((RETRY_NUM-=1))
   sleep $POLL_INTERVAL_SECS
 done
+echo "TypeDB server failed to start within $((POLL_INTERVAL_SECS * RETRY_NUM)) seconds, aborting..."
 exit 1
