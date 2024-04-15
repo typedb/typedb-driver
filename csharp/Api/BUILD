@@ -30,7 +30,6 @@ csharp_library(
         "@paket.csharp_deps//newtonsoft.json",
     ],
     out = "TypeDB.Driver.Api",
-    runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
