@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from collections.abc import Iterable, Mapping
-from typing import Union
+from collections.abc import Mapping as ABCMapping
+from typing import Iterable, Mapping, Union
 
 from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
@@ -78,7 +78,7 @@ class TypeDB:
         """
         if isinstance(addresses, str):
             return _Driver([addresses], credential)
-        elif isinstance(addresses, Mapping):
+        elif isinstance(addresses, ABCMapping):
             return _Driver(dict(addresses), credential)
         else:
             return _Driver(list(addresses), credential)
