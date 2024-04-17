@@ -174,7 +174,7 @@ public:
     /**
      * Convert a JSON object to a JSON string.
      */
-    const JSONString toString() const;
+    const std::string toString() const;
     const JSONNull& asNull() const;
 
 private:

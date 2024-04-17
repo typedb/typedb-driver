@@ -254,7 +254,7 @@ const JSONString& JSON::asString() const {
     return stringValue;
 }
 
-const JSONString JSON::toString() const {
+const std::string JSON::toString() const {
     std::stringstream ss;
     appendToString(ss, *this);
     return JSONString(ss.str());
