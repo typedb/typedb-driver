@@ -34,5 +34,3 @@ ELSEIF (APPLE)
 ELSE()
     target_link_libraries(test_assembly typedb-driver-cpp)
 ENDIF()
-
-target_link_libraries(test_assembly "-framework CoreFoundation")
