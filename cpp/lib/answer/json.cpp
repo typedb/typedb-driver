@@ -325,7 +325,7 @@ JSON JSONBuilder::buildArray(const nlohmann::json& from) {
     return JSON(std::move(a));
 }
 
-void JSON::appendToString(std::stringstream& ss, const JSON& json) const {
+void appendToString(std::stringstream& ss, const JSON& json) {
     switch (json.type()) {
         case JSONType::STRING: {
             ss << "\"" << json.asString() << "\"";
@@ -369,7 +369,7 @@ void JSON::appendToString(std::stringstream& ss, const JSON& json) const {
             break;
         }
         case JSONType::INVALID: {
-            throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
+            throw Utils::exception(TypeDB::InternalError::INVALID_NATIVE_HANDLE);
             break;
         }
     }
