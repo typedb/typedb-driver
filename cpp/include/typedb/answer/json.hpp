@@ -172,7 +172,7 @@ public:
     const JSONString& asString() const;
 
     /**
-     * Convert a JSON object to a JSON string.
+     * Convert a JSON object to a string
      */
     const std::string toString() const;
     const JSONNull& asNull() const;
