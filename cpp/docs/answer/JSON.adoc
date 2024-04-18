@@ -226,7 +226,7 @@ const std::string TypeDB::JSON::toString() const
 
 
 
-Convert a JSON object to a string.
+Convert a JSON object to a string
 
 [caption=""]
 .Returns
@@ -248,6 +248,13 @@ The JSONType of this JSON object
 [caption=""]
 .Returns
 `JSONType`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+switch(json.type() { ... }
+----
 
 // end::methods[]
 
