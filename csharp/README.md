@@ -173,6 +173,7 @@ class WelcomeToTypeDB
                         transaction.Commit();
                     }
                 }
+             }
         }
         catch (TypeDBDriverException e)
         {
