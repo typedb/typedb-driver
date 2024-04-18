@@ -202,8 +202,6 @@ private:
     JSON(JSONMap&&);
     JSON(JSONArray&&);
 
-    void appendToString(std::stringstream& ss, const JSON& json) const;
-
     friend class JSONBuilder;
 };
 

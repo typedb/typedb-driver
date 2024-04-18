@@ -254,6 +254,8 @@ const JSONString& JSON::asString() const {
     return stringValue;
 }
 
+void appendToString(std::stringstream& ss, const JSON& json);
+
 const std::string JSON::toString() const {
     std::stringstream ss;
     appendToString(ss, *this);
