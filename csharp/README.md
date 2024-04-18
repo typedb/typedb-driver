@@ -43,6 +43,7 @@ Any error encountered will throw a `TypeDBDriverException`. Note that methods wh
 ### TypeDB Core
 Connect to TypeDB using `Drivers.CoreDriver` and perform basic read/write operations:
 ```cs
+using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 
@@ -133,6 +134,7 @@ class WelcomeToTypeDB
 ### TypeDB Cloud
 Connect to TypeDB cloud instances using `Drivers.CloudDriver`:
 ```cs
+using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 
