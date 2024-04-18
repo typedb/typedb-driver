@@ -31,11 +31,22 @@ cc_test(
     copts = cxxopts,
     includes = ["include"],
     env = {"RUST_BACKTRACE": "full"},
-    linkstatic = True,
-    linkopts = select({
-        "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
-        "//conditions:default": [],
-    }),
+    linkstatic = True
+)
+
+cc_test(
+    name = "test-cpp-driver-cloud",
+    srcs = ["test_cloud.cpp"],
+    deps = [
+        "//cpp:typedb-driver-cpp-import",
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
+    ],
+    copts = cxxopts,
+    includes = ["include"],
+    env = {"RUST_BACKTRACE": "full"},
+    linkstatic = True
 )
 
 clang_format_test(
