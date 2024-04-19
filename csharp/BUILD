@@ -118,7 +118,7 @@ filegroup(
     srcs = [":Drivers.cs"],
 )
 
-# TODO: Not hermetic - requires doxygen on the host
+# TODO: Not hermetic - requires doxygen on the host (https://github.com/vaticle/bazel-distribution/issues/412)
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C# Driver",
