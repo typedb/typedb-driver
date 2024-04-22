@@ -222,13 +222,13 @@ filegroup(
     output_group = "header"
 )
 
+# TODO: Not hermetic - requires doxygen on the host (https://github.com/vaticle/bazel-distribution/issues/412)
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C Driver",
     sources = [":_typedb_driver_h_only"],
     main_page_md = ":README.md",
     tags = ["manual"],
-
 )
 
 doxygen_c_to_adoc(
