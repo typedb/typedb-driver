@@ -216,5 +216,45 @@ Parses a JSON string into a ``JSON`` object.
 .Returns
 `static JSON`
 
+[#_const_stdstring_TypeDBJSONtoString_____const]
+==== toString
+
+[source,cpp]
+----
+const std::string TypeDB::JSON::toString() const
+----
+
+
+
+Convert a JSON object to a string
+
+[caption=""]
+.Returns
+`const std::string`
+
+[#_JSONType_TypeDBJSONtype_____const]
+==== type
+
+[source,cpp]
+----
+JSONType TypeDB::JSON::type() const
+----
+
+
+
+The JSONType of this JSON object
+
+
+[caption=""]
+.Returns
+`JSONType`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+switch(json.type() { ... }
+----
+
 // end::methods[]
 
