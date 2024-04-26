@@ -192,7 +192,11 @@ class DoxygenParserCpp : Callable<Unit> {
 
         val (memberDecls, idToAnchor) = parseMemberDecls(document)
         val classDescr: List<String> = document.selectFirst("div.textblock")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
+            ?.let {
+                it.selectFirst("div.compoundTemplParams")?.remove();
+                splitToParagraphs(it.html())
+            }
+            ?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
             ?: listOf()
 
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }

@@ -4,10 +4,6 @@
 *Package*: `TypeDB`
 
 
- template<typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>>
- 
-  class TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >
-
 
 Result representing a stream of query results.
 
