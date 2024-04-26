@@ -158,6 +158,7 @@ class DoxygenParserCpp : Callable<Unit> {
         if (memItemLeft != null) {
             if (memItemLeft.text().startsWith("typedef")) {
                 val actual = element.selectFirst("td.memItemLeft")!!.text().substringAfter("typedef ")
+                    .replace("< ", "<").replace(" >", ">") // Consistency with linux
                 val alias = element.selectFirst("td.memItemRight")!!.text()
                 return Class(
                     name = alias,
