@@ -83,6 +83,14 @@ class DoxygenParserC : Callable<Unit> {
         if (!docsDir.toFile().exists()) {
             Files.createDirectory(docsDir)
         }
+        // Create file once to avoid repeated headings.
+        // TODO: a refactor that we add the filename directly as key to fileContents
+        filenameOverrides.values.toSet().forEach { filename ->
+            val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
+            outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+            outputFile.appendText("=== $filename\n\n")
+        }
+
 
         run {
             val typedbDriverFile = File(inputDirectoryName).resolve("html/typedb__driver_8h.html")
@@ -126,12 +134,18 @@ class DoxygenParserC : Callable<Unit> {
             // Write to files
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val resolvedKey = resolveKey(entry.key)
-                val filename = filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
-                val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
-                val fileContent = entry.value
-                outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
-                outputFile.appendText("=== $filename\n\n")
-                fileContent.forEach { outputFile.appendText(it) }
+                if (filenameOverrides.contains(resolvedKey)) {
+                    val filename = filenameOverrides.get(resolvedKey)
+                    val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
+                    entry.value.forEach { outputFile.appendText(it) }
+                } else {
+                    val filename = resolvedKey
+                    val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
+                    outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+                    outputFile.appendText("=== $filename\n\n")
+                    entry.value.forEach { outputFile.appendText(it) }
+                }
+
             }
         }
     }

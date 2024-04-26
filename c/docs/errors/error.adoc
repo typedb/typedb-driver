@@ -1,6 +1,9 @@
 [#_methods__errors__error]
 === error
 
+[#_methods__errors__error]
+=== error
+
 [#_Struct_Error]
 ==== Struct Error
 
@@ -56,9 +59,6 @@ Returns the error message of the ``Error`` object
 .Returns
 `char*`
 
-[#_methods__errors__error]
-=== error
-
 [#_get_last_error]
 ==== get_last_error
 
@@ -74,9 +74,6 @@ Returns the error which set the error flag.
 [caption=""]
 .Returns
 `struct Error*`
-
-[#_methods__errors__error]
-=== error
 
 [#_check_error]
 ==== check_error
