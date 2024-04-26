@@ -73,6 +73,8 @@ class DoxygenParserCpp : Callable<Unit> {
             // Typedefs
             val typeDefFile = getFile(docsDir, "typedefs.adoc")
             typeDefFile.writeText("")
+            typeDefFile.appendText("[#_aliases]\n")
+            typeDefFile.appendText("=== Aliases\n\n")
             val typeDefTBody =
                 parsed.select("tr.heading").first { element -> element.text().equals("Typedefs") }.parent()!!
             typeDefTBody.select("tr").filter { tr ->
@@ -80,7 +82,7 @@ class DoxygenParserCpp : Callable<Unit> {
             }.map {
                 parseTypeDef(it!!)
             }.forEach {
-                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cpp"))
+                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cpp", headerLevel = 4))
             }
 
             // Enums
