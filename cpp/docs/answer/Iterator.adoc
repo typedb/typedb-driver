@@ -4,9 +4,9 @@
 *Package*: `TypeDB`
 
 
- template&lt;typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper&lt;NATIVE_ITER, NATIVE_T, T&gt;&gt;
+ template<typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>>
  
-  class TypeDB::Iterator&lt; NATIVE_ITER, NATIVE_T, T, HELPER &gt;
+  class TypeDB::Iterator< NATIVE_ITER, NATIVE_T, T, HELPER >
 
 
 A structure emulating std::iterator, used for streaming of query results from the server.

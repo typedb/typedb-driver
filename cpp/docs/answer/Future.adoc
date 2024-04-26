@@ -4,9 +4,9 @@
 *Package*: `TypeDB`
 
 
- template&lt;typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper&lt;RETURN, NATIVE_PROMISE&gt;&gt;
+ template<typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE>>
  
-  class TypeDB::Future&lt; RETURN, NATIVE_PROMISE, HELPER &gt;
+  class TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >
 
 
 A structure emulating std::future, used as result of an asynchronous call to the server.

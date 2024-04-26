@@ -88,7 +88,7 @@ ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transac
 
 
 
-Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType`` or ``Annotation``s
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector<Annotation>&amp;, Transitivity)>> without filtering on ``ValueType`` or ``Annotation``s
 
 [caption=""]
 .Returns
@@ -106,7 +106,7 @@ ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transac
 
 
 
-Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector<Annotation>&amp;, Transitivity)>> without filtering on ``ValueType``
 
 [caption=""]
 .Returns
@@ -122,7 +122,7 @@ ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transac
 
 
 
-Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector<Annotation>&amp;, Transitivity)>> without filtering on ``ValueType``
 
 [caption=""]
 .Returns
@@ -138,7 +138,7 @@ ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transac
 
 
 
-Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``Annotation``s
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector<Annotation>&amp;, Transitivity)>> without filtering on ``Annotation``s
 
 [caption=""]
 .Returns
@@ -154,7 +154,7 @@ ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transac
 
 
 
-See <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>>
+See <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector<Annotation>&amp;, Transitivity)>>
 
 [caption=""]
 .Returns
@@ -612,7 +612,7 @@ VoidFuture TypeDB::ThingType::setOwns(Transaction& transaction, AttributeType* a
 
 
 
-Variant of <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector&lt;Annotation&gt;&amp;)>> with no overridden attribute type
+Variant of <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector<Annotation>&amp;)>> with no overridden attribute type
 
 [caption=""]
 .Returns
@@ -628,7 +628,7 @@ VoidFuture TypeDB::ThingType::setOwns(Transaction& transaction, AttributeType* a
 
 
 
-Variant of <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector&lt;Annotation&gt;&amp;)>> with no overridden attribute type
+Variant of <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector<Annotation>&amp;)>> with no overridden attribute type
 
 [caption=""]
 .Returns
@@ -644,7 +644,7 @@ VoidFuture TypeDB::ThingType::setOwns(Transaction& transaction, AttributeType* a
 
 
 
-See <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector&lt;Annotation&gt;&amp;)>>
+See <<#_VoidFuture_TypeDBThingTypesetOwns___Transaction__transaction__AttributeType__ptr__attributeType__AttributeType__ptr__overriddenType__const_stdvector__Annotation____annotations_,setOwns(Transaction&amp;, AttributeType*, AttributeType*, const std::vector<Annotation>&amp;)>>
 
 [caption=""]
 .Returns

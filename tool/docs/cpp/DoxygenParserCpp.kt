@@ -82,7 +82,7 @@ class DoxygenParserCpp : Callable<Unit> {
             }.map {
                 parseTypeDef(it!!)
             }.forEach {
-                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cpp", headerLevel = 4))
+                if (it.isNotEmpty()) typeDefFile.appendText(this.doxygenSpecificReplacement(it.toAsciiDoc("cpp", headerLevel = 4)))
             }
 
             // Enums
@@ -106,7 +106,7 @@ class DoxygenParserCpp : Callable<Unit> {
         }
 
         classes.forEach { parsedClass ->
-            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cpp")
+            val parsedClassAsciiDoc = doxygenSpecificReplacement(parsedClass.toAsciiDoc("cpp"))
             val outputFile = getFile(docsDir, "${generateFilename(parsedClass.name)}.adoc")
             outputFile.writeText(parsedClassAsciiDoc)
         }
@@ -330,6 +330,9 @@ class DoxygenParserCpp : Callable<Unit> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
     }
 
+    private fun doxygenSpecificReplacement(docs: String): String {
+        return docs.replace("&lt;", "<").replace("&gt;", ">")
+    }
 
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.

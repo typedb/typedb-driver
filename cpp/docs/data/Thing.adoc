@@ -90,7 +90,7 @@ ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, con
 
 
 
-See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp;, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp;)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp;, const std::vector<std::unique_ptr<AttributeType>>&amp;)>>
 
 [caption=""]
 .Returns
@@ -140,7 +140,7 @@ ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, con
 
 
 
-See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp; attributeTypes)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp; transaction, const std::vector<std::unique_ptr<AttributeType>>&amp; attributeTypes)>>
 
 [caption=""]
 .Returns
@@ -156,7 +156,7 @@ ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, con
 
 
 
-See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___,getHas(Transaction&amp;, const std::initializer_list&lt;Annotation&gt;&amp;)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___,getHas(Transaction&amp;, const std::initializer_list<Annotation>&amp;)>>
 
 [caption=""]
 .Returns
@@ -264,7 +264,7 @@ ConceptIterable< Relation > TypeDB::Thing::getRelations(Transaction& transaction
 
 
 
-See <<#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes___,getRelations(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;RoleType&gt;&gt;&amp; roleTypes)>>
+See <<#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes___,getRelations(Transaction&amp; transaction, const std::vector<std::unique_ptr<RoleType>>&amp; roleTypes)>>
 
 [caption=""]
 .Returns
