@@ -1,4 +1,4 @@
-[#_Future__RETURN__NATIVE_PROMISE__HELPER_]
+[#_Future]
 === Future< RETURN, NATIVE_PROMISE, HELPER >
 
 *Package*: `TypeDB`

@@ -1,4 +1,4 @@
-[#_Iterator__NATIVE_ITER__NATIVE_T__T__HELPER_]
+[#_Iterator]
 === Iterator< NATIVE_ITER, NATIVE_T, T, HELPER >
 
 *Package*: `TypeDB`

@@ -182,7 +182,7 @@ class DoxygenParserCpp : Callable<Unit> {
             .replace(Regex("Class(?: Template)? Reference.*"), "").trim()
         val packagePath = fullyQualifiedName.substringBeforeLast("::")
         val className = fullyQualifiedName.substringAfterLast("::")
-        val classAnchor = replaceSymbolsForAnchor(className)
+        val classAnchor = replaceSymbolsForAnchor(className.substringBefore("<"))
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
         val superClasses = document.select("tr.inherit_header")
             .map { it.text().substringAfter("inherited from ") }
