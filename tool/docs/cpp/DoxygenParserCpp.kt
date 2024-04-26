@@ -340,6 +340,6 @@ class DoxygenParserCpp : Callable<Unit> {
     }
 
     private fun generateFilename(className: String): String {
-        return className.replace("[<> ,]".toRegex(), "_")
+        return className.substringBefore("<").replace(",", "_")
     }
 }
