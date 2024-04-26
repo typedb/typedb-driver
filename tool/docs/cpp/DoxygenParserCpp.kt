@@ -173,7 +173,7 @@ class DoxygenParserCpp : Callable<Unit> {
                 return Class(
                     name = alias,
                     anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for $actual")
+                    description = listOf("Alias for ``$actual``")
                 )
             }
         }
