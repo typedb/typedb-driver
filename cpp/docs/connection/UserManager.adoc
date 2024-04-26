@@ -75,7 +75,7 @@ void TypeDB::UserManager::create(const std::string& username, const std::string&
 
 
 
-Creates a user with the given name &amp; password.
+Creates a user with the given name & password.
 
 
 [caption=""]

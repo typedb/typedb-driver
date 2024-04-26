@@ -9,7 +9,7 @@
 
 
 
-Common super-type of RoleType &amp; ThingType.
+Common super-type of RoleType & ThingType.
 
 // tag::methods[]
 [#_virtual_VoidFuture_TypeDBTypedeleteType___Transaction__transaction_]

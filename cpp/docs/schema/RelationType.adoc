@@ -263,7 +263,7 @@ VoidFuture TypeDB::RelationType::setRelates(Transaction& transaction, const std:
 
 
 
-Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType does not override an existing role.
+Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel)>> where the RoleType does not override an existing role.
 
 [caption=""]
 .Returns
@@ -279,7 +279,7 @@ VoidFuture TypeDB::RelationType::setRelates(Transaction& transaction, const std:
 
 
 
-Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType is specified directly rather than the label.
+Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel)>> where the RoleType is specified directly rather than the label.
 
 [caption=""]
 .Returns
@@ -365,7 +365,7 @@ VoidFuture TypeDB::RelationType::unsetRelates(Transaction& transaction, RoleType
 
 
 
-Variant of <<#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__const_stdstring__roleLabel_,unsetRelates(Transaction&amp; transaction, const std::string&amp; roleLabel)>> where the RoleType is specified directly rather than the label.
+Variant of <<#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__const_stdstring__roleLabel_,unsetRelates(Transaction& transaction, const std::string& roleLabel)>> where the RoleType is specified directly rather than the label.
 
 [caption=""]
 .Returns

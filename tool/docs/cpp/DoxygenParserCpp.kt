@@ -336,7 +336,7 @@ class DoxygenParserCpp : Callable<Unit> {
     }
 
     private fun doxygenSpecificReplacement(docs: String): String {
-        return docs.replace("&lt;", "<").replace("&gt;", ">")
+        return docs.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
     }
 
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
