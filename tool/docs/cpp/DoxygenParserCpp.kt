@@ -168,6 +168,7 @@ class DoxygenParserCpp : Callable<Unit> {
             } else if (memItemLeft.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
                 val actual = usingEquality.text().substringAfter("=").trim()
+                    .replace("< ", "<").replace(" >", ">") // Consistency with linux
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,
