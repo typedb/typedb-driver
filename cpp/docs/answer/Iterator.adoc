@@ -1,5 +1,5 @@
 [#_Iterator]
-=== Iterator< NATIVE_ITER, NATIVE_T, T, HELPER >
+=== Iterator
 
 *Package*: `TypeDB`
 

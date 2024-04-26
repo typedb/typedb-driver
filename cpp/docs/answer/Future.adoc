@@ -1,5 +1,5 @@
 [#_Future]
-=== Future< RETURN, NATIVE_PROMISE, HELPER >
+=== Future
 
 *Package*: `TypeDB`
 
