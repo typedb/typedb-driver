@@ -64,13 +64,13 @@ class DoxygenParserC : Callable<Unit> {
     private lateinit var unnormalisedFilenameOverrides: MutableMap<String, String>
 
     private var recreatedFiles: MutableSet<File> = mutableSetOf()
+    private var filenameOverrides: MutableMap<String, String> = HashMap()
 
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
         val dirs: MutableMap<String, String> = HashMap()
         unnormalisedDirs.entries.forEach { entry -> dirs[normaliseKey(entry.key)] = entry.value }
-        val filenameOverrides: MutableMap<String, String> = HashMap()
         unnormalisedFilenameOverrides.entries.forEach { entry ->
             filenameOverrides[normaliseKey(entry.key)] = normaliseKey(entry.value)
         }
@@ -83,14 +83,6 @@ class DoxygenParserC : Callable<Unit> {
         if (!docsDir.toFile().exists()) {
             Files.createDirectory(docsDir)
         }
-        // Create file once to avoid repeated headings.
-        // TODO: a refactor that we add the filename directly as key to fileContents
-        filenameOverrides.values.toSet().forEach { filename ->
-            val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
-            outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
-            outputFile.appendText("=== $filename\n\n")
-        }
-
 
         run {
             val typedbDriverFile = File(inputDirectoryName).resolve("html/typedb__driver_8h.html")
@@ -133,19 +125,11 @@ class DoxygenParserC : Callable<Unit> {
 
             // Write to files
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
-                val resolvedKey = resolveKey(entry.key)
-                if (filenameOverrides.contains(resolvedKey)) {
-                    val filename = filenameOverrides.get(resolvedKey)
-                    val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
-                    entry.value.forEach { outputFile.appendText(it) }
-                } else {
-                    val filename = resolvedKey
-                    val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
-                    outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
-                    outputFile.appendText("=== $filename\n\n")
-                    entry.value.forEach { outputFile.appendText(it) }
-                }
-
+                val filename = entry.key
+                val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
+                outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+                outputFile.appendText("=== $filename\n\n")
+                entry.value.forEach { outputFile.appendText(it) }
             }
         }
     }
@@ -171,7 +155,8 @@ class DoxygenParserC : Callable<Unit> {
 
     private fun resolveKey(key: String): String {
         val key_root = key.substringAfter("Struct ").substringAfter("Enum ")
-        return sortedDirsLongest.first { normaliseKey(key_root).startsWith(it.first) }.first
+        val resolvedKey = sortedDirsLongest.first { normaliseKey(key_root).startsWith(it.first) }.first
+        return filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
     }
 
     private fun parseTypeDef(element: Element): Class {
