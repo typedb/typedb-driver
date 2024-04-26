@@ -114,7 +114,7 @@ Alias for Iterator<_native::StringIterator, char, std::string>
 [#_DateTime]
 ==== DateTime
 
-Alias for std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>
+Alias for std::chrono::time_point< std::chrono::system_clock, std::chrono::milliseconds >
 
 [#_DatabaseIterator]
 ==== DatabaseIterator
