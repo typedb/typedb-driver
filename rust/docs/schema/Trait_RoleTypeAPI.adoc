@@ -6,7 +6,7 @@
 * `RoleType`
 
 // tag::methods[]
-[#_trait_RoleTypeAPI_delete__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_delete_transaction_tx_Transaction_]
 ==== delete
 
 [source,rust]
@@ -60,7 +60,7 @@ role_type.delete(transaction).resolve();
 --
 ====
 
-[#_trait_RoleTypeAPI_get_player_instances__transaction_tx_Transaction_____transitivity_Transitivity]
+[#_trait_RoleTypeAPI_get_player_instances_transaction_tx_Transaction_transitivity_Transitivity]
 ==== get_player_instances
 
 [source,rust]
@@ -98,7 +98,7 @@ Result<BoxStream<'tx, Result<Thing>>>
 role_type.get_player_instances(transaction, transitivity)
 ----
 
-[#_trait_RoleTypeAPI_get_player_types__transaction_tx_Transaction_____transitivity_Transitivity]
+[#_trait_RoleTypeAPI_get_player_types_transaction_tx_Transaction_transitivity_Transitivity]
 ==== get_player_types
 
 [source,rust]
@@ -136,7 +136,7 @@ Result<BoxStream<'tx, Result<ThingType>>>
 role_type.get_player_types(transaction, transitivity)
 ----
 
-[#_trait_RoleTypeAPI_get_relation_instances__transaction_tx_Transaction_____transitivity_Transitivity]
+[#_trait_RoleTypeAPI_get_relation_instances_transaction_tx_Transaction_transitivity_Transitivity]
 ==== get_relation_instances
 
 [source,rust]
@@ -174,7 +174,7 @@ Result<BoxStream<'tx, Result<Relation>>>
 role_type.get_relation_instances(transaction, transitivity)
 ----
 
-[#_trait_RoleTypeAPI_get_relation_type__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_get_relation_type_transaction_tx_Transaction_]
 ==== get_relation_type
 
 [source,rust]
@@ -228,7 +228,7 @@ role_type.get_relation_type(transaction).resolve();
 --
 ====
 
-[#_trait_RoleTypeAPI_get_relation_types__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_get_relation_types_transaction_tx_Transaction_]
 ==== get_relation_types
 
 [source,rust]
@@ -264,7 +264,7 @@ Result<BoxStream<'tx, Result<RelationType>>>
 role_type.get_relation_types(transaction)
 ----
 
-[#_trait_RoleTypeAPI_get_subtypes__transaction_tx_Transaction_____transitivity_Transitivity]
+[#_trait_RoleTypeAPI_get_subtypes_transaction_tx_Transaction_transitivity_Transitivity]
 ==== get_subtypes
 
 [source,rust]
@@ -302,7 +302,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 role_type.get_subtypes(transaction, transitivity)
 ----
 
-[#_trait_RoleTypeAPI_get_supertype__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_get_supertype_transaction_tx_Transaction_]
 ==== get_supertype
 
 [source,rust]
@@ -356,7 +356,7 @@ role_type.get_supertype(transaction).resolve();
 --
 ====
 
-[#_trait_RoleTypeAPI_get_supertypes__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_get_supertypes_transaction_tx_Transaction_]
 ==== get_supertypes
 
 [source,rust]
@@ -392,7 +392,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 role_type.get_supertypes(transaction)
 ----
 
-[#_trait_RoleTypeAPI_is_abstract__]
+[#_trait_RoleTypeAPI_is_abstract_]
 ==== is_abstract
 
 [source,rust]
@@ -416,7 +416,7 @@ bool
 role_type.is_abstract()
 ----
 
-[#_trait_RoleTypeAPI_is_deleted__transaction_tx_Transaction___]
+[#_trait_RoleTypeAPI_is_deleted_transaction_tx_Transaction_]
 ==== is_deleted
 
 [source,rust]
@@ -470,7 +470,7 @@ role_type.is_deleted(transaction).resolve();
 --
 ====
 
-[#_trait_RoleTypeAPI_set_label__transaction_tx_Transaction_____new_label_String]
+[#_trait_RoleTypeAPI_set_label_transaction_tx_Transaction_new_label_String]
 ==== set_label
 
 [source,rust]

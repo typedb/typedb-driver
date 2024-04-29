@@ -32,7 +32,7 @@ Gets the ``IExplainables`` object for this ``IConceptMap``, exposing which of th
 conceptMap.AllExplainables;
 ----
 
-[#_IConcept_TypeDB_Driver_Api_IConceptMap_Get___string_variable_]
+[#_IConcept_TypeDB_Driver_Api_IConceptMap_Get_string_variable_]
 ==== Get
 
 [source,cs]
@@ -65,7 +65,7 @@ a| `variable` a| The string representation of a variable a| `string`
 conceptMap.Get(variable);
 ----
 
-[#_IEnumerable__IConcept___TypeDB_Driver_Api_IConceptMap_GetConcepts___]
+[#_IEnumerable_IConcept_TypeDB_Driver_Api_IConceptMap_GetConcepts_]
 ==== GetConcepts
 
 [source,cs]
@@ -89,7 +89,7 @@ Returns a collection of all concepts in this ``IConceptMap``.
 conceptMap.GetConcepts();
 ----
 
-[#_Dictionary__string__IConcept___TypeDB_Driver_Api_IConceptMap_GetMap___]
+[#_Dictionary_string_IConcept_TypeDB_Driver_Api_IConceptMap_GetMap_]
 ==== GetMap
 
 [source,cs]
@@ -113,7 +113,7 @@ Returns the inner ``Dictionary`` (``Map`` as a common TypeDB term) where keys ar
 conceptMap.GetMap();
 ----
 
-[#_IEnumerable__string___TypeDB_Driver_Api_IConceptMap_GetVariables___]
+[#_IEnumerable_string_TypeDB_Driver_Api_IConceptMap_GetVariables_]
 ==== GetVariables
 
 [source,cs]

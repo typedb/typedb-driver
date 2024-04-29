@@ -15,7 +15,7 @@ a| `DEFAULT_ADDRESS` a| `static java.lang.String` a|
 // end::properties[]
 
 // tag::methods[]
-[#_TypeDB_TypeDB__]
+[#_TypeDB_TypeDB_]
 ==== TypeDB
 
 [source,java]
@@ -29,7 +29,7 @@ public TypeDB()
 .Returns
 `public`
 
-[#_TypeDB_cloudDriver__java_lang_String__TypeDBCredential]
+[#_TypeDB_cloudDriver_java_lang_String_TypeDBCredential]
 ==== cloudDriver
 
 [source,java]
@@ -62,7 +62,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 TypeDB.cloudDriver(address, credential);
 ----
 
-[#_TypeDB_cloudDriver__java_util_Set_java_lang_String___TypeDBCredential]
+[#_TypeDB_cloudDriver_java_util_Set_java_lang_String_TypeDBCredential]
 ==== cloudDriver
 
 [source,java]
@@ -95,7 +95,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 TypeDB.cloudDriver(addresses, credential);
 ----
 
-[#_TypeDB_cloudDriver__java_util_Map_java_lang_String_​java_lang_String___TypeDBCredential]
+[#_TypeDB_cloudDriver_java_util_Map_java_lang_String_​java_lang_String_TypeDBCredential]
 ==== cloudDriver
 
 [source,java]
@@ -128,7 +128,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 TypeDB.cloudDriver(addressTranslation, credential);
 ----
 
-[#_TypeDB_coreDriver__java_lang_String]
+[#_TypeDB_coreDriver_java_lang_String]
 ==== coreDriver
 
 [source,java]

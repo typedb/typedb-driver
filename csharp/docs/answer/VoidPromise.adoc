@@ -19,7 +19,7 @@ Promise
 
 
 // tag::methods[]
-[#_void_TypeDB_Driver_Common_VoidPromise_Resolve___]
+[#_void_TypeDB_Driver_Common_VoidPromise_Resolve_]
 ==== Resolve
 
 [source,cs]
@@ -43,7 +43,7 @@ Retrieves the result of the Promise.
 promise.Resolve();
 ----
 
-[#_TypeDB_Driver_Common_VoidPromise_VoidPromise___Action_resolver_]
+[#_TypeDB_Driver_Common_VoidPromise_VoidPromise_Action_resolver_]
 ==== VoidPromise
 
 [source,cs]

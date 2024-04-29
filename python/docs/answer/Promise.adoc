@@ -6,7 +6,7 @@ A ``Promise`` represents an asynchronous network operation.
 The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.
 
 // tag::methods[]
-[#_Promise_map__]
+[#_Promise_map_]
 ==== map
 
 [source,python]
@@ -20,7 +20,7 @@ classmethod map(ctor: Callable[[U], T], raw: Callable[[], U]) -> Promise[T]
 .Returns
 `Promise[T]`
 
-[#_Promise_resolve__]
+[#_Promise_resolve_]
 ==== resolve
 
 [source,python]

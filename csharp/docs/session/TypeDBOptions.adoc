@@ -8,7 +8,7 @@
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour.
 
 // tag::methods[]
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_Explain___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Explain_]
 ==== Explain
 
 [source,cs]
@@ -32,7 +32,7 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 options.Explain();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Explain___bool_explain_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Explain_bool_explain_]
 ==== Explain
 
 [source,cs]
@@ -65,7 +65,7 @@ a| `explain` a| Explicitly enable or disable explanations a| `bool`
 options.Explain(explain);
 ----
 
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_Infer___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Infer_]
 ==== Infer
 
 [source,cs]
@@ -89,7 +89,7 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 options.Infer();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Infer___bool_infer_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Infer_bool_infer_]
 ==== Infer
 
 [source,cs]
@@ -122,7 +122,7 @@ a| `infer` a| Explicitly enable or disable inference a| `bool`
 options.Infer(infer);
 ----
 
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_Parallel___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Parallel_]
 ==== Parallel
 
 [source,cs]
@@ -146,7 +146,7 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 options.Parallel();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Parallel___bool_parallel_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Parallel_bool_parallel_]
 ==== Parallel
 
 [source,cs]
@@ -179,7 +179,7 @@ a| `parallel` a| Explicitly enable or disable parallel execution a| `bool`
 options.Parallel(parallel);
 ----
 
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_Prefetch___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_Prefetch_]
 ==== Prefetch
 
 [source,cs]
@@ -203,7 +203,7 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 options.Prefetch();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Prefetch___bool_prefetch_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_Prefetch_bool_prefetch_]
 ==== Prefetch
 
 [source,cs]
@@ -236,7 +236,7 @@ a| `prefetch` a| Explicitly enable or disable prefetching a| `bool`
 options.Prefetch(prefetch);
 ----
 
-[#_int_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___]
+[#_int_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize_]
 ==== PrefetchSize
 
 [source,cs]
@@ -260,7 +260,7 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 options.PrefetchSize();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize___int_prefetchSize_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_PrefetchSize_int_prefetchSize_]
 ==== PrefetchSize
 
 [source,cs]
@@ -293,7 +293,7 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 options.PrefetchSize(prefetchSize);
 ----
 
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica_]
 ==== ReadAnyReplica
 
 [source,cs]
@@ -317,7 +317,7 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 options.ReadAnyReplica();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica___bool_readAnyReplica_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_ReadAnyReplica_bool_readAnyReplica_]
 ==== ReadAnyReplica
 
 [source,cs]
@@ -350,7 +350,7 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 options.ReadAnyReplica(readAnyReplica);
 ----
 
-[#_int_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___]
+[#_int_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis_]
 ==== SchemaLockAcquireTimeoutMillis
 
 [source,cs]
@@ -374,7 +374,7 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 options.SchemaLockAcquireTimeoutMillis();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis___int_schemaLockAcquireTimeoutMillis_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SchemaLockAcquireTimeoutMillis_int_schemaLockAcquireTimeoutMillis_]
 ==== SchemaLockAcquireTimeoutMillis
 
 [source,cs]
@@ -407,7 +407,7 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 options.SchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
 ----
 
-[#_int_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___]
+[#_int_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis_]
 ==== SessionIdleTimeoutMillis
 
 [source,cs]
@@ -431,7 +431,7 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 options.SessionIdleTimeoutMillis();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis___int_sessionIdleTimeoutMillis_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_SessionIdleTimeoutMillis_int_sessionIdleTimeoutMillis_]
 ==== SessionIdleTimeoutMillis
 
 [source,cs]
@@ -464,7 +464,7 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 options.SessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
 ----
 
-[#_bool_TypeDB_Driver_Api_TypeDBOptions_TraceInference___]
+[#_bool_TypeDB_Driver_Api_TypeDBOptions_TraceInference_]
 ==== TraceInference
 
 [source,cs]
@@ -488,7 +488,7 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 options.TraceInference();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TraceInference___bool_traceInference_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TraceInference_bool_traceInference_]
 ==== TraceInference
 
 [source,cs]
@@ -521,7 +521,7 @@ a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `bool`
 options.TraceInference(traceInference);
 ----
 
-[#_int_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___]
+[#_int_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis_]
 ==== TransactionTimeoutMillis
 
 [source,cs]
@@ -545,7 +545,7 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 options.TransactionTimeoutMillis();
 ----
 
-[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis___int_transactionTimeoutMillis_]
+[#_TypeDBOptions_TypeDB_Driver_Api_TypeDBOptions_TransactionTimeoutMillis_int_transactionTimeoutMillis_]
 ==== TransactionTimeoutMillis
 
 [source,cs]
@@ -578,7 +578,7 @@ a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically.
 options.TransactionTimeoutMillis(transactionTimeoutMillis);
 ----
 
-[#_TypeDB_Driver_Api_TypeDBOptions_TypeDBOptions___]
+[#_TypeDB_Driver_Api_TypeDBOptions_TypeDBOptions_]
 ==== TypeDBOptions
 
 [source,cs]

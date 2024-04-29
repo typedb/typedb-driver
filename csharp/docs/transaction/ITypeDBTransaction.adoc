@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver.Api`
 
 // tag::methods[]
-[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close___]
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close_]
 ==== Close
 
 [source,cs]
@@ -28,7 +28,7 @@ Closes the transaction.
 transaction.Close();
 ----
 
-[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Commit___]
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Commit_]
 ==== Commit
 
 [source,cs]
@@ -76,7 +76,7 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 transaction.Concepts;
 ----
 
-[#_bool_TypeDB_Driver_Api_ITypeDBTransaction_IsOpen___]
+[#_bool_TypeDB_Driver_Api_ITypeDBTransaction_IsOpen_]
 ==== IsOpen
 
 [source,cs]
@@ -124,7 +124,7 @@ The ``LogicManager`` for this Transaction, providing access to all Concept API -
 transaction.Logic;
 ----
 
-[#_void_TypeDB_Driver_Api_ITypeDBTransaction_OnClose___Action__Exception___function_]
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_OnClose_Action_Exception_function_]
 ==== OnClose
 
 [source,cs]
@@ -205,7 +205,7 @@ The````QueryManager```` for this Transaction, from which any TypeQL query can be
 transaction.Query;
 ----
 
-[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback___]
+[#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback_]
 ==== Rollback
 
 [source,cs]

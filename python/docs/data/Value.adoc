@@ -6,7 +6,7 @@
 * `Concept`
 
 // tag::methods[]
-[#_Value_as_boolean__]
+[#_Value_as_boolean_]
 ==== as_boolean
 
 [source,python]
@@ -27,7 +27,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 value.as_boolean()
 ----
 
-[#_Value_as_datetime__]
+[#_Value_as_datetime_]
 ==== as_datetime
 
 [source,python]
@@ -48,7 +48,7 @@ Returns a timezone naive ``datetime`` value of this value concept. If the value 
 value.as_datetime()
 ----
 
-[#_Value_as_double__]
+[#_Value_as_double_]
 ==== as_double
 
 [source,python]
@@ -69,7 +69,7 @@ Returns a ``double`` value of this value concept. If the value has another type,
 value.as_double()
 ----
 
-[#_Value_as_long__]
+[#_Value_as_long_]
 ==== as_long
 
 [source,python]
@@ -90,7 +90,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 value.as_long()
 ----
 
-[#_Value_as_string__]
+[#_Value_as_string_]
 ==== as_string
 
 [source,python]
@@ -111,7 +111,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.as_string()
 ----
 
-[#_Value_as_value__]
+[#_Value_as_value_]
 ==== as_value
 
 [source,python]
@@ -132,7 +132,7 @@ Casts the concept to ``Value``.
 value.as_value()
 ----
 
-[#_Value_get__]
+[#_Value_get_]
 ==== get
 
 [source,python]
@@ -153,7 +153,7 @@ Retrieves the value which this value concept holds.
 value.get()
 ----
 
-[#_Value_get_value_type__]
+[#_Value_get_value_type_]
 ==== get_value_type
 
 [source,python]
@@ -174,7 +174,7 @@ Retrieves the ``ValueType`` of this value concept.
 value.get_value_type()
 ----
 
-[#_Value_is_boolean__]
+[#_Value_is_boolean_]
 ==== is_boolean
 
 [source,python]
@@ -195,7 +195,7 @@ Returns ``True`` if the value which this value concept holds is of type ``boolea
 value.is_boolean()
 ----
 
-[#_Value_is_datetime__]
+[#_Value_is_datetime_]
 ==== is_datetime
 
 [source,python]
@@ -216,7 +216,7 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 value.is_datetime()
 ----
 
-[#_Value_is_double__]
+[#_Value_is_double_]
 ==== is_double
 
 [source,python]
@@ -237,7 +237,7 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 value.is_double()
 ----
 
-[#_Value_is_long__]
+[#_Value_is_long_]
 ==== is_long
 
 [source,python]
@@ -258,7 +258,7 @@ Returns ``True`` if the value which this value concept holds is of type ``long``
 value.is_long()
 ----
 
-[#_Value_is_string__]
+[#_Value_is_string_]
 ==== is_string
 
 [source,python]
@@ -279,7 +279,7 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 value.is_string()
 ----
 
-[#_Value_is_value__]
+[#_Value_is_value_]
 ==== is_value
 
 [source,python]

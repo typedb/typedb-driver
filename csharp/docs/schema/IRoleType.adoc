@@ -13,7 +13,7 @@
 Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type. Roles allow a schema to enforce logical constraints on types of role players.
 
 // tag::methods[]
-[#_IRoleType_IConcept__TypeDB_Driver_Api_IRoleType_AsRoleType___]
+[#_IRoleType_IConcept_TypeDB_Driver_Api_IRoleType_AsRoleType_]
 ==== AsRoleType
 
 [source,cs]
@@ -41,7 +41,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.AsRoleType();
 ----
 
-[#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IThing_TypeDB_Driver_Api_IRoleType_GetPlayerInstances_ITypeDBTransaction_transaction_]
 ==== GetPlayerInstances
 
 [source,cs]
@@ -68,7 +68,7 @@ IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
 .Returns
 `IEnumerable< IThing >`
 
-[#_IEnumerable__IThing___TypeDB_Driver_Api_IRoleType_GetPlayerInstances___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+[#_IEnumerable_IThing_TypeDB_Driver_Api_IRoleType_GetPlayerInstances_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
 ==== GetPlayerInstances
 
 [source,cs]
@@ -102,7 +102,7 @@ a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`
 roleType.GetPlayerInstances(transaction, transitivity);
 ----
 
-[#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IThingType_TypeDB_Driver_Api_IRoleType_GetPlayerTypes_ITypeDBTransaction_transaction_]
 ==== GetPlayerTypes
 
 [source,cs]
@@ -129,7 +129,7 @@ IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
 .Returns
 `IEnumerable< IThingType >`
 
-[#_IEnumerable__IThingType___TypeDB_Driver_Api_IRoleType_GetPlayerTypes___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+[#_IEnumerable_IThingType_TypeDB_Driver_Api_IRoleType_GetPlayerTypes_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
 ==== GetPlayerTypes
 
 [source,cs]
@@ -163,7 +163,7 @@ a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`
 roleType.GetPlayerTypes(transaction, transitivity)
 ----
 
-[#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IRelation_TypeDB_Driver_Api_IRoleType_GetRelationInstances_ITypeDBTransaction_transaction_]
 ==== GetRelationInstances
 
 [source,cs]
@@ -190,7 +190,7 @@ IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
 .Returns
 `IEnumerable< IRelation >`
 
-[#_IEnumerable__IRelation___TypeDB_Driver_Api_IRoleType_GetRelationInstances___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+[#_IEnumerable_IRelation_TypeDB_Driver_Api_IRoleType_GetRelationInstances_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
 ==== GetRelationInstances
 
 [source,cs]
@@ -224,7 +224,7 @@ a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit
 roleType.GetRelationInstances(transaction, transitivity)
 ----
 
-[#_IEnumerable__IRelationType___TypeDB_Driver_Api_IRoleType_GetRelationTypes___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IRelationType_TypeDB_Driver_Api_IRoleType_GetRelationTypes_ITypeDBTransaction_transaction_]
 ==== GetRelationTypes
 
 [source,cs]
@@ -257,7 +257,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 roleType.GetRelationTypes(transaction);
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IRoleType_IsRoleType___]
+[#_bool_IConcept_TypeDB_Driver_Api_IRoleType_IsRoleType_]
 ==== IsRoleType
 
 [source,cs]

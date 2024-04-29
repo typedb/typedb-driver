@@ -14,7 +14,7 @@ Other types can own an attribute type. That means that instances of these other 
 Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
 
 // tag::methods[]
-[#_AttributeType_as_attribute_type__]
+[#_AttributeType_as_attribute_type_]
 ==== as_attribute_type
 
 [source,python]
@@ -35,7 +35,7 @@ Casts the concept to ``AttributeType``.
 attribute.as_attribute_type()
 ----
 
-[#_AttributeType_get__transaction_TypeDBTransaction__value_Value__bool__int__float__str__datetime]
+[#_AttributeType_get_transaction_TypeDBTransaction_value_Value_bool_int_float_str_datetime]
 ==== get
 
 [source,python]
@@ -66,7 +66,7 @@ a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \
 attribute = attribute_type.get(transaction, value).resolve()
 ----
 
-[#_AttributeType_get_instances__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_AttributeType_get_instances_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_instances
 
 [source,python]
@@ -98,7 +98,7 @@ attribute_type.get_instances(transaction)
 attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_get_owners__transaction_TypeDBTransaction__annotations_set_Annotation___None__transitivity_Transitivity]
+[#_AttributeType_get_owners_transaction_TypeDBTransaction_annotations_set_Annotation_None_transitivity_Transitivity]
 ==== get_owners
 
 [source,python]
@@ -131,7 +131,7 @@ attribute_type.get_owners(transaction)
 attribute_type.get_owners(transaction, annotations=Annotation.unique(), transitivity=Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_get_regex__transaction_TypeDBTransaction]
+[#_AttributeType_get_regex_transaction_TypeDBTransaction]
 ==== get_regex
 
 [source,python]
@@ -161,7 +161,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 attribute_type.get_regex(transaction).resolve()
 ----
 
-[#_AttributeType_get_subtypes_with_value_type__transaction_TypeDBTransaction__value_type_ValueType__transitivity_Transitivity]
+[#_AttributeType_get_subtypes_with_value_type_transaction_TypeDBTransaction_value_type_ValueType_transitivity_Transitivity]
 ==== get_subtypes_with_value_type
 
 [source,python]
@@ -195,7 +195,7 @@ attribute_type.get_subtypes_with_value_type(transaction, value_type,
                                             Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_get_value_type__]
+[#_AttributeType_get_value_type_]
 ==== get_value_type
 
 [source,python]
@@ -216,7 +216,7 @@ Retrieves the ``ValueType`` of this ``AttributeType``.
 attribute_type.get_value_type()
 ----
 
-[#_AttributeType_is_attribute_type__]
+[#_AttributeType_is_attribute_type_]
 ==== is_attribute_type
 
 [source,python]
@@ -237,7 +237,7 @@ Checks if the concept is an ``AttributeType``.
 attribute.is_attribute_type()
 ----
 
-[#_AttributeType_is_boolean__]
+[#_AttributeType_is_boolean_]
 ==== is_boolean
 
 [source,python]
@@ -258,7 +258,7 @@ Returns ``True`` if the value for attributes of this type is of type ``boolean``
 attribute_type.is_boolean()
 ----
 
-[#_AttributeType_is_datetime__]
+[#_AttributeType_is_datetime_]
 ==== is_datetime
 
 [source,python]
@@ -279,7 +279,7 @@ Returns ``True`` if the value for attributes of this type is of type ``datetime`
 attribute_type.is_datetime()
 ----
 
-[#_AttributeType_is_double__]
+[#_AttributeType_is_double_]
 ==== is_double
 
 [source,python]
@@ -300,7 +300,7 @@ Returns ``True`` if the value for attributes of this type is of type ``double``.
 attribute_type.is_double()
 ----
 
-[#_AttributeType_is_long__]
+[#_AttributeType_is_long_]
 ==== is_long
 
 [source,python]
@@ -321,7 +321,7 @@ Returns ``True`` if the value for attributes of this type is of type ``long``. O
 attribute_type.is_long()
 ----
 
-[#_AttributeType_is_string__]
+[#_AttributeType_is_string_]
 ==== is_string
 
 [source,python]
@@ -342,7 +342,7 @@ Returns ``True`` if the value for attributes of this type is of type ``string``.
 attribute_type.is_string()
 ----
 
-[#_AttributeType_put__transaction_TypeDBTransaction__value_Value__bool__int__float__str__datetime]
+[#_AttributeType_put_transaction_TypeDBTransaction_value_Value_bool_int_float_str_datetime]
 ==== put
 
 [source,python]
@@ -373,7 +373,7 @@ a| `value` a| New ``Attribute``’s value (datetime values are treated as timezo
 attribute = attribute_type.put(transaction, value).resolve()
 ----
 
-[#_AttributeType_set_regex__transaction_TypeDBTransaction__regex_str]
+[#_AttributeType_set_regex_transaction_TypeDBTransaction_regex_str]
 ==== set_regex
 
 [source,python]
@@ -406,7 +406,7 @@ a| `regex` a| Regular expression a| `str` a|
 attribute_type.set_regex(transaction, regex).resolve()
 ----
 
-[#_AttributeType_set_supertype__transaction_TypeDBTransaction__super_attribute_type_AttributeType]
+[#_AttributeType_set_supertype_transaction_TypeDBTransaction_super_attribute_type_AttributeType]
 ==== set_supertype
 
 [source,python]
@@ -437,7 +437,7 @@ a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of th
 attribute_type.set_supertype(transaction, super_attribute_type).resolve()
 ----
 
-[#_AttributeType_unset_regex__transaction_TypeDBTransaction]
+[#_AttributeType_unset_regex_transaction_TypeDBTransaction]
 ==== unset_regex
 
 [source,python]

@@ -4,7 +4,7 @@
 A stream of elements offering a functional interface to manipulate elements. Typically the elements are generated/retrieved lazily.
 
 // tag::methods[]
-[#_Stream_T__asyncIterator___]
+[#_Stream_T_asyncIterator_]
 ==== [asyncIterator]
 
 [source,nodejs]
@@ -18,7 +18,7 @@ A stream of elements offering a functional interface to manipulate elements. Typ
 .Returns
 `AsyncIterator<T, any, undefined>`
 
-[#_Stream_T_collect__]
+[#_Stream_T_collect_]
 ==== collect
 
 [source,nodejs]
@@ -39,7 +39,7 @@ Collects all the answers from this stream into an array
 results = transaction.query.match(query).collect().await;
 ----
 
-[#_Stream_T_every__callbackFn___value____unknown_]
+[#_Stream_T_every_callbackFn_value_unknown_]
 ==== every
 
 [source,nodejs]
@@ -62,7 +62,7 @@ a| `callbackFn` a|  a| `((value) => unknown)`
 .Returns
 `Promise<boolean>`
 
-[#_Stream_T_filter__filter___value____boolean_]
+[#_Stream_T_filter_filter_value_boolean_]
 ==== filter
 
 [source,nodejs]
@@ -88,7 +88,7 @@ Examples
 .Returns
 `Stream<T>`
 
-[#_Stream_T_first__]
+[#_Stream_T_first_]
 ==== first
 
 [source,nodejs]
@@ -102,7 +102,7 @@ Returns the first element in the stream.
 .Returns
 `Promise<T>`
 
-[#_Stream_T_flatMap__mapper___value____Stream_U__]
+[#_Stream_T_flatMap_mapper_value_Stream_U_]
 ==== flatMap
 
 [source,nodejs]
@@ -125,7 +125,7 @@ a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value)
 .Returns
 `Stream<U>`
 
-[#_Stream_T_forEach__fn___value____void_]
+[#_Stream_T_forEach_fn_value_void_]
 ==== forEach
 
 [source,nodejs]
@@ -148,7 +148,7 @@ a| `fn` a| The function to evaluate for each element. a| `((value) => void)`
 .Returns
 `Promise<void>`
 
-[#_Stream_T_iterator__]
+[#_Stream_T_iterator_]
 ==== iterator
 
 [source,nodejs]
@@ -162,7 +162,7 @@ iterator(): AsyncIterator<T, any, undefined>
 .Returns
 `AsyncIterator<T, any, undefined>`
 
-[#_Stream_T_map__mapper___value____U_]
+[#_Stream_T_map_mapper_value_U_]
 ==== map
 
 [source,nodejs]
@@ -185,7 +185,7 @@ a| `mapper` a| The mapping function to apply. Returns a new stream from this str
 .Returns
 `Stream<U>`
 
-[#_Stream_T_new_Stream__]
+[#_Stream_T_new_Stream_]
 ==== new Stream
 
 [source,nodejs]
@@ -199,7 +199,7 @@ new Stream<T>(): Stream<T>
 .Returns
 `Stream<T>`
 
-[#_Stream_T_some__callbackFn___value____unknown_]
+[#_Stream_T_some_callbackFn_value_unknown_]
 ==== some
 
 [source,nodejs]

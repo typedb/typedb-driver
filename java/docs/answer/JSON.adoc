@@ -4,7 +4,7 @@
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
 // tag::methods[]
-[#_JSON_JSON__]
+[#_JSON_JSON_]
 ==== JSON
 
 [source,java]
@@ -18,7 +18,7 @@ public JSON()
 .Returns
 `public`
 
-[#_JSON_asArray__]
+[#_JSON_asArray_]
 ==== asArray
 
 [source,java]
@@ -32,7 +32,7 @@ public java.util.List<JSON> asArray()
 .Returns
 `public java.util.List<JSON>`
 
-[#_JSON_asBoolean__]
+[#_JSON_asBoolean_]
 ==== asBoolean
 
 [source,java]
@@ -46,7 +46,7 @@ public boolean asBoolean()
 .Returns
 `public boolean`
 
-[#_JSON_asNumber__]
+[#_JSON_asNumber_]
 ==== asNumber
 
 [source,java]
@@ -60,7 +60,7 @@ public double asNumber()
 .Returns
 `public double`
 
-[#_JSON_asObject__]
+[#_JSON_asObject_]
 ==== asObject
 
 [source,java]
@@ -74,7 +74,7 @@ public java.util.Map<java.lang.String,​JSON> asObject()
 .Returns
 `public java.util.Map<java.lang.String,​JSON>`
 
-[#_JSON_asString__]
+[#_JSON_asString_]
 ==== asString
 
 [source,java]
@@ -88,7 +88,7 @@ public java.lang.String asString()
 .Returns
 `public java.lang.String`
 
-[#_JSON_isArray__]
+[#_JSON_isArray_]
 ==== isArray
 
 [source,java]
@@ -102,7 +102,7 @@ public boolean isArray()
 .Returns
 `public boolean`
 
-[#_JSON_isBoolean__]
+[#_JSON_isBoolean_]
 ==== isBoolean
 
 [source,java]
@@ -116,7 +116,7 @@ public boolean isBoolean()
 .Returns
 `public boolean`
 
-[#_JSON_isNumber__]
+[#_JSON_isNumber_]
 ==== isNumber
 
 [source,java]
@@ -130,7 +130,7 @@ public boolean isNumber()
 .Returns
 `public boolean`
 
-[#_JSON_isObject__]
+[#_JSON_isObject_]
 ==== isObject
 
 [source,java]
@@ -144,7 +144,7 @@ public boolean isObject()
 .Returns
 `public boolean`
 
-[#_JSON_isString__]
+[#_JSON_isString_]
 ==== isString
 
 [source,java]
@@ -158,7 +158,7 @@ public boolean isString()
 .Returns
 `public boolean`
 
-[#_JSON_parse__java_lang_String]
+[#_JSON_parse_java_lang_String]
 ==== parse
 
 [source,java]

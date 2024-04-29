@@ -13,7 +13,7 @@
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_VoidPromise_TypeDB_Driver_Api_IRelation_AddPlayer___ITypeDBTransaction_transaction__IRoleType_roleType__IThing_player_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelation_AddPlayer_ITypeDBTransaction_transaction_IRoleType_roleType_IThing_player_]
 ==== AddPlayer
 
 [source,cs]
@@ -48,7 +48,7 @@ a| `player` a| The thing to play the role a| `IThing`
 relation.AddPlayer(transaction, roleType, player).Resolve();
 ----
 
-[#_IRelation_IConcept__TypeDB_Driver_Api_IRelation_AsRelation___]
+[#_IRelation_IConcept_TypeDB_Driver_Api_IRelation_AsRelation_]
 ==== AsRelation
 
 [source,cs]
@@ -74,7 +74,7 @@ Implements TypeDB.Driver.Api.IConcept.
 relation.AsRelation();
 ----
 
-[#_Dictionary__IRoleType__ICollection__IThing_____TypeDB_Driver_Api_IRelation_GetPlayers___ITypeDBTransaction_transaction_]
+[#_Dictionary_IRoleType_ICollection_IThing_TypeDB_Driver_Api_IRelation_GetPlayers_ITypeDBTransaction_transaction_]
 ==== GetPlayers
 
 [source,cs]
@@ -107,7 +107,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 relation.GetPlayers(transaction)
 ----
 
-[#_IEnumerable__IThing___TypeDB_Driver_Api_IRelation_GetPlayersByRoleType___ITypeDBTransaction_transaction__params_IRoleType___roleTypes_]
+[#_IEnumerable_IThing_TypeDB_Driver_Api_IRelation_GetPlayersByRoleType_ITypeDBTransaction_transaction_params_IRoleType_roleTypes_]
 ==== GetPlayersByRoleType
 
 [source,cs]
@@ -141,7 +141,7 @@ a| `roleTypes` a| 0 or more role types a| `params IRoleType[]`
 relation.GetPlayersByRoleType(transaction, roleTypes);
 ----
 
-[#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelation_GetRelating___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IRelation_GetRelating_ITypeDBTransaction_transaction_]
 ==== GetRelating
 
 [source,cs]
@@ -174,7 +174,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 relation.GetRelating(transaction);
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IRelation_IsRelation___]
+[#_bool_IConcept_TypeDB_Driver_Api_IRelation_IsRelation_]
 ==== IsRelation
 
 [source,cs]
@@ -200,7 +200,7 @@ Implements TypeDB.Driver.Api.IConcept.
 relation.IsRelation();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelation_RemovePlayer___ITypeDBTransaction_transaction__IRoleType_roleType__IThing_player_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelation_RemovePlayer_ITypeDBTransaction_transaction_IRoleType_roleType_IThing_player_]
 ==== RemovePlayer
 
 [source,cs]

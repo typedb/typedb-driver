@@ -6,7 +6,7 @@
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
 // tag::methods[]
-[#_Rule_delete__TypeDBTransaction]
+[#_Rule_delete_TypeDBTransaction]
 ==== delete
 
 [source,java]
@@ -38,7 +38,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 rule.delete(transaction).resolve();
 ----
 
-[#_Rule_getLabel__]
+[#_Rule_getLabel_]
 ==== getLabel
 
 [source,java]
@@ -53,7 +53,7 @@ Retrieves the unique label of the rule.
 .Returns
 `java.lang.String`
 
-[#_Rule_getThen__]
+[#_Rule_getThen_]
 ==== getThen
 
 [source,java]
@@ -68,7 +68,7 @@ The single statement that constitutes the ‘then’ of the rule.
 .Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
-[#_Rule_getWhen__]
+[#_Rule_getWhen_]
 ==== getWhen
 
 [source,java]
@@ -83,7 +83,7 @@ The statements that constitute the ‘when’ of the rule.
 .Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
-[#_Rule_isDeleted__TypeDBTransaction]
+[#_Rule_isDeleted_TypeDBTransaction]
 ==== isDeleted
 
 [source,java]
@@ -115,7 +115,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 rule.isDeleted(transaction).resolve();
 ----
 
-[#_Rule_setLabel__TypeDBTransaction__java_lang_String]
+[#_Rule_setLabel_TypeDBTransaction_java_lang_String]
 ==== setLabel
 
 [source,java]

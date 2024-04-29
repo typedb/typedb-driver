@@ -16,7 +16,7 @@ a| `UNIQUE` a| `Annotation` a| Annotation to specify the owned is UNIQUE
 // end::properties[]
 
 // tag::methods[]
-[#_Annotation_parse__string_string]
+[#_Annotation_parse_string_string]
 ==== parse
 
 [source,nodejs]
@@ -39,7 +39,7 @@ a| `string` a| name of the attribute as a string. e.g.: "key", "unique" a| `stri
 .Returns
 `Annotation`
 
-[#_Annotation_toString__]
+[#_Annotation_toString_]
 ==== toString
 
 [source,nodejs]

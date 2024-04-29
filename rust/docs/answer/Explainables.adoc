@@ -25,7 +25,7 @@ a| `relations` a| `HashMap<String, Explainable>` a| Explainable relations
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Explainables_is_empty__]
+[#_struct_Explainables_is_empty_]
 ==== is_empty
 
 [source,rust]

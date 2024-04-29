@@ -8,7 +8,7 @@
 Contains explainable objects.
 
 // tag::methods[]
-[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Attribute___string_variable_]
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Attribute_string_variable_]
 ==== Attribute
 
 [source,cs]
@@ -41,7 +41,7 @@ a| `variable` a| The string representation of a variable a| `string`
 conceptMap.AllExplainables.Attribute(variable);
 ----
 
-[#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetAttributes___]
+[#_IEnumerable_KeyValuePair_string_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_GetAttributes_]
 ==== GetAttributes
 
 [source,cs]
@@ -65,7 +65,7 @@ Retrieves all of this ``IConceptMap``’s explainable attributes.
 conceptMap.AllExplainables.GetAttributes();
 ----
 
-[#_IEnumerable__KeyValuePair__KeyValuePair__string__string____IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetOwnerships___]
+[#_IEnumerable_KeyValuePair_KeyValuePair_string_string_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_GetOwnerships_]
 ==== GetOwnerships
 
 [source,cs]
@@ -89,7 +89,7 @@ Retrieves all of this ``IConceptMap``’s explainable ownerships.
 conceptMap.AllExplainables.GetOwnerships();
 ----
 
-[#_IEnumerable__KeyValuePair__string__IExplainable_____TypeDB_Driver_Api_IConceptMap_IExplainables_GetRelations___]
+[#_IEnumerable_KeyValuePair_string_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_GetRelations_]
 ==== GetRelations
 
 [source,cs]
@@ -113,7 +113,7 @@ Retrieves all of this ``IConceptMap``’s explainable relations.
 conceptMap.AllExplainables.GetRelations();
 ----
 
-[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Ownership___string_owner__string_attribute_]
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Ownership_string_owner_string_attribute_]
 ==== Ownership
 
 [source,cs]
@@ -147,7 +147,7 @@ a| `attribute` a| The string representation of the attribute variable a| `string
 conceptMap.AllExplainables.Ownership(owner, attribute);
 ----
 
-[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Relation___string_variable_]
+[#_IExplainable_TypeDB_Driver_Api_IConceptMap_IExplainables_Relation_string_variable_]
 ==== Relation
 
 [source,cs]

@@ -9,7 +9,7 @@
 A session with a TypeDB database.
 
 // tag::methods[]
-[#_struct_Session_database_name__]
+[#_struct_Session_database_name_]
 ==== database_name
 
 [source,rust]
@@ -33,7 +33,7 @@ Returns the name of the database of the session.
 session.database_name();
 ----
 
-[#_struct_Session_force_close__]
+[#_struct_Session_force_close_]
 ==== force_close
 
 [source,rust]
@@ -57,7 +57,7 @@ Result
 session.force_close();
 ----
 
-[#_struct_Session_is_open__]
+[#_struct_Session_is_open_]
 ==== is_open
 
 [source,rust]
@@ -81,7 +81,7 @@ bool
 session.is_open();
 ----
 
-[#_struct_Session_new__]
+[#_struct_Session_new_]
 ==== new
 
 [tabs]
@@ -116,7 +116,7 @@ Opens a communication tunnel (session) to the given database with default option
 Result<Self>
 ----
 
-[#_struct_Session_new_with_options__database_Database__session_type_SessionType__options_Options]
+[#_struct_Session_new_with_options_database_Database_session_type_SessionType_options_Options]
 ==== new_with_options
 
 [tabs]
@@ -195,7 +195,7 @@ Session::new_with_options(database, session_type, options);
 --
 ====
 
-[#_struct_Session_on_close__function]
+[#_struct_Session_on_close_function]
 ==== on_close
 
 [source,rust]
@@ -228,7 +228,7 @@ null
 session.on_close(function);
 ----
 
-[#_struct_Session_on_reopen__function]
+[#_struct_Session_on_reopen_function]
 ==== on_reopen
 
 [source,rust]
@@ -261,7 +261,7 @@ null
 session.on_reopen(function);
 ----
 
-[#_struct_Session_transaction__]
+[#_struct_Session_transaction_]
 ==== transaction
 
 [tabs]
@@ -302,7 +302,7 @@ Opens a transaction to perform read or write queries on the database connected t
 Result<Transaction<'_>>
 ----
 
-[#_struct_Session_transaction_with_options__transaction_type_TransactionType__options_Options]
+[#_struct_Session_transaction_with_options_transaction_type_TransactionType_options_Options]
 ==== transaction_with_options
 
 [tabs]
@@ -380,7 +380,7 @@ session.transaction_with_options(transaction_type, options);
 --
 ====
 
-[#_struct_Session_type___]
+[#_struct_Session_type_]
 ==== type_
 
 [source,rust]

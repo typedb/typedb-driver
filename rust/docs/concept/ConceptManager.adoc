@@ -8,7 +8,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_struct_ConceptManager_get_attribute__iid_IID]
+[#_struct_ConceptManager_get_attribute_iid_IID]
 ==== get_attribute
 
 [source,rust]
@@ -62,7 +62,7 @@ transaction.concepts().get_attribute(iid).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_attribute_type__label_String]
+[#_struct_ConceptManager_get_attribute_type_label_String]
 ==== get_attribute_type
 
 [source,rust]
@@ -116,7 +116,7 @@ transaction.concepts().get_attribute_type(label).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_entity__iid_IID]
+[#_struct_ConceptManager_get_entity_iid_IID]
 ==== get_entity
 
 [source,rust]
@@ -167,7 +167,7 @@ transaction.concepts().get_entity(iid).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_entity_type__label_String]
+[#_struct_ConceptManager_get_entity_type_label_String]
 ==== get_entity_type
 
 [source,rust]
@@ -221,7 +221,7 @@ transaction.concepts().get_entity_type(label).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_relation__iid_IID]
+[#_struct_ConceptManager_get_relation_iid_IID]
 ==== get_relation
 
 [source,rust]
@@ -275,7 +275,7 @@ transaction.concepts().get_relation(iid).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_relation_type__label_String]
+[#_struct_ConceptManager_get_relation_type_label_String]
 ==== get_relation_type
 
 [source,rust]
@@ -329,7 +329,7 @@ transaction.concepts().get_relation_type(label).resolve()
 --
 ====
 
-[#_struct_ConceptManager_get_schema_exceptions__]
+[#_struct_ConceptManager_get_schema_exceptions_]
 ==== get_schema_exceptions
 
 [source,rust]
@@ -355,7 +355,7 @@ Result<impl Stream<Item = Result<SchemaException>> + 'tx>
 transaction.concepts().get_schema_exceptions()
 ----
 
-[#_struct_ConceptManager_put_attribute_type__label_String__value_type_ValueType]
+[#_struct_ConceptManager_put_attribute_type_label_String_value_type_ValueType]
 ==== put_attribute_type
 
 [source,rust]
@@ -411,7 +411,7 @@ transaction.concepts().put_attribute_type(label, value_type).resolve()
 --
 ====
 
-[#_struct_ConceptManager_put_entity_type__label_String]
+[#_struct_ConceptManager_put_entity_type_label_String]
 ==== put_entity_type
 
 [source,rust]
@@ -465,7 +465,7 @@ transaction.concepts().put_entity_type(label).resolve()
 --
 ====
 
-[#_struct_ConceptManager_put_relation_type__label_String]
+[#_struct_ConceptManager_put_relation_type_label_String]
 ==== put_relation_type
 
 [source,rust]

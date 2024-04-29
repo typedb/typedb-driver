@@ -36,7 +36,7 @@ label.Scope;
 // end::properties[]
 
 // tag::methods[]
-[#_override_bool_TypeDB_Driver_Common_Label_Equals___object_obj_]
+[#_override_bool_TypeDB_Driver_Common_Label_Equals_object_obj_]
 ==== Equals
 
 [source,cs]
@@ -69,7 +69,7 @@ a| `obj` a| Object to compare with a| `object?`
 label.Equals(obj);
 ----
 
-[#_TypeDB_Driver_Common_Label_Label___string_scope__string_name_]
+[#_TypeDB_Driver_Common_Label_Label_string_scope_string_name_]
 ==== Label
 
 [source,cs]
@@ -103,7 +103,7 @@ a| `name` a| Label name a| `string`
 new Label("relation", "role");
 ----
 
-[#_TypeDB_Driver_Common_Label_Label___string_name_]
+[#_TypeDB_Driver_Common_Label_Label_string_name_]
 ==== Label
 
 [source,cs]
@@ -160,7 +160,7 @@ Returns the string representation of the scoped name.
 label.ScopedName;
 ----
 
-[#_override_string_TypeDB_Driver_Common_Label_ToString___]
+[#_override_string_TypeDB_Driver_Common_Label_ToString_]
 ==== ToString
 
 [source,cs]

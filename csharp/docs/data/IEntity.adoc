@@ -13,7 +13,7 @@
 Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_IEntity_IConcept__TypeDB_Driver_Api_IEntity_AsEntity___]
+[#_IEntity_IConcept_TypeDB_Driver_Api_IEntity_AsEntity_]
 ==== AsEntity
 
 [source,cs]
@@ -39,7 +39,7 @@ Implements TypeDB.Driver.Api.IConcept.
 entity.AsEntity();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IEntity_IsEntity___]
+[#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
 ==== IsEntity
 
 [source,cs]

@@ -26,7 +26,7 @@ a| `WRITE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDBTransaction_Type_id__]
+[#_TypeDBTransaction_Type_id_]
 ==== id
 
 [source,java]
@@ -40,7 +40,7 @@ public int id()
 .Returns
 `public int`
 
-[#_TypeDBTransaction_Type_isRead__]
+[#_TypeDBTransaction_Type_isRead_]
 ==== isRead
 
 [source,java]
@@ -54,7 +54,7 @@ public boolean isRead()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction_Type_isWrite__]
+[#_TypeDBTransaction_Type_isWrite_]
 ==== isWrite
 
 [source,java]
@@ -68,7 +68,7 @@ public boolean isWrite()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction_Type_valueOf__java_lang_String]
+[#_TypeDBTransaction_Type_valueOf_java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -91,7 +91,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static TypeDBTransaction.Type`
 
-[#_TypeDBTransaction_Type_values__]
+[#_TypeDBTransaction_Type_values_]
 ==== values
 
 [source,java]

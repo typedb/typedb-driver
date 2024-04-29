@@ -6,7 +6,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_QueryManager_define__com_vaticle_typeql_lang_query_TypeQLDefine]
+[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine]
 ==== define
 
 [source,java]
@@ -25,7 +25,7 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_define__com_vaticle_typeql_lang_query_TypeQLDefine__TypeDBOptions]
+[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine_TypeDBOptions]
 ==== define
 
 [source,java]
@@ -59,7 +59,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().define(query, options).resolve()
 ----
 
-[#_QueryManager_define__java_lang_String]
+[#_QueryManager_define_java_lang_String]
 ==== define
 
 [source,java]
@@ -78,7 +78,7 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_define__java_lang_String__TypeDBOptions]
+[#_QueryManager_define_java_lang_String_TypeDBOptions]
 ==== define
 
 [source,java]
@@ -96,7 +96,7 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_delete__com_vaticle_typeql_lang_query_TypeQLDelete]
+[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete]
 ==== delete
 
 [source,java]
@@ -115,7 +115,7 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_delete__com_vaticle_typeql_lang_query_TypeQLDelete__TypeDBOptions]
+[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete_TypeDBOptions]
 ==== delete
 
 [source,java]
@@ -149,7 +149,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().delete(query, options).resolve()
 ----
 
-[#_QueryManager_delete__java_lang_String]
+[#_QueryManager_delete_java_lang_String]
 ==== delete
 
 [source,java]
@@ -168,7 +168,7 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_delete__java_lang_String__TypeDBOptions]
+[#_QueryManager_delete_java_lang_String_TypeDBOptions]
 ==== delete
 
 [source,java]
@@ -186,7 +186,7 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_explain__ConceptMap_Explainable]
+[#_QueryManager_explain_ConceptMap_Explainable]
 ==== explain
 
 [source,java]
@@ -205,7 +205,7 @@ See also: <<#_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainabl
 .Returns
 `java.util.stream.Stream<Explanation>`
 
-[#_QueryManager_explain__ConceptMap_Explainable__TypeDBOptions]
+[#_QueryManager_explain_ConceptMap_Explainable_TypeDBOptions]
 ==== explain
 
 [source,java]
@@ -239,7 +239,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().explain(explainable, options)
 ----
 
-[#_QueryManager_fetch__com_vaticle_typeql_lang_query_TypeQLFetch]
+[#_QueryManager_fetch_com_vaticle_typeql_lang_query_TypeQLFetch]
 ==== fetch
 
 [source,java]
@@ -258,7 +258,7 @@ See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb
 .Returns
 `java.util.stream.Stream<JSON>`
 
-[#_QueryManager_fetch__com_vaticle_typeql_lang_query_TypeQLFetch__TypeDBOptions]
+[#_QueryManager_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_TypeDBOptions]
 ==== fetch
 
 [source,java]
@@ -292,7 +292,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().fetch(query, options)
 ----
 
-[#_QueryManager_fetch__java_lang_String]
+[#_QueryManager_fetch_java_lang_String]
 ==== fetch
 
 [source,java]
@@ -311,7 +311,7 @@ See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb
 .Returns
 `java.util.stream.Stream<JSON>`
 
-[#_QueryManager_fetch__java_lang_String__TypeDBOptions]
+[#_QueryManager_fetch_java_lang_String_TypeDBOptions]
 ==== fetch
 
 [source,java]
@@ -329,7 +329,7 @@ See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb
 .Returns
 `java.util.stream.Stream<JSON>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet]
 ==== get
 
 [source,java]
@@ -348,7 +348,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_dri
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet__TypeDBOptions]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_TypeDBOptions]
 ==== get
 
 [source,java]
@@ -382,7 +382,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().get(query, options)
 ----
 
-[#_QueryManager_get__java_lang_String]
+[#_QueryManager_get_java_lang_String]
 ==== get
 
 [source,java]
@@ -401,7 +401,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_dri
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_get__java_lang_String__TypeDBOptions]
+[#_QueryManager_get_java_lang_String_TypeDBOptions]
 ==== get
 
 [source,java]
@@ -419,7 +419,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_dri
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Aggregate]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate]
 ==== get
 
 [source,java]
@@ -438,7 +438,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 .Returns
 `Promise<java.util.Optional<Value>>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Aggregate__TypeDBOptions]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_TypeDBOptions]
 ==== get
 
 [source,java]
@@ -472,7 +472,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().getAggregate(query, options).resolve()
 ----
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Group]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group]
 ==== get
 
 [source,java]
@@ -491,7 +491,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMapGroup>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Group__TypeDBOptions]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_TypeDBOptions]
 ==== get
 
 [source,java]
@@ -525,7 +525,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().getGroup(query, options)
 ----
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate]
 ==== get
 
 [source,java]
@@ -544,7 +544,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_va
 .Returns
 `java.util.stream.Stream<ValueGroup>`
 
-[#_QueryManager_get__com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate__TypeDBOptions]
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_TypeDBOptions]
 ==== get
 
 [source,java]
@@ -578,7 +578,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().getGroupAggregate(query, options)
 ----
 
-[#_QueryManager_getAggregate__java_lang_String]
+[#_QueryManager_getAggregate_java_lang_String]
 ==== getAggregate
 
 [source,java]
@@ -597,7 +597,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 .Returns
 `Promise<java.util.Optional<Value>>`
 
-[#_QueryManager_getAggregate__java_lang_String__TypeDBOptions]
+[#_QueryManager_getAggregate_java_lang_String_TypeDBOptions]
 ==== getAggregate
 
 [source,java]
@@ -615,7 +615,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 .Returns
 `Promise<java.util.Optional<Value>>`
 
-[#_QueryManager_getGroup__java_lang_String]
+[#_QueryManager_getGroup_java_lang_String]
 ==== getGroup
 
 [source,java]
@@ -634,7 +634,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMapGroup>`
 
-[#_QueryManager_getGroup__java_lang_String__TypeDBOptions]
+[#_QueryManager_getGroup_java_lang_String_TypeDBOptions]
 ==== getGroup
 
 [source,java]
@@ -652,7 +652,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMapGroup>`
 
-[#_QueryManager_getGroupAggregate__java_lang_String]
+[#_QueryManager_getGroupAggregate_java_lang_String]
 ==== getGroupAggregate
 
 [source,java]
@@ -671,7 +671,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_va
 .Returns
 `java.util.stream.Stream<ValueGroup>`
 
-[#_QueryManager_getGroupAggregate__java_lang_String__TypeDBOptions]
+[#_QueryManager_getGroupAggregate_java_lang_String_TypeDBOptions]
 ==== getGroupAggregate
 
 [source,java]
@@ -689,7 +689,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_va
 .Returns
 `java.util.stream.Stream<ValueGroup>`
 
-[#_QueryManager_insert__com_vaticle_typeql_lang_query_TypeQLInsert]
+[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert]
 ==== insert
 
 [source,java]
@@ -707,7 +707,7 @@ See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_insert__com_vaticle_typeql_lang_query_TypeQLInsert__TypeDBOptions]
+[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert_TypeDBOptions]
 ==== insert
 
 [source,java]
@@ -740,7 +740,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().insert(query, options)
 ----
 
-[#_QueryManager_insert__java_lang_String]
+[#_QueryManager_insert_java_lang_String]
 ==== insert
 
 [source,java]
@@ -758,7 +758,7 @@ See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_insert__java_lang_String__TypeDBOptions]
+[#_QueryManager_insert_java_lang_String_TypeDBOptions]
 ==== insert
 
 [source,java]
@@ -775,7 +775,7 @@ See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_undefine__com_vaticle_typeql_lang_query_TypeQLUndefine]
+[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine]
 ==== undefine
 
 [source,java]
@@ -794,7 +794,7 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_undefine__com_vaticle_typeql_lang_query_TypeQLUndefine__TypeDBOptions]
+[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_TypeDBOptions]
 ==== undefine
 
 [source,java]
@@ -828,7 +828,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().undefine(query, options).resolve()
 ----
 
-[#_QueryManager_undefine__java_lang_String]
+[#_QueryManager_undefine_java_lang_String]
 ==== undefine
 
 [source,java]
@@ -847,7 +847,7 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_undefine__java_lang_String__TypeDBOptions]
+[#_QueryManager_undefine_java_lang_String_TypeDBOptions]
 ==== undefine
 
 [source,java]
@@ -865,7 +865,7 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 .Returns
 `Promise<java.lang.Void>`
 
-[#_QueryManager_update__com_vaticle_typeql_lang_query_TypeQLUpdate]
+[#_QueryManager_update_com_vaticle_typeql_lang_query_TypeQLUpdate]
 ==== update
 
 [source,java]
@@ -883,7 +883,7 @@ See also: <<#_update_com_vaticle_typeql_lang_query_TypeQLUpdate_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_update__com_vaticle_typeql_lang_query_TypeQLUpdate__TypeDBOptions]
+[#_QueryManager_update_com_vaticle_typeql_lang_query_TypeQLUpdate_TypeDBOptions]
 ==== update
 
 [source,java]
@@ -916,7 +916,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().update(query, options)
 ----
 
-[#_QueryManager_update__java_lang_String]
+[#_QueryManager_update_java_lang_String]
 ==== update
 
 [source,java]
@@ -934,7 +934,7 @@ See also: <<#_update_com_vaticle_typeql_lang_query_TypeQLUpdate_com_vaticle_type
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
-[#_QueryManager_update__java_lang_String__TypeDBOptions]
+[#_QueryManager_update_java_lang_String_TypeDBOptions]
 ==== update
 
 [source,java]

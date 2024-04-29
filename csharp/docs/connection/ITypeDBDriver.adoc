@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver.Api`
 
 // tag::methods[]
-[#_void_TypeDB_Driver_Api_ITypeDBDriver_Close___]
+[#_void_TypeDB_Driver_Api_ITypeDBDriver_Close_]
 ==== Close
 
 [source,cs]
@@ -52,7 +52,7 @@ The ``IDatabaseManager`` for this connection, providing access to database manag
 driver.Databases;
 ----
 
-[#_IUser_TypeDB_Driver_Api_ITypeDBDriver_GetCurrentUser___]
+[#_IUser_TypeDB_Driver_Api_ITypeDBDriver_GetCurrentUser_]
 ==== GetCurrentUser
 
 [source,cs]
@@ -76,7 +76,7 @@ Returns the logged-in user for the connection. Only for TypeDB Cloud.
 driver.GetCurrentUser();
 ----
 
-[#_bool_TypeDB_Driver_Api_ITypeDBDriver_IsOpen___]
+[#_bool_TypeDB_Driver_Api_ITypeDBDriver_IsOpen_]
 ==== IsOpen
 
 [source,cs]
@@ -100,7 +100,7 @@ Checks whether this connection is presently open.
 driver.IsOpen();
 ----
 
-[#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session___string_database__SessionType_type_]
+[#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session_string_database_SessionType_type_]
 ==== Session
 
 [source,cs]
@@ -127,7 +127,7 @@ ITypeDBDriver::Session(string, SessionType, TypeDBOptions);
 .Returns
 `ITypeDBSession`
 
-[#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session___string_database__SessionType_type__TypeDBOptions_options_]
+[#_ITypeDBSession_TypeDB_Driver_Api_ITypeDBDriver_Session_string_database_SessionType_type_TypeDBOptions_options_]
 ==== Session
 
 [source,cs]

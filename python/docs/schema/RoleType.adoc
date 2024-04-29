@@ -10,7 +10,7 @@ Roles are special internal types used by relations. We can not create an instanc
 Roles allow a schema to enforce logical constraints on types of role players.
 
 // tag::methods[]
-[#_RoleType_as_role_type__]
+[#_RoleType_as_role_type_]
 ==== as_role_type
 
 [source,python]
@@ -31,7 +31,7 @@ Casts the concept to ``RoleType``.
 role_type.as_role_type()
 ----
 
-[#_RoleType_get_player_instances__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RoleType_get_player_instances_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_player_instances
 
 [source,python]
@@ -62,7 +62,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 role_type.get_player_instances(transaction, transitivity)
 ----
 
-[#_RoleType_get_player_types__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RoleType_get_player_types_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_player_types
 
 [source,python]
@@ -93,7 +93,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 role_type.get_player_types(transaction, transitivity)
 ----
 
-[#_RoleType_get_relation_instances__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RoleType_get_relation_instances_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_relation_instances
 
 [source,python]
@@ -124,7 +124,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect relatio
 role_type.get_relation_instances(transaction, transitivity)
 ----
 
-[#_RoleType_get_relation_type__transaction_TypeDBTransaction]
+[#_RoleType_get_relation_type_transaction_TypeDBTransaction]
 ==== get_relation_type
 
 [source,python]
@@ -154,7 +154,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 role_type.get_relation_type(transaction).resolve()
 ----
 
-[#_RoleType_get_relation_types__transaction_TypeDBTransaction]
+[#_RoleType_get_relation_types_transaction_TypeDBTransaction]
 ==== get_relation_types
 
 [source,python]
@@ -184,7 +184,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 role_type.get_relation_types(transaction)
 ----
 
-[#_RoleType_get_subtypes__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RoleType_get_subtypes_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_subtypes
 
 [source,python]
@@ -215,7 +215,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 role_type.get_subtypes(transaction, transitivity)
 ----
 
-[#_RoleType_get_supertype__transaction_TypeDBTransaction]
+[#_RoleType_get_supertype_transaction_TypeDBTransaction]
 ==== get_supertype
 
 [source,python]
@@ -245,7 +245,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 role_type.get_supertype(transaction).resolve()
 ----
 
-[#_RoleType_get_supertypes__transaction_TypeDBTransaction]
+[#_RoleType_get_supertypes_transaction_TypeDBTransaction]
 ==== get_supertypes
 
 [source,python]
@@ -275,7 +275,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 role_type.get_supertypes(transaction)
 ----
 
-[#_RoleType_is_role_type__]
+[#_RoleType_is_role_type_]
 ==== is_role_type
 
 [source,python]

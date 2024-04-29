@@ -8,7 +8,7 @@
 A TypeDB database
 
 // tag::methods[]
-[#_struct_Database_delete__]
+[#_struct_Database_delete_]
 ==== delete
 
 [tabs]
@@ -68,7 +68,7 @@ database.delete();
 --
 ====
 
-[#_struct_Database_name__]
+[#_struct_Database_name_]
 ==== name
 
 [source,rust]
@@ -85,7 +85,7 @@ Retrieves the database name as a string.
 &str
 ----
 
-[#_struct_Database_preferred_replica_info__]
+[#_struct_Database_preferred_replica_info_]
 ==== preferred_replica_info
 
 [source,rust]
@@ -109,7 +109,7 @@ Option<ReplicaInfo>
 database.preferred_replica_info();
 ----
 
-[#_struct_Database_primary_replica_info__]
+[#_struct_Database_primary_replica_info_]
 ==== primary_replica_info
 
 [source,rust]
@@ -133,7 +133,7 @@ Option<ReplicaInfo>
 database.primary_replica_info()
 ----
 
-[#_struct_Database_replicas_info__]
+[#_struct_Database_replicas_info_]
 ==== replicas_info
 
 [source,rust]
@@ -157,7 +157,7 @@ Vec<ReplicaInfo>
 database.replicas_info()
 ----
 
-[#_struct_Database_rule_schema__]
+[#_struct_Database_rule_schema_]
 ==== rule_schema
 
 [tabs]
@@ -217,7 +217,7 @@ database.rule_schema();
 --
 ====
 
-[#_struct_Database_schema__]
+[#_struct_Database_schema_]
 ==== schema
 
 [tabs]
@@ -277,7 +277,7 @@ database.schema();
 --
 ====
 
-[#_struct_Database_type_schema__]
+[#_struct_Database_type_schema_]
 ==== type_schema
 
 [tabs]

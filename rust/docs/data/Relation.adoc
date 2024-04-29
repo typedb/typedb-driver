@@ -28,7 +28,7 @@ a| `type_` a| `RelationType` a| The type which this Relation belongs to
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Relation_add_role_player__]
+[#_struct_Relation_add_role_player_]
 ==== add_role_player
 
 [source,rust]
@@ -50,7 +50,7 @@ fn add_role_player<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Relation_delete__]
+[#_struct_Relation_delete_]
 ==== delete
 
 [source,rust]
@@ -70,7 +70,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Relation_get_has__]
+[#_struct_Relation_get_has_]
 ==== get_has
 
 [source,rust]
@@ -92,7 +92,7 @@ fn get_has<'tx>(
 Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
-[#_struct_Relation_get_players_by_role_type__]
+[#_struct_Relation_get_players_by_role_type_]
 ==== get_players_by_role_type
 
 [source,rust]
@@ -113,7 +113,7 @@ fn get_players_by_role_type<'tx>(
 Result<BoxStream<'tx, Result<Thing>>>
 ----
 
-[#_struct_Relation_get_playing__]
+[#_struct_Relation_get_playing_]
 ==== get_playing
 
 [source,rust]
@@ -133,7 +133,7 @@ fn get_playing<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_Relation_get_relating__]
+[#_struct_Relation_get_relating_]
 ==== get_relating
 
 [source,rust]
@@ -153,7 +153,7 @@ fn get_relating<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_Relation_get_relations__]
+[#_struct_Relation_get_relations_]
 ==== get_relations
 
 [source,rust]
@@ -174,7 +174,7 @@ fn get_relations<'tx>(
 Result<BoxStream<'tx, Result<Relation>>>
 ----
 
-[#_struct_Relation_get_role_players__]
+[#_struct_Relation_get_role_players_]
 ==== get_role_players
 
 [source,rust]
@@ -194,7 +194,7 @@ fn get_role_players<'tx>(
 Result<BoxStream<'tx, Result<(RoleType, Thing)>>>
 ----
 
-[#_struct_Relation_iid__]
+[#_struct_Relation_iid_]
 ==== iid
 
 [source,rust]
@@ -211,7 +211,7 @@ fn iid(&self) -> &IID
 &IID
 ----
 
-[#_struct_Relation_is_deleted__]
+[#_struct_Relation_is_deleted_]
 ==== is_deleted
 
 [source,rust]
@@ -231,7 +231,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_Relation_is_inferred__]
+[#_struct_Relation_is_inferred_]
 ==== is_inferred
 
 [source,rust]
@@ -248,7 +248,7 @@ fn is_inferred(&self) -> bool
 bool
 ----
 
-[#_struct_Relation_remove_role_player__]
+[#_struct_Relation_remove_role_player_]
 ==== remove_role_player
 
 [source,rust]
@@ -270,7 +270,7 @@ fn remove_role_player<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Relation_set_has__]
+[#_struct_Relation_set_has_]
 ==== set_has
 
 [source,rust]
@@ -291,7 +291,7 @@ fn set_has<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Relation_unset_has__]
+[#_struct_Relation_unset_has_]
 ==== unset_has
 
 [source,rust]

@@ -8,7 +8,7 @@
 * `TypeDB.Driver.Api.IConcept`
 
 // tag::methods[]
-[#_bool_TypeDB_Driver_Api_IValue_AsBool___]
+[#_bool_TypeDB_Driver_Api_IValue_AsBool_]
 ==== AsBool
 
 [source,cs]
@@ -32,7 +32,7 @@ Returns a ``bool`` value of this value concept. If the value has another type, r
 value.AsBool();
 ----
 
-[#_System_DateTime_TypeDB_Driver_Api_IValue_AsDateTime___]
+[#_System_DateTime_TypeDB_Driver_Api_IValue_AsDateTime_]
 ==== AsDateTime
 
 [source,cs]
@@ -56,7 +56,7 @@ Returns a ``datetime`` value of this value concept. This value contains raw date
 value.AsDateTime();
 ----
 
-[#_double_TypeDB_Driver_Api_IValue_AsDouble___]
+[#_double_TypeDB_Driver_Api_IValue_AsDouble_]
 ==== AsDouble
 
 [source,cs]
@@ -80,7 +80,7 @@ Returns a ``double`` value of this value concept. If the value has another type,
 value.AsDouble();
 ----
 
-[#_long_TypeDB_Driver_Api_IValue_AsLong___]
+[#_long_TypeDB_Driver_Api_IValue_AsLong_]
 ==== AsLong
 
 [source,cs]
@@ -104,7 +104,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 value.AsLong();
 ----
 
-[#_string_TypeDB_Driver_Api_IValue_AsString___]
+[#_string_TypeDB_Driver_Api_IValue_AsString_]
 ==== AsString
 
 [source,cs]
@@ -128,7 +128,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.AsString();
 ----
 
-[#_object_TypeDB_Driver_Api_IValue_AsUntyped___]
+[#_object_TypeDB_Driver_Api_IValue_AsUntyped_]
 ==== AsUntyped
 
 [source,cs]
@@ -152,7 +152,7 @@ Returns an untyped ``object`` value of this value concept. This is useful for va
 value.AsUntyped();
 ----
 
-[#_IValue_IConcept__TypeDB_Driver_Api_IValue_AsValue___]
+[#_IValue_IConcept_TypeDB_Driver_Api_IValue_AsValue_]
 ==== AsValue
 
 [source,cs]
@@ -180,7 +180,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.AsValue();
 ----
 
-[#_bool_TypeDB_Driver_Api_IValue_IsBool___]
+[#_bool_TypeDB_Driver_Api_IValue_IsBool_]
 ==== IsBool
 
 [source,cs]
@@ -204,7 +204,7 @@ Returns ``True`` if the value which this value concept holds is of type ``bool``
 value.IsBool();
 ----
 
-[#_bool_TypeDB_Driver_Api_IValue_IsDateTime___]
+[#_bool_TypeDB_Driver_Api_IValue_IsDateTime_]
 ==== IsDateTime
 
 [source,cs]
@@ -228,7 +228,7 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 value.IsDateTime();
 ----
 
-[#_bool_TypeDB_Driver_Api_IValue_IsDouble___]
+[#_bool_TypeDB_Driver_Api_IValue_IsDouble_]
 ==== IsDouble
 
 [source,cs]
@@ -252,7 +252,7 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 value.IsDouble();
 ----
 
-[#_bool_TypeDB_Driver_Api_IValue_IsLong___]
+[#_bool_TypeDB_Driver_Api_IValue_IsLong_]
 ==== IsLong
 
 [source,cs]
@@ -276,7 +276,7 @@ Returns ``True`` if the value which this value concept holds is of type ``long``
 value.IsLong();
 ----
 
-[#_bool_TypeDB_Driver_Api_IValue_IsString___]
+[#_bool_TypeDB_Driver_Api_IValue_IsString_]
 ==== IsString
 
 [source,cs]
@@ -300,7 +300,7 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 value.IsString();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IValue_IsValue___]
+[#_bool_IConcept_TypeDB_Driver_Api_IValue_IsValue_]
 ==== IsValue
 
 [source,cs]

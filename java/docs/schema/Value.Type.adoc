@@ -30,7 +30,7 @@ a| `STRING`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_Value_Type_isKeyable__]
+[#_Value_Type_isKeyable_]
 ==== isKeyable
 
 [source,java]
@@ -53,7 +53,7 @@ Returns ``true`` if this value concept can be used as a key via the @key annotat
 valueType.isKeyable();
 ----
 
-[#_Value_Type_isWritable__]
+[#_Value_Type_isWritable_]
 ==== isWritable
 
 [source,java]
@@ -76,7 +76,7 @@ Returns ``true`` if this value concept can be written to a database. Otherwise, 
 valueType.isWritable();
 ----
 
-[#_Value_Type_of__com_vaticle_typedb_driver_jni_ValueType]
+[#_Value_Type_of_com_vaticle_typedb_driver_jni_ValueType]
 ==== of
 
 [source,java]
@@ -91,7 +91,7 @@ public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType
 .Returns
 `public static Value.Type`
 
-[#_Value_Type_valueClass__]
+[#_Value_Type_valueClass_]
 ==== valueClass
 
 [source,java]
@@ -114,7 +114,7 @@ Returns a ``Class`` equivalent of this value concept for this programming langua
 valueType.valueClass();
 ----
 
-[#_Value_Type_valueOf__java_lang_String]
+[#_Value_Type_valueOf_java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -137,7 +137,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static Value.Type`
 
-[#_Value_Type_values__]
+[#_Value_Type_values_]
 ==== values
 
 [source,java]

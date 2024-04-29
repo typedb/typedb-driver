@@ -8,7 +8,7 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_EntityType_as_entity_type__]
+[#_EntityType_as_entity_type_]
 ==== as_entity_type
 
 [source,python]
@@ -29,7 +29,7 @@ Casts the concept to ``EntityType``.
 entity_type.as_entity_type()
 ----
 
-[#_EntityType_create__transaction_TypeDBTransaction]
+[#_EntityType_create_transaction_TypeDBTransaction]
 ==== create
 
 [source,python]
@@ -59,7 +59,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 entity_type.create(transaction).resolve()
 ----
 
-[#_EntityType_get_instances__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_EntityType_get_instances_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_instances
 
 [source,python]
@@ -90,7 +90,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instanc
 entity_type.get_instances(transaction, transitivity)
 ----
 
-[#_EntityType_get_subtypes__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_EntityType_get_subtypes_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== get_subtypes
 
 [source,python]
@@ -121,7 +121,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 entity_type.get_subtypes(transaction, transitivity)
 ----
 
-[#_EntityType_is_entity_type__]
+[#_EntityType_is_entity_type_]
 ==== is_entity_type
 
 [source,python]
@@ -142,7 +142,7 @@ Checks if the concept is an ``EntityType``.
 entity_type.is_entity_type()
 ----
 
-[#_EntityType_set_supertype__transaction_TypeDBTransaction__super_entity_type_EntityType]
+[#_EntityType_set_supertype_transaction_TypeDBTransaction_super_entity_type_EntityType]
 ==== set_supertype
 
 [source,python]

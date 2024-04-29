@@ -8,7 +8,7 @@
 Provides access to all database management methods.
 
 // tag::methods[]
-[#_bool_TypeDB_Driver_Api_IDatabaseManager_Contains___string_name_]
+[#_bool_TypeDB_Driver_Api_IDatabaseManager_Contains_string_name_]
 ==== Contains
 
 [source,cs]
@@ -41,7 +41,7 @@ a| `name` a| The database name to be checked a| `string`
 driver.Databases.Contains(name);
 ----
 
-[#_void_TypeDB_Driver_Api_IDatabaseManager_Create___string_name_]
+[#_void_TypeDB_Driver_Api_IDatabaseManager_Create_string_name_]
 ==== Create
 
 [source,cs]
@@ -74,7 +74,7 @@ a| `name` a| The name of the database to be created a| `string`
 driver.Databases.Create(name);
 ----
 
-[#_IDatabase_TypeDB_Driver_Api_IDatabaseManager_Get___string_name_]
+[#_IDatabase_TypeDB_Driver_Api_IDatabaseManager_Get_string_name_]
 ==== Get
 
 [source,cs]
@@ -107,7 +107,7 @@ a| `name` a| The name of the database to retrieve a| `string`
 driver.Databases.Get(name);
 ----
 
-[#_IList__IDatabase___TypeDB_Driver_Api_IDatabaseManager_GetAll___]
+[#_IList_IDatabase_TypeDB_Driver_Api_IDatabaseManager_GetAll_]
 ==== GetAll
 
 [source,cs]

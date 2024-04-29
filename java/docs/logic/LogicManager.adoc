@@ -6,7 +6,7 @@
 Provides methods for manipulating rules in the database.
 
 // tag::methods[]
-[#_LogicManager_getRule__java_lang_String]
+[#_LogicManager_getRule_java_lang_String]
 ==== getRule
 
 [source,java]
@@ -38,7 +38,7 @@ a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String`
 transaction.logic().getRule(label).resolve();
 ----
 
-[#_LogicManager_getRules__]
+[#_LogicManager_getRules_]
 ==== getRules
 
 [source,java]
@@ -61,7 +61,7 @@ Retrieves all rules.
 transaction.logic().getRules()
 ----
 
-[#_LogicManager_putRule__java_lang_String__com_vaticle_typeql_lang_pattern_Pattern__com_vaticle_typeql_lang_pattern_Pattern]
+[#_LogicManager_putRule_java_lang_String_com_vaticle_typeql_lang_pattern_Pattern_com_vaticle_typeql_lang_pattern_Pattern]
 ==== putRule
 
 [source,java]

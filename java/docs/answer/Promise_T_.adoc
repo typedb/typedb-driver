@@ -8,7 +8,7 @@ A ``Promise`` represents an asynchronous network operation.
 The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.
 
 // tag::methods[]
-[#_Promise_T_Promise__java_util_function_Supplier_T_]
+[#_Promise_T_Promise_java_util_function_Supplier_T_]
 ==== Promise
 
 [source,java]
@@ -39,7 +39,7 @@ a| `inner` a| The supplier to function to wrap into the promise a| `java.util.fu
 new Promise(supplier)
 ----
 
-[#_Promise_T_map__java_util_function_Supplier_T___java_util_function_Function_T_​U_]
+[#_Promise_T_map_java_util_function_Supplier_T_java_util_function_Function_T_​U_]
 ==== map
 
 [source,java]
@@ -72,7 +72,7 @@ a| `fn` a| The mapping function a| `java.util.function.Function<T,​U>`
 Promise.map(supplier, mapper);
 ----
 
-[#_Promise_T_resolve__]
+[#_Promise_T_resolve_]
 ==== resolve
 
 [source,java]

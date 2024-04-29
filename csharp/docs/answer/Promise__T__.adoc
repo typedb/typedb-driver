@@ -1,4 +1,4 @@
-[#_Promise__T_]
+[#_Promise_T_]
 === Promise< T >
 
 *Package*: `TypeDB.Driver.Common`
@@ -10,7 +10,7 @@ A ``Promise`` represents an asynchronous network operation.
 The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``Resolve``d.
 
 // tag::methods[]
-[#_static_Promise__TTo___TypeDB_Driver_Common_Promise__T___Map__TFrom__TTo_____Func__TFrom__resolver__Func__TFrom__TTo___selector_]
+[#_static_Promise_TTo_TypeDB_Driver_Common_Promise_T_Map_TFrom_TTo_Func_TFrom_resolver_Func_TFrom_TTo_selector_]
 ==== Map< TFrom, TTo >
 
 [source,cs]
@@ -44,7 +44,7 @@ a| `selector` a| The mapping (like Select from Linq) function a| `Func< TFrom, T
 Promise<TFrom>.Map<TFrom, TTo>(resolver, selector);
 ----
 
-[#_TypeDB_Driver_Common_Promise__T___Promise___Func__T__resolver_]
+[#_TypeDB_Driver_Common_Promise_T_Promise_Func_T_resolver_]
 ==== Promise
 
 [source,cs]
@@ -77,7 +77,7 @@ a| `resolver` a| The function to wrap into the promise a| `Func< T? >`
 new Promise(resolver);
 ----
 
-[#_T_TypeDB_Driver_Common_Promise__T___Resolve___]
+[#_T_TypeDB_Driver_Common_Promise_T_Resolve_]
 ==== Resolve
 
 [source,cs]

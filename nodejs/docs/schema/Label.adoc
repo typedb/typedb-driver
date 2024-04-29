@@ -6,7 +6,7 @@ A ``Label`` holds the uniquely identifying name of a type.
 It consists of an optional 'scope', and a 'name', represented "scope:name". The scope is used only used to distinguish between role-types of the same name declared in different relation types.
 
 // tag::methods[]
-[#_Label__name__]
+[#_Label_name_]
 ====  name
 
 [source,nodejs]
@@ -20,7 +20,7 @@ Returns the name part of the label.
 .Returns
 `string`
 
-[#_Label__scope__]
+[#_Label_scope_]
 ====  scope
 
 [source,nodejs]
@@ -34,7 +34,7 @@ Returns the (possibly null) scope part of the label.
 .Returns
 `string`
 
-[#_Label__scopedName__]
+[#_Label_scopedName_]
 ====  scopedName
 
 [source,nodejs]
@@ -48,7 +48,7 @@ Returns the string representation of the scoped name.
 .Returns
 `string`
 
-[#_Label_equals__that_Label]
+[#_Label_equals_that_Label]
 ==== equals
 
 [source,nodejs]
@@ -71,7 +71,7 @@ a| `that` a| The label to compare to. a| `Label`
 .Returns
 `boolean`
 
-[#_Label_toString__]
+[#_Label_toString_]
 ==== toString
 
 [source,nodejs]

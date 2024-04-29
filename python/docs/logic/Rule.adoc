@@ -17,7 +17,7 @@ a| `when` a| `str` a| The statements that constitute the ‘when’ of the rule.
 // end::properties[]
 
 // tag::methods[]
-[#_Rule_delete__transaction_TypeDBTransaction]
+[#_Rule_delete_transaction_TypeDBTransaction]
 ==== delete
 
 [source,python]
@@ -47,7 +47,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a|
 rule.delete(transaction).resolve()
 ----
 
-[#_Rule_is_deleted__transaction_TypeDBTransaction]
+[#_Rule_is_deleted_transaction_TypeDBTransaction]
 ==== is_deleted
 
 [source,python]
@@ -77,7 +77,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a|
 rule.is_deleted(transaction).resolve()
 ----
 
-[#_Rule_set_label__transaction_TypeDBTransaction__new_label_str]
+[#_Rule_set_label_transaction_TypeDBTransaction_new_label_str]
 ==== set_label
 
 [source,python]

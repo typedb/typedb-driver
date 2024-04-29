@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver.Api`
 
 // tag::methods[]
-[#_IAttribute_TypeDB_Driver_Api_IConcept_AsAttribute___]
+[#_IAttribute_TypeDB_Driver_Api_IConcept_AsAttribute_]
 ==== AsAttribute
 
 [source,cs]
@@ -30,7 +30,7 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 concept.AsAttribute();
 ----
 
-[#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType___]
+[#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType_]
 ==== AsAttributeType
 
 [source,cs]
@@ -56,7 +56,7 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 concept.AsAttributeType();
 ----
 
-[#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity___]
+[#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity_]
 ==== AsEntity
 
 [source,cs]
@@ -82,7 +82,7 @@ Implemented in TypeDB.Driver.Api.IEntity.
 concept.AsEntity();
 ----
 
-[#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType___]
+[#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType_]
 ==== AsEntityType
 
 [source,cs]
@@ -108,7 +108,7 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 concept.AsEntityType();
 ----
 
-[#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation___]
+[#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation_]
 ==== AsRelation
 
 [source,cs]
@@ -134,7 +134,7 @@ Implemented in TypeDB.Driver.Api.IRelation.
 concept.AsRelation();
 ----
 
-[#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType___]
+[#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType_]
 ==== AsRelationType
 
 [source,cs]
@@ -160,7 +160,7 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 concept.AsRelationType();
 ----
 
-[#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType___]
+[#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType_]
 ==== AsRoleType
 
 [source,cs]
@@ -186,7 +186,7 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 concept.AsRoleType();
 ----
 
-[#_IThing_TypeDB_Driver_Api_IConcept_AsThing___]
+[#_IThing_TypeDB_Driver_Api_IConcept_AsThing_]
 ==== AsThing
 
 [source,cs]
@@ -212,7 +212,7 @@ Implemented in TypeDB.Driver.Api.IThing.
 concept.AsThing();
 ----
 
-[#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType___]
+[#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType_]
 ==== AsThingType
 
 [source,cs]
@@ -238,7 +238,7 @@ Implemented in TypeDB.Driver.Api.IThingType.
 concept.AsThingType();
 ----
 
-[#_IType_TypeDB_Driver_Api_IConcept_AsType___]
+[#_IType_TypeDB_Driver_Api_IConcept_AsType_]
 ==== AsType
 
 [source,cs]
@@ -264,7 +264,7 @@ Implemented in TypeDB.Driver.Api.IType.
 concept.AsType();
 ----
 
-[#_IValue_TypeDB_Driver_Api_IConcept_AsValue___]
+[#_IValue_TypeDB_Driver_Api_IConcept_AsValue_]
 ==== AsValue
 
 [source,cs]
@@ -290,7 +290,7 @@ Implemented in TypeDB.Driver.Api.IValue.
 concept.AsValue();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsAttribute___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsAttribute_]
 ==== IsAttribute
 
 [source,cs]
@@ -316,7 +316,7 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 concept.IsAttribute();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType_]
 ==== IsAttributeType
 
 [source,cs]
@@ -342,7 +342,7 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 concept.IsAttributeType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsEntity___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsEntity_]
 ==== IsEntity
 
 [source,cs]
@@ -368,7 +368,7 @@ Implemented in TypeDB.Driver.Api.IEntity.
 concept.IsEntity();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsEntityType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsEntityType_]
 ==== IsEntityType
 
 [source,cs]
@@ -394,7 +394,7 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 concept.IsEntityType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsRelation___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsRelation_]
 ==== IsRelation
 
 [source,cs]
@@ -420,7 +420,7 @@ Implemented in TypeDB.Driver.Api.IRelation.
 concept.IsRelation();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsRelationType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsRelationType_]
 ==== IsRelationType
 
 [source,cs]
@@ -446,7 +446,7 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 concept.IsRelationType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsRoleType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsRoleType_]
 ==== IsRoleType
 
 [source,cs]
@@ -472,7 +472,7 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 concept.IsRoleType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsThing___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsThing_]
 ==== IsThing
 
 [source,cs]
@@ -498,7 +498,7 @@ Implemented in TypeDB.Driver.Api.IThing.
 concept.IsThing();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsThingType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsThingType_]
 ==== IsThingType
 
 [source,cs]
@@ -524,7 +524,7 @@ Implemented in TypeDB.Driver.Api.IThingType.
 concept.IsThingType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsType___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsType_]
 ==== IsType
 
 [source,cs]
@@ -550,7 +550,7 @@ Implemented in TypeDB.Driver.Api.IType.
 concept.IsType();
 ----
 
-[#_bool_TypeDB_Driver_Api_IConcept_IsValue___]
+[#_bool_TypeDB_Driver_Api_IConcept_IsValue_]
 ==== IsValue
 
 [source,cs]

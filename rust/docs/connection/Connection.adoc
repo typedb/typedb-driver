@@ -9,7 +9,7 @@
 A connection to a TypeDB server which serves as the starting point for all interaction.
 
 // tag::methods[]
-[#_struct_Connection_force_close__]
+[#_struct_Connection_force_close_]
 ==== force_close
 
 [source,rust]
@@ -33,7 +33,7 @@ Result
 connection.force_close()
 ----
 
-[#_struct_Connection_is_cloud__]
+[#_struct_Connection_is_cloud_]
 ==== is_cloud
 
 [source,rust]
@@ -57,7 +57,7 @@ bool
 connection.is_cloud()
 ----
 
-[#_struct_Connection_is_open__]
+[#_struct_Connection_is_open_]
 ==== is_open
 
 [source,rust]
@@ -81,7 +81,7 @@ bool
 connection.is_open()
 ----
 
-[#_struct_Connection_new_cloud__init_addresses__T___credential_Credential]
+[#_struct_Connection_new_cloud_init_addresses_T_credential_Credential]
 ==== new_cloud
 
 [source,rust]
@@ -128,7 +128,7 @@ Connection::new_cloud(
 )
 ----
 
-[#_struct_Connection_new_cloud_with_translation__address_translation_HashMap_T__credential_Credential]
+[#_struct_Connection_new_cloud_with_translation_address_translation_HashMap_T_credential_Credential]
 ==== new_cloud_with_translation
 
 [source,rust]
@@ -176,7 +176,7 @@ Connection::new_cloud_with_translation(
 )
 ----
 
-[#_struct_Connection_new_core__address_impl_AsRef_str_]
+[#_struct_Connection_new_core_address_impl_AsRef_str_]
 ==== new_core
 
 [source,rust]

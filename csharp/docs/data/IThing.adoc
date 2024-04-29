@@ -8,7 +8,7 @@
 * `TypeDB.Driver.Api.IConcept`
 
 // tag::methods[]
-[#_IThing_IConcept__TypeDB_Driver_Api_IThing_AsThing___]
+[#_IThing_IConcept_TypeDB_Driver_Api_IThing_AsThing_]
 ==== AsThing
 
 [source,cs]
@@ -34,7 +34,7 @@ Implements TypeDB.Driver.Api.IConcept.
 thing.AsThing();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IThing_Delete___ITypeDBTransaction_transaction_]
+[#_VoidPromise_TypeDB_Driver_Api_IThing_Delete_ITypeDBTransaction_transaction_]
 ==== Delete
 
 [source,cs]
@@ -67,7 +67,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 thing.Delete(transaction).Resolve();
 ----
 
-[#_IEnumerable__IAttribute___TypeDB_Driver_Api_IThing_GetHas___ITypeDBTransaction_transaction__params_IAttributeType___attributeTypes_]
+[#_IEnumerable_IAttribute_TypeDB_Driver_Api_IThing_GetHas_ITypeDBTransaction_transaction_params_IAttributeType_attributeTypes_]
 ==== GetHas
 
 [source,cs]
@@ -102,7 +102,7 @@ thing.GetHas(transaction);
 thing.GetHas(transaction, attributeType);
 ----
 
-[#_IEnumerable__IAttribute___TypeDB_Driver_Api_IThing_GetHas___ITypeDBTransaction_transaction__ICollection__Annotation___annotations_]
+[#_IEnumerable_IAttribute_TypeDB_Driver_Api_IThing_GetHas_ITypeDBTransaction_transaction_ICollection_Annotation_annotations_]
 ==== GetHas
 
 [source,cs]
@@ -137,7 +137,7 @@ thing.GetHas(transaction);
 thing.GetHas(transaction, new []{NewKey()});
 ----
 
-[#_IEnumerable__IRoleType___TypeDB_Driver_Api_IThing_GetPlaying___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IThing_GetPlaying_ITypeDBTransaction_transaction_]
 ==== GetPlaying
 
 [source,cs]
@@ -170,7 +170,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 thing.GetPlaying(transaction);
 ----
 
-[#_IEnumerable__IRelation___TypeDB_Driver_Api_IThing_GetRelations___ITypeDBTransaction_transaction__params_IRoleType___roleTypes_]
+[#_IEnumerable_IRelation_TypeDB_Driver_Api_IThing_GetRelations_ITypeDBTransaction_transaction_params_IRoleType_roleTypes_]
 ==== GetRelations
 
 [source,cs]
@@ -228,7 +228,7 @@ The unique id of the ``IThing``.
 thing.IID;
 ----
 
-[#_Promise__bool___TypeDB_Driver_Api_IThing_IsDeleted___ITypeDBTransaction_transaction_]
+[#_Promise_bool_TypeDB_Driver_Api_IThing_IsDeleted_ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
 [source,cs]
@@ -261,7 +261,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 thing.IsDeleted(transaction).Resolve();
 ----
 
-[#_bool_TypeDB_Driver_Api_IThing_IsInferred___]
+[#_bool_TypeDB_Driver_Api_IThing_IsInferred_]
 ==== IsInferred
 
 [source,cs]
@@ -285,7 +285,7 @@ Checks if this ``IThing`` is inferred by a [Reasoning Rule].
 thing.IsInferred();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IThing_IsThing___]
+[#_bool_IConcept_TypeDB_Driver_Api_IThing_IsThing_]
 ==== IsThing
 
 [source,cs]
@@ -311,7 +311,7 @@ Implements TypeDB.Driver.Api.IConcept.
 thing.IsThing();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IThing_SetHas___ITypeDBTransaction_transaction__IAttribute_attribute_]
+[#_VoidPromise_TypeDB_Driver_Api_IThing_SetHas_ITypeDBTransaction_transaction_IAttribute_attribute_]
 ==== SetHas
 
 [source,cs]
@@ -369,7 +369,7 @@ The type which this ``IThing`` belongs to.
 thing.Type;
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IThing_UnsetHas___ITypeDBTransaction_transaction__IAttribute_attribute_]
+[#_VoidPromise_TypeDB_Driver_Api_IThing_UnsetHas_ITypeDBTransaction_transaction_IAttribute_attribute_]
 ==== UnsetHas
 
 [source,cs]

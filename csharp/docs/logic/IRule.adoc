@@ -8,7 +8,7 @@
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
 // tag::methods[]
-[#_VoidPromise_TypeDB_Driver_Api_IRule_Delete___ITypeDBTransaction_transaction_]
+[#_VoidPromise_TypeDB_Driver_Api_IRule_Delete_ITypeDBTransaction_transaction_]
 ==== Delete
 
 [source,cs]
@@ -41,7 +41,7 @@ a| `transaction` a| The current ``Transaction`` a| `ITypeDBTransaction`
 rule.Delete(transaction).Resolve();
 ----
 
-[#_Promise__bool___TypeDB_Driver_Api_IRule_IsDeleted___ITypeDBTransaction_transaction_]
+[#_Promise_bool_TypeDB_Driver_Api_IRule_IsDeleted_ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
 [source,cs]
@@ -90,7 +90,7 @@ Retrieves the unique label of the rule.
 .Returns
 `string`
 
-[#_VoidPromise_TypeDB_Driver_Api_IRule_SetLabel___ITypeDBTransaction_transaction__string_label_]
+[#_VoidPromise_TypeDB_Driver_Api_IRule_SetLabel_ITypeDBTransaction_transaction_string_label_]
 ==== SetLabel
 
 [source,cs]

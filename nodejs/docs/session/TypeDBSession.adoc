@@ -16,7 +16,7 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 // end::properties[]
 
 // tag::methods[]
-[#_TypeDBSession_close__]
+[#_TypeDBSession_close_]
 ==== close
 
 [source,nodejs]
@@ -37,7 +37,7 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close()
 ----
 
-[#_TypeDBSession_isOpen__]
+[#_TypeDBSession_isOpen_]
 ==== isOpen
 
 [source,nodejs]
@@ -58,7 +58,7 @@ Checks whether this session is open.
 session.isOpen()
 ----
 
-[#_TypeDBSession_onClose__callback_______Promise_void__]
+[#_TypeDBSession_onClose_callback_Promise_void_]
 ==== onClose
 
 [source,nodejs]
@@ -88,7 +88,7 @@ a| `callback` a| The callback function. a| `(() => Promise<void>)`
 session.onClose(function)
 ----
 
-[#_TypeDBSession_onReopen__callback_______Promise_void__]
+[#_TypeDBSession_onReopen_callback_Promise_void_]
 ==== onReopen
 
 [source,nodejs]
@@ -118,7 +118,7 @@ a| `callback` a| The callback function. a| `(() => Promise<void>)`
 session.onReopen(function)
 ----
 
-[#_TypeDBSession_transaction__type_TransactionType__options_TypeDBOptions]
+[#_TypeDBSession_transaction_type_TransactionType_options_TypeDBOptions]
 ==== transaction
 
 [source,nodejs]

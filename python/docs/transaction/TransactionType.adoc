@@ -23,7 +23,7 @@ a| `WRITE` a| `1`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TransactionType_is_read__]
+[#_TransactionType_is_read_]
 ==== is_read
 
 [source,python]
@@ -37,7 +37,7 @@ is_read() -> bool
 .Returns
 `bool`
 
-[#_TransactionType_is_write__]
+[#_TransactionType_is_write_]
 ==== is_write
 
 [source,python]

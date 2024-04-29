@@ -8,7 +8,7 @@
 * `TypeDB.Driver.Api.IConcept`
 
 // tag::methods[]
-[#_IType_IConcept__TypeDB_Driver_Api_IType_AsType___]
+[#_IType_IConcept_TypeDB_Driver_Api_IType_AsType_]
 ==== AsType
 
 [source,cs]
@@ -36,7 +36,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.AsType();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IType_Delete___ITypeDBTransaction_transaction_]
+[#_VoidPromise_TypeDB_Driver_Api_IType_Delete_ITypeDBTransaction_transaction_]
 ==== Delete
 
 [source,cs]
@@ -69,7 +69,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 type.Delete(transaction).Resolve();
 ----
 
-[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IType_TypeDB_Driver_Api_IType_GetSubtypes_ITypeDBTransaction_transaction_]
 ==== GetSubtypes
 
 [source,cs]
@@ -96,7 +96,7 @@ IType::GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
 .Returns
 `IEnumerable< IType >`
 
-[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSubtypes___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+[#_IEnumerable_IType_TypeDB_Driver_Api_IType_GetSubtypes_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
 ==== GetSubtypes
 
 [source,cs]
@@ -131,7 +131,7 @@ type.GetSubtypes(transaction);
 type.GetSubtypes(transaction, Explicit);
 ----
 
-[#_Promise__IType___TypeDB_Driver_Api_IType_GetSupertype___ITypeDBTransaction_transaction_]
+[#_Promise_IType_TypeDB_Driver_Api_IType_GetSupertype_ITypeDBTransaction_transaction_]
 ==== GetSupertype
 
 [source,cs]
@@ -164,7 +164,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 type.GetSupertype(transaction).Resolve();
 ----
 
-[#_IEnumerable__IType___TypeDB_Driver_Api_IType_GetSupertypes___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IType_TypeDB_Driver_Api_IType_GetSupertypes_ITypeDBTransaction_transaction_]
 ==== GetSupertypes
 
 [source,cs]
@@ -197,7 +197,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 type.GetSupertypes(transaction);
 ----
 
-[#_bool_TypeDB_Driver_Api_IType_IsAbstract___]
+[#_bool_TypeDB_Driver_Api_IType_IsAbstract_]
 ==== IsAbstract
 
 [source,cs]
@@ -221,7 +221,7 @@ Checks if the type is prevented from having data instances (i.e., ``abstract``).
 type.IsAbstract();
 ----
 
-[#_Promise__bool___TypeDB_Driver_Api_IType_IsDeleted___ITypeDBTransaction_transaction_]
+[#_Promise_bool_TypeDB_Driver_Api_IType_IsDeleted_ITypeDBTransaction_transaction_]
 ==== IsDeleted
 
 [source,cs]
@@ -254,7 +254,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 type.IsDeleted(transaction).Resolve();
 ----
 
-[#_bool_TypeDB_Driver_Api_IType_IsRoot___]
+[#_bool_TypeDB_Driver_Api_IType_IsRoot_]
 ==== IsRoot
 
 [source,cs]
@@ -278,7 +278,7 @@ Checks if the type is a root type.
 type.IsRoot();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IType_IsType___]
+[#_bool_IConcept_TypeDB_Driver_Api_IType_IsType_]
 ==== IsType
 
 [source,cs]
@@ -330,7 +330,7 @@ The unique label of the type.
 type.Label;
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IType_SetLabel___ITypeDBTransaction_transaction__string_label_]
+[#_VoidPromise_TypeDB_Driver_Api_IType_SetLabel_ITypeDBTransaction_transaction_string_label_]
 ==== SetLabel
 
 [source,cs]
