@@ -15,7 +15,7 @@ Relation is an instance of a relation type.
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_VoidFuture_TypeDBRelationaddPlayer___Transaction__transaction__RoleType__ptr__roleType__Thing__ptr__player_]
+[#_VoidFuture_TypeDBRelationaddPlayer_Transaction_transaction_RoleType_ptr_roleType_Thing_ptr_player_]
 ==== addPlayer
 
 [source,cpp]
@@ -50,7 +50,7 @@ a| `player` a| The thing to play the role a| `Thing*`
 relation.addPlayer(transaction, roleType, player).get();
 ----
 
-[#_stdmap__stdunique_ptr__RoleType____stdunique_ptr__Thing_____TypeDBRelationgetPlayers___Transaction__transaction_]
+[#_stdmap_stdunique_ptr_RoleType_stdunique_ptr_Thing_TypeDBRelationgetPlayers_Transaction_transaction_]
 ==== getPlayers
 
 [source,cpp]
@@ -83,7 +83,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 relation.getPlayers(transaction)
 ----
 
-[#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes_]
+[#_ConceptIterable_Thing_TypeDBRelationgetPlayersByRoleType_Transaction_transaction_const_stdvector_stdunique_ptr_RoleType_roleTypes_]
 ==== getPlayersByRoleType
 
 [source,cpp]
@@ -117,7 +117,7 @@ a| `roleTypes` a| 0 or more role types a| `const std::vector< std::unique_ptr< R
 relation.getPlayersByRoleType(transaction, roleTypes);
 ----
 
-[#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
+[#_ConceptIterable_Thing_TypeDBRelationgetPlayersByRoleType_Transaction_transaction_const_stdvector_RoleType_ptr_roleTypes_]
 ==== getPlayersByRoleType
 
 [source,cpp]
@@ -127,13 +127,13 @@ ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& tra
 
 
 
-See <<#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes_,getPlayersByRoleType>>
+See <<#_ConceptIterable_Thing_TypeDBRelationgetPlayersByRoleType_Transaction_transaction_const_stdvector_stdunique_ptr_RoleType_roleTypes_,getPlayersByRoleType>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Thing >`
 
-[#_ConceptIterable__RoleType___TypeDBRelationgetRelating___Transaction__transaction_]
+[#_ConceptIterable_RoleType_TypeDBRelationgetRelating_Transaction_transaction_]
 ==== getRelating
 
 [source,cpp]
@@ -166,7 +166,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 relation.getRelating(transaction);
 ----
 
-[#_stdunique_ptr__RelationType___TypeDBRelationgetType___]
+[#_stdunique_ptr_RelationType_TypeDBRelationgetType_]
 ==== getType
 
 [source,cpp]
@@ -190,7 +190,7 @@ Retrieves the type which this ``Relation`` belongs to.
 relation.getType();
 ----
 
-[#_VoidFuture_TypeDBRelationremovePlayer___Transaction__transaction__RoleType__ptr__roleType__Thing__ptr__player_]
+[#_VoidFuture_TypeDBRelationremovePlayer_Transaction_transaction_RoleType_ptr_roleType_Thing_ptr_player_]
 ==== removePlayer
 
 [source,cpp]

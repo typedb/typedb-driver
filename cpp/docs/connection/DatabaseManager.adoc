@@ -8,7 +8,7 @@
 Provides access to all database management methods.
 
 // tag::methods[]
-[#_DatabaseIterable_TypeDBDatabaseManagerall_____const]
+[#_DatabaseIterable_TypeDBDatabaseManagerall_const]
 ==== all
 
 [source,cpp]
@@ -32,7 +32,7 @@ Retrieves all databases present on the TypeDB server
 driver.databases.all()
 ----
 
-[#_bool_TypeDBDatabaseManagercontains___const_stdstring____const]
+[#_bool_TypeDBDatabaseManagercontains_const_stdstring_const]
 ==== contains
 
 [source,cpp]
@@ -65,7 +65,7 @@ a| `name` a| The database name to be checked a|
 driver.databases.contains(name)
 ----
 
-[#_void_TypeDBDatabaseManagercreate___const_stdstring____const]
+[#_void_TypeDBDatabaseManagercreate_const_stdstring_const]
 ==== create
 
 [source,cpp]
@@ -98,7 +98,7 @@ a| `name` a| The name of the database to be created a|
 driver.databases.create(name)
 ----
 
-[#_Database_TypeDBDatabaseManagerget___const_stdstring____const]
+[#_Database_TypeDBDatabaseManagerget_const_stdstring_const]
 ==== get
 
 [source,cpp]

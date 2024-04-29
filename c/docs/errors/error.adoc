@@ -1,4 +1,4 @@
-[#_methods__errors__error]
+[#_methods_errors_error]
 === error
 
 [#_Struct_Error]
@@ -7,6 +7,22 @@
 
 
 Represents errors encountered during operation.
+
+[#_check_error]
+==== check_error
+
+[source,cpp]
+----
+bool check_error(void)
+----
+
+
+
+Checks if the error flag was set by the last operation. If true, the error can be retrieved using get_last_error(void)
+
+[caption=""]
+.Returns
+`bool`
 
 [#_error_code]
 ==== error_code
@@ -56,9 +72,6 @@ Returns the error message of the ``Error`` object
 .Returns
 `char*`
 
-[#_methods__errors__error]
-=== error
-
 [#_get_last_error]
 ==== get_last_error
 
@@ -74,23 +87,4 @@ Returns the error which set the error flag.
 [caption=""]
 .Returns
 `struct Error*`
-
-[#_methods__errors__error]
-=== error
-
-[#_check_error]
-==== check_error
-
-[source,cpp]
-----
-bool check_error(void)
-----
-
-
-
-Checks if the error flag was set by the last operation. If true, the error can be retrieved using get_last_error(void)
-
-[caption=""]
-.Returns
-`bool`
 

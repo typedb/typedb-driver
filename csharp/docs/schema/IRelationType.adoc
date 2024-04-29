@@ -14,7 +14,7 @@
 Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles. Other types can play roles in relations if it’s mentioned in their definition. A relation type must specify at least one role.
 
 // tag::methods[]
-[#_IRelationType_IConcept__TypeDB_Driver_Api_IRelationType_AsRelationType___]
+[#_IRelationType_IConcept_TypeDB_Driver_Api_IRelationType_AsRelationType_]
 ==== AsRelationType
 
 [source,cs]
@@ -42,7 +42,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.AsRelationType();
 ----
 
-[#_Promise__IRelation___TypeDB_Driver_Api_IRelationType_Create___ITypeDBTransaction_transaction_]
+[#_Promise_IRelation_TypeDB_Driver_Api_IRelationType_Create_ITypeDBTransaction_transaction_]
 ==== Create
 
 [source,cs]
@@ -75,7 +75,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 relationType.Create(transaction).Resolve();
 ----
 
-[#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_]
 ==== GetRelates
 
 [source,cs]
@@ -102,7 +102,7 @@ IRelationType::getRelates(ITypeDBTransaction, IConcept.Transitivity)
 .Returns
 `IEnumerable< IRoleType >`
 
-[#_IEnumerable__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction__IConcept_Transitivity_transitivity_]
+[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
 ==== GetRelates
 
 [source,cs]
@@ -136,7 +136,7 @@ a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit
 relationType.GetRelates(transaction, transitivity);
 ----
 
-[#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
+[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
 ==== GetRelates
 
 [source,cs]
@@ -170,7 +170,7 @@ a| `roleLabel` a| Label of the role we wish to retrieve a| `string`
 relationType.GetRelates(transaction, roleLabel).Resolve();
 ----
 
-[#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelatesOverridden___ITypeDBTransaction_transaction__IRoleType_roleType_]
+[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelatesOverridden_ITypeDBTransaction_transaction_IRoleType_roleType_]
 ==== GetRelatesOverridden
 
 [source,cs]
@@ -197,7 +197,7 @@ IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
 .Returns
 `Promise< IRoleType >`
 
-[#_Promise__IRoleType___TypeDB_Driver_Api_IRelationType_GetRelatesOverridden___ITypeDBTransaction_transaction__string_roleLabel_]
+[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelatesOverridden_ITypeDBTransaction_transaction_string_roleLabel_]
 ==== GetRelatesOverridden
 
 [source,cs]
@@ -231,7 +231,7 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a| `string`
 relationType.GetRelatesOverridden(transaction, roleLabel).Resolve();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IRelationType_IsRelationType___]
+[#_bool_IConcept_TypeDB_Driver_Api_IRelationType_IsRelationType_]
 ==== IsRelationType
 
 [source,cs]
@@ -259,7 +259,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.IsRelationType();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
 ==== SetRelates
 
 [source,cs]
@@ -286,7 +286,7 @@ IRelationType::SetRelates(ITypeDBTransaction, string, string)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel__IRoleType_overriddenType_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_IRoleType_overriddenType_]
 ==== SetRelates
 
 [source,cs]
@@ -313,7 +313,7 @@ IRelationType::SetRelates(ITypeDBTransaction, string, string)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates___ITypeDBTransaction_transaction__string_roleLabel__string_overriddenLabel_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_string_overriddenLabel_]
 ==== SetRelates
 
 [source,cs]
@@ -349,7 +349,7 @@ relationType.SetRelates(transaction, roleLabel).Resolve();
 relationType.SetRelates(transaction, roleLabel, overriddenLabel).Resolve();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetSupertype___ITypeDBTransaction_transaction__IRelationType_superRelationType_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetSupertype_ITypeDBTransaction_transaction_IRelationType_superRelationType_]
 ==== SetSupertype
 
 [source,cs]
@@ -383,7 +383,7 @@ a| `superRelationType` a| The ``IRelationType`` to set as the supertype of this 
 relationType.SetSupertype(transaction, superRelationType).Resolve();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates___ITypeDBTransaction_transaction__IRoleType_roleType_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates_ITypeDBTransaction_transaction_IRoleType_roleType_]
 ==== UnsetRelates
 
 [source,cs]
@@ -410,7 +410,7 @@ IRelationType::UnsetRelates(ITypeDBTransaction, string)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates___ITypeDBTransaction_transaction__string_roleLabel_]
+[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
 ==== UnsetRelates
 
 [source,cs]

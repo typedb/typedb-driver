@@ -1,4 +1,4 @@
-[#_methods__logic__logic]
+[#_methods_logic_logic]
 === logic
 
 [#_logic_manager_get_rule]

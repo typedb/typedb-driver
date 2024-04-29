@@ -8,7 +8,7 @@
 Extension class with additional methods describing characteristics of ``ValueType`` enum values.
 
 // tag::methods[]
-[#_static_System_Type_TypeDB_Driver_Api_ValueTypeExtensions_GetValueClass___this_IValueValueType_valueType_]
+[#_static_System_Type_TypeDB_Driver_Api_ValueTypeExtensions_GetValueClass_this_IValueValueType_valueType_]
 ==== GetValueClass
 
 [source,cs]
@@ -32,7 +32,7 @@ Returns a ``System.Type`` equivalent of this value concept for this programming 
 valueType.GetValueClass();
 ----
 
-[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsKeyable___this_ValueType_valueType_]
+[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsKeyable_this_ValueType_valueType_]
 ==== IsKeyable
 
 [source,cs]
@@ -56,7 +56,7 @@ Returns ``true`` if this value concept can be used as a key via the @key annotat
 valueType.IsKeyable();
 ----
 
-[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsWritable___this_IValueValueType_valueType_]
+[#_static_bool_TypeDB_Driver_Api_ValueTypeExtensions_IsWritable_this_IValueValueType_valueType_]
 ==== IsWritable
 
 [source,cs]

@@ -8,7 +8,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_bool_TypeDB_Driver_Api_IUserManager_Contains___string_username_]
+[#_bool_TypeDB_Driver_Api_IUserManager_Contains_string_username_]
 ==== Contains
 
 [source,cs]
@@ -41,7 +41,7 @@ a| `username` a| The user name to be checked a| `string`
 driver.Users.Contains(username);
 ----
 
-[#_void_TypeDB_Driver_Api_IUserManager_Create___string_username__string_password_]
+[#_void_TypeDB_Driver_Api_IUserManager_Create_string_username_string_password_]
 ==== Create
 
 [source,cs]
@@ -75,7 +75,7 @@ a| `password` a| The password of the user to be created a| `string`
 driver.Users.Create(username, password);
 ----
 
-[#_void_TypeDB_Driver_Api_IUserManager_Delete___string_username_]
+[#_void_TypeDB_Driver_Api_IUserManager_Delete_string_username_]
 ==== Delete
 
 [source,cs]
@@ -108,7 +108,7 @@ a| `username` a| The name of the user to be deleted a| `string`
 driver.Users.Delete(username);
 ----
 
-[#_IUser_TypeDB_Driver_Api_IUserManager_Get___string_username_]
+[#_IUser_TypeDB_Driver_Api_IUserManager_Get_string_username_]
 ==== Get
 
 [source,cs]
@@ -141,7 +141,7 @@ a| `username` a| The name of the user to retrieve a| `string`
 driver.Users.Get(username);
 ----
 
-[#_ISet__IUser___TypeDB_Driver_Api_IUserManager_GetAll___]
+[#_ISet_IUser_TypeDB_Driver_Api_IUserManager_GetAll_]
 ==== GetAll
 
 [source,cs]
@@ -165,7 +165,7 @@ Retrieves all users which exist on the TypeDB server.
 driver.Users.GetAll();
 ----
 
-[#_void_TypeDB_Driver_Api_IUserManager_SetPassword___string_username__string_password_]
+[#_void_TypeDB_Driver_Api_IUserManager_SetPassword_string_username_string_password_]
 ==== SetPassword
 
 [source,cs]

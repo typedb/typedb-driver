@@ -24,7 +24,7 @@ Returns the number of seconds remaining till this user’s current password expi
 .Returns
 `long?`
 
-[#_void_TypeDB_Driver_Api_IUser_UpdatePassword___string_passwordOld__string_passwordNew_]
+[#_void_TypeDB_Driver_Api_IUser_UpdatePassword_string_passwordOld_string_passwordNew_]
 ==== UpdatePassword
 
 [source,cs]

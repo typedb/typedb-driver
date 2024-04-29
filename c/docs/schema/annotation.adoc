@@ -1,4 +1,4 @@
-[#_methods__schema__annotation]
+[#_methods_schema_annotation]
 === annotation
 
 [#_Struct_Annotation]

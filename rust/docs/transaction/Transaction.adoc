@@ -8,7 +8,7 @@
 A transaction with a TypeDB database.
 
 // tag::methods[]
-[#_struct_Transaction_commit__]
+[#_struct_Transaction_commit_]
 ==== commit
 
 [source,rust]
@@ -50,7 +50,7 @@ transaction.commit()
 --
 ====
 
-[#_struct_Transaction_concept__]
+[#_struct_Transaction_concept_]
 ==== concept
 
 [source,rust]
@@ -67,7 +67,7 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 ConceptManager<'_>
 ----
 
-[#_struct_Transaction_force_close__]
+[#_struct_Transaction_force_close_]
 ==== force_close
 
 [source,rust]
@@ -91,7 +91,7 @@ null
 transaction.force_close()
 ----
 
-[#_struct_Transaction_is_open__]
+[#_struct_Transaction_is_open_]
 ==== is_open
 
 [source,rust]
@@ -115,7 +115,7 @@ bool
 transaction.close()
 ----
 
-[#_struct_Transaction_logic__]
+[#_struct_Transaction_logic_]
 ==== logic
 
 [source,rust]
@@ -132,7 +132,7 @@ Retrieves the ``LogicManager`` for this Transaction, providing access to all Con
 LogicManager<'_>
 ----
 
-[#_struct_Transaction_on_close__function]
+[#_struct_Transaction_on_close_function]
 ==== on_close
 
 [source,rust]
@@ -168,7 +168,7 @@ null
 transaction.on_close(function)
 ----
 
-[#_struct_Transaction_query__]
+[#_struct_Transaction_query_]
 ==== query
 
 [source,rust]
@@ -185,7 +185,7 @@ Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query 
 QueryManager<'_>
 ----
 
-[#_struct_Transaction_rollback__]
+[#_struct_Transaction_rollback_]
 ==== rollback
 
 [source,rust]
@@ -227,7 +227,7 @@ transaction.rollback()
 --
 ====
 
-[#_struct_Transaction_type___]
+[#_struct_Transaction_type_]
 ==== type_
 
 [source,rust]

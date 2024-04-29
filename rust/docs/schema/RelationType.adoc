@@ -32,7 +32,7 @@ a| `label` a| `String` a|
 // end::properties[]
 
 // tag::methods[]
-[#_struct_RelationType_create__]
+[#_struct_RelationType_create_]
 ==== create
 
 [source,rust]
@@ -52,7 +52,7 @@ fn create<'tx>(
 BoxPromise<'tx, Result<Relation>>
 ----
 
-[#_struct_RelationType_delete__]
+[#_struct_RelationType_delete_]
 ==== delete
 
 [source,rust]
@@ -72,7 +72,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_get_instances__]
+[#_struct_RelationType_get_instances_]
 ==== get_instances
 
 [source,rust]
@@ -93,7 +93,7 @@ fn get_instances<'tx>(
 Result<BoxStream<'tx, Result<Relation>>>
 ----
 
-[#_struct_RelationType_get_owns__]
+[#_struct_RelationType_get_owns_]
 ==== get_owns
 
 [source,rust]
@@ -116,7 +116,7 @@ fn get_owns<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_RelationType_get_owns_overridden__]
+[#_struct_RelationType_get_owns_overridden_]
 ==== get_owns_overridden
 
 [source,rust]
@@ -137,7 +137,7 @@ fn get_owns_overridden<'tx>(
 BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
-[#_struct_RelationType_get_plays__]
+[#_struct_RelationType_get_plays_]
 ==== get_plays
 
 [source,rust]
@@ -158,7 +158,7 @@ fn get_plays<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_RelationType_get_plays_overridden__]
+[#_struct_RelationType_get_plays_overridden_]
 ==== get_plays_overridden
 
 [source,rust]
@@ -179,7 +179,7 @@ fn get_plays_overridden<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_RelationType_get_relates__]
+[#_struct_RelationType_get_relates_]
 ==== get_relates
 
 [source,rust]
@@ -200,7 +200,7 @@ fn get_relates<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_RelationType_get_relates_for_role_label__]
+[#_struct_RelationType_get_relates_for_role_label_]
 ==== get_relates_for_role_label
 
 [source,rust]
@@ -221,7 +221,7 @@ fn get_relates_for_role_label<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_RelationType_get_relates_overridden__]
+[#_struct_RelationType_get_relates_overridden_]
 ==== get_relates_overridden
 
 [source,rust]
@@ -242,7 +242,7 @@ fn get_relates_overridden<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_RelationType_get_subtypes__]
+[#_struct_RelationType_get_subtypes_]
 ==== get_subtypes
 
 [source,rust]
@@ -263,7 +263,7 @@ fn get_subtypes<'tx>(
 Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
-[#_struct_RelationType_get_supertype__]
+[#_struct_RelationType_get_supertype_]
 ==== get_supertype
 
 [source,rust]
@@ -283,7 +283,7 @@ fn get_supertype<'tx>(
 BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
-[#_struct_RelationType_get_supertypes__]
+[#_struct_RelationType_get_supertypes_]
 ==== get_supertypes
 
 [source,rust]
@@ -303,7 +303,7 @@ fn get_supertypes<'tx>(
 Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
-[#_struct_RelationType_get_syntax__]
+[#_struct_RelationType_get_syntax_]
 ==== get_syntax
 
 [source,rust]
@@ -323,7 +323,7 @@ fn get_syntax<'tx>(
 BoxPromise<'tx, Result<String>>
 ----
 
-[#_struct_RelationType_is_abstract__]
+[#_struct_RelationType_is_abstract_]
 ==== is_abstract
 
 [source,rust]
@@ -340,7 +340,7 @@ fn is_abstract(&self) -> bool
 bool
 ----
 
-[#_struct_RelationType_is_deleted__]
+[#_struct_RelationType_is_deleted_]
 ==== is_deleted
 
 [source,rust]
@@ -360,7 +360,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_RelationType_is_root__]
+[#_struct_RelationType_is_root_]
 ==== is_root
 
 [source,rust]
@@ -377,7 +377,7 @@ fn is_root(&self) -> bool
 bool
 ----
 
-[#_struct_RelationType_label__]
+[#_struct_RelationType_label_]
 ==== label
 
 [source,rust]
@@ -394,7 +394,7 @@ fn label(&self) -> &str
 &str
 ----
 
-[#_struct_RelationType_root__]
+[#_struct_RelationType_root_]
 ==== root
 
 [source,rust]
@@ -411,7 +411,7 @@ Returns the root ``RelationType``
 Self
 ----
 
-[#_struct_RelationType_set_abstract__]
+[#_struct_RelationType_set_abstract_]
 ==== set_abstract
 
 [source,rust]
@@ -431,7 +431,7 @@ fn set_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_set_label__]
+[#_struct_RelationType_set_label_]
 ==== set_label
 
 [source,rust]
@@ -452,7 +452,7 @@ fn set_label<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_set_owns__]
+[#_struct_RelationType_set_owns_]
 ==== set_owns
 
 [source,rust]
@@ -475,7 +475,7 @@ fn set_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_set_plays__]
+[#_struct_RelationType_set_plays_]
 ==== set_plays
 
 [source,rust]
@@ -497,7 +497,7 @@ fn set_plays<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_set_relates__]
+[#_struct_RelationType_set_relates_]
 ==== set_relates
 
 [source,rust]
@@ -519,7 +519,7 @@ fn set_relates<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_set_supertype__]
+[#_struct_RelationType_set_supertype_]
 ==== set_supertype
 
 [source,rust]
@@ -540,7 +540,7 @@ fn set_supertype<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_unset_abstract__]
+[#_struct_RelationType_unset_abstract_]
 ==== unset_abstract
 
 [source,rust]
@@ -560,7 +560,7 @@ fn unset_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_unset_owns__]
+[#_struct_RelationType_unset_owns_]
 ==== unset_owns
 
 [source,rust]
@@ -581,7 +581,7 @@ fn unset_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_unset_plays__]
+[#_struct_RelationType_unset_plays_]
 ==== unset_plays
 
 [source,rust]
@@ -602,7 +602,7 @@ fn unset_plays<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RelationType_unset_relates__]
+[#_struct_RelationType_unset_relates_]
 ==== unset_relates
 
 [source,rust]

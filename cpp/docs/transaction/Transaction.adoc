@@ -21,7 +21,7 @@ a| `query` a| `const QueryManager TypeDB::Transaction` a| The````QueryManager```
 // end::properties[]
 
 // tag::methods[]
-[#_void_TypeDBTransactionclose___]
+[#_void_TypeDBTransactionclose_]
 ==== close
 
 [source,cpp]
@@ -45,7 +45,7 @@ Closes the transaction.
 transaction.close()
 ----
 
-[#_void_TypeDBTransactioncommit___]
+[#_void_TypeDBTransactioncommit_]
 ==== commit
 
 [source,cpp]
@@ -69,7 +69,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 transaction.commit()
 ----
 
-[#_void_TypeDBTransactionforceClose___]
+[#_void_TypeDBTransactionforceClose_]
 ==== forceClose
 
 [source,cpp]
@@ -93,7 +93,7 @@ Closes the transaction.
 transaction.close()
 ----
 
-[#_bool_TypeDBTransactionisOpen_____const]
+[#_bool_TypeDBTransactionisOpen_const]
 ==== isOpen
 
 [source,cpp]
@@ -117,7 +117,7 @@ Checks whether this transaction is open.
 transaction.isOpen();
 ----
 
-[#_void_TypeDBTransactiononClose___stdfunction__void_const_stdoptional__DriverException______callback_]
+[#_void_TypeDBTransactiononClose_stdfunction_void_const_stdoptional_DriverException_callback_]
 ==== onClose
 
 [source,cpp]
@@ -150,7 +150,7 @@ a| `function` a| The callback function. a|
 transaction.onClose(function);
 ----
 
-[#_void_TypeDBTransactionrollback___]
+[#_void_TypeDBTransactionrollback_]
 ==== rollback
 
 [source,cpp]
@@ -174,7 +174,7 @@ Rolls back the uncommitted changes made via this transaction.
 transaction.rollback()
 ----
 
-[#_TypeDBTransactionType_TypeDBTransactiontype_____const]
+[#_TypeDBTransactionType_TypeDBTransactiontype_const]
 ==== type
 
 [source,cpp]

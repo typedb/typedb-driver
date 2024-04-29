@@ -8,7 +8,7 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_ConceptIterable__Concept___TypeDBConceptMapconcepts___]
+[#_ConceptIterable_Concept_TypeDBConceptMapconcepts_]
 ==== concepts
 
 [source,cpp]
@@ -32,7 +32,7 @@ Produces an ``Iterator`` over all concepts in this ``ConceptMap``.
 conceptMap.concepts();
 ----
 
-[#_Explainables_TypeDBConceptMapexplainables___]
+[#_Explainables_TypeDBConceptMapexplainables_]
 ==== explainables
 
 [source,cpp]
@@ -56,7 +56,7 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 conceptMap.explainables();
 ----
 
-[#_stdunique_ptr__Concept___TypeDBConceptMapget___const_stdstring__variableName_]
+[#_stdunique_ptr_Concept_TypeDBConceptMapget_const_stdstring_variableName_]
 ==== get
 
 [source,cpp]
@@ -89,7 +89,7 @@ a| `variable` a| The string representation of a variable a|
 conceptMap.get(variable);
 ----
 
-[#_stdmap__stdstring__stdunique_ptr__Concept_____TypeDBConceptMapmap___]
+[#_stdmap_stdstring_stdunique_ptr_Concept_TypeDBConceptMapmap_]
 ==== map
 
 [source,cpp]
@@ -113,7 +113,7 @@ Returns the inner ``Map`` where keys are query variables, and values are concept
 conceptMap.map();
 ----
 
-[#_stdstring_TypeDBConceptMaptoString___]
+[#_stdstring_TypeDBConceptMaptoString_]
 ==== toString
 
 [source,cpp]
@@ -129,7 +129,7 @@ A string representation of this ConceptMap.
 .Returns
 `std::string`
 
-[#_StringIterable_TypeDBConceptMapvariables___]
+[#_StringIterable_TypeDBConceptMapvariables_]
 ==== variables
 
 [source,cpp]

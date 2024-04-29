@@ -1,4 +1,4 @@
-[#_methods__concept__entity]
+[#_methods_concept_entity]
 === entity
 
 [#_entity_get_type]

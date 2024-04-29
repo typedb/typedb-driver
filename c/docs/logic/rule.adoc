@@ -1,4 +1,4 @@
-[#_methods__logic__rule]
+[#_methods_logic_rule]
 === rule
 
 [#_Struct_Rule]

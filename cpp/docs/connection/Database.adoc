@@ -8,7 +8,7 @@
 A TypeDB database.
 
 // tag::methods[]
-[#_void_TypeDBDatabasedeleteDatabase___]
+[#_void_TypeDBDatabasedeleteDatabase_]
 ==== deleteDatabase
 
 [source,cpp]
@@ -32,7 +32,7 @@ Deletes this database.
 database.deleteDatabase()
 ----
 
-[#_stdstring_TypeDBDatabasename_____const]
+[#_stdstring_TypeDBDatabasename_const]
 ==== name
 
 [source,cpp]
@@ -48,7 +48,7 @@ The database name as a string.
 .Returns
 `std::string`
 
-[#_stdoptional__ReplicaInfo___TypeDBDatabasepreferredReplica___]
+[#_stdoptional_ReplicaInfo_TypeDBDatabasepreferredReplica_]
 ==== preferredReplica
 
 [source,cpp]
@@ -72,7 +72,7 @@ Returns the preferred replica for this database. Operations which can be run on 
 database.preferredReplica()
 ----
 
-[#_stdoptional__ReplicaInfo___TypeDBDatabaseprimaryReplica___]
+[#_stdoptional_ReplicaInfo_TypeDBDatabaseprimaryReplica_]
 ==== primaryReplica
 
 [source,cpp]
@@ -96,7 +96,7 @@ Returns the primary replica for this database. _Only works in TypeDB Cloud_
 database.primaryReplica()
 ----
 
-[#_ReplicaInfoIterable_TypeDBDatabasereplicas___]
+[#_ReplicaInfoIterable_TypeDBDatabasereplicas_]
 ==== replicas
 
 [source,cpp]
@@ -120,7 +120,7 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 database.replicas()
 ----
 
-[#_stdstring_TypeDBDatabaseruleSchema___]
+[#_stdstring_TypeDBDatabaseruleSchema_]
 ==== ruleSchema
 
 [source,cpp]
@@ -144,7 +144,7 @@ The rules in the schema as a valid TypeQL define query string.
 database.ruleSchema()
 ----
 
-[#_stdstring_TypeDBDatabaseschema___]
+[#_stdstring_TypeDBDatabaseschema_]
 ==== schema
 
 [source,cpp]
@@ -168,7 +168,7 @@ A full schema text as a valid TypeQL define query string.
 database.schema()
 ----
 
-[#_stdstring_TypeDBDatabasetypeSchema___]
+[#_stdstring_TypeDBDatabasetypeSchema_]
 ==== typeSchema
 
 [source,cpp]

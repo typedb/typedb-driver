@@ -8,7 +8,7 @@
 Contains explainable objects.
 
 // tag::methods[]
-[#_Explainable_TypeDBExplainablesattribute___stdstring__variable_]
+[#_Explainable_TypeDBExplainablesattribute_stdstring_variable_]
 ==== attribute
 
 [source,cpp]
@@ -41,7 +41,7 @@ a| `variable` a| The string representation of a variable a| `std::string&`
 conceptMap.explainables().attribute(variable);
 ----
 
-[#_StringIterable_TypeDBExplainablesattributes___]
+[#_StringIterable_TypeDBExplainablesattributes_]
 ==== attributes
 
 [source,cpp]
@@ -65,7 +65,7 @@ Retrieves all of this ``ConceptMap``’s explainable attributes.
 conceptMap.explainables().attributes();
 ----
 
-[#_Explainable_TypeDBExplainablesownership___stdstring__owner__stdstring__attribute_]
+[#_Explainable_TypeDBExplainablesownership_stdstring_owner_stdstring_attribute_]
 ==== ownership
 
 [source,cpp]
@@ -99,7 +99,7 @@ a| `attribute` a| The string representation of the attribute variable a| `std::s
 conceptMap.explainables().ownership(owner, attribute);
 ----
 
-[#_OwnerAttributePairIterable_TypeDBExplainablesownerships___]
+[#_OwnerAttributePairIterable_TypeDBExplainablesownerships_]
 ==== ownerships
 
 [source,cpp]
@@ -123,7 +123,7 @@ Retrieves all of this ``ConceptMap``’s explainable ownerships.
 conceptMap.explainables().ownerships();
 ----
 
-[#_Explainable_TypeDBExplainablesrelation___stdstring__variable_]
+[#_Explainable_TypeDBExplainablesrelation_stdstring_variable_]
 ==== relation
 
 [source,cpp]
@@ -156,7 +156,7 @@ a| `variable` a| The string representation of a variable a| `std::string&`
 conceptMap.explainables().relation(variable);
 ----
 
-[#_StringIterable_TypeDBExplainablesrelations___]
+[#_StringIterable_TypeDBExplainablesrelations_]
 ==== relations
 
 [source,cpp]
@@ -180,7 +180,7 @@ Retrieves all of this ``ConceptMap``’s explainable relations.
 conceptMap.explainables().relations();
 ----
 
-[#_stdstring_TypeDBExplainablestoString___]
+[#_stdstring_TypeDBExplainablestoString_]
 ==== toString
 
 [source,cpp]

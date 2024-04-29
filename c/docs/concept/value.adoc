@@ -1,4 +1,4 @@
-[#_methods__concept__value]
+[#_methods_concept_value]
 === value
 
 [#_value_get_boolean]

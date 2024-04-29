@@ -1,4 +1,4 @@
-[#_methods__transaction__transaction]
+[#_methods_transaction_transaction]
 === transaction
 
 [#_Struct_Transaction]

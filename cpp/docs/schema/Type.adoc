@@ -9,10 +9,10 @@
 
 
 
-Common super-type of RoleType &amp; ThingType.
+Common super-type of RoleType & ThingType.
 
 // tag::methods[]
-[#_virtual_VoidFuture_TypeDBTypedeleteType___Transaction__transaction_]
+[#_virtual_VoidFuture_TypeDBTypedeleteType_Transaction_transaction_]
 ==== deleteType
 
 [source,cpp]
@@ -47,7 +47,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.deleteType(transaction).get();
 ----
 
-[#_virtual_stdstring_TypeDBTypegetLabel___]
+[#_virtual_stdstring_TypeDBTypegetLabel_]
 ==== getLabel
 
 [source,cpp]
@@ -73,7 +73,7 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 type.getLabel();
 ----
 
-[#_ConceptIterable__Type___TypeDBTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Type_TypeDBTypegetSubtypes_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
@@ -108,7 +108,7 @@ type.getSubtypes(transaction);
 type.getSubtypes(transaction, Transitivity.EXPLICIT);
 ----
 
-[#_ConceptPtrFuture__Type___TypeDBTypegetSupertype___Transaction__transaction_]
+[#_ConceptPtrFuture_Type_TypeDBTypegetSupertype_Transaction_transaction_]
 ==== getSupertype
 
 [source,cpp]
@@ -141,7 +141,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.getSupertype(transaction).get();
 ----
 
-[#_ConceptIterable__Type___TypeDBTypegetSupertypes___Transaction__transaction_]
+[#_ConceptIterable_Type_TypeDBTypegetSupertypes_Transaction_transaction_]
 ==== getSupertypes
 
 [source,cpp]
@@ -174,7 +174,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.getSupertypes(transaction);
 ----
 
-[#_virtual_bool_TypeDBTypeisAbstract___]
+[#_virtual_bool_TypeDBTypeisAbstract_]
 ==== isAbstract
 
 [source,cpp]
@@ -200,7 +200,7 @@ Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 type.isAbstract();
 ----
 
-[#_virtual_BoolFuture_TypeDBTypeisDeleted___Transaction__transaction_]
+[#_virtual_BoolFuture_TypeDBTypeisDeleted_Transaction_transaction_]
 ==== isDeleted
 
 [source,cpp]
@@ -235,7 +235,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.isDeleted(transaction).get();
 ----
 
-[#_virtual_VoidFuture_TypeDBTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
+[#_virtual_VoidFuture_TypeDBTypesetLabel_Transaction_transaction_const_stdstring_newLabel_]
 ==== setLabel
 
 [source,cpp]

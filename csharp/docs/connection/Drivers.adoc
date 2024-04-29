@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver`
 
 // tag::methods[]
-[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver___string_address__TypeDBCredential_credential_]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_string_address_TypeDBCredential_credential_]
 ==== CloudDriver
 
 [source,cs]
@@ -38,7 +38,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 Drivers.CloudDriver(address, credential);
 ----
 
-[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver___ICollection__string___addresses__TypeDBCredential_credential_]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_ICollection_string_addresses_TypeDBCredential_credential_]
 ==== CloudDriver
 
 [source,cs]
@@ -72,7 +72,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 Drivers.CloudDriver(addresses, credential);
 ----
 
-[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CoreDriver___string_address_]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CoreDriver_string_address_]
 ==== CoreDriver
 
 [source,cs]

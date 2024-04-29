@@ -1,23 +1,4 @@
-[#_methods__connection__connection]
-=== connection
-
-[#_init_logging]
-==== init_logging
-
-[source,cpp]
-----
-void init_logging(void)
-----
-
-
-
-Enables logging in the TypeDB driver.
-
-[caption=""]
-.Returns
-`void`
-
-[#_methods__connection__connection]
+[#_methods_connection_connection]
 === connection
 
 [#_Struct_Connection]
@@ -155,4 +136,20 @@ a| `address` a| The address of the TypeDB server a| `const char*`
 [caption=""]
 .Returns
 `struct Connection*`
+
+[#_init_logging]
+==== init_logging
+
+[source,cpp]
+----
+void init_logging(void)
+----
+
+
+
+Enables logging in the TypeDB driver.
+
+[caption=""]
+.Returns
+`void`
 

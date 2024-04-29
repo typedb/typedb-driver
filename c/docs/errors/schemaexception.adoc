@@ -1,4 +1,4 @@
-[#_methods__errors__schemaexception]
+[#_methods_errors_schemaexception]
 === schemaexception
 
 [#_Struct_SchemaException]

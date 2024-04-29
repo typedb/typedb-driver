@@ -1,5 +1,12 @@
-[#_methods__answer__primitives]
+[#_methods_answer_primitives]
 === primitives
+
+[#_Struct_BoolPromise]
+==== Struct BoolPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_Struct_StringIterator]
 ==== Struct StringIterator
@@ -28,6 +35,29 @@ Iterator over the ``StringPair``s representing explainable owner-attribute varia
 
 
 Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
+
+[#_Struct_VoidPromise]
+==== Struct VoidPromise
+
+
+
+Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
+
+[#_bool_promise_resolve]
+==== bool_promise_resolve
+
+[source,cpp]
+----
+bool bool_promise_resolve(struct BoolPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`bool`
 
 [#_string_free]
 ==== string_free
@@ -140,42 +170,6 @@ Waits for and returns the result of the operation represented by the ``BoolPromi
 [caption=""]
 .Returns
 `char*`
-
-[#_methods__answer__primitives]
-=== primitives
-
-[#_Struct_BoolPromise]
-==== Struct BoolPromise
-
-
-
-Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
-
-[#_bool_promise_resolve]
-==== bool_promise_resolve
-
-[source,cpp]
-----
-bool bool_promise_resolve(struct BoolPromise* promise)
-----
-
-
-
-Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
-
-[caption=""]
-.Returns
-`bool`
-
-[#_methods__answer__primitives]
-=== primitives
-
-[#_Struct_VoidPromise]
-==== Struct VoidPromise
-
-
-
-Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
 
 [#_void_promise_resolve]
 ==== void_promise_resolve

@@ -6,7 +6,7 @@
 The metadata and state of an individual raft replica of a database.
 
 // tag::methods[]
-[#_Database_Replica_isPreferred__]
+[#_Database_Replica_isPreferred_]
 ==== isPreferred
 
 [source,java]
@@ -21,7 +21,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 .Returns
 `boolean`
 
-[#_Database_Replica_isPrimary__]
+[#_Database_Replica_isPrimary_]
 ==== isPrimary
 
 [source,java]
@@ -36,7 +36,7 @@ Checks whether this is the primary replica of the raft cluster.
 .Returns
 `boolean`
 
-[#_Database_Replica_server__]
+[#_Database_Replica_server_]
 ==== server
 
 [source,java]
@@ -51,7 +51,7 @@ The server hosting this replica
 .Returns
 `java.lang.String`
 
-[#_Database_Replica_term__]
+[#_Database_Replica_term_]
 ==== term
 
 [source,java]

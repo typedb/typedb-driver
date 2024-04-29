@@ -13,7 +13,7 @@ a| `DEFAULT_ADDRESS`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDB_cloudDriver__addresses_string__string____Record_string__string___credential_TypeDBCredential]
+[#_TypeDB_cloudDriver_addresses_string_string_Record_string_string_credential_TypeDBCredential]
 ==== cloudDriver
 
 [source,nodejs]
@@ -40,7 +40,7 @@ Examples
 .Returns
 `Promise<TypeDBDriver>`
 
-[#_TypeDB_coreDriver__address_string__DEFAULT_ADDRESS]
+[#_TypeDB_coreDriver_address_string_DEFAULT_ADDRESS]
 ==== coreDriver
 
 [source,nodejs]

@@ -6,7 +6,7 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_ConceptMap_concepts__]
+[#_ConceptMap_concepts_]
 ==== concepts
 
 [source,java]
@@ -29,7 +29,7 @@ Produces a stream over all concepts in this ``ConceptMap``.
 conceptMap.concepts();
 ----
 
-[#_ConceptMap_explainables__]
+[#_ConceptMap_explainables_]
 ==== explainables
 
 [source,java]
@@ -51,7 +51,7 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 conceptMap.explainables();
 ----
 
-[#_ConceptMap_get__java_lang_String]
+[#_ConceptMap_get_java_lang_String]
 ==== get
 
 [source,java]
@@ -83,7 +83,7 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.get(variable);
 ----
 
-[#_ConceptMap_map__]
+[#_ConceptMap_map_]
 ==== map
 
 [source,java]
@@ -106,7 +106,7 @@ Returns the inner ``Map`` where keys are query variables, and values are concept
 conceptMap.map();
 ----
 
-[#_ConceptMap_variables__]
+[#_ConceptMap_variables_]
 ==== variables
 
 [source,java]

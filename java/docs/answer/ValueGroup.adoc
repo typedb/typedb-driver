@@ -6,7 +6,7 @@
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_ValueGroup_owner__]
+[#_ValueGroup_owner_]
 ==== owner
 
 [source,java]
@@ -29,7 +29,7 @@ Retrieves the concept that is the group owner.
 conceptMapGroup.owner()
 ----
 
-[#_ValueGroup_value__]
+[#_ValueGroup_value_]
 ==== value
 
 [source,java]

@@ -4,7 +4,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_QueryManager_define__query_str__options_TypeDBOptions]
+[#_QueryManager_define_query_str_options_TypeDBOptions]
 ==== define
 
 [source,python]
@@ -35,7 +35,7 @@ a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
 transaction.query.define(query, options).resolve()
 ----
 
-[#_QueryManager_delete__query_str__options_TypeDBOptions__None]
+[#_QueryManager_delete_query_str_options_TypeDBOptions_None]
 ==== delete
 
 [source,python]
@@ -66,7 +66,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.delete(query, options).resolve()
 ----
 
-[#_QueryManager_explain__explainable_ConceptMap_Explainable__options_TypeDBOptions__None]
+[#_QueryManager_explain_explainable_ConceptMap_Explainable_options_TypeDBOptions_None]
 ==== explain
 
 [source,python]
@@ -97,7 +97,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.explain(explainable, options)
 ----
 
-[#_QueryManager_fetch__query_str__options_TypeDBOptions__None]
+[#_QueryManager_fetch_query_str_options_TypeDBOptions_None]
 ==== fetch
 
 [source,python]
@@ -128,7 +128,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.fetch(query, options)
 ----
 
-[#_QueryManager_get__query_str__options_TypeDBOptions__None]
+[#_QueryManager_get_query_str_options_TypeDBOptions_None]
 ==== get
 
 [source,python]
@@ -159,7 +159,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.get(query, options)
 ----
 
-[#_QueryManager_get_aggregate__query_str__options_TypeDBOptions__None]
+[#_QueryManager_get_aggregate_query_str_options_TypeDBOptions_None]
 ==== get_aggregate
 
 [source,python]
@@ -190,7 +190,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.get_aggregate(query, options).resolve()
 ----
 
-[#_QueryManager_get_group__query_str__options_TypeDBOptions__None]
+[#_QueryManager_get_group_query_str_options_TypeDBOptions_None]
 ==== get_group
 
 [source,python]
@@ -221,7 +221,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.get_group(query, options)
 ----
 
-[#_QueryManager_get_group_aggregate__query_str__options_TypeDBOptions__None]
+[#_QueryManager_get_group_aggregate_query_str_options_TypeDBOptions_None]
 ==== get_group_aggregate
 
 [source,python]
@@ -252,7 +252,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.get_group_aggregate(query, options)
 ----
 
-[#_QueryManager_insert__query_str__options_TypeDBOptions__None]
+[#_QueryManager_insert_query_str_options_TypeDBOptions_None]
 ==== insert
 
 [source,python]
@@ -283,7 +283,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.insert(query, options)
 ----
 
-[#_QueryManager_undefine__query_str__options_TypeDBOptions]
+[#_QueryManager_undefine_query_str_options_TypeDBOptions]
 ==== undefine
 
 [source,python]
@@ -314,7 +314,7 @@ a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
 transaction.query.undefine(query, options).resolve()
 ----
 
-[#_QueryManager_update__query_str__options_TypeDBOptions__None]
+[#_QueryManager_update_query_str_options_TypeDBOptions_None]
 ==== update
 
 [source,python]

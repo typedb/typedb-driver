@@ -8,7 +8,7 @@
 * `Concept`
 
 // tag::methods[]
-[#_Thing_asAttribute__]
+[#_Thing_asAttribute_]
 ==== asAttribute
 
 [source,java]
@@ -30,7 +30,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Thing_asAttributeType__]
+[#_Thing_asAttributeType_]
 ==== asAttributeType
 
 [source,java]
@@ -52,7 +52,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Thing_asEntity__]
+[#_Thing_asEntity_]
 ==== asEntity
 
 [source,java]
@@ -74,7 +74,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Thing_asEntityType__]
+[#_Thing_asEntityType_]
 ==== asEntityType
 
 [source,java]
@@ -96,7 +96,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Thing_asRelation__]
+[#_Thing_asRelation_]
 ==== asRelation
 
 [source,java]
@@ -118,7 +118,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_Thing_asRelationType__]
+[#_Thing_asRelationType_]
 ==== asRelationType
 
 [source,java]
@@ -140,7 +140,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Thing_asRoleType__]
+[#_Thing_asRoleType_]
 ==== asRoleType
 
 [source,java]
@@ -162,7 +162,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Thing_asThing__]
+[#_Thing_asThing_]
 ==== asThing
 
 [source,java]
@@ -185,7 +185,7 @@ Casts the concept to ``Thing``.
 thing.asThing();
 ----
 
-[#_Thing_asThingType__]
+[#_Thing_asThingType_]
 ==== asThingType
 
 [source,java]
@@ -207,7 +207,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Thing_asType__]
+[#_Thing_asType_]
 ==== asType
 
 [source,java]
@@ -229,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Thing_asValue__]
+[#_Thing_asValue_]
 ==== asValue
 
 [source,java]
@@ -251,7 +251,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Thing_delete__TypeDBTransaction]
+[#_Thing_delete_TypeDBTransaction]
 ==== delete
 
 [source,java]
@@ -283,7 +283,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.delete(transaction).resolve();
 ----
 
-[#_Thing_getHas__TypeDBTransaction__AttributeType___]
+[#_Thing_getHas_TypeDBTransaction_AttributeType_]
 ==== getHas
 
 [source,java]
@@ -318,7 +318,7 @@ thing.getHas(transaction);
  thing.getHas(transaction, attributeType);
 ----
 
-[#_Thing_getHas__TypeDBTransaction__java_util_Set_ThingType_Annotation_]
+[#_Thing_getHas_TypeDBTransaction_java_util_Set_ThingType_Annotation_]
 ==== getHas
 
 [source,java]
@@ -353,7 +353,7 @@ thing.getHas(transaction);
  thing.getHas(transaction, set(Annotation.key()));
 ----
 
-[#_Thing_getIID__]
+[#_Thing_getIID_]
 ==== getIID
 
 [source,java]
@@ -376,7 +376,7 @@ Retrieves the unique id of the ``Thing``.
 thing.getIID();
 ----
 
-[#_Thing_getPlaying__TypeDBTransaction]
+[#_Thing_getPlaying_TypeDBTransaction]
 ==== getPlaying
 
 [source,java]
@@ -408,7 +408,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.getPlaying(transaction);
 ----
 
-[#_Thing_getRelations__TypeDBTransaction__RoleType___]
+[#_Thing_getRelations_TypeDBTransaction_RoleType_]
 ==== getRelations
 
 [source,java]
@@ -442,7 +442,7 @@ a| `roleTypes` a| The array of roles to filter the relations by. a| `RoleType[]`
 thing.getRelations(transaction, roleTypes);
 ----
 
-[#_Thing_getType__]
+[#_Thing_getType_]
 ==== getType
 
 [source,java]
@@ -465,7 +465,7 @@ Retrieves the type which this ``Thing`` belongs to.
 thing.getType();
 ----
 
-[#_Thing_isAttribute__]
+[#_Thing_isAttribute_]
 ==== isAttribute
 
 [source,java]
@@ -488,7 +488,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Thing_isAttributeType__]
+[#_Thing_isAttributeType_]
 ==== isAttributeType
 
 [source,java]
@@ -511,7 +511,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Thing_isDeleted__TypeDBTransaction]
+[#_Thing_isDeleted_TypeDBTransaction]
 ==== isDeleted
 
 [source,java]
@@ -543,7 +543,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.isDeleted(transaction).resolve();
 ----
 
-[#_Thing_isEntity__]
+[#_Thing_isEntity_]
 ==== isEntity
 
 [source,java]
@@ -566,7 +566,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Thing_isEntityType__]
+[#_Thing_isEntityType_]
 ==== isEntityType
 
 [source,java]
@@ -589,7 +589,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Thing_isInferred__]
+[#_Thing_isInferred_]
 ==== isInferred
 
 [source,java]
@@ -612,7 +612,7 @@ Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 thing.isInferred();
 ----
 
-[#_Thing_isRelation__]
+[#_Thing_isRelation_]
 ==== isRelation
 
 [source,java]
@@ -635,7 +635,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_Thing_isRelationType__]
+[#_Thing_isRelationType_]
 ==== isRelationType
 
 [source,java]
@@ -658,7 +658,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Thing_isRoleType__]
+[#_Thing_isRoleType_]
 ==== isRoleType
 
 [source,java]
@@ -681,7 +681,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Thing_isThing__]
+[#_Thing_isThing_]
 ==== isThing
 
 [source,java]
@@ -704,7 +704,7 @@ Checks if the concept is a ``Thing``.
 thing.isThing();
 ----
 
-[#_Thing_isThingType__]
+[#_Thing_isThingType_]
 ==== isThingType
 
 [source,java]
@@ -727,7 +727,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Thing_isType__]
+[#_Thing_isType_]
 ==== isType
 
 [source,java]
@@ -750,7 +750,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Thing_isValue__]
+[#_Thing_isValue_]
 ==== isValue
 
 [source,java]
@@ -773,7 +773,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Thing_setHas__TypeDBTransaction__Attribute]
+[#_Thing_setHas_TypeDBTransaction_Attribute]
 ==== setHas
 
 [source,java]
@@ -807,7 +807,7 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 thing.setHas(transaction, attribute).resolve();
 ----
 
-[#_Thing_unsetHas__TypeDBTransaction__Attribute]
+[#_Thing_unsetHas_TypeDBTransaction_Attribute]
 ==== unsetHas
 
 [source,java]

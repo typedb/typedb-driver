@@ -8,7 +8,7 @@
 TypeDB user information.
 
 // tag::methods[]
-[#_stdoptional__int64_t___TypeDBUserpasswordExpirySeconds___]
+[#_stdoptional_int64_t_TypeDBUserpasswordExpirySeconds_]
 ==== passwordExpirySeconds
 
 [source,cpp]
@@ -24,7 +24,7 @@ Returns the number of seconds remaining till this user’s current password expi
 .Returns
 `std::optional< int64_t >`
 
-[#_void_TypeDBUserpasswordUpdate___const_UserManager__userManager__const_stdstring__passwordOld__const_stdstring__passwordNew_]
+[#_void_TypeDBUserpasswordUpdate_const_UserManager_userManager_const_stdstring_passwordOld_const_stdstring_passwordNew_]
 ==== passwordUpdate
 
 [source,cpp]
@@ -51,7 +51,7 @@ a| `passwordNew` a| The new password a| `const std::string&`
 .Returns
 `void`
 
-[#_stdstring_TypeDBUserusername___]
+[#_stdstring_TypeDBUserusername_]
 ==== username
 
 [source,cpp]

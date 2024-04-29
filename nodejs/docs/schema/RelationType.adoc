@@ -17,7 +17,7 @@ a| `NAME`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_RelationType_asAttribute__]
+[#_RelationType_asAttribute_]
 ==== asAttribute
 
 [source,nodejs]
@@ -38,7 +38,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_RelationType_asAttributeType__]
+[#_RelationType_asAttributeType_]
 ==== asAttributeType
 
 [source,nodejs]
@@ -59,7 +59,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_RelationType_asEntity__]
+[#_RelationType_asEntity_]
 ==== asEntity
 
 [source,nodejs]
@@ -80,7 +80,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_RelationType_asEntityType__]
+[#_RelationType_asEntityType_]
 ==== asEntityType
 
 [source,nodejs]
@@ -101,7 +101,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_RelationType_asRelation__]
+[#_RelationType_asRelation_]
 ==== asRelation
 
 [source,nodejs]
@@ -122,7 +122,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_RelationType_asRelationType__]
+[#_RelationType_asRelationType_]
 ==== asRelationType
 
 [source,nodejs]
@@ -143,7 +143,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_RelationType_asRoleType__]
+[#_RelationType_asRoleType_]
 ==== asRoleType
 
 [source,nodejs]
@@ -164,7 +164,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_RelationType_asThing__]
+[#_RelationType_asThing_]
 ==== asThing
 
 [source,nodejs]
@@ -185,7 +185,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_RelationType_asThingType__]
+[#_RelationType_asThingType_]
 ==== asThingType
 
 [source,nodejs]
@@ -206,7 +206,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_RelationType_asType__]
+[#_RelationType_asType_]
 ==== asType
 
 [source,nodejs]
@@ -227,7 +227,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_RelationType_asValue__]
+[#_RelationType_asValue_]
 ==== asValue
 
 [source,nodejs]
@@ -248,7 +248,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_RelationType_create__transaction_TypeDBTransaction]
+[#_RelationType_create_transaction_TypeDBTransaction]
 ==== create
 
 [source,nodejs]
@@ -278,7 +278,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 relationType.create(transaction)
 ----
 
-[#_RelationType_delete__transaction_TypeDBTransaction]
+[#_RelationType_delete_transaction_TypeDBTransaction]
 ==== delete
 
 [source,nodejs]
@@ -308,7 +308,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.delete(transaction)
 ----
 
-[#_RelationType_equals__concept_Concept]
+[#_RelationType_equals_concept_Concept]
 ==== equals
 
 [source,nodejs]
@@ -331,7 +331,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_RelationType_getInstances__transaction_TypeDBTransaction]
+[#_RelationType_getInstances_transaction_TypeDBTransaction]
 ==== getInstances
 
 [source,nodejs]
@@ -361,7 +361,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getInstances(transaction)
 ----
 
-[#_RelationType_getInstances__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RelationType_getInstances_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getInstances
 
 [source,nodejs]
@@ -392,7 +392,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instanc
 thingType.getInstances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction]
+[#_RelationType_getOwns_transaction_TypeDBTransaction]
 ==== getOwns
 
 [source,nodejs]
@@ -422,7 +422,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__valueType_ValueType]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_valueType_ValueType]
 ==== getOwns
 
 [source,nodejs]
@@ -453,7 +453,7 @@ a| `valueType` a| If specified, only attribute types of this ``ValueType`` will 
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__annotations_Annotation__]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_annotations_Annotation_]
 ==== getOwns
 
 [source,nodejs]
@@ -484,7 +484,7 @@ a| `annotations` a| If specified, only attribute types of this ``ValueType`` wil
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__valueType_ValueType__annotations_Annotation__]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_valueType_ValueType_annotations_Annotation_]
 ==== getOwns
 
 [source,nodejs]
@@ -516,7 +516,7 @@ a| `annotations` a| Only retrieve attribute types owned with annotations. a| `An
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getOwns
 
 [source,nodejs]
@@ -547,7 +547,7 @@ a| `transitivity` a| If specified, only attribute types of this ``ValueType`` wi
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__valueType_ValueType__transitivity_Transitivity]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_valueType_ValueType_transitivity_Transitivity]
 ==== getOwns
 
 [source,nodejs]
@@ -579,7 +579,7 @@ a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `T
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__annotations_Annotation____transitivity_Transitivity]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_annotations_Annotation_transitivity_Transitivity]
 ==== getOwns
 
 [source,nodejs]
@@ -611,7 +611,7 @@ a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `T
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwns__transaction_TypeDBTransaction__valueType_ValueType__annotations_Annotation____transitivity_Transitivity]
+[#_RelationType_getOwns_transaction_TypeDBTransaction_valueType_ValueType_annotations_Annotation_transitivity_Transitivity]
 ==== getOwns
 
 [source,nodejs]
@@ -644,7 +644,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_RelationType_getOwnsOverridden__transaction_TypeDBTransaction__attributeType_AttributeType]
+[#_RelationType_getOwnsOverridden_transaction_TypeDBTransaction_attributeType_AttributeType]
 ==== getOwnsOverridden
 
 [source,nodejs]
@@ -675,7 +675,7 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 thingType.getOwnsOverridden(transaction, attributeType)
 ----
 
-[#_RelationType_getPlays__transaction_TypeDBTransaction]
+[#_RelationType_getPlays_transaction_TypeDBTransaction]
 ==== getPlays
 
 [source,nodejs]
@@ -705,7 +705,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_RelationType_getPlays__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RelationType_getPlays_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getPlays
 
 [source,nodejs]
@@ -736,7 +736,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_RelationType_getPlaysOverridden__transaction_TypeDBTransaction__role_RoleType]
+[#_RelationType_getPlaysOverridden_transaction_TypeDBTransaction_role_RoleType]
 ==== getPlaysOverridden
 
 [source,nodejs]
@@ -767,7 +767,7 @@ a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 thingType.getPlaysOverridden(transaction, role)
 ----
 
-[#_RelationType_getRelates__transaction_TypeDBTransaction]
+[#_RelationType_getRelates_transaction_TypeDBTransaction]
 ==== getRelates
 
 [source,nodejs]
@@ -790,7 +790,7 @@ a| `transaction` a|  a| `TypeDBTransaction`
 .Returns
 `Stream<RoleType>`
 
-[#_RelationType_getRelates__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RelationType_getRelates_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getRelates
 
 [source,nodejs]
@@ -821,7 +821,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relate
 relationType.getRelates(transaction, roleLabel, transitivity)
 ----
 
-[#_RelationType_getRelatesForRoleLabel__transaction_TypeDBTransaction__roleLabel_string]
+[#_RelationType_getRelatesForRoleLabel_transaction_TypeDBTransaction_roleLabel_string]
 ==== getRelatesForRoleLabel
 
 [source,nodejs]
@@ -845,7 +845,7 @@ a| `roleLabel` a|  a| `string`
 .Returns
 `Promise<RoleType>`
 
-[#_RelationType_getRelatesOverridden__transaction_TypeDBTransaction__roleLabel_string]
+[#_RelationType_getRelatesOverridden_transaction_TypeDBTransaction_roleLabel_string]
 ==== getRelatesOverridden
 
 [source,nodejs]
@@ -876,7 +876,7 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a| `string`
 relationType.getRelatesOverridden(transaction, roleLabel)
 ----
 
-[#_RelationType_getSubtypes__transaction_TypeDBTransaction]
+[#_RelationType_getSubtypes_transaction_TypeDBTransaction]
 ==== getSubtypes
 
 [source,nodejs]
@@ -906,7 +906,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSubtypes(transaction)
 ----
 
-[#_RelationType_getSubtypes__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_RelationType_getSubtypes_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getSubtypes
 
 [source,nodejs]
@@ -937,7 +937,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 thingType.getSubtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_RelationType_getSupertype__transaction_TypeDBTransaction]
+[#_RelationType_getSupertype_transaction_TypeDBTransaction]
 ==== getSupertype
 
 [source,nodejs]
@@ -967,7 +967,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSupertype(transaction)
 ----
 
-[#_RelationType_getSupertypes__transaction_TypeDBTransaction]
+[#_RelationType_getSupertypes_transaction_TypeDBTransaction]
 ==== getSupertypes
 
 [source,nodejs]
@@ -997,7 +997,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSupertypes(transaction)
 ----
 
-[#_RelationType_getSyntax__transaction_TypeDBTransaction]
+[#_RelationType_getSyntax_transaction_TypeDBTransaction]
 ==== getSyntax
 
 [source,nodejs]
@@ -1027,7 +1027,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSyntax(transaction)
 ----
 
-[#_RelationType_isAttribute__]
+[#_RelationType_isAttribute_]
 ==== isAttribute
 
 [source,nodejs]
@@ -1048,7 +1048,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_RelationType_isAttributeType__]
+[#_RelationType_isAttributeType_]
 ==== isAttributeType
 
 [source,nodejs]
@@ -1069,7 +1069,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_RelationType_isDeleted__transaction_TypeDBTransaction]
+[#_RelationType_isDeleted_transaction_TypeDBTransaction]
 ==== isDeleted
 
 [source,nodejs]
@@ -1092,7 +1092,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 .Returns
 `Promise<boolean>`
 
-[#_RelationType_isEntity__]
+[#_RelationType_isEntity_]
 ==== isEntity
 
 [source,nodejs]
@@ -1113,7 +1113,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_RelationType_isEntityType__]
+[#_RelationType_isEntityType_]
 ==== isEntityType
 
 [source,nodejs]
@@ -1134,7 +1134,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_RelationType_isRelation__]
+[#_RelationType_isRelation_]
 ==== isRelation
 
 [source,nodejs]
@@ -1155,7 +1155,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_RelationType_isRelationType__]
+[#_RelationType_isRelationType_]
 ==== isRelationType
 
 [source,nodejs]
@@ -1176,7 +1176,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_RelationType_isRoleType__]
+[#_RelationType_isRoleType_]
 ==== isRoleType
 
 [source,nodejs]
@@ -1197,7 +1197,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_RelationType_isThing__]
+[#_RelationType_isThing_]
 ==== isThing
 
 [source,nodejs]
@@ -1218,7 +1218,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_RelationType_isThingType__]
+[#_RelationType_isThingType_]
 ==== isThingType
 
 [source,nodejs]
@@ -1239,7 +1239,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_RelationType_isType__]
+[#_RelationType_isType_]
 ==== isType
 
 [source,nodejs]
@@ -1260,7 +1260,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_RelationType_isValue__]
+[#_RelationType_isValue_]
 ==== isValue
 
 [source,nodejs]
@@ -1281,7 +1281,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_RelationType_setAbstract__transaction_TypeDBTransaction]
+[#_RelationType_setAbstract_transaction_TypeDBTransaction]
 ==== setAbstract
 
 [source,nodejs]
@@ -1311,7 +1311,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.setAbstract(transaction)
 ----
 
-[#_RelationType_setLabel__transaction_TypeDBTransaction__label_string]
+[#_RelationType_setLabel_transaction_TypeDBTransaction_label_string]
 ==== setLabel
 
 [source,nodejs]
@@ -1342,7 +1342,7 @@ a| `label` a| The new ``Label`` to be given to the type. a| `string`
 type.setLabel(transaction, label)
 ----
 
-[#_RelationType_setOwns__transaction_TypeDBTransaction__attributeType_AttributeType]
+[#_RelationType_setOwns_transaction_TypeDBTransaction_attributeType_AttributeType]
 ==== setOwns
 
 [source,nodejs]
@@ -1373,7 +1373,7 @@ a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_RelationType_setOwns__transaction_TypeDBTransaction__attributeType_AttributeType__annotations_Annotation__]
+[#_RelationType_setOwns_transaction_TypeDBTransaction_attributeType_AttributeType_annotations_Annotation_]
 ==== setOwns
 
 [source,nodejs]
@@ -1405,7 +1405,7 @@ a| `annotations` a| The ``AttributeType`` that this attribute ownership override
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_RelationType_setOwns__transaction_TypeDBTransaction__attributeType_AttributeType__overriddenType_AttributeType]
+[#_RelationType_setOwns_transaction_TypeDBTransaction_attributeType_AttributeType_overriddenType_AttributeType]
 ==== setOwns
 
 [source,nodejs]
@@ -1437,7 +1437,7 @@ a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overr
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_RelationType_setOwns__transaction_TypeDBTransaction__attributeType_AttributeType__overriddenType_AttributeType__annotations_Annotation__]
+[#_RelationType_setOwns_transaction_TypeDBTransaction_attributeType_AttributeType_overriddenType_AttributeType_annotations_Annotation_]
 ==== setOwns
 
 [source,nodejs]
@@ -1470,7 +1470,7 @@ a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]`
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_RelationType_setPlays__transaction_TypeDBTransaction__role_RoleType]
+[#_RelationType_setPlays_transaction_TypeDBTransaction_role_RoleType]
 ==== setPlays
 
 [source,nodejs]
@@ -1501,7 +1501,7 @@ a| `role` a| The role to be played by the instances of this type a| `RoleType`
 thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
 ----
 
-[#_RelationType_setPlays__transaction_TypeDBTransaction__role_RoleType__overriddenType_RoleType]
+[#_RelationType_setPlays_transaction_TypeDBTransaction_role_RoleType_overriddenType_RoleType]
 ==== setPlays
 
 [source,nodejs]
@@ -1533,7 +1533,7 @@ a| `overriddenType` a| The role type that this role overrides, if applicable a| 
 thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
 ----
 
-[#_RelationType_setRelates__transaction_TypeDBTransaction__roleLabel_string__overriddenLabel_string]
+[#_RelationType_setRelates_transaction_TypeDBTransaction_roleLabel_string_overriddenLabel_string]
 ==== setRelates
 
 [source,nodejs]
@@ -1565,7 +1565,7 @@ a| `overriddenLabel` a| The label being overridden, if applicable a| `string`
 relationType.setRelates(transaction, roleLabel) relationType.setRelates(transaction, roleLabel, overriddenLabel)
 ----
 
-[#_RelationType_setSupertype__transaction_TypeDBTransaction__type_RelationType]
+[#_RelationType_setSupertype_transaction_TypeDBTransaction_type_RelationType]
 ==== setSupertype
 
 [source,nodejs]
@@ -1596,7 +1596,7 @@ a| `type` a|  a| `RelationType`
 relationType.setSupertype(transaction, superRelationType).resolve();
 ----
 
-[#_RelationType_unsetAbstract__transaction_TypeDBTransaction]
+[#_RelationType_unsetAbstract_transaction_TypeDBTransaction]
 ==== unsetAbstract
 
 [source,nodejs]
@@ -1626,7 +1626,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.unsetAbstract(transaction)
 ----
 
-[#_RelationType_unsetOwns__transaction_TypeDBTransaction__attributeType_AttributeType]
+[#_RelationType_unsetOwns_transaction_TypeDBTransaction_attributeType_AttributeType]
 ==== unsetOwns
 
 [source,nodejs]
@@ -1657,7 +1657,7 @@ a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `Att
 thingType.unsetOwns(transaction, attributeType)
 ----
 
-[#_RelationType_unsetPlays__transaction_TypeDBTransaction__role_RoleType]
+[#_RelationType_unsetPlays_transaction_TypeDBTransaction_role_RoleType]
 ==== unsetPlays
 
 [source,nodejs]
@@ -1688,7 +1688,7 @@ a| `role` a| The role to not be played by the instances of this type. a| `RoleTy
 thingType.unsetPlays(transaction, role)
 ----
 
-[#_RelationType_unsetRelates__transaction_TypeDBTransaction__roleLabel_string]
+[#_RelationType_unsetRelates_transaction_TypeDBTransaction_roleLabel_string]
 ==== unsetRelates
 
 [source,nodejs]

@@ -9,7 +9,7 @@
 Provides methods for manipulating rules in the database.
 
 // tag::methods[]
-[#_struct_LogicManager_get_rule__label_String]
+[#_struct_LogicManager_get_rule_label_String]
 ==== get_rule
 
 [source,rust]
@@ -60,7 +60,7 @@ transaction.logic().get_rule(label).resolve()
 --
 ====
 
-[#_struct_LogicManager_get_rules__]
+[#_struct_LogicManager_get_rules_]
 ==== get_rules
 
 [source,rust]
@@ -84,7 +84,7 @@ Result<impl Stream<Item = Result<Rule>> + 'tx>
 transaction.logic.get_rules()
 ----
 
-[#_struct_LogicManager_put_rule__label_String__when_Conjunction__then_Statement]
+[#_struct_LogicManager_put_rule_label_String_when_Conjunction_then_Statement]
 ==== put_rule
 
 [source,rust]

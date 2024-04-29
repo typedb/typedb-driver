@@ -73,6 +73,8 @@ class DoxygenParserCpp : Callable<Unit> {
             // Typedefs
             val typeDefFile = getFile(docsDir, "typedefs.adoc")
             typeDefFile.writeText("")
+            typeDefFile.appendText("[#_aliases]\n")
+            typeDefFile.appendText("=== Aliases\n\n")
             val typeDefTBody =
                 parsed.select("tr.heading").first { element -> element.text().equals("Typedefs") }.parent()!!
             typeDefTBody.select("tr").filter { tr ->
@@ -80,7 +82,7 @@ class DoxygenParserCpp : Callable<Unit> {
             }.map {
                 parseTypeDef(it!!)
             }.forEach {
-                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cpp"))
+                if (it.isNotEmpty()) typeDefFile.appendText(this.doxygenSpecificReplacement(it.toAsciiDoc("cpp", headerLevel = 4)))
             }
 
             // Enums
@@ -104,7 +106,7 @@ class DoxygenParserCpp : Callable<Unit> {
         }
 
         classes.forEach { parsedClass ->
-            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cpp")
+            val parsedClassAsciiDoc = doxygenSpecificReplacement(parsedClass.toAsciiDoc("cpp"))
             val outputFile = getFile(docsDir, "${generateFilename(parsedClass.name)}.adoc")
             outputFile.writeText(parsedClassAsciiDoc)
         }
@@ -156,6 +158,7 @@ class DoxygenParserCpp : Callable<Unit> {
         if (memItemLeft != null) {
             if (memItemLeft.text().startsWith("typedef")) {
                 val actual = element.selectFirst("td.memItemLeft")!!.text().substringAfter("typedef ")
+                    .replace("< ", "<").replace(" >", ">") // Consistency with linux
                 val alias = element.selectFirst("td.memItemRight")!!.text()
                 return Class(
                     name = alias,
@@ -165,11 +168,12 @@ class DoxygenParserCpp : Callable<Unit> {
             } else if (memItemLeft.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
                 val actual = usingEquality.text().substringAfter("=").trim()
+                    .replace("< ", "<").replace(" >", ">") // Consistency with linux
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,
                     anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for $actual")
+                    description = listOf("Alias for ``$actual``")
                 )
             }
         }
@@ -181,7 +185,7 @@ class DoxygenParserCpp : Callable<Unit> {
         val fullyQualifiedName = document.selectFirst("div .title")!!.text()
             .replace(Regex("Class(?: Template)? Reference.*"), "").trim()
         val packagePath = fullyQualifiedName.substringBeforeLast("::")
-        val className = fullyQualifiedName.substringAfterLast("::")
+        val className = fullyQualifiedName.substringAfterLast("::").substringBefore("<")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
         val superClasses = document.select("tr.inherit_header")
@@ -190,7 +194,11 @@ class DoxygenParserCpp : Callable<Unit> {
 
         val (memberDecls, idToAnchor) = parseMemberDecls(document)
         val classDescr: List<String> = document.selectFirst("div.textblock")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
+            ?.let {
+                it.selectFirst("div.compoundTemplParams")?.remove();
+                splitToParagraphs(it.html())
+            }
+            ?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
             ?: listOf()
 
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }
@@ -328,6 +336,9 @@ class DoxygenParserCpp : Callable<Unit> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
     }
 
+    private fun doxygenSpecificReplacement(docs: String): String {
+        return docs.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+    }
 
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.
@@ -340,6 +351,6 @@ class DoxygenParserCpp : Callable<Unit> {
     }
 
     private fun generateFilename(className: String): String {
-        return className.replace("[<> ,]".toRegex(), "_")
+        return className.substringBefore("<").replace(",", "_")
     }
 }

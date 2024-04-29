@@ -1,4 +1,4 @@
-[#_methods__schema__relationtype]
+[#_methods_schema_relationtype]
 === relationtype
 
 [#_relation_type_create]

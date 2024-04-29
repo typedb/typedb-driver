@@ -14,7 +14,7 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_IEntityType_IConcept__TypeDB_Driver_Api_IEntityType_AsEntityType___]
+[#_IEntityType_IConcept_TypeDB_Driver_Api_IEntityType_AsEntityType_]
 ==== AsEntityType
 
 [source,cs]
@@ -42,7 +42,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.AsEntityType();
 ----
 
-[#_Promise__IEntity___TypeDB_Driver_Api_IEntityType_Create___ITypeDBTransaction_transaction_]
+[#_Promise_IEntity_TypeDB_Driver_Api_IEntityType_Create_ITypeDBTransaction_transaction_]
 ==== Create
 
 [source,cs]
@@ -75,7 +75,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 entityType.Create(transaction).Resolve();
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IEntityType_IsEntityType___]
+[#_bool_IConcept_TypeDB_Driver_Api_IEntityType_IsEntityType_]
 ==== IsEntityType
 
 [source,cs]
@@ -103,7 +103,7 @@ Implements TypeDB.Driver.Api.IConcept.
 concept.IsEntityType();
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IEntityType_SetSupertype___ITypeDBTransaction_transaction__IEntityType_superEntityType_]
+[#_VoidPromise_TypeDB_Driver_Api_IEntityType_SetSupertype_ITypeDBTransaction_transaction_IEntityType_superEntityType_]
 ==== SetSupertype
 
 [source,cs]

@@ -1,4 +1,4 @@
-[#_methods__schema__attributetype]
+[#_methods_schema_attributetype]
 === attributetype
 
 [#_attribute_type_get]

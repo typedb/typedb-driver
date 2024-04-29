@@ -15,7 +15,7 @@ Instance of data of an entity type, representing a standalone object that exists
 Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_stdunique_ptr__EntityType___TypeDBEntitygetType___]
+[#_stdunique_ptr_EntityType_TypeDBEntitygetType_]
 ==== getType
 
 [source,cpp]

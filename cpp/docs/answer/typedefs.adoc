@@ -1,180 +1,183 @@
-[#_ConceptMapIterator]
-=== ConceptMapIterator
+[#_aliases]
+=== Aliases
 
-Alias for Iterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
+[#_ConceptMapIterator]
+==== ConceptMapIterator
+
+Alias for ``Iterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>``
 
 [#_ConceptMapIterable]
-=== ConceptMapIterable
+==== ConceptMapIterable
 
-Alias for Iterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
+Alias for ``Iterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>``
 
 [#_ConceptMapGroupIterable]
-=== ConceptMapGroupIterable
+==== ConceptMapGroupIterable
 
-Alias for Iterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
+Alias for ``Iterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>``
 
 [#_ConceptMapGroupIterator]
-=== ConceptMapGroupIterator
+==== ConceptMapGroupIterator
 
-Alias for Iterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
+Alias for ``Iterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>``
 
 [#_OwnerAttributePairIterator]
-=== OwnerAttributePairIterator
+==== OwnerAttributePairIterator
 
-Alias for Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
+Alias for ``Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>``
 
 [#_OwnerAttributePairIterable]
-=== OwnerAttributePairIterable
+==== OwnerAttributePairIterable
 
-Alias for Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
+Alias for ``Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>``
 
 [#_JSONMap]
-=== JSONMap
+==== JSONMap
 
-Alias for std::map<std::string, JSON>
+Alias for ``std::map<std::string, JSON>``
 
 [#_JSONArray]
-=== JSONArray
+==== JSONArray
 
-Alias for std::vector<JSON>
+Alias for ``std::vector<JSON>``
 
 [#_JSONBoolean]
-=== JSONBoolean
+==== JSONBoolean
 
-Alias for bool
+Alias for ``bool``
 
 [#_JSONLong]
-=== JSONLong
+==== JSONLong
 
-Alias for long
+Alias for ``long``
 
 [#_JSONDouble]
-=== JSONDouble
+==== JSONDouble
 
-Alias for double
+Alias for ``double``
 
 [#_JSONString]
-=== JSONString
+==== JSONString
 
-Alias for std::string
+Alias for ``std::string``
 
 [#_AggregateResult]
-=== AggregateResult
+==== AggregateResult
 
-Alias for std::optional<std::unique_ptr<Value>>
+Alias for ``std::optional<std::unique_ptr<Value>>``
 
 [#_AggregateFuture]
-=== AggregateFuture
+==== AggregateFuture
 
-Alias for Future<AggregateResult, _native::ConceptPromise>
+Alias for ``Future<AggregateResult, _native::ConceptPromise>``
 
 [#_ValueGroupIterable]
-=== ValueGroupIterable
+==== ValueGroupIterable
 
-Alias for Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
+Alias for ``Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>``
 
 [#_ValueGroupIterator]
-=== ValueGroupIterator
+==== ValueGroupIterator
 
-Alias for Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
+Alias for ``Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>``
 
 [#_VoidFuture]
-=== VoidFuture
+==== VoidFuture
 
-Alias for Future<void, _native::VoidPromise>
+Alias for ``Future<void, _native::VoidPromise>``
 
 [#_BoolFuture]
-=== BoolFuture
+==== BoolFuture
 
-Alias for Future<bool, _native::BoolPromise>
+Alias for ``Future<bool, _native::BoolPromise>``
 
 [#_StringFuture]
-=== StringFuture
+==== StringFuture
 
-Alias for Future<std::string, _native::StringPromise>
+Alias for ``Future<std::string, _native::StringPromise>``
 
 [#_OptionalStringFuture]
-=== OptionalStringFuture
+==== OptionalStringFuture
 
-Alias for Future<std::optional<std::string>, _native::StringPromise>
+Alias for ``Future<std::optional<std::string>, _native::StringPromise>``
 
 [#_StringIterable]
-=== StringIterable
+==== StringIterable
 
-Alias for Iterable<_native::StringIterator, char, std::string>
+Alias for ``Iterable<_native::StringIterator, char, std::string>``
 
 [#_StringIterator]
-=== StringIterator
+==== StringIterator
 
-Alias for Iterator<_native::StringIterator, char, std::string>
+Alias for ``Iterator<_native::StringIterator, char, std::string>``
 
 [#_DateTime]
-=== DateTime
+==== DateTime
 
-Alias for std::chrono::time_point< std::chrono::system_clock, std::chrono::milliseconds >
+Alias for std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>
 
 [#_DatabaseIterator]
-=== DatabaseIterator
+==== DatabaseIterator
 
-Alias for Iterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>
+Alias for ``Iterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>``
 
 [#_DatabaseIterable]
-=== DatabaseIterable
+==== DatabaseIterable
 
-Alias for Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>
+Alias for ``Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>``
 
 [#_ReplicaInfoIterable]
-=== ReplicaInfoIterable
+==== ReplicaInfoIterable
 
-Alias for Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
+Alias for ``Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>``
 
 [#_ReplicaInfoIterator]
-=== ReplicaInfoIterator
+==== ReplicaInfoIterator
 
-Alias for Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
+Alias for ``Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>``
 
 [#_ExplanationIterator]
-=== ExplanationIterator
+==== ExplanationIterator
 
-Alias for Iterator<_native::ExplanationIterator, _native::Explanation, Explanation>
+Alias for ``Iterator<_native::ExplanationIterator, _native::Explanation, Explanation>``
 
 [#_ExplanationIterable]
-=== ExplanationIterable
+==== ExplanationIterable
 
-Alias for Iterable<_native::ExplanationIterator, _native::Explanation, Explanation>
+Alias for ``Iterable<_native::ExplanationIterator, _native::Explanation, Explanation>``
 
 [#_RuleFuture]
-=== RuleFuture
+==== RuleFuture
 
-Alias for Future<Rule, _native::RulePromise>
+Alias for ``Future<Rule, _native::RulePromise>``
 
 [#_OptionalRuleFuture]
-=== OptionalRuleFuture
+==== OptionalRuleFuture
 
-Alias for Future<std::optional<Rule>, _native::RulePromise>
+Alias for ``Future<std::optional<Rule>, _native::RulePromise>``
 
 [#_RuleIterable]
-=== RuleIterable
+==== RuleIterable
 
-Alias for Iterable<_native::RuleIterator, _native::Rule, Rule>
+Alias for ``Iterable<_native::RuleIterator, _native::Rule, Rule>``
 
 [#_RuleIterator]
-=== RuleIterator
+==== RuleIterator
 
-Alias for Iterator<_native::RuleIterator, _native::Rule, Rule>
+Alias for ``Iterator<_native::RuleIterator, _native::Rule, Rule>``
 
 [#_JSONIterable]
-=== JSONIterable
+==== JSONIterable
 
-Alias for Iterable<_native::StringIterator, char, JSON>
+Alias for ``Iterable<_native::StringIterator, char, JSON>``
 
 [#_UserIterator]
-=== UserIterator
+==== UserIterator
 
-Alias for Iterator<_native::UserIterator, _native::User, User>
+Alias for ``Iterator<_native::UserIterator, _native::User, User>``
 
 [#_UserIterable]
-=== UserIterable
+==== UserIterable
 
-Alias for Iterable<_native::UserIterator, _native::User, User>
+Alias for ``Iterable<_native::UserIterator, _native::User, User>``
 

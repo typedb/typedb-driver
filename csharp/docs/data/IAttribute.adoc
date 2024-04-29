@@ -15,7 +15,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 Attributes can be uniquely addressed by their type and value.
 
 // tag::methods[]
-[#_IAttribute_IConcept__TypeDB_Driver_Api_IAttribute_AsAttribute___]
+[#_IAttribute_IConcept_TypeDB_Driver_Api_IAttribute_AsAttribute_]
 ==== AsAttribute
 
 [source,cs]
@@ -41,7 +41,7 @@ Implements TypeDB.Driver.Api.IConcept.
 attribute.AsAttribute();
 ----
 
-[#_IEnumerable__IThing___TypeDB_Driver_Api_IAttribute_GetOwners___ITypeDBTransaction_transaction_]
+[#_IEnumerable_IThing_TypeDB_Driver_Api_IAttribute_GetOwners_ITypeDBTransaction_transaction_]
 ==== GetOwners
 
 [source,cs]
@@ -74,7 +74,7 @@ a| `transaction` a| The current transaction a| `ITypeDBTransaction`
 attribute.GetOwners(transaction);
 ----
 
-[#_IEnumerable__IThing___TypeDB_Driver_Api_IAttribute_GetOwners___ITypeDBTransaction_transaction__IThingType_ownerType_]
+[#_IEnumerable_IThing_TypeDB_Driver_Api_IAttribute_GetOwners_ITypeDBTransaction_transaction_IThingType_ownerType_]
 ==== GetOwners
 
 [source,cs]
@@ -108,7 +108,7 @@ a| `ownerType` a| Filter results for only owners of the given type a| `IThingTyp
 attribute.GetOwners(transaction, ownerType);
 ----
 
-[#_bool_IConcept__TypeDB_Driver_Api_IAttribute_IsAttribute___]
+[#_bool_IConcept_TypeDB_Driver_Api_IAttribute_IsAttribute_]
 ==== IsAttribute
 
 [source,cs]

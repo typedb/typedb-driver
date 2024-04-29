@@ -1,4 +1,4 @@
-[#_methods__schema__transitivity]
+[#_methods_schema_transitivity]
 === transitivity
 
 [#_Struct_Transitivity]

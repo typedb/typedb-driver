@@ -1,0 +1,56 @@
+[#_Iterable]
+=== Iterable
+
+*Package*: `TypeDB`
+
+
+
+Result representing a stream of query results.
+
+Exposes ``<<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_,begin()>>`` to get an iterator over the results and ``<<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_end_,end()>>`` to check if the end has been reached.
+  Note: <<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_,begin()>> must be called for any server-side exceptions encountered while evaluating the query to be thrown
+
+
+[caption=""]
+.Examples
+[source,cpp]
+----
+for (auto& element : iterable) { ... }
+for (auto it = iterable.begin(); it != iterable.end(); ++it ) { ... } // Note: it++ is deleted.
+----
+
+// tag::methods[]
+[#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_]
+==== begin
+
+[source,cpp]
+----
+ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::begin()
+----
+
+
+
+Returns an iterator pointing to the first element.
+
+[caption=""]
+.Returns
+`ITERATOR`
+
+[#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_end_]
+==== end
+
+[source,cpp]
+----
+ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::end()
+----
+
+
+
+Returns an iterator equivalent to the result of advancing past the last element.
+
+[caption=""]
+.Returns
+`ITERATOR`
+
+// end::methods[]
+

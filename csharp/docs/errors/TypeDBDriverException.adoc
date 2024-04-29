@@ -8,7 +8,7 @@
 Exceptions raised by the driver.
 
 // tag::methods[]
-[#_bool_TypeDB_Driver_Common_TypeDBDriverException_Contains___string_subString_]
+[#_bool_TypeDB_Driver_Common_TypeDBDriverException_Contains_string_subString_]
 ==== Contains
 
 [source,cs]

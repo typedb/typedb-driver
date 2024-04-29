@@ -5,7 +5,7 @@
 
 
 
-Simple class holding the owner concept &amp; owned attribute identifying an explainable ownership.
+Simple class holding the owner concept & owned attribute identifying an explainable ownership.
 
 [caption=""]
 .Fields

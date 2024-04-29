@@ -16,7 +16,7 @@ a| `RootThingType(RootThingType)`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_enum_ThingType_label__]
+[#_enum_ThingType_label_]
 ==== label
 
 [source,rust]

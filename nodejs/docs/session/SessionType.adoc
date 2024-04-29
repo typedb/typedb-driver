@@ -16,7 +16,7 @@ a| `SCHEMA`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_SessionType_isData__]
+[#_SessionType_isData_]
 ==== isData
 
 [source,nodejs]
@@ -30,7 +30,7 @@ isData(): boolean
 .Returns
 `boolean`
 
-[#_SessionType_isSchema__]
+[#_SessionType_isSchema_]
 ==== isSchema
 
 [source,nodejs]

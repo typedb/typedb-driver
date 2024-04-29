@@ -6,7 +6,7 @@
 Contains an explainable object.
 
 // tag::methods[]
-[#_ConceptMap_Explainable_conjunction__]
+[#_ConceptMap_Explainable_conjunction_]
 ==== conjunction
 
 [source,java]
@@ -28,7 +28,7 @@ Retrieves the subquery of the original query that is actually being explained.
 explainable.conjunction();
 ----
 
-[#_ConceptMap_Explainable_id__]
+[#_ConceptMap_Explainable_id_]
 ==== id
 
 [source,java]

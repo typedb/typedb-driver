@@ -8,7 +8,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define___string_query_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define_string_query_]
 ==== Define
 
 [source,cs]
@@ -35,7 +35,7 @@ IQueryManager::Define(string, TypeDBOptions)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define___string_query__TypeDBOptions_options_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Define_string_query_TypeDBOptions_options_]
 ==== Define
 
 [source,cs]
@@ -69,7 +69,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Define(query, options).Resolve()
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete___string_query_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete_string_query_]
 ==== Delete
 
 [source,cs]
@@ -96,7 +96,7 @@ IQueryManager::Delete(string, TypeDBOptions)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete___string_query__TypeDBOptions_options_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Delete_string_query_TypeDBOptions_options_]
 ==== Delete
 
 [source,cs]
@@ -130,7 +130,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Delete(query, options).Resolve()
 ----
 
-[#_IEnumerable__IExplanation___TypeDB_Driver_Api_IQueryManager_Explain___IConceptMap_IExplainable_explainable_]
+[#_IEnumerable_IExplanation_TypeDB_Driver_Api_IQueryManager_Explain_IConceptMap_IExplainable_explainable_]
 ==== Explain
 
 [source,cs]
@@ -157,7 +157,7 @@ IQueryManager::Explain(IConceptMap.IExplainable, TypeDBOptions)
 .Returns
 `IEnumerable< IExplanation > IExplainable`
 
-[#_IEnumerable__IExplanation___TypeDB_Driver_Api_IQueryManager_Explain___IConceptMap_IExplainable_explainable__TypeDBOptions_options_]
+[#_IEnumerable_IExplanation_TypeDB_Driver_Api_IQueryManager_Explain_IConceptMap_IExplainable_explainable_TypeDBOptions_options_]
 ==== Explain
 
 [source,cs]
@@ -191,7 +191,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Explain(explainable, options)
 ----
 
-[#_IEnumerable__JObject___TypeDB_Driver_Api_IQueryManager_Fetch___string_query_]
+[#_IEnumerable_JObject_TypeDB_Driver_Api_IQueryManager_Fetch_string_query_]
 ==== Fetch
 
 [source,cs]
@@ -218,7 +218,7 @@ IQueryManager::Fetch(string, TypeDBOptions)
 .Returns
 `IEnumerable< JObject >`
 
-[#_IEnumerable__JObject___TypeDB_Driver_Api_IQueryManager_Fetch___string_query__TypeDBOptions_options_]
+[#_IEnumerable_JObject_TypeDB_Driver_Api_IQueryManager_Fetch_string_query_TypeDBOptions_options_]
 ==== Fetch
 
 [source,cs]
@@ -252,7 +252,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Fetch(query, options)
 ----
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Get___string_query_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Get_string_query_]
 ==== Get
 
 [source,cs]
@@ -279,7 +279,7 @@ IQueryManager::Get(string, TypeDBOptions)
 .Returns
 `IEnumerable< IConceptMap >`
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Get___string_query__TypeDBOptions_options_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Get_string_query_TypeDBOptions_options_]
 ==== Get
 
 [source,cs]
@@ -313,7 +313,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Get(query, options);
 ----
 
-[#_Promise__IValue___TypeDB_Driver_Api_IQueryManager_GetAggregate___string_query_]
+[#_Promise_IValue_TypeDB_Driver_Api_IQueryManager_GetAggregate_string_query_]
 ==== GetAggregate
 
 [source,cs]
@@ -340,7 +340,7 @@ IQueryManager::GetAggregate(string, TypeDBOptions)
 .Returns
 `Promise< IValue >`
 
-[#_Promise__IValue___TypeDB_Driver_Api_IQueryManager_GetAggregate___string_query__TypeDBOptions_options_]
+[#_Promise_IValue_TypeDB_Driver_Api_IQueryManager_GetAggregate_string_query_TypeDBOptions_options_]
 ==== GetAggregate
 
 [source,cs]
@@ -374,7 +374,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.GetAggregate(query, options).Resolve()
 ----
 
-[#_IEnumerable__IConceptMapGroup___TypeDB_Driver_Api_IQueryManager_GetGroup___string_query_]
+[#_IEnumerable_IConceptMapGroup_TypeDB_Driver_Api_IQueryManager_GetGroup_string_query_]
 ==== GetGroup
 
 [source,cs]
@@ -401,7 +401,7 @@ IQueryManager::GetGroup(string, TypeDBOptions)
 .Returns
 `IEnumerable< IConceptMapGroup >`
 
-[#_IEnumerable__IConceptMapGroup___TypeDB_Driver_Api_IQueryManager_GetGroup___string_query__TypeDBOptions_options_]
+[#_IEnumerable_IConceptMapGroup_TypeDB_Driver_Api_IQueryManager_GetGroup_string_query_TypeDBOptions_options_]
 ==== GetGroup
 
 [source,cs]
@@ -435,7 +435,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.GetGroup(query, options)
 ----
 
-[#_IEnumerable__IValueGroup___TypeDB_Driver_Api_IQueryManager_GetGroupAggregate___string_query_]
+[#_IEnumerable_IValueGroup_TypeDB_Driver_Api_IQueryManager_GetGroupAggregate_string_query_]
 ==== GetGroupAggregate
 
 [source,cs]
@@ -462,7 +462,7 @@ IQueryManager::GetGroupAggregate(string, TypeDBOptions)
 .Returns
 `IEnumerable< IValueGroup >`
 
-[#_IEnumerable__IValueGroup___TypeDB_Driver_Api_IQueryManager_GetGroupAggregate___string_query__TypeDBOptions_options_]
+[#_IEnumerable_IValueGroup_TypeDB_Driver_Api_IQueryManager_GetGroupAggregate_string_query_TypeDBOptions_options_]
 ==== GetGroupAggregate
 
 [source,cs]
@@ -496,7 +496,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.GetGroupAggregate(query, options)
 ----
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Insert___string_query_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Insert_string_query_]
 ==== Insert
 
 [source,cs]
@@ -523,7 +523,7 @@ IQueryManager::Insert(string, TypeDBOptions)
 .Returns
 `IEnumerable< IConceptMap >`
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Insert___string_query__TypeDBOptions_options_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Insert_string_query_TypeDBOptions_options_]
 ==== Insert
 
 [source,cs]
@@ -557,7 +557,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Insert(query, options)
 ----
 
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine___string_query_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine_string_query_]
 ==== Undefine
 
 [source,cs]
@@ -584,7 +584,7 @@ IQueryManager::Undefine(string, TypeDBOptions)
 .Returns
 `VoidPromise`
 
-[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine___string_query__TypeDBOptions_options_]
+[#_VoidPromise_TypeDB_Driver_Api_IQueryManager_Undefine_string_query_TypeDBOptions_options_]
 ==== Undefine
 
 [source,cs]
@@ -618,7 +618,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.Query.Undefine(query, options).Resolve()
 ----
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Update___string_query_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Update_string_query_]
 ==== Update
 
 [source,cs]
@@ -645,7 +645,7 @@ IQueryManager::Update(string, TypeDBOptions)
 .Returns
 `IEnumerable< IConceptMap >`
 
-[#_IEnumerable__IConceptMap___TypeDB_Driver_Api_IQueryManager_Update___string_query__TypeDBOptions_options_]
+[#_IEnumerable_IConceptMap_TypeDB_Driver_Api_IQueryManager_Update_string_query_TypeDBOptions_options_]
 ==== Update
 
 [source,cs]

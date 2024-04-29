@@ -10,7 +10,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 Attributes can be uniquely addressed by their type and value.
 
 // tag::methods[]
-[#_Attribute_as_attribute__]
+[#_Attribute_as_attribute_]
 ==== as_attribute
 
 [source,python]
@@ -31,7 +31,7 @@ Casts the concept to ``Attribute``.
 attribute.as_attribute()
 ----
 
-[#_Attribute_as_boolean__]
+[#_Attribute_as_boolean_]
 ==== as_boolean
 
 [source,python]
@@ -52,7 +52,7 @@ Returns a ``boolean`` value of the attribute. If the value has another type, rai
 attribute.as_boolean()
 ----
 
-[#_Attribute_as_datetime__]
+[#_Attribute_as_datetime_]
 ==== as_datetime
 
 [source,python]
@@ -73,7 +73,7 @@ Returns a ``datetime`` value of the attribute. If the value has another type, ra
 attribute.as_boolean()
 ----
 
-[#_Attribute_as_double__]
+[#_Attribute_as_double_]
 ==== as_double
 
 [source,python]
@@ -94,7 +94,7 @@ Returns a ``double`` value of the attribute. If the value has another type, rais
 attribute.as_boolean()
 ----
 
-[#_Attribute_as_long__]
+[#_Attribute_as_long_]
 ==== as_long
 
 [source,python]
@@ -115,7 +115,7 @@ Returns a ``long`` value of the attribute. If the value has another type, raises
 attribute.as_long()
 ----
 
-[#_Attribute_as_string__]
+[#_Attribute_as_string_]
 ==== as_string
 
 [source,python]
@@ -136,7 +136,7 @@ Returns a ``string`` value of the attribute. If the value has another type, rais
 attribute.as_boolean()
 ----
 
-[#_Attribute_get_owners__transaction_TypeDBTransaction__owner_type_ThingType__None]
+[#_Attribute_get_owners_transaction_TypeDBTransaction_owner_type_ThingType_None]
 ==== get_owners
 
 [source,python]
@@ -168,7 +168,7 @@ attribute.get_owners(transaction)
 attribute.get_owners(transaction, owner_type)
 ----
 
-[#_Attribute_get_type__]
+[#_Attribute_get_type_]
 ==== get_type
 
 [source,python]
@@ -189,7 +189,7 @@ Retrieves the type which this ``Attribute`` belongs to.
 attribute.get_type()
 ----
 
-[#_Attribute_get_value__]
+[#_Attribute_get_value_]
 ==== get_value
 
 [source,python]
@@ -210,7 +210,7 @@ Retrieves the value which the ``Attribute`` instance holds.
 attribute.get_value()
 ----
 
-[#_Attribute_get_value_type__]
+[#_Attribute_get_value_type_]
 ==== get_value_type
 
 [source,python]
@@ -231,7 +231,7 @@ Retrieves the type of the value which the ``Attribute`` instance holds.
 attribute.get_value_type()
 ----
 
-[#_Attribute_is_attribute__]
+[#_Attribute_is_attribute_]
 ==== is_attribute
 
 [source,python]
@@ -252,7 +252,7 @@ Checks if the concept is an ``Attribute``.
 attribute.is_attribute()
 ----
 
-[#_Attribute_is_boolean__]
+[#_Attribute_is_boolean_]
 ==== is_boolean
 
 [source,python]
@@ -273,7 +273,7 @@ Returns ``True`` if the attribute value is of type ``boolean``. Otherwise, retur
 attribute.is_boolean()
 ----
 
-[#_Attribute_is_datetime__]
+[#_Attribute_is_datetime_]
 ==== is_datetime
 
 [source,python]
@@ -294,7 +294,7 @@ Returns ``True`` if the attribute value is of type ``datetime``. Otherwise, retu
 attribute.is_datetime()
 ----
 
-[#_Attribute_is_double__]
+[#_Attribute_is_double_]
 ==== is_double
 
 [source,python]
@@ -315,7 +315,7 @@ Returns ``True`` if the attribute value is of type ``double``. Otherwise, return
 attribute.is_double()
 ----
 
-[#_Attribute_is_long__]
+[#_Attribute_is_long_]
 ==== is_long
 
 [source,python]
@@ -336,7 +336,7 @@ Returns ``True`` if the attribute value is of type ``long``. Otherwise, returns 
 attribute.is_long()
 ----
 
-[#_Attribute_is_string__]
+[#_Attribute_is_string_]
 ==== is_string
 
 [source,python]

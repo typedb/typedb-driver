@@ -19,7 +19,7 @@ a| `root` a| `boolean` a| Whether the type is a root type.
 // end::properties[]
 
 // tag::methods[]
-[#_Type_asAttribute__]
+[#_Type_asAttribute_]
 ==== asAttribute
 
 [source,nodejs]
@@ -40,7 +40,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_Type_asAttributeType__]
+[#_Type_asAttributeType_]
 ==== asAttributeType
 
 [source,nodejs]
@@ -61,7 +61,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_Type_asEntity__]
+[#_Type_asEntity_]
 ==== asEntity
 
 [source,nodejs]
@@ -82,7 +82,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_Type_asEntityType__]
+[#_Type_asEntityType_]
 ==== asEntityType
 
 [source,nodejs]
@@ -103,7 +103,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_Type_asRelation__]
+[#_Type_asRelation_]
 ==== asRelation
 
 [source,nodejs]
@@ -124,7 +124,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_Type_asRelationType__]
+[#_Type_asRelationType_]
 ==== asRelationType
 
 [source,nodejs]
@@ -145,7 +145,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_Type_asRoleType__]
+[#_Type_asRoleType_]
 ==== asRoleType
 
 [source,nodejs]
@@ -166,7 +166,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_Type_asThing__]
+[#_Type_asThing_]
 ==== asThing
 
 [source,nodejs]
@@ -187,7 +187,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_Type_asThingType__]
+[#_Type_asThingType_]
 ==== asThingType
 
 [source,nodejs]
@@ -208,7 +208,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_Type_asType__]
+[#_Type_asType_]
 ==== asType
 
 [source,nodejs]
@@ -229,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_Type_asValue__]
+[#_Type_asValue_]
 ==== asValue
 
 [source,nodejs]
@@ -250,7 +250,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_Type_delete__transaction_TypeDBTransaction]
+[#_Type_delete_transaction_TypeDBTransaction]
 ==== delete
 
 [source,nodejs]
@@ -280,7 +280,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.delete(transaction)
 ----
 
-[#_Type_equals__concept_Concept]
+[#_Type_equals_concept_Concept]
 ==== equals
 
 [source,nodejs]
@@ -303,7 +303,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_Type_getSubtypes__transaction_TypeDBTransaction]
+[#_Type_getSubtypes_transaction_TypeDBTransaction]
 ==== getSubtypes
 
 [source,nodejs]
@@ -333,7 +333,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSubtypes(transaction) type.getSubtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_Type_getSubtypes__transaction_TypeDBTransaction__transitivity_Transitivity]
+[#_Type_getSubtypes_transaction_TypeDBTransaction_transitivity_Transitivity]
 ==== getSubtypes
 
 [source,nodejs]
@@ -364,7 +364,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 type.getSubtypes(transaction) type.getSubtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_Type_getSupertype__transaction_TypeDBTransaction]
+[#_Type_getSupertype_transaction_TypeDBTransaction]
 ==== getSupertype
 
 [source,nodejs]
@@ -394,7 +394,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertype(transaction)
 ----
 
-[#_Type_getSupertypes__transaction_TypeDBTransaction]
+[#_Type_getSupertypes_transaction_TypeDBTransaction]
 ==== getSupertypes
 
 [source,nodejs]
@@ -424,7 +424,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertypes(transaction)
 ----
 
-[#_Type_isAttribute__]
+[#_Type_isAttribute_]
 ==== isAttribute
 
 [source,nodejs]
@@ -445,7 +445,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_Type_isAttributeType__]
+[#_Type_isAttributeType_]
 ==== isAttributeType
 
 [source,nodejs]
@@ -466,7 +466,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_Type_isDeleted__transaction_TypeDBTransaction]
+[#_Type_isDeleted_transaction_TypeDBTransaction]
 ==== isDeleted
 
 [source,nodejs]
@@ -489,7 +489,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 .Returns
 `Promise<boolean>`
 
-[#_Type_isEntity__]
+[#_Type_isEntity_]
 ==== isEntity
 
 [source,nodejs]
@@ -510,7 +510,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_Type_isEntityType__]
+[#_Type_isEntityType_]
 ==== isEntityType
 
 [source,nodejs]
@@ -531,7 +531,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_Type_isRelation__]
+[#_Type_isRelation_]
 ==== isRelation
 
 [source,nodejs]
@@ -552,7 +552,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_Type_isRelationType__]
+[#_Type_isRelationType_]
 ==== isRelationType
 
 [source,nodejs]
@@ -573,7 +573,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_Type_isRoleType__]
+[#_Type_isRoleType_]
 ==== isRoleType
 
 [source,nodejs]
@@ -594,7 +594,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_Type_isThing__]
+[#_Type_isThing_]
 ==== isThing
 
 [source,nodejs]
@@ -615,7 +615,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_Type_isThingType__]
+[#_Type_isThingType_]
 ==== isThingType
 
 [source,nodejs]
@@ -636,7 +636,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_Type_isType__]
+[#_Type_isType_]
 ==== isType
 
 [source,nodejs]
@@ -657,7 +657,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_Type_isValue__]
+[#_Type_isValue_]
 ==== isValue
 
 [source,nodejs]
@@ -678,7 +678,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_Type_setLabel__transaction_TypeDBTransaction__label_string]
+[#_Type_setLabel_transaction_TypeDBTransaction_label_string]
 ==== setLabel
 
 [source,nodejs]

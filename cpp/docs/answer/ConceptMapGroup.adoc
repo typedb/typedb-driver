@@ -8,7 +8,7 @@
 Contains an element of the group query result.
 
 // tag::methods[]
-[#_ConceptMapIterable_TypeDBConceptMapGroupconceptMaps___]
+[#_ConceptMapIterable_TypeDBConceptMapGroupconceptMaps_]
 ==== conceptMaps
 
 [source,cpp]
@@ -32,7 +32,7 @@ Retrieves the ``ConceptMap``s of the group.
 conceptMapGroup.conceptMaps();
 ----
 
-[#_stdunique_ptr__Concept___TypeDBConceptMapGroupowner___]
+[#_stdunique_ptr_Concept_TypeDBConceptMapGroupowner_]
 ==== owner
 
 [source,cpp]
@@ -56,7 +56,7 @@ Retrieves the concept that is the group owner.
 conceptMapGroup.owner();
 ----
 
-[#_stdstring_TypeDBConceptMapGrouptoString___]
+[#_stdstring_TypeDBConceptMapGrouptoString_]
 ==== toString
 
 [source,cpp]

@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver.Api`
 
 // tag::methods[]
-[#_void_TypeDB_Driver_Api_ITypeDBSession_Close___]
+[#_void_TypeDB_Driver_Api_ITypeDBSession_Close_]
 ==== Close
 
 [source,cs]
@@ -52,7 +52,7 @@ Returns the name of the database of the session.
 session.DatabaseName;
 ----
 
-[#_bool_TypeDB_Driver_Api_ITypeDBSession_IsOpen___]
+[#_bool_TypeDB_Driver_Api_ITypeDBSession_IsOpen_]
 ==== IsOpen
 
 [source,cs]
@@ -76,7 +76,7 @@ Checks whether this session is open.
 session.IsOpen();
 ----
 
-[#_void_TypeDB_Driver_Api_ITypeDBSession_OnClose___Action_function_]
+[#_void_TypeDB_Driver_Api_ITypeDBSession_OnClose_Action_function_]
 ==== OnClose
 
 [source,cs]
@@ -109,7 +109,7 @@ a| `function` a| The callback function. a| `Action`
 session.OnClose(function);
 ----
 
-[#_void_TypeDB_Driver_Api_ITypeDBSession_OnReopen___Action_function_]
+[#_void_TypeDB_Driver_Api_ITypeDBSession_OnReopen_Action_function_]
 ==== OnReopen
 
 [source,cs]
@@ -166,7 +166,7 @@ Gets the options for the session.
 session.Options;
 ----
 
-[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type_]
+[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction_TransactionType_type_]
 ==== Transaction
 
 [source,cs]
@@ -193,7 +193,7 @@ ITypeDBSession::Transaction(TransactionType, TypeDBOptions)
 .Returns
 `ITypeDBTransaction`
 
-[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction___TransactionType_type__TypeDBOptions_options_]
+[#_ITypeDBTransaction_TypeDB_Driver_Api_ITypeDBSession_Transaction_TransactionType_type_TypeDBOptions_options_]
 ==== Transaction
 
 [source,cs]

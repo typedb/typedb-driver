@@ -14,7 +14,7 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_ConceptPtrFuture__Entity___TypeDBEntityTypecreate___Transaction__transaction_]
+[#_ConceptPtrFuture_Entity_TypeDBEntityTypecreate_Transaction_transaction_]
 ==== create
 
 [source,cpp]
@@ -47,7 +47,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 entityType.create(transaction).get();
 ----
 
-[#_ConceptIterable__Entity___TypeDBEntityTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Entity_TypeDBEntityTypegetInstances_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getInstances
 
 [source,cpp]
@@ -81,7 +81,7 @@ a| `transitivity` a| ``Transitivity::EXPLICIT`` for direct instances only, ``Tra
 entityType.getInstances(transaction, transitivity);
 ----
 
-[#_ConceptIterable__EntityType___TypeDBEntityTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_EntityType_TypeDBEntityTypegetSubtypes_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
@@ -115,7 +115,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 entityType.getSubtypes(transaction, transitivity);
 ----
 
-[#_VoidFuture_TypeDBEntityTypesetSupertype___Transaction__transaction__EntityType__ptr__superEntityType_]
+[#_VoidFuture_TypeDBEntityTypesetSupertype_Transaction_transaction_EntityType_ptr_superEntityType_]
 ==== setSupertype
 
 [source,cpp]

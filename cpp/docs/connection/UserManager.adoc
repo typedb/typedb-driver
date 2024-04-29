@@ -8,7 +8,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_UserIterable_TypeDBUserManagerall_____const]
+[#_UserIterable_TypeDBUserManagerall_const]
 ==== all
 
 [source,cpp]
@@ -32,7 +32,7 @@ Retrieves all users which exist on the TypeDB server.
 driver.users.all();
 ----
 
-[#_bool_TypeDBUserManagercontains___const_stdstring__username___const]
+[#_bool_TypeDBUserManagercontains_const_stdstring_username_const]
 ==== contains
 
 [source,cpp]
@@ -65,7 +65,7 @@ a| `username` a| The user name to be checked a| `const std::string&`
 driver.users.contains(username);
 ----
 
-[#_void_TypeDBUserManagercreate___const_stdstring__username__const_stdstring__password___const]
+[#_void_TypeDBUserManagercreate_const_stdstring_username_const_stdstring_password_const]
 ==== create
 
 [source,cpp]
@@ -75,7 +75,7 @@ void TypeDB::UserManager::create(const std::string& username, const std::string&
 
 
 
-Creates a user with the given name &amp; password.
+Creates a user with the given name & password.
 
 
 [caption=""]
@@ -99,7 +99,7 @@ a| `password` a| The password of the user to be created a| `const std::string&`
 driver.users.create(username, password);
 ----
 
-[#_void_TypeDBUserManagerdeleteUser___const_stdstring__username___const]
+[#_void_TypeDBUserManagerdeleteUser_const_stdstring_username_const]
 ==== deleteUser
 
 [source,cpp]
@@ -132,7 +132,7 @@ a| `username` a| The name of the user to be deleted a| `const std::string&`
 driver.users.deleteUser(username);
 ----
 
-[#_stdunique_ptr__User___TypeDBUserManagerget___const_stdstring__username___const]
+[#_stdunique_ptr_User_TypeDBUserManagerget_const_stdstring_username_const]
 ==== get
 
 [source,cpp]
@@ -165,7 +165,7 @@ a| `username` a| The name of the user to retrieve a| `const std::string&`
 driver.users.get(username);
 ----
 
-[#_void_TypeDBUserManagerpasswordSet___const_stdstring__username__const_stdstring__password___const]
+[#_void_TypeDBUserManagerpasswordSet_const_stdstring_username_const_stdstring_password_const]
 ==== passwordSet
 
 [source,cpp]

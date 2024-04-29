@@ -4,7 +4,7 @@
 *Package*: `TypeDB.Driver.Api`
 
 // tag::methods[]
-[#_void_TypeDB_Driver_Api_IDatabase_Delete___]
+[#_void_TypeDB_Driver_Api_IDatabase_Delete_]
 ==== Delete
 
 [source,cs]
@@ -28,7 +28,7 @@ Deletes this database.
 database.Delete();
 ----
 
-[#_ISet__IReplica___TypeDB_Driver_Api_IDatabase_GetReplicas___]
+[#_ISet_IReplica_TypeDB_Driver_Api_IDatabase_GetReplicas_]
 ==== GetReplicas
 
 [source,cs]
@@ -52,7 +52,7 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 database.GetReplicas();
 ----
 
-[#_string_TypeDB_Driver_Api_IDatabase_GetRuleSchema___]
+[#_string_TypeDB_Driver_Api_IDatabase_GetRuleSchema_]
 ==== GetRuleSchema
 
 [source,cs]
@@ -76,7 +76,7 @@ The rules in the schema as a valid TypeQL define query string.
 database.GetRuleSchema();
 ----
 
-[#_string_TypeDB_Driver_Api_IDatabase_GetSchema___]
+[#_string_TypeDB_Driver_Api_IDatabase_GetSchema_]
 ==== GetSchema
 
 [source,cs]
@@ -100,7 +100,7 @@ A full schema text as a valid TypeQL define query string.
 database.GetSchema();
 ----
 
-[#_string_TypeDB_Driver_Api_IDatabase_GetTypeSchema___]
+[#_string_TypeDB_Driver_Api_IDatabase_GetTypeSchema_]
 ==== GetTypeSchema
 
 [source,cs]
