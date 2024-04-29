@@ -213,7 +213,7 @@ doxygen_cpp_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
-    output_dir = 'cpp/docs',
+    output_dir = 'docs/modules/ROOT/partials/cpp',
     tags = ["manual"]
 )
 
