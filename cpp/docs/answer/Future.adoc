@@ -10,7 +10,7 @@ A structure emulating std::future, used as result of an asynchronous call to the
 Note that a future must be evaluated for any server-side exceptions to be raised.
 
 // tag::methods[]
-[#_RETURN_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__get___]
+[#_RETURN_TypeDBFuture_RETURN_NATIVE_PROMISE_HELPER_get_]
 ==== get
 
 [source,cpp]
@@ -26,7 +26,7 @@ Waits for the call to complete and returns the result.
 .Returns
 `RETURN`
 
-[#_void_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__wait___]
+[#_void_TypeDBFuture_RETURN_NATIVE_PROMISE_HELPER_wait_]
 ==== wait
 
 [source,cpp]

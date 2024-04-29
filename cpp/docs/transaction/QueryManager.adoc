@@ -8,7 +8,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_VoidFuture_TypeDBQueryManagerdefine___const_stdstring__query__const_Options__options__Options_____const]
+[#_VoidFuture_TypeDBQueryManagerdefine_const_stdstring_query_const_Options_options_Options_const]
 ==== define
 
 [source,cpp]
@@ -42,7 +42,7 @@ a| `options` a| Specify query options a|
 transaction.query.define(query, options).get()
 ----
 
-[#_ExplanationIterable_TypeDBQueryManagerexplain___const_Explainable__explainable__const_Options___Options_____const]
+[#_ExplanationIterable_TypeDBQueryManagerexplain_const_Explainable_explainable_const_Options_Options_const]
 ==== explain
 
 [source,cpp]
@@ -76,7 +76,7 @@ a| `options` a| Specify query options a|
 transaction.query.explain(explainable, options)
 ----
 
-[#_JSONIterable_TypeDBQueryManagerfetch___const_stdstring__query__const_Options__options__Options_____const]
+[#_JSONIterable_TypeDBQueryManagerfetch_const_stdstring_query_const_Options_options_Options_const]
 ==== fetch
 
 [source,cpp]
@@ -110,7 +110,7 @@ a| `options` a| Specify query options a|
 transaction.query.fetch(query, options)
 ----
 
-[#_ConceptMapIterable_TypeDBQueryManagerget___const_stdstring__query__const_Options__options__Options_____const]
+[#_ConceptMapIterable_TypeDBQueryManagerget_const_stdstring_query_const_Options_options_Options_const]
 ==== get
 
 [source,cpp]
@@ -144,7 +144,7 @@ a| `options` a| Specify query options a|
 transaction.query.get(query, options)
 ----
 
-[#_AggregateFuture_TypeDBQueryManagergetAggregate___const_stdstring__query__const_Options___Options_____const]
+[#_AggregateFuture_TypeDBQueryManagergetAggregate_const_stdstring_query_const_Options_Options_const]
 ==== getAggregate
 
 [source,cpp]
@@ -178,7 +178,7 @@ a| `options` a| Specify query options a|
 transaction.query.getAggregate(query, options).get()
 ----
 
-[#_ConceptMapGroupIterable_TypeDBQueryManagergetGroup___const_stdstring__query__const_Options___Options_____const]
+[#_ConceptMapGroupIterable_TypeDBQueryManagergetGroup_const_stdstring_query_const_Options_Options_const]
 ==== getGroup
 
 [source,cpp]
@@ -212,7 +212,7 @@ a| `options` a| Specify query options a|
 transaction.query.getGroup(query, options)
 ----
 
-[#_ValueGroupIterable_TypeDBQueryManagergetGroupAggregate___const_stdstring__query__const_Options___Options_____const]
+[#_ValueGroupIterable_TypeDBQueryManagergetGroupAggregate_const_stdstring_query_const_Options_Options_const]
 ==== getGroupAggregate
 
 [source,cpp]
@@ -246,7 +246,7 @@ a| `options` a| Specify query options a|
 transaction.query.getGroupAggregate(query, options)
 ----
 
-[#_ConceptMapIterable_TypeDBQueryManagerinsert___const_stdstring__query__const_Options__options__Options_____const]
+[#_ConceptMapIterable_TypeDBQueryManagerinsert_const_stdstring_query_const_Options_options_Options_const]
 ==== insert
 
 [source,cpp]
@@ -280,7 +280,7 @@ a| `options` a| Specify query options a|
 transaction.query.insert(query, options)
 ----
 
-[#_VoidFuture_TypeDBQueryManagermatchDelete___const_stdstring__query__const_Options__options__Options_____const]
+[#_VoidFuture_TypeDBQueryManagermatchDelete_const_stdstring_query_const_Options_options_Options_const]
 ==== matchDelete
 
 [source,cpp]
@@ -314,7 +314,7 @@ a| `options` a| Specify query options a|
 transaction.query.matchDelete(query, options).get()
 ----
 
-[#_VoidFuture_TypeDBQueryManagerundefine___const_stdstring__query__const_Options__options__Options_____const]
+[#_VoidFuture_TypeDBQueryManagerundefine_const_stdstring_query_const_Options_options_Options_const]
 ==== undefine
 
 [source,cpp]
@@ -348,7 +348,7 @@ a| `options` a| Specify query options a|
 transaction.query.undefine(query, options).get()
 ----
 
-[#_ConceptMapIterable_TypeDBQueryManagerupdate___const_stdstring__query__const_Options___Options_____const]
+[#_ConceptMapIterable_TypeDBQueryManagerupdate_const_stdstring_query_const_Options_Options_const]
 ==== update
 
 [source,cpp]

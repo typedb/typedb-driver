@@ -8,7 +8,7 @@
 A session with a TypeDB database.
 
 // tag::methods[]
-[#_void_TypeDBSessionclose___]
+[#_void_TypeDBSessionclose_]
 ==== close
 
 [source,cpp]
@@ -32,7 +32,7 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close();
 ----
 
-[#_stdstring_TypeDBSessiondatabaseName_____const]
+[#_stdstring_TypeDBSessiondatabaseName_const]
 ==== databaseName
 
 [source,cpp]
@@ -56,7 +56,7 @@ Returns the name of the database of the session.
 session.databaseName();
 ----
 
-[#_bool_TypeDBSessionisOpen_____const]
+[#_bool_TypeDBSessionisOpen_const]
 ==== isOpen
 
 [source,cpp]
@@ -80,7 +80,7 @@ Checks whether this session is open.
 session.isOpen();
 ----
 
-[#_void_TypeDBSessiononClose___stdfunction__void____callback_]
+[#_void_TypeDBSessiononClose_stdfunction_void_callback_]
 ==== onClose
 
 [source,cpp]
@@ -113,7 +113,7 @@ a| `function` a| The callback function. a|
 session.onClose(function)
 ----
 
-[#_void_TypeDBSessiononReopen___stdfunction__void____callback_]
+[#_void_TypeDBSessiononReopen_stdfunction_void_callback_]
 ==== onReopen
 
 [source,cpp]
@@ -146,7 +146,7 @@ a| `function` a| The callback function. a|
 session.onReopen(function)
 ----
 
-[#_Transaction_TypeDBSessiontransaction___TransactionType_type__const_Options__options__Options_____const]
+[#_Transaction_TypeDBSessiontransaction_TransactionType_type_const_Options_options_Options_const]
 ==== transaction
 
 [source,cpp]
@@ -180,7 +180,7 @@ a| `options` a| Options for the session a|
 session.transaction(transactionType, options);
 ----
 
-[#_SessionType_TypeDBSessiontype_____const]
+[#_SessionType_TypeDBSessiontype_const]
 ==== type
 
 [source,cpp]

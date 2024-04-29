@@ -12,7 +12,7 @@
 A primitive value. Holds the value of an attribute, or the result of an expression in a query.
 
 // tag::methods[]
-[#_bool_TypeDBValueasBoolean___]
+[#_bool_TypeDBValueasBoolean_]
 ==== asBoolean
 
 [source,cpp]
@@ -36,7 +36,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 value.asBoolean();
 ----
 
-[#_DateTime_TypeDBValueasDateTime___]
+[#_DateTime_TypeDBValueasDateTime_]
 ==== asDateTime
 
 [source,cpp]
@@ -60,7 +60,7 @@ Returns a ``DateTime`` value of this value concept. If the value has another typ
 value.asDatetime();
 ----
 
-[#_double_TypeDBValueasDouble___]
+[#_double_TypeDBValueasDouble_]
 ==== asDouble
 
 [source,cpp]
@@ -84,7 +84,7 @@ Returns a ``double`` value of this value concept. If the value has another type,
 value.asDouble();
 ----
 
-[#_int64_t_TypeDBValueasLong___]
+[#_int64_t_TypeDBValueasLong_]
 ==== asLong
 
 [source,cpp]
@@ -108,7 +108,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 value.asLong();
 ----
 
-[#_stdstring_TypeDBValueasString___]
+[#_stdstring_TypeDBValueasString_]
 ==== asString
 
 [source,cpp]
@@ -132,7 +132,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.asString();
 ----
 
-[#_static_stdstring_TypeDBValueformatDateTime___DateTime_t_]
+[#_static_stdstring_TypeDBValueformatDateTime_DateTime_t_]
 ==== formatDateTime
 
 [source,cpp]
@@ -156,7 +156,7 @@ Returns a string in the TypeQL DateTime format corresponding to the specified Da
 Value::formatDateTime(datetime);
 ----
 
-[#_bool_TypeDBValueisBoolean___]
+[#_bool_TypeDBValueisBoolean_]
 ==== isBoolean
 
 [source,cpp]
@@ -180,7 +180,7 @@ Returns ``true`` if the value which this value concept holds is of type ``boolea
 value.isBoolean()
 ----
 
-[#_bool_TypeDBValueisDateTime___]
+[#_bool_TypeDBValueisDateTime_]
 ==== isDateTime
 
 [source,cpp]
@@ -204,7 +204,7 @@ Returns ``True`` if the value which this value concept holds is of type ``DateTi
 value.isDatetime();
 ----
 
-[#_bool_TypeDBValueisDouble___]
+[#_bool_TypeDBValueisDouble_]
 ==== isDouble
 
 [source,cpp]
@@ -228,7 +228,7 @@ Returns ``true`` if the value which this value concept holds is of type ``double
 value.isDouble();
 ----
 
-[#_bool_TypeDBValueisLong___]
+[#_bool_TypeDBValueisLong_]
 ==== isLong
 
 [source,cpp]
@@ -252,7 +252,7 @@ Returns ``true`` if the value which this value concept holds is of type ``long``
 value.isLong()
 ----
 
-[#_bool_TypeDBValueisString___]
+[#_bool_TypeDBValueisString_]
 ==== isString
 
 [source,cpp]
@@ -276,7 +276,7 @@ Returns ``true`` if the value which this value concept holds is of type ``string
 value.isString();
 ----
 
-[#_static_stdunique_ptr__Value___TypeDBValueof___bool_value_]
+[#_static_stdunique_ptr_Value_TypeDBValueof_bool_value_]
 ==== of
 
 [source,cpp]
@@ -300,7 +300,7 @@ Creates a new Value object of the specified boolean value.
 Value::of(value);
 ----
 
-[#_static_stdunique_ptr__Value___TypeDBValueof___int64_t_value_]
+[#_static_stdunique_ptr_Value_TypeDBValueof_int64_t_value_]
 ==== of
 
 [source,cpp]
@@ -324,7 +324,7 @@ Creates a new Value object of the specified long value.
 Value::of(value);
 ----
 
-[#_static_stdunique_ptr__Value___TypeDBValueof___double_value_]
+[#_static_stdunique_ptr_Value_TypeDBValueof_double_value_]
 ==== of
 
 [source,cpp]
@@ -348,7 +348,7 @@ Creates a new Value object of the specified double value.
 Value::of(value);
 ----
 
-[#_static_stdunique_ptr__Value___TypeDBValueof___const_stdstring__value_]
+[#_static_stdunique_ptr_Value_TypeDBValueof_const_stdstring_value_]
 ==== of
 
 [source,cpp]
@@ -372,7 +372,7 @@ Creates a new Value object of the specified string value.
 Value::of(value);
 ----
 
-[#_static_stdunique_ptr__Value___TypeDBValueof___DateTime_value_]
+[#_static_stdunique_ptr_Value_TypeDBValueof_DateTime_value_]
 ==== of
 
 [source,cpp]
@@ -396,7 +396,7 @@ Creates a new Value object of the specified DateTime value.
 Value::of(value);
 ----
 
-[#_static_DateTime_TypeDBValueparseDateTime___const_stdstring__s_]
+[#_static_DateTime_TypeDBValueparseDateTime_const_stdstring_s_]
 ==== parseDateTime
 
 [source,cpp]
@@ -420,7 +420,7 @@ Parses a DateTime from a string in the TypeQL DateTime format (yyyy-mm-dd'T'HH:M
 Value::parseDateTime(str);
 ----
 
-[#_ValueType_TypeDBValuevalueType___]
+[#_ValueType_TypeDBValuevalueType_]
 ==== valueType
 
 [source,cpp]

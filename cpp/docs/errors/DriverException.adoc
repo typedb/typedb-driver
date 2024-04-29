@@ -8,7 +8,7 @@
 Exceptions raised by the driver.
 
 // tag::methods[]
-[#_const_stdstring_view_TypeDBDriverExceptioncode___]
+[#_const_stdstring_view_TypeDBDriverExceptioncode_]
 ==== code
 
 [source,cpp]
@@ -35,7 +35,7 @@ catch (TypeDB::DriverException& e){
 }
 ----
 
-[#_const_stdstring_view_TypeDBDriverExceptionmessage___]
+[#_const_stdstring_view_TypeDBDriverExceptionmessage_]
 ==== message
 
 [source,cpp]

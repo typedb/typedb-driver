@@ -8,7 +8,7 @@
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_stdunique_ptr__Concept___TypeDBValueGroupowner___]
+[#_stdunique_ptr_Concept_TypeDBValueGroupowner_]
 ==== owner
 
 [source,cpp]
@@ -32,7 +32,7 @@ Retrieves the concept that is the group owner.
 conceptMapGroup.owner()
 ----
 
-[#_stdstring_TypeDBValueGrouptoString___]
+[#_stdstring_TypeDBValueGrouptoString_]
 ==== toString
 
 [source,cpp]
@@ -48,7 +48,7 @@ A string representation of this ConceptMap.
 .Returns
 `std::string`
 
-[#_AggregateResult_TypeDBValueGroupvalue___]
+[#_AggregateResult_TypeDBValueGroupvalue_]
 ==== value
 
 [source,cpp]

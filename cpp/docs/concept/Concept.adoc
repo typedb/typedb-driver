@@ -8,7 +8,7 @@
 The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
 
 // tag::methods[]
-[#_Attribute__ptr__TypeDBConceptasAttribute___]
+[#_Attribute_ptr_TypeDBConceptasAttribute_]
 ==== asAttribute
 
 [source,cpp]
@@ -32,7 +32,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_AttributeType__ptr__TypeDBConceptasAttributeType___]
+[#_AttributeType_ptr_TypeDBConceptasAttributeType_]
 ==== asAttributeType
 
 [source,cpp]
@@ -56,7 +56,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Entity__ptr__TypeDBConceptasEntity___]
+[#_Entity_ptr_TypeDBConceptasEntity_]
 ==== asEntity
 
 [source,cpp]
@@ -80,7 +80,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_EntityType__ptr__TypeDBConceptasEntityType___]
+[#_EntityType_ptr_TypeDBConceptasEntityType_]
 ==== asEntityType
 
 [source,cpp]
@@ -104,7 +104,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Relation__ptr__TypeDBConceptasRelation___]
+[#_Relation_ptr_TypeDBConceptasRelation_]
 ==== asRelation
 
 [source,cpp]
@@ -128,7 +128,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_RelationType__ptr__TypeDBConceptasRelationType___]
+[#_RelationType_ptr_TypeDBConceptasRelationType_]
 ==== asRelationType
 
 [source,cpp]
@@ -152,7 +152,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_RoleType__ptr__TypeDBConceptasRoleType___]
+[#_RoleType_ptr_TypeDBConceptasRoleType_]
 ==== asRoleType
 
 [source,cpp]
@@ -176,7 +176,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Thing__ptr__TypeDBConceptasThing___]
+[#_Thing_ptr_TypeDBConceptasThing_]
 ==== asThing
 
 [source,cpp]
@@ -200,7 +200,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_ThingType__ptr__TypeDBConceptasThingType___]
+[#_ThingType_ptr_TypeDBConceptasThingType_]
 ==== asThingType
 
 [source,cpp]
@@ -224,7 +224,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Value__ptr__TypeDBConceptasValue___]
+[#_Value_ptr_TypeDBConceptasValue_]
 ==== asValue
 
 [source,cpp]
@@ -248,7 +248,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_static_bool_TypeDBConceptequals___Concept__ptr__first__Concept__ptr__second_]
+[#_static_bool_TypeDBConceptequals_Concept_ptr_first_Concept_ptr_second_]
 ==== equals
 
 [source,cpp]
@@ -264,7 +264,7 @@ Checks equality of two concepts.
 .Returns
 `static bool`
 
-[#_ConceptType_TypeDBConceptgetConceptType___]
+[#_ConceptType_TypeDBConceptgetConceptType_]
 ==== getConceptType
 
 [source,cpp]
@@ -288,7 +288,7 @@ Returns the ConceptType of this concept.
 switch(concept.getConceptType()) { ... }
 ----
 
-[#_bool_TypeDBConceptisAttribute___]
+[#_bool_TypeDBConceptisAttribute_]
 ==== isAttribute
 
 [source,cpp]
@@ -312,7 +312,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_bool_TypeDBConceptisAttributeType___]
+[#_bool_TypeDBConceptisAttributeType_]
 ==== isAttributeType
 
 [source,cpp]
@@ -336,7 +336,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_bool_TypeDBConceptisEntity___]
+[#_bool_TypeDBConceptisEntity_]
 ==== isEntity
 
 [source,cpp]
@@ -360,7 +360,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_bool_TypeDBConceptisEntityType___]
+[#_bool_TypeDBConceptisEntityType_]
 ==== isEntityType
 
 [source,cpp]
@@ -384,7 +384,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_bool_TypeDBConceptisRelation___]
+[#_bool_TypeDBConceptisRelation_]
 ==== isRelation
 
 [source,cpp]
@@ -408,7 +408,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_bool_TypeDBConceptisRelationType___]
+[#_bool_TypeDBConceptisRelationType_]
 ==== isRelationType
 
 [source,cpp]
@@ -432,7 +432,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_bool_TypeDBConceptisRoleType___]
+[#_bool_TypeDBConceptisRoleType_]
 ==== isRoleType
 
 [source,cpp]
@@ -456,7 +456,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_bool_TypeDBConceptisThing___]
+[#_bool_TypeDBConceptisThing_]
 ==== isThing
 
 [source,cpp]
@@ -480,7 +480,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_bool_TypeDBConceptisThingType___]
+[#_bool_TypeDBConceptisThingType_]
 ==== isThingType
 
 [source,cpp]
@@ -504,7 +504,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_bool_TypeDBConceptisValue___]
+[#_bool_TypeDBConceptisValue_]
 ==== isValue
 
 [source,cpp]
@@ -528,7 +528,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_bool_TypeDBConceptoperator___const_Concept__other_]
+[#_bool_TypeDBConceptoperator_const_Concept_other_]
 ==== operator==
 
 [source,cpp]
@@ -544,7 +544,7 @@ Checks equality with the ``other`` concept.
 .Returns
 `bool`
 
-[#_stdstring_TypeDBConcepttoString___]
+[#_stdstring_TypeDBConcepttoString_]
 ==== toString
 
 [source,cpp]

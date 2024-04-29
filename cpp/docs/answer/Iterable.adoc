@@ -7,8 +7,8 @@
 
 Result representing a stream of query results.
 
-Exposes ``<<#_ITERATOR_TypeDBIterable__NATIVE_ITER__NATIVE_T__T__HELPER__begin___,begin()>>`` to get an iterator over the results and ``<<#_ITERATOR_TypeDBIterable__NATIVE_ITER__NATIVE_T__T__HELPER__end___,end()>>`` to check if the end has been reached.
-  Note: <<#_ITERATOR_TypeDBIterable__NATIVE_ITER__NATIVE_T__T__HELPER__begin___,begin()>> must be called for any server-side exceptions encountered while evaluating the query to be thrown
+Exposes ``<<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_,begin()>>`` to get an iterator over the results and ``<<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_end_,end()>>`` to check if the end has been reached.
+  Note: <<#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_,begin()>> must be called for any server-side exceptions encountered while evaluating the query to be thrown
 
 
 [caption=""]
@@ -20,7 +20,7 @@ for (auto it = iterable.begin(); it != iterable.end(); ++it ) { ... } // Note: i
 ----
 
 // tag::methods[]
-[#_ITERATOR_TypeDBIterable__NATIVE_ITER__NATIVE_T__T__HELPER__begin___]
+[#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_begin_]
 ==== begin
 
 [source,cpp]
@@ -36,7 +36,7 @@ Returns an iterator pointing to the first element.
 .Returns
 `ITERATOR`
 
-[#_ITERATOR_TypeDBIterable__NATIVE_ITER__NATIVE_T__T__HELPER__end___]
+[#_ITERATOR_TypeDBIterable_NATIVE_ITER_NATIVE_T_T_HELPER_end_]
 ==== end
 
 [source,cpp]

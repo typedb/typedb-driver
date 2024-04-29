@@ -8,7 +8,7 @@
 Simple JSON structure for results of fetch queries.
 
 // tag::methods[]
-[#_const_JSONArray__TypeDBJSONasArray_____const]
+[#_const_JSONArray_TypeDBJSONasArray_const]
 ==== asArray
 
 [source,cpp]
@@ -24,7 +24,7 @@ if this JSON object holds an array, returns the underlying array. Else throws an
 .Returns
 `const JSONArray&`
 
-[#_const_JSONBoolean__TypeDBJSONasBoolean_____const]
+[#_const_JSONBoolean_TypeDBJSONasBoolean_const]
 ==== asBoolean
 
 [source,cpp]
@@ -40,7 +40,7 @@ if this JSON object holds a boolean value, returns the value. Else throws an exc
 .Returns
 `const JSONBoolean&`
 
-[#_const_JSONDouble__TypeDBJSONasDouble_____const]
+[#_const_JSONDouble_TypeDBJSONasDouble_const]
 ==== asDouble
 
 [source,cpp]
@@ -56,7 +56,7 @@ if this JSON object holds a double value, returns the value. Else throws an exce
 .Returns
 `const JSONDouble&`
 
-[#_const_JSONLong__TypeDBJSONasLong_____const]
+[#_const_JSONLong_TypeDBJSONasLong_const]
 ==== asLong
 
 [source,cpp]
@@ -72,7 +72,7 @@ if this JSON object holds a long value, returns the value. Else throws an except
 .Returns
 `const JSONLong&`
 
-[#_const_JSONMap__TypeDBJSONasMap_____const]
+[#_const_JSONMap_TypeDBJSONasMap_const]
 ==== asMap
 
 [source,cpp]
@@ -88,7 +88,7 @@ if this JSON object holds a map, returns the underlying map. Else throws an exce
 .Returns
 `const JSONMap&`
 
-[#_const_JSONString__TypeDBJSONasString_____const]
+[#_const_JSONString_TypeDBJSONasString_const]
 ==== asString
 
 [source,cpp]
@@ -104,7 +104,7 @@ if this JSON object holds a string value, returns the value. Else throws an exce
 .Returns
 `const JSONString&`
 
-[#_bool_TypeDBJSONisArray_____const]
+[#_bool_TypeDBJSONisArray_const]
 ==== isArray
 
 [source,cpp]
@@ -120,7 +120,7 @@ true if this JSON object holds an array, else false
 .Returns
 `bool`
 
-[#_bool_TypeDBJSONisBoolean_____const]
+[#_bool_TypeDBJSONisBoolean_const]
 ==== isBoolean
 
 [source,cpp]
@@ -136,7 +136,7 @@ true if this JSON object holds a boolean value, else false
 .Returns
 `bool`
 
-[#_bool_TypeDBJSONisDouble_____const]
+[#_bool_TypeDBJSONisDouble_const]
 ==== isDouble
 
 [source,cpp]
@@ -152,7 +152,7 @@ true if this JSON object holds a double value, else false
 .Returns
 `bool`
 
-[#_bool_TypeDBJSONisLong_____const]
+[#_bool_TypeDBJSONisLong_const]
 ==== isLong
 
 [source,cpp]
@@ -168,7 +168,7 @@ true if this JSON object holds a long value, else false
 .Returns
 `bool`
 
-[#_bool_TypeDBJSONisMap_____const]
+[#_bool_TypeDBJSONisMap_const]
 ==== isMap
 
 [source,cpp]
@@ -184,7 +184,7 @@ true if this JSON object holds a map, else false
 .Returns
 `bool`
 
-[#_bool_TypeDBJSONisString_____const]
+[#_bool_TypeDBJSONisString_const]
 ==== isString
 
 [source,cpp]
@@ -200,7 +200,7 @@ true if this JSON object holds a string value, else false
 .Returns
 `bool`
 
-[#_static_JSON_TypeDBJSONparse___const_stdstring__string_]
+[#_static_JSON_TypeDBJSONparse_const_stdstring_string_]
 ==== parse
 
 [source,cpp]
@@ -216,7 +216,7 @@ Parses a JSON string into a ``JSON`` object.
 .Returns
 `static JSON`
 
-[#_const_stdstring_TypeDBJSONtoString_____const]
+[#_const_stdstring_TypeDBJSONtoString_const]
 ==== toString
 
 [source,cpp]
@@ -232,7 +232,7 @@ Convert a JSON object to a string
 .Returns
 `const std::string`
 
-[#_JSONType_TypeDBJSONtype_____const]
+[#_JSONType_TypeDBJSONtype_const]
 ==== type
 
 [source,cpp]

@@ -10,7 +10,7 @@ An explanation of which rule was used to infer the concept and the satisfying Co
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
 // tag::methods[]
-[#_ConceptMap_TypeDBExplanationconclusion___]
+[#_ConceptMap_TypeDBExplanationconclusion_]
 ==== conclusion
 
 [source,cpp]
@@ -34,7 +34,7 @@ Retrieves the Conclusion for this Explanation.
 explanation.conclusion()
 ----
 
-[#_ConceptMap_TypeDBExplanationcondition___]
+[#_ConceptMap_TypeDBExplanationcondition_]
 ==== condition
 
 [source,cpp]
@@ -58,7 +58,7 @@ Retrieves the Condition for this Explanation.
 explanation.condition()
 ----
 
-[#_stdvector__stdstring___TypeDBExplanationqueryVariableMapping___const_stdstring__var_]
+[#_stdvector_stdstring_TypeDBExplanationqueryVariableMapping_const_stdstring_var_]
 ==== queryVariableMapping
 
 [source,cpp]
@@ -91,7 +91,7 @@ a| `var` a| The query variable to map to rule variables. a| `const std::string&`
 explanation.variableMapping(var)
 ----
 
-[#_stdvector__stdstring___TypeDBExplanationqueryVariables___]
+[#_stdvector_stdstring_TypeDBExplanationqueryVariables_]
 ==== queryVariables
 
 [source,cpp]
@@ -115,7 +115,7 @@ Retrieves the query variables for this ``Explanation``.
 explanation.queryVariables()
 ----
 
-[#_Rule_TypeDBExplanationrule___]
+[#_Rule_TypeDBExplanationrule_]
 ==== rule
 
 [source,cpp]
@@ -139,7 +139,7 @@ Retrieves the Rule for this Explanation.
 explanation.rule()
 ----
 
-[#_stdstring_TypeDBExplanationtoString___]
+[#_stdstring_TypeDBExplanationtoString_]
 ==== toString
 
 [source,cpp]

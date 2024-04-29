@@ -20,7 +20,7 @@ a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for t
 // end::properties[]
 
 // tag::methods[]
-[#_void_TypeDBDriverclose___]
+[#_void_TypeDBDriverclose_]
 ==== close
 
 [source,cpp]
@@ -44,7 +44,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_static_Driver_TypeDBDrivercloudDriver___const_stdvector__stdstring____addresses__const_Credential__credential_]
+[#_static_Driver_TypeDBDrivercloudDriver_const_stdvector_stdstring_addresses_const_Credential_credential_]
 ==== cloudDriver
 
 [source,cpp]
@@ -78,7 +78,7 @@ a| `credential` a| The Credential to connect with a| `const Credential&`
 Driver::cloudDriver(addresses, credential);
 ----
 
-[#_static_Driver_TypeDBDrivercoreDriver___const_stdstring__address_]
+[#_static_Driver_TypeDBDrivercoreDriver_const_stdstring_address_]
 ==== coreDriver
 
 [source,cpp]
@@ -111,7 +111,7 @@ a| `address` a| The address of the TypeDB server a| `const std::string&`
 Driver::coreDriver(address);
 ----
 
-[#_static_void_TypeDBDriverinitLogging___]
+[#_static_void_TypeDBDriverinitLogging_]
 ==== initLogging
 
 [source,cpp]
@@ -135,7 +135,7 @@ Enables logging in the TypeDB driver.
 Driver::initLogging();
 ----
 
-[#_bool_TypeDBDriverisOpen___]
+[#_bool_TypeDBDriverisOpen_]
 ==== isOpen
 
 [source,cpp]
@@ -159,7 +159,7 @@ Checks whether this connection is presently open.
 driver.isOpen();
 ----
 
-[#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options__Options___]
+[#_Session_TypeDBDriversession_const_stdstring_database_SessionType_sessionType_const_Options_options_Options_]
 ==== session
 
 [source,cpp]
@@ -194,7 +194,7 @@ a| `options` a| ``TypeDBOptions`` for the session a|
 driver.session(database, sessionType, options);
 ----
 
-[#_User_TypeDBDriveruser___]
+[#_User_TypeDBDriveruser_]
 ==== user
 
 [source,cpp]

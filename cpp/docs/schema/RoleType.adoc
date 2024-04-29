@@ -15,7 +15,7 @@ Defines a role an instance can play in a Relation.
 Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type. Roles allow a schema to enforce logical constraints on types of role players.
 
 // tag::methods[]
-[#_virtual_VoidFuture_TypeDBRoleTypedeleteType___Transaction__transaction_]
+[#_virtual_VoidFuture_TypeDBRoleTypedeleteType_Transaction_transaction_]
 ==== deleteType
 
 [source,cpp]
@@ -52,7 +52,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.deleteType(transaction).get();
 ----
 
-[#_virtual_stdstring_TypeDBRoleTypegetLabel___]
+[#_virtual_stdstring_TypeDBRoleTypegetLabel_]
 ==== getLabel
 
 [source,cpp]
@@ -80,7 +80,7 @@ Implements TypeDB::Type.
 type.getLabel();
 ----
 
-[#_stdstring_TypeDBRoleTypegetName___]
+[#_stdstring_TypeDBRoleTypegetName_]
 ==== getName
 
 [source,cpp]
@@ -104,7 +104,7 @@ Returns the name of this role type's label.
 label.getName();
 ----
 
-[#_ConceptIterable__Thing___TypeDBRoleTypegetPlayerInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Thing_TypeDBRoleTypegetPlayerInstances_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getPlayerInstances
 
 [source,cpp]
@@ -138,7 +138,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect playin
 roleType.getPlayerInstances(transaction, transitivity);
 ----
 
-[#_ConceptIterable__ThingType___TypeDBRoleTypegetPlayerTypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_ThingType_TypeDBRoleTypegetPlayerTypes_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getPlayerTypes
 
 [source,cpp]
@@ -172,7 +172,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 roleType.getPlayerTypes(transaction, transitivity)
 ----
 
-[#_ConceptIterable__Relation___TypeDBRoleTypegetRelationInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Relation_TypeDBRoleTypegetRelationInstances_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getRelationInstances
 
 [source,cpp]
@@ -206,7 +206,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect relati
 roleType.getRelationInstances(transaction, transitivity)
 ----
 
-[#_ConceptPtrFuture__RelationType___TypeDBRoleTypegetRelationType___Transaction__transaction_]
+[#_ConceptPtrFuture_RelationType_TypeDBRoleTypegetRelationType_Transaction_transaction_]
 ==== getRelationType
 
 [source,cpp]
@@ -239,7 +239,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 roleType.getRelationType(transaction).get();
 ----
 
-[#_ConceptIterable__RelationType___TypeDBRoleTypegetRelationTypes___Transaction__transaction_]
+[#_ConceptIterable_RelationType_TypeDBRoleTypegetRelationTypes_Transaction_transaction_]
 ==== getRelationTypes
 
 [source,cpp]
@@ -272,7 +272,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 roleType.getRelationTypes(transaction);
 ----
 
-[#_stdstring_TypeDBRoleTypegetScope___]
+[#_stdstring_TypeDBRoleTypegetScope_]
 ==== getScope
 
 [source,cpp]
@@ -296,7 +296,7 @@ Returns the scope part of this role type's label.
 label.getScope();
 ----
 
-[#_ConceptIterable__RoleType___TypeDBRoleTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_RoleType_TypeDBRoleTypegetSubtypes_Transaction_transaction_Transitivity_transitivity_TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
@@ -330,7 +330,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 roleType.getSubtypes(transaction, transitivity);
 ----
 
-[#_ConceptPtrFuture__RoleType___TypeDBRoleTypegetSupertype___Transaction__transaction_]
+[#_ConceptPtrFuture_RoleType_TypeDBRoleTypegetSupertype_Transaction_transaction_]
 ==== getSupertype
 
 [source,cpp]
@@ -363,7 +363,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 roleType.getSupertype(transaction).get();
 ----
 
-[#_ConceptIterable__RoleType___TypeDBRoleTypegetSupertypes___Transaction__transaction_]
+[#_ConceptIterable_RoleType_TypeDBRoleTypegetSupertypes_Transaction_transaction_]
 ==== getSupertypes
 
 [source,cpp]
@@ -396,7 +396,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 roleType.getSupertypes(transaction);
 ----
 
-[#_virtual_bool_TypeDBRoleTypeisAbstract___]
+[#_virtual_bool_TypeDBRoleTypeisAbstract_]
 ==== isAbstract
 
 [source,cpp]
@@ -424,7 +424,7 @@ Implements TypeDB::Type.
 type.isAbstract();
 ----
 
-[#_virtual_BoolFuture_TypeDBRoleTypeisDeleted___Transaction__transaction_]
+[#_virtual_BoolFuture_TypeDBRoleTypeisDeleted_Transaction_transaction_]
 ==== isDeleted
 
 [source,cpp]
@@ -461,7 +461,7 @@ a| `transaction` a| The current transaction a| `Transaction&`
 type.isDeleted(transaction).get();
 ----
 
-[#_bool_TypeDBRoleTypeisRoot___]
+[#_bool_TypeDBRoleTypeisRoot_]
 ==== isRoot
 
 [source,cpp]
@@ -485,7 +485,7 @@ Checks if the type is a root type.
 type.isRoot();
 ----
 
-[#_virtual_VoidFuture_TypeDBRoleTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
+[#_virtual_VoidFuture_TypeDBRoleTypesetLabel_Transaction_transaction_const_stdstring_newLabel_]
 ==== setLabel
 
 [source,cpp]
