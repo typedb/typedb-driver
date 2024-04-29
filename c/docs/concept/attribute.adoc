@@ -1,4 +1,4 @@
-[#_methods__concept__attribute]
+[#_methods_concept_attribute]
 === attribute
 
 [#_attribute_get_owners]

@@ -1,4 +1,4 @@
-[#_methods__concept__relation]
+[#_methods_concept_relation]
 === relation
 
 [#_relation_add_role_player]

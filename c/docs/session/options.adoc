@@ -1,4 +1,4 @@
-[#_methods__session__options]
+[#_methods_session_options]
 === options
 
 [#_Struct_Options]

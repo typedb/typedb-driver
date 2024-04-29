@@ -1,4 +1,4 @@
-[#_methods__transaction__query]
+[#_methods_transaction_query]
 === query
 
 [#_query_define]

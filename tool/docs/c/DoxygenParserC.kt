@@ -126,7 +126,7 @@ class DoxygenParserC : Callable<Unit> {
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val filename = entry.key
                 val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
-                outputFile.appendText("[#_methods__${dirs[filename]}__$filename]\n")
+                outputFile.appendText("[#_methods_${dirs[filename]}_$filename]\n")
                 outputFile.appendText("=== $filename\n\n")
                 entry.value.forEach { outputFile.appendText(it) }
             }

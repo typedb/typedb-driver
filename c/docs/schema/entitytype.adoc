@@ -1,4 +1,4 @@
-[#_methods__schema__entitytype]
+[#_methods_schema_entitytype]
 === entitytype
 
 [#_entity_type_create]

@@ -1,4 +1,4 @@
-[#_methods__connection__database]
+[#_methods_connection_database]
 === database
 
 [#_Struct_Database]

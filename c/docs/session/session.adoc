@@ -1,4 +1,4 @@
-[#_methods__session__session]
+[#_methods_session_session]
 === session
 
 [#_Struct_Session]

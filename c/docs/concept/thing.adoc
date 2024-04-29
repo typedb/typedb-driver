@@ -1,4 +1,4 @@
-[#_methods__concept__thing]
+[#_methods_concept_thing]
 === thing
 
 [#_thing_delete]
