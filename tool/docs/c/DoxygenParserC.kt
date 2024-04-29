@@ -98,11 +98,10 @@ class DoxygenParserC : Callable<Unit> {
 
             // Enums
             val enums = parsed.select("td.memname").filter { element -> element.text().startsWith("enum") }
-                .map { element -> element.parents().select(".memitem").first() }.map {
-                    parseEnum(it!!)
-                }.filter {
-                    it.name.isNotEmpty()
-                }.toList()
+                .map { element -> element.parents().select(".memitem").first() }
+                .filter { element -> !element!!.previousElementSibling()!!.text().contains("()") }
+                .map { parseEnum(it!!) }
+                .filter { it.name.isNotEmpty() }.toList()
             val functions = parsed.select("h2").filter { element -> element.text().endsWith("()") }
                 .map { element -> element.nextElementSibling()!! }
                 .filter { element -> element.className().equals("memitem") }
