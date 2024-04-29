@@ -135,7 +135,7 @@ doxygen_csharp_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
-    output_dir = 'csharp/docs',
+    output_dir = 'docs/modules/ROOT/partials/csharp',
     tags = ["manual"]
 )
 
