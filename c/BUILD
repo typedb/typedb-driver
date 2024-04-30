@@ -236,7 +236,7 @@ doxygen_c_to_adoc(
     data = [":docs_html"],
     docs_dirs = dir_mapping,
     force_file = force_file,
-    output_dir = "c/docs",
+    output_dir = "docs/modules/ROOT/partials/c",
     tags = ["manual"]
 )
 
