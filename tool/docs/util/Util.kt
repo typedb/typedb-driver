@@ -46,7 +46,7 @@ fun replaceSymbolsForAnchor(name: String): String {
         .replace("[\\.,\\(\\)\\s#<>\\[\\]]".toRegex(), "_")
         .replace("*", "_ptr_")
         .replace("&", "_amp_")
-        .removeSuffix("_")
+        .removeSuffix("_").replace("__+".toRegex(), "_")
 }
 
 fun addZeroWidthWhitespaces(html: String): String {

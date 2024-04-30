@@ -1,0 +1,608 @@
+[#_Options]
+=== Options
+
+*Package*: `TypeDB`
+
+
+
+TypeDB Session and Transaction options.
+
+``Options`` can be used to override the default server behaviour.
+
+// tag::methods[]
+[#_TypeDBOptionsOptions_]
+==== Options
+
+[source,cpp]
+----
+TypeDB::Options::Options()
+----
+
+
+
+Produces a new ``Options`` object.
+
+
+[caption=""]
+.Returns
+`TypeDB::Options::Options`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+TypeDBOptions options = TypeDBOptions();
+----
+
+[#_stdoptional_bool_TypeDBOptionsexplain_]
+==== explain
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::explain()
+----
+
+
+
+Returns the value set for the explanation in this ``TypeDBOptions`` object. If set to ``true``, explanations for queries are enabled.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.explain();
+----
+
+[#_Options_TypeDBOptionsexplain_bool_explain_]
+==== explain
+
+[source,cpp]
+----
+Options& TypeDB::Options::explain(bool explain)
+----
+
+
+
+Explicitly enables or disables explanations. If set to ``true``, enables explanations for queries. Only affects read transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explain` a| Explicitly enable or disable explanations a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.explain(explain);
+----
+
+[#_stdoptional_bool_TypeDBOptionsinfer_]
+==== infer
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::infer()
+----
+
+
+
+Returns the value set for the inference in this ``TypeDBOptions`` object.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.infer();
+----
+
+[#_Options_TypeDBOptionsinfer_bool_infer_]
+==== infer
+
+[source,cpp]
+----
+Options& TypeDB::Options::infer(bool infer)
+----
+
+
+
+Explicitly enables or disables inference. Only settable at transaction level and above. Only affects read transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `infer` a| Explicitly enable or disable inference a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.infer(infer);
+----
+
+[#_stdoptional_bool_TypeDBOptionsparallel_]
+==== parallel
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::parallel()
+----
+
+
+
+Returns the value set for the parallel execution in this ``TypeDBOptions`` object. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.parallel();
+----
+
+[#_Options_TypeDBOptionsparallel_bool_parallel_]
+==== parallel
+
+[source,cpp]
+----
+Options& TypeDB::Options::parallel(bool parallel)
+----
+
+
+
+Explicitly enables or disables parallel execution. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `parallel` a| Explicitly enable or disable parallel execution a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.parallel(parallel);
+----
+
+[#_stdoptional_bool_TypeDBOptionsprefetch_]
+==== prefetch
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::prefetch()
+----
+
+
+
+Returns the value set for the prefetching in this ``TypeDBOptions`` object. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetch();
+----
+
+[#_Options_TypeDBOptionsprefetch_bool_prefetch_]
+==== prefetch
+
+[source,cpp]
+----
+Options& TypeDB::Options::prefetch(bool prefetch)
+----
+
+
+
+Explicitly enables or disables prefetching. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetch` a| Explicitly enable or disable prefetching a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetch(prefetch);
+----
+
+[#_stdoptional_int32_t_TypeDBOptionsprefetchSize_]
+==== prefetchSize
+
+[source,cpp]
+----
+std::optional< int32_t > TypeDB::Options::prefetchSize()
+----
+
+
+
+Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+
+[caption=""]
+.Returns
+`std::optional< int32_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetchSize();
+----
+
+[#_Options_TypeDBOptionsprefetchSize_int32_t_prefetchSize_]
+==== prefetchSize
+
+[source,cpp]
+----
+Options& TypeDB::Options::prefetchSize(int32_t prefetchSize)
+----
+
+
+
+Explicitly sets a prefetch size. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| `int32_t`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.prefetchSize(prefetchSize);
+----
+
+[#_stdoptional_bool_TypeDBOptionsreadAnyReplica_]
+==== readAnyReplica
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::readAnyReplica()
+----
+
+
+
+Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.readAnyReplica();
+----
+
+[#_Options_TypeDBOptionsreadAnyReplica_bool_readAnyReplica_]
+==== readAnyReplica
+
+[source,cpp]
+----
+Options& TypeDB::Options::readAnyReplica(bool readAnyReplica)
+----
+
+
+
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.readAnyReplica(readAnyReplica);
+----
+
+[#_stdoptional_int64_t_TypeDBOptionsschemaLockAcquireTimeoutMillis_]
+==== schemaLockAcquireTimeoutMillis
+
+[source,cpp]
+----
+std::optional< int64_t > TypeDB::Options::schemaLockAcquireTimeoutMillis()
+----
+
+
+
+Returns the value set for the schema lock acquire timeout in this ``TypeDBOptions`` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+
+[caption=""]
+.Returns
+`std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.schemaLockAcquireTimeoutMillis();
+----
+
+[#_Options_TypeDBOptionsschemaLockAcquireTimeoutMillis_int64_t_timeoutMillis_]
+==== schemaLockAcquireTimeoutMillis
+
+[source,cpp]
+----
+Options& TypeDB::Options::schemaLockAcquireTimeoutMillis(int64_t timeoutMillis)
+----
+
+
+
+Explicitly sets schema lock acquire timeout. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock a| 
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
+[#_stdoptional_int64_t_TypeDBOptionssessionIdleTimeoutMillis_]
+==== sessionIdleTimeoutMillis
+
+[source,cpp]
+----
+std::optional< int64_t > TypeDB::Options::sessionIdleTimeoutMillis()
+----
+
+
+
+Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+
+[caption=""]
+.Returns
+`std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.sessionIdleTimeoutMillis();
+----
+
+[#_Options_TypeDBOptionssessionIdleTimeoutMillis_int64_t_timeoutMillis_]
+==== sessionIdleTimeoutMillis
+
+[source,cpp]
+----
+Options& TypeDB::Options::sessionIdleTimeoutMillis(int64_t timeoutMillis)
+----
+
+
+
+Explicitly sets a session idle timeout. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive a| 
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.sessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
+----
+
+[#_stdoptional_bool_TypeDBOptionstraceInference_]
+==== traceInference
+
+[source,cpp]
+----
+std::optional< bool > TypeDB::Options::traceInference()
+----
+
+
+
+Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory.
+
+
+[caption=""]
+.Returns
+`std::optional< bool >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.traceInference();
+----
+
+[#_Options_TypeDBOptionstraceInference_bool_traceInference_]
+==== traceInference
+
+[source,cpp]
+----
+Options& TypeDB::Options::traceInference(bool traceInference)
+----
+
+
+
+Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `bool`
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.traceInference(traceInference);
+----
+
+[#_stdoptional_int64_t_TypeDBOptionstransactionTimeoutMillis_]
+==== transactionTimeoutMillis
+
+[source,cpp]
+----
+std::optional< int64_t > TypeDB::Options::transactionTimeoutMillis()
+----
+
+
+
+Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+
+[caption=""]
+.Returns
+`std::optional< int64_t >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.transactionTimeoutMillis();
+----
+
+[#_Options_TypeDBOptionstransactionTimeoutMillis_int64_t_timeoutMillis_]
+==== transactionTimeoutMillis
+
+[source,cpp]
+----
+Options& TypeDB::Options::transactionTimeoutMillis(int64_t timeoutMillis)
+----
+
+
+
+Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| 
+|===
+
+[caption=""]
+.Returns
+`Options&`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+options.transactionTimeoutMillis(transactionTimeoutMillis);
+----
+
+// end::methods[]
+

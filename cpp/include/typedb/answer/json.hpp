@@ -101,7 +101,7 @@ public:
     JSON(JSON&&);
     JSON& operator=(JSON&&);
 
-    /*
+    /**
      * The JSONType of this JSON object
      * <h3>Examples</h3>
      * <pre>
@@ -170,6 +170,11 @@ public:
      * if this JSON object holds a string value, returns the value. Else throws an exception
      */
     const JSONString& asString() const;
+
+    /**
+     * Convert a JSON object to a string
+     */
+    const std::string toString() const;
     const JSONNull& asNull() const;
 
 private:

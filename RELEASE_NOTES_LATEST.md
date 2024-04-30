@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@2.28.0-rc0
+cargo add typedb-driver@2.28.0
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.28.0-rc0</version>
+        <version>2.28.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.28.0rc0
+pip install typedb-driver==2.28.0
 ```
 
 ### NodeJS driver
@@ -51,36 +51,41 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
 ```
-npm install typedb-driver@2.28.0-rc0
+npm install typedb-driver@2.28.0
 ```
 
 ### C# driver
 
-NuGet package: Coming soon
-Documentation: Coming soon
+NuGet package: https://www.nuget.org/packages/TypeDB.Driver
+Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="2.28.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="2.28.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="2.28.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="2.28.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="2.28.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="2.28.0-rc0" />
+    <PackageReference Include="TypeDB.Driver" Version="2.28.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="2.28.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="2.28.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="2.28.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="2.28.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="2.28.0" />
 </ItemGroup>
 ```
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.28.0-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.28.0
 Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.28.0-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.28.0
 
 
 ## New Features
+- **Implement a method to convert a JSON object to a JSON string**
+  
+  The `toString()` method is callable for JSON class objects. It returns a string.
+  
+  
 - **Address translation**
   
   We allow the user to provide a translation map from the advertised server addresses (now treated as generic server names) to the actual addresses the driver shall use to connect to the cloud instances. We require the user to provide the full mapping.
@@ -218,14 +223,6 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
 
 ## Bugs Fixed
-- **Update Git patch during Windows Circle CI initial job setup**
-  
-  We update the Windows Circle CI git patch file to be compatible with the WORKSPACE file which has been recently updated. We also add a check of whether the git patch was successfully applied to catch such mistakes early in the future.
-  
-- **Fix deadsnakes ppa in Circle CI sync-dependencies release job**
-  
-  Add `-y` to the `add-apt-repository` command in the Circle CI sync-dependencies release job.
-  
 
 ## Code Refactors
 - **Implement new steps for getting answers from templated get**
@@ -240,6 +237,33 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
 
 ## Other Improvements
+- **Fixes to C++ structure based on feedback from website**
+  Various improvements to the document generation tools to make the C++ and C driver docs on the website more readable
+  
+  
+- **Update the README.md for the C driver**
+  
+  Update the readme file for the latest filenames.
+  
+  
+- **Fix C# README examples and add issues refs to recent TODOs**
+  C# driver's examples should be able to be built in any namespace now.
+  
+  Some of the recent `TODO`s left in the codebase have been cleaned or marked with a specific GitHub issue number.  
+  
+  
+- **Python: ABC and typing are not interchangeable**
+
+- **Increase wait time in start-core-server to 10 s, add error message**
+
+- **Increase bootup timeout to 5 seconds in CI tests**
+
+- **Deploy C# driver in a separate job**
+  
+  Currently, Bazel generates three different build configurations for the underlying FFI library during C# driver deployment. As that requires compilation of the binding generator and lengthy project analysis, that step is prone to random failures (`socket closed`).
+  
+  As the full analysis of the issue proved time-consuming, we instead opt to make the C# driver deployment step easily retriable.
+  
 - **Fix parsing & formatting issues for C, C++ documentation**
   Fixes the automatic documentation generation tools for the C & C++ drivers (1) to be  consistent with other languages in terms of structure, and (2) removes stray duplication of parameter documentation in method descriptions.
   
@@ -256,7 +280,3 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
   We add missing documentation for the `setSupertype` concept API in the NodeJS Driver.
   
-- **Merge master to development after 2.27.0 release**
-  We merge back changes made during the release process for 2.27.0, including changes to test infrastructure to explicitly disable monitoring (for port clashes) and diagnostics (to avoid spurious error reports).
-  
-    

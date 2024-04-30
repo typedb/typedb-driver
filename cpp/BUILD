@@ -51,6 +51,7 @@ cc_binary(
     copts = cxxopts,
     linkopts = select({
         "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+        "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
         "//conditions:default": [],
     }),
     local_defines = ["_COMPILING_TYPEDB_DRIVER"],
@@ -199,8 +200,7 @@ alias(
     })
 )
 
-# docs
-# TODO: Not hermetic - requires doxygen on the host
+# TODO: Not hermetic - requires doxygen on the host (https://github.com/vaticle/bazel-distribution/issues/412)
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C++ Driver",
@@ -213,7 +213,7 @@ doxygen_cpp_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
-    output_dir = 'cpp/docs',
+    output_dir = 'docs/modules/ROOT/partials/cpp',
     tags = ["manual"]
 )
 

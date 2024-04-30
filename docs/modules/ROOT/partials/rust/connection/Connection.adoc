@@ -1,0 +1,213 @@
+[#_struct_Connection]
+=== Connection
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+// tag::methods[]
+[#_struct_Connection_force_close_]
+==== force_close
+
+[source,rust]
+----
+pub fn force_close(&self) -> Result
+----
+
+Closes this connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.force_close()
+----
+
+[#_struct_Connection_is_cloud_]
+==== is_cloud
+
+[source,rust]
+----
+pub fn is_cloud(&self) -> bool
+----
+
+Check if the connection is to an Cloud server.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.is_cloud()
+----
+
+[#_struct_Connection_is_open_]
+==== is_open
+
+[source,rust]
+----
+pub fn is_open(&self) -> bool
+----
+
+Checks it this connection is opened.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.is_open()
+----
+
+[#_struct_Connection_new_cloud_init_addresses_T_credential_Credential]
+==== new_cloud
+
+[source,rust]
+----
+pub fn new_cloud<T: AsRef<str> + Sync>(
+    init_addresses: &[T],
+    credential: Credential
+) -> Result<Self>
+----
+
+Creates a new TypeDB Cloud connection.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `init_addresses` a| Addresses (host:port) on which TypeDB Cloud nodes are running a| `&[T]`
+a| `credential` a| User credential and TLS encryption setting a| `Credential`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_cloud(
+    &["localhost:11729", "localhost:21729", "localhost:31729"],
+    Credential::with_tls(
+        "admin",
+        "password",
+        Some(&PathBuf::from(
+            std::env::var("ROOT_CA")
+                .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
+        )),
+    )?,
+)
+----
+
+[#_struct_Connection_new_cloud_with_translation_address_translation_HashMap_T_credential_Credential]
+==== new_cloud_with_translation
+
+[source,rust]
+----
+pub fn new_cloud_with_translation<T, U>(
+    address_translation: HashMap<T, U>,
+    credential: Credential
+) -> Result<Self>where
+    T: AsRef<str> + Sync,
+    U: AsRef<str> + Sync,
+----
+
+Creates a new TypeDB Cloud connection.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address_translation` a| Translation map from addresses received from the TypeDB server(s) to addresses to be used by the driver for connection a| `HashMap<T`
+a| `credential` a| User credential and TLS encryption setting a| `Credential`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>where
+    T: AsRef<str> + Sync,
+    U: AsRef<str> + Sync,
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_cloud_with_translation(
+    [
+        ("typedb-cloud.ext:11729", "localhost:11729"),
+        ("typedb-cloud.ext:21729", "localhost:21729"),
+        ("typedb-cloud.ext:31729", "localhost:31729"),
+    ].into(),
+    credential,
+)
+----
+
+[#_struct_Connection_new_core_address_impl_AsRef_str_]
+==== new_core
+
+[source,rust]
+----
+pub fn new_core(address: impl AsRef<str>) -> Result<Self>
+----
+
+Creates a new TypeDB Server connection.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_core("127.0.0.1:1729")
+----
+
+// end::methods[]
+

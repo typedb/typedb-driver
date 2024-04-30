@@ -1,0 +1,70 @@
+[#_TypeDB]
+=== TypeDB
+
+[caption=""]
+.Namespace variables
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `DEFAULT_ADDRESS`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_TypeDB_cloudDriver_addresses_string_string_Record_string_string_credential_TypeDBCredential]
+==== cloudDriver
+
+[source,nodejs]
+----
+cloudDriver(addresses, credential): Promise<TypeDBDriver>
+----
+
+Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| List of addresses of the individual TypeDB Cloud servers. As long one specified address is provided, the driver will discover the other addresses from that server. a| `string \| string[] \| Record<string, string>`
+a| `credential` a| The credentials to log in, and encryption settings. See ``TypeDBCredential``
+Examples
+``const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+``Copy a| `TypeDBCredential`
+|===
+
+[caption=""]
+.Returns
+`Promise<TypeDBDriver>`
+
+[#_TypeDB_coreDriver_address_string_DEFAULT_ADDRESS]
+==== coreDriver
+
+[source,nodejs]
+----
+coreDriver(address?): Promise<TypeDBDriver>
+----
+
+Creates a connection to TypeDB.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| Address of the TypeDB server.
+Examples
+``const driver = TypeDB.coreDriver("127.0.0.1:11729");
+``Copy a| `string = DEFAULT_ADDRESS`
+|===
+
+[caption=""]
+.Returns
+`Promise<TypeDBDriver>`
+
+// end::methods[]
+

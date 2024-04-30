@@ -69,7 +69,7 @@ build:
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs cpp/docs c/docs csharp/docs"
+        DOCS_DIRS="docs/modules/ROOT/partials/java docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/python docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
         rm -rf $DOCS_DIRS
         tool/docs/update.sh
         git add $DOCS_DIRS
@@ -293,7 +293,7 @@ build:
 
         source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
           bazel test //python/tests/integration:test_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          # TODO currently broken test
+          # TODO #635: currently broken test
           # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export CLOUD_FAILED= || export CLOUD_FAILED=1
         tool/test/stop-cloud-servers.sh
@@ -541,7 +541,7 @@ build:
         export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
 
-# TODO: assembly tests for all drivers to run in factory
+# TODO #512: assembly tests for all drivers to run in factory
 
 release:
   filter:

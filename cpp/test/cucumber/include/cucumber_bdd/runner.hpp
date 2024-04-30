@@ -57,7 +57,7 @@ class TestRunner : public TestRunnerBase {
         steps.reserve(totalSteps);
         for (const StepCollection<CTX> stepVec : stepLists) {
             for (const cucumber_bdd::StepDefinition<CTX> stepDef : stepVec) {
-                steps.push_back(StepDefinition<CTX>{stepDef.regex, stepDef.impl});  // TODO: Avoid deep copy?
+                steps.push_back(StepDefinition<CTX>{stepDef.regex, stepDef.impl});
             }
         }
         assert(steps.size() == totalSteps);

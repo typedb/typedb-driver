@@ -30,7 +30,7 @@ def rust_docs(name, feature):
 def rustdoc_to_adoc(name, data, docs_dirs, modes = {}):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "rust/docs",
+        "docs/modules/ROOT/partials/rust/",
     ] + [
         "--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs
     ] + [

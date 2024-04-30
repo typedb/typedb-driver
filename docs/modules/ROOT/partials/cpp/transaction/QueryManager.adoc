@@ -1,0 +1,386 @@
+[#_QueryManager]
+=== QueryManager
+
+*Package*: `TypeDB`
+
+
+
+Provides methods for executing TypeQL queries in the transaction.
+
+// tag::methods[]
+[#_VoidFuture_TypeDBQueryManagerdefine_const_stdstring_query_const_Options_options_Options_const]
+==== define
+
+[source,cpp]
+----
+VoidFuture TypeDB::QueryManager::define(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Define query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Define query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.define(query, options).get()
+----
+
+[#_ExplanationIterable_TypeDBQueryManagerexplain_const_Explainable_explainable_const_Options_Options_const]
+==== explain
+
+[source,cpp]
+----
+ExplanationIterable TypeDB::QueryManager::explain(const Explainable& explainable, const Options& = Options()) const
+----
+
+
+
+Performs a TypeQL Explain query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explainable` a| The Explainable to be explained a| `const Explainable&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ExplanationIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.explain(explainable, options)
+----
+
+[#_JSONIterable_TypeDBQueryManagerfetch_const_stdstring_query_const_Options_options_Options_const]
+==== fetch
+
+[source,cpp]
+----
+JSONIterable TypeDB::QueryManager::fetch(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Fetch query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Fetch query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`JSONIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.fetch(query, options)
+----
+
+[#_ConceptMapIterable_TypeDBQueryManagerget_const_stdstring_query_const_Options_options_Options_const]
+==== get
+
+[source,cpp]
+----
+ConceptMapIterable TypeDB::QueryManager::get(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Get query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptMapIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.get(query, options)
+----
+
+[#_AggregateFuture_TypeDBQueryManagergetAggregate_const_stdstring_query_const_Options_Options_const]
+==== getAggregate
+
+[source,cpp]
+----
+AggregateFuture TypeDB::QueryManager::getAggregate(const std::string& query, const Options& = Options()) const
+----
+
+
+
+Performs a TypeQL Get Aggregate query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Aggregate query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`AggregateFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.getAggregate(query, options).get()
+----
+
+[#_ConceptMapGroupIterable_TypeDBQueryManagergetGroup_const_stdstring_query_const_Options_Options_const]
+==== getGroup
+
+[source,cpp]
+----
+ConceptMapGroupIterable TypeDB::QueryManager::getGroup(const std::string& query, const Options& = Options()) const
+----
+
+
+
+Performs a TypeQL Get Group query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Group query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptMapGroupIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.getGroup(query, options)
+----
+
+[#_ValueGroupIterable_TypeDBQueryManagergetGroupAggregate_const_stdstring_query_const_Options_Options_const]
+==== getGroupAggregate
+
+[source,cpp]
+----
+ValueGroupIterable TypeDB::QueryManager::getGroupAggregate(const std::string& query, const Options& = Options()) const
+----
+
+
+
+Performs a TypeQL Get Group Aggregate query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Group Aggregate query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ValueGroupIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.getGroupAggregate(query, options)
+----
+
+[#_ConceptMapIterable_TypeDBQueryManagerinsert_const_stdstring_query_const_Options_options_Options_const]
+==== insert
+
+[source,cpp]
+----
+ConceptMapIterable TypeDB::QueryManager::insert(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Insert query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Insert query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptMapIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.insert(query, options)
+----
+
+[#_VoidFuture_TypeDBQueryManagermatchDelete_const_stdstring_query_const_Options_options_Options_const]
+==== matchDelete
+
+[source,cpp]
+----
+VoidFuture TypeDB::QueryManager::matchDelete(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Delete query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Delete query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.matchDelete(query, options).get()
+----
+
+[#_VoidFuture_TypeDBQueryManagerundefine_const_stdstring_query_const_Options_options_Options_const]
+==== undefine
+
+[source,cpp]
+----
+VoidFuture TypeDB::QueryManager::undefine(const std::string& query, const Options& options = Options()) const
+----
+
+
+
+Performs a TypeQL Undefine query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Undefine query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.undefine(query, options).get()
+----
+
+[#_ConceptMapIterable_TypeDBQueryManagerupdate_const_stdstring_query_const_Options_Options_const]
+==== update
+
+[source,cpp]
+----
+ConceptMapIterable TypeDB::QueryManager::update(const std::string& query, const Options& = Options()) const
+----
+
+
+
+Performs a TypeQL Update query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Update query to be executed a| `const std::string&`
+a| `options` a| Specify query options a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptMapIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+transaction.query.update(query, options)
+----
+
+// end::methods[]
+

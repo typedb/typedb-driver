@@ -1,0 +1,46 @@
+[#_Future]
+=== Future
+
+*Package*: `TypeDB`
+
+
+
+A structure emulating std::future, used as result of an asynchronous call to the server.
+
+Note that a future must be evaluated for any server-side exceptions to be raised.
+
+// tag::methods[]
+[#_RETURN_TypeDBFuture_RETURN_NATIVE_PROMISE_HELPER_get_]
+==== get
+
+[source,cpp]
+----
+RETURN TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::get()
+----
+
+
+
+Waits for the call to complete and returns the result.
+
+[caption=""]
+.Returns
+`RETURN`
+
+[#_void_TypeDBFuture_RETURN_NATIVE_PROMISE_HELPER_wait_]
+==== wait
+
+[source,cpp]
+----
+void TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::wait()
+----
+
+
+
+Waits for the call to complete and ignores the result. Any exceptions will still be thrown.
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

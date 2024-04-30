@@ -1,0 +1,361 @@
+[#_struct_RootThingType]
+=== RootThingType
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `PartialEq<RootThingType>`
+* `StructuralEq`
+* `StructuralPartialEq`
+* `ThingTypeAPI`
+
+// tag::methods[]
+[#_struct_RootThingType_delete_]
+==== delete
+
+[source,rust]
+----
+fn delete<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_delete,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_get_owns_]
+==== get_owns
+
+[source,rust]
+----
+fn get_owns<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    value_type: Option<ValueType>,
+    transitivity: Transitivity,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_owns,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'tx, Result<AttributeType>>>
+----
+
+[#_struct_RootThingType_get_owns_overridden_]
+==== get_owns_overridden
+
+[source,rust]
+----
+fn get_owns_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    overridden_attribute_type: AttributeType
+) -> BoxPromise<'tx, Result<Option<AttributeType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<Option<AttributeType>>>
+----
+
+[#_struct_RootThingType_get_plays_]
+==== get_plays
+
+[source,rust]
+----
+fn get_plays<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'tx, Result<RoleType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_plays,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'tx, Result<RoleType>>>
+----
+
+[#_struct_RootThingType_get_plays_overridden_]
+==== get_plays_overridden
+
+[source,rust]
+----
+fn get_plays_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    overridden_role_type: RoleType
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<Option<RoleType>>>
+----
+
+[#_struct_RootThingType_get_syntax_]
+==== get_syntax
+
+[source,rust]
+----
+fn get_syntax<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result<String>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<String>>
+----
+
+[#_struct_RootThingType_is_abstract_]
+==== is_abstract
+
+[source,rust]
+----
+fn is_abstract(&self) -> bool
+----
+
+<<#_trait_ThingTypeAPI_tymethod_is_abstract,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_RootThingType_is_deleted_]
+==== is_deleted
+
+[source,rust]
+----
+fn is_deleted<'tx>(
+    &self,
+    _transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result<bool>>
+----
+
+<<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<bool>>
+----
+
+[#_struct_RootThingType_is_root_]
+==== is_root
+
+[source,rust]
+----
+fn is_root(&self) -> bool
+----
+
+<<#_trait_ThingTypeAPI_tymethod_is_root,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_RootThingType_label_]
+==== label
+
+[source,rust]
+----
+fn label(&self) -> &str
+----
+
+<<#_trait_ThingTypeAPI_tymethod_label,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_RootThingType_set_abstract_]
+==== set_abstract
+
+[source,rust]
+----
+fn set_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_set_label_]
+==== set_label
+
+[source,rust]
+----
+fn set_label<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>,
+    new_label: String
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_label,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_set_owns_]
+==== set_owns
+
+[source,rust]
+----
+fn set_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_owns,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_set_plays_]
+==== set_plays
+
+[source,rust]
+----
+fn set_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_plays,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_unset_abstract_]
+==== unset_abstract
+
+[source,rust]
+----
+fn unset_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_unset_owns_]
+==== unset_owns
+
+[source,rust]
+----
+fn unset_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>,
+    attribute_type: AttributeType
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_RootThingType_unset_plays_]
+==== unset_plays
+
+[source,rust]
+----
+fn unset_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'_>,
+    role_type: RoleType
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+// end::methods[]
+

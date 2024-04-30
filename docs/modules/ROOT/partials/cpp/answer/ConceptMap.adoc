@@ -1,0 +1,157 @@
+[#_ConceptMap]
+=== ConceptMap
+
+*Package*: `TypeDB`
+
+
+
+Contains a mapping of variables to concepts.
+
+// tag::methods[]
+[#_ConceptIterable_Concept_TypeDBConceptMapconcepts_]
+==== concepts
+
+[source,cpp]
+----
+ConceptIterable< Concept > TypeDB::ConceptMap::concepts()
+----
+
+
+
+Produces an ``Iterator`` over all concepts in this ``ConceptMap``.
+
+
+[caption=""]
+.Returns
+`ConceptIterable< Concept >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.concepts();
+----
+
+[#_Explainables_TypeDBConceptMapexplainables_]
+==== explainables
+
+[source,cpp]
+----
+Explainables TypeDB::ConceptMap::explainables()
+----
+
+
+
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable.
+
+
+[caption=""]
+.Returns
+`Explainables`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.explainables();
+----
+
+[#_stdunique_ptr_Concept_TypeDBConceptMapget_const_stdstring_variableName_]
+==== get
+
+[source,cpp]
+----
+std::unique_ptr< Concept > TypeDB::ConceptMap::get(const std::string& variableName)
+----
+
+
+
+Retrieves a concept for a given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| 
+|===
+
+[caption=""]
+.Returns
+`std::unique_ptr< Concept >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.get(variable);
+----
+
+[#_stdmap_stdstring_stdunique_ptr_Concept_TypeDBConceptMapmap_]
+==== map
+
+[source,cpp]
+----
+std::map< std::string, std::unique_ptr< Concept > > TypeDB::ConceptMap::map()
+----
+
+
+
+Returns the inner ``Map`` where keys are query variables, and values are concepts.
+
+
+[caption=""]
+.Returns
+`std::map< std::string, std::unique_ptr< Concept > >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.map();
+----
+
+[#_stdstring_TypeDBConceptMaptoString_]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::ConceptMap::toString()
+----
+
+
+
+A string representation of this ConceptMap.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_StringIterable_TypeDBConceptMapvariables_]
+==== variables
+
+[source,cpp]
+----
+StringIterable TypeDB::ConceptMap::variables()
+----
+
+
+
+Produces an ``Iterator`` stream over all variables in this ``ConceptMap``.
+
+
+[caption=""]
+.Returns
+`StringIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+conceptMap.variables();
+----
+
+// end::methods[]
+

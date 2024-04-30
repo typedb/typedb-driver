@@ -1,0 +1,203 @@
+[#_UserManager]
+=== UserManager
+
+*Package*: `TypeDB`
+
+
+
+Provides access to all user management methods.
+
+// tag::methods[]
+[#_UserIterable_TypeDBUserManagerall_const]
+==== all
+
+[source,cpp]
+----
+UserIterable TypeDB::UserManager::all() const
+----
+
+
+
+Retrieves all users which exist on the TypeDB server.
+
+
+[caption=""]
+.Returns
+`UserIterable`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.all();
+----
+
+[#_bool_TypeDBUserManagercontains_const_stdstring_username_const]
+==== contains
+
+[source,cpp]
+----
+bool TypeDB::UserManager::contains(const std::string& username) const
+----
+
+
+
+Checks if a user with the given name exists.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The user name to be checked a| `const std::string&`
+|===
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.contains(username);
+----
+
+[#_void_TypeDBUserManagercreate_const_stdstring_username_const_stdstring_password_const]
+==== create
+
+[source,cpp]
+----
+void TypeDB::UserManager::create(const std::string& username, const std::string& password) const
+----
+
+
+
+Creates a user with the given name & password.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| `const std::string&`
+a| `password` a| The password of the user to be created a| `const std::string&`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.create(username, password);
+----
+
+[#_void_TypeDBUserManagerdeleteUser_const_stdstring_username_const]
+==== deleteUser
+
+[source,cpp]
+----
+void TypeDB::UserManager::deleteUser(const std::string& username) const
+----
+
+
+
+Deletes a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be deleted a| `const std::string&`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.deleteUser(username);
+----
+
+[#_stdunique_ptr_User_TypeDBUserManagerget_const_stdstring_username_const]
+==== get
+
+[source,cpp]
+----
+std::unique_ptr< User > TypeDB::UserManager::get(const std::string& username) const
+----
+
+
+
+Retrieves a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| `const std::string&`
+|===
+
+[caption=""]
+.Returns
+`std::unique_ptr< User >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.get(username);
+----
+
+[#_void_TypeDBUserManagerpasswordSet_const_stdstring_username_const_stdstring_password_const]
+==== passwordSet
+
+[source,cpp]
+----
+void TypeDB::UserManager::passwordSet(const std::string& username, const std::string& password) const
+----
+
+
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to set the password of a| `const std::string&`
+a| `password` a| The new password a| `const std::string&`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+driver.users.passwordSet(username, password);
+----
+
+// end::methods[]
+

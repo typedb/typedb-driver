@@ -1,0 +1,564 @@
+[#_Concept]
+=== Concept
+
+*Package*: `TypeDB`
+
+
+
+The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
+
+// tag::methods[]
+[#_Attribute_ptr_TypeDBConceptasAttribute_]
+==== asAttribute
+
+[source,cpp]
+----
+Attribute* TypeDB::Concept::asAttribute()
+----
+
+
+
+Casts the concept to ``Attribute``.
+
+
+[caption=""]
+.Returns
+`Attribute*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asAttribute();
+----
+
+[#_AttributeType_ptr_TypeDBConceptasAttributeType_]
+==== asAttributeType
+
+[source,cpp]
+----
+AttributeType* TypeDB::Concept::asAttributeType()
+----
+
+
+
+Casts the concept to ``EntityType``.
+
+
+[caption=""]
+.Returns
+`AttributeType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntityType();
+----
+
+[#_Entity_ptr_TypeDBConceptasEntity_]
+==== asEntity
+
+[source,cpp]
+----
+Entity* TypeDB::Concept::asEntity()
+----
+
+
+
+Casts the concept to ``Entity``.
+
+
+[caption=""]
+.Returns
+`Entity*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntity();
+----
+
+[#_EntityType_ptr_TypeDBConceptasEntityType_]
+==== asEntityType
+
+[source,cpp]
+----
+EntityType* TypeDB::Concept::asEntityType()
+----
+
+
+
+Casts the concept to ``EntityType``.
+
+
+[caption=""]
+.Returns
+`EntityType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asEntityType();
+----
+
+[#_Relation_ptr_TypeDBConceptasRelation_]
+==== asRelation
+
+[source,cpp]
+----
+Relation* TypeDB::Concept::asRelation()
+----
+
+
+
+Casts the concept to ``Relation``.
+
+
+[caption=""]
+.Returns
+`Relation*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRelation();
+----
+
+[#_RelationType_ptr_TypeDBConceptasRelationType_]
+==== asRelationType
+
+[source,cpp]
+----
+RelationType* TypeDB::Concept::asRelationType()
+----
+
+
+
+Casts the concept to ``RelationType``.
+
+
+[caption=""]
+.Returns
+`RelationType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRelationType();
+----
+
+[#_RoleType_ptr_TypeDBConceptasRoleType_]
+==== asRoleType
+
+[source,cpp]
+----
+RoleType* TypeDB::Concept::asRoleType()
+----
+
+
+
+Casts the concept to ``RoleType``.
+
+
+[caption=""]
+.Returns
+`RoleType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asRoleType();
+----
+
+[#_Thing_ptr_TypeDBConceptasThing_]
+==== asThing
+
+[source,cpp]
+----
+Thing* TypeDB::Concept::asThing()
+----
+
+
+
+Casts the concept to ``Thing``.
+
+
+[caption=""]
+.Returns
+`Thing*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asThing();
+----
+
+[#_ThingType_ptr_TypeDBConceptasThingType_]
+==== asThingType
+
+[source,cpp]
+----
+ThingType* TypeDB::Concept::asThingType()
+----
+
+
+
+Casts the concept to ``ThingType``.
+
+
+[caption=""]
+.Returns
+`ThingType*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asThingType();
+----
+
+[#_Value_ptr_TypeDBConceptasValue_]
+==== asValue
+
+[source,cpp]
+----
+Value* TypeDB::Concept::asValue()
+----
+
+
+
+Casts the concept to ``Value``.
+
+
+[caption=""]
+.Returns
+`Value*`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.asValue();
+----
+
+[#_static_bool_TypeDBConceptequals_Concept_ptr_first_Concept_ptr_second_]
+==== equals
+
+[source,cpp]
+----
+static bool TypeDB::Concept::equals(Concept* first, Concept* second)
+----
+
+
+
+Checks equality of two concepts.
+
+[caption=""]
+.Returns
+`static bool`
+
+[#_ConceptType_TypeDBConceptgetConceptType_]
+==== getConceptType
+
+[source,cpp]
+----
+ConceptType TypeDB::Concept::getConceptType()
+----
+
+
+
+Returns the ConceptType of this concept.
+
+
+[caption=""]
+.Returns
+`ConceptType`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+switch(concept.getConceptType()) { ... }
+----
+
+[#_bool_TypeDBConceptisAttribute_]
+==== isAttribute
+
+[source,cpp]
+----
+bool TypeDB::Concept::isAttribute()
+----
+
+
+
+Checks if the concept is a ``Relation``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRelation();
+----
+
+[#_bool_TypeDBConceptisAttributeType_]
+==== isAttributeType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isAttributeType()
+----
+
+
+
+Checks if the concept is an ``AttributeType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isAttributeType();
+----
+
+[#_bool_TypeDBConceptisEntity_]
+==== isEntity
+
+[source,cpp]
+----
+bool TypeDB::Concept::isEntity()
+----
+
+
+
+Checks if the concept is an ``Entity``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isEntity();
+----
+
+[#_bool_TypeDBConceptisEntityType_]
+==== isEntityType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isEntityType()
+----
+
+
+
+Checks if the concept is an ``EntityType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isEntityType();
+----
+
+[#_bool_TypeDBConceptisRelation_]
+==== isRelation
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRelation()
+----
+
+
+
+Checks if the concept is a ``Value``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isValue();
+----
+
+[#_bool_TypeDBConceptisRelationType_]
+==== isRelationType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRelationType()
+----
+
+
+
+Checks if the concept is a ``RelationType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRelationType();
+----
+
+[#_bool_TypeDBConceptisRoleType_]
+==== isRoleType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRoleType()
+----
+
+
+
+Checks if the concept is a ``RoleType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isRoleType();
+----
+
+[#_bool_TypeDBConceptisThing_]
+==== isThing
+
+[source,cpp]
+----
+bool TypeDB::Concept::isThing()
+----
+
+
+
+Checks if the concept is a ``Thing``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isThing();
+----
+
+[#_bool_TypeDBConceptisThingType_]
+==== isThingType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isThingType()
+----
+
+
+
+Checks if the concept is a ``ThingType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isThingType();
+----
+
+[#_bool_TypeDBConceptisValue_]
+==== isValue
+
+[source,cpp]
+----
+bool TypeDB::Concept::isValue()
+----
+
+
+
+Checks if the concept is a ``Value``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+concept.isValue();
+----
+
+[#_bool_TypeDBConceptoperator_const_Concept_other_]
+==== operator==
+
+[source,cpp]
+----
+bool TypeDB::Concept::operator==(const Concept& other)
+----
+
+
+
+Checks equality with the ``other`` concept.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_stdstring_TypeDBConcepttoString_]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::Concept::toString()
+----
+
+
+
+A string representation of this Concept.
+
+[caption=""]
+.Returns
+`std::string`
+
+// end::methods[]
+

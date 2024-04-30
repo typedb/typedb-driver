@@ -1,0 +1,211 @@
+[#_struct_Entity]
+=== Entity
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `EntityAPI`
+* `Eq`
+* `PartialEq<Entity>`
+* `StructuralEq`
+* `StructuralPartialEq`
+* `ThingAPI`
+
+Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `IID` a| The unique id of this Entity
+a| `is_inferred` a| `bool` a| If this Thing is inferred by a [Reasoning Rule] or not
+a| `type_` a| `EntityType` a| The type which this Entity belongs to
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_Entity_delete_]
+==== delete
+
+[source,rust]
+----
+fn delete<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingAPI_method_delete,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_Entity_get_has_]
+==== get_has
+
+[source,rust]
+----
+fn get_has<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    attribute_types: Vec<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'tx, Result<Attribute>>>
+----
+
+<<#_trait_ThingAPI_method_get_has,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'tx, Result<Attribute>>>
+----
+
+[#_struct_Entity_get_playing_]
+==== get_playing
+
+[source,rust]
+----
+fn get_playing<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
+----
+
+<<#_trait_ThingAPI_method_get_playing,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'tx, Result<RoleType>>>
+----
+
+[#_struct_Entity_get_relations_]
+==== get_relations
+
+[source,rust]
+----
+fn get_relations<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'tx, Result<Relation>>>
+----
+
+<<#_trait_ThingAPI_method_get_relations,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'tx, Result<Relation>>>
+----
+
+[#_struct_Entity_iid_]
+==== iid
+
+[source,rust]
+----
+fn iid(&self) -> &IID
+----
+
+<<#_trait_ThingAPI_tymethod_iid,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&IID
+----
+
+[#_struct_Entity_is_deleted_]
+==== is_deleted
+
+[source,rust]
+----
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>
+) -> BoxPromise<'tx, Result<bool>>
+----
+
+<<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<bool>>
+----
+
+[#_struct_Entity_is_inferred_]
+==== is_inferred
+
+[source,rust]
+----
+fn is_inferred(&self) -> bool
+----
+
+<<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_Entity_set_has_]
+==== set_has
+
+[source,rust]
+----
+fn set_has<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    attribute: Attribute
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingAPI_method_set_has,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[#_struct_Entity_unset_has_]
+==== unset_has
+
+[source,rust]
+----
+fn unset_has<'tx>(
+    &self,
+    transaction: &'tx Transaction<'_>,
+    attribute: Attribute
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingAPI_method_unset_has,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+// end::methods[]
+

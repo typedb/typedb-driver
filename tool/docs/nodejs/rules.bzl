@@ -21,7 +21,7 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 def typedoc_to_adoc(name, data, docs_dirs):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "nodejs/docs",
+        "docs/modules/ROOT/partials/nodejs",
     ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
     kt_jvm_binary(
         name = name,

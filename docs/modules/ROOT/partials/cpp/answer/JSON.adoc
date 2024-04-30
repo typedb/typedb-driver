@@ -1,0 +1,260 @@
+[#_JSON]
+=== JSON
+
+*Package*: `TypeDB`
+
+
+
+Simple JSON structure for results of fetch queries.
+
+// tag::methods[]
+[#_const_JSONArray_TypeDBJSONasArray_const]
+==== asArray
+
+[source,cpp]
+----
+const JSONArray& TypeDB::JSON::asArray() const
+----
+
+
+
+if this JSON object holds an array, returns the underlying array. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONArray&`
+
+[#_const_JSONBoolean_TypeDBJSONasBoolean_const]
+==== asBoolean
+
+[source,cpp]
+----
+const JSONBoolean& TypeDB::JSON::asBoolean() const
+----
+
+
+
+if this JSON object holds a boolean value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONBoolean&`
+
+[#_const_JSONDouble_TypeDBJSONasDouble_const]
+==== asDouble
+
+[source,cpp]
+----
+const JSONDouble& TypeDB::JSON::asDouble() const
+----
+
+
+
+if this JSON object holds a double value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONDouble&`
+
+[#_const_JSONLong_TypeDBJSONasLong_const]
+==== asLong
+
+[source,cpp]
+----
+const JSONLong& TypeDB::JSON::asLong() const
+----
+
+
+
+if this JSON object holds a long value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONLong&`
+
+[#_const_JSONMap_TypeDBJSONasMap_const]
+==== asMap
+
+[source,cpp]
+----
+const JSONMap& TypeDB::JSON::asMap() const
+----
+
+
+
+if this JSON object holds a map, returns the underlying map. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONMap&`
+
+[#_const_JSONString_TypeDBJSONasString_const]
+==== asString
+
+[source,cpp]
+----
+const JSONString& TypeDB::JSON::asString() const
+----
+
+
+
+if this JSON object holds a string value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONString&`
+
+[#_bool_TypeDBJSONisArray_const]
+==== isArray
+
+[source,cpp]
+----
+bool TypeDB::JSON::isArray() const
+----
+
+
+
+true if this JSON object holds an array, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDBJSONisBoolean_const]
+==== isBoolean
+
+[source,cpp]
+----
+bool TypeDB::JSON::isBoolean() const
+----
+
+
+
+true if this JSON object holds a boolean value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDBJSONisDouble_const]
+==== isDouble
+
+[source,cpp]
+----
+bool TypeDB::JSON::isDouble() const
+----
+
+
+
+true if this JSON object holds a double value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDBJSONisLong_const]
+==== isLong
+
+[source,cpp]
+----
+bool TypeDB::JSON::isLong() const
+----
+
+
+
+true if this JSON object holds a long value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDBJSONisMap_const]
+==== isMap
+
+[source,cpp]
+----
+bool TypeDB::JSON::isMap() const
+----
+
+
+
+true if this JSON object holds a map, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDBJSONisString_const]
+==== isString
+
+[source,cpp]
+----
+bool TypeDB::JSON::isString() const
+----
+
+
+
+true if this JSON object holds a string value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_JSON_TypeDBJSONparse_const_stdstring_string_]
+==== parse
+
+[source,cpp]
+----
+static JSON TypeDB::JSON::parse(const std::string& string)
+----
+
+
+
+Parses a JSON string into a ``JSON`` object.
+
+[caption=""]
+.Returns
+`static JSON`
+
+[#_const_stdstring_TypeDBJSONtoString_const]
+==== toString
+
+[source,cpp]
+----
+const std::string TypeDB::JSON::toString() const
+----
+
+
+
+Convert a JSON object to a string
+
+[caption=""]
+.Returns
+`const std::string`
+
+[#_JSONType_TypeDBJSONtype_const]
+==== type
+
+[source,cpp]
+----
+JSONType TypeDB::JSON::type() const
+----
+
+
+
+The JSONType of this JSON object
+
+
+[caption=""]
+.Returns
+`JSONType`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+switch(json.type() { ... }
+----
+
+// end::methods[]
+

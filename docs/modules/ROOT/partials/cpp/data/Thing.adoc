@@ -1,0 +1,423 @@
+[#_Thing]
+=== Thing
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::Concept`
+
+
+
+Common super-type of Entity, Relation, and Attribute.
+
+// tag::methods[]
+[#_VoidFuture_TypeDBThingdeleteThing_Transaction_transaction_]
+==== deleteThing
+
+[source,cpp]
+----
+VoidFuture TypeDB::Thing::deleteThing(Transaction& transaction)
+----
+
+
+
+Deletes this ``Thing``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.deleteThing(transaction).get();
+----
+
+[#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdinitializer_list_Annotation_annotations_]
+==== getHas
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::initializer_list< Annotation >& annotations = {})
+----
+
+
+
+Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation``s.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getHas(transaction);
+thing.getHas(transaction, {Annotation.key()}));
+----
+
+[#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_AttributeType_ptr_attribute_]
+==== getHas
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const AttributeType* attribute)
+----
+
+
+
+See <<#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdvector_stdunique_ptr_AttributeType_attributeTypes_,getHas(Transaction&, const std::vector<std::unique_ptr<AttributeType>>&)>>
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdvector_stdunique_ptr_AttributeType_attributeTypes_]
+==== getHas
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< std::unique_ptr< AttributeType > >& attributeTypes)
+----
+
+
+
+Retrieves the ``Attribute``s of the specified ``AttributeType``s that this ``Thing`` owns.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `const std::vector< std::unique_ptr< AttributeType > >&`
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getHas(transaction, attributeTypes);
+----
+
+[#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdvector_const_AttributeType_ptr_attributeTypes_]
+==== getHas
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< const AttributeType* >& attributeTypes)
+----
+
+
+
+See <<#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdvector_stdunique_ptr_AttributeType_attributeTypes_,getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes)>>
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdvector_Annotation_annotations_]
+==== getHas
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< Annotation >& annotations)
+----
+
+
+
+See <<#_ConceptIterable_Attribute_TypeDBThinggetHas_Transaction_transaction_const_stdinitializer_list_Annotation_annotations_,getHas(Transaction&, const std::initializer_list<Annotation>&)>>
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[#_stdstring_TypeDBThinggetIID_]
+==== getIID
+
+[source,cpp]
+----
+std::string TypeDB::Thing::getIID()
+----
+
+
+
+Retrieves the unique id of the ``Thing``.
+
+
+[caption=""]
+.Returns
+`std::string`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getIID();
+----
+
+[#_ConceptIterable_RoleType_TypeDBThinggetPlaying_Transaction_transaction_]
+==== getPlaying
+
+[source,cpp]
+----
+ConceptIterable< RoleType > TypeDB::Thing::getPlaying(Transaction& transaction)
+----
+
+
+
+Retrieves the roles that this ``Thing`` is currently playing.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< RoleType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getPlaying(transaction);
+----
+
+[#_ConceptIterable_Relation_TypeDBThinggetRelations_Transaction_transaction_const_stdvector_stdunique_ptr_RoleType_roleTypes_]
+==== getRelations
+
+[source,cpp]
+----
+ConceptIterable< Relation > TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< std::unique_ptr< RoleType > >& roleTypes = {})
+----
+
+
+
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `roleTypes` a| The array of roles to filter the relations by. a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Relation >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getRelations(transaction);
+thing.getRelations(transaction, roleTypes);
+----
+
+[#_ConceptIterable_Relation_TypeDBThinggetRelations_Transaction_transaction_const_stdvector_RoleType_ptr_roleTypes_]
+==== getRelations
+
+[source,cpp]
+----
+ConceptIterable< Relation > TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
+----
+
+
+
+See <<#_ConceptIterable_Relation_TypeDBThinggetRelations_Transaction_transaction_const_stdvector_stdunique_ptr_RoleType_roleTypes_,getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes)>>
+
+[caption=""]
+.Returns
+`ConceptIterable< Relation >`
+
+[#_stdunique_ptr_ThingType_TypeDBThinggetType_]
+==== getType
+
+[source,cpp]
+----
+std::unique_ptr< ThingType > TypeDB::Thing::getType()
+----
+
+
+
+Retrieves the type which this ``Thing`` belongs to.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< ThingType >`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.getType();
+----
+
+[#_BoolFuture_TypeDBThingisDeleted_Transaction_transaction_]
+==== isDeleted
+
+[source,cpp]
+----
+BoolFuture TypeDB::Thing::isDeleted(Transaction& transaction)
+----
+
+
+
+Checks if this ``Thing`` is deleted.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+|===
+
+[caption=""]
+.Returns
+`BoolFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.isDeleted(transaction).get();
+----
+
+[#_bool_TypeDBThingisInferred_]
+==== isInferred
+
+[source,cpp]
+----
+bool TypeDB::Thing::isInferred()
+----
+
+
+
+Checks if this ``Thing`` is inferred by a [Reasoning Rule].
+
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.isInferred();
+----
+
+[#_VoidFuture_TypeDBThingsetHas_Transaction_transaction_Attribute_ptr_attribute_]
+==== setHas
+
+[source,cpp]
+----
+VoidFuture TypeDB::Thing::setHas(Transaction& transaction, Attribute* attribute)
+----
+
+
+
+Assigns an ``Attribute`` to be owned by this ``Thing``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute*`
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.setHas(transaction, attribute).get();
+----
+
+[#_VoidFuture_TypeDBThingunsetHas_Transaction_transaction_Attribute_ptr_attribute_]
+==== unsetHas
+
+[source,cpp]
+----
+VoidFuture TypeDB::Thing::unsetHas(Transaction& transaction, Attribute* attribute)
+----
+
+
+
+Unassigns an ``Attribute`` from this ``Thing``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `Transaction&`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute*`
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[caption=""]
+.Code examples
+[source,cpp]
+----
+thing.unsetHas(transaction, attribute).get();
+----
+
+// end::methods[]
+

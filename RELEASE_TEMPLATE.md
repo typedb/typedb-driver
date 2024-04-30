@@ -56,8 +56,8 @@ npm install typedb-driver@{version}
 
 ### C# driver
 
-NuGet package: Coming soon
-Documentation: Coming soon
+NuGet package: https://www.nuget.org/packages/TypeDB.Driver
+Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>

@@ -41,7 +41,7 @@ checkstyle_test(
         ".circleci/windows/git.patch",
         "LICENSE",
         "VERSION",
-        "docs/*",
+        "docs/**/*",
     ]),
     license_type = "apache-header",
 )

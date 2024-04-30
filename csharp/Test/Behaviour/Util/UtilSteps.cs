@@ -36,7 +36,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"set time-zone is: {}")]
         public void SetTimeZoneIs(string timeZoneId)
         {
-            // no-op: C# doesn't support time zone changes.
+            // no-op: C# doesn't support time zone changes. // TODO #636: consider implementation
         }
     }
 }
