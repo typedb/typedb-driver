@@ -83,6 +83,4 @@ include::api-ref::partial$c/logic/rule.adoc[]
 
 include::api-ref::partial$c/errors/error.adoc[]
 
-1
-
 include::api-ref::partial$c/errors/schemaexception.adoc[]
