@@ -70,7 +70,7 @@ build:
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         DOCS_DIRS="docs/modules/ROOT/partials/java docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/python docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
-        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \; -o -type d ! -exec test -e {}/api-reference.adoc \; -exec rm -rf {} \;
+        find ./$DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
         git add $DOCS_DIRS
         git diff --exit-code HEAD $DOCS_DIRS
