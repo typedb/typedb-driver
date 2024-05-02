@@ -11,7 +11,7 @@
 a| `AddressTranslationMismatch`
 a| `BrokenPipe`
 a| `CloudAllNodesFailed`
-a| `CloudEndpointEncrypted`
+a| `CloudEncryptionSettingsMismatch`
 a| `CloudReplicaNotPrimary`
 a| `CloudSSLCertificateNotValidated`
 a| `CloudTokenCredentialInvalid`
