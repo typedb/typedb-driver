@@ -62,8 +62,8 @@ error_messages! { ConnectionError
         17: "Invalid token credential.",
     SessionCloseFailed =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    CloudEndpointEncrypted =
-        19: "Unable to connect to TypeDB Cloud: attempting an unencrypted connection to an encrypted endpoint.",
+    CloudEncryptionSettingsMismatch =
+        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
         20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
@@ -137,7 +137,7 @@ impl Error {
         if status_message == "broken pipe" {
             Error::Connection(ConnectionError::BrokenPipe)
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::CloudEndpointEncrypted)
+            Error::Connection(ConnectionError::CloudEncryptionSettingsMismatch)
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::CloudSSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
