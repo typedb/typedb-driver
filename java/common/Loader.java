@@ -91,22 +91,14 @@ public class Loader {
         if (jniURL == null) {
             throw new TypeDBDriverException(JNI_PLATFORM_LIBRARY_NOT_FOUND, DRIVER_JNI_LIBRARY_NAME, platformString);
         }
-
-        try {
-            return unpackNativeResources(jniURL.toURI());
-        } catch (URISyntaxException e) {
-            throw new IOException(e);
-        }
+        return unpackNativeResources(jniURL);
     }
 
-    private static Path unpackNativeResources(URI resourceURI) throws IOException {
+    private static Path unpackNativeResources(URL resourceURL) throws IOException {
         Path tempPath = Files.createTempDirectory("typedb-driver-lib");
         tempPath.toFile().deleteOnExit();
-
-        FileSystem fs = FileSystems.newFileSystem(resourceURI, Collections.emptyMap());
-        Path p = fs.provider().getPath(resourceURI);
-        Path newPath = tempPath.resolve(p.getParent().relativize(p).toString());
-        Files.copy(p, newPath);
+        Path newPath = tempPath.resolve(Path.of(resourceURL.getPath()).getFileName().toString());
+        Files.copy(resourceURL.openStream(), newPath);
         newPath.toFile().deleteOnExit();
         return tempPath;
     }
