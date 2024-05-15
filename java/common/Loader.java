@@ -23,14 +23,9 @@ import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -54,8 +49,8 @@ public class Loader {
     public static void loadNativeLibraries() {
         if (!loaded) {
             try {
-                Path tempPath = getNativeResourceURI();
-                System.load(tempPath.resolve(DRIVER_JNI_LIBRARY_NAME).toAbsolutePath().toString());
+                Path libraryPath = unpackNativeLibrary();
+                System.load(libraryPath.toAbsolutePath().toString());
                 loaded = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -63,7 +58,7 @@ public class Loader {
         }
     }
 
-    private static Path getNativeResourceURI() throws IOException {
+    private static Path unpackNativeLibrary() throws IOException {
         Pair<OS, Arch> platform = new Pair<>(OS.detect(), Arch.detect());
         if (!DRIVER_JNI_JAR_NAME.containsKey(platform)) {
             throw new TypeDBDriverException(UNRECOGNISED_OS_ARCH, platform.first(), platform.second());
@@ -91,24 +86,16 @@ public class Loader {
         if (jniURL == null) {
             throw new TypeDBDriverException(JNI_PLATFORM_LIBRARY_NOT_FOUND, DRIVER_JNI_LIBRARY_NAME, platformString);
         }
-
-        try {
-            return unpackNativeResources(jniURL.toURI());
-        } catch (URISyntaxException e) {
-            throw new IOException(e);
-        }
+        return unpackNativeResources(jniURL);
     }
 
-    private static Path unpackNativeResources(URI resourceURI) throws IOException {
+    private static Path unpackNativeResources(URL resourceURL) throws IOException {
         Path tempPath = Files.createTempDirectory("typedb-driver-lib");
         tempPath.toFile().deleteOnExit();
-
-        FileSystem fs = FileSystems.newFileSystem(resourceURI, Collections.emptyMap());
-        Path p = fs.provider().getPath(resourceURI);
-        Path newPath = tempPath.resolve(p.getParent().relativize(p).toString());
-        Files.copy(p, newPath);
+        Path newPath = tempPath.resolve(Path.of(resourceURL.getPath()).getFileName().toString());
+        Files.copy(resourceURL.openStream(), newPath);
         newPath.toFile().deleteOnExit();
-        return tempPath;
+        return newPath;
     }
 
     private enum OS {
