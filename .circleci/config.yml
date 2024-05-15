@@ -589,17 +589,17 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
 
-#      - run: .circleci\windows\python\deploy_snapshot.bat
-#
-#      - run: .circleci\windows\java\deploy_snapshot.bat
-#
-#      - run: .circleci\windows\clib\deploy_snapshot.bat
-#      - run: .circleci\windows\clib\test_assembly.bat
-#
-#      - run: .circleci\windows\cpp\deploy_snapshot.bat
-#      - run: .circleci\windows\cpp\test_assembly.bat
-#
-#      - run: .circleci\windows\csharp\deploy_snapshot.bat
+      - run: .circleci\windows\python\deploy_snapshot.bat
+
+      - run: .circleci\windows\java\deploy_snapshot.bat
+
+      - run: .circleci\windows\clib\deploy_snapshot.bat
+      - run: .circleci\windows\clib\test_assembly.bat
+
+      - run: .circleci\windows\cpp\deploy_snapshot.bat
+      - run: .circleci\windows\cpp\test_assembly.bat
+
+      - run: .circleci\windows\csharp\deploy_snapshot.bat
 
   deploy-snapshot-any:
     executor: linux-x86_64-ubuntu-2204
