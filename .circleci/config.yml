@@ -46,6 +46,11 @@ executors:
     resource_class: macos.m1.medium.gen1
     working_directory: ~/typedb-driver
 
+  win-x86_64:
+    resource_class: windows.xlarge
+    machine:
+      image: windows-server-2022-gui:2022.04.1
+    shell: cmd.exe
 
 commands:
 
@@ -578,26 +583,23 @@ jobs:
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
 
-      - run: .circleci\windows\python\deploy_snapshot.bat
-
-      - run: .circleci\windows\java\deploy_snapshot.bat
-
-      - run: .circleci\windows\clib\deploy_snapshot.bat
-      - run: .circleci\windows\clib\test_assembly.bat
-
-      - run: .circleci\windows\cpp\deploy_snapshot.bat
-      - run: .circleci\windows\cpp\test_assembly.bat
-
-      - run: .circleci\windows\csharp\deploy_snapshot.bat
+#      - run: .circleci\windows\python\deploy_snapshot.bat
+#
+#      - run: .circleci\windows\java\deploy_snapshot.bat
+#
+#      - run: .circleci\windows\clib\deploy_snapshot.bat
+#      - run: .circleci\windows\clib\test_assembly.bat
+#
+#      - run: .circleci\windows\cpp\deploy_snapshot.bat
+#      - run: .circleci\windows\cpp\test_assembly.bat
+#
+#      - run: .circleci\windows\csharp\deploy_snapshot.bat
 
   deploy-snapshot-any:
     executor: linux-x86_64-ubuntu-2204
@@ -669,10 +671,7 @@ jobs:
       - test-dotnet-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
@@ -748,10 +747,7 @@ jobs:
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
@@ -845,7 +841,7 @@ workflows:
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, pin-circleci-windows-executor]
 
       - deploy-snapshot-any:
           filters:
