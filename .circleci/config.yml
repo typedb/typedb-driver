@@ -49,7 +49,7 @@ executors:
   win-x86_64:
     resource_class: windows.xlarge
     machine:
-      image: windows-server-2022-gui:2024.04.1
+      image: windows-server-2022-gui:2024.01.1
     shell: cmd.exe
 
 commands:
