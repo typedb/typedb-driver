@@ -841,7 +841,7 @@ workflows:
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [development, master, pin-circleci-windows-executor]
+              only: [development, master]
 
       - deploy-snapshot-any:
           filters:
