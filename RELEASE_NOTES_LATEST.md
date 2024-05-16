@@ -81,7 +81,7 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## New Features
-- **Copy jin library from input stream rather than file**
+- **Copy jni library from input stream rather than file**
   We now copy the jni library by reading from it as an input stream rather than as a file copy. This approach works when the JNI jars are nested, such as in Spring Boot projects.
   
 

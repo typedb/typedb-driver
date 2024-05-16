@@ -46,6 +46,11 @@ executors:
     resource_class: macos.m1.medium.gen1
     working_directory: ~/typedb-driver
 
+  win-x86_64:
+    resource_class: windows.xlarge
+    machine:
+      image: windows-server-2022-gui:2024.01.1
+    shell: cmd.exe
 
 commands:
 
@@ -578,10 +583,7 @@ jobs:
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
@@ -669,10 +671,7 @@ jobs:
       - test-dotnet-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
@@ -748,10 +747,7 @@ jobs:
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-windows-x86_64:
-    executor:
-      name: win/default
-      size: xlarge
-      shell: cmd.exe
+    executor: win-x86_64
     working_directory: ~/typedb-driver
     steps:
       - checkout
