@@ -46,6 +46,7 @@ function server_start() {
     --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
     --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
     --diagnostics.reporting.errors=false \
+    --diagnostics.reporting.statistics=false \
     --diagnostics.monitoring.enable=false
 }
 

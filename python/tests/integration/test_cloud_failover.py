@@ -57,6 +57,7 @@ class TestCloudFailover(TestCase):
             "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
             "--server.encryption.enable", "true",
             "--diagnostics.reporting.errors", "false",
+            "--diagnostics.reporting.statistics", "false",
             "--diagnostics.monitoring.enable", "false"
         ])
 
