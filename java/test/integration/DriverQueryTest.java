@@ -73,6 +73,7 @@ public class DriverQueryTest {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         Map<String, String> options = new HashMap<>();
         options.put("--diagnostics.reporting.errors", "false");
+        options.put("--diagnostics.reporting.statistics", "false");
         typedb = new TypeDBCoreRunner(options);
         typedb.start();
         typedbDriver = TypeDB.coreDriver(typedb.address());

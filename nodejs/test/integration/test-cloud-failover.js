@@ -71,6 +71,7 @@ function serverStart(idx) {
         "--server.encryption.file.internal-zmq.private-key", encryptionResourceDir + "int-zmq-private-key",
         "--server.encryption.file.internal-zmq.public-key", encryptionResourceDir + "int-zmq-public-key",
         "--diagnostics.reporting.errors", "false",
+        "--diagnostics.reporting.statistics", "false",
         "--diagnostics.monitoring.enable", "false"
     ]);
     node.stdout.on('data', (data) => {
