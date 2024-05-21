@@ -802,10 +802,9 @@ jobs:
           apt update -y && apt install -y software-properties-common
           add-apt-repository -y ppa:deadsnakes/ppa
           apt update -y && apt install -y python3.9 python3.9-distutils python3-pip software-properties-common
-          apt-get remove -y python3-cffi-backend
-          python3.9 -m pip install -U cffi
+          python3.10 -m pip install -U cffi
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run --python_path=$(which python3.9) @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
+          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204
