@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+
+go_library(
+    name = "hello_lib",
+    srcs = ["hello_lib.go"],
+    importpath = "hello_lib_path",
+    deps = [],
+    visibility =  ["//visibility:public"]
+)
+
+go_test(
+    name = "hello-lib-test",
+    srcs = ["hello_lib_test.go"],
+    deps = ["//go/lib:hello_lib"],
+)
+
