@@ -6,6 +6,11 @@ go_binary(
     srcs = ["hello-world.go"],
 #    embed = ["//go/lib:hello_lib"],
     deps = ["//go/lib:hello_lib"],
-
 )
 
+go_binary(
+    name = "json-test",
+    srcs = ["json_explore.go"],
+#    embed = ["//go/lib:hello_lib"],
+    deps = ["//go/lib:hello_lib"],
+)
