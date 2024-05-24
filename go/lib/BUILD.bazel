@@ -1,12 +1,11 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
-
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "hello_lib",
     srcs = ["hello_lib.go"],
     importpath = "hello_lib_path",
+    visibility = ["//visibility:public"],
     deps = [],
-    visibility =  ["//visibility:public"]
 )
 
 go_test(
@@ -15,3 +14,16 @@ go_test(
     deps = ["//go/lib:hello_lib"],
 )
 
+go_library(
+    name = "lib",
+    srcs = ["hello_lib.go"],
+    importpath = "github.com/cucumber/godog/lib",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "lib_test",
+    srcs = ["hello_lib_test.go"],
+    embed = [":lib"],
+    deps = [":hello_lib"],
+)
