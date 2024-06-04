@@ -1,59 +1,32 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
-load("@bazel_gazelle//:def.bzl", "gazelle")
+load("//go:rules.bzl", "swig_native_go_library")
 
-# Define a gazelle binary target
-#gazelle_binary(
-#    name = "gazelle",
-#    languages = [
-#        "@bazel_gazelle//language/go",  # Built-in rule from gazelle for Golang.
-#    ],
-#    visibility = ["//visibility:public"],
-#)
-# gazelle:prefix github.com/example/project
-
-# Define a gazelle run target
-#gazelle(
-#    name = "update_build_files",
-#    gazelle = ":gazelle",
-#    args = [
-#        "update",
-#    ],
-#    visibility = ["//visibility:public"],
-#)
-#
-#gazelle(
-#    name = "update_repos",
-#    gazelle = ":gazelle",
-#    args = [
-#        "update-repos",
-#        "-from_file=go.mod",
-#    ],
-#    visibility = ["//visibility:public"],
-#)
-
-# gazelle:prefix github.com/cucumber/godog
-gazelle(name = "gazelle")
+swig_native_go_library(
+    name = "typedb_driver_go_native",
+    lib = "//c:typedb_driver_clib_headers",
+    interface = "//c:typedb_driver.i",
+    includes = ["//c:swig/typedb_driver_go.swg"],
+    enable_cxx = True,
+    visibility = ["//visibility:public"],
+)
 
 go_library(
     name = "godog_lib",
     srcs = [
         "godogs.go",
     ],
-    importpath = "example.com/private",
-    visibility = ["//visibility:private"],
-    deps = ["//go/lib:hello_lib", "@com_github_cucumber_godog//:godog"],
-
+#    embed = [":typedb_driver_go_native"],
+    embed = [],
+    importpath = "example.com/godog",
+    visibility = ["//visibility:public"],
+#    deps = ["//go/lib:hello_lib", "//go/swigdir:typedb_driver_swg_lib", "@com_github_cucumber_godog//:godog"],
+    deps = ["//go:typedb_driver_go_native", "__typedb_driver_go_native"],
+    cgo=True
 )
 
 go_binary(
     name = "go",
     embed = [":godog_lib"],
-    visibility = ["//visibility:public"],
-)
 
-go_test(
-    name = "godog_test",
-    srcs = ["godogs_test.go"],
-    embed = [":godog_lib"],
-    data = ["//go/features:godogs.feature"]
+    visibility = ["//visibility:public"],
 )
