@@ -2,9 +2,7 @@ package main
 
 // this path is interesting - can use gopath or something
 
-/*
-#cgo LDFLAGS: -Lgo/ -ltypedb_driver_go_native -framework CoreFoundation
-*/
+
 import "C"
 import (
 	"fmt"
