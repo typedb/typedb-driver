@@ -15,18 +15,17 @@ go_library(
     srcs = [
         "godogs.go",
     ],
-#    embed = [":typedb_driver_go_native"],
     embed = [],
     importpath = "example.com/godog",
     visibility = ["//visibility:public"],
 #    deps = ["//go/lib:hello_lib", "//go/swigdir:typedb_driver_swg_lib", "@com_github_cucumber_godog//:godog"],
-    deps = ["//go:typedb_driver_go_native", "__typedb_driver_go_native"],
-    cgo=True
+    deps = ["//go:typedb_driver_go_native"],
 )
 
 go_binary(
-    name = "go",
+    name = "driver_test",
     embed = [":godog_lib"],
 
     visibility = ["//visibility:public"],
+    cgo=True
 )
