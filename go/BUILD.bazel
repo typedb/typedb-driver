@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("//go:rules.bzl", "swig_native_go_library")
 
 swig_native_go_library(
@@ -11,28 +11,24 @@ swig_native_go_library(
 )
 
 go_library(
-    name = "godog_lib",
+    name = "driver_lib",
     srcs = [
-        "godogs.go",
+        "driver_eg.go",
     ],
     clinkopts = [
-            "-L/Users/nickan/typedb-driver/bazel-bin/go",
-            "-ltypedb_driver_go_native",
-            "-framework", "CoreFoundation"
+        "-L/Users/XXXXX/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
+        "-ltypedb_driver_go_native",
+        "-framework", "CoreFoundation"
         ],
 
-    embed = [],
-    importpath = "example.com/godog",
     visibility = ["//visibility:public"],
-#    deps = ["//go/lib:hello_lib", "//go/swigdir:typedb_driver_swg_lib", "@com_github_cucumber_godog//:godog"],
     deps = ["//go:typedb_driver_go_native"],
     cgo=True
-
 )
 
 go_binary(
     name = "driver_test",
-    embed = [":godog_lib"],
+    embed = [":driver_lib"],
 
     visibility = ["//visibility:public"],
 )
