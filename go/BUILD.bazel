@@ -1,5 +1,19 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("//go:rules.bzl", "swig_native_go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# for updating dependencies
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go/go.mod",
+        "-to_macro=go/deps.bzl%go_dependencies",
+        "-prune",
+        "-build_file_proto_mode=disable_global",
+    ],
+    command = "update-repos",
+)
+
 
 swig_native_go_library(
     name = "typedb_driver_go_native",
@@ -16,7 +30,7 @@ go_library(
         "driver_eg.go",
     ],
     clinkopts = [
-        "-L/Users/XXXXX/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
+        "-L/Users/nickan/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
         "-ltypedb_driver_go_native",
         "-framework", "CoreFoundation"
         ],
