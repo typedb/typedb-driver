@@ -29,6 +29,7 @@ ts_project(
 
         "//nodejs:node_modules/@types/node",
     ],
+    transpiler = "tsc",
     visibility = ["//visibility:public"],
 )
 
@@ -41,6 +42,7 @@ ts_project(
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs:node_modules/@types/node",
     ],
+    transpiler = "tsc",
     visibility = ["//visibility:public"],
 )
 
