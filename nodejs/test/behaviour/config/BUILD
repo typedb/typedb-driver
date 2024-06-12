@@ -29,6 +29,7 @@ ts_project(
         "//nodejs:node_modules/@types/node",
         "//nodejs:node_modules/@cucumber/cucumber",
     ],
+    transpiler = "tsc",
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )

@@ -33,3 +33,7 @@ build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
 
 # TODO
 # build:windows --stamp --workspace_status_command=workspace-status.bat
+
+build --@aspect_rules_ts//ts:skipLibCheck=always
+fetch --@aspect_rules_ts//ts:skipLibCheck=always
+query --@aspect_rules_ts//ts:skipLibCheck=always

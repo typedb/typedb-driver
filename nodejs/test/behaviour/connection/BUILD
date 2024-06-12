@@ -34,6 +34,7 @@ ts_project(
         "//nodejs:node_modules/google-protobuf",
         "//nodejs:node_modules/@types/google-protobuf",
     ],
+    transpiler = "tsc",
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )
@@ -50,6 +51,7 @@ ts_project(
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/util:util",
     ],
+    transpiler = "tsc",
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )
@@ -66,6 +68,7 @@ ts_project(
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/util:util",
     ],
+    transpiler = "tsc",
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )

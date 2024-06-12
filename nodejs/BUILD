@@ -82,6 +82,7 @@ ts_project(
         ":node_modules/uuid",
         ":node_modules/@types/uuid",
     ],
+    transpiler = "tsc",
     visibility = ["//visibility:public"],
     out_dir = "dist",
 )
@@ -133,6 +134,7 @@ ts_project(
         ":node_modules/typedoc",
         ":node_modules/@types/node",
     ],
+    transpiler = "tsc",
     visibility = ["//visibility:public"],
     out_dir = ".",
 )

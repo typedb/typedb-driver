@@ -35,6 +35,7 @@ ts_project(
         "//nodejs/test/behaviour/util:util",
         "//nodejs/test/behaviour/connection:steps-base",
     ],
+    transpiler = "tsc",
     resolve_json_module = True,
     visibility = ["//visibility:public"],
 )
