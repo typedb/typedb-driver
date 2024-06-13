@@ -28,6 +28,7 @@ swig_native_go_library(
     visibility = ["//visibility:public"],
 )
 
+# SAMPLE CODE FOR TESTING. THIS SHOULD BE USED AS A GUIDE WHEN DEVELOPING PRODUCTION CODE.
 go_library(
     name = "driver_lib_example",
     srcs = [
