@@ -1,23 +1,12 @@
+# TODO add apache 2.0 license everywhere
+
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("//go:rules.bzl", "swig_native_go_library")
-load("@bazel_gazelle//:def.bzl", "gazelle")
-
-# for updating dependencies
-gazelle(
-    name = "gazelle-update-repos",
-    args = [
-        "-from_file=go/go.mod",
-        "-to_macro=go/deps.bzl%go_dependencies",
-        "-prune",
-        "-build_file_proto_mode=disable_global",
-    ],
-    command = "update-repos",
-)
-
 
 swig_native_go_library(
     name = "typedb_driver_go_native",
     lib = "//c:typedb_driver_clib_headers",
+    package_name= "typedb_driver",
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_go.swg"],
     enable_cxx = True,
@@ -25,16 +14,15 @@ swig_native_go_library(
 )
 
 go_library(
-    name = "driver_lib",
+    name = "driver_lib_example",
     srcs = [
         "driver_eg.go",
     ],
     clinkopts = [
-        "-L/Users/nickan/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
+        "-L/Users/XXX/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
         "-ltypedb_driver_go_native",
         "-framework", "CoreFoundation"
         ],
-
     visibility = ["//visibility:public"],
     deps = ["//go:typedb_driver_go_native"],
     cgo=True
@@ -42,7 +30,6 @@ go_library(
 
 go_binary(
     name = "driver_test",
-    embed = [":driver_lib"],
-
+    embed = [":driver_lib_example"],
     visibility = ["//visibility:public"],
 )
