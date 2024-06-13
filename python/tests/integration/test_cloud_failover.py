@@ -56,9 +56,7 @@ class TestCloudFailover(TestCase):
             "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
             "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
             "--server.encryption.enable", "true",
-            "--diagnostics.reporting.errors", "false",
-            "--diagnostics.reporting.statistics", "false",
-            "--diagnostics.monitoring.enable", "false"
+            "--development-mode.enable", "true"
         ])
 
     def get_primary_replica(self, database_manager: DatabaseManager):

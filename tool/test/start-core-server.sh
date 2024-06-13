@@ -22,7 +22,7 @@ rm -rf typedb-all
 
 bazel run //tool/test:typedb-extractor -- typedb-all
 BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
-JAVA_HOME=$BAZEL_JAVA_HOME ./typedb-all/typedb server --diagnostics.reporting.errors=false --diagnostics.reporting.statistics=false --diagnostics.monitoring.enable=false &
+JAVA_HOME=$BAZEL_JAVA_HOME ./typedb-all/typedb server --development-mode.enable=true &
 
 set +e
 POLL_INTERVAL_SECS=0.5

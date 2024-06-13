@@ -47,16 +47,11 @@ import static org.junit.Assert.fail;
 public class AddressTranslationTest {
     private static final Logger LOG = LoggerFactory.getLogger(AddressTranslationTest.class);
 
-    private static final Map<String, String> serverOptions = map(
-            pair("--diagnostics.reporting.errors", "false"),
-            pair("--diagnostics.reporting.statistics", "false"),
-            pair("--diagnostics.monitoring.enable", "false")
-    );
     private static final TypeDBCredential credential = new TypeDBCredential("admin", "password", false);
 
     @Test
     public void testAddressTranslation() {
-        TypeDBCloudRunner typedb = TypeDBCloudRunner.create(Paths.get("."), 3, serverOptions);
+        TypeDBCloudRunner typedb = TypeDBCloudRunner.create(Paths.get("."), 3);
         typedb.start();
         Map<String, String> addresses = typedb.externalAddresses().stream().map(address -> pair(address, address))
                 .collect(Collectors.toMap(Pair::first, Pair::second));

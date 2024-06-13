@@ -25,7 +25,7 @@ powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb
 7z x typedb-server-windows.zip
 RD /S /Q typedb-server-windows
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
-START /B "" typedb-server-windows\typedb server --diagnostics.reporting.statistics=false --diagnostics.reporting.errors=false
+START /B "" typedb-server-windows\typedb server
 
 powershell -Command "(gc csharp\Test\Deployment\NugetApplicationTest.csproj) -replace 'DRIVER_CSHARP_VERSION_MARKER', '0.0.0-%CIRCLE_SHA1%' | Out-File -encoding ASCII csharp\Test\Deployment\NugetApplicationTest.csproj"
 type csharp\Test\Deployment\NugetApplicationTest.csproj

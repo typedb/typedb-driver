@@ -52,11 +52,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 {"transaction-timeout-millis", (option, val) => option.TransactionTimeoutMillis(Int32.Parse(val))}
         };
 
-        public static readonly Dictionary<string, string> ServerOptions =
-            new Dictionary<string, string>(){
-                {"--diagnostics.reporting.enable", "false"}
-        };
-
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
 

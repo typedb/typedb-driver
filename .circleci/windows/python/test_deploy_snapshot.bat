@@ -27,7 +27,7 @@ powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb
 7z x typedb-server-windows.zip
 RD /S /Q typedb-server-windows
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
-START /B "" typedb-server-windows\typedb server --diagnostics.reporting.statistics=false --diagnostics.reporting.errors=false
+START /B "" typedb-server-windows\typedb server
 
 python3 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+%VER%
 cd python/tests/deployment
