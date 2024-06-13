@@ -44,6 +44,7 @@ def _rule_implementation(ctx):
                 --server.peers.peer-3.internal-address.zeromq=localhost:31730 \
                 --server.peers.peer-3.internal-address.grpc=localhost:31731 \
                 --server.encryption.enable=true \
+                --diagnostics.monitoring.port=${1}1732 \
                 --development-mode.enable=true
             }
             if test -d typedb_distribution; then
