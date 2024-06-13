@@ -20,38 +20,6 @@ workspace(name = "vaticle_typedb_driver")
 ##############################
 # Load @vaticle_dependencies #
 ##############################
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "io_bazel_rules_go",
-    integrity = "sha256-fHbWI2so/2laoozzX5XeMXqUcv0fsUrHl8m/aE8Js3w=",
-    urls = [
-        "https://mirror.bazel.BUILD/github.com/bazelbuild/rules_go/releases/download/v0.44.2/rules_go-v0.44.2.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.44.2/rules_go-v0.44.2.zip",
-    ],
-)
-
-http_archive(
-    name = "bazel_gazelle",
-    integrity = "sha256-MpOL2hbmcABjA1R5Bj2dJMYO2o15/Uc5Vj9Q0zHLMgk=",
-    urls = [
-        "https://mirror.bazel.BUILD/github.com/bazelbuild/bazel-gazelle/releases/download/v0.35.0/bazel-gazelle-v0.35.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.35.0/bazel-gazelle-v0.35.0.tar.gz",
-    ],
-)
-
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-
-load("//go:deps.bzl", "go_dependencies")
-# gazelle:repository_macro go/deps.bzl%go_dependencies
-go_dependencies()
-go_rules_dependencies()
-go_register_toolchains(version = "1.21.10")
-gazelle_dependencies()
-
-
 load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 
 vaticle_dependencies()
@@ -133,6 +101,27 @@ paket2bazel_dependencies()
 load("//csharp/nuget:paket.csharp_deps.bzl", "csharp_deps")
 
 csharp_deps()
+
+# Load //builder/go
+load("@vaticle_dependencies//builder/go:deps.bzl", go_deps = "deps")
+
+go_deps()
+
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+
+go_rules_dependencies()
+
+go_register_toolchains(version = "1.21.10")
+
+# gazelle:repo bazel_gazelle <- Used to tell gazelle that it is loaded in a macro.
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+
+load("//go:deps.bzl", "go_repositories")
+
+# gazelle:repository_macro go/deps.bzl%go_repositories
+go_repositories()
+
+gazelle_dependencies()
 
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
