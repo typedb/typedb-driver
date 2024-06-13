@@ -26,13 +26,8 @@ def swig_native_go_library(name, visibility, tags=[], **kwargs):
         **kwargs,
     )
 
-#    https://github.com/bazelbuild/rules_go/blob/master/docs/go/core/rules.md#attributes-2
-
     native.alias(
         name = name,
         actual = "__" + name,
         visibility = visibility
     )
-
-
-
