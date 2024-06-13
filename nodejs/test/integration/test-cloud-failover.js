@@ -70,6 +70,7 @@ function serverStart(idx) {
         "--server.encryption.file.internal-grpc.root-ca", encryptionResourceDir + "int-grpc-root-ca.pem",
         "--server.encryption.file.internal-zmq.private-key", encryptionResourceDir + "int-zmq-private-key",
         "--server.encryption.file.internal-zmq.public-key", encryptionResourceDir + "int-zmq-public-key",
+        "--diagnostics.monitoring.port", `${idx}1732`,
         "--development-mode.enable", "true"
     ]);
     node.stdout.on('data', (data) => {
