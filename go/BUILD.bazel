@@ -28,14 +28,14 @@ swig_native_go_library(
     visibility = ["//visibility:public"],
 )
 
-# SAMPLE CODE FOR TESTING. THIS SHOULD BE USED AS A GUIDE WHEN DEVELOPING PRODUCTION CODE.
+# TODO SAMPLE CODE FOR TESTING. THIS SHOULD BE USED AS A GUIDE WHEN DEVELOPING PRODUCTION CODE.
 go_library(
     name = "driver_lib_example",
     srcs = [
         "driver_eg.go",
     ],
     clinkopts = [
-        "-L/Users/XXX/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
+        "-L/Users/nickan/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
         "-ltypedb_driver_go_native",
         "-framework", "CoreFoundation"
         ],
