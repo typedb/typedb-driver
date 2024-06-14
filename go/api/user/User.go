@@ -17,23 +17,10 @@
  * under the License.
  */
 
-package main
+package user
 
-import "C"
-import (
-	"fmt"
-	"typedb_driver/go_wrapper"
-)
-
-func openCoreFunc() {
-	dbName := "access-management-db";
-	fmt.Println(dbName)
-	serverAddr := "127.0.0.1:1729";
-
-	typedb_driver.Connection_open_core(serverAddr)
-	//driver.Databases.Create(dbName)
-}
-
-func main() {
-	openCoreFunc()
+type User interface {
+	Username() string
+	PasswordExpirySeconds() (int64, bool)
+	PasswordUpdate(passwordOld, passwordNew string)
 }

@@ -17,23 +17,13 @@
  * under the License.
  */
 
-package main
+package user
 
-import "C"
-import (
-	"fmt"
-	"typedb_driver/go_wrapper"
-)
-
-func openCoreFunc() {
-	dbName := "access-management-db";
-	fmt.Println(dbName)
-	serverAddr := "127.0.0.1:1729";
-
-	typedb_driver.Connection_open_core(serverAddr)
-	//driver.Databases.Create(dbName)
-}
-
-func main() {
-	openCoreFunc()
+type UserManager interface {
+	Contains(username string) bool
+	Create(username, password string)
+	Delete(username string)
+	Get(username string) User
+	All() map[string]User
+	PasswordSet(username, password string)
 }

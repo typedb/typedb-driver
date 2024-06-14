@@ -17,23 +17,17 @@
  * under the License.
  */
 
-package main
+package api
 
-import "C"
 import (
-	"fmt"
-	"typedb_driver/go_wrapper"
+	"typedb_driver/go/api/database"
+	"typedb_driver/go/api/user"
 )
 
-func openCoreFunc() {
-	dbName := "access-management-db";
-	fmt.Println(dbName)
-	serverAddr := "127.0.0.1:1729";
-
-	typedb_driver.Connection_open_core(serverAddr)
-	//driver.Databases.Create(dbName)
-}
-
-func main() {
-	openCoreFunc()
+type Driver interface {
+	IsOpen() bool
+	Databases() database.DatabaseManager
+	Close()
+	User() user.User
+	Users() user.UserManager
 }

@@ -17,23 +17,22 @@
  * under the License.
  */
 
-package main
+package database
 
-import "C"
-import (
-	"fmt"
-	"typedb_driver/go_wrapper"
-)
-
-func openCoreFunc() {
-	dbName := "access-management-db";
-	fmt.Println(dbName)
-	serverAddr := "127.0.0.1:1729";
-
-	typedb_driver.Connection_open_core(serverAddr)
-	//driver.Databases.Create(dbName)
+type Database interface {
+	Name() string
+	Schema() string
+	TypeSchema() string
+	RuleSchema() string
+	Delete()
+	Replicas() []Replica
+	PrimaryReplica() Replica
+	PreferredReplica() Replica
 }
 
-func main() {
-	openCoreFunc()
+type Replica interface {
+	Server() string
+	IsPrimary() bool
+	IsPreferred() bool
+	Term() int64
 }
