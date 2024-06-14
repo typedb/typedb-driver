@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@2.28.2-rc1
+cargo add typedb-driver@2.28.4
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.28.2-rc1</version>
+        <version>2.28.4</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.28.2-rc1
+pip install typedb-driver==2.28.4
 ```
 
 ### NodeJS driver
@@ -51,7 +51,7 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
 ```
-npm install typedb-driver@2.28.2-rc1
+npm install typedb-driver@2.28.4
 ```
 
 ### C# driver
@@ -61,23 +61,23 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="2.28.2-rc1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="2.28.2-rc1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="2.28.2-rc1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="2.28.2-rc1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="2.28.2-rc1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="2.28.2-rc1" />
+    <PackageReference Include="TypeDB.Driver" Version="2.28.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="2.28.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="2.28.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="2.28.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="2.28.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="2.28.4" />
 </ItemGroup>
 ```
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.28.2-rc1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.28.4
 Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.28.2-rc1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.28.4
 
 
 ## New Features
@@ -93,6 +93,7 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## Other Improvements
-
-
-    
+- **Turn on development mode for tests**
+  We activate the newly introduced in `TypeDB` `--development-mode.enable` flag for all the CI builds of the driver.
+  
+- **Update `nodejs` driver dependencies and fix builds based on the updated `typescript` rules**
