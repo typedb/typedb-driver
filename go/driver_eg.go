@@ -22,7 +22,7 @@ package main
 import "C"
 import (
 	"fmt"
-	"typedb_driver/go_wrapper"
+	"typedb_driver/go/connection"
 )
 
 func openCoreFunc() {
@@ -30,8 +30,22 @@ func openCoreFunc() {
 	fmt.Println(dbName)
 	serverAddr := "127.0.0.1:1729";
 
-	typedb_driver.Connection_open_core(serverAddr)
-	//driver.Databases.Create(dbName)
+	driver := Connection.NewTypeDBDriverwithString(serverAddr)
+	fmt.Println("hello")
+
+	driver.Databases().Create(dbName)
+	fmt.Println("db created")
+
+	database := driver.Databases().Get(dbName)
+	// TODO not stable, occasional runtime error: slice bounds out of range.
+	fmt.Println(database)
+
+	database.Delete()
+
+	fmt.Println(driver.Databases().Contains(dbName))
+
+	driver.Close()
+
 }
 
 func main() {
