@@ -25,5 +25,5 @@ go_library(
     ],
     importpath = "typedb_driver/go/api/user",
     visibility = ["//visibility:public"],
-    cgo=True
+    cgo = True
 )

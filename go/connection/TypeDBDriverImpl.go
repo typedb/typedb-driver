@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package Connection
+package connection
 
 import "C"
 import (
@@ -32,7 +32,7 @@ type TypeDBDriver struct {
 	userMgr    user.UserManager
 }
 
-func NewTypeDBDriverwithString(address string) *TypeDBDriver {
+func NewTypeDBDriver(address string) *TypeDBDriver {
 	core_conn := openCore(address)
 	databaseMgr := NewTypeDBDatabaseManagerImpl(core_conn)
 	//userMgr := NewUserManagerImpl(core_conn)
@@ -69,7 +69,7 @@ func (d *TypeDBDriver) Session(database string, typ typedb_driver.SessionType) t
 }
 
 func (d *TypeDBDriver) Close() {
-	if !d.IsOpen(){
+	if !d.IsOpen() {
 		return
 	}
 	typedb_driver.Connection_force_close(d.nativeObject)

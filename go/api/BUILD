@@ -22,7 +22,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 go_library(
     name = "api",
-    srcs = glob(["*.go", "*/*.go", "*/*/*.go"]),
+    srcs = glob(["*.go", "*/*.go"]),
     deps = [
         "//go/api/database:database",
         "//go/api/user:user",
@@ -30,12 +30,12 @@ go_library(
     ],
     importpath = "typedb_driver/go/api",
     visibility = ["//visibility:public"],
-    cgo=True
+    cgo = True
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "*/*", "*/*/*"]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
     size = "small",
 )
