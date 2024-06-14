@@ -30,7 +30,7 @@ func openCoreFunc() {
 	fmt.Println(dbName)
 	serverAddr := "127.0.0.1:1729";
 
-	driver := Connection.NewTypeDBDriverwithString(serverAddr)
+	driver := connection.NewTypeDBDriver(serverAddr)
 	fmt.Println("hello")
 
 	driver.Databases().Create(dbName)

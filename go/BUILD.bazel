@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 load("//go:rules.bzl", "swig_native_go_library")
 
 swig_native_go_library(
@@ -29,13 +29,13 @@ swig_native_go_library(
 )
 
 go_library(
-    name = "driver_go",
+    name = "driver-go",
     srcs = glob(["*.go"]),
     data = ["//:LICENSE"],
     importpath = "typedb_driver/go",
 
     clinkopts = [
-        "-L/Users/XXX/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
+        "-L/Users/nickan/typedb-driver/bazel-bin/go", # TODO use relative path. For now use the bazel output path.
         "-ltypedb_driver_go_native",
         "-framework", "CoreFoundation"
     ],
@@ -43,14 +43,22 @@ go_library(
         "//go:typedb_driver_go_native",
         "//go/api/user:user",
         "//go/api/database:database",
-        "//go/Connection:connection",
+        "//go/connection:connection",
     ],
     visibility = ["//visibility:public"],
-    cgo=True
+    cgo = True
 )
 
-go_binary(
-    name = "driver_test",
-    embed = [":driver_go"],
+# TODO figure out why this is not running.
+go_test(
+    name = "db-connection-test",
+    srcs = ["//go/test/integration:db_connection_test.go"],
+    embed = ["//go:driver-go"],
     visibility = ["//visibility:public"],
 )
+
+#go_binary(
+#    name = "driver_test",
+#    embed = [":driver-go"],
+#    visibility = ["//visibility:public"],
+#)
