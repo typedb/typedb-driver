@@ -16,14 +16,14 @@ func NewUserImpl(user typedb_driver.User, users UserManagerImpl,) *UserImpl {
 	}
 }
 
-func (u *UserImpl) username() string {
+func (u *UserImpl) Username() string {
 	return typedb_driver.User_get_username(u.nativeObject)
 }
 
-func (u *UserImpl) passwordExpirySeconds() int64 {
+func (u *UserImpl) PasswordExpirySeconds() int64 {
 	return typedb_driver.User_get_password_expiry_seconds(u.nativeObject)
 }
 
-func (u *UserImpl) passwordUpdate(passwordOld string, passwordNew string)  {
+func (u *UserImpl) PasswordUpdate(passwordOld string, passwordNew string)  {
 	typedb_driver.User_password_update(u.nativeObject, u.users.nativeObject, passwordOld, passwordNew)
 }
