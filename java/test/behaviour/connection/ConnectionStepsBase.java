@@ -27,6 +27,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +61,7 @@ public abstract class ConnectionStepsBase {
             pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
     );
 
-    public static final Map<String, String> serverOptions = map(
-            pair("--diagnostics.reporting.errors", "false"),
-            pair("--diagnostics.reporting.statistics", "false"),
-            pair("--diagnostics.monitoring.enable", "false")
-    );
+    public static final Map<String, String> serverOptions = Collections.emptyMap();
 
     public static TypeDBTransaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);

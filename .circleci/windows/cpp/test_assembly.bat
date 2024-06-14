@@ -35,7 +35,7 @@ cmake --build . --config release
 popd
 set PATH=%cd%\test_assembly_cpp\typedb-driver-cpp-windows-x86_64\lib;%PATH%;
 
-START /B "" typedb-server-windows\typedb server
+START /B "" typedb-server-windows\typedb server --development-mode.enable=true
 powershell -Command "Start-Sleep -Seconds 10"
 
 test_assembly_cpp\Release\test_assembly.exe
