@@ -10,7 +10,6 @@ type UserImpl struct {
 }
 
 func NewUserImpl(user typedb_driver.User, users UserManagerImpl,) *UserImpl {
-
 	return &UserImpl{
 		users:        users,
 		nativeObject: user,
@@ -28,4 +27,3 @@ func (u *UserImpl) passwordExpirySeconds() int64 {
 func (u *UserImpl) passwordUpdate(passwordOld string, passwordNew string)  {
 	typedb_driver.User_password_update(u.nativeObject, u.users.nativeObject, passwordOld, passwordNew)
 }
-

@@ -16,7 +16,6 @@ func NewUserManagerImpl(nativeConnection typedb_driver.Connection) *UserManagerI
 		nativeConnection: nativeConnection,
 		nativeObject: typedb_driver.User_manager_new(nativeConnection),
 	}
-
 }
 
 func (userMngr *UserManagerImpl) Contains(username string) bool {
@@ -45,24 +44,12 @@ func (userMngr *UserManagerImpl) PasswordSet(username, password string) {
 }
 
 func (userMngr *UserManagerImpl) GetCurrentUser() user.User {
-	//curr := typedb_driver.Users_current_user(this)
 	return nil
-	//	 return new UserImpl(users_current_user(nativeObject), this);
+	//	TODO implement
 }
-
 
 func (userMngr *UserManagerImpl) All() map[string]user.User {
-
-
 	userSet := make(map[string]user.User)
-
-	//usersIterator := typedb_driver.Users_all(userMngr.nativeObject)
-	//typedb_driver.User_iterator_next(usersIterator)
-	// TODO implement
-
+	// TODO implement - iterator
 	return userSet
 }
-
-
-
-
