@@ -92,7 +92,6 @@ load("//go:deps.bzl", "go_repositories")
 go_repositories()
 gazelle_dependencies()
 
-
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
