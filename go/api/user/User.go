@@ -22,5 +22,5 @@ package user
 type User interface {
 	Username() string
 	PasswordExpirySeconds() (int64, bool)
-	PasswordUpdate(passwordOld, passwordNew string)
+	PasswordUpdate() (string, string)
 }
