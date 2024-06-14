@@ -26,12 +26,12 @@ go_library(
     deps = [
         "//go/api/database:database",
         "//go/api/user:user",
+        "//go:typedb_driver_go_native",
     ],
     importpath = "typedb_driver/go/api",
     visibility = ["//visibility:public"],
-
+    cgo=True
 )
-
 
 checkstyle_test(
     name = "checkstyle",

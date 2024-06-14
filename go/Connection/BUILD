@@ -25,9 +25,12 @@ go_library(
     srcs = glob(["*.go", "*/*.go"],
     ),
     deps = [
-        "//go/Api:api",
+        "//go/api/database:database",
+        "//go:typedb_driver_go_native",
+        "//go/api/user:user"
     ],
-    out = "TypeDB.Driver.Connection",
+    importpath="typedb_driver/go/connection",
+    cgo=True
 )
 
 checkstyle_test(

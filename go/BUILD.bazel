@@ -39,7 +39,12 @@ go_library(
         "-ltypedb_driver_go_native",
         "-framework", "CoreFoundation"
     ],
-    deps = ["//go/api:api", "//go:typedb_driver_go_native"],
+    deps = [
+        "//go:typedb_driver_go_native",
+        "//go/api/user:user",
+        "//go/api/database:database",
+        "//go/Connection:connection",
+    ],
     visibility = ["//visibility:public"],
     cgo=True
 )
