@@ -15,15 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains")
 
-gazelle(
-    name = "update-dependencies",
-    args = [
-        "-from_file=go/go.mod",
-        "-to_macro=go/deps.bzl%go_repositories",
-        "-prune",
-        "-build_file_proto_mode=disable_global",
-    ],
-    command = "update-repos",
-)
+go_versions = [
+    "1.21.10",
+]
+
+def register_all_toolchains():
+    for version in go_versions:
+        go_register_toolchains(version=version)

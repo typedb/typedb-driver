@@ -24,4 +24,4 @@
 # go get PACKAGE NAME, eg:
 # go get github.com/cucumber/godog
 
-bazel run //go/gazelle:gazelle-update-dependencies
+bazel run //go/gazelle:update-dependencies
