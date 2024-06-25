@@ -1,24 +1,28 @@
-# TypeDB Go Driver
+# TypeDB Go Driver (WIP)
 
-### In progress:
-The current state has managed to implement basic database features for the driver. 
-A very simple example is provided in `db_creation_example.go` and a go_test target has been made to test this (needs
-working on). 
+## Current state
 
-The library has been successfully made, but there is an issue with getting the relative path from the bazel directory
-so we have used the absolute path at the moment.
+`TypeDB Go Driver` is not implemented yet. This repository contains proofs of concept, including driver's library build
+phase and basic database manipulation functionality. A usage example could be found
+in [driver_proof_of_concept.go](driver_proof_of_concept.go) (database creation and deletion).
 
-The Database can be created and deleted, and a variety of functions can be run with the generated dynamic library.
-To expand on this, we need to implement the other functions, similar to the other drivers. 
+### Issues
 
+- [BUILD](BUILD) expects manual actions to build on a specific machine and is not fully automated yet (more details
+  below and inside the file)
+- Only basic connection and database manipulation features are implemented and not tested
+- There is no resource management, exceptions handling and some of the needed Rust structs wrappers on the SWIG side
 
-### How to run (in current state):
-To run, in `go/BUILD.bazel`, in the `clinkopts` of the go_library `driver-go`, set the -L linker path to your bazel
-output. This is configured in the [dependencies](https://github.com/vaticle/dependencies) repo, and should be in `go/`.
+### Run
 
-You can then uncomment the go_library and go_binary in `go/BUILD.bazel` and run
+- Run `bazel build //go:libtypedb_driver_go_native`
+- Uncomment `driver-go` (and `driver-temp-exe`) targets in [BUILD](BUILD)
+- Specify your local path to the `typedb_driver_go_native` dynamic library instead
+  of `$TYPEDB_DRIVER_PATH/typedb-driver/bazel-bin/go`
+- Run `bazel build //go:driver-go` (or `bazel run //go:driver-temp-exe`). Make sure that you have a `TypeDB` server
+  running to connect to it
+
 ```bash
-bazel run go:driver-test
+bazel build //go:libtypedb_driver_go_native
+bazel build //go:driver-go
 ```
-
-to run the binary, and to run the file `db_creation_example.go`.

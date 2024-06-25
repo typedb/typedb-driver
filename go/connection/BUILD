@@ -17,8 +17,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "connection",
@@ -36,6 +36,6 @@ go_library(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob(["*",]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )

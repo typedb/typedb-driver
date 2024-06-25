@@ -20,10 +20,10 @@
 package user
 
 type UserManager interface {
-	Contains(username string) bool
-	Create(username, password string)
-	Delete(username string)
-	Get(username string) User
-	All() map[string]User
-	PasswordSet(username, password string)
+    Contains(username string) bool
+    Create(username, password string)
+    Delete(username string)
+    Get(username string) User
+    All() map[string]User
+    PasswordSet(username, password string)
 }

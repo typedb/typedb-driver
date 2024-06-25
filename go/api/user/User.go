@@ -20,7 +20,7 @@
 package user
 
 type User interface {
-	Username() string
-	PasswordExpirySeconds() (int64, bool)
-	PasswordUpdate() (string, string)
+    Username() string
+    PasswordExpirySeconds() (int64, bool)
+    PasswordUpdate() (string, string)
 }

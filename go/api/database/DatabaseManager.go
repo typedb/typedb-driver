@@ -20,8 +20,8 @@
 package database
 
 type DatabaseManager interface {
-	Get(name string) Database
-	Contains(name string) bool
-	Create(name string)
-	All() []Database
+    Get(name string) Database
+    Contains(name string) bool
+    Create(name string)
+    All() []Database
 }

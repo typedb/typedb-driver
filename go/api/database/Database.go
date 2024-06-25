@@ -20,19 +20,19 @@
 package database
 
 type Database interface {
-	Name() string
-	Schema() string
-	TypeSchema() string
-	RuleSchema() string
-	Delete()
-	Replicas() []Replica
-	PrimaryReplica() Replica
-	PreferredReplica() Replica
+    Name() string
+    Schema() string
+    TypeSchema() string
+    RuleSchema() string
+    Delete()
+    Replicas() []Replica
+    PrimaryReplica() Replica
+    PreferredReplica() Replica
 }
 
 type Replica interface {
-	Server() string
-	IsPrimary() bool
-	IsPreferred() bool
-	Term() int64
+    Server() string
+    IsPrimary() bool
+    IsPreferred() bool
+    Term() int64
 }

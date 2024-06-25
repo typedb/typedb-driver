@@ -11,16 +11,15 @@ This repository stores all TypeDB Drivers built by Vaticle.
 
 See the table below for links to README files, documentation, and source code.
 
-| Driver | Readme                                                                               | Documentation                                                    | Driver location                                                               |
-|-----|--------------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Rust | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md)   | [Documentation](https://typedb.com/docs/drivers/rust/overview)   | [`rust/`](https://github.com/vaticle/typedb-driver/tree/development/rust)     |
-| Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/drivers/python/overview) | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
+| Driver  | Readme                                                                               | Documentation                                                    | Driver location                                                               |
+|---------|--------------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| Rust    | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md)   | [Documentation](https://typedb.com/docs/drivers/rust/overview)   | [`rust/`](https://github.com/vaticle/typedb-driver/tree/development/rust)     |
+| Python  | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/drivers/python/overview) | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
 | Node.js | [README](https://github.com/vaticle/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/nodejs/overview) | [`nodejs/`](https://github.com/vaticle/typedb-driver/tree/development/nodejs) |
-| Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
-| C   | [README](https://github.com/vaticle/typedb-driver/tree/development/c/README.md)      | See C++                                                          | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)           |
-| C++ | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)       |
-| C#  | [README](https://github.com/vaticle/typedb-driver/tree/development/csharp/README.md) | (Coming soon!)                                                   | [`csharp/`](https://github.com/vaticle/typedb-driver/tree/development/csharp) |
-| Go  | [README](https://github.com/vaticle/typedb-driver/tree/development/go/README.md)      | (Coming soon!)                                                   | [`csharp/`](https://github.com/vaticle/typedb-driver/tree/development/csharp) |
+| Java    | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
+| C       | [README](https://github.com/vaticle/typedb-driver/tree/development/c/README.md)      | See C++                                                          | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)           |
+| C++     | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)       |
+| C#      | [README](https://github.com/vaticle/typedb-driver/tree/development/csharp/README.md) | [Documentation](https://typedb.com/docs/drivers/csharp/overview) | [`csharp/`](https://github.com/vaticle/typedb-driver/tree/development/csharp) |
 
 ### Package hosting
 

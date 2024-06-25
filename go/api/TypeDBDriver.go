@@ -20,16 +20,16 @@
 package api
 
 import (
-	"typedb_driver/go/api/database"
-	"typedb_driver/go/api/user"
-	"typedb_driver/go_wrapper"
+    "typedb_driver/go/api/database"
+    "typedb_driver/go/api/user"
+    "typedb_driver/go_wrapper"
 )
 
 type Driver interface {
-	IsOpen() bool
-	Databases() database.DatabaseManager
-	Session() typedb_driver.Session
-	Close()
-	User() user.User
-	Users() user.UserManager
+    IsOpen() bool
+    Databases() database.DatabaseManager
+    Session() typedb_driver.Session // TODO: Implement sessions and return it instead of the native one
+    Close()
+    User() user.User
+    Users() user.UserManager
 }

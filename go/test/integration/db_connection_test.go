@@ -1,32 +1,50 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package main
 
 import (
-	"testing"
-	"typedb_driver/go/connection"
+    "testing"
+    "typedb_driver/go/connection"
 )
 
 func TestDBConnection(t *testing.T) {
-	dbName := "test-db"
-	serverAddr := "127.0.0.1:1729"
+    dbName := "test-db"
+    serverAddr := "127.0.0.1:1729"
 
-	driver := connection.NewTypeDBDriver(serverAddr)
+    driver := connection.NewTypeDBDriver(serverAddr)
 
-	driver.Databases().Create(dbName)
-	if !driver.Databases().Contains(dbName) {
-		t.Errorf("Expected driver.Databases to contain '%s'", dbName)
-	}
+    driver.Databases().Create(dbName)
+    if !driver.Databases().Contains(dbName) {
+        t.Errorf("Expected driver.Databases to contain '%s'", dbName)
+    }
 
-	database := driver.Databases().Get(dbName)
-	if database.Name() != "dbName" {
-		t.Errorf("Expected databaseName to be '%s', got '%s", dbName, database.Name())
-	}
+    database := driver.Databases().Get(dbName)
+    if database.Name() != "dbName" {
+        t.Errorf("Expected databaseName to be '%s', got '%s", dbName, database.Name())
+    }
 
-	database.Delete()
+    database.Delete()
 
-	if driver.Databases().Contains(dbName) {
-		t.Errorf("Expected database to be deleted, but exists as: '%s'", dbName)
-	}
+    if driver.Databases().Contains(dbName) {
+        t.Errorf("Expected database to be deleted, but exists as: '%s'", dbName)
+    }
 
-	driver.Close()
+    driver.Close()
 }
-

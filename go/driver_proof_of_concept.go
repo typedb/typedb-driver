@@ -21,33 +21,33 @@ package main
 
 import "C"
 import (
-	"fmt"
-	"typedb_driver/go/connection"
+    "fmt"
+    "typedb_driver/go/connection"
 )
 
 func openCoreFunc() {
-	dbName := "access-management-db";
-	fmt.Println(dbName)
-	serverAddr := "127.0.0.1:1729";
+    dbName := "access-management-db"
+    fmt.Println(dbName)
+    serverAddr := "127.0.0.1:1729"
 
-	driver := connection.NewTypeDBDriver(serverAddr)
-	fmt.Println("hello")
+    driver := connection.NewTypeDBDriver(serverAddr)
+    fmt.Println("hello")
 
-	driver.Databases().Create(dbName)
-	fmt.Println("db created")
+    driver.Databases().Create(dbName)
+    fmt.Println("db created")
 
-	database := driver.Databases().Get(dbName)
-	// TODO not stable, occasional runtime error: slice bounds out of range.
-	fmt.Println(database)
+    database := driver.Databases().Get(dbName)
+    // TODO not stable, occasional runtime error: slice bounds out of range.
+    fmt.Println(database)
 
-	database.Delete()
+    database.Delete()
 
-	fmt.Println(driver.Databases().Contains(dbName))
+    fmt.Println(driver.Databases().Contains(dbName))
 
-	driver.Close()
+    driver.Close()
 
 }
 
 func main() {
-	openCoreFunc()
+    openCoreFunc()
 }

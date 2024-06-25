@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
 gazelle(
@@ -26,4 +27,11 @@ gazelle(
         "-build_file_proto_mode=disable_global",
     ],
     command = "update-repos",
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    size = "small",
+    include = glob(["*"]),
+    license_type = "apache-header",
 )
