@@ -19,15 +19,15 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 # TODO: Consider merging everything into api/BUILD
-go_library(
-    name = "database",
-    srcs = [
-        "DatabaseManager.go",
-        "Database.go"
-    ],
-    importpath = "typedb_driver/go/api/database",
-    visibility = ["//visibility:public"],
-)
+#go_library(
+#    name = "database",
+#    srcs = [
+#        "DatabaseManager.go",
+#        "Database.go"
+#    ],
+#    importpath = "typedb_driver/go/api/database",
+#    visibility = ["//visibility:public"],
+#)
 
 checkstyle_test(
     name = "checkstyle",

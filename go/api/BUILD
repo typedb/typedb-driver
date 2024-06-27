@@ -20,18 +20,18 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-go_library(
-    name = "api",
-    srcs = glob(["*.go", "*/*.go"]),
-    deps = [
-        "//go/api/database:database",
-        "//go/api/user:user",
-        "//go:typedb_driver_go_native",
-    ],
-    importpath = "typedb_driver/go/api",
-    visibility = ["//visibility:public"],
-    cgo = True
-)
+#go_library(
+#    name = "api",
+#    srcs = glob(["*.go", "*/*.go"]),
+#    deps = [
+#        "//go/api/database:database",
+#        "//go/api/user:user",
+#        "//go:typedb_driver_go_native",
+#    ],
+#    importpath = "typedb_driver/go/api",
+#    visibility = ["//visibility:public"],
+#    cgo = True
+#)
 
 checkstyle_test(
     name = "checkstyle",
