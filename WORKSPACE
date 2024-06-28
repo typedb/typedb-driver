@@ -20,7 +20,6 @@ workspace(name = "vaticle_typedb_driver")
 ##############################
 # Load @vaticle_dependencies #
 ##############################
-
 load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 vaticle_dependencies()
 
@@ -78,6 +77,22 @@ load("@rules_dotnet//dotnet:paket.paket2bazel_dependencies.bzl", "paket2bazel_de
 paket2bazel_dependencies()
 load("//csharp/nuget:paket.csharp_deps.bzl", csharp_deps = "csharp_deps")
 csharp_deps()
+
+# Load //builder/go
+load("@vaticle_dependencies//builder/go:deps.bzl", go_deps = "deps")
+go_deps()
+load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies")
+go_rules_dependencies()
+
+load("//go:go_versions.bzl", "register_all_toolchains")
+register_all_toolchains()
+
+# gazelle:repo bazel_gazelle <- Used to tell gazelle that it is loaded in a macro.
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("//go:deps.bzl", "go_repositories")
+# gazelle:repository_macro go/deps.bzl%go_repositories
+go_repositories()
+gazelle_dependencies()
 
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
@@ -246,6 +261,7 @@ vaticle_typedb_protocol_npm_repositories()
 
 # Setup rules_ts
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
 rules_ts_dependencies(
     ts_version_from = "//nodejs:package.json",
 )
