@@ -93,5 +93,5 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
             return False
 
     def close(self) -> None:
-        if not self.is_open():
+        if self.is_open():
             connection_force_close(self._native_connection)
