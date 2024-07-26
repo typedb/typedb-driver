@@ -813,7 +813,7 @@ jobs:
       - run: |
           apt update -y
           apt install -y git
-          git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
+          git push --delete https://$REPO_GITHUB_TOKEN@github.com/typedb/typedb-driver.git $CIRCLE_BRANCH
 
 workflows:
   typedb-driver-snapshot:

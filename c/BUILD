@@ -222,7 +222,7 @@ filegroup(
     output_group = "header"
 )
 
-# TODO: Not hermetic - requires doxygen on the host (https://github.com/vaticle/bazel-distribution/issues/412)
+# TODO: Not hermetic - requires doxygen on the host (https://github.com/typedb/bazel-distribution/issues/412)
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C Driver",
