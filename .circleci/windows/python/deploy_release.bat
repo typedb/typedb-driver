@@ -37,3 +37,6 @@ IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
+bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip312 --compilation_mode=opt -- release
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
