@@ -47,8 +47,8 @@ error_messages! { ConnectionError
         9: "Invalid field in message received from server: '{name}'.",
     UnexpectedResponse { response: String } =
         10: "Received unexpected response from server: '{response}'.",
-    ServerConnectionFailed { addresses: String } =
-        11: "Unable to connect to TypeDB server(s) at: \n{addresses}",
+    ServerConnectionFailed { addresses: Vec<Address> } =
+        11: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
         12: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =

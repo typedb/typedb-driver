@@ -81,16 +81,15 @@ impl Connection {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let server_connection = ServerConnection::new_core(background_runtime.clone(), address)?;
 
-        let advertised_id = server_connection
+        let advertised_address = server_connection
             .servers_all()?
             .into_iter()
             .exactly_one()
-            .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?
-            .to_string();
+            .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?;
 
         match server_connection.validate() {
             Ok(()) => Ok(Self {
-                server_connections: [(advertised_id, server_connection)].into(),
+                server_connections: [(advertised_address, server_connection)].into(),
                 background_runtime,
                 username: None,
                 is_cloud: false,
@@ -123,14 +122,8 @@ impl Connection {
     /// ```
     pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-
         let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credential.clone())?;
-
-        let server_to_address: HashMap<Address, Address> = servers
-            .into_iter()
-            .map(|address| (address.clone(), address))
-            .try_collect()?;
-
+        let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
         Self::new_cloud_impl(server_to_address, background_runtime, credential)
     }
 
@@ -166,7 +159,7 @@ impl Connection {
 
         let server_to_address: HashMap<Address, Address> = address_translation
             .into_iter()
-            .map(|(private, public)| Ok((private.as_ref().parse()?, public.as_ref().parse()?)))
+            .map(|(private, public)| -> Result<_> { Ok((private.as_ref().parse()?, public.as_ref().parse()?)) })
             .try_collect()?;
 
         let provided: HashSet<Address> = server_to_address.keys().cloned().collect();
@@ -215,12 +208,13 @@ impl Connection {
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credential,
     ) -> Result<HashSet<Address>> {
-        for address in addresses.clone() {
+        let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
+        for address in &addresses {
             let server_connection =
-                ServerConnection::new_cloud(background_runtime.clone(), address.as_ref().parse()?, credential.clone());
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
-                    Ok(servers) => return servers.into_iter().map(|s| s.parse()).collect(),
+                    Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
                         ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                     )) => (),
@@ -232,10 +226,7 @@ impl Connection {
                 Err(err) => Err(err)?,
             }
         }
-        Err(ConnectionError::ServerConnectionFailed {
-            addresses: addresses.into_iter().map(|addr| addr.as_ref().to_owned()).join(", "),
-        }
-        .into())
+        Err(ConnectionError::ServerConnectionFailed { addresses }.into())
     }
 
     /// Checks it this connection is opened.
@@ -277,16 +268,16 @@ impl Connection {
         self.server_connections.len()
     }
 
-    pub(crate) fn servers(&self) -> impl Iterator<Item = &str> {
-        self.server_connections.keys().map(String::as_str)
+    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
+        self.server_connections.keys()
     }
 
     pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
         self.server_connections.get(id)
     }
 
-    pub(crate) fn connections(&self) -> impl Iterator<Item = (&str, &ServerConnection)> + '_ {
-        self.server_connections.iter().map(|(id, conn)| (id.as_str(), conn))
+    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
+        self.server_connections.iter()
     }
 
     pub(crate) fn username(&self) -> Option<&str> {
@@ -294,8 +285,8 @@ impl Connection {
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailedStatusError {
-            error: self.servers().map(str::to_owned).collect_vec().join(", "),
+        Error::Connection(ConnectionError::ServerConnectionFailed {
+            addresses: self.servers().map(Address::clone).collect_vec(),
         })
     }
 }
@@ -354,7 +345,7 @@ impl ServerConnection {
         self.request_transmitter.force_close()
     }
 
-    pub(crate) fn servers_all(&self) -> Result<Vec<String>> {
+    pub(crate) fn servers_all(&self) -> Result<Vec<Address>> {
         match self.request_blocking(Request::ServersAll)? {
             Response::ServersAll { servers } => Ok(servers),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),

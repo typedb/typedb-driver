@@ -43,20 +43,11 @@ pub(super) type CallCredChannel = InterceptedService<Channel, CredentialInjector
 pub(super) trait GRPCChannel:
     GrpcService<BoxBody, Error = TonicError, ResponseBody = BoxBody, Future = ResponseFuture> + Clone + Send + 'static
 {
-    fn is_plaintext(&self) -> bool;
 }
 
-impl GRPCChannel for PlainTextChannel {
-    fn is_plaintext(&self) -> bool {
-        true
-    }
-}
+impl GRPCChannel for PlainTextChannel {}
 
-impl GRPCChannel for CallCredChannel {
-    fn is_plaintext(&self) -> bool {
-        false
-    }
-}
+impl GRPCChannel for CallCredChannel {}
 
 pub(super) fn open_plaintext_channel(address: Address) -> PlainTextChannel {
     PlainTextChannel::new(Channel::builder(address.into_uri()).connect_lazy(), PlainTextFacade)
