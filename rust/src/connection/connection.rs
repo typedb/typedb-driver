@@ -155,14 +155,14 @@ impl Connection {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
         let fetched =
-            Self::fetch_server_list(background_runtime.clone(), address_translation.values(), credential.clone())?;
+            Self::fetch_server_list(background_runtime.clone(), address_translation.keys(), credential.clone())?;
 
-        let server_to_address: HashMap<Address, Address> = address_translation
+        let address_to_server: HashMap<Address, Address> = address_translation
             .into_iter()
-            .map(|(private, public)| -> Result<_> { Ok((private.as_ref().parse()?, public.as_ref().parse()?)) })
+            .map(|(public, private)| -> Result<_> { Ok((public.as_ref().parse()?, private.as_ref().parse()?)) })
             .try_collect()?;
 
-        let provided: HashSet<Address> = server_to_address.keys().cloned().collect();
+        let provided: HashSet<Address> = address_to_server.keys().cloned().collect();
         let unknown = &provided - &fetched;
         let unmapped = &fetched - &provided;
         if !unknown.is_empty() || !unmapped.is_empty() {
@@ -171,24 +171,23 @@ impl Connection {
 
         debug_assert_eq!(fetched, provided);
 
-        Self::new_cloud_impl(server_to_address, background_runtime, credential)
+        Self::new_cloud_impl(address_to_server, background_runtime, credential)
     }
 
     fn new_cloud_impl(
-        server_to_address: HashMap<Address, Address>,
+        address_to_server: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credential: Credential,
     ) -> Result<Connection> {
-        let server_connections: HashMap<Address, ServerConnection> = server_to_address
+        let server_connections: HashMap<Address, ServerConnection> = address_to_server
             .into_iter()
-            .map(|(server_id, address)| {
-                ServerConnection::new_cloud(background_runtime.clone(), address, credential.clone())
-                    .map(|server_connection| (server_id, server_connection))
+            .map(|(public, private)| {
+                ServerConnection::new_cloud(background_runtime.clone(), public, credential.clone())
+                    .map(|server_connection| (private, server_connection))
             })
             .try_collect()?;
 
-        let errors: Vec<Error> =
-            server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
+        let errors = server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect_vec();
         if errors.len() == server_connections.len() {
             Err(ConnectionError::CloudAllNodesFailed {
                 errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
