@@ -157,15 +157,8 @@ unuseddeps_deps()
 # Load @vaticle_bazel_distribution #
 ####################################
 
-# load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
-# vaticle_bazel_distribution()
-
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-git_repository(
-    name = "vaticle_bazel_distribution",
-    remote = "https://github.com/typedb/bazel-distribution",
-    commit = "1c2b606a80cfb650c82f368ebe32e5a606a73d8f", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
-)
+load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
+vaticle_bazel_distribution()
 
 # Load //common
 load("@vaticle_bazel_distribution//common:deps.bzl", "rules_pkg")
