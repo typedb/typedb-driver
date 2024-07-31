@@ -33,6 +33,7 @@ use crate::{
     error::InternalError,
     Connection,
 };
+use crate::common::address::Address;
 
 /// A TypeDB database
 pub struct Database {
@@ -254,7 +255,7 @@ impl fmt::Debug for Database {
 #[derive(Clone)]
 pub(super) struct Replica {
     /// The server hosting this replica
-    server: String,
+    server: Address,
     /// Retrieves the database name for which this is a replica
     database_name: String,
     /// Checks whether this is the primary replica of the raft cluster.

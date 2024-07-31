@@ -57,7 +57,7 @@ use crate::{
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
 #[derive(Clone)]
 pub struct Connection {
-    server_connections: HashMap<String, ServerConnection>,
+    server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
     is_cloud: bool,
@@ -126,12 +126,9 @@ impl Connection {
 
         let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credential.clone())?;
 
-        let server_to_address: HashMap<String, Address> = servers
+        let server_to_address: HashMap<Address, Address> = servers
             .into_iter()
-            .map(|address| {
-                let id = address.clone();
-                address.parse().map(|address| (id, address))
-            })
+            .map(|address| (address.clone(), address))
             .try_collect()?;
 
         Self::new_cloud_impl(server_to_address, background_runtime, credential)
@@ -164,35 +161,32 @@ impl Connection {
     {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
-        let servers =
+        let fetched =
             Self::fetch_server_list(background_runtime.clone(), address_translation.values(), credential.clone())?;
 
-        let server_to_address: HashMap<String, Address> = address_translation
+        let server_to_address: HashMap<Address, Address> = address_translation
             .into_iter()
-            .map(|(id, address)| {
-                let id = id.as_ref().to_owned();
-                address.as_ref().parse().map(|address| (id, address))
-            })
+            .map(|(private, public)| Ok((private.as_ref().parse()?, public.as_ref().parse()?)))
             .try_collect()?;
 
-        let translated: HashSet<String> = server_to_address.keys().cloned().collect();
-        let unknown = &translated - &servers;
-        let unmapped = &servers - &translated;
+        let provided: HashSet<Address> = server_to_address.keys().cloned().collect();
+        let unknown = &provided - &fetched;
+        let unmapped = &fetched - &provided;
         if !unknown.is_empty() || !unmapped.is_empty() {
             return Err(ConnectionError::AddressTranslationMismatch { unknown, unmapped }.into());
         }
 
-        debug_assert_eq!(servers, translated);
+        debug_assert_eq!(fetched, provided);
 
         Self::new_cloud_impl(server_to_address, background_runtime, credential)
     }
 
     fn new_cloud_impl(
-        server_to_address: HashMap<String, Address>,
+        server_to_address: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credential: Credential,
     ) -> Result<Connection> {
-        let server_connections: HashMap<String, ServerConnection> = server_to_address
+        let server_connections: HashMap<Address, ServerConnection> = server_to_address
             .into_iter()
             .map(|(server_id, address)| {
                 ServerConnection::new_cloud(background_runtime.clone(), address, credential.clone())
@@ -207,7 +201,7 @@ impl Connection {
                 errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             })?
         } else {
-            Ok(Self {
+            Ok(Connection {
                 server_connections,
                 background_runtime,
                 username: Some(credential.username().to_owned()),
@@ -220,13 +214,13 @@ impl Connection {
         background_runtime: Arc<BackgroundRuntime>,
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credential,
-    ) -> Result<HashSet<String>> {
+    ) -> Result<HashSet<Address>> {
         for address in addresses.clone() {
             let server_connection =
                 ServerConnection::new_cloud(background_runtime.clone(), address.as_ref().parse()?, credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
-                    Ok(servers) => return Ok(servers.into_iter().collect()),
+                    Ok(servers) => return servers.into_iter().map(|s| s.parse()).collect(),
                     Err(Error::Connection(
                         ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                     )) => (),
@@ -287,7 +281,7 @@ impl Connection {
         self.server_connections.keys().map(String::as_str)
     }
 
-    pub(crate) fn connection(&self, id: &str) -> Option<&ServerConnection> {
+    pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
         self.server_connections.get(id)
     }
 
