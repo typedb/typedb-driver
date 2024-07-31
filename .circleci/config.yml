@@ -843,7 +843,16 @@ workflows:
             branches:
               only: [development, master]
 
-      - deploy-snapshot-any
+      - deploy-snapshot-any:
+          filters:
+            branches:
+              only: [development, master]
+          requires:
+            - deploy-snapshot-linux-arm64
+            - deploy-snapshot-linux-x86_64
+            - deploy-snapshot-mac-arm64
+            - deploy-snapshot-mac-x86_64
+            - deploy-snapshot-windows-x86_64
 
       - deploy-snapshot-dotnet-any:
           filters:
@@ -902,6 +911,9 @@ workflows:
             - deploy-snapshot-dotnet-any
 
       - test-snapshot-any:
+          filters:
+            branches:
+              only: [master]
           requires:
             - deploy-snapshot-any
 
