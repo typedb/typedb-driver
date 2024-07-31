@@ -160,6 +160,7 @@ unuseddeps_deps()
 # load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 # vaticle_bazel_distribution()
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "vaticle_bazel_distribution",
     remote = "https://github.com/typedb/bazel-distribution",
