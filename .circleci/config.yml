@@ -902,9 +902,6 @@ workflows:
             - deploy-snapshot-dotnet-any
 
       - test-snapshot-any:
-          filters:
-            branches:
-              only: [master]
           requires:
             - deploy-snapshot-any
 
