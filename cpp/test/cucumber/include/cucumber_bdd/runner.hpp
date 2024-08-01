@@ -71,6 +71,7 @@ class TestRunner : public TestRunnerBase {
     void afterAllTests() override {
         if (hooks != nullptr) hooks->afterAll();
     }
+
     bool skipScenario(const cucumber::messages::pickle& scenario) override {
         return (hooks != nullptr) ? hooks->skipScenario(scenario) : false;
     }

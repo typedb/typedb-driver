@@ -64,8 +64,9 @@ void TestRunnerBase::loadFeature(const std::string& path) {
 
 int TestRunnerBase::runAllTests() {
     beforeAllTests();
-    return RUN_ALL_TESTS();
+    int ret = RUN_ALL_TESTS();
     afterAllTests();
+    return ret;
 }
 
 }  // namespace cucumber_bdd
