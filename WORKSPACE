@@ -136,8 +136,10 @@ load("@vaticle_dependencies//tool/swig:deps.bzl", swig_deps = "deps")
 swig_deps()
 
 # Load //tool/common
+load("//python:python_versions.bzl", "create_interpreter_symlinks")
+create_interpreter_symlinks({"python39_symlink" : "python39"})
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
-vaticle_dependencies_ci_pip()
+vaticle_dependencies_ci_pip("@python39_symlink//:python")
 load("@vaticle_dependencies_ci_pip//:requirements.bzl", "install_deps")
 install_deps()
 
