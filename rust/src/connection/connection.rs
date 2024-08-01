@@ -131,8 +131,8 @@ impl Connection {
     ///
     /// # Arguments
     ///
-    /// * `address_translation` -- Translation map from addresses received from the TypeDB server(s)
-    /// to addresses to be used by the driver for connection
+    /// * `address_translation` -- Translation map from addresses to be used by the driver for connection
+    ///    to addresses received from the TypeDB server(s)
     /// * `credential` -- User credential and TLS encryption setting
     ///
     /// # Examples
@@ -162,7 +162,7 @@ impl Connection {
             .map(|(public, private)| -> Result<_> { Ok((public.as_ref().parse()?, private.as_ref().parse()?)) })
             .try_collect()?;
 
-        let provided: HashSet<Address> = address_to_server.keys().cloned().collect();
+        let provided: HashSet<Address> = address_to_server.values().cloned().collect();
         let unknown = &provided - &fetched;
         let unmapped = &fetched - &provided;
         if !unknown.is_empty() || !unmapped.is_empty() {
@@ -190,7 +190,7 @@ impl Connection {
         let errors = server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect_vec();
         if errors.len() == server_connections.len() {
             Err(ConnectionError::CloudAllNodesFailed {
-                errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
+                errors: errors.into_iter().map(|err| err.to_string()).join("\n"),
             })?
         } else {
             Ok(Connection {

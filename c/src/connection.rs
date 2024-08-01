@@ -52,10 +52,10 @@ pub extern "C" fn connection_open_cloud(
 /// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
 /// the provided credential.
 ///
-/// @param advertised_addresses A null-terminated array holding the address(es) the TypeDB server(s)
-/// are configured to advertise
-/// @param translated_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
+/// @param public_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
 /// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
+/// @param private_addresses A null-terminated array holding the address(es) the TypeDB server(s)
+/// are configured to advertise
 /// @param credential The <code>Credential</code> to connect with
 #[no_mangle]
 pub extern "C" fn connection_open_cloud_translated(
