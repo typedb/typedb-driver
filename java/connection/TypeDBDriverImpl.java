@@ -81,15 +81,15 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     private static com.vaticle.typedb.driver.jni.Connection openCloud(Map<String, String> addressTranslation, TypeDBCredential credential) {
         try {
-            List<String> advertised = new ArrayList();
-            List<String> translated = new ArrayList();
+            List<String> publicAddresses = new ArrayList();
+            List<String> privateAddresses = new ArrayList();
             for (Map.Entry<String, String> entry: addressTranslation.entrySet()) {
-                advertised.add(entry.getKey());
-                translated.add(entry.getValue());
+                publicAddresses.add(entry.getKey());
+                privateAddresses.add(entry.getValue());
             }
             return connection_open_cloud_translated(
-                advertised.toArray(new String[0]),
-                translated.toArray(new String[0]),
+                publicAddresses.toArray(new String[0]),
+                privateAddresses.toArray(new String[0]),
                 credential.nativeObject
             );
         } catch (com.vaticle.typedb.driver.jni.Error e) {

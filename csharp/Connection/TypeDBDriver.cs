@@ -80,16 +80,16 @@ namespace TypeDB.Driver.Connection
         {
             try
             {
-                string[] advertisedAddresses = new string[addressTranslation.Count];
-                string[] translatedAddresses = new string[addressTranslation.Count];
+                string[] publicAddresses = new string[addressTranslation.Count];
+                string[] privateAddresses = new string[addressTranslation.Count];
                 int index = 0;
                 foreach (KeyValuePair<string, string> translation in addressTranslation)
                 {
-                    advertisedAddresses[index] = translation.Key;
-                    translatedAddresses[index] = translation.Value;
+                    publicAddresses[index] = translation.Key;
+                    privateAddresses[index] = translation.Value;
                     index++;
                 }
-                return Pinvoke.typedb_driver.connection_open_cloud_translated(advertisedAddresses, translatedAddresses, credential.NativeObject);
+                return Pinvoke.typedb_driver.connection_open_cloud_translated(publicAddresses, privateAddresses, credential.NativeObject);
             }
             catch (Pinvoke.Error e)
             {

@@ -59,11 +59,11 @@ pub extern "C" fn connection_open_cloud(
 /// @param credential The <code>Credential</code> to connect with
 #[no_mangle]
 pub extern "C" fn connection_open_cloud_translated(
-    advertised_addresses: *const *const c_char,
-    translated_addresses: *const *const c_char,
+    public_addresses: *const *const c_char,
+    private_addresses: *const *const c_char,
     credential: *const Credential,
 ) -> *mut Connection {
-    let addresses = string_array_view(advertised_addresses).zip_eq(string_array_view(translated_addresses)).collect();
+    let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
     try_release(Connection::new_cloud_with_translation(addresses, borrow(credential).clone()))
 }
 
