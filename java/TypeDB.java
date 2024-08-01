@@ -86,8 +86,8 @@ public class TypeDB {
      * TypeDB.cloudDriver(addressTranslation, credential);
      * </pre>
      *
-     * @param addressTranslation Translation map from addresses received from the TypeDB server(s)
-     * to addresses to be used by the driver for connection
+     * @param addressTranslation Translation map from addresses to be used by the driver for connection
+     * to addresses received from the TypeDB server(s)
      * @param credential The credential to connect with
      */
     public static TypeDBDriver cloudDriver(Map<String, String> addressTranslation, TypeDBCredential credential) {

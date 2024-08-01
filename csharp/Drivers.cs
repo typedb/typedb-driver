@@ -71,7 +71,7 @@ namespace TypeDB.Driver
          * </pre>
          *
          * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses
-         * received from the TypeDB server(s) to addresses to be used by the driver for connection
+         * to be used by the driver for connection to addresses received from the TypeDB server(s)
          * @param credential The credential to connect with
          */
         public static ITypeDBDriver CloudDriver(ICollection<string> addresses, TypeDBCredential credential)

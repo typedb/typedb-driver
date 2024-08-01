@@ -113,7 +113,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translati
 [options="header"]
 |===
 |Name |Description |Type
-a| `addressTranslation` a| Translation map from addresses received from the TypeDB server(s) to addresses to be used by the driver for connection a| `java.util.Map<java.lang.String,​java.lang.String>`
+a| `addressTranslation` a| Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `java.util.Map<java.lang.String,​java.lang.String>`
 a| `credential` a| The credential to connect with a| `TypeDBCredential`
 |===
 

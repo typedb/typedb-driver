@@ -85,8 +85,8 @@ public:
      * Driver::cloudDriver(addresses, credential);
      * </pre>
      *
-     * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses
-     * received from the TypeDB server(s) to addresses to be used by the driver for connection
+     * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses to be used
+     * by the driver for connection to addresses received from the TypeDB server(s) 
      * @param credential The Credential to connect with
      */
     static Driver cloudDriver(const std::vector<std::string>& addresses, const Credential& credential);

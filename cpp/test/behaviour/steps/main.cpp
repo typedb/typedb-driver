@@ -56,5 +56,4 @@ int main(int argc, char** argv) {
         &TypeDB::BDD::testHooks);
     driver.loadFeature(argv[1]);
     return driver.runAllTests();
-    return 0;
 }

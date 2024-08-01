@@ -47,17 +47,17 @@ Driver Driver::cloudDriver(const std::vector<std::string>& addresses, const Cred
 }
 
 Driver Driver::cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential) {
-    std::vector<const char*> advertisedAddressesNative;
-    std::vector<const char*> translatedAddressesNative;
-    for (auto& [advertised, translated] : addressTranslation) {
-        advertisedAddressesNative.push_back(advertised.c_str());
-        translatedAddressesNative.push_back(translated.c_str());
+    std::vector<const char*> publicAddressesNative;
+    std::vector<const char*> privateAddressesNative;
+    for (auto& [publicAddress, privateAddress] : addressTranslation) {
+        publicAddressesNative.push_back(publicAddress.c_str());
+        privateAddressesNative.push_back(privateAddress.c_str());
     }
-    advertisedAddressesNative.push_back(nullptr);
-    translatedAddressesNative.push_back(nullptr);
+    publicAddressesNative.push_back(nullptr);
+    privateAddressesNative.push_back(nullptr);
     auto p = _native::connection_open_cloud_translated(
-        advertisedAddressesNative.data(),
-        translatedAddressesNative.data(),
+        publicAddressesNative.data(),
+        privateAddressesNative.data(),
         credential.getNative()
     );
     DriverException::check_and_throw();

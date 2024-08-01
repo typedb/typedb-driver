@@ -22,7 +22,7 @@ use std::{collections::HashSet, error::Error as StdError, fmt};
 use tonic::{Code, Status};
 use typeql::error_messages;
 
-use super::RequestID;
+use super::{address::Address, RequestID};
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
@@ -46,8 +46,8 @@ error_messages! { ConnectionError
         9: "Invalid field in message received from server: '{name}'.",
     UnexpectedResponse { response: String } =
         10: "Received unexpected response from server: '{response}'.",
-    ServerConnectionFailed { addresses: String } =
-        11: "Unable to connect to TypeDB server(s) at: \n{addresses}",
+    ServerConnectionFailed { addresses: Vec<Address> } =
+        11: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
         12: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
@@ -72,7 +72,7 @@ error_messages! { ConnectionError
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         23: "Invalid URL '{address}': missing port.",
-    AddressTranslationMismatch { unknown: HashSet<String>, unmapped: HashSet<String> } =
+    AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
         24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
 }
 
@@ -86,7 +86,7 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}.",
-    UnknownServer { server: String } =
+    UnknownServer { server: Address } =
         5: "Received replica at unrecognized server: {server}.",
     EnumOutOfBounds { value: i32, enum_name: &'static str } =
         6: "Value '{value}' is out of bounds for enum '{enum_name}'.",

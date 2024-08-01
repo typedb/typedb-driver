@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use chrono::NaiveDateTime;
+use chrono::DateTime;
 use itertools::Itertools;
 use typedb_protocol::{
     concept,
@@ -408,7 +408,7 @@ impl TryFromProto<ValueProto> for Value {
             Some(ValueProtoInner::Double(double)) => Ok(Self::Double(double)),
             Some(ValueProtoInner::String(string)) => Ok(Self::String(string)),
             Some(ValueProtoInner::DateTime(millis)) => {
-                Ok(Self::DateTime(NaiveDateTime::from_timestamp_millis(millis).unwrap()))
+                Ok(Self::DateTime(DateTime::from_timestamp_millis(millis).unwrap().naive_utc()))
             }
             None => Err(ConnectionError::MissingResponseField { field: "value" }.into()),
         }
@@ -423,7 +423,7 @@ impl IntoProto<ValueProto> for Value {
                 Self::Long(long) => ValueProtoInner::Long(long),
                 Self::Double(double) => ValueProtoInner::Double(double),
                 Self::String(string) => ValueProtoInner::String(string),
-                Self::DateTime(date_time) => ValueProtoInner::DateTime(date_time.timestamp_millis()),
+                Self::DateTime(date_time) => ValueProtoInner::DateTime(date_time.and_utc().timestamp_millis()),
             }),
         }
     }

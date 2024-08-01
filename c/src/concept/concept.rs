@@ -19,7 +19,7 @@
 
 use std::ffi::c_char;
 
-use chrono::NaiveDateTime;
+use chrono::DateTime;
 use typedb_driver::{
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
@@ -56,7 +56,7 @@ pub extern "C" fn value_new_string(string: *const c_char) -> *mut Concept {
 /// Creates a new ``Value`` object of the specified datetime value.
 #[no_mangle]
 pub extern "C" fn value_new_date_time_from_millis(millis: i64) -> *mut Concept {
-    release(Concept::Value(Value::DateTime(NaiveDateTime::from_timestamp_millis(millis).unwrap())))
+    release(Concept::Value(Value::DateTime(DateTime::from_timestamp_millis(millis).unwrap().naive_utc())))
 }
 
 /// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>boolean</code>.
@@ -143,7 +143,7 @@ pub extern "C" fn value_get_string(value: *const Concept) -> *mut c_char {
 #[no_mangle]
 pub extern "C" fn value_get_date_time_as_millis(value: *const Concept) -> i64 {
     if let Value::DateTime(date_time) = borrow_as_value(value) {
-        date_time.timestamp_millis()
+        date_time.and_utc().timestamp_millis()
     } else {
         unreachable!("Attempting to unwrap a non-datetime {:?} as datetime", borrow_as_value(value))
     }

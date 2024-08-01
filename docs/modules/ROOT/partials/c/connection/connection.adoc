@@ -88,7 +88,7 @@ a| `credential` a| The ``Credential`` to connect with a| `const struct Credentia
 
 [source,cpp]
 ----
-struct Connection* connection_open_cloud_translated(const char*const* advertised_addresses, const char*const* translated_addresses, const struct Credential* credential)
+struct Connection* connection_open_cloud_translated(const char*const* public_addresses, const char*const* private_addresses, const struct Credential* credential)
 ----
 
 
@@ -102,8 +102,8 @@ Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translati
 [options="header"]
 |===
 |Name |Description |Type
-a| `advertised_addresses` a| A null-terminated array holding the address(es) the TypeDB server(s) are configured to advertise a| `const char*const*`
-a| `translated_addresses` a| A null-terminated array holding the address(es) of the TypeDB server(s) the driver will connect to. This array _must_ have the same length as ``advertised_addresses`` a| `const char*const*`
+a| `public_addresses` a| A null-terminated array holding the address(es) of the TypeDB server(s) the driver will connect to. This array _must_ have the same length as ``advertised_addresses`` a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the address(es) the TypeDB server(s) are configured to advertise a| `const char*const*`
 a| `credential` a| The ``Credential`` to connect with a| `const struct Credential*`
 |===
 

@@ -51,7 +51,7 @@ void TestRunnerBase::loadFeature(const std::string& path) {
 
     if (doc.feature.has_value()) {
         for (cucumber::messages::pickle scenario : compiler.compile(doc, path)) {
-            if (skipScenario(scenario)) {
+            if (skipScenario(scenario) || scenario.steps.empty()) {
                 DEBUGONLY(std::cout << "Skipping scenario: " << scenario.name << std::endl)
             } else {
                 DEBUGONLY(std::cout << "Registering scenario: " << scenario.name << std::endl)
@@ -64,8 +64,9 @@ void TestRunnerBase::loadFeature(const std::string& path) {
 
 int TestRunnerBase::runAllTests() {
     beforeAllTests();
-    return RUN_ALL_TESTS();
+    int ret = RUN_ALL_TESTS();
     afterAllTests();
+    return ret;
 }
 
 }  // namespace cucumber_bdd
