@@ -611,7 +611,6 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
-      - install-npm-apt
       - deploy-npm-snapshot-unix
 
   deploy-snapshot-dotnet-any:
@@ -768,7 +767,6 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
-      - install-npm-apt
       - deploy-npm-release-unix
 
   deploy-release-dotnet-any:
