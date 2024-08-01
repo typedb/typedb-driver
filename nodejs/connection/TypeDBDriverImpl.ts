@@ -100,15 +100,16 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         } else {
             addressTranslation = this._initAddresses;
             const unknown = [];
-            for (const [advertised, _] of Object.entries(addressTranslation)) {
-                if (serverAddresses.indexOf(advertised) === -1) {
-                    unknown.push(advertised);
+            for (const [_, privateAddress] of Object.entries(addressTranslation)) {
+                if (serverAddresses.indexOf(privateAddress) === -1) {
+                    unknown.push(privateAddress);
                 }
             }
             const unmapped = [];
-            for (const advertisedAddress of serverAddresses) {
-                if (!(advertisedAddress in addressTranslation)) {
-                    unmapped.push(advertisedAddress);
+            for (const privateAddress of serverAddresses) {
+                let publicAddress = Object.keys(addressTranslation).find((key) => addressTranslation[key] == privateAddress);
+                if (!publicAddress) {
+                    unmapped.push(privateAddress);
                 }
             }
             if (unknown.length > 0 || unmapped.length > 0) {
@@ -134,7 +135,13 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     private async fetchCloudServerAddresses(): Promise<string[]> {
-        for (const [_, address] of Object.entries(this._initAddresses)) {
+        let initPrivateAddresses: string[];
+        if (Array.isArray(this._initAddresses)) {
+            initPrivateAddresses = this._initAddresses;
+        } else {
+            initPrivateAddresses = Array.from(Object.values(this._initAddresses));
+        }
+        for (const address of initPrivateAddresses) {
             try {
                 const stub = new TypeDBStubImpl(address, this._credential);
                 await stub.open();
@@ -145,7 +152,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 console.error(`Fetching cloud servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(Object.values(this._initAddresses).join(",")));
+        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(initPrivateAddresses.join(",")));
     }
 
     isOpen(): boolean {
