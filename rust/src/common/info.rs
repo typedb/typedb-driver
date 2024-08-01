@@ -20,9 +20,8 @@
 use std::time::Duration;
 
 use tokio::sync::mpsc::UnboundedSender;
-use crate::common::address::Address;
 
-use super::{Callback, SessionID};
+use super::{address::Address, Callback, SessionID};
 
 #[derive(Clone, Debug)]
 pub(crate) struct SessionInfo {

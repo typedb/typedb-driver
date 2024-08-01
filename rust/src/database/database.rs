@@ -25,6 +25,7 @@ use log::{debug, error};
 
 use crate::{
     common::{
+        address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
@@ -33,7 +34,6 @@ use crate::{
     error::InternalError,
     Connection,
 };
-use crate::common::address::Address;
 
 /// A TypeDB database
 pub struct Database {

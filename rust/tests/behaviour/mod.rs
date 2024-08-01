@@ -27,11 +27,16 @@ mod util;
 
 use std::{
     collections::{HashMap, HashSet},
-    path::PathBuf,
+    iter, mem,
+    path::{Path, PathBuf},
 };
 
-use cucumber::{StatsWriter, World};
-use futures::future::try_join_all;
+use cucumber::{gherkin::Feature, StatsWriter, World};
+use futures::{
+    future::{try_join_all, Either},
+    stream::{self, StreamExt},
+};
+use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
@@ -41,6 +46,48 @@ use typedb_driver::{
 };
 
 use self::session_tracker::SessionTracker;
+
+#[derive(Debug, Default)]
+struct SingletonParser {
+    basic: cucumber::parser::Basic,
+}
+
+impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
+    type Cli = <cucumber::parser::Basic as cucumber::Parser<I>>::Cli;
+    type Output = stream::FlatMap<
+        stream::Iter<std::vec::IntoIter<Result<Feature, cucumber::parser::Error>>>,
+        Either<
+            stream::Iter<std::vec::IntoIter<Result<Feature, cucumber::parser::Error>>>,
+            stream::Iter<iter::Once<Result<Feature, cucumber::parser::Error>>>,
+        >,
+        fn(
+            Result<Feature, cucumber::parser::Error>,
+        ) -> Either<
+            stream::Iter<std::vec::IntoIter<Result<Feature, cucumber::parser::Error>>>,
+            stream::Iter<iter::Once<Result<Feature, cucumber::parser::Error>>>,
+        >,
+    >;
+
+    fn parse(self, input: I, cli: Self::Cli) -> Self::Output {
+        self.basic.parse(input, cli).flat_map(|res| match res {
+            Ok(mut feature) => {
+                let scenarios = mem::take(&mut feature.scenarios);
+                let singleton_features = scenarios
+                    .into_iter()
+                    .map(|scenario| {
+                        Ok(Feature {
+                            name: feature.name.clone() + " :: " + &scenario.name,
+                            scenarios: vec![scenario],
+                            ..feature.clone()
+                        })
+                    })
+                    .collect_vec();
+                Either::Left(stream::iter(singleton_features))
+            }
+            Err(err) => Either::Right(stream::iter(iter::once(Err(err)))),
+        })
+    }
+}
 
 #[derive(Debug, World)]
 pub struct Context {
@@ -75,10 +122,11 @@ impl Context {
             std::process::exit(1);
         }));
 
-        !Self::cucumber()
+        !Self::cucumber::<&str>()
             .repeat_failed()
             .fail_on_skipped()
             .max_concurrent_scenarios(Some(1))
+            .with_parser(SingletonParser::default())
             .with_default_cli()
             .after(|_, _, _, _, context| {
                 Box::pin(async {

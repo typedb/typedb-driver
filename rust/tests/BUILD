@@ -31,6 +31,7 @@ rust_test(
         "@crates//:chrono",
         "@crates//:cucumber",
         "@crates//:futures",
+        "@crates//:itertools",
         "@crates//:regex",
         "@crates//:serde_json",
         "@crates//:serial_test",

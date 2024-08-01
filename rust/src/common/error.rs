@@ -21,9 +21,8 @@ use std::{collections::HashSet, error::Error as StdError, fmt};
 
 use tonic::{Code, Status};
 use typeql::error_messages;
-use crate::common::address::Address;
 
-use super::RequestID;
+use super::{address::Address, RequestID};
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
