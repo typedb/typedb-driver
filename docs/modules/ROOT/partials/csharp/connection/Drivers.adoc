@@ -57,7 +57,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses received from the TypeDB server(s) to addresses to be used by the driver for connection a| `ICollection< string >`
+a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `ICollection< string >`
 a| `credential` a| The credential to connect with a| `TypeDBCredential`
 |===
 
