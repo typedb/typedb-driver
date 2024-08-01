@@ -107,7 +107,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
             }
             const unmapped = [];
             for (const privateAddress of serverAddresses) {
-                let publicAddress = Object.keys(addressTranslation).find((key) => addressTranslation[key] == privateAddress);
+                const publicAddress = Object.keys(addressTranslation).find((key) => addressTranslation[key] == privateAddress);
                 if (!publicAddress) {
                     unmapped.push(privateAddress);
                 }
