@@ -4,7 +4,7 @@
   "description": "TypeDB Node.js Driver",
   "author": "Vaticle",
   "license": "Apache-2.0",
-  "homepage": "https://vaticle.com",
+  "homepage": "https://typedb.com",
   "type": "commonjs",
   "repository": {
     "type": "git",

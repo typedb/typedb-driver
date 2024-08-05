@@ -42,6 +42,8 @@ export namespace TypeDB {
      * Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
      * @param addresses - List of addresses of the individual TypeDB Cloud servers.
      * As long one specified address is provided, the driver will discover the other addresses from that server.
+     * Alternatively, a translation map from addresses to be used by the driver for connection
+     * to addresses received from the TypeDB server(s) may be provided.
      * @param credential - The credentials to log in, and encryption settings. See <code>{@link TypeDBCredential}</code>
      *
      * ### Examples

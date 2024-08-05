@@ -76,8 +76,8 @@ def native_driver_versioned(python_versions):
                 "Topic :: Database :: Front-Ends"
             ],
             url = "https://github.com/vaticle/typedb-driver-python/",
-            author = "Vaticle",
-            author_email = "community@vaticle.com",
+            author = "TypeDB Community",
+            author_email = "community@typedb.com",
             license = "Apache-2.0",
             requirements_file = "//python:requirements.txt",
             keywords = ["typedb", "database", "graph", "knowledgebase", "knowledge-engineering"],

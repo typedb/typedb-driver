@@ -52,18 +52,18 @@ pub extern "C" fn connection_open_cloud(
 /// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
 /// the provided credential.
 ///
-/// @param advertised_addresses A null-terminated array holding the address(es) the TypeDB server(s)
-/// are configured to advertise
-/// @param translated_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
+/// @param public_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
 /// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
+/// @param private_addresses A null-terminated array holding the address(es) the TypeDB server(s)
+/// are configured to advertise
 /// @param credential The <code>Credential</code> to connect with
 #[no_mangle]
 pub extern "C" fn connection_open_cloud_translated(
-    advertised_addresses: *const *const c_char,
-    translated_addresses: *const *const c_char,
+    public_addresses: *const *const c_char,
+    private_addresses: *const *const c_char,
     credential: *const Credential,
 ) -> *mut Connection {
-    let addresses = string_array_view(advertised_addresses).zip_eq(string_array_view(translated_addresses)).collect();
+    let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
     try_release(Connection::new_cloud_with_translation(addresses, borrow(credential).clone()))
 }
 

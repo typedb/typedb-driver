@@ -44,10 +44,10 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
                 if isinstance(addresses, list):
                     native_connection = connection_open_cloud(addresses, credential.native_object)
                 else:
-                    advertised_addresses = list(addresses.keys())
-                    translated_addresses = [addresses[advertised] for advertised in advertised_addresses]
+                    public_addresses = list(addresses.keys())
+                    private_addresses = [addresses[public] for public in public_addresses]
                     native_connection = connection_open_cloud_translated(
-                            advertised_addresses, translated_addresses, credential.native_object)
+                            public_addresses, private_addresses, credential.native_object)
             except TypeDBDriverExceptionNative as e:
                 raise TypeDBDriverException.of(e)
         else:
@@ -93,5 +93,5 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
             return False
 
     def close(self) -> None:
-        if not self.is_open():
+        if self.is_open():
             connection_force_close(self._native_connection)

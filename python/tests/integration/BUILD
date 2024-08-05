@@ -32,8 +32,19 @@ typedb_cloud_py_test(
 )
 
 py_test(
-    name = "test_connection",
-    srcs = ["test_connection.py"],
+    name = "test_core_connection",
+    srcs = ["test_core_connection.py"],
+    deps = [
+        "//python:driver_python",
+        requirement("PyHamcrest"),
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    python_version = "PY3"
+)
+
+py_test(
+    name = "test_cloud_connection",
+    srcs = ["test_cloud_connection.py"],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),

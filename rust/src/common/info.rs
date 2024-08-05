@@ -21,7 +21,7 @@ use std::time::Duration;
 
 use tokio::sync::mpsc::UnboundedSender;
 
-use super::{Callback, SessionID};
+use super::{address::Address, Callback, SessionID};
 
 #[derive(Clone, Debug)]
 pub(crate) struct SessionInfo {
@@ -40,7 +40,7 @@ pub(crate) struct DatabaseInfo {
 #[derive(Debug)]
 pub struct ReplicaInfo {
     /// The server hosting this replica
-    pub server: String,
+    pub server: Address,
     /// Whether this is the primary replica of the raft cluster.
     pub is_primary: bool,
     /// Whether this is the preferred replica of the raft cluster.

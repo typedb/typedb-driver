@@ -63,7 +63,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses received from the TypeDB server(s) to addresses to be used by the driver for connection a| `const std::vector< std::string >&`
+a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `const std::vector< std::string >&`
 a| `credential` a| The Credential to connect with a| `const Credential&`
 |===
 
