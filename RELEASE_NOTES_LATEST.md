@@ -97,10 +97,6 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
 
 ## Other Improvements
-- **Update VERSION to 2.28.5-rc0 and create release notes**
-  
-  Update VERSION to 2.28.5-rc0 and create release notes
-  
 - **Hermetic npm deployment**
   
 - **Build and deploy for Python 3.12**
