@@ -29,7 +29,6 @@ use crate::{
     common::{stream::Stream, Promise, Result},
     concept::Value,
     connection::TransactionStream,
-    logic::Explanation,
     Options,
 };
 
@@ -292,29 +291,4 @@ impl<'tx> QueryManager<'tx> {
         Ok(self.transaction_stream.get_ref().fetch(query.to_string(), options)?.map_ok(|tree| tree.into_json()))
     }
 
-    /// Performs a TypeQL Explain query in the transaction.
-    /// See [``QueryManager::explain_with_options]
-    pub fn explain(&self, explainable: &Explainable) -> Result<impl Stream<Item = Result<Explanation>> + 'tx> {
-        self.explain_with_options(explainable, Options::new())
-    }
-
-    /// Performs a TypeQL Explain query in the transaction.
-    ///
-    /// # Arguments
-    ///
-    /// * `explainable` -- The Explainable to be explained
-    /// * `options` -- Specify query options
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// transaction.query().explain_with_options(explainable, options)
-    /// ```
-    pub fn explain_with_options(
-        &self,
-        explainable: &Explainable,
-        options: Options,
-    ) -> Result<impl Stream<Item = Result<Explanation>> + 'tx> {
-        self.transaction_stream.get_ref().explain(explainable.id, options)
-    }
 }

@@ -21,7 +21,7 @@ use std::{borrow::Cow, collections::HashMap};
 
 use super::JSON;
 use crate::concept::{
-    Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, RootThingType, Value, ValueType,
+    Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, Value, ValueType,
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -49,14 +49,13 @@ impl Node {
                 JSON::Object(map.into_iter().map(|(var, node)| (Cow::Owned(var), node.into_json())).collect())
             }
             Node::List(list) => JSON::Array(list.into_iter().map(Node::into_json).collect()),
-            Node::Leaf(Some(Concept::RootThingType(_))) => {
-                json_type(RootThingType::LABEL, Cow::Borrowed(RootThingType::LABEL))
-            }
             Node::Leaf(Some(Concept::EntityType(EntityType { label, .. }))) => {
-                json_type(EntityType::ROOT_LABEL, Cow::Owned(label))
+                todo!()
+                // json_type(, Cow::Owned(label))
             }
             Node::Leaf(Some(Concept::RelationType(RelationType { label, .. }))) => {
-                json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
+                todo!()
+                // json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
             }
             Node::Leaf(Some(Concept::AttributeType(AttributeType { label, value_type, .. }))) => {
                 json_attribute_type(Cow::Owned(label), value_type)
@@ -65,7 +64,7 @@ impl Node {
                 json_type("relation:role", Cow::Owned(label.to_string()))
             }
             Node::Leaf(Some(Concept::Attribute(Attribute {
-                type_: AttributeType { label, value_type, .. },
+                type_: Some(AttributeType { label, value_type, .. }),
                 value,
                 ..
             }))) => JSON::Object(
@@ -90,18 +89,20 @@ const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
 const VALUE: Cow<'static, str> = Cow::Borrowed("value");
 
 fn json_type(root: &'static str, label: Cow<'static, str>) -> JSON {
-    JSON::Object([(ROOT, JSON::String(Cow::Borrowed(root))), (LABEL, JSON::String(label))].into())
+    todo!()
+    // JSON::Object([(ROOT, JSON::String(Cow::Borrowed(root))), (LABEL, JSON::String(label))].into())
 }
 
-fn json_attribute_type(label: Cow<'static, str>, value_type: ValueType) -> JSON {
-    JSON::Object(
-        [
-            (ROOT, JSON::String(Cow::Borrowed(AttributeType::ROOT_LABEL))),
-            (LABEL, JSON::String(label)),
-            (VALUE_TYPE, json_value_type(value_type)),
-        ]
-        .into(),
-    )
+fn json_attribute_type(label: Cow<'static, str>, value_type: Option<ValueType>) -> JSON {
+    todo!()
+    // JSON::Object(
+    //     [
+    //         (ROOT, JSON::String(Cow::Borrowed(AttributeType::ROOT_LABEL))),
+    //         (LABEL, JSON::String(label)),
+    //         (VALUE_TYPE, json_value_type(value_type)),
+    //     ]
+    //     .into(),
+    // )
 }
 
 fn json_value_type(value_type: ValueType) -> JSON {

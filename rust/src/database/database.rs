@@ -143,19 +143,6 @@ impl Database {
         self.run_failsafe(|database| async move { database.type_schema().await }).await
     }
 
-    /// Returns the rules in the schema as a valid TypeQL define query string.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "database.rule_schema();")]
-    #[cfg_attr(not(feature = "sync"), doc = "database.rule_schema().await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn rule_schema(&self) -> Result<String> {
-        self.run_failsafe(|database| async move { database.rule_schema().await }).await
-    }
-
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
@@ -371,11 +358,6 @@ impl ServerDatabase {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn type_schema(&self) -> Result<String> {
         self.connection.database_type_schema(self.name.clone()).await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn rule_schema(&self) -> Result<String> {
-        self.connection.database_rule_schema(self.name.clone()).await
     }
 }
 

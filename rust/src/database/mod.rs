@@ -21,4 +21,4 @@ mod database;
 mod database_manager;
 mod session;
 
-pub use self::{database::Database, database_manager::DatabaseManager, session::Session};
+pub use self::{database::Database, database_manager::DatabaseManager};

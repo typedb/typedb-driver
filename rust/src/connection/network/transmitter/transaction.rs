@@ -42,7 +42,8 @@ use tokio::{
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
-use typedb_protocol::transaction::{self, server::Server, stream::State};
+use typedb_protocol::transaction::{self, server::Server,
+};
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
@@ -339,31 +340,32 @@ impl ResponseCollector {
     }
 
     async fn collect_res_part(&self, res_part: transaction::ResPart) {
-        let request_id = res_part.req_id.clone().into();
-
-        match res_part.res {
-            Some(transaction::res_part::Res::StreamResPart(stream_res_part)) => {
-                match State::from_i32(stream_res_part.state).expect("enum out of range") {
-                    State::Done => {
-                        self.callbacks.write().unwrap().remove(&request_id);
-                    }
-                    State::Continue => {
-                        match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
-                            Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
-                                let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
-                                callback.error(ConnectionError::TransactionIsClosed);
-                            }
-                            _ => (),
-                        }
-                    }
-                }
-            }
-            Some(_) => match self.callbacks.read().unwrap().get(&request_id) {
-                Some(sink) => sink.send(TransactionResponse::try_from_proto(res_part)),
-                _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
-            },
-            None => error!("{}", ConnectionError::MissingResponseField { field: "res_part.res" }),
-        }
+        todo!()
+        // let request_id = res_part.req_id.clone().into();
+        //
+        // match res_part.res_part {
+            // Some(transaction::res_part::Res::StreamResPart(stream_res_part)) => {
+            //     match State::from_i32(stream_res_part.state).expect("enum out of range") {
+            //         State::Done => {
+            //             self.callbacks.write().unwrap().remove(&request_id);
+            //         }
+            //         State::Continue => {
+            //             match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
+            //                 Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
+            //                     let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
+            //                     callback.error(ConnectionError::TransactionIsClosed);
+            //                 }
+            //                 _ => (),
+            //             }
+            //         }
+            //     }
+            // }
+            // Some(_) => match self.callbacks.read().unwrap().get(&request_id) {
+            //     Some(sink) => sink.send(TransactionResponse::try_from_proto(res_part)),
+            //     _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
+            // },
+            // None => error!("{}", ConnectionError::MissingResponseField { field: "res_part.res" }),
+        // }
     }
 
     async fn close(self, error: ConnectionError) {

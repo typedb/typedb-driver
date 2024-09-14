@@ -119,7 +119,7 @@ impl RPCTransmitter {
 
     async fn send_request<Channel: GRPCChannel>(mut rpc: RPCStub<Channel>, request: Request) -> Result<Response> {
         match request {
-            Request::ConnectionOpen => rpc.connection_open(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::ConnectionOpen { .. } => rpc.connection_open(request.try_into_proto()?).await.map(Response::from_proto),
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
 
@@ -144,17 +144,6 @@ impl RPCTransmitter {
             }
             Request::DatabaseTypeSchema { .. } => {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-            Request::DatabaseRuleSchema { .. } => {
-                rpc.database_rule_schema(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-
-            Request::SessionOpen { .. } => rpc.session_open(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::SessionPulse { .. } => {
-                rpc.session_pulse(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-            Request::SessionClose { .. } => {
-                rpc.session_close(request.try_into_proto()?).await.map(Response::from_proto)
             }
 
             Request::Transaction(transaction_request) => {

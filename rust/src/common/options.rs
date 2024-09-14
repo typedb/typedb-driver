@@ -41,7 +41,7 @@ pub struct Options {
     /// If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
     pub prefetch: Option<bool>,
     /// If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
-    pub prefetch_size: Option<i32>,
+    pub prefetch_size: Option<u64>,
     /// If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
     pub session_idle_timeout: Option<Duration>,
     /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
@@ -83,7 +83,7 @@ impl Options {
     }
 
     /// If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
-    pub fn prefetch_size(self, prefetch_size: i32) -> Self {
+    pub fn prefetch_size(self, prefetch_size: u64) -> Self {
         Self { prefetch_size: Some(prefetch_size), ..self }
     }
 

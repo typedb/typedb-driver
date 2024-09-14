@@ -30,7 +30,6 @@ pub enum Annotation {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum ThingType {
-    RootThingType(RootThingType),
     EntityType(EntityType),
     RelationType(RelationType),
     AttributeType(AttributeType),
@@ -46,7 +45,6 @@ impl ThingType {
     /// ```
     pub fn label(&self) -> &str {
         match self {
-            Self::RootThingType(_) => RootThingType::LABEL,
             Self::EntityType(entity_type) => &entity_type.label,
             Self::RelationType(relation_type) => &relation_type.label,
             Self::AttributeType(attribute_type) => &attribute_type.label,
@@ -54,29 +52,11 @@ impl ThingType {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RootThingType;
-
-impl RootThingType {
-    pub(crate) const LABEL: &'static str = "thing";
-}
-
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntityType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
-}
-
-impl EntityType {
-    pub(crate) const ROOT_LABEL: &'static str = "entity";
-
-    /// Returns the root `EntityType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
-    }
 }
 
 /// Relation types (or subtypes of the relation root type) represent relationships between types.
@@ -88,17 +68,6 @@ impl EntityType {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RelationType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
-}
-
-impl RelationType {
-    pub(crate) const ROOT_LABEL: &'static str = "relation";
-
-    /// Returns the root `RelationType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
-    }
 }
 
 /// Attribute types represent properties that other types can own.
@@ -115,18 +84,7 @@ impl RelationType {
 #[derive(Clone, Debug, PartialEq)]
 pub struct AttributeType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
-    pub value_type: ValueType,
-}
-
-impl AttributeType {
-    pub(crate) const ROOT_LABEL: &'static str = "attribute";
-
-    /// Returns the root `AttributeType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true, value_type: ValueType::Object }
-    }
+    pub value_type: Option<ValueType>,
 }
 
 /// Roles are special internal types used by relations. We can not create an instance
@@ -137,8 +95,6 @@ impl AttributeType {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RoleType {
     pub label: ScopedLabel,
-    pub is_root: bool,
-    pub is_abstract: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -18,12 +18,11 @@
  */
 
 pub mod concept;
-pub mod logic;
 pub mod query;
 
 use std::{fmt, marker::PhantomData, pin::Pin};
 
-use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
+use self::{query::QueryManager};
 use crate::{
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
@@ -72,16 +71,6 @@ impl Transaction<'_> {
     /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
     pub fn query(&self) -> QueryManager<'_> {
         QueryManager::new(self.transaction_stream.as_ref())
-    }
-
-    /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
-    pub fn concept(&self) -> ConceptManager<'_> {
-        ConceptManager::new(self.transaction_stream.as_ref())
-    }
-
-    /// Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
-    pub fn logic(&self) -> LogicManager<'_> {
-        LogicManager::new(self.transaction_stream.as_ref())
     }
 
     /// Registers a callback function which will be executed when this transaction is closed.

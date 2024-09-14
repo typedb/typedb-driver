@@ -20,7 +20,6 @@
 mod common;
 mod concept;
 mod database;
-mod logic;
 mod message;
 mod user;
 

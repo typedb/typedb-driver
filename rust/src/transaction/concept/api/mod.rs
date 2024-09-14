@@ -21,6 +21,6 @@ mod thing;
 mod type_;
 
 pub use self::{
-    thing::{AttributeAPI, EntityAPI, RelationAPI, ThingAPI},
-    type_::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI, ThingTypeAPI},
+    thing::{ThingAPI},
+    type_::{AttributeTypeAPI, ThingTypeAPI},
 };

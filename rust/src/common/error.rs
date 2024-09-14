@@ -97,7 +97,7 @@ error_messages! { InternalError
 pub enum Error {
     Connection(ConnectionError),
     Internal(InternalError),
-    TypeQL(typeql::common::Error),
+    TypeQL(typeql::Error),
     Other(String),
 }
 
@@ -182,8 +182,8 @@ impl From<InternalError> for Error {
     }
 }
 
-impl From<typeql::common::Error> for Error {
-    fn from(err: typeql::common::Error) -> Self {
+impl From<typeql::Error> for Error {
+    fn from(err: typeql::Error) -> Self {
         Self::TypeQL(err)
     }
 }

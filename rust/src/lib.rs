@@ -25,7 +25,6 @@ mod common;
 pub mod concept;
 mod connection;
 mod database;
-pub mod logic;
 pub mod transaction;
 mod user;
 
@@ -35,7 +34,7 @@ pub use self::{
         IID,
     },
     connection::{Connection, Credential},
-    database::{Database, DatabaseManager, Session},
+    database::{Database, DatabaseManager},
     transaction::Transaction,
     user::{User, UserManager},
 };

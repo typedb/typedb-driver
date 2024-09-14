@@ -315,7 +315,7 @@ impl ServerConnection {
     }
 
     pub(crate) fn validate(&self) -> Result {
-        match self.request_blocking(Request::ConnectionOpen)? {
+        match self.request_blocking(Request::ConnectionOpen { driver_lang: String::from("rust"), driver_version: String::from("0.0.0.testing") })? {
             Response::ConnectionOpen => Ok(()),
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
@@ -337,11 +337,12 @@ impl ServerConnection {
     }
 
     pub(crate) fn force_close(&self) -> Result {
-        let session_ids: Vec<SessionID> = self.open_sessions.lock().unwrap().keys().cloned().collect();
-        for session_id in session_ids {
-            self.close_session(session_id).ok();
-        }
-        self.request_transmitter.force_close()
+        // let session_ids: Vec<SessionID> = self.open_sessions.lock().unwrap().keys().cloned().collect();
+        // for session_id in session_ids {
+        //     self.close_session(session_id).ok();
+        // }
+        todo!()
+        // self.request_transmitter.force_close()
     }
 
     pub(crate) fn servers_all(&self) -> Result<Vec<Address>> {
@@ -398,68 +399,58 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn database_rule_schema(&self, database_name: String) -> Result<String> {
-        match self.request(Request::DatabaseRuleSchema { database_name }).await? {
-            Response::DatabaseRuleSchema { schema } => Ok(schema),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn delete_database(&self, database_name: String) -> Result {
         self.request(Request::DatabaseDelete { database_name }).await?;
         Ok(())
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn open_session(
-        &self,
-        database_name: String,
-        session_type: SessionType,
-        options: Options,
-    ) -> Result<SessionInfo> {
-        let start = Instant::now();
-        match self.request(Request::SessionOpen { database_name, session_type, options }).await? {
-            Response::SessionOpen { session_id, server_duration } => {
-                let (on_close_register_sink, on_close_register_source) = unbounded_async();
-                let (pulse_shutdown_sink, pulse_shutdown_source) = unbounded_async();
-                self.open_sessions.lock().unwrap().insert(session_id.clone(), pulse_shutdown_sink);
-                self.background_runtime.spawn(session_pulse(
-                    session_id.clone(),
-                    self.request_transmitter.clone(),
-                    on_close_register_source,
-                    self.background_runtime.callback_handler_sink(),
-                    pulse_shutdown_source,
-                ));
-                Ok(SessionInfo {
-                    session_id,
-                    network_latency: start.elapsed().saturating_sub(server_duration),
-                    on_close_register_sink,
-                })
-            }
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    pub(crate) fn close_session(&self, session_id: SessionID) -> Result {
-        if let Some(sink) = self.open_sessions.lock().unwrap().remove(&session_id) {
-            sink.send(()).ok();
-        }
-        self.request_blocking(Request::SessionClose { session_id })?;
-        Ok(())
-    }
+    // #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    // pub(crate) async fn open_session(
+    //     &self,
+    //     database_name: String,
+    //     session_type: SessionType,
+    //     options: Options,
+    // ) -> Result<SessionInfo> {
+    //     let start = Instant::now();
+    //     match self.request(Request::SessionOpen { database_name, session_type, options }).await? {
+    //         Response::SessionOpen { session_id, server_duration } => {
+    //             let (on_close_register_sink, on_close_register_source) = unbounded_async();
+    //             let (pulse_shutdown_sink, pulse_shutdown_source) = unbounded_async();
+    //             self.open_sessions.lock().unwrap().insert(session_id.clone(), pulse_shutdown_sink);
+    //             self.background_runtime.spawn(session_pulse(
+    //                 session_id.clone(),
+    //                 self.request_transmitter.clone(),
+    //                 on_close_register_source,
+    //                 self.background_runtime.callback_handler_sink(),
+    //                 pulse_shutdown_source,
+    //             ));
+    //             Ok(SessionInfo {
+    //                 session_id,
+    //                 network_latency: start.elapsed().saturating_sub(server_duration),
+    //                 on_close_register_sink,
+    //             })
+    //         }
+    //         other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+    //     }
+    // }
+    //
+    // pub(crate) fn close_session(&self, session_id: SessionID) -> Result {
+    //     if let Some(sink) = self.open_sessions.lock().unwrap().remove(&session_id) {
+    //         sink.send(()).ok();
+    //     }
+    //     self.request_blocking(Request::SessionClose { session_id })?;
+    //     Ok(())
+    // }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn open_transaction(
         &self,
-        session_id: SessionID,
         transaction_type: TransactionType,
         options: Options,
         network_latency: Duration,
     ) -> Result<(TransactionStream, UnboundedSender<()>)> {
         match self
             .request(Request::Transaction(TransactionRequest::Open {
-                session_id,
                 transaction_type,
                 options,
                 network_latency,
@@ -547,42 +538,4 @@ impl fmt::Debug for ServerConnection {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("ServerConnection").field("open_sessions", &self.open_sessions).finish()
     }
-}
-
-async fn session_pulse(
-    session_id: SessionID,
-    request_transmitter: Arc<RPCTransmitter>,
-    mut on_close_callback_source: UnboundedReceiver<Callback>,
-    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
-    mut shutdown_source: UnboundedReceiver<()>,
-) {
-    const PULSE_INTERVAL: Duration = Duration::from_secs(5);
-    let mut next_pulse = Instant::now();
-    let mut on_close = Vec::new();
-    loop {
-        select! {
-            _ = sleep_until(next_pulse) => {
-                let session_id = session_id.clone();
-                match request_transmitter.request_async(Request::SessionPulse { session_id }).await {
-                    Ok(Response::SessionPulse { is_alive: true }) => {
-                        next_pulse = (next_pulse + PULSE_INTERVAL).max(Instant::now())
-                    }
-                    _ => break,
-                }
-            }
-            callback = on_close_callback_source.recv() => {
-                if let Some(callback) = callback {
-                    on_close.push(callback)
-                }
-            }
-            _ = shutdown_source.recv() => break,
-        }
-    }
-
-    join_all(on_close.into_iter().map(|callback| {
-        let (response_sink, response) = oneshot_async();
-        callback_handler_sink.send((Box::new(callback), response_sink)).unwrap();
-        response
-    }))
-    .await;
 }

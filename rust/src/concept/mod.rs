@@ -23,7 +23,7 @@ mod value;
 
 pub use self::{
     thing::{Attribute, Entity, Relation, Thing},
-    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, RootThingType, ScopedLabel, ThingType},
+    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, ScopedLabel, ThingType},
     value::{Value, ValueType},
 };
 
@@ -31,8 +31,6 @@ pub use self::{
 /// To use subtype specific methods, the Concept must be of the expected subtype.
 #[derive(Clone, Debug, PartialEq)]
 pub enum Concept {
-    RootThingType(RootThingType),
-
     EntityType(EntityType),
     RelationType(RelationType),
     RoleType(RoleType),
