@@ -23,6 +23,7 @@ use typedb_protocol::{
     , server_manager,
     transaction, user, user_manager, Version::Version,
 };
+use uuid::Uuid;
 
 use crate::{
     common::{info::DatabaseInfo, RequestID, Result}
@@ -41,7 +42,7 @@ impl TryIntoProto<connection::open::Req> for Request {
         match self {
             Self::ConnectionOpen { driver_lang, driver_version } => {
                 Ok(connection::open::Req { version: Version.into(), driver_lang, driver_version })
-            },
+            }
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -194,8 +195,8 @@ impl TryIntoProto<user::password_update::Req> for Request {
 }
 
 impl FromProto<connection::open::Res> for Response {
-    fn from_proto(_proto: connection::open::Res) -> Self {
-        Self::ConnectionOpen
+    fn from_proto(proto: connection::open::Res) -> Self {
+        Self::ConnectionOpen { connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap() }
     }
 }
 

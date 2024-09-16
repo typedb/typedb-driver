@@ -28,52 +28,52 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
+    ConnectionOpenError =
+        100: "Error opening connection.",
     ConnectionIsClosed =
         2: "The connection has been closed and no further operation is allowed.",
-    SessionIsClosed =
-        3: "The session is closed and no further operation is allowed.",
     TransactionIsClosed =
-        4: "The transaction is closed and no further operation is allowed.",
+        3: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors { errors: String } =
-        5: "The transaction is closed because of the error(s):\n{errors}",
+        4: "The transaction is closed because of the error(s):\n{errors}",
     DatabaseDoesNotExist { name: String } =
-        6: "The database '{name}' does not exist.",
+        5: "The database '{name}' does not exist.",
     MissingResponseField { field: &'static str } =
-        7: "Missing field in message received from server: '{field}'.",
+        6: "Missing field in message received from server: '{field}'.",
     UnknownRequestId { request_id: RequestID } =
-        8: "Received a response with unknown request id '{request_id}'",
+        7: "Received a response with unknown request id '{request_id}'",
     InvalidResponseField { name: &'static str } =
-        9: "Invalid field in message received from server: '{name}'.",
+        8: "Invalid field in message received from server: '{name}'.",
     UnexpectedResponse { response: String } =
-        10: "Received unexpected response from server: '{response}'.",
+        9: "Received unexpected response from server: '{response}'.",
     ServerConnectionFailed { addresses: Vec<Address> } =
-        11: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
+        10: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
-        12: "Unable to connect to TypeDB server(s), received errors: \n{error}",
+        11: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
-        13: "Unable to connect to TypeDB server(s), received network error: \n{error}",
+        12: "Unable to connect to TypeDB server(s), received network error: \n{error}",
     UserManagementCloudOnly =
-        14: "User management is only available in TypeDB Cloud servers.",
+        13: "User management is only available in TypeDB Cloud servers.",
     CloudReplicaNotPrimary =
-        15: "The replica is not the primary replica.",
+        14: "The replica is not the primary replica.",
     CloudAllNodesFailed { errors: String } =
-        16: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
+        15: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
     CloudTokenCredentialInvalid =
-        17: "Invalid token credential.",
+        16: "Invalid token credential.",
     SessionCloseFailed =
-        18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
+        17: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
     CloudEncryptionSettingsMismatch =
-        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
+        18: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
-        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
+        19: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
+        20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
     ConnectionFailed =
-        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
-        23: "Invalid URL '{address}': missing port.",
+        22: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
+        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
 }
 
 error_messages! { InternalError

@@ -22,6 +22,7 @@ use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
 use typedb_protocol::transaction;
+use uuid::Uuid;
 
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, readable_concept, ValueGroup},
@@ -60,7 +61,9 @@ pub(super) enum Request {
 
 #[derive(Debug)]
 pub(super) enum Response {
-    ConnectionOpen,
+    ConnectionOpen {
+        connection_id: Uuid,
+    },
 
     ServersAll {
         servers: Vec<Address>,

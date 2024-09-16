@@ -21,16 +21,16 @@ use std::path::PathBuf;
 
 use futures::TryFutureExt;
 use typedb_driver::{
-    Connection, Credential, Database, DatabaseManager, Session, SessionType::Schema, TransactionType::Write,
+    Connection, Credential, Database, DatabaseManager, SessionType::Schema, TransactionType::Write,
 };
 
 pub const TEST_DATABASE: &str = "test";
 
-pub fn new_core_connection() -> typedb_driver::Result<Connection> {
-    Connection::new_core("0.0.0.0:1729")
+pub async fn new_core_connection() -> typedb_driver::Result<Connection> {
+    Connection::new_core("0.0.0.0:1729").await
 }
 
-pub fn new_cloud_connection() -> typedb_driver::Result<Connection> {
+pub async fn new_cloud_connection() -> typedb_driver::Result<Connection> {
     Connection::new_cloud(
         &["localhost:11729", "localhost:21729", "localhost:31729"],
         Credential::with_tls(
@@ -51,11 +51,11 @@ pub async fn create_test_database_with_schema(connection: Connection, schema: &s
     databases.create(TEST_DATABASE).await?;
 
     let database = databases.get(TEST_DATABASE).await?;
-    let session = Session::new(database, Schema).await?;
-    let transaction = session.transaction(Write).await?;
-    transaction.query().define(schema).await?;
-    transaction.commit().await?;
-    Ok(())
+    // let transaction = session.transaction(Write).await?;
+    // transaction.query().define(schema).await?;
+    // transaction.commit().await?;
+    // Ok(())
+    todo!()
 }
 
 #[macro_export]

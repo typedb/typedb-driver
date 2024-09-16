@@ -82,8 +82,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
-        todo!()
-        // self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
     }
 
     pub(super) async fn databases_contains(

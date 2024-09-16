@@ -19,22 +19,15 @@
 
 use std::fmt;
 
-use typedb_driver::{Options, Session, Transaction, TransactionType};
+use typedb_driver::{Options, Transaction, TransactionType};
 
 pub struct SessionTracker {
-    session: Session,
     transactions: Vec<Transaction<'static>>,
 }
 
 impl fmt::Debug for SessionTracker {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("SessionTracker").field("session", &self.session).finish()
-    }
-}
-
-impl From<Session> for SessionTracker {
-    fn from(session: Session) -> Self {
-        Self { session, transactions: Vec::new() }
+        todo!()
     }
 }
 
@@ -45,9 +38,6 @@ impl Drop for SessionTracker {
 }
 
 impl SessionTracker {
-    pub fn session(&self) -> &Session {
-        &self.session
-    }
 
     pub async fn open_transaction(
         &mut self,
@@ -55,10 +45,10 @@ impl SessionTracker {
         transaction_options: Options,
     ) -> typedb_driver::Result {
         unsafe {
-            // SAFETY: the transactions tracked by the SessionTracker instance borrow SessionTracker::session.
-            // As long as SessionTracker is alive, the transactions are valid.
-            let transaction = self.session.transaction_with_options(transaction_type, transaction_options).await?;
-            self.transactions.push(std::mem::transmute(transaction));
+            // // SAFETY: the transactions tracked by the SessionTracker instance borrow SessionTracker::session.
+            // // As long as SessionTracker is alive, the transactions are valid.
+            // self.transactions.push(std::mem::transmute(transaction));
+            todo!()
         }
         Ok(())
     }

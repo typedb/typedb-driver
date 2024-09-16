@@ -37,11 +37,10 @@ use typedb_driver::{
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
-    logic::Rule,
     transaction::concept::api::ThingAPI,
     DatabaseManager, Result as TypeDBResult,
 };
-use typeql::{parse_pattern, parse_query, parse_statement, pattern::Statement};
+use typeql::{parse_query};
 
 use crate::{assert_with_timeout, behaviour::Context};
 
@@ -81,38 +80,38 @@ pub async fn match_answer_concept(context: &Context, answer_identifier: &str, an
 async fn key_values_equal(context: &Context, expected_label_and_value: &str, answer: &Concept) -> bool {
     let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
-
-    let res = match answer {
-        Concept::Entity(entity) => {
-            async { entity.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        Concept::Relation(rel) => {
-            async { rel.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        Concept::Attribute(attr) => {
-            async { attr.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        _ => unreachable!("Unexpected Concept type: {answer:?}"),
-    };
-    match res {
-        Ok(keys) => keys
-            .into_iter()
-            .find(|key| key.type_.label == identifiers[0])
-            .map(|attr| value_equals_str(&attr.value, identifiers[1]))
-            .unwrap_or(false),
-        Err(_) => false,
-    }
+    //
+    // let res = match answer {
+    //     Concept::Entity(entity) => {
+    //         async { entity.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     Concept::Relation(rel) => {
+    //         async { rel.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     Concept::Attribute(attr) => {
+    //         async { attr.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     _ => unreachable!("Unexpected Concept type: {answer:?}"),
+    // };
+    // match res {
+    //     Ok(keys) => keys
+    //         .into_iter()
+    //         .find(|key| key.type_.label == identifiers[0])
+    //         .map(|attr| value_equals_str(&attr.value, identifiers[1]))
+    //         .unwrap_or(false),
+    //     Err(_) => false,
+    // }
+    todo!()
 }
 
 fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
     match answer {
-        Concept::RootThingType(_) => expected_label == "thing",
         Concept::EntityType(EntityType { label, .. }) => expected_label == label,
         Concept::RelationType(RelationType { label, .. }) => expected_label == label,
         Concept::RoleType(RoleType { label, .. }) => expected_label == label.to_string(),
@@ -247,14 +246,6 @@ fn get_iid(concept: &Concept) -> String {
         _ => unreachable!("Unexpected Concept type: {concept:?}"),
     };
     iid.to_string()
-}
-
-pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> TypeDBResult<bool> {
-    let when = parse_pattern(answer_identifiers.get("when").unwrap())?.into_conjunction();
-    let then = parse_statement(answer_identifiers.get("then").unwrap())?;
-    Ok(*answer_identifiers.get("label").unwrap() == answer.label
-        && when == answer.when
-        && then == Statement::Thing(answer.then.clone()))
 }
 
 pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {

@@ -63,12 +63,9 @@ impl Node {
             Node::Leaf(Some(Concept::RoleType(RoleType { label, .. }))) => {
                 json_type("relation:role", Cow::Owned(label.to_string()))
             }
-            Node::Leaf(Some(Concept::Attribute(Attribute {
-                type_: Some(AttributeType { label, value_type, .. }),
-                value,
-                ..
-            }))) => JSON::Object(
-                [(TYPE, json_attribute_type(Cow::Owned(label), value_type)), (VALUE, json_value(value))].into(),
+            Node::Leaf(Some(Concept::Attribute(Attribute { value, type_, .. }))) => JSON::Object(
+                todo!()
+                // [(TYPE, json_attribute_type(Cow::Owned(label), value_type)), (VALUE, json_value(value))].into(),
             ),
             Node::Leaf(Some(Concept::Value(value))) => {
                 JSON::Object([(VALUE_TYPE, json_value_type(value.get_type())), (VALUE, json_value(value))].into())

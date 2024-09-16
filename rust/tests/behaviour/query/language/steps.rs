@@ -23,7 +23,7 @@ use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use typeql::parse_query;
 use util::{
     equals_approximate, iter_table_map, json_matches_str, match_answer_concept, match_answer_concept_map,
-    match_answer_rule, match_templated_answer,
+    match_templated_answer,
 };
 
 use crate::{
@@ -425,51 +425,6 @@ generic_step_impl! {
         let expected = step.docstring().unwrap();
         let actual = context.fetch_answer.as_ref().expect("trying to assert on fetch answers without performing fetch first!");
         assert!(json_matches_str(expected, actual)?, "expected: {}\nactual: {}", expected, actual);
-        Ok(())
-    }
-
-    #[step(expr = "rules contain: {label}")]
-    async fn rules_contain(context: &mut Context, rule_label: LabelParam) {
-        let res = context.transaction().logic().get_rule(rule_label.name).await;
-        assert!(res.is_ok(), "{res:?}");
-        assert!(res.as_ref().unwrap().is_some(), "{res:?}");
-    }
-
-    #[step(expr = "rules do not contain: {label}")]
-    async fn rules_do_not_contain(context: &mut Context, rule_label: LabelParam) {
-        let res = context.transaction().logic().get_rule(rule_label.name).await;
-        assert_eq!(res, Ok(None), "{res:?}");
-    }
-
-    #[step(expr = "rules are")]
-    async fn rules_are(context: &mut Context, step: &Step) -> TypeDBResult {
-        let stream = context.transaction().logic().get_rules();
-        assert!(stream.is_ok(), "{:?}", stream.err());
-        let res = stream.unwrap().try_collect::<Vec<_>>().await;
-        assert!(res.is_ok(), "{:?}", res.err());
-        let answers = res.unwrap();
-        let step_table = iter_table_map(step).collect::<Vec<_>>();
-        let expected_answers = step_table.len();
-        let actual_answers = answers.len();
-        assert_eq!(
-            actual_answers, expected_answers,
-            "The number of identifier entries (rows) should match the number of answers, \
-            but found {expected_answers} identifier entries and {actual_answers} answers."
-        );
-        let mut matched_rows = 0;
-        for ans_row in &answers {
-            for table_row in &step_table {
-                if match_answer_rule(table_row, ans_row).await? {
-                    matched_rows += 1;
-                    break;
-                }
-            }
-        }
-        assert_eq!(
-            matched_rows, actual_answers,
-            "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
-            matched entries of given {actual_answers}."
-        );
         Ok(())
     }
 }

@@ -21,7 +21,7 @@ use std::path::PathBuf;
 
 use futures::StreamExt;
 use serial_test::serial;
-use typedb_driver::{Connection, Credential, DatabaseManager, Session, SessionType::Data, TransactionType::Write};
+use typedb_driver::{Connection, Credential, DatabaseManager, SessionType::Data, TransactionType::Write};
 
 use super::common;
 
@@ -50,11 +50,11 @@ async fn address_translation() {
     let databases = DatabaseManager::new(connection);
     assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
 
-    let session = Session::new(databases.get(common::TEST_DATABASE).await.unwrap(), Data).await.unwrap();
-    let transaction = session.transaction(Write).await.unwrap();
-    let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
-    let results: Vec<_> = answer_stream.collect().await;
-    transaction.commit().await.unwrap();
-    assert_eq!(results.len(), 5);
-    assert!(results.into_iter().all(|res| res.is_ok()));
+    todo!()
+    // let transaction = session.transaction(Write).await.unwrap();
+    // let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
+    // let results: Vec<_> = answer_stream.collect().await;
+    // transaction.commit().await.unwrap();
+    // assert_eq!(results.len(), 5);
+    // assert!(results.into_iter().all(|res| res.is_ok()));
 }

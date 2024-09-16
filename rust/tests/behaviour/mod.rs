@@ -17,7 +17,6 @@
  * under the License.
  */
 
-mod concept;
 mod connection;
 mod driver;
 mod parameter;
@@ -41,7 +40,6 @@ use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
-    logic::Rule,
     Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
 };
 
@@ -183,73 +181,6 @@ impl Context {
 
     pub fn take_transaction(&mut self) -> Transaction {
         self.session_trackers.get_mut(0).unwrap().take_transaction()
-    }
-
-    pub async fn get_entity_type(&self, type_label: String) -> TypeDBResult<EntityType> {
-        self.transaction().concept().get_entity_type(type_label).await.map(|entity_type| {
-            assert!(entity_type.is_some());
-            entity_type.unwrap()
-        })
-    }
-
-    pub async fn get_relation_type(&self, type_label: String) -> TypeDBResult<RelationType> {
-        self.transaction().concept().get_relation_type(type_label).await.map(|relation_type| {
-            assert!(relation_type.is_some());
-            relation_type.unwrap()
-        })
-    }
-
-    pub async fn get_attribute_type(&self, type_label: String) -> TypeDBResult<AttributeType> {
-        self.transaction().concept().get_attribute_type(type_label).await.map(|attribute_type| {
-            assert!(attribute_type.is_some());
-            attribute_type.unwrap()
-        })
-    }
-
-    pub fn get_thing(&self, var_name: String) -> &Thing {
-        assert!(&self.things.contains_key(&var_name));
-        self.things.get(&var_name).unwrap().as_ref().unwrap()
-    }
-
-    pub fn get_entity(&self, var_name: String) -> &Entity {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Entity(_)));
-        let Thing::Entity(entity) = thing else { unreachable!() };
-        entity
-    }
-
-    pub fn get_relation(&self, var_name: String) -> &Relation {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Relation(_)));
-        let Thing::Relation(relation) = thing else { unreachable!() };
-        relation
-    }
-
-    pub fn get_attribute(&self, var_name: String) -> &Attribute {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Attribute(_)));
-        let Thing::Attribute(attribute) = thing else { unreachable!() };
-        attribute
-    }
-
-    pub fn insert_thing(&mut self, var_name: String, thing: Option<Thing>) {
-        self.things.insert(var_name, thing);
-    }
-
-    pub fn insert_entity(&mut self, var_name: String, entity: Option<Entity>) {
-        self.insert_thing(var_name, entity.map(Thing::Entity));
-    }
-
-    pub fn insert_relation(&mut self, var_name: String, relation: Option<Relation>) {
-        self.insert_thing(var_name, relation.map(Thing::Relation));
-    }
-
-    pub fn insert_attribute(&mut self, var_name: String, attribute: Option<Attribute>) {
-        self.insert_thing(var_name, attribute.map(Thing::Attribute));
-    }
-
-    pub async fn get_rule(&self, label: String) -> TypeDBResult<Option<Rule>> {
-        self.transaction().logic().get_rule(label).await
     }
 
     pub fn set_connection(&mut self, new_connection: Connection) {
