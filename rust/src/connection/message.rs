@@ -63,6 +63,7 @@ pub(super) enum Request {
 pub(super) enum Response {
     ConnectionOpen {
         connection_id: Uuid,
+        server_duration_millis: u64,
     },
 
     ServersAll {
@@ -114,7 +115,7 @@ pub(super) enum Response {
 
 #[derive(Debug)]
 pub(super) enum TransactionRequest {
-    Open { transaction_type: TransactionType, options: Options, network_latency: Duration },
+    Open { database: String, transaction_type: TransactionType, options: Options, network_latency: Duration },
     Commit,
     Rollback,
     Query(QueryRequest),

@@ -28,13 +28,13 @@ use super::common;
 fn basic_async_std() {
     async_std::task::block_on(async {
         let connection = common::new_core_connection().await.unwrap();
-        let databases = DatabaseManager::new(connection);
+        let databases = DatabaseManager::new(connection.clone());
         databases.create("testing-db").await.unwrap();
         let dbs = databases.all().await.unwrap();
         dbg!(&dbs);
         let db = databases.get("testing-db").await.unwrap();
         db.delete().await.unwrap();
-        // common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
+        common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await.unwrap();
         // let databases = DatabaseManager::new(connection);
         // assert!(databases.contains(common::TEST_DATABASE).await?);
         //

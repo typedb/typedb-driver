@@ -23,9 +23,11 @@ use std::{
     sync::{Arc, Mutex},
     time::Duration,
 };
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use itertools::Itertools;
 use tokio::sync::mpsc::UnboundedSender;
+use tokio::time::Instant;
 use uuid::Uuid;
 
 use crate::{
@@ -308,6 +310,7 @@ pub(crate) struct ServerConnection {
     connection_id: Uuid,
     open_transactions: Arc<Mutex<HashMap<RequestID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
+    latency_tracker: LatencyTracker,
 }
 
 impl ServerConnection {
@@ -319,8 +322,15 @@ impl ServerConnection {
         driver_version: &str,
     ) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
-        let connection_id = Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
-        Ok(Self { background_runtime, connection_id, open_transactions: Default::default(), request_transmitter })
+        let (connection_id, latency) = Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
+        let latency_tracker = LatencyTracker::new(latency);
+        Ok(Self {
+            background_runtime,
+            connection_id,
+            open_transactions: Default::default(),
+            request_transmitter,
+            latency_tracker,
+        })
     }
 
     fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> Result<Self> {
@@ -330,14 +340,18 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn open_connection(request_transmitter: &RPCTransmitter, driver_lang: &str, driver_version: &str) -> Result<Uuid> {
+    async fn open_connection(request_transmitter: &RPCTransmitter, driver_lang: &str, driver_version: &str) -> Result<(Uuid, Duration)> {
         let message = Request::ConnectionOpen {
-            driver_lang: driver_lang.to_string(),
-            driver_version: driver_version.to_string(),
+            driver_lang: driver_lang.to_owned(),
+            driver_version: driver_version.to_owned(),
         };
 
+        let request_time = Instant::now();
         match request_transmitter.request(message).await? {
-            Response::ConnectionOpen { connection_id } => Ok(connection_id),
+            Response::ConnectionOpen { connection_id, server_duration_millis } => {
+                let latency = Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
+                Ok((connection_id, latency))
+            },
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
     }
@@ -466,12 +480,14 @@ impl ServerConnection {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn open_transaction(
         &self,
+        database_name: &str,
         transaction_type: TransactionType,
         options: Options,
-        network_latency: Duration,
     ) -> Result<(TransactionStream, UnboundedSender<()>)> {
+        let network_latency = self.latency_tracker.current_latency();
         match self
             .request(Request::Transaction(TransactionRequest::Open {
+                database: database_name.to_owned(),
                 transaction_type,
                 options,
                 network_latency,
@@ -558,5 +574,26 @@ impl ServerConnection {
 impl fmt::Debug for ServerConnection {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("ServerConnection").field("connection_id", &self.connection_id).finish()
+    }
+}
+
+#[derive(Debug, Clone)]
+struct LatencyTracker {
+    latency_millis: Arc<AtomicU64>,
+}
+
+impl LatencyTracker {
+    fn new(initial_latency: Duration) -> Self {
+        Self { latency_millis: Arc::new(AtomicU64::new(initial_latency.as_millis() as u64)) }
+    }
+
+    pub(crate) fn update_latency(&self, latency_millis: Duration) {
+        let previous_latency = self.latency_millis.load(Ordering::Relaxed);
+        // TODO: this is a strange but simple averaging scheme
+        self.latency_millis.store((latency_millis.as_millis() as u64 + previous_latency) / 2, Ordering::Relaxed);
+    }
+
+    fn current_latency(&self) -> Duration {
+        Duration::from_millis(self.latency_millis.load(Ordering::Relaxed))
     }
 }

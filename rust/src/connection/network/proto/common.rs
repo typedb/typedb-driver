@@ -27,6 +27,7 @@ impl IntoProto<i32> for TransactionType {
         match self {
             Self::Read => transaction::Type::Read.into(),
             Self::Write => transaction::Type::Write.into(),
+            Self::Schema => transaction::Type::Schema.into(),
         }
     }
 }

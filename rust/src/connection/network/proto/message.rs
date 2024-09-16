@@ -196,7 +196,10 @@ impl TryIntoProto<user::password_update::Req> for Request {
 
 impl FromProto<connection::open::Res> for Response {
     fn from_proto(proto: connection::open::Res) -> Self {
-        Self::ConnectionOpen { connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap() }
+        Self::ConnectionOpen {
+            connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap(),
+            server_duration_millis: proto.server_duration_millis,
+        }
     }
 }
 
@@ -260,9 +263,9 @@ impl IntoProto<transaction::Req> for TransactionRequest {
         let mut request_id = None;
 
         let req = match self {
-            Self::Open { transaction_type, options, network_latency } => {
+            Self::Open { database, transaction_type, options, network_latency } => {
                 transaction::req::Req::OpenReq(transaction::open::Req {
-                    database: todo!(),
+                    database,
                     r#type: transaction_type.into_proto(),
                     options: Some(options.into_proto()),
                     network_latency_millis: network_latency.as_millis() as u64,

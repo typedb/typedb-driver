@@ -20,20 +20,17 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use log::{debug, error};
 
-use crate::{
-    common::{
-        address::Address,
-        error::ConnectionError,
-        info::{DatabaseInfo, ReplicaInfo},
-        Error, Result,
-    },
-    connection::ServerConnection,
-    error::InternalError,
-    Connection,
-};
+use crate::{common::{
+    address::Address,
+    error::ConnectionError,
+    info::{DatabaseInfo, ReplicaInfo},
+    Error, Result,
+}, connection::ServerConnection, error::InternalError, Connection, TransactionType, Transaction, Options};
 
 /// A TypeDB database
 pub struct Database {
@@ -60,6 +57,67 @@ impl Database {
             replicas: RwLock::new(Replica::fetch_all(name, connection.clone()).await?),
             connection,
         })
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn transaction_with_options(&self, transaction_type: TransactionType, options: Options) -> Result<Transaction<'static>> {
+
+        //         // let server_session = database
+//         //     .run_failsafe(|database| async move {
+//         //         let session_info =
+//         //             database.connection().open_session(database.name().to_owned(), session_type, options).await?;
+//         //         Ok(ServerSession { connection: database.connection().clone(), info: session_info })
+//         //     })
+//         //     .await?;
+        let (transaction_stream, transaction_shutdown_sink) = self.run_failsafe(|database| async move {
+            database.connection().open_transaction(self.name(), transaction_type, options).await
+        }).await?;
+
+        // TODO: who holds onto the transaction shutdown sink? Probably Connection?
+
+        //
+        // let (transaction_stream, transaction_shutdown_sink) = match self.connection
+        //     .open_transaction(transaction_type, options, network_latency)
+        //     .await
+        // {
+        //     Ok((transaction_stream, transaction_shutdown_sink)) => (transaction_stream, transaction_shutdown_sink),
+        //     Err(_err) => {
+        //         self.is_open.store(false);
+        //         server_connection.close_session(session_id).ok();
+        //
+        //         let (server_session, (transaction_stream, transaction_shutdown_sink)) = self
+        //             .database
+        //             .run_failsafe(|database| {
+        //                 let session_type = self.session_type;
+        //                 async move {
+        //                     let connection = database.connection();
+        //                     let database_name = database.name().to_owned();
+        //                     let session_info = connection.open_session(database_name, session_type, options).await?;
+        //                     Ok((
+        //                         ServerSession { connection: connection.clone(), info: session_info.clone() },
+        //                         connection
+        //                             .open_transaction(
+        //                                 transaction_type,
+        //                                 options,
+        //                                 session_info.network_latency,
+        //                             )
+        //                             .await?,
+        //                     ))
+        //                 }
+        //             })
+        //             .await?;
+        //         *self.server_session.write().unwrap() = server_session;
+        //         self.is_open.store(true);
+        //         self.reopened();
+        //         (transaction_stream, transaction_shutdown_sink)
+        //     }
+        // };
+        //
+        // self.on_server_session_close(move || {
+        //     transaction_shutdown_sink.send(()).ok();
+        // });
+        //
+        Ok(Transaction::new(transaction_stream))
     }
 
     /// Retrieves the database name as a string.
@@ -145,9 +203,9 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase) -> P,
-        P: Future<Output = Result<R>>,
+        where
+            F: Fn(ServerDatabase) -> P,
+            P: Future<Output=Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
             Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
@@ -160,16 +218,16 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase) -> P,
-        P: Future<Output = Result<R>>,
+        where
+            F: Fn(ServerDatabase) -> P,
+            P: Future<Output=Result<R>>,
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
             match task(replica.database.clone()).await {
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                )) => {
+                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    )) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.server);
                 }
                 res => return res,
@@ -180,9 +238,9 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase) -> P,
-        P: Future<Output = Result<R>>,
+        where
+            F: Fn(ServerDatabase) -> P,
+            P: Future<Output=Result<R>>,
     {
         let mut primary_replica =
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
@@ -190,10 +248,10 @@ impl Database {
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             match task(primary_replica.database.clone()).await {
                 Err(Error::Connection(
-                    ConnectionError::CloudReplicaNotPrimary
-                    | ConnectionError::ServerConnectionFailedStatusError { .. }
-                    | ConnectionError::ConnectionFailed,
-                )) => {
+                        ConnectionError::CloudReplicaNotPrimary
+                        | ConnectionError::ServerConnectionFailedStatusError { .. }
+                        | ConnectionError::ConnectionFailed,
+                    )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
                     primary_replica = self.seek_primary_replica().await?;
@@ -298,10 +356,10 @@ impl Replica {
                     return Self::try_from_info(info, &connection);
                 }
                 Err(Error::Connection(
-                    ConnectionError::DatabaseDoesNotExist { .. }
-                    | ConnectionError::ServerConnectionFailedStatusError { .. }
-                    | ConnectionError::ConnectionFailed,
-                )) => {
+                        ConnectionError::DatabaseDoesNotExist { .. }
+                        | ConnectionError::ServerConnectionFailedStatusError { .. }
+                        | ConnectionError::ConnectionFailed,
+                    )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name, server

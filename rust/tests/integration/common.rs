@@ -20,9 +20,7 @@
 use std::path::PathBuf;
 
 use futures::TryFutureExt;
-use typedb_driver::{
-    Connection, Credential, Database, DatabaseManager, SessionType::Schema, TransactionType::Write,
-};
+use typedb_driver::{Connection, Credential, Database, DatabaseManager, Options, SessionType::Schema, Transaction, TransactionType, TransactionType::Write};
 
 pub const TEST_DATABASE: &str = "test";
 
@@ -51,6 +49,8 @@ pub async fn create_test_database_with_schema(connection: Connection, schema: &s
     databases.create(TEST_DATABASE).await?;
 
     let database = databases.get(TEST_DATABASE).await?;
+    let transaction = database.transaction_with_options(TransactionType::Schema, Options::new()).await?;
+
     // let transaction = session.transaction(Write).await?;
     // transaction.query().define(schema).await?;
     // transaction.commit().await?;

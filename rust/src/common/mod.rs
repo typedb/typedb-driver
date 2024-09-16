@@ -71,4 +71,5 @@ pub enum SessionType {
 pub enum TransactionType {
     Read = 0,
     Write = 1,
+    Schema = 2,
 }
