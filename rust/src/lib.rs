@@ -20,6 +20,17 @@
 #![deny(elided_lifetimes_in_paths)]
 #![deny(unused_must_use)]
 
+pub use self::{
+    common::{
+        box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result, SessionType,
+        TransactionType,
+    },
+    connection::{Connection, Credential},
+    database::{Database, DatabaseManager},
+    transaction::Transaction,
+    user::{User, UserManager},
+};
+
 pub mod answer;
 mod common;
 pub mod concept;
@@ -28,13 +39,3 @@ mod database;
 pub mod transaction;
 mod user;
 
-pub use self::{
-    common::{
-        box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, SessionType, TransactionType,
-        IID,
-    },
-    connection::{Connection, Credential},
-    database::{Database, DatabaseManager},
-    transaction::Transaction,
-    user::{User, UserManager},
-};

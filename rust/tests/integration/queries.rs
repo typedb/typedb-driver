@@ -17,22 +17,14 @@
  * under the License.
  */
 
-use std::{sync::Arc, time::Instant};
-
-use chrono::{NaiveDate, NaiveDateTime};
-use futures::StreamExt;
 use serial_test::serial;
-use tokio::sync::mpsc;
-use typedb_driver::{
-    concept::{Attribute, Concept, Value},
-    error::ConnectionError,
-    Connection, Credential, DatabaseManager, Error, Options,
-    SessionType::{Data, Schema},
-    TransactionType::{Read, Write},
-};
 
-use super::common;
-use crate::test_for_each_arg;
+use typedb_driver::{
+    Connection,
+    Credential, Error, error::ConnectionError
+
+    ,
+};
 
 #[tokio::test]
 #[serial]

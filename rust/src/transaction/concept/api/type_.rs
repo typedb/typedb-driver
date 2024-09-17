@@ -17,13 +17,9 @@
  * under the License.
  */
 
-use crate::{
-    common::{box_promise, box_stream, stream::BoxStream, BoxPromise},
-    concept::{
-        Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType,
-        Thing, ThingType, Transitivity, Value, ValueType,
-    },
-    promisify, resolve, Result, Transaction,
+use crate::concept::{
+    AttributeType, EntityType, RelationType
+    , ValueType,
 };
 
 pub trait ThingTypeAPI: Sync + Send {
@@ -64,11 +60,11 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.value_type()
     /// ```
-    fn value_type(&self) -> Option<ValueType>;
+    fn value_type(&self) -> Option<&ValueType>;
 }
 
 impl AttributeTypeAPI for AttributeType {
-    fn value_type(&self) -> Option<ValueType> {
-        self.value_type
+    fn value_type(&self) -> Option<&ValueType> {
+        self.value_type.as_ref()
     }
 }

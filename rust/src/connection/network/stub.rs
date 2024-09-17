@@ -29,8 +29,9 @@ use typedb_protocol::{
     user, user_manager,
 };
 
+use crate::common::{Error, error::ConnectionError, Result, StdResult};
+
 use super::channel::{CallCredentials, GRPCChannel};
-use crate::common::{error::ConnectionError, Error, Result, StdResult};
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 

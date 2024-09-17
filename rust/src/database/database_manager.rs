@@ -20,12 +20,13 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use super::Database;
 use crate::{
     common::{error::ConnectionError, Result},
-    connection::ServerConnection,
-    Connection, Error,
+    Connection,
+    connection::ServerConnection, Error,
 };
+
+use super::Database;
 
 /// Provides access to all database management methods.
 #[derive(Clone, Debug)]

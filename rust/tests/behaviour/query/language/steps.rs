@@ -176,8 +176,8 @@ generic_step_impl! {
     //         // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
     //         // where parsing happens at server-side which closes transaction if they fail
     //         Err(_) => {
-    //             for session_tracker in &mut context.session_trackers {
-    //                 session_tracker.transactions_mut().clear();
+    //             for transaction_tracker in &mut context.transaction_trackers {
+    //                 transaction_tracker.transactions_mut().clear();
     //             }
     //         }
     //     }
@@ -198,8 +198,8 @@ generic_step_impl! {
     //         // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
     //         // where parsing happens at server-side which closes transaction if they fail
     //         Err(_) => {
-    //             for session_tracker in &mut context.session_trackers {
-    //                 session_tracker.transactions_mut().clear();
+    //             for transaction_tracker in &mut context.transaction_trackers {
+    //                 transaction_tracker.transactions_mut().clear();
     //             }
     //         }
     //     }
@@ -304,8 +304,8 @@ generic_step_impl! {
     //         // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
     //         // where parsing happens at server-side which closes transaction if they fail
     //         Err(_) => {
-    //             for session_tracker in &mut context.session_trackers {
-    //                 session_tracker.transactions_mut().clear();
+    //             for transaction_tracker in &mut context.transaction_trackers {
+    //                 transaction_tracker.transactions_mut().clear();
     //             }
     //         }
     //     }
@@ -418,8 +418,8 @@ generic_step_impl! {
     //         // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
     //         // where parsing happens at server-side which closes transaction if they fail
     //         Err(_) => {
-    //             for session_tracker in &mut context.session_trackers {
-    //                 session_tracker.transactions_mut().clear();
+    //             for transaction_tracker in &mut context.transaction_trackers {
+    //                 transaction_tracker.transactions_mut().clear();
     //             }
     //         }
     //     }

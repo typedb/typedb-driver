@@ -17,18 +17,6 @@
  * under the License.
  */
 
-use core::fmt;
-use std::sync::{Arc, Mutex, RwLock};
-
-use crossbeam::atomic::AtomicCell;
-use log::warn;
-
-use crate::{
-    common::{error::ConnectionError, info::SessionInfo, Result, SessionType, TransactionType},
-    connection::ServerConnection,
-    Database, Options, Transaction,
-};
-
 // type Callback = Box<dyn FnMut() + Send>;
 //
 // /// A session with a TypeDB database.

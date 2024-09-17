@@ -21,7 +21,7 @@
 use std::future::Future;
 
 use crate::{
-    common::Result, connection::ServerConnection, error::ConnectionError, Connection, DatabaseManager, Error, User,
+    common::Result, Connection, connection::ServerConnection, DatabaseManager, Error, error::ConnectionError, User,
 };
 
 /// Provides access to all user management methods.

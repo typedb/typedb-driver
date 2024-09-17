@@ -17,8 +17,9 @@
  * under the License.
  */
 
-use super::{AttributeType, EntityType, RelationType, Value};
 use crate::common::IID;
+
+use super::{AttributeType, EntityType, RelationType, Value};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Thing {
@@ -47,7 +48,7 @@ impl Thing {
 pub struct Entity {
     /// The unique id of this Entity
     pub iid: IID,
-    /// The type which this Entity belongs to
+    /// The label of the entity type this instance belongs to
     pub type_: Option<EntityType>,
 }
 
@@ -57,7 +58,7 @@ pub struct Entity {
 pub struct Relation {
     /// The unique id of this Relation
     pub iid: IID,
-    /// The type which this Relation belongs to
+    /// The label of the relation type this instance belongs to
     pub type_: Option<RelationType>,
 }
 
@@ -69,7 +70,7 @@ pub struct Attribute {
     /// The unique id of this Attribute
     pub iid: IID,
     /// The type which this Attribute belongs to
-    /// The value which this Attribute instance holds.
+    /// The label of the attribute type this instance belongs to
     pub type_: Option<AttributeType>,
     pub value: Value,
 }

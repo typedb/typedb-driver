@@ -25,7 +25,7 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::{AnswerRow, readable_concept},
+    answer::{ConceptRow, readable_concept},
     common::{address::Address, info::DatabaseInfo, RequestID}
     ,
     Options,
@@ -143,7 +143,7 @@ pub(super) enum QueryResponse {
     Ok(),
     ConceptRowsHeader(ConceptRowsHeader),
     ConceptTreesHeader(ConceptTreesHeader),
-    StreamConceptRows(Vec<AnswerRow>),
+    StreamConceptRows(Vec<ConceptRow>),
     StreamConceptTrees(Vec<readable_concept::Tree>),
     Error(ServerError),
 

@@ -21,7 +21,7 @@ use std::{future::Future, thread, thread::JoinHandle};
 
 use crossbeam::{
     atomic::AtomicCell,
-    channel::{bounded as bounded_blocking, unbounded, Sender},
+    channel::{bounded as bounded_blocking, Sender, unbounded},
 };
 use log::error;
 use tokio::{

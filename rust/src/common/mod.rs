@@ -17,6 +17,13 @@
  * under the License.
  */
 
+pub use self::{
+    error::Error,
+    options::Options,
+    promise::{box_promise, BoxPromise, Promise},
+    stream::{box_stream, BoxStream},
+};
+
 pub(crate) mod address;
 pub mod error;
 mod id;
@@ -28,13 +35,6 @@ mod promise;
 #[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
 #[cfg_attr(feature = "sync", path = "stream_sync.rs")]
 pub mod stream;
-
-pub use self::{
-    error::Error,
-    options::Options,
-    promise::{box_promise, BoxPromise, Promise},
-    stream::{box_stream, BoxStream},
-};
 
 pub(crate) type Callback = Box<dyn FnOnce() + Send>;
 

@@ -17,10 +17,11 @@
  * under the License.
  */
 
-use typedb_protocol::{transaction, Options as OptionsProto};
+use typedb_protocol::{Options as OptionsProto, transaction};
 
-use super::{FromProto, IntoProto};
-use crate::{concept::SchemaException, Options, SessionType, TransactionType};
+use crate::{Options, TransactionType};
+
+use super::IntoProto;
 
 impl IntoProto<i32> for TransactionType {
     fn into_proto(self) -> i32 {

@@ -32,18 +32,18 @@ use itertools::Itertools;
 use tokio::time::{Duration, sleep};
 
 use typedb_driver::{
-    answer::{AnswerRow, JSON},
+    answer::{ConceptRow, JSON},
     concept::{Thing, Value},
     Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
 };
 
-use self::session_tracker::SessionTracker;
+use self::transaction_tracker::TransactionTracker;
 
 mod connection;
 mod driver;
 mod parameter;
 mod query;
-mod session_tracker;
+mod transaction_tracker;
 mod util;
 
 #[derive(Debug, Default)]
@@ -96,9 +96,9 @@ pub struct Context {
     pub connection: Connection,
     pub databases: DatabaseManager,
     pub users: UserManager,
-    pub session_trackers: Vec<SessionTracker>,
+    pub transaction_trackers: Vec<TransactionTracker>,
     pub things: HashMap<String, Option<Thing>>,
-    pub answer: Vec<AnswerRow>,
+    pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
 }
@@ -175,18 +175,18 @@ impl Context {
     }
 
     pub fn transaction(&self) -> &Transaction {
-        self.session_trackers.get(0).unwrap().transaction()
+        self.transaction_trackers.get(0).unwrap().transaction()
     }
 
     pub fn take_transaction(&mut self) -> Transaction {
-        self.session_trackers.get_mut(0).unwrap().take_transaction()
+        self.transaction_trackers.get_mut(0).unwrap().take_transaction()
     }
 
     pub fn set_connection(&mut self, new_connection: Connection) {
         self.connection = new_connection;
         self.databases = DatabaseManager::new(self.connection.clone());
         self.users = UserManager::new(self.connection.clone());
-        self.session_trackers.clear();
+        self.transaction_trackers.clear();
         self.answer.clear();
         self.fetch_answer = None;
         self.value_answer = None;
@@ -214,7 +214,7 @@ impl Default for Context {
             connection,
             databases,
             users,
-            session_trackers: Vec::new(),
+            transaction_trackers: Vec::new(),
             things: HashMap::new(),
             answer: Vec::new(),
             fetch_answer: None,

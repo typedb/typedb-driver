@@ -20,7 +20,7 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
-    answer::{AnswerRow, ConceptMapGroup, Explainable, Explainables, ValueGroup},
+    answer::{ConceptRow, ConceptMapGroup, Explainable, Explainables, ValueGroup},
     box_stream,
     concept::Concept,
     logic::{Explanation, Rule},
@@ -36,45 +36,45 @@ use super::{
 
 /// Frees the native rust <code>ConceptMap</code> object
 #[no_mangle]
-pub extern "C" fn concept_map_drop(concept_map: *mut AnswerRow) {
+pub extern "C" fn concept_map_drop(concept_map: *mut ConceptRow) {
     free(concept_map);
 }
 
 /// Produces an <code>Iterator</code> over all variables in this <code>ConceptMap</code>.
 #[no_mangle]
-pub extern "C" fn concept_map_get_variables(concept_map: *const AnswerRow) -> *mut StringIterator {
+pub extern "C" fn concept_map_get_variables(concept_map: *const ConceptRow) -> *mut StringIterator {
     release(StringIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_keys().map(Ok)))))
 }
 
 /// Produces an <code>Iterator</code> over all <code>Concepts</code> in this <code>ConceptMap</code>.
 #[no_mangle]
-pub extern "C" fn concept_map_get_values(concept_map: *const AnswerRow) -> *mut ConceptIterator {
+pub extern "C" fn concept_map_get_values(concept_map: *const ConceptRow) -> *mut ConceptIterator {
     release(ConceptIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_values().map(Ok)))))
 }
 
 /// Retrieves a concept for a given variable name.
 ///
 #[no_mangle]
-pub extern "C" fn concept_map_get(concept_map: *const AnswerRow, var: *const c_char) -> *mut Concept {
+pub extern "C" fn concept_map_get(concept_map: *const ConceptRow, var: *const c_char) -> *mut Concept {
     release_optional(borrow(concept_map).get(string_view(var)).cloned())
 }
 
 /// Gets the <code>Explainables</code> object for this <code>ConceptMap</code>, exposing
 /// which of the concepts in this <code>ConceptMap</code> are explainable.
 #[no_mangle]
-pub extern "C" fn concept_map_get_explainables(concept_map: *const AnswerRow) -> *mut Explainables {
+pub extern "C" fn concept_map_get_explainables(concept_map: *const ConceptRow) -> *mut Explainables {
     release(borrow(concept_map).explainables.clone())
 }
 
 /// Checks whether the provided <code>ConceptMap</code> objects are equal
 #[no_mangle]
-pub extern "C" fn concept_map_equals(lhs: *const AnswerRow, rhs: *const AnswerRow) -> bool {
+pub extern "C" fn concept_map_equals(lhs: *const ConceptRow, rhs: *const ConceptRow) -> bool {
     borrow(lhs) == borrow(rhs)
 }
 
 /// A string representation of this ConceptMap.
 #[no_mangle]
-pub extern "C" fn concept_map_to_string(concept_map: *const AnswerRow) -> *mut c_char {
+pub extern "C" fn concept_map_to_string(concept_map: *const ConceptRow) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept_map)))
 }
 
@@ -188,13 +188,13 @@ pub extern "C" fn explanation_get_rule(explanation: *const Explanation) -> *mut 
 
 /// Retrieves the Conclusion for this Explanation.
 #[no_mangle]
-pub extern "C" fn explanation_get_conclusion(explanation: *const Explanation) -> *mut AnswerRow {
+pub extern "C" fn explanation_get_conclusion(explanation: *const Explanation) -> *mut ConceptRow {
     release(borrow(explanation).conclusion.clone())
 }
 
 /// Retrieves the Condition for this Explanation.
 #[no_mangle]
-pub extern "C" fn explanation_get_condition(explanation: *const Explanation) -> *mut AnswerRow {
+pub extern "C" fn explanation_get_condition(explanation: *const Explanation) -> *mut ConceptRow {
     release(borrow(explanation).condition.clone())
 }
 

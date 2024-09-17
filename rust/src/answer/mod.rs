@@ -18,7 +18,7 @@
  */
 
 pub use self::{
-    concept_map::AnswerRow,
+    concept_map::ConceptRow,
     json::JSON,
     value_group::ValueGroup,
 };

@@ -17,21 +17,17 @@
  * under the License.
  */
 
-use std::{
-    collections::{hash_map, HashMap},
-    ops::Index,
-};
 use itertools::Itertools;
 
 use crate::concept::Concept;
 
 /// Contains a mapping of variables to concepts.
 #[derive(Clone, Debug, PartialEq)]
-pub struct AnswerRow {
-    pub concepts: Vec<Option<Concept>>,
+pub struct ConceptRow {
+    pub row: Vec<Option<Concept>>,
 }
 
-impl AnswerRow {
+impl ConceptRow {
     /// Retrieves a concept for a given column index. Returns an empty optional if
     /// the position has an empty answer, or if the index is not range for the row.
     ///
@@ -42,10 +38,10 @@ impl AnswerRow {
     /// # Examples
     ///
     /// ```rust
-    /// answer_row.get_position(column_index)
+    /// concept_row.get_position(column_index)
     /// ```
     pub fn get_index(&self, column_index: usize) -> Option<&Concept> {
-        self.concepts.get(column_index).map(|inner| inner.as_ref()).flatten()
+        self.row.get(column_index).map(|inner| inner.as_ref()).flatten()
     }
 
     /// Retrieves a concept for a given variable name and the column names. Returns an empty optional if
@@ -59,7 +55,7 @@ impl AnswerRow {
     /// # Examples
     ///
     /// ```rust
-    /// answer_row.get(var_name, column_names)
+    /// concept_row.get(var_name, column_names)
     /// ```
     pub fn get(&self, var_name: &str, column_names: &[&str]) -> Option<&Concept> {
         column_names.iter().find_position(|name| **name == var_name)
@@ -67,20 +63,20 @@ impl AnswerRow {
             .flatten()
     }
 
-    /// Produces an iterator over all concepts in this `AnswerRow`, skipping empty results
+    /// Produces an iterator over all concepts in this `ConceptRow`, skipping empty results
     ///
     /// # Examples
     ///
     /// ```rust
-    /// answer_row.concepts()
+    /// concept_row.concepts()
     /// ```
     pub fn concepts(&self) -> impl Iterator<Item = &Concept> {
-        self.concepts.iter().filter_map(|concept| concept.as_ref())
+        self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }
 
 //
-// impl Index<String> for AnswerRow {
+// impl Index<String> for ConceptRow {
 //     type Output = Concept;
 //
 //     fn index(&self, index: String) -> &Self::Output {
@@ -88,7 +84,7 @@ impl AnswerRow {
 //     }
 // }
 //
-// impl IntoIterator for AnswerRow {
+// impl IntoIterator for ConceptRow {
 //     type Item = (String, Concept);
 //     type IntoIter = hash_map::IntoIter<String, Concept>;
 //

@@ -22,7 +22,7 @@ pub mod concept;
 use std::{fmt, marker::PhantomData, pin::Pin};
 
 use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, error::ConnectionError, Options, BoxStream, Error};
-use crate::answer::AnswerRow;
+use crate::answer::ConceptRow;
 use crate::answer::readable_concept::Tree;
 use crate::common::stream::Stream;
 
@@ -153,7 +153,7 @@ impl fmt::Debug for Transaction<'_> {
 
 pub enum QueryAnswer {
     Ok(),
-    ConceptRowsStream(ConceptRowsHeader, BoxStream<'static, Result<AnswerRow>>),
+    ConceptRowsStream(ConceptRowsHeader, BoxStream<'static, Result<ConceptRow>>),
     ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<Tree>>),
 }
 

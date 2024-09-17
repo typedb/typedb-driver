@@ -25,13 +25,12 @@ use tokio::{
     },
 };
 
-use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
     common::{address::Address, Result},
     connection::{
         message::{Request, Response},
         network::{
-            channel::{open_callcred_channel, open_plaintext_channel, GRPCChannel},
+            channel::{GRPCChannel, open_callcred_channel, open_plaintext_channel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },
@@ -39,6 +38,8 @@ use crate::{
     },
     Credential, Error,
 };
+
+use super::{oneshot_blocking, response_sink::ResponseSink};
 
 pub(in crate::connection) struct RPCTransmitter {
     request_sink: UnboundedSender<(Request, ResponseSink<Response>)>,

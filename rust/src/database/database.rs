@@ -17,9 +17,9 @@
  * under the License.
  */
 
+use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
-use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -27,10 +27,10 @@ use log::{debug, error};
 
 use crate::{common::{
     address::Address,
+    Error,
     error::ConnectionError,
-    info::{DatabaseInfo, ReplicaInfo},
-    Error, Result,
-}, connection::ServerConnection, error::InternalError, Connection, TransactionType, Transaction, Options};
+    info::{DatabaseInfo, ReplicaInfo}, Result,
+}, Connection, connection::ServerConnection, error::InternalError, Options, Transaction, TransactionType};
 
 /// A TypeDB database
 pub struct Database {

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use crate::{common::Result, error::ConnectionError, Connection};
+use crate::{common::Result, Connection, error::ConnectionError};
 
 #[derive(Clone, Debug)]
 /// User information

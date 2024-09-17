@@ -21,23 +21,23 @@ use std::fmt;
 
 use typedb_driver::{Options, Transaction, TransactionType};
 
-pub struct SessionTracker {
+pub struct TransactionTracker {
     transactions: Vec<Transaction<'static>>,
 }
 
-impl fmt::Debug for SessionTracker {
+impl fmt::Debug for TransactionTracker {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         todo!()
     }
 }
 
-impl Drop for SessionTracker {
+impl Drop for TransactionTracker {
     fn drop(&mut self) {
         self.transactions.clear(); // ensure transactions are dropped before the sessions
     }
 }
 
-impl SessionTracker {
+impl TransactionTracker {
 
     pub async fn open_transaction(
         &mut self,

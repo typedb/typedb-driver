@@ -78,6 +78,15 @@ error_messages! { ConnectionError
         22: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
         23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
+
+    ValueTimeZoneNameNotRecognised { time_zone: String } =
+        24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
+    ValueTimeZoneOffsetNotImplemented { offset: i32 } =
+        25: "Time zone provided by the server has numerical offset '{offset}', which is not yet supported by the driver.",
+    ValueStructNotImplemented =
+        26: "Struct valued responses are not yet supported by the driver.",
+    ListsNotImplemented =
+        27: "Lists are not yet supported by the driver."
 }
 
 error_messages! { InternalError

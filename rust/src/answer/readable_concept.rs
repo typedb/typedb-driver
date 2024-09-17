@@ -19,10 +19,11 @@
 
 use std::{borrow::Cow, collections::HashMap};
 
-use super::JSON;
 use crate::concept::{
     Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, Value, ValueType,
 };
+
+use super::JSON;
 
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Tree {
@@ -103,29 +104,29 @@ fn json_attribute_type(label: Cow<'static, str>, value_type: Option<ValueType>) 
 }
 
 fn json_value_type(value_type: ValueType) -> JSON {
-    const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
-    const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
-    const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
-    const LONG: Cow<'static, str> = Cow::Borrowed("long");
-    const STRING: Cow<'static, str> = Cow::Borrowed("string");
-    const OBJECT: Cow<'static, str> = Cow::Borrowed("object");
-
-    match value_type {
-        ValueType::Boolean => JSON::String(BOOLEAN),
-        ValueType::Double => JSON::String(DOUBLE),
-        ValueType::Long => JSON::String(LONG),
-        ValueType::String => JSON::String(STRING),
-        ValueType::DateTime => JSON::String(DATETIME),
-        ValueType::Object => JSON::String(OBJECT),
-    }
+    // const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
+    // const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
+    // const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
+    // const LONG: Cow<'static, str> = Cow::Borrowed("long");
+    // const STRING: Cow<'static, str> = Cow::Borrowed("string");
+    //
+    // match value_type {
+    //     ValueType::Boolean => JSON::String(BOOLEAN),
+    //     ValueType::Double => JSON::String(DOUBLE),
+    //     ValueType::Long => JSON::String(LONG),
+    //     ValueType::String => JSON::String(STRING),
+    //     ValueType::DateTime => JSON::String(DATETIME),
+    // }
+    todo!()
 }
 
 fn json_value(value: Value) -> JSON {
-    match value {
-        Value::Boolean(bool) => JSON::Boolean(bool),
-        Value::Double(double) => JSON::Number(double),
-        Value::Long(long) => JSON::Number(long as f64),
-        Value::String(string) => JSON::String(Cow::Owned(string)),
-        Value::DateTime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string())),
-    }
+    // match value {
+    //     Value::Boolean(bool) => JSON::Boolean(bool),
+    //     Value::Double(double) => JSON::Number(double),
+    //     Value::Long(long) => JSON::Number(long as f64),
+    //     Value::String(string) => JSON::String(Cow::Owned(string)),
+    //     Value::DateTime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string())),
+    // }
+    todo!()
 }

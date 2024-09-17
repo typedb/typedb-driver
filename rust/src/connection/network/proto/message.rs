@@ -31,7 +31,7 @@ use crate::{
     error::{ConnectionError, InternalError},
     user::User,
 };
-use crate::answer::AnswerRow;
+use crate::answer::ConceptRow;
 use crate::answer::readable_concept::Tree;
 use crate::error::ServerError;
 use crate::transaction::{ConceptRowsHeader, ConceptTreesHeader};
@@ -348,7 +348,7 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
             typedb_protocol::query::res_part::Res::RowsRes(rows) => {
                 let mut converted = Vec::with_capacity(rows.rows.len());
                 for row_proto in rows.rows.into_iter() {
-                    converted.push(AnswerRow::try_from_proto(row_proto)?);
+                    converted.push(ConceptRow::try_from_proto(row_proto)?);
                 }
                 Ok(QueryResponse::StreamConceptRows(converted))
             }

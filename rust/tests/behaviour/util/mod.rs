@@ -33,7 +33,7 @@ use futures::{
 use regex::{Captures, Regex};
 use tokio::time::sleep;
 use typedb_driver::{
-    answer::{AnswerRow, JSON},
+    answer::{ConceptRow, JSON},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
@@ -56,7 +56,7 @@ pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> 
 pub async fn match_answer_concept_map(
     context: &Context,
     answer_identifiers: &HashMap<&str, &str>,
-    answer: &AnswerRow,
+    answer: &ConceptRow,
 ) -> bool {
     // stream::iter(answer_identifiers.keys())
     //     .all(|key| async {
@@ -227,15 +227,15 @@ pub fn equals_approximate(first: f64, second: f64) -> bool {
 pub async fn match_templated_answer(
     context: &Context,
     step: &Step,
-    answer: &AnswerRow,
-) -> TypeDBResult<Vec<AnswerRow>> {
+    answer: &ConceptRow,
+) -> TypeDBResult<Vec<ConceptRow>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
     // context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
     todo!()
 }
 
-fn apply_query_template(query_template: &str, answer: &AnswerRow) -> String {
+fn apply_query_template(query_template: &str, answer: &ConceptRow) -> String {
     // let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
     // re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
     todo!()

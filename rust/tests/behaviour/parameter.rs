@@ -22,7 +22,7 @@ use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 use chrono::NaiveDateTime;
 use cucumber::Parameter;
 use typedb_driver::{
-    concept::{Annotation, ScopedLabel, Transitivity, Value, ValueType},
+    concept::{Annotation, ScopedLabel, Value, ValueType},
     TransactionType,
 };
 
@@ -86,7 +86,6 @@ impl ValueParam {
             ValueType::DateTime => {
                 Value::DateTime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
             }
-            ValueType::Object => unreachable!(),
         }
     }
 }
@@ -137,18 +136,13 @@ impl FromStr for OptionalAsValueTypeParam {
 #[derive(Clone, Copy, Debug, Parameter)]
 #[param(name = "optional_explicit", regex = r" explicit|")]
 pub struct OptionalExplicitParam {
-    pub transitivity: Transitivity,
 }
 
 impl FromStr for OptionalExplicitParam {
     type Err = Infallible;
 
     fn from_str(text: &str) -> Result<Self, Self::Err> {
-        Ok(match text {
-            "" => Self { transitivity: Transitivity::Transitive },
-            " explicit" => Self { transitivity: Transitivity::Explicit },
-            _ => unreachable!(),
-        })
+        todo!()
     }
 }
 
