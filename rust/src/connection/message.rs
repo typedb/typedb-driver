@@ -25,12 +25,14 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, readable_concept, ValueGroup},
-    common::{address::Address, info::DatabaseInfo, RequestID},
-    concept::Value,
+    answer::{AnswerRow, readable_concept},
+    common::{address::Address, info::DatabaseInfo, RequestID}
+    ,
     Options,
     TransactionType, user::User,
 };
+use crate::error::ServerError;
+use crate::transaction::{ConceptRowsHeader, ConceptTreesHeader};
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -124,46 +126,39 @@ pub(super) enum TransactionRequest {
 
 #[derive(Debug)]
 pub(super) enum TransactionResponse {
-    Open,
+    Open { server_duration_millis: u64 },
     Commit,
     Rollback,
     Query(QueryResponse),
+    Close,
 }
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Define { query: String, options: Options },
-    Undefine { query: String, options: Options },
-    Delete { query: String, options: Options },
-
-    Get { query: String, options: Options },
-    Insert { query: String, options: Options },
-    Update { query: String, options: Options },
-
-    GetAggregate { query: String, options: Options },
-
-    GetGroup { query: String, options: Options },
-    GetGroupAggregate { query: String, options: Options },
-
-    Fetch { query: String, options: Options },
-
-    Explain { explainable_id: i64, options: Options }, // TODO: ID type
+    Query { query: String, options: Options }
 }
 
 #[derive(Debug)]
 pub(super) enum QueryResponse {
-    Define,
-    Undefine,
-    Delete,
+    Ok(),
+    ConceptRowsHeader(ConceptRowsHeader),
+    ConceptTreesHeader(ConceptTreesHeader),
+    StreamConceptRows(Vec<AnswerRow>),
+    StreamConceptTrees(Vec<readable_concept::Tree>),
+    Error(ServerError),
 
-    Get { answers: Vec<ConceptMap> },
-    Insert { answers: Vec<ConceptMap> },
-    Update { answers: Vec<ConceptMap> },
-
-    GetAggregate { answer: Option<Value> },
-
-    GetGroup { answers: Vec<ConceptMapGroup> },
-    GetGroupAggregate { answers: Vec<ValueGroup> },
-
-    Fetch { answers: Vec<readable_concept::Tree> },
+    // Define,
+    // Undefine,
+    // Delete,
+    //
+    // Get { answers: Vec<ConceptMap> },
+    // Insert { answers: Vec<ConceptMap> },
+    // Update { answers: Vec<ConceptMap> },
+    //
+    // GetAggregate { answer: Option<Value> },
+    //
+    // GetGroup { answers: Vec<ConceptMapGroup> },
+    // GetGroupAggregate { answers: Vec<ValueGroup> },
+    //
+    // Fetch { answers: Vec<readable_concept::Tree> },
 }

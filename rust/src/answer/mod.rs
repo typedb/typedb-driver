@@ -17,15 +17,14 @@
  * under the License.
  */
 
+pub use self::{
+    concept_map::AnswerRow,
+    json::JSON,
+    value_group::ValueGroup,
+};
+
 pub mod concept_map;
-mod concept_map_group;
 mod json;
 pub(crate) mod readable_concept;
 mod value_group;
 
-pub use self::{
-    concept_map::{ConceptMap, Explainable, Explainables},
-    concept_map_group::ConceptMapGroup,
-    json::JSON,
-    value_group::ValueGroup,
-};

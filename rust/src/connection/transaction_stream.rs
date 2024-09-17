@@ -22,20 +22,14 @@ use std::{fmt, iter, pin::Pin};
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
 
-use crate::{
-    answer::{ConceptMap, ConceptMapGroup, readable_concept, ValueGroup},
-    common::{
-        Promise,
-        Result, stream::{BoxStream, Stream},
-    },
-    concept::Value,
-    connection::message::{
-        QueryRequest, QueryResponse,
-        TransactionRequest, TransactionResponse,
-    },
-    error::{ConnectionError, InternalError},
-    Options, promisify, resolve, TransactionType,
-};
+use crate::{box_stream, common::{
+    Promise,
+    Result, stream::{BoxStream, Stream},
+}, connection::message::{
+    QueryRequest, QueryResponse,
+    TransactionRequest, TransactionResponse,
+}, error::{ConnectionError, InternalError}, Error, Options, promisify, resolve, TransactionType};
+use crate::transaction::QueryAnswer;
 
 use super::network::transmitter::TransactionTransmitter;
 
@@ -70,7 +64,7 @@ impl TransactionStream {
         self.options
     }
 
-    pub(crate) fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+    pub(crate) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
         self.transaction_transmitter.on_close(callback)
     }
 
@@ -78,7 +72,11 @@ impl TransactionStream {
         let promise = self.transaction_transmitter.single(TransactionRequest::Commit);
         promisify! {
             let _this = self;  // move into the promise so the stream isn't dropped until the promise is resolved
-            resolve!(promise).map(|_| ())
+            resolve!(promise).map(|_| {
+                ()
+            }).map_err(|err| {
+                err
+            })
         }
     }
 
@@ -87,128 +85,62 @@ impl TransactionStream {
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<'_, Result> {
-        let promise = self.query_single(QueryRequest::Define { query, options });
-        promisify! { resolve!(promise).map(|_| ()) }
-    }
-
-    pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<'_, Result> {
-        let promise = self.query_single(QueryRequest::Undefine { query, options });
-        promisify! { resolve!(promise).map(|_| ()) }
-    }
-
-    pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<'_, Result> {
-        let promise = self.query_single(QueryRequest::Delete { query, options });
-        promisify! { resolve!(promise).map(|_| ()) }
-    }
-
-    pub(crate) fn get(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        let stream = self.query_stream(QueryRequest::Get { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::Get { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
-    }
-
-    pub(crate) fn insert(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        let stream = self.query_stream(QueryRequest::Insert { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::Insert { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
-    }
-
-    pub(crate) fn update(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        let stream = self.query_stream(QueryRequest::Update { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::Update { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
-    }
-
-    pub(crate) fn get_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Option<Value>>> {
-        let promise = self.query_single(QueryRequest::GetAggregate { query, options });
+    pub(crate) fn query(&self, query: &str, options: Options) -> impl Promise<'static, Result<QueryAnswer>>
+    {
+        let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
-            match resolve!(promise)? {
-                QueryResponse::GetAggregate { answer } => Ok(answer),
-                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+            let mut stream = stream?;
+
+            #[cfg(feature = "sync")]
+            let header = stream.next();
+            #[cfg(not(feature = "sync"))]
+            let header: Option<Result<QueryResponse>> = stream.next().await;
+
+            let header = match header {
+                None => return Err(ConnectionError::QueryStreamNoResponse.into()),
+                Some(Err(err)) => return Err(err),
+                Some(Ok(header)) => header,
+            };
+
+            match header {
+                QueryResponse::Ok() => Ok(QueryAnswer::Ok()),
+                QueryResponse::ConceptTreesHeader(trees_header) => {
+                    let answers = box_stream(stream.flat_map(|result| match result {
+                        Ok(QueryResponse::StreamConceptTrees(trees)) => stream_iter(trees.into_iter().map(Ok)),
+                        Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
+                        Ok(other) => {
+                            stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                        }
+                        Err(err) => stream_once(Err(err)),
+                    }));
+                    Ok(QueryAnswer::ConceptTreesStream(trees_header, answers))
+                },
+                QueryResponse::ConceptRowsHeader(rows_header) => {
+                   let answers = box_stream(stream.flat_map(|result| match result {
+                        Ok(QueryResponse::StreamConceptRows(rows)) => stream_iter(rows.into_iter().map(Ok)),
+                        Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
+                        Ok(other) => {
+                            stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                        }
+                        Err(err) => stream_once(Err(err)),
+                    }));
+                    Ok(QueryAnswer::ConceptRowsStream(rows_header, answers))
+                },
+                QueryResponse::Error(error) => Err(error.into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into())
             }
         }
-    }
-
-    pub(crate) fn get_group(
-        &self,
-        query: String,
-        options: Options,
-    ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
-        let stream = self.query_stream(QueryRequest::GetGroup { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::GetGroup { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
-    }
-
-    pub(crate) fn get_group_aggregate(
-        &self,
-        query: String,
-        options: Options,
-    ) -> Result<impl Stream<Item = Result<ValueGroup>>> {
-        let stream = self.query_stream(QueryRequest::GetGroupAggregate { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::GetGroupAggregate { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
-    }
-
-    pub(crate) fn fetch(
-        &self,
-        query: String,
-        options: Options,
-    ) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
-        let stream = self.query_stream(QueryRequest::Fetch { query, options })?;
-        Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::Fetch { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => {
-                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
-            }
-            Err(err) => stream_once(Err(err)),
-        }))
     }
 
     fn single(&self, req: TransactionRequest) -> impl Promise<'static, Result<TransactionResponse>> {
         self.transaction_transmitter.single(req)
     }
 
-    fn query_single(&self, req: QueryRequest) -> impl Promise<'_, Result<QueryResponse>> {
-        let promise = self.single(TransactionRequest::Query(req));
-        promisify! {
-            match resolve!(promise)? {
-                TransactionResponse::Query(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-            }
-        }
-    }
-
-    fn stream(&self, req: TransactionRequest) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
+    fn stream(&self, req: TransactionRequest) -> Result<impl Stream<Item=Result<TransactionResponse>>> {
         self.transaction_transmitter.stream(req)
     }
 
-    fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item = Result<QueryResponse>>> {
+    fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item=Result<QueryResponse>>> {
         Ok(self.stream(TransactionRequest::Query(req))?.map(|response| match response {
             Ok(TransactionResponse::Query(res)) => Ok(res),
             Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -228,11 +160,11 @@ fn stream_once<'a, T: Send + 'a>(value: T) -> BoxStream<'a, T> {
 }
 
 #[cfg(feature = "sync")]
-fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item=T> + Send + 'a) -> BoxStream<'a, T> {
     Box::new(iter)
 }
 
 #[cfg(not(feature = "sync"))]
-fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item=T> + Send + 'a) -> BoxStream<'a, T> {
     Box::pin(stream::iter(iter))
 }

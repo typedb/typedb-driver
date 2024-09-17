@@ -18,17 +18,13 @@
  */
 
 pub mod concept;
-pub mod query;
 
 use std::{fmt, marker::PhantomData, pin::Pin};
 
-use self::{query::QueryManager};
-use crate::{
-    common::{Promise, Result, TransactionType},
-    connection::TransactionStream,
-    error::ConnectionError,
-    Options,
-};
+use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, error::ConnectionError, Options, BoxStream, Error};
+use crate::answer::AnswerRow;
+use crate::answer::readable_concept::Tree;
+use crate::common::stream::Stream;
 
 /// A transaction with a TypeDB database.
 pub struct Transaction<'a> {
@@ -63,14 +59,37 @@ impl Transaction<'_> {
         self.transaction_stream.is_open()
     }
 
+
+    /// Performs a TypeQL query with default options.
+    /// See [`Transaction::query_with_options`]
+    pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
+        self.query_with_options(query, Options::new())
+    }
+
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` -- The TypeQL query to be executed
+    /// * `options` -- Query options
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query_with_options(query, options)
+    /// ```
+    pub fn query_with_options(
+        &self,
+        query: impl AsRef<str>,
+        options: Options,
+    ) -> impl Promise<'static, Result<QueryAnswer>> {
+        let query = query.as_ref();
+        self.transaction_stream.query(query, options)
+    }
+
     /// Retrieves the transaction’s type (READ or WRITE).
     pub fn type_(&self) -> TransactionType {
         self.type_
-    }
-
-    /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
-    pub fn query(&self) -> QueryManager<'_> {
-        QueryManager::new(self.transaction_stream.as_ref())
     }
 
     /// Registers a callback function which will be executed when this transaction is closed.
@@ -84,7 +103,7 @@ impl Transaction<'_> {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
         self.transaction_stream.on_close(callback)
     }
 
@@ -129,4 +148,21 @@ impl fmt::Debug for Transaction<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }
+}
+
+
+pub enum QueryAnswer {
+    Ok(),
+    ConceptRowsStream(ConceptRowsHeader, BoxStream<'static, Result<AnswerRow>>),
+    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<Tree>>),
+}
+
+
+#[derive(Debug)]
+pub struct ConceptRowsHeader {
+    pub column_variable_names: Vec<String>,
+}
+
+#[derive(Debug)]
+pub struct ConceptTreesHeader {
 }

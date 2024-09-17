@@ -17,13 +17,6 @@
  * under the License.
  */
 
-mod connection;
-mod driver;
-mod parameter;
-mod query;
-mod session_tracker;
-mod util;
-
 use std::{
     collections::{HashMap, HashSet},
     iter, mem,
@@ -32,18 +25,26 @@ use std::{
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
-    future::{try_join_all, Either},
+    future::{Either, try_join_all},
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
+
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
-    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
+    answer::{AnswerRow, JSON},
+    concept::{Thing, Value},
     Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
 };
 
 use self::session_tracker::SessionTracker;
+
+mod connection;
+mod driver;
+mod parameter;
+mod query;
+mod session_tracker;
+mod util;
 
 #[derive(Debug, Default)]
 struct SingletonParser {
@@ -97,11 +98,9 @@ pub struct Context {
     pub users: UserManager,
     pub session_trackers: Vec<SessionTracker>,
     pub things: HashMap<String, Option<Thing>>,
-    pub answer: Vec<ConceptMap>,
-    pub answer_group: Vec<ConceptMapGroup>,
+    pub answer: Vec<AnswerRow>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
-    pub value_answer_group: Vec<ValueGroup>,
 }
 
 impl Context {
@@ -189,10 +188,8 @@ impl Context {
         self.users = UserManager::new(self.connection.clone());
         self.session_trackers.clear();
         self.answer.clear();
-        self.answer_group.clear();
         self.fetch_answer = None;
         self.value_answer = None;
-        self.value_answer_group.clear();
     }
 }
 
@@ -220,10 +217,8 @@ impl Default for Context {
             session_trackers: Vec::new(),
             things: HashMap::new(),
             answer: Vec::new(),
-            answer_group: Vec::new(),
             fetch_answer: None,
             value_answer: None,
-            value_answer_group: Vec::new(),
         }
     }
 }

@@ -19,7 +19,9 @@
 
 use std::{collections::HashSet, error::Error as StdError, fmt};
 
+use itertools::Itertools;
 use tonic::{Code, Status};
+use tonic_types::StatusExt;
 use typeql::error_messages;
 
 use super::{address::Address, RequestID};
@@ -39,19 +41,21 @@ error_messages! { ConnectionError
     DatabaseDoesNotExist { name: String } =
         5: "The database '{name}' does not exist.",
     MissingResponseField { field: &'static str } =
-        6: "Missing field in message received from server: '{field}'.",
+        6: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
     UnknownRequestId { request_id: RequestID } =
         7: "Received a response with unknown request id '{request_id}'",
+    QueryStreamNoResponse =
+        101: "Didn't receive any server responses for the query.",
     InvalidResponseField { name: &'static str } =
-        8: "Invalid field in message received from server: '{name}'.",
+        8: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
     UnexpectedResponse { response: String } =
-        9: "Received unexpected response from server: '{response}'.",
+        9: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
     ServerConnectionFailed { addresses: Vec<Address> } =
         10: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
         11: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
-        12: "Unable to connect to TypeDB server(s), received network error: \n{error}",
+        12: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
     UserManagementCloudOnly =
         13: "User management is only available in TypeDB Cloud servers.",
     CloudReplicaNotPrimary =
@@ -83,13 +87,51 @@ error_messages! { InternalError
     SendError =
         2: "Unable to send response over callback channel (receiver dropped).",
     UnexpectedRequestType { request_type: String } =
-        3: "Unexpected request type for remote procedure call: {request_type}.",
+        3: "Unexpected request type for remote procedure call: {request_type}. This is either a version compatibility issue or a bug.",
     UnexpectedResponseType { response_type: String } =
-        4: "Unexpected response type for remote procedure call: {response_type}.",
+        4: "Unexpected response type for remote procedure call: {response_type}. This is either a version compatibility issue or a bug.",
     UnknownServer { server: Address } =
         5: "Received replica at unrecognized server: {server}.",
     EnumOutOfBounds { value: i32, enum_name: &'static str } =
         6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
+}
+
+#[derive(Clone, PartialEq, Eq)]
+pub struct ServerError {
+    error_code: String,
+    error_domain: String,
+    message: String,
+    stack_trace: Vec<String>,
+}
+
+impl ServerError {
+    pub(crate) fn new(error_code: String, error_domain: String, message: String, stack_trace: Vec<String>) -> Self {
+        Self { error_code, error_domain, message, stack_trace }
+    }
+
+    pub(crate) fn format_code(&self) -> &str {
+        &self.error_code
+    }
+
+    pub(crate) fn message(&self) -> &str {
+        &self.message
+    }
+}
+
+impl fmt::Display for ServerError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.stack_trace.is_empty() {
+            write!( f, "[{}] {}. {}", self.error_code, self.error_domain, self.message)
+        } else {
+            write!( f, "{}", format!("\n{}", self.stack_trace.join("\nCaused: ")))
+        }
+    }
+}
+
+impl fmt::Debug for ServerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(self, f)
+    }
 }
 
 /// Represents errors encountered during operation.
@@ -97,6 +139,7 @@ error_messages! { InternalError
 pub enum Error {
     Connection(ConnectionError),
     Internal(InternalError),
+    Server(ServerError),
     TypeQL(typeql::Error),
     Other(String),
 }
@@ -106,6 +149,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.format_code(),
             Self::Internal(error) => error.format_code(),
+            Self::Server(error) => error.format_code().to_owned(),
             Self::TypeQL(_error) => String::new(),
             Self::Other(_error) => String::new(),
         }
@@ -115,6 +159,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.message(),
             Self::Internal(error) => error.message(),
+            Self::Server(error) => error.message().to_owned(),
             Self::TypeQL(error) => error.to_string(),
             Self::Other(error) => error.clone(),
         }
@@ -153,6 +198,7 @@ impl fmt::Display for Error {
         match self {
             Self::Connection(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
+            Self::Server(error) => write!(f, "{error}"),
             Self::TypeQL(error) => write!(f, "{error}"),
             Self::Other(message) => write!(f, "{message}"),
         }
@@ -165,6 +211,7 @@ impl StdError for Error {
             Self::Connection(error) => Some(error),
             Self::Internal(error) => Some(error),
             Self::TypeQL(error) => Some(error),
+            Self::Server(_) => None,
             Self::Other(_) => None,
         }
     }
@@ -182,6 +229,13 @@ impl From<InternalError> for Error {
     }
 }
 
+impl From<ServerError> for Error {
+    fn from(error: ServerError) -> Self {
+        Self::Server(error)
+
+    }
+}
+
 impl From<typeql::Error> for Error {
     fn from(err: typeql::Error) -> Self {
         Self::TypeQL(err)
@@ -190,14 +244,36 @@ impl From<typeql::Error> for Error {
 
 impl From<Status> for Error {
     fn from(status: Status) -> Self {
-        if status.code() == Code::Unavailable {
-            Self::parse_unavailable(status.message())
-        } else if status.code() == Code::Unknown || is_rst_stream(&status) {
-            Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
-        } else if status.code() == Code::Unimplemented {
-            Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
+        if let Ok(details) = status.check_error_details() {
+            if let Some(bad_request) = details.bad_request() {
+                Self::Connection(ConnectionError::ServerConnectionFailedWithError { error: format!("{:?}", bad_request) })
+            } else if let Some(error_info) = details.error_info() {
+                let code = error_info.reason.clone();
+                let domain = error_info.domain.clone();
+                let stack_trace = if let Some(debug_info) = details.debug_info() {
+                    debug_info.stack_entries.clone()
+                } else {
+                    vec![]
+                };
+                Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
+            } else {
+                Self::from_message(status.message())
+            }
         } else {
-            Self::from_message(status.message())
+            if status.code() == Code::Unavailable {
+                Self::parse_unavailable(status.message())
+            } else if status.code() == Code::Unknown
+                || is_rst_stream(&status)
+                || status.code() == Code::InvalidArgument
+                || status.code() == Code::FailedPrecondition
+                || status.code() == Code::AlreadyExists
+            {
+                Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
+            } else if status.code() == Code::Unimplemented {
+                Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
+            } else {
+                Self::from_message(status.message())
+            }
         }
     }
 }

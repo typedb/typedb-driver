@@ -33,7 +33,7 @@ use futures::{
 use regex::{Captures, Regex};
 use tokio::time::sleep;
 use typedb_driver::{
-    answer::{ConceptMap, JSON},
+    answer::{AnswerRow, JSON},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
@@ -56,14 +56,15 @@ pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> 
 pub async fn match_answer_concept_map(
     context: &Context,
     answer_identifiers: &HashMap<&str, &str>,
-    answer: &ConceptMap,
+    answer: &AnswerRow,
 ) -> bool {
-    stream::iter(answer_identifiers.keys())
-        .all(|key| async {
-            answer.map.contains_key(*key)
-                && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
-        })
-        .await
+    // stream::iter(answer_identifiers.keys())
+    //     .all(|key| async {
+    //         answer.map.contains_key(*key)
+    //             && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
+    //     })
+    //     .await
+    todo!()
 }
 
 pub async fn match_answer_concept(context: &Context, answer_identifier: &str, answer: &Concept) -> bool {
@@ -226,16 +227,18 @@ pub fn equals_approximate(first: f64, second: f64) -> bool {
 pub async fn match_templated_answer(
     context: &Context,
     step: &Step,
-    answer: &ConceptMap,
-) -> TypeDBResult<Vec<ConceptMap>> {
+    answer: &AnswerRow,
+) -> TypeDBResult<Vec<AnswerRow>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
-    context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    // context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    todo!()
 }
 
-fn apply_query_template(query_template: &str, answer: &ConceptMap) -> String {
-    let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
-    re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
+fn apply_query_template(query_template: &str, answer: &AnswerRow) -> String {
+    // let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
+    // re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
+    todo!()
 }
 
 fn get_iid(concept: &Concept) -> String {

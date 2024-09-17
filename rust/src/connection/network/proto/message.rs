@@ -18,11 +18,8 @@
  */
 
 use itertools::Itertools;
-use typedb_protocol::{
-    connection, database, database_manager
-    , server_manager,
-    transaction, user, user_manager, Version::Version,
-};
+use typedb_protocol::{connection, database, database_manager, server_manager, transaction, user, user_manager, Version::Version};
+use typedb_protocol::query::initial_res::Res;
 use uuid::Uuid;
 
 use crate::{
@@ -34,6 +31,10 @@ use crate::{
     error::{ConnectionError, InternalError},
     user::User,
 };
+use crate::answer::AnswerRow;
+use crate::answer::readable_concept::Tree;
+use crate::error::ServerError;
+use crate::transaction::{ConceptRowsHeader, ConceptTreesHeader};
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 
@@ -291,27 +292,91 @@ impl IntoProto<transaction::Req> for TransactionRequest {
 impl TryFromProto<transaction::Res> for TransactionResponse {
     fn try_from_proto(proto: transaction::Res) -> Result<Self> {
         match proto.res {
-            Some(transaction::res::Res::OpenRes(_)) => Ok(Self::Open),
+            Some(transaction::res::Res::OpenRes(transaction::open::Res { server_duration_millis })) => {
+                Ok(Self::Open { server_duration_millis })
+            }
             Some(transaction::res::Res::CommitRes(_)) => Ok(Self::Commit),
             Some(transaction::res::Res::RollbackRes(_)) => Ok(Self::Rollback),
-            Some(transaction::res::Res::QueryRes(_)) => {
-                todo!()
+            Some(transaction::res::Res::QueryRes(initial_res)) => {
+                match initial_res.res {
+                    Some(res) => {
+                        match res {
+                            Res::Error(error) => {
+                                Ok(TransactionResponse::Query(QueryResponse::from_proto(error)))
+                            }
+                            Res::Ok(header) => {
+                                match header.ok {
+                                    None => {
+                                        Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res.Ok.ok" }.into())
+                                    }
+                                    Some(header) => {
+                                        Ok(TransactionResponse::Query(QueryResponse::from_proto(header)))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    None => {
+                        Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res" }.into())
+                    }
+                }
             }
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
 
-impl TryFromProto<transaction::ResPart> for TransactionResponse {
-    fn try_from_proto(proto: transaction::ResPart) -> Result<Self> {
-        // match proto.res {
-        //     Some(transaction::res_part::Res::QueryManagerResPart(res_part)) => {
-        //         Ok(Self::Query(QueryResponse::try_from_proto(res_part)?))
-        //     }
-        //     Some(transaction::res_part::Res::StreamResPart(_)) => unreachable!(),
-        //     None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
-        // }
-        todo!()
+impl TryFromProto<typedb_protocol::query::ResPart> for TransactionResponse {
+    fn try_from_proto(proto: typedb_protocol::query::ResPart) -> Result<Self> {
+        match proto.res {
+            Some(res) => Ok(TransactionResponse::Query(QueryResponse::try_from_proto(res)?)),
+            None => Err(ConnectionError::MissingResponseField { field: "query.ResPart.res" }.into()),
+        }
+    }
+}
+
+impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
+    fn try_from_proto(proto: typedb_protocol::query::res_part::Res) -> Result<Self> {
+        match proto {
+            typedb_protocol::query::res_part::Res::TreesRes(trees) => {
+                let mut converted = Vec::with_capacity(trees.trees.len());
+                for tree_proto in trees.trees.into_iter() {
+                    converted.push(Tree::try_from_proto(tree_proto)?);
+                }
+                Ok(QueryResponse::StreamConceptTrees(converted))
+            }
+            typedb_protocol::query::res_part::Res::RowsRes(rows) => {
+                let mut converted = Vec::with_capacity(rows.rows.len());
+                for row_proto in rows.rows.into_iter() {
+                    converted.push(AnswerRow::try_from_proto(row_proto)?);
+                }
+                Ok(QueryResponse::StreamConceptRows(converted))
+            }
+        }
+    }
+}
+
+impl FromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
+    fn from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Self {
+        match proto {
+            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => {
+                QueryResponse::Ok()
+            }
+            typedb_protocol::query::initial_res::ok::Ok::ReadableConceptTreeStream(_tree_stream_header) => {
+                QueryResponse::ConceptTreesHeader(ConceptTreesHeader {})
+            }
+            typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
+                QueryResponse::ConceptRowsHeader(ConceptRowsHeader {
+                    column_variable_names: rows_stream_header.column_variable_names
+                })
+            }
+        }
+    }
+}
+
+impl FromProto<typedb_protocol::Error> for QueryResponse {
+    fn from_proto(proto: typedb_protocol::Error) -> Self {
+        QueryResponse::Error(ServerError::new(proto.error_code, proto.domain, String::new(), proto.stack_trace))
     }
 }
 
@@ -359,7 +424,14 @@ impl FromProto<user::password_update::Res> for Response {
 
 impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
-        todo!()
+        match self {
+            QueryRequest::Query { query, options } => {
+                typedb_protocol::query::Req {
+                    query,
+                    options: Some(options.into_proto()),
+                }
+            }
+        }
         // let (req, options) = match self {
         //     Self::Define { query, options } => {
         //         (query_manager::req::Req::DefineReq(query_manager::define::Req { query }), options)
@@ -404,33 +476,33 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
         // query_manager::Req { req: Some(req), options: Some(options.into_proto()) }
     }
 }
-
-impl TryFromProto<typedb_protocol::query::ResPart> for QueryResponse {
-    fn try_from_proto(proto: typedb_protocol::query::ResPart) -> Result<Self> {
-        todo!()
-        // match proto.res {
-        //     Some(query_manager::res_part::Res::GetResPart(res)) => {
-        //         Ok(Self::Get { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-        //     }
-        //     Some(query_manager::res_part::Res::InsertResPart(res)) => {
-        //         Ok(Self::Insert { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-        //     }
-        //     Some(query_manager::res_part::Res::UpdateResPart(res)) => {
-        //         Ok(Self::Update { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-        //     }
-        //     Some(query_manager::res_part::Res::GetGroupResPart(res)) => Ok(Self::GetGroup {
-        //         answers: res.answers.into_iter().map(ConceptMapGroup::try_from_proto).try_collect()?,
-        //     }),
-        //     Some(query_manager::res_part::Res::GetGroupAggregateResPart(res)) => Ok(Self::GetGroupAggregate {
-        //         answers: res.answers.into_iter().map(ValueGroup::try_from_proto).try_collect()?,
-        //     }),
-        //     Some(query_manager::res_part::Res::FetchResPart(res)) => Ok(Self::Fetch {
-        //         answers: res.answers.into_iter().map(readable_concept::Tree::try_from_proto).try_collect()?,
-        //     }),
-        //     Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
-        //         answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
-        //     }),
-        //     None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
-        // }
-    }
-}
+//
+// impl TryFromProto<typedb_protocol::query::ResPart> for QueryResponse {
+//     fn try_from_proto(proto: typedb_protocol::query::ResPart) -> Result<Self> {
+//         todo!()
+//         // match proto.res {
+//         //     Some(query_manager::res_part::Res::GetResPart(res)) => {
+//         //         Ok(Self::Get { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
+//         //     }
+//         //     Some(query_manager::res_part::Res::InsertResPart(res)) => {
+//         //         Ok(Self::Insert { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
+//         //     }
+//         //     Some(query_manager::res_part::Res::UpdateResPart(res)) => {
+//         //         Ok(Self::Update { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
+//         //     }
+//         //     Some(query_manager::res_part::Res::GetGroupResPart(res)) => Ok(Self::GetGroup {
+//         //         answers: res.answers.into_iter().map(ConceptMapGroup::try_from_proto).try_collect()?,
+//         //     }),
+//         //     Some(query_manager::res_part::Res::GetGroupAggregateResPart(res)) => Ok(Self::GetGroupAggregate {
+//         //         answers: res.answers.into_iter().map(ValueGroup::try_from_proto).try_collect()?,
+//         //     }),
+//         //     Some(query_manager::res_part::Res::FetchResPart(res)) => Ok(Self::Fetch {
+//         //         answers: res.answers.into_iter().map(readable_concept::Tree::try_from_proto).try_collect()?,
+//         //     }),
+//         //     Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
+//         //         answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
+//         //     }),
+//         //     None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
+//         // }
+//     }
+// }

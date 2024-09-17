@@ -60,7 +60,19 @@ impl Database {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn transaction_with_options(&self, transaction_type: TransactionType, options: Options) -> Result<Transaction<'static>> {
+    pub async fn transaction(
+        &self,
+        transaction_type: TransactionType,
+    ) -> Result<Transaction<'static>> {
+        self.transaction_with_options(transaction_type, Options::new()).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn transaction_with_options(
+        &self,
+        transaction_type: TransactionType,
+        options: Options
+    ) -> Result<Transaction<'static>> {
 
         //         // let server_session = database
 //         //     .run_failsafe(|database| async move {

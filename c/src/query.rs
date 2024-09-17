@@ -21,7 +21,7 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 
 use itertools::Itertools;
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
+    answer::{AnswerRow, ConceptMapGroup, Explainable, ValueGroup},
     box_stream,
     logic::Explanation,
     Options, Result, Transaction,
@@ -71,12 +71,12 @@ pub extern "C" fn query_delete(
 }
 
 /// Iterator over the <code>ConceptMap</code>s in the result of a TypeQL Get query.
-pub struct ConceptMapIterator(pub CIterator<Result<ConceptMap>>);
+pub struct ConceptMapIterator(pub CIterator<Result<AnswerRow>>);
 
 /// Forwards the <code>ConceptMapIterator</code> and returns the next <code>ConceptMap</code> if it exists,
 /// or null if there are no more elements.
 #[no_mangle]
-pub extern "C" fn concept_map_iterator_next(it: *mut ConceptMapIterator) -> *mut ConceptMap {
+pub extern "C" fn concept_map_iterator_next(it: *mut ConceptMapIterator) -> *mut AnswerRow {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 

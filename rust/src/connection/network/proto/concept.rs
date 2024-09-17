@@ -27,6 +27,7 @@ use typedb_protocol::{
     Concept as ConceptProto,
     Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
     ReadableConceptTree as ReadableConceptTreeProto,
+    AnswerRow as AnswerRowProto,
     Relation as RelationProto
     , RelationType as RelationTypeProto, RoleType as RoleTypeProto,
     thing, Thing as ThingProto, Value as ValueProto,
@@ -39,11 +40,23 @@ use crate::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
         ScopedLabel, Thing, Value, ValueType,
     },
-    error::{ConnectionError, InternalError},
+    error::ConnectionError,
     Result,
 };
+use crate::answer::AnswerRow;
 
 use super::{FromProto, TryFromProto};
+
+impl TryFromProto<AnswerRowProto> for AnswerRow {
+    fn try_from_proto(proto: AnswerRowProto) -> Result<Self> {
+        // let AnswerRowProto { map: map_proto, explainables: explainables_proto } = proto;
+        // let map = map_proto.into_iter().map(|(k, v)| Concept::try_from_proto(v).map(|v| (k, v))).try_collect()?;
+        // let explainables = explainables_proto
+        //     .ok_or::<ConnectionError>(ConnectionError::MissingResponseField { field: "explainables" })?;
+        // Ok(Self { map, explainables: Explainables::from_proto(explainables) })
+        todo!()
+    }
+}
 
 impl TryFromProto<ConceptProto> for Concept {
     fn try_from_proto(proto: ConceptProto) -> Result<Self> {

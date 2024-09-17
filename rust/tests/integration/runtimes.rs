@@ -20,6 +20,8 @@
 use futures::StreamExt;
 use serial_test::serial;
 use typedb_driver::{DatabaseManager, TransactionType::Write};
+use typedb_driver::transaction::QueryAnswer;
+use typedb_driver::TransactionType::Read;
 
 use super::common;
 
@@ -34,12 +36,17 @@ fn basic_async_std() {
         dbg!(&dbs);
         let db = databases.get("testing-db").await.unwrap();
         db.delete().await.unwrap();
-        common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await.unwrap();
-        // let databases = DatabaseManager::new(connection);
-        // assert!(databases.contains(common::TEST_DATABASE).await?);
-        //
-        // let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
-        // let transaction = session.transaction(Write).await?;
+        common::create_test_database_with_schema(connection.clone(), "define entity person;").await.unwrap();
+        assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
+
+        let database = databases.get(common::TEST_DATABASE).await.unwrap();
+        let transaction = database.transaction(Read).await.unwrap();
+
+        let answers = transaction.query("match entity $x;").await.unwrap();
+        assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_, _)));
+
+        drop(transaction)
+
         // let answer_stream = transaction.query().get("match $x sub thing; get;")?;
         // let results: Vec<_> = answer_stream.collect().await;
         // transaction.commit().await?;
