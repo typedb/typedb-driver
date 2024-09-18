@@ -94,17 +94,5 @@ pub struct AttributeType {
 /// Roles allow a schema to enforce logical constraints on types of role players.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RoleType {
-    pub label: ScopedLabel,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ScopedLabel {
-    pub scope: String,
-    pub name: String,
-}
-
-impl fmt::Display for ScopedLabel {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}:{}", self.scope, self.name)
-    }
+    pub label: String,
 }

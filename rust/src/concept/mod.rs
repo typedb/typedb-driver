@@ -23,7 +23,7 @@ use crate::IID;
 
 pub use self::{
     thing::{Attribute, Entity, Relation, Thing},
-    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, ScopedLabel, ThingType},
+    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, ThingType},
     value::{Value, ValueType},
 };
 
@@ -48,6 +48,19 @@ pub enum Concept {
 }
 
 impl Concept {
+    pub fn get_variant(&self) -> &str {
+        match self {
+            Concept::EntityType(_) => "EntityType",
+            Concept::RelationType(_) => "RelationType",
+            Concept::RoleType(_) => "RoleType",
+            Concept::AttributeType(_) => "AttributeType",
+            Concept::Entity(_) => "Entity",
+            Concept::Relation(_) => "Relation",
+            Concept::Attribute(_) => "Attribute",
+            Concept::Value(_) => "Value",
+        }
+    }
+
     pub fn get_iid(&self) -> Option<&IID> {
         match self {
             Concept::Entity(entity) => Some(&entity.iid),
@@ -62,19 +75,6 @@ impl Concept {
             Concept::Relation(relation) => Some(&relation.type_.as_ref().unwrap().label),
             Concept::Attribute(attribute) => Some(&attribute.type_.as_ref().unwrap().label),
             _ => None
-        }
-    }
-
-    pub fn get_variant(&self) -> &str {
-        match self {
-            Concept::EntityType(_) => "EntityType",
-            Concept::RelationType(_) => "RelationType",
-            Concept::RoleType(_) => "RoleType",
-            Concept::AttributeType(_) => "AttributeType",
-            Concept::Entity(_) => "Entity",
-            Concept::Relation(_) => "Relation",
-            Concept::Attribute(_) => "Attribute",
-            Concept::Value(_) => "Value",
         }
     }
 

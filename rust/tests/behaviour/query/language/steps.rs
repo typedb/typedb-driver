@@ -34,7 +34,7 @@ use crate::{
 
 generic_step_impl! {
     #[step(expr = "typeql query")]
-    pub async fn typeql_query(context: &mut Context, step: &Step) -> TypeDBResult<typedb_driver::transaction::QueryAnswer> {
+    pub async fn typeql_query(context: &mut Context, step: &Step) -> TypeDBResult<typedb_driver::answer::QueryAnswer> {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.transaction().query(&parsed.to_string()).await
     }

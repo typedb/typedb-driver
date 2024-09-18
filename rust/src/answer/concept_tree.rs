@@ -25,6 +25,11 @@ use crate::concept::{
 
 use super::JSON;
 
+
+#[derive(Debug)]
+pub struct ConceptTreesHeader {
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Tree {
     pub(crate) root: HashMap<String, Node>,

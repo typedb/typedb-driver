@@ -20,7 +20,7 @@
 use futures::StreamExt;
 use serial_test::serial;
 use typedb_driver::{DatabaseManager, TransactionType::Write};
-use typedb_driver::transaction::QueryAnswer;
+use typedb_driver::answer::QueryAnswer;
 use typedb_driver::TransactionType::Read;
 
 use super::common;
@@ -43,7 +43,13 @@ fn basic_async_std() {
         let transaction = database.transaction(Read).await.unwrap();
 
         let answers = transaction.query("match entity $x;").await.unwrap();
-        assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_, _)));
+        assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
+
+        let rows: Vec<_> = answers.into_rows().collect().await;
+        dbg!(&rows.len());
+        for row in rows {
+            dbg!(&row);
+        }
 
         drop(transaction)
 

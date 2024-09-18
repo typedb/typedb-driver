@@ -25,14 +25,16 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::{ConceptRow, readable_concept},
+    answer::{ConceptRow, concept_tree},
     common::{address::Address, info::DatabaseInfo, RequestID}
     ,
     Options,
     TransactionType, user::User,
 };
+use crate::answer::concept_row::ConceptRowsHeader;
+use crate::answer::concept_tree::ConceptTreesHeader;
+use crate::concept::Concept;
 use crate::error::ServerError;
-use crate::transaction::{ConceptRowsHeader, ConceptTreesHeader};
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -143,8 +145,8 @@ pub(super) enum QueryResponse {
     Ok(),
     ConceptRowsHeader(ConceptRowsHeader),
     ConceptTreesHeader(ConceptTreesHeader),
-    StreamConceptRows(Vec<ConceptRow>),
-    StreamConceptTrees(Vec<readable_concept::Tree>),
+    StreamConceptRows(Vec<Vec<Option<Concept>>>),
+    StreamConceptTrees(Vec<concept_tree::Tree>),
     Error(ServerError),
 
     // Define,

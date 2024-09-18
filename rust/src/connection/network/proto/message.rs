@@ -19,6 +19,7 @@
 
 use itertools::Itertools;
 use typedb_protocol::{connection, database, database_manager, server_manager, transaction, user, user_manager, Version::Version};
+use typedb_protocol::concept::Concept;
 use typedb_protocol::query::initial_res::Res;
 use uuid::Uuid;
 
@@ -31,11 +32,9 @@ use crate::{
     error::{ConnectionError, InternalError},
     user::User,
 };
-use crate::answer::ConceptRow;
-use crate::answer::readable_concept::Tree;
+use crate::answer::concept_row::ConceptRowsHeader;
+use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
 use crate::error::ServerError;
-use crate::transaction::{ConceptRowsHeader, ConceptTreesHeader};
-
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -297,7 +296,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
             }
             Some(transaction::res::Res::CommitRes(_)) => Ok(Self::Commit),
             Some(transaction::res::Res::RollbackRes(_)) => Ok(Self::Rollback),
-            Some(transaction::res::Res::QueryRes(initial_res)) => {
+            Some(transaction::res::Res::QueryInitialRes(initial_res)) => {
                 match initial_res.res {
                     Some(res) => {
                         match res {
@@ -348,7 +347,7 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
             typedb_protocol::query::res_part::Res::RowsRes(rows) => {
                 let mut converted = Vec::with_capacity(rows.rows.len());
                 for row_proto in rows.rows.into_iter() {
-                    converted.push(ConceptRow::try_from_proto(row_proto)?);
+                    converted.push(TryFromProto::try_from_proto(row_proto)?);
                 }
                 Ok(QueryResponse::StreamConceptRows(converted))
             }
@@ -367,7 +366,7 @@ impl FromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
                 QueryResponse::ConceptRowsHeader(ConceptRowsHeader {
-                    column_variable_names: rows_stream_header.column_variable_names
+                    column_names: rows_stream_header.column_variable_names
                 })
             }
         }

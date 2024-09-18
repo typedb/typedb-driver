@@ -17,14 +17,35 @@
  * under the License.
  */
 
+use crate::answer::concept_row::ConceptRowsHeader;
+use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
+use crate::BoxStream;
 pub use self::{
-    concept_map::ConceptRow,
+    concept_row::ConceptRow,
     json::JSON,
     value_group::ValueGroup,
 };
+use crate::Result;
 
-pub mod concept_map;
+pub mod concept_row;
 mod json;
-pub(crate) mod readable_concept;
+pub(crate) mod concept_tree;
 mod value_group;
+
+
+pub enum QueryAnswer {
+    Ok(),
+    ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>),
+    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, crate::Result<Tree>>),
+}
+
+impl QueryAnswer {
+    pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>> {
+        if let Self::ConceptRowsStream(stream) = self {
+            stream
+        } else {
+            panic!("Query answer is not a rows stream.")
+        }
+    }
+}
 

@@ -152,6 +152,21 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
                 val == &NaiveDateTime::new(my_date, my_time)
             }
         }
+        Value::Decimal(_) => {
+            todo!()
+        }
+        Value::Date(_) => {
+            todo!()
+        }
+        Value::DateTimeTZ(_) => {
+            todo!()
+        }
+        Value::Duration(_) => {
+            todo!()
+        }
+        Value::Struct(_, _) => {
+            todo!()
+        }
     }
 }
 

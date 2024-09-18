@@ -21,9 +21,8 @@ pub mod concept;
 
 use std::{fmt, marker::PhantomData, pin::Pin};
 
-use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, error::ConnectionError, Options, BoxStream, Error};
-use crate::answer::ConceptRow;
-use crate::answer::readable_concept::Tree;
+use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, Error, Options};
+use crate::answer::QueryAnswer;
 use crate::common::stream::Stream;
 
 /// A transaction with a TypeDB database.
@@ -148,21 +147,4 @@ impl fmt::Debug for Transaction<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }
-}
-
-
-pub enum QueryAnswer {
-    Ok(),
-    ConceptRowsStream(ConceptRowsHeader, BoxStream<'static, Result<ConceptRow>>),
-    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<Tree>>),
-}
-
-
-#[derive(Debug)]
-pub struct ConceptRowsHeader {
-    pub column_variable_names: Vec<String>,
-}
-
-#[derive(Debug)]
-pub struct ConceptTreesHeader {
 }

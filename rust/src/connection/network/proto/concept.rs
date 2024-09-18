@@ -23,21 +23,20 @@ use std::str::FromStr;
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 use itertools::Itertools;
-use typedb_protocol::{Attribute as AttributeProto, AttributeType as AttributeTypeProto, concept, Concept as ConceptProto, ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto}, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, RowEntry, thing, Thing as ThingProto, Value as ValueProto, value::Value as ValueProtoInner, value_type::ValueType as ValueTypeProto};
-use typedb_protocol::row_entry::{Entry};
+use typedb_protocol::{Attribute as AttributeProto, AttributeType as AttributeTypeProto, concept, Concept as ConceptProto, ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto}, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, thing, Thing as ThingProto, Value as ValueProto, value::Value as ValueProtoInner, value_type::ValueType as ValueTypeProto};
+use typedb_protocol::row_entry::Entry;
 use typedb_protocol::value::datetime_tz::Timezone as TimezoneProto;
 
-use crate::{answer::readable_concept, concept::{
+use crate::{answer::concept_tree, concept::{
     Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
-    ScopedLabel, Thing, Value, ValueType,
+    Thing, Value, ValueType,
 }, Error, error::ConnectionError, Result};
-use crate::answer::ConceptRow;
 use crate::concept::value::Decimal;
 use crate::error::ConnectionError::{ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotRecognised, ValueTimeZoneOffsetNotImplemented};
 
 use super::{FromProto, TryFromProto};
 
-impl TryFromProto<ConceptRowProto> for ConceptRow {
+impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
     fn try_from_proto(proto: ConceptRowProto) -> Result<Self> {
         let mut row = Vec::new();
         for entry in proto.row {
@@ -51,7 +50,7 @@ impl TryFromProto<ConceptRowProto> for ConceptRow {
                 }
             }
         }
-        Ok(Self { row })
+        Ok(row)
     }
 }
 
@@ -88,7 +87,7 @@ impl TryFromProto<ConceptProto> for Concept {
     }
 }
 
-impl TryFromProto<ReadableConceptTreeProto> for readable_concept::Tree {
+impl TryFromProto<ReadableConceptTreeProto> for concept_tree::Tree {
     fn try_from_proto(proto: ReadableConceptTreeProto) -> Result<Self> {
         let ReadableConceptTreeProto { root: root_proto } = proto;
         Ok(Self {
@@ -97,7 +96,7 @@ impl TryFromProto<ReadableConceptTreeProto> for readable_concept::Tree {
     }
 }
 
-impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
+impl TryFromProto<readable_concept_tree::Node> for concept_tree::Node {
     fn try_from_proto(proto: readable_concept_tree::Node) -> Result<Self> {
         match proto.node {
             Some(readable_concept_tree::node::Node::Map(map)) => Ok(Self::Map(HashMap::try_from_proto(map)?)),
@@ -111,19 +110,19 @@ impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
     }
 }
 
-impl TryFromProto<readable_concept_tree::node::Map> for HashMap<String, readable_concept::Node> {
+impl TryFromProto<readable_concept_tree::node::Map> for HashMap<String, concept_tree::Node> {
     fn try_from_proto(proto: readable_concept_tree::node::Map) -> Result<Self> {
         let readable_concept_tree::node::Map { map } = proto;
         map.into_iter()
-            .map(|(var, node_proto)| readable_concept::Node::try_from_proto(node_proto).map(|node| (var, node)))
+            .map(|(var, node_proto)| concept_tree::Node::try_from_proto(node_proto).map(|node| (var, node)))
             .try_collect()
     }
 }
 
-impl TryFromProto<readable_concept_tree::node::List> for Vec<readable_concept::Node> {
+impl TryFromProto<readable_concept_tree::node::List> for Vec<concept_tree::Node> {
     fn try_from_proto(proto: readable_concept_tree::node::List) -> Result<Self> {
         let readable_concept_tree::node::List { list } = proto;
-        list.into_iter().map(readable_concept::Node::try_from_proto).try_collect()
+        list.into_iter().map(concept_tree::Node::try_from_proto).try_collect()
     }
 }
 
@@ -156,21 +155,21 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Conce
 
 impl FromProto<EntityTypeProto> for EntityType {
     fn from_proto(proto: EntityTypeProto) -> Self {
-        let EntityTypeProto { label, annotations } = proto;
+        let EntityTypeProto { label } = proto;
         Self { label }
     }
 }
 
 impl FromProto<RelationTypeProto> for RelationType {
     fn from_proto(proto: RelationTypeProto) -> Self {
-        let RelationTypeProto { label, annotations } = proto;
+        let RelationTypeProto { label  } = proto;
         Self { label }
     }
 }
 
 impl TryFromProto<AttributeTypeProto> for AttributeType {
     fn try_from_proto(proto: AttributeTypeProto) -> Result<Self> {
-        let AttributeTypeProto { label, value_type, annotations } = proto;
+        let AttributeTypeProto { label, value_type } = proto;
         let value_type = match value_type {
             None => None,
             Some(proto) => Some(ValueType::try_from_proto(proto.value_type.unwrap())?)
@@ -195,8 +194,8 @@ impl TryFromProto<ValueTypeProto> for ValueType {
 
 impl FromProto<RoleTypeProto> for RoleType {
     fn from_proto(proto: RoleTypeProto) -> Self {
-        let RoleTypeProto { scope, name, annotations } = proto;
-        Self { label: ScopedLabel { scope, name } }
+        let RoleTypeProto { label } = proto;
+        Self { label }
     }
 }
 

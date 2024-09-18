@@ -17,17 +17,37 @@
  * under the License.
  */
 
+use std::sync::Arc;
+
 use itertools::Itertools;
 
 use crate::concept::Concept;
 
+
+#[derive(Debug, PartialEq)]
+pub struct ConceptRowsHeader {
+    pub column_names: Vec<String>,
+}
+
+impl ConceptRowsHeader {
+    fn get_index(&self, name: &str) -> Option<usize> {
+        self.column_names.iter().find_position(|column_name| **column_name == name)
+            .map(|(pos, _)| pos)
+    }
+}
+
 /// Contains a mapping of variables to concepts.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ConceptRow {
+    header: Arc<ConceptRowsHeader>,
     pub row: Vec<Option<Concept>>,
 }
 
 impl ConceptRow {
+    pub fn new(header: Arc<ConceptRowsHeader>, row: Vec<Option<Concept>>) -> Self {
+        Self { header, row }
+    }
+
     /// Retrieves a concept for a given column index. Returns an empty optional if
     /// the position has an empty answer, or if the index is not range for the row.
     ///
@@ -57,9 +77,10 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.get(var_name, column_names)
     /// ```
-    pub fn get(&self, var_name: &str, column_names: &[&str]) -> Option<&Concept> {
-        column_names.iter().find_position(|name| **name == var_name)
-            .map(|(index, _)| self.get_index(index))
+    pub fn get(&self, column_name: &str) -> Option<&Concept> {
+        self.header
+            .get_index(column_name)
+            .map(|index| self.get_index(index))
             .flatten()
     }
 
@@ -70,7 +91,7 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.concepts()
     /// ```
-    pub fn concepts(&self) -> impl Iterator<Item = &Concept> {
+    pub fn concepts(&self) -> impl Iterator<Item=&Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }

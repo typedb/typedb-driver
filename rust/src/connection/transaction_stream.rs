@@ -18,6 +18,7 @@
  */
 
 use std::{fmt, iter, pin::Pin};
+use std::sync::Arc;
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
@@ -29,7 +30,7 @@ use crate::{box_stream, common::{
     QueryRequest, QueryResponse,
     TransactionRequest, TransactionResponse,
 }, error::{ConnectionError, InternalError}, Error, Options, promisify, resolve, TransactionType};
-use crate::transaction::QueryAnswer;
+use crate::answer::{ConceptRow, QueryAnswer};
 
 use super::network::transmitter::TransactionTransmitter;
 
@@ -116,15 +117,25 @@ impl TransactionStream {
                     Ok(QueryAnswer::ConceptTreesStream(trees_header, answers))
                 },
                 QueryResponse::ConceptRowsHeader(rows_header) => {
-                   let answers = box_stream(stream.flat_map(|result| match result {
-                        Ok(QueryResponse::StreamConceptRows(rows)) => stream_iter(rows.into_iter().map(Ok)),
-                        Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
-                        Ok(other) => {
-                            stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                    let header = Arc::new(rows_header);
+                    let answers = box_stream(stream.flat_map(move |result| {
+                        let header = header.clone();
+                        match result {
+                            Ok(QueryResponse::StreamConceptRows(rows)) => {
+                                stream_iter(rows.into_iter().map({
+                                    move |row| {
+                                        Ok(ConceptRow::new(header.clone(), row))
+                                    }
+                                }))
+                            }
+                            Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
+                            Ok(other) => {
+                                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                            }
+                            Err(err) => stream_once(Err(err)),
                         }
-                        Err(err) => stream_once(Err(err)),
-                    }));
-                    Ok(QueryAnswer::ConceptRowsStream(rows_header, answers))
+                     }));
+                     Ok(QueryAnswer::ConceptRowsStream(answers))
                 },
                 QueryResponse::Error(error) => Err(error.into()),
                 other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into())
