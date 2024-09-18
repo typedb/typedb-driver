@@ -32,35 +32,36 @@ fn basic_async_std() {
         let connection = common::new_core_connection().await.unwrap();
         let databases = DatabaseManager::new(connection.clone());
         databases.create("testing-db").await.unwrap();
-        let dbs = databases.all().await.unwrap();
-        dbg!(&dbs);
+
         let db = databases.get("testing-db").await.unwrap();
         db.delete().await.unwrap();
-        common::create_test_database_with_schema(connection.clone(), "define entity person;").await.unwrap();
+        common::create_test_database_with_schema(connection.clone(), "define entity person, owns age; attribute age, value long;").await.unwrap();
         assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
 
         let database = databases.get(common::TEST_DATABASE).await.unwrap();
-        let transaction = database.transaction(Read).await.unwrap();
 
+        let transaction = database.transaction(Read).await.unwrap();
         let answers = transaction.query("match entity $x;").await.unwrap();
         assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
-
         let rows: Vec<_> = answers.into_rows().collect().await;
-        dbg!(&rows.len());
-        for row in rows {
-            dbg!(&row);
-        }
+        assert_eq!(rows.len(), 1);
+        drop(transaction);
 
-        drop(transaction)
+        let transaction = database.transaction(Write).await.unwrap();
+        let answers = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
+        assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
+        let rows: Vec<_> = answers.into_rows().collect().await;
+        assert_eq!(rows.len(), 1);
+        transaction.commit().await.unwrap();
 
-        // let answer_stream = transaction.query().get("match $x sub thing; get;")?;
-        // let results: Vec<_> = answer_stream.collect().await;
-        // transaction.commit().await?;
-        // assert_eq!(results.len(), 5);
-        // assert!(results.into_iter().all(|res| res.is_ok()));
-        // Ok::<(), typedb_driver::Error>(())
+        let transaction = database.transaction(Read).await.unwrap();
+        let answers = transaction.query("match $x isa person;").await.unwrap();
+        assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
+        let rows: Vec<_> = answers.into_rows().collect().await;
+        assert_eq!(rows.len(), 2);
+        drop(transaction);
     })
-        // .unwrap();
+    // .unwrap();
 }
 //
 // #[test]
