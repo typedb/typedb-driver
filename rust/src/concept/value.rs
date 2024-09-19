@@ -24,6 +24,8 @@ use std::fmt::Formatter;
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
+use crate::Error;
+
 /// Represents the type of primitive value is held by a Value or Attribute.
 #[repr(C)]
 #[derive(Clone, PartialEq, Eq)]
@@ -31,11 +33,11 @@ pub enum ValueType {
     Boolean,
     Long,
     Double,
-    String,
     Decimal,
+    String,
     Date,
-    DateTime,
-    DateTimeTZ,
+    Datetime,
+    DatetimeTZ,
     Duration,
     Struct(String),
 }
@@ -46,11 +48,11 @@ impl ValueType {
             Self::Boolean => "bool",
             Self::Long => "long",
             Self::Double => "double",
-            Self::String => "string",
             Self::Decimal => "decimal",
+            Self::String => "string",
             Self::Date => "date",
-            Self::DateTime => "datetime",
-            Self::DateTimeTZ => "datetime_tz",
+            Self::Datetime => "datetime",
+            Self::DatetimeTZ => "datetime_tz",
             Self::Duration => "duration",
             Self::Struct(name) => &name,
         }
@@ -74,11 +76,11 @@ pub enum Value {
     Boolean(bool),
     Long(i64),
     Double(f64),
-    String(String),
     Decimal(Decimal),
+    String(String),
     Date(NaiveDate),
-    DateTime(NaiveDateTime),
-    DateTimeTZ(DateTime<Tz>),
+    Datetime(NaiveDateTime),
+    DatetimeTZ(DateTime<Tz>),
     Duration(Duration),
     Struct(Struct, String),
 }
@@ -89,7 +91,7 @@ impl Value {
     /// # Examples
     ///
     /// ```rust
-    /// value.get_value_type();
+    /// value.get_type();
     /// ```
     pub fn get_type(&self) -> ValueType {
         match self {
@@ -99,10 +101,32 @@ impl Value {
             Self::String(_) => ValueType::String,
             Self::Decimal(_) => ValueType::Decimal,
             Self::Date(_) => ValueType::Date,
-            Self::DateTime(_) => ValueType::DateTime,
-            Self::DateTimeTZ(_) => ValueType::DateTimeTZ,
+            Self::Datetime(_) => ValueType::Datetime,
+            Self::DatetimeTZ(_) => ValueType::DatetimeTZ,
             Self::Duration(_) => ValueType::Duration,
             Self::Struct(_, struct_type_name) => ValueType::Struct(struct_type_name.clone()),
+        }
+    }
+
+    /// Retrieves the name of the `ValueType` of this value concept.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// value.get_type_name();
+    /// ```
+    pub fn get_type_name(&self) -> &str {
+        match self {
+            Self::Boolean(_) => ValueType::Boolean.name(),
+            Self::Long(_) => ValueType::Long.name(),
+            Self::Double(_) => ValueType::Double.name(),
+            Self::String(_) => ValueType::String.name(),
+            Self::Decimal(_) => ValueType::Decimal.name(),
+            Self::Date(_) => ValueType::Date.name(),
+            Self::Datetime(_) => ValueType::Datetime.name(),
+            Self::DatetimeTZ(_) => ValueType::DatetimeTZ.name(),
+            Self::Duration(_) => ValueType::Duration.name(),
+            Self::Struct(_, struct_type_name) => struct_type_name,
         }
     }
 
@@ -155,7 +179,7 @@ impl Value {
     }
 
     pub fn get_datetime(&self) -> Option<NaiveDateTime> {
-        if let Value::DateTime(datetime) = self {
+        if let Value::Datetime(datetime) = self {
             Some(*datetime)
         } else {
             None
@@ -163,8 +187,16 @@ impl Value {
     }
 
     pub fn get_datetime_tz(&self) -> Option<DateTime<Tz>> {
-        if let Value::DateTimeTZ(datetime_tz) = self {
+        if let Value::DatetimeTZ(datetime_tz) = self {
             Some(*datetime_tz)
+        } else {
+            None
+        }
+    }
+
+    pub fn get_duration(&self) -> Option<Duration> {
+        if let Value::Duration(duration) = self {
+            Some(*duration)
         } else {
             None
         }
@@ -179,15 +211,8 @@ impl Value {
     }
 }
 
-
-pub const FRACTIONAL_PART_DENOMINATOR_LOG10: u32 = 19;
-const FRACTIONAL_PART_DENOMINATOR: u64 = 10u64.pow(FRACTIONAL_PART_DENOMINATOR_LOG10);
-
-#[allow(clippy::assertions_on_constants)]
-const _ASSERT: () = {
-    assert!(FRACTIONAL_PART_DENOMINATOR > u64::MAX / 10);
-};
-
+/// A fixed-point decimal number.
+/// Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Decimal {
     integer: i64,
@@ -195,25 +220,31 @@ pub struct Decimal {
 }
 
 impl Decimal {
+    const FRACTIONAL_PART_DENOMINATOR_LOG10: u32 = 19;
+    pub const FRACTIONAL_PART_DENOMINATOR: u64 = 10u64.pow(Decimal::FRACTIONAL_PART_DENOMINATOR_LOG10);
     pub const MIN: Self = Self::new(i64::MIN, 0);
-    pub const MAX: Self = Self::new(i64::MAX, FRACTIONAL_PART_DENOMINATOR - 1);
+    pub const MAX: Self = Self::new(i64::MAX, Decimal::FRACTIONAL_PART_DENOMINATOR - 1);
 
     pub const fn new(integer: i64, fractional: u64) -> Self {
-        assert!(fractional < FRACTIONAL_PART_DENOMINATOR);
+        assert!(fractional < Decimal::FRACTIONAL_PART_DENOMINATOR);
         Self { integer, fractional }
     }
 
+    /// Get the integer part of the decimal as normal signed 64 bit number
     pub fn integer_part(&self) -> i64 {
         self.integer
     }
 
+    /// Get the fractional part of the decimal, in multiples of 10^-19 (Decimal::FRACTIONAL_PART_DENOMINATOR)
+    /// This means, the smallest decimal representable is 10^-19, and up to 19 decimal places are supported.
     pub fn fractional_part(&self) -> u64 {
         self.fractional
     }
 }
 
-
-// TODO: see what the most user-friendly interface is here!
+/// A relative duration, which contains months, days, and nanoseconds.
+/// Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component
+/// When used as an absolute duration, convertible to chrono::Duration
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub struct Duration {
     pub months: u32,
@@ -224,6 +255,33 @@ pub struct Duration {
 impl Duration {
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }
+    }
+
+    pub fn months(&self) -> u32 {
+        self.months
+    }
+
+    pub fn days(&self) -> u32 {
+        self.days
+    }
+
+    pub fn nanos(&self) -> u64 {
+        self.nanos
+    }
+}
+
+impl TryFrom<Duration> for chrono::Duration {
+    type Error = crate::Error;
+
+    fn try_from(duration: Duration) -> Result<Self, Self::Error> {
+        if duration.months != 0 || duration.days != 0 {
+            Err(Error::Other(String::from("Converting TypeDB duration to chrono::Duration is only possible when months and days are not set.")))
+        } else {
+            match i64::try_from(duration.nanos) {
+                Ok(nanos) => Ok(chrono::Duration::nanoseconds(nanos)),
+                Err(err) => Err(Error::Other(String::from("Duration u64 nanos exceeded i64 required for chrono::Duration")))
+            }
+        }
     }
 }
 

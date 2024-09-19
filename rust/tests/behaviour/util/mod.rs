@@ -22,27 +22,27 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-mod steps;
-
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::gherkin::Step;
 use futures::{
-    stream::{self, StreamExt},
+    stream::StreamExt,
     TryFutureExt, TryStreamExt,
 };
-use regex::{Captures, Regex};
 use tokio::time::sleep;
+use typeql::parse_query;
+
 use typedb_driver::{
     answer::{ConceptRow, JSON},
     concept::{
-        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
-    transaction::concept::api::ThingAPI,
-    DatabaseManager, Result as TypeDBResult,
+    DatabaseManager,
+    Result as TypeDBResult, transaction::concept::api::ThingAPI,
 };
-use typeql::{parse_query};
 
 use crate::{assert_with_timeout, behaviour::Context};
+
+mod steps;
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
@@ -143,7 +143,7 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
             expected.parse::<f64>().map(|expected| equals_approximate(expected, *val)).unwrap_or(false)
         }
         Value::Boolean(val) => expected.parse::<bool>().map(|expected| expected.eq(val)).unwrap_or(false),
-        Value::DateTime(val) => {
+        Value::Datetime(val) => {
             if expected.contains(':') {
                 val == &NaiveDateTime::parse_from_str(expected, "%Y-%m-%dT%H:%M:%S").unwrap()
             } else {
@@ -158,7 +158,7 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
         Value::Date(_) => {
             todo!()
         }
-        Value::DateTimeTZ(_) => {
+        Value::DatetimeTZ(_) => {
             todo!()
         }
         Value::Duration(_) => {

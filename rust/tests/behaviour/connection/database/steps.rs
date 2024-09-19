@@ -25,14 +25,15 @@ use futures::{
     stream, StreamExt, TryFutureExt,
 };
 use tokio::time::sleep;
+
 use typedb_driver::Database;
 
 use crate::{
     assert_with_timeout,
     behaviour::{
+        Context,
         util,
         util::{create_database_with_timeout, iter_table},
-        Context,
     },
     generic_step_impl,
 };

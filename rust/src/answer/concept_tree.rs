@@ -25,7 +25,6 @@ use crate::concept::{
 
 use super::JSON;
 
-
 #[derive(Debug)]
 pub struct ConceptTreesHeader {
 }

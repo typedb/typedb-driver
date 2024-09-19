@@ -21,23 +21,6 @@ use crate::common::IID;
 
 use super::{AttributeType, EntityType, RelationType, Value};
 
-#[derive(Clone, Debug, PartialEq)]
-pub enum Thing {
-    Entity(Entity),
-    Relation(Relation),
-    Attribute(Attribute),
-}
-
-impl Thing {
-    pub fn iid(&self) -> &IID {
-        match self {
-            Self::Entity(entity) => &entity.iid,
-            Self::Relation(relation) => &relation.iid,
-            Self::Attribute(attribute) => &attribute.iid,
-        }
-    }
-}
-
 // TODO: Storing the Type here is *extremely* inefficient; we could be effectively creating
 //       1 million copies of the same data when matching concepts of homogeneous types
 /// Instance of data of an entity type, representing a standalone object
@@ -52,6 +35,23 @@ pub struct Entity {
     pub type_: Option<EntityType>,
 }
 
+impl Entity {
+    /// Retrieves the unique id of the `Entity`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// entity.iid();
+    /// ```
+    fn iid(&self) -> &IID {
+        &self.iid
+    }
+
+    pub(crate) fn type_(&self) -> Option<&EntityType> {
+        self.type_.as_ref()
+    }
+}
+
 /// Relation is an instance of a relation type and can be uniquely addressed by
 /// a combination of its type, owned attributes and role players.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -62,15 +62,39 @@ pub struct Relation {
     pub type_: Option<RelationType>,
 }
 
+impl Relation {
+    /// Retrieves the unique id of the `Relation`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// relation.iid();
+    /// ```
+    fn iid(&self) -> &IID {
+        &self.iid
+    }
+
+    pub(crate) fn type_(&self) -> Option<&RelationType> {
+        self.type_.as_ref()
+    }
+}
+
 /// Attribute is an instance of the attribute type and has a value.
 /// This value is fixed and unique for every given instance of the attribute type.
 /// Attributes can be uniquely addressed by their type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
     /// The unique id of this Attribute
-    pub iid: IID,
+    pub(crate) iid: IID,
+    /// The (dataful) value of this attribute
+    pub value: Value,
     /// The type which this Attribute belongs to
     /// The label of the attribute type this instance belongs to
     pub type_: Option<AttributeType>,
-    pub value: Value,
+}
+
+impl Attribute {
+    pub(crate) fn type_(&self) -> Option<&AttributeType> {
+        self.type_.as_ref()
+    }
 }

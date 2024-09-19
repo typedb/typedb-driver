@@ -17,8 +17,6 @@
  * under the License.
  */
 
-use std::fmt;
-
 use super::ValueType;
 
 /// Annotations are used to specify extra schema constraints.
@@ -28,35 +26,24 @@ pub enum Annotation {
     Unique,
 }
 
-#[derive(Clone, Debug, PartialEq)]
-pub enum ThingType {
-    EntityType(EntityType),
-    RelationType(RelationType),
-    AttributeType(AttributeType),
-}
-
-impl ThingType {
-    /// Retrieves the unique label of the `ThingType`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// thing_type.label()
-    /// ```
-    pub fn label(&self) -> &str {
-        match self {
-            Self::EntityType(entity_type) => &entity_type.label,
-            Self::RelationType(relation_type) => &relation_type.label,
-            Self::AttributeType(attribute_type) => &attribute_type.label,
-        }
-    }
-}
-
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntityType {
     pub label: String,
+}
+
+impl EntityType {
+    /// Retrieves the unique label of the `EntityType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// entity_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
+    }
 }
 
 /// Relation types (or subtypes of the relation root type) represent relationships between types.
@@ -68,6 +55,19 @@ pub struct EntityType {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RelationType {
     pub label: String,
+}
+
+impl RelationType {
+    /// Retrieves the unique label of the `RelationType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// relation_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
+    }
 }
 
 /// Attribute types represent properties that other types can own.
@@ -87,6 +87,30 @@ pub struct AttributeType {
     pub value_type: Option<ValueType>,
 }
 
+impl AttributeType {
+    /// Retrieves the unique label of the `AttributeType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// attribute_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
+    }
+
+    /// Retrieves the `ValueType` of the `AttributeType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// attribute_type.value_type()
+    /// ```
+    pub fn value_type(&self) -> Option<&ValueType> {
+        self.value_type.as_ref()
+    }
+}
+
 /// Roles are special internal types used by relations. We can not create an instance
 /// of a role in a database. But we can set an instance of another type (role player)
 /// to play a role in a particular instance of a relation type.
@@ -95,4 +119,18 @@ pub struct AttributeType {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RoleType {
     pub label: String,
+}
+
+
+impl RoleType {
+    /// Retrieves the unique label of the `RoleType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// role_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
+    }
 }

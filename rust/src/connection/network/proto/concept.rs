@@ -23,13 +23,13 @@ use std::str::FromStr;
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 use itertools::Itertools;
-use typedb_protocol::{Attribute as AttributeProto, AttributeType as AttributeTypeProto, concept, Concept as ConceptProto, ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto}, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, thing, Thing as ThingProto, Value as ValueProto, value::Value as ValueProtoInner, value_type::ValueType as ValueTypeProto};
+use typedb_protocol::{Attribute as AttributeProto, AttributeType as AttributeTypeProto, concept, Concept as ConceptProto, ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto}, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Value as ValueProto, value::Value as ValueProtoInner, value_type::ValueType as ValueTypeProto};
 use typedb_protocol::row_entry::Entry;
 use typedb_protocol::value::datetime_tz::Timezone as TimezoneProto;
 
 use crate::{answer::concept_tree, concept::{
     Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
-    Thing, Value, ValueType,
+    Value, ValueType,
 }, Error, error::ConnectionError, Result};
 use crate::concept::value::Decimal;
 use crate::error::ConnectionError::{ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotRecognised, ValueTimeZoneOffsetNotImplemented};
@@ -65,7 +65,7 @@ impl TryFromProto<ConceptProto> for Concept {
                 Ok(Self::RelationType(RelationType::from_proto(relation_type_proto)))
             }
             Some(concept::Concept::AttributeType(attribute_type_proto)) => {
-                AttributeType::try_from_proto(attribute_type_proto).map(Self::AttributeType)
+                Ok(Self::AttributeType(AttributeType::from_proto(attribute_type_proto)))
             }
 
             Some(concept::Concept::RoleType(role_type_proto)) => {
@@ -136,8 +136,7 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Conce
                 Ok(Some(Concept::RelationType(RelationType::from_proto(relation_type_proto))))
             }
             Some(ReadableConceptProto::AttributeType(attribute_type_proto)) => {
-                AttributeType::try_from_proto(attribute_type_proto)
-                    .map(|attr_type| Some(Concept::AttributeType(attr_type)))
+                Ok(Some(Concept::AttributeType(AttributeType::from_proto(attribute_type_proto))))
             }
             Some(ReadableConceptProto::RoleType(role_type_proto)) => {
                 Ok(Some(Concept::RoleType(RoleType::from_proto(role_type_proto))))
@@ -162,33 +161,36 @@ impl FromProto<EntityTypeProto> for EntityType {
 
 impl FromProto<RelationTypeProto> for RelationType {
     fn from_proto(proto: RelationTypeProto) -> Self {
-        let RelationTypeProto { label  } = proto;
+        let RelationTypeProto { label } = proto;
         Self { label }
     }
 }
 
-impl TryFromProto<AttributeTypeProto> for AttributeType {
-    fn try_from_proto(proto: AttributeTypeProto) -> Result<Self> {
+impl FromProto<AttributeTypeProto> for AttributeType {
+    fn from_proto(proto: AttributeTypeProto) -> Self {
         let AttributeTypeProto { label, value_type } = proto;
         let value_type = match value_type {
             None => None,
-            Some(proto) => Some(ValueType::try_from_proto(proto.value_type.unwrap())?)
+            Some(proto) => Some(ValueType::from_proto(proto.value_type.unwrap()))
         };
-        Ok(Self { label, value_type })
+        Self { label, value_type }
     }
 }
 
-impl TryFromProto<ValueTypeProto> for ValueType {
-    fn try_from_proto(proto: ValueTypeProto) -> Result<Self> {
-        todo!()
-        // match ValueTypeProto::from_i32(proto) {
-        // Some(ValueTypeProto::Boolean) => Ok(Self::Boolean),
-        // Some(ValueTypeProto::Long) => Ok(Self::Long),
-        // Some(ValueTypeProto::Double) => Ok(Self::Double),
-        // Some(ValueTypeProto::String) => Ok(Self::String),
-        // Some(ValueTypeProto::Datetime) => Ok(Self::DateTime),
-        // None => Err(InternalError::EnumOutOfBounds { value: proto, enum_name: "ValueType" }.into()),
-        // }
+impl FromProto<ValueTypeProto> for ValueType {
+    fn from_proto(proto: ValueTypeProto) -> Self {
+        match proto {
+            ValueTypeProto::Boolean(_) => Self::Boolean,
+            ValueTypeProto::Long(_) => Self::Long,
+            ValueTypeProto::Double(_) => Self::Double,
+            ValueTypeProto::String(_) => Self::String,
+            ValueTypeProto::Decimal(_) => Self::Decimal,
+            ValueTypeProto::Date(_) => Self::Date,
+            ValueTypeProto::Datetime(_) => Self::Datetime,
+            ValueTypeProto::DatetimeTz(_) => Self::DatetimeTZ,
+            ValueTypeProto::Duration(_) => Self::Duration,
+            ValueTypeProto::Struct(typedb_protocol::value_type::Struct { name }) => Self::Struct(name),
+        }
     }
 }
 
@@ -196,21 +198,6 @@ impl FromProto<RoleTypeProto> for RoleType {
     fn from_proto(proto: RoleTypeProto) -> Self {
         let RoleTypeProto { label } = proto;
         Self { label }
-    }
-}
-
-impl TryFromProto<ThingProto> for Thing {
-    fn try_from_proto(proto: ThingProto) -> Result<Self> {
-        match proto.thing {
-            Some(thing::Thing::Entity(entity_proto)) => Entity::try_from_proto(entity_proto).map(Self::Entity),
-            Some(thing::Thing::Relation(relation_proto)) => {
-                Relation::try_from_proto(relation_proto).map(Self::Relation)
-            }
-            Some(thing::Thing::Attribute(attribute_proto)) => {
-                Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
-            }
-            None => Err(ConnectionError::MissingResponseField { field: "thing" }.into()),
-        }
     }
 }
 
@@ -239,7 +226,7 @@ impl TryFromProto<AttributeProto> for Attribute {
         let AttributeProto { iid, attribute_type, value, } = proto;
         let type_ = match attribute_type {
             None => None,
-            Some(attribute_type) => Some(AttributeType::try_from_proto(attribute_type)?),
+            Some(attribute_type) => Some(AttributeType::from_proto(attribute_type)),
         };
         Ok(Self {
             iid: iid.into(),
@@ -263,7 +250,7 @@ impl TryFromProto<ValueProto> for Value {
                 Ok(Self::Date(NaiveDate::from_num_days_from_ce_opt(date.num_days_since_ce).unwrap()))
             }
             Some(ValueProtoInner::Datetime(datetime)) => {
-                Ok(Self::DateTime(naive_datetime_from_timestamp(datetime.seconds, datetime.nanos)))
+                Ok(Self::Datetime(naive_datetime_from_timestamp(datetime.seconds, datetime.nanos)))
             }
             Some(ValueProtoInner::DatetimeTz(datetime_tz)) => {
                 let datetime = datetime_tz.datetime.ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.datetime" }))?;
@@ -278,7 +265,7 @@ impl TryFromProto<ValueProto> for Value {
                         // TODO: not implemented yet
                     }
                 };
-                Ok(Self::DateTimeTZ( tz.from_utc_datetime(&naive_datetime_from_timestamp(datetime.seconds, datetime.nanos))))
+                Ok(Self::DatetimeTZ(tz.from_utc_datetime(&naive_datetime_from_timestamp(datetime.seconds, datetime.nanos))))
             }
             Some(ValueProtoInner::Duration(duration)) => {
                 Ok(Self::Duration(crate::concept::value::Duration::new(duration.months, duration.days, duration.nanos)))

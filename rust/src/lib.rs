@@ -22,7 +22,7 @@
 
 pub use self::{
     common::{
-        box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result, SessionType,
+        box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result,
         TransactionType,
     },
     connection::{Connection, Credential},

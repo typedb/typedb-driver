@@ -23,29 +23,62 @@ use itertools::Itertools;
 
 use crate::concept::Concept;
 
-
 #[derive(Debug, PartialEq)]
-pub struct ConceptRowsHeader {
+pub struct ConceptRowHeader {
     pub column_names: Vec<String>,
 }
 
-impl ConceptRowsHeader {
+impl ConceptRowHeader {
     fn get_index(&self, name: &str) -> Option<usize> {
         self.column_names.iter().find_position(|column_name| **column_name == name)
             .map(|(pos, _)| pos)
     }
 }
 
-/// Contains a mapping of variables to concepts.
+/// A single row of concepts representing substitutions for variables in the query
+/// Contains a Header (column names), and the row of optional concepts
+/// An empty concept in a column means the variable does not have a substitution in this answer.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ConceptRow {
-    header: Arc<ConceptRowsHeader>,
+    header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
 }
 
 impl ConceptRow {
-    pub fn new(header: Arc<ConceptRowsHeader>, row: Vec<Option<Concept>>) -> Self {
+    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>) -> Self {
         Self { header, row }
+    }
+
+    /// Retrieve the row header (shared by all elements in this stream).
+    ///
+    /// # Arguments
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_header()
+    /// ```
+    pub fn get_header(&self) -> &[String] {
+        &self.header.column_names
+    }
+
+    /// Retrieves a concept for a given variable. Returns an empty optional if
+    /// the variable name has an empty answer, or if the variable name is not present.
+    ///
+    /// # Arguments
+    ///
+    /// * `var_name` -- The variable name in the row to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get(var_name)
+    /// ```
+    pub fn get(&self, column_name: &str) -> Option<&Concept> {
+        self.header
+            .get_index(column_name)
+            .map(|index| self.get_index(index))
+            .flatten()
     }
 
     /// Retrieves a concept for a given column index. Returns an empty optional if
@@ -64,26 +97,6 @@ impl ConceptRow {
         self.row.get(column_index).map(|inner| inner.as_ref()).flatten()
     }
 
-    /// Retrieves a concept for a given variable name and the column names. Returns an empty optional if
-    /// the variable name has an empty answer, or if the variable name is present.
-    ///
-    /// # Arguments
-    ///
-    /// * `var_name` -- The variable name in the row to retrieve
-    /// * `column_names` -- The column names (header)
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// concept_row.get(var_name, column_names)
-    /// ```
-    pub fn get(&self, column_name: &str) -> Option<&Concept> {
-        self.header
-            .get_index(column_name)
-            .map(|index| self.get_index(index))
-            .flatten()
-    }
-
     /// Produces an iterator over all concepts in this `ConceptRow`, skipping empty results
     ///
     /// # Examples
@@ -95,21 +108,3 @@ impl ConceptRow {
         self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }
-
-//
-// impl Index<String> for ConceptRow {
-//     type Output = Concept;
-//
-//     fn index(&self, index: String) -> &Self::Output {
-//         &self.map[&index]
-//     }
-// }
-//
-// impl IntoIterator for ConceptRow {
-//     type Item = (String, Concept);
-//     type IntoIter = hash_map::IntoIter<String, Concept>;
-//
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.map.into_iter()
-//     }
-// }

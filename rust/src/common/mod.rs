@@ -43,28 +43,13 @@ pub type Result<T = ()> = StdResult<T, Error>;
 
 pub type IID = id::ID;
 pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-/// This enum is used to specify the type of the session.
-///
-/// # Examples
-///
-/// ```rust
-/// Session::new(database, SessionType::Schema).await
-/// ```
-#[repr(C)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
-}
 
 /// This enum is used to specify the type of transaction.
 ///
 /// # Examples
 ///
 /// ```rust
-/// session.transaction(TransactionType::READ)
+/// database.transaction(TransactionType::Read)
 /// ```
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

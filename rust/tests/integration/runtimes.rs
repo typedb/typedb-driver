@@ -19,6 +19,7 @@
 
 use futures::StreamExt;
 use serial_test::serial;
+
 use typedb_driver::{DatabaseManager, TransactionType::Write};
 use typedb_driver::answer::QueryAnswer;
 use typedb_driver::TransactionType::Read;

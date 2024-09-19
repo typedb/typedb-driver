@@ -17,13 +17,10 @@
  * under the License.
  */
 
-pub mod concept;
-
 use std::{fmt, marker::PhantomData, pin::Pin};
 
 use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, Error, Options};
 use crate::answer::QueryAnswer;
-use crate::common::stream::Stream;
 
 /// A transaction with a TypeDB database.
 pub struct Transaction<'a> {

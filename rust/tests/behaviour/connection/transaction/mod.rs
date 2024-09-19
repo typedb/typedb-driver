@@ -17,11 +17,11 @@
  * under the License.
  */
 
-pub(crate) mod steps;
-
 use serial_test::serial;
 
 use crate::behaviour::Context;
+
+pub(crate) mod steps;
 
 #[tokio::test]
 #[serial]

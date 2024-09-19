@@ -17,18 +17,6 @@
  * under the License.
  */
 
-use cucumber::{gherkin::Step, given, then, when};
-
-use typedb_driver::TransactionType;
-
-use crate::{
-    behaviour::{
-        Context,
-        parameter::TransactionTypeParam,
-    },
-    generic_step_impl,
-};
-
 // generic_step_impl! {
 //     #[step(expr = "reasoning schema")]
 //     async fn reasoning_schema(context: &mut Context, step: &Step) {

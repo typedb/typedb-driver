@@ -21,6 +21,7 @@ use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 
 use chrono::NaiveDateTime;
 use cucumber::Parameter;
+
 use typedb_driver::{
     concept::{Annotation, Value, ValueType},
     TransactionType,
@@ -83,8 +84,8 @@ impl ValueParam {
             ValueType::Double => Value::Double(self.0.parse().unwrap()),
             ValueType::Long => Value::Long(self.0.parse().unwrap()),
             ValueType::String => Value::String(self.0),
-            ValueType::DateTime => {
-                Value::DateTime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
+            ValueType::Datetime => {
+                Value::Datetime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
             }
             ValueType::Decimal => {
                 todo!()
@@ -92,7 +93,7 @@ impl ValueParam {
             ValueType::Date => {
                 todo!()
             }
-            ValueType::DateTimeTZ => {
+            ValueType::DatetimeTZ => {
                 todo!()
             }
             ValueType::Duration => {
@@ -128,7 +129,7 @@ impl FromStr for ValueTypeParam {
             "long" => Self { value_type: ValueType::Long },
             "double" => Self { value_type: ValueType::Double },
             "string" => Self { value_type: ValueType::String },
-            "datetime" => Self { value_type: ValueType::DateTime },
+            "datetime" => Self { value_type: ValueType::Datetime },
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }

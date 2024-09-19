@@ -19,7 +19,6 @@
 
 use itertools::Itertools;
 use typedb_protocol::{connection, database, database_manager, server_manager, transaction, user, user_manager, Version::Version};
-use typedb_protocol::concept::Concept;
 use typedb_protocol::query::initial_res::Res;
 use uuid::Uuid;
 
@@ -32,9 +31,10 @@ use crate::{
     error::{ConnectionError, InternalError},
     user::User,
 };
-use crate::answer::concept_row::ConceptRowsHeader;
+use crate::answer::concept_row::ConceptRowHeader;
 use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
 use crate::error::ServerError;
+
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -365,7 +365,7 @@ impl FromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
                 QueryResponse::ConceptTreesHeader(ConceptTreesHeader {})
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
-                QueryResponse::ConceptRowsHeader(ConceptRowsHeader {
+                QueryResponse::ConceptRowsHeader(ConceptRowHeader {
                     column_names: rows_stream_header.column_variable_names
                 })
             }
@@ -431,77 +431,5 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
                 }
             }
         }
-        // let (req, options) = match self {
-        //     Self::Define { query, options } => {
-        //         (query_manager::req::Req::DefineReq(query_manager::define::Req { query }), options)
-        //     }
-        //     Self::Undefine { query, options } => {
-        //         (query_manager::req::Req::UndefineReq(query_manager::undefine::Req { query }), options)
-        //     }
-        //     Self::Delete { query, options } => {
-        //         (query_manager::req::Req::DeleteReq(query_manager::delete::Req { query }), options)
-        //     }
-        //
-        //     Self::Get { query, options } => {
-        //         (query_manager::req::Req::GetReq(query_manager::get::Req { query }), options)
-        //     }
-        //     Self::Insert { query, options } => {
-        //         (query_manager::req::Req::InsertReq(query_manager::insert::Req { query }), options)
-        //     }
-        //     Self::Update { query, options } => {
-        //         (query_manager::req::Req::UpdateReq(query_manager::update::Req { query }), options)
-        //     }
-        //
-        //     Self::GetAggregate { query, options } => {
-        //         (query_manager::req::Req::GetAggregateReq(query_manager::get_aggregate::Req { query }), options)
-        //     }
-        //
-        //     Self::GetGroup { query, options } => {
-        //         (query_manager::req::Req::GetGroupReq(query_manager::get_group::Req { query }), options)
-        //     }
-        //     Self::GetGroupAggregate { query, options } => (
-        //         query_manager::req::Req::GetGroupAggregateReq(query_manager::get_group_aggregate::Req { query }),
-        //         options,
-        //     ),
-        //
-        //     Self::Fetch { query, options } => {
-        //         (query_manager::req::Req::FetchReq(query_manager::fetch::Req { query }), options)
-        //     }
-        //
-        //     Self::Explain { explainable_id, options } => {
-        //         (query_manager::req::Req::ExplainReq(query_manager::explain::Req { explainable_id }), options)
-        //     }
-        // };
-        // query_manager::Req { req: Some(req), options: Some(options.into_proto()) }
     }
 }
-//
-// impl TryFromProto<typedb_protocol::query::ResPart> for QueryResponse {
-//     fn try_from_proto(proto: typedb_protocol::query::ResPart) -> Result<Self> {
-//         todo!()
-//         // match proto.res {
-//         //     Some(query_manager::res_part::Res::GetResPart(res)) => {
-//         //         Ok(Self::Get { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-//         //     }
-//         //     Some(query_manager::res_part::Res::InsertResPart(res)) => {
-//         //         Ok(Self::Insert { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-//         //     }
-//         //     Some(query_manager::res_part::Res::UpdateResPart(res)) => {
-//         //         Ok(Self::Update { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
-//         //     }
-//         //     Some(query_manager::res_part::Res::GetGroupResPart(res)) => Ok(Self::GetGroup {
-//         //         answers: res.answers.into_iter().map(ConceptMapGroup::try_from_proto).try_collect()?,
-//         //     }),
-//         //     Some(query_manager::res_part::Res::GetGroupAggregateResPart(res)) => Ok(Self::GetGroupAggregate {
-//         //         answers: res.answers.into_iter().map(ValueGroup::try_from_proto).try_collect()?,
-//         //     }),
-//         //     Some(query_manager::res_part::Res::FetchResPart(res)) => Ok(Self::Fetch {
-//         //         answers: res.answers.into_iter().map(readable_concept::Tree::try_from_proto).try_collect()?,
-//         //     }),
-//         //     Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
-//         //         answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
-//         //     }),
-//         //     None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
-//         // }
-//     }
-// }

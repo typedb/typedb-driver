@@ -19,9 +19,9 @@
 
 use std::path::PathBuf;
 
-use futures::StreamExt;
 use serial_test::serial;
-use typedb_driver::{Connection, Credential, DatabaseManager, SessionType::Data, TransactionType::Write};
+
+use typedb_driver::{Connection, Credential, DatabaseManager, SessionType::Data};
 
 use super::common;
 

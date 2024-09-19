@@ -17,15 +17,15 @@
  * under the License.
  */
 
-use crate::answer::concept_row::ConceptRowsHeader;
 use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
 use crate::BoxStream;
+use crate::Result;
+
 pub use self::{
     concept_row::ConceptRow,
     json::JSON,
     value_group::ValueGroup,
 };
-use crate::Result;
 
 pub mod concept_row;
 mod json;
@@ -40,6 +40,19 @@ pub enum QueryAnswer {
 }
 
 impl QueryAnswer {
+
+    pub fn is_ok(&self) -> bool {
+        matches!(self, Self::Ok())
+    }
+
+    pub fn is_rows_stream(&self) -> bool {
+        matches!(self, Self::ConceptRowsStream(_))
+    }
+
+    pub fn is_json_stream(&self) -> bool {
+        matches!(self, Self::ConceptTreesStream(_, _))
+    }
+
     pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>> {
         if let Self::ConceptRowsStream(stream) = self {
             stream

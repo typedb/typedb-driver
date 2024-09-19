@@ -19,8 +19,9 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use typeql::parse_query;
+
+use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use util::{
     equals_approximate, iter_table_map, json_matches_str, match_answer_concept, match_answer_concept_map,
     match_templated_answer,
@@ -28,7 +29,7 @@ use util::{
 
 use crate::{
     assert_err,
-    behaviour::{parameter::LabelParam, util, Context},
+    behaviour::{Context, parameter::LabelParam, util},
     generic_step_impl,
 };
 
