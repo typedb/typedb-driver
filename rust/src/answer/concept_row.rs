@@ -17,6 +17,8 @@
  * under the License.
  */
 
+use std::fmt;
+use std::fmt::{Debug, Formatter};
 use std::sync::Arc;
 
 use itertools::Itertools;
@@ -38,7 +40,7 @@ impl ConceptRowHeader {
 /// A single row of concepts representing substitutions for variables in the query
 /// Contains a Header (column names), and the row of optional concepts
 /// An empty concept in a column means the variable does not have a substitution in this answer.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
@@ -106,5 +108,24 @@ impl ConceptRow {
     /// ```
     pub fn concepts(&self) -> impl Iterator<Item=&Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
+    }
+}
+
+impl fmt::Display for ConceptRow {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
+    }
+}
+
+impl fmt::Debug for ConceptRow {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "|")?;
+        for (concept, name) in self.row.iter().zip(self.header.column_names.iter()) {
+            match concept {
+                None => write!(f, "  ${}: empty  ", name)?,
+                Some(concept) => write!(f, "  ${}: {}  |", name, concept)?,
+            }
+        }
+        Ok(())
     }
 }

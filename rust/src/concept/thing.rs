@@ -84,8 +84,8 @@ impl Relation {
 /// Attributes can be uniquely addressed by their type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
-    /// The unique id of this Attribute
-    pub(crate) iid: IID,
+    /// The unique id of this Attribute (internal use only)
+    pub iid: IID,
     /// The (dataful) value of this attribute
     pub value: Value,
     /// The type which this Attribute belongs to

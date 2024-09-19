@@ -37,7 +37,7 @@ use typedb_driver::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
     DatabaseManager,
-    Result as TypeDBResult, transaction::concept::api::ThingAPI,
+    Result as TypeDBResult,
 };
 
 use crate::{assert_with_timeout, behaviour::Context};

@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 use std::fmt;
-use std::fmt::Formatter;
+use std::fmt::{Debug, Display, Formatter};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
@@ -71,7 +71,7 @@ impl fmt::Debug for ValueType {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum Value {
     Boolean(bool),
     Long(i64),
@@ -211,9 +211,33 @@ impl Value {
     }
 }
 
+impl Display for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Debug for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}: ", self.get_type_name())?;
+        match self {
+            Value::Boolean(bool) => write!(f, "{}", bool),
+            Value::Long(long) => write!(f, "{}", long),
+            Value::Double(double) => write!(f, "{}", double),
+            Value::Decimal(decimal) => write!(f, "{}", decimal),
+            Value::String(string) => write!(f, "\"{}\"", string),
+            Value::Date(date) => write!(f, "{}", date),
+            Value::Datetime(datetime) => write!(f, "{}", datetime),
+            Value::DatetimeTZ(datetime_tz) => write!(f, "{}", datetime_tz),
+            Value::Duration(duration) => write!(f, "{}", duration),
+            Value::Struct(value, name) => write!(f, "{} {}", name, value)
+        }
+    }
+}
+
 /// A fixed-point decimal number.
 /// Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Decimal {
     integer: i64,
     fractional: u64,
@@ -242,10 +266,33 @@ impl Decimal {
     }
 }
 
+impl Display for Decimal {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Debug for Decimal {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        // count number of tailing 0's that don't have to be represented
+        let mut tail_0s = 0;
+        let mut fractional = self.fractional;
+        while fractional % 10 == 0 {
+            tail_0s += 1;
+            fractional /= 10;
+        }
+
+        // count number of leading 0's that have to be represented
+        let digits = (fractional as f64).log10().floor() as u64;
+        let leading_0s = Self::FRACTIONAL_PART_DENOMINATOR - digits - tail_0s;
+        write!(f, "{}.{:0width$}{}", self.integer_part(), "", digits, width = leading_0s as usize)
+    }
+}
+
 /// A relative duration, which contains months, days, and nanoseconds.
 /// Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component
 /// When used as an absolute duration, convertible to chrono::Duration
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Duration {
     pub months: u32,
     pub days: u32,
@@ -285,7 +332,31 @@ impl TryFrom<Duration> for chrono::Duration {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+impl Display for Duration {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Debug for Duration {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "months: {}, days: {}, nanos: {}", self.months, self.days, self.nanos)
+    }
+}
+
+#[derive(Clone, PartialEq)]
 pub struct Struct {
     fields: HashMap<String, Value>,
+}
+
+impl Display for Struct {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Display::fmt(self, f)
+    }
+}
+
+impl Debug for Struct {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.fields)
+    }
 }

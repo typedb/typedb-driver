@@ -36,7 +36,7 @@ pub mod type_;
 pub mod value;
 
 /// The fundamental TypeQL object.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub enum Concept {
     EntityType(EntityType),
     RelationType(RelationType),
@@ -357,9 +357,30 @@ impl Concept {
     }
 }
 
-/// Represents invalid schema constructs discovered during schema validation.
-#[derive(Clone, Debug)]
-pub struct SchemaException {
-    pub code: String,
-    pub message: String,
+impl Display for Concept {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
 }
+
+impl Debug for Concept {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if self.is_type() {
+            write!( f, "{}({})", self.get_category(), self.get_label())
+        } else {
+            write!(f, "{}({}", self.get_category(), self.get_label())?;
+            if self.get_iid().is_some() {
+                write!(f, ": {}", self.get_iid().unwrap())?;
+                if self.get_value().is_some() {
+                    write!(f, ", {}", self.get_value().unwrap())?;
+                }
+            } else if self.get_value().is_some() {
+                write!(f, ": {}", self.get_value().unwrap())?;
+            } else {
+                // shouldn't be reachable?
+            }
+            write!(f, ")")
+        }
+    }
+}
+

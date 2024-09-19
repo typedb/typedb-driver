@@ -21,7 +21,7 @@ use std::path::PathBuf;
 
 use serial_test::serial;
 
-use typedb_driver::{Connection, Credential, DatabaseManager, SessionType::Data};
+use typedb_driver::{Connection, Credential, DatabaseManager, };
 
 use super::common;
 

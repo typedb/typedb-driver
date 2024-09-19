@@ -56,14 +56,20 @@ fn basic_async_std() {
         transaction.commit().await.unwrap();
 
         let transaction = database.transaction(Read).await.unwrap();
-        let answers = transaction.query("match $x isa person;").await.unwrap();
+        let answers = transaction.query("match $x isa person, has age $a;").await.unwrap();
         assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
-        let rows: Vec<_> = answers.into_rows().collect().await;
-        assert_eq!(rows.len(), 2);
-        drop(transaction);
+        let mut iter = answers.into_rows();
+
+        let mut rows_count = 0;
+        while let Some(row) = iter.next().await {
+            println!("{}", row.unwrap());
+            rows_count += 1;
+        }
+        assert_eq!(rows_count, 2);
     })
     // .unwrap();
 }
+
 //
 // #[test]
 // #[serial]

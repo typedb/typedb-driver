@@ -33,7 +33,7 @@ use tokio::time::{Duration, sleep};
 
 use typedb_driver::{
     answer::{ConceptRow, JSON},
-    concept::{Thing, Value},
+    concept::{Value},
     Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
 };
 
@@ -97,7 +97,6 @@ pub struct Context {
     pub databases: DatabaseManager,
     pub users: UserManager,
     pub transaction_trackers: Vec<TransactionTracker>,
-    pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
@@ -142,7 +141,7 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.session_options = Options::new();
-        self.transaction_options = Options::new().infer(true);
+        self.transaction_options = Options::new();
         self.set_connection(Connection::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
@@ -199,7 +198,7 @@ impl Default for Context {
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
         );
         let session_options = Options::new();
-        let transaction_options = Options::new().infer(true);
+        let transaction_options = Options::new();
         let connection = Connection::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
@@ -215,7 +214,6 @@ impl Default for Context {
             databases,
             users,
             transaction_trackers: Vec::new(),
-            things: HashMap::new(),
             answer: Vec::new(),
             fetch_answer: None,
             value_answer: None,
