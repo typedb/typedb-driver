@@ -68,6 +68,7 @@ pub(super) enum Response {
     ConnectionOpen {
         connection_id: Uuid,
         server_duration_millis: u64,
+        databases: Vec<DatabaseInfo>,
     },
 
     ServersAll {
@@ -77,7 +78,9 @@ pub(super) enum Response {
     DatabasesContains {
         contains: bool,
     },
-    DatabaseCreate,
+    DatabaseCreate {
+        database: DatabaseInfo
+    },
     DatabaseGet {
         database: DatabaseInfo,
     },

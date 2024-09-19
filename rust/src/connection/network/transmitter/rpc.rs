@@ -120,7 +120,9 @@ impl RPCTransmitter {
 
     async fn send_request<Channel: GRPCChannel>(mut rpc: RPCStub<Channel>, request: Request) -> Result<Response> {
         match request {
-            Request::ConnectionOpen { .. } => rpc.connection_open(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::ConnectionOpen { .. } => {
+                rpc.connection_open(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            },
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
 
@@ -128,7 +130,7 @@ impl RPCTransmitter {
                 rpc.databases_contains(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseCreate { .. } => {
-                rpc.databases_create(request.try_into_proto()?).await.map(Response::from_proto)
+                rpc.databases_create(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
             Request::DatabaseGet { .. } => {
                 rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)

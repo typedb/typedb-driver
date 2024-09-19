@@ -21,14 +21,15 @@ use std::path::PathBuf;
 
 use serial_test::serial;
 
-use typedb_driver::{Connection, Credential, DatabaseManager, };
+use typedb_driver::{Credential, DatabaseManager, };
+use typedb_driver::driver::TypeDBDriver;
 
 use super::common;
 
 #[tokio::test]
 #[serial]
 async fn address_translation() {
-    let connection = Connection::new_cloud_with_translation(
+    let typedb_driver = TypeDBDriver::new_cloud_with_translation(
         [
             ("localhost:11729", "localhost:11729"),
             ("localhost:21729", "localhost:21729"),
@@ -46,11 +47,11 @@ async fn address_translation() {
     )
     .unwrap();
 
-    common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await.unwrap();
-    let databases = DatabaseManager::new(connection);
-    assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
-
     todo!()
+    // common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await.unwrap();
+    // let databases = DatabaseManager::new(typedb_driver);
+    // assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
+    //
     // let transaction = session.transaction(Write).await.unwrap();
     // let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
     // let results: Vec<_> = answer_stream.collect().await;

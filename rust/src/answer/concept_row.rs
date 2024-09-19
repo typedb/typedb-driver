@@ -106,7 +106,7 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.concepts()
     /// ```
-    pub fn concepts(&self) -> impl Iterator<Item=&Concept> {
+    pub fn get_concepts(&self) -> impl Iterator<Item=&Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }

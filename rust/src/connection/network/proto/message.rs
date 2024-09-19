@@ -194,12 +194,17 @@ impl TryIntoProto<user::password_update::Req> for Request {
     }
 }
 
-impl FromProto<connection::open::Res> for Response {
-    fn from_proto(proto: connection::open::Res) -> Self {
-        Self::ConnectionOpen {
+impl TryFromProto<connection::open::Res> for Response {
+    fn try_from_proto(proto: connection::open::Res) -> Result<Self> {
+        let mut database_infos = Vec::new();
+        for database_info_proto in proto.databases_all.unwrap().databases {
+            database_infos.push(DatabaseInfo::try_from_proto(database_info_proto)?);
+        }
+        Ok(Self::ConnectionOpen {
             connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap(),
             server_duration_millis: proto.server_duration_millis,
-        }
+            databases: database_infos,
+        })
     }
 }
 
@@ -217,9 +222,11 @@ impl FromProto<database_manager::contains::Res> for Response {
     }
 }
 
-impl FromProto<database_manager::create::Res> for Response {
-    fn from_proto(_proto: database_manager::create::Res) -> Self {
-        Self::DatabaseCreate
+impl TryFromProto<database_manager::create::Res> for Response {
+    fn try_from_proto(proto: database_manager::create::Res) -> Result<Self> {
+        Ok(Self::DatabaseCreate {
+            database: DatabaseInfo::try_from_proto(proto.database.unwrap())?
+        })
     }
 }
 

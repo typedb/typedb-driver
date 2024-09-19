@@ -27,7 +27,7 @@ use crate::{assert_err, assert_with_timeout, behaviour::Context, generic_step_im
 generic_step_impl! {
     #[step(expr = "users get all")]
     async fn users_get_all(context: &mut Context) -> TypeDBResult {
-        context.users.all().await?;
+        context.driver.users().all().await?;
         Ok(())
     }
 
@@ -38,7 +38,7 @@ generic_step_impl! {
 
     #[step(expr = "users get user: {word}")]
     async fn users_get_user(context: &mut Context, username: String) -> TypeDBResult {
-        context.users.get(username).await?;
+        context.driver.users().get(username).await?;
         Ok(())
     }
 
@@ -49,7 +49,7 @@ generic_step_impl! {
 
     #[step(expr = "users contains: {word}")]
     async fn users_contains(context: &mut Context, username: String) -> TypeDBResult {
-        assert_with_timeout!(context.users.contains(username.clone()).await?, "User {username} doesn't exist.");
+        assert_with_timeout!(context.driver.users().contains(username.clone()).await?, "User {username} doesn't exist.");
         Ok(())
     }
 
@@ -60,7 +60,7 @@ generic_step_impl! {
 
     #[step(expr = "users not contains: {word}")]
     async fn users_not_contains(context: &mut Context, username: String) -> TypeDBResult {
-        assert_with_timeout!(!context.users.contains(username.clone()).await?, "User {username} exists.");
+        assert_with_timeout!(!context.driver.users().contains(username.clone()).await?, "User {username} exists.");
         Ok(())
     }
 
@@ -71,7 +71,7 @@ generic_step_impl! {
 
     #[step(expr = "users create: {word}, {word}")]
     async fn users_create(context: &mut Context, username: String, password: String) -> TypeDBResult {
-        context.users.create(username, password).await
+        context.driver.users().create(username, password).await
     }
 
     #[step(expr = "users create: {word}, {word}; throws exception")]
@@ -81,7 +81,7 @@ generic_step_impl! {
 
     #[step(expr = "users password set: {word}, {word}")]
     async fn users_password_set(context: &mut Context, username: String, password: String) -> TypeDBResult {
-        context.users.set_password(username, password).await
+        context.driver.users().set_password(username, password).await
     }
 
     #[step(expr = "users password set: {word}, {word}; throws exception")]
@@ -91,9 +91,9 @@ generic_step_impl! {
 
     #[step(expr = "user password update: {word}, {word}")]
     async fn user_password_update(context: &mut Context, password_old: String, password_new: String) -> TypeDBResult {
-        let connected_user = context.users.current_user().await?;
+        let connected_user = context.driver.users().current_user().await?;
         assert!(connected_user.is_some());
-        connected_user.unwrap().password_update(&context.connection, password_old, password_new).await
+        connected_user.unwrap().password_update(&context.driver, password_old, password_new).await
     }
 
     #[step(expr = "user password update: {word}, {word}; throws exception")]
@@ -103,7 +103,7 @@ generic_step_impl! {
 
     #[step(expr = "users delete: {word}")]
     async fn user_delete(context: &mut Context, username: String) -> TypeDBResult {
-        context.users.delete(username).await
+        context.driver.users().delete(username).await
     }
 
     #[step(expr = "users delete: {word}; throws exception")]
@@ -113,7 +113,7 @@ generic_step_impl! {
 
     #[step(expr = "user expiry-seconds")]
     async fn user_expiry_seconds(context: &mut Context) -> TypeDBResult {
-        let connected_user = context.users.current_user().await?;
+        let connected_user = context.driver.users().current_user().await?;
         assert!(connected_user.is_some());
         assert!(connected_user.unwrap().password_expiry_seconds.is_some());
         Ok(())
@@ -121,7 +121,7 @@ generic_step_impl! {
 
     #[step(expr = "get connected user")]
     async fn get_connected_user(context: &mut Context) -> TypeDBResult {
-        assert!(context.users.current_user().await?.is_some());
+        assert!(context.driver.users().current_user().await?.is_some());
         Ok(())
     }
 }

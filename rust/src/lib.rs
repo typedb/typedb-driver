@@ -25,10 +25,11 @@ pub use self::{
         box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result,
         TransactionType,
     },
-    connection::{Connection, Credential},
+    connection::{Credential},
     database::{Database, DatabaseManager},
     transaction::Transaction,
     user::{User, UserManager},
+    driver::TypeDBDriver,
 };
 
 pub mod answer;
@@ -38,4 +39,5 @@ mod connection;
 mod database;
 pub mod transaction;
 mod user;
+pub mod driver;
 

@@ -30,32 +30,29 @@ use super::common;
 #[serial]
 fn basic_async_std() {
     async_std::task::block_on(async {
-        let connection = common::new_core_connection().await.unwrap();
-        let databases = DatabaseManager::new(connection.clone());
-        databases.create("testing-db").await.unwrap();
+        let driver = common::new_core_driver().await.unwrap();
+        driver.databases().create("testing-db").await.unwrap();
 
-        let db = databases.get("testing-db").await.unwrap();
+        let db = driver.databases().get("testing-db").await.unwrap();
         db.delete().await.unwrap();
-        common::create_test_database_with_schema(connection.clone(), "define entity person, owns age; attribute age, value long;").await.unwrap();
-        assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
+        common::create_test_database_with_schema(&driver, "define entity person, owns age; attribute age, value long;").await.unwrap();
+        assert!(driver.databases().contains(common::TEST_DATABASE).await.unwrap());
 
-        let database = databases.get(common::TEST_DATABASE).await.unwrap();
-
-        let transaction = database.transaction(Read).await.unwrap();
+        let transaction = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
         let answers = transaction.query("match entity $x;").await.unwrap();
         assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
         let rows: Vec<_> = answers.into_rows().collect().await;
         assert_eq!(rows.len(), 1);
         drop(transaction);
 
-        let transaction = database.transaction(Write).await.unwrap();
+        let transaction = driver.transaction(common::TEST_DATABASE, Write).await.unwrap();
         let answers = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
         assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
         let rows: Vec<_> = answers.into_rows().collect().await;
         assert_eq!(rows.len(), 1);
         transaction.commit().await.unwrap();
 
-        let transaction = database.transaction(Read).await.unwrap();
+        let transaction = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
         let answers = transaction.query("match $x isa person, has age $a;").await.unwrap();
         assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
         let mut iter = answers.into_rows();
@@ -75,9 +72,9 @@ fn basic_async_std() {
 // #[serial]
 // fn basic_async_std() {
 //     async_std::task::block_on(async {
-//         let connection = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         let typedb_driver = common::new_cloud_connection()?;
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //         assert!(databases.contains(common::TEST_DATABASE).await?);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
@@ -96,9 +93,9 @@ fn basic_async_std() {
 // #[serial]
 // fn basic_smol() {
 //     smol::block_on(async {
-//         let connection = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         let typedb_driver = common::new_cloud_connection()?;
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //         assert!(databases.contains(common::TEST_DATABASE).await?);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
@@ -117,9 +114,9 @@ fn basic_async_std() {
 // #[serial]
 // fn basic_futures() {
 //     futures::executor::block_on(async {
-//         let connection = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         let typedb_driver = common::new_cloud_connection()?;
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //         assert!(databases.contains(common::TEST_DATABASE).await?);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;

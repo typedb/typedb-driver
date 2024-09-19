@@ -22,7 +22,7 @@ use std::fmt;
 use typedb_driver::{Options, Transaction, TransactionType};
 
 pub struct TransactionTracker {
-    transactions: Vec<Transaction<'static>>,
+    transactions: Vec<Transaction>,
 }
 
 impl fmt::Debug for TransactionTracker {

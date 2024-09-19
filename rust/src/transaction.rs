@@ -23,24 +23,21 @@ use crate::{common::{Promise, Result, TransactionType}, connection::TransactionS
 use crate::answer::QueryAnswer;
 
 /// A transaction with a TypeDB database.
-pub struct Transaction<'a> {
+pub struct Transaction {
     /// The transaction’s type (READ or WRITE)
     type_: TransactionType,
     /// The options for the transaction
     options: Options,
     transaction_stream: Pin<Box<TransactionStream>>,
-
-    _lifetime_guard: PhantomData<&'a ()>,
 }
 
-impl Transaction<'_> {
+impl Transaction {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
         let transaction_stream = Box::pin(transaction_stream);
         Transaction {
             type_: transaction_stream.type_(),
             options: transaction_stream.options(),
             transaction_stream,
-            _lifetime_guard: PhantomData,
         }
     }
 
@@ -140,7 +137,7 @@ impl Transaction<'_> {
     }
 }
 
-impl fmt::Debug for Transaction<'_> {
+impl fmt::Debug for Transaction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }

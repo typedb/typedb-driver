@@ -70,6 +70,8 @@ pub(in crate::connection) struct TransactionTransmitter {
     error: Arc<RwLock<Option<Error>>>,
     on_close_register_sink: UnboundedSender<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
     shutdown_sink: UnboundedSender<()>,
+    // runtime is alive as long as the transaction transmitter is alive:
+    background_runtime: Arc<BackgroundRuntime>,
 }
 
 impl Drop for TransactionTransmitter {
@@ -80,11 +82,11 @@ impl Drop for TransactionTransmitter {
 
 impl TransactionTransmitter {
     pub(in crate::connection) fn new(
-        background_runtime: &BackgroundRuntime,
+        background_runtime: Arc<BackgroundRuntime>,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
-        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     ) -> Self {
+        let callback_handler_sink = background_runtime.callback_handler_sink();
         let (buffer_sink, buffer_source) = unbounded_async();
         let (on_close_register_sink, on_close_register_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
@@ -102,7 +104,7 @@ impl TransactionTransmitter {
             shutdown_sink.clone(),
             shutdown_source,
         ));
-        Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink }
+        Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink, background_runtime }
     }
 
     pub(in crate::connection) fn is_open(&self) -> bool {
@@ -444,5 +446,4 @@ impl ResponseCollector {
             response.await.ok();
         }
     }
-
 }

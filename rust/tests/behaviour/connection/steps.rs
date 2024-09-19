@@ -20,7 +20,7 @@
 use cucumber::{given, then, when};
 use tokio::time::sleep;
 
-use typedb_driver::{Connection, Credential, Result as TypeDBResult};
+use typedb_driver::{Credential, Result as TypeDBResult, TypeDBDriver};
 
 use crate::{assert_with_timeout, behaviour::Context, generic_step_impl};
 
@@ -33,7 +33,7 @@ generic_step_impl! {
 
     #[step(expr = "connection opens with authentication: {word}, {word}")]
     async fn connection_opens_with_authentication(context: &mut Context, login: String, password: String) {
-        let connection = Connection::new_cloud(
+        let typedb_driver = TypeDBDriver::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(
                 &login,
@@ -41,7 +41,7 @@ generic_step_impl! {
                 Some(&context.tls_root_ca),
             ).unwrap()
         );
-        context.set_connection(connection.unwrap());
+        context.set_connection(typedb_driver.unwrap());
     }
 
     #[step("connection has been opened")]
@@ -49,12 +49,12 @@ generic_step_impl! {
 
     #[step("connection does not have any database")]
     async fn connection_does_not_have_any_database(context: &mut Context) -> TypeDBResult {
-        if context.databases.all().await?.is_empty() {
+        if context.driver.databases().all().await?.is_empty() {
             assert_with_timeout!(
                 {
                     context.cleanup_databases().await;
                     context.cleanup_users().await;
-                    context.databases.all().await?.is_empty()
+                    context.driver.databases().all().await?.is_empty()
                 },
                 "Connection has at least one database.",
             );
@@ -64,6 +64,6 @@ generic_step_impl! {
 
     #[step("connection closes")]
     async fn connection_closes(context: &mut Context) {
-        assert!(context.connection.clone().force_close().is_ok());
+        assert!(context.driver.force_close().is_ok());
     }
 }

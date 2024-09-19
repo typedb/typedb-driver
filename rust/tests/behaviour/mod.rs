@@ -31,11 +31,7 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{Duration, sleep};
 
-use typedb_driver::{
-    answer::{ConceptRow, JSON},
-    concept::{Value},
-    Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
-};
+use typedb_driver::{answer::{ConceptRow, JSON}, concept::{Value}, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager};
 
 use self::transaction_tracker::TransactionTracker;
 
@@ -93,9 +89,7 @@ pub struct Context {
     pub tls_root_ca: PathBuf,
     pub session_options: Options,
     pub transaction_options: Options,
-    pub connection: Connection,
-    pub databases: DatabaseManager,
-    pub users: UserManager,
+    pub driver: TypeDBDriver,
     pub transaction_trackers: Vec<TransactionTracker>,
     pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
@@ -142,7 +136,7 @@ impl Context {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.session_options = Options::new();
         self.transaction_options = Options::new();
-        self.set_connection(Connection::new_cloud(
+        self.set_connection(TypeDBDriver::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
@@ -152,22 +146,23 @@ impl Context {
     }
 
     pub async fn all_databases(&self) -> HashSet<String> {
-        self.databases.all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
+        self.driver.databases().all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
     }
 
     pub async fn cleanup_databases(&mut self) {
-        try_join_all(self.databases.all().await.unwrap().into_iter().map(Database::delete)).await.ok();
+        try_join_all(self.driver.databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
     }
 
     pub async fn cleanup_users(&mut self) {
         try_join_all(
-            self.users
+            self.driver
+                .users()
                 .all()
                 .await
                 .unwrap()
                 .into_iter()
                 .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.users.delete(user.username)),
+                .map(|user| self.driver.users().delete(user.username)),
         )
         .await
         .ok();
@@ -181,10 +176,8 @@ impl Context {
         self.transaction_trackers.get_mut(0).unwrap().take_transaction()
     }
 
-    pub fn set_connection(&mut self, new_connection: Connection) {
-        self.connection = new_connection;
-        self.databases = DatabaseManager::new(self.connection.clone());
-        self.users = UserManager::new(self.connection.clone());
+    pub fn set_connection(&mut self, new_connection: TypeDBDriver) {
+        self.driver = new_connection;
         self.transaction_trackers.clear();
         self.answer.clear();
         self.fetch_answer = None;
@@ -199,20 +192,16 @@ impl Default for Context {
         );
         let session_options = Options::new();
         let transaction_options = Options::new();
-        let connection = Connection::new_cloud(
+        let typedb_driver = TypeDBDriver::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )
         .unwrap();
-        let databases = DatabaseManager::new(connection.clone());
-        let users = UserManager::new(connection.clone());
         Self {
             tls_root_ca,
             session_options,
             transaction_options,
-            connection,
-            databases,
-            users,
+            driver: typedb_driver,
             transaction_trackers: Vec::new(),
             answer: Vec::new(),
             fetch_answer: None,

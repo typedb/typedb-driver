@@ -18,10 +18,12 @@
  */
 
 use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
+use std::collections::HashMap;
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
+use itertools::Itertools;
 
 use log::{debug, error};
 
@@ -30,13 +32,15 @@ use crate::{common::{
     Error,
     error::ConnectionError,
     info::{DatabaseInfo, ReplicaInfo}, Result,
-}, Connection, connection::ServerConnection, error::InternalError, Options, Transaction, TransactionType};
+}, error::InternalError, Options, Transaction, TransactionType};
+use crate::connection::server_connection::ServerConnection;
+use crate::driver::TypeDBDriver;
 
 /// A TypeDB database
 pub struct Database {
     name: String,
     replicas: RwLock<Vec<Replica>>,
-    connection: Connection,
+    server_connections: HashMap<Address, ServerConnection>,
 }
 
 impl Database {
@@ -44,92 +48,10 @@ impl Database {
     const FETCH_REPLICAS_MAX_RETRIES: usize = 10;
     const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
 
-    pub(super) fn new(database_info: DatabaseInfo, connection: Connection) -> Result<Self> {
+    pub(super) fn new(database_info: DatabaseInfo, server_connections: HashMap<Address, ServerConnection>) -> Result<Self> {
         let name = database_info.name.clone();
-        let replicas = RwLock::new(Replica::try_from_info(database_info, &connection)?);
-        Ok(Self { name, replicas, connection })
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(super) async fn get(name: String, connection: Connection) -> Result<Self> {
-        Ok(Self {
-            name: name.clone(),
-            replicas: RwLock::new(Replica::fetch_all(name, connection.clone()).await?),
-            connection,
-        })
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn transaction(
-        &self,
-        transaction_type: TransactionType,
-    ) -> Result<Transaction<'static>> {
-        self.transaction_with_options(transaction_type, Options::new()).await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn transaction_with_options(
-        &self,
-        transaction_type: TransactionType,
-        options: Options
-    ) -> Result<Transaction<'static>> {
-
-        //         // let server_session = database
-//         //     .run_failsafe(|database| async move {
-//         //         let session_info =
-//         //             database.connection().open_session(database.name().to_owned(), session_type, options).await?;
-//         //         Ok(ServerSession { connection: database.connection().clone(), info: session_info })
-//         //     })
-//         //     .await?;
-        let (transaction_stream, transaction_shutdown_sink) = self.run_failsafe(|database| async move {
-            database.connection().open_transaction(self.name(), transaction_type, options).await
-        }).await?;
-
-        // TODO: who holds onto the transaction shutdown sink? Probably Connection?
-
-        //
-        // let (transaction_stream, transaction_shutdown_sink) = match self.connection
-        //     .open_transaction(transaction_type, options, network_latency)
-        //     .await
-        // {
-        //     Ok((transaction_stream, transaction_shutdown_sink)) => (transaction_stream, transaction_shutdown_sink),
-        //     Err(_err) => {
-        //         self.is_open.store(false);
-        //         server_connection.close_session(session_id).ok();
-        //
-        //         let (server_session, (transaction_stream, transaction_shutdown_sink)) = self
-        //             .database
-        //             .run_failsafe(|database| {
-        //                 let session_type = self.session_type;
-        //                 async move {
-        //                     let connection = database.connection();
-        //                     let database_name = database.name().to_owned();
-        //                     let session_info = connection.open_session(database_name, session_type, options).await?;
-        //                     Ok((
-        //                         ServerSession { connection: connection.clone(), info: session_info.clone() },
-        //                         connection
-        //                             .open_transaction(
-        //                                 transaction_type,
-        //                                 options,
-        //                                 session_info.network_latency,
-        //                             )
-        //                             .await?,
-        //                     ))
-        //                 }
-        //             })
-        //             .await?;
-        //         *self.server_session.write().unwrap() = server_session;
-        //         self.is_open.store(true);
-        //         self.reopened();
-        //         (transaction_stream, transaction_shutdown_sink)
-        //     }
-        // };
-        //
-        // self.on_server_session_close(move || {
-        //     transaction_shutdown_sink.send(()).ok();
-        // });
-        //
-        Ok(Transaction::new(transaction_stream))
+        let replicas = RwLock::new(Replica::try_from_info(database_info, &server_connections)?);
+        Ok(Self { name, replicas, server_connections })
     }
 
     /// Retrieves the database name as a string.
@@ -183,8 +105,9 @@ impl Database {
     #[cfg_attr(not(feature = "sync"), doc = "database.delete().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn delete(self) -> Result {
+    pub async fn delete(self: Arc<Self>) -> Result {
         self.run_on_primary_replica(|database| database.delete()).await
+        // TODO: set flag
     }
 
     /// Returns a full schema text as a valid TypeQL define query string.
@@ -245,7 +168,7 @@ impl Database {
                 res => return res,
             }
         }
-        Err(self.connection.unable_to_connect_error())
+        Err(Self::unable_to_connect_error(&self.server_connections))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -271,20 +194,26 @@ impl Database {
                 res => return res,
             }
         }
-        Err(self.connection.unable_to_connect_error())
+        Err(Self::unable_to_connect_error(&self.server_connections))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self) -> Result<Replica> {
         for _ in 0..Self::FETCH_REPLICAS_MAX_RETRIES {
-            let replicas = Replica::fetch_all(self.name.clone(), self.connection.clone()).await?;
+            let replicas = Replica::fetch_all(self.name.clone(), &self.server_connections).await?;
             *self.replicas.write().unwrap() = replicas;
             if let Some(replica) = self.primary_replica() {
                 return Ok(replica);
             }
             Self::wait_for_primary_replica_selection().await;
         }
-        Err(self.connection.unable_to_connect_error())
+        Err(Self::unable_to_connect_error(&self.server_connections))
+    }
+
+    fn unable_to_connect_error(server_connections: &HashMap<Address, ServerConnection>) -> Error {
+        Error::Connection(ConnectionError::ServerConnectionFailed {
+            addresses: server_connections.keys().map(Address::clone).collect_vec(),
+        })
     }
 
     fn primary_replica(&self) -> Option<Replica> {
@@ -295,10 +224,14 @@ impl Database {
         self.replicas.read().unwrap().iter().filter(|r| r.is_preferred).max_by_key(|r| r.term).cloned()
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn wait_for_primary_replica_selection() {
-        // FIXME: blocking sleep! Can't do agnostic async sleep.
+    #[cfg(feature = "sync")]
+    fn wait_for_primary_replica_selection() {
         sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
+    }
+
+    #[cfg(not(feature = "sync"))]
+    async fn wait_for_primary_replica_selection() {
+        tokio::time::sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION).await
     }
 }
 
@@ -337,13 +270,13 @@ impl Replica {
         }
     }
 
-    fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
+    fn try_from_info(database_info: DatabaseInfo, server_connections: &HashMap<Address, ServerConnection>) -> Result<Vec<Self>> {
         database_info
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = connection
-                    .connection(&replica.server)
+                let server_connection = server_connections
+                    .get(&replica.server)
                     .ok_or_else(|| InternalError::UnknownServer { server: replica.server.clone() })?;
                 Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
             })
@@ -360,12 +293,12 @@ impl Replica {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn fetch_all(name: String, connection: Connection) -> Result<Vec<Self>> {
-        for (server, server_connection) in connection.connections() {
+    async fn fetch_all(name: String, server_connections: &HashMap<Address, ServerConnection>) -> Result<Vec<Self>> {
+        for (server, server_connection) in server_connections {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(info) => {
-                    return Self::try_from_info(info, &connection);
+                    return Self::try_from_info(info, server_connections);
                 }
                 Err(Error::Connection(
                         ConnectionError::DatabaseDoesNotExist { .. }
@@ -380,7 +313,7 @@ impl Replica {
                 Err(err) => return Err(err),
             }
         }
-        Err(connection.unable_to_connect_error())
+        Err(Database::unable_to_connect_error(server_connections))
     }
 }
 
@@ -407,7 +340,7 @@ impl ServerDatabase {
         Self { name, connection }
     }
 
-    pub(super) fn name(&self) -> &str {
+    pub fn name(&self) -> &str {
         self.name.as_str()
     }
 

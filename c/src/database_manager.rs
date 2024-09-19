@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{box_stream, Connection, Database, DatabaseManager};
+use typedb_driver::{box_stream, TypeDBDriver, Database, DatabaseManager};
 
 use super::{
     error::{try_release, unwrap_or_default, unwrap_void},
@@ -29,7 +29,7 @@ use super::{
 
 /// Creates and returns a native <code>DatabaseManager</code> for the connection
 #[no_mangle]
-pub extern "C" fn database_manager_new(connection: *const Connection) -> *mut DatabaseManager {
+pub extern "C" fn database_manager_new(connection: *const TypeDBDriver) -> *mut DatabaseManager {
     let connection = borrow(connection).clone();
     release(DatabaseManager::new(connection))
 }

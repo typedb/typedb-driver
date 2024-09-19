@@ -20,18 +20,18 @@
 use serial_test::serial;
 
 use typedb_driver::{
-    Connection,
     Credential, Error, error::ConnectionError
 
     ,
 };
+use typedb_driver::driver::TypeDBDriver;
 
 #[tokio::test]
 #[serial]
 async fn missing_port() {
-    assert!(matches!(Connection::new_core("localhost").await, Err(Error::Connection(ConnectionError::MissingPort { .. }))));
+    assert!(matches!(TypeDBDriver::new_core("localhost").await, Err(Error::Connection(ConnectionError::MissingPort { .. }))));
     assert!(matches!(
-        Connection::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
+        TypeDBDriver::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
         Err(Error::Connection(ConnectionError::MissingPort { .. }))
     ));
 }
@@ -43,8 +43,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn basic(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //         assert!(databases.contains(common::TEST_DATABASE).await?);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
@@ -59,8 +59,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn query_error(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
 //         let transaction = session.transaction(Write).await?;
@@ -73,8 +73,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn concurrent_transactions(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //
 //         let session = Arc::new(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?);
 //
@@ -106,8 +106,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn networking_in_on_close(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //         assert!(databases.contains(common::TEST_DATABASE).await?);
 //
 //         let session = Arc::new(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?);
@@ -132,8 +132,8 @@ async fn missing_port() {
 //             name sub attribute, value string;
 //             age sub attribute, value long;
 //             rule age-rule: when { $x isa person; } then { $x has age 25; };"#;
-//         common::create_test_database_with_schema(connection.clone(), schema).await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), schema).await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
 //         let transaction = session.transaction(Write).await?;
@@ -161,8 +161,8 @@ async fn missing_port() {
 //             name sub attribute, value string;
 //             age sub attribute, value long;
 //             rule age-rule: when { $x isa person; } then { $x has age 25; };"#;
-//         common::create_test_database_with_schema(connection.clone(), schema).await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), schema).await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
 //         let transaction = session.transaction(Write).await?;
@@ -217,8 +217,8 @@ async fn missing_port() {
 //             date-of-birth sub attribute, value datetime;
 //             friendship sub relation,
 //                 relates friend;"#;
-//         common::create_test_database_with_schema(connection.clone(), schema).await?;
-//         let databases = DatabaseManager::new(connection);
+//         common::create_test_database_with_schema(typedb_driver.clone(), schema).await?;
+//         let databases = DatabaseManager::new(typedb_driver);
 //
 //         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
 //         let transaction = session.transaction(Write).await?;
@@ -253,8 +253,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn force_close_connection(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection.clone());
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver.clone());
 //
 //         let database = databases.get(common::TEST_DATABASE).await?;
 //         assert!(database.schema().await.is_ok());
@@ -287,8 +287,8 @@ async fn missing_port() {
 //     }
 //
 //     async fn force_close_session(connection: Connection) -> typedb_driver::Result {
-//         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(connection.clone());
+//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
+//         let databases = DatabaseManager::new(typedb_driver.clone());
 //
 //         let session = Arc::new(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?);
 //         let transaction = session.transaction(Write).await?;
@@ -316,8 +316,8 @@ async fn missing_port() {
 //                 person sub entity, owns name, owns age;
 //                 name sub attribute, value string;
 //                 age sub attribute, value long;"#;
-//             common::create_test_database_with_schema(connection.clone(), schema).await?;
-//             let databases = DatabaseManager::new(connection.clone());
+//             common::create_test_database_with_schema(typedb_driver.clone(), schema).await?;
+//             let databases = DatabaseManager::new(typedb_driver.clone());
 //
 //             let start_time = Instant::now();
 //             let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;

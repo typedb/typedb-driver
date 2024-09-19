@@ -17,27 +17,37 @@
  * under the License.
  */
 
+use std::collections::HashMap;
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
+use std::sync::{Arc, RwLock};
 
-use crate::{
-    common::{error::ConnectionError, Result},
-    Connection,
-    connection::ServerConnection, Error,
-};
+use crate::{common::{error::ConnectionError, Result}, Error};
+use crate::common::address::Address;
+use crate::connection::server_connection::ServerConnection;
+use crate::info::DatabaseInfo;
 
 use super::Database;
 
 /// Provides access to all database management methods.
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct DatabaseManager {
-    connection: Connection,
+    server_connections: HashMap<Address, ServerConnection>,
+    databases_cache: RwLock<HashMap<String, Arc<Database>>>,
 }
 
 /// Provides access to all database management methods.
 impl DatabaseManager {
-    pub fn new(connection: Connection) -> Self {
-        Self { connection }
+    pub(crate) fn new(
+        server_connections: HashMap<Address, ServerConnection>,
+        database_info: Vec<DatabaseInfo>,
+    ) -> Result<Self> {
+        let mut databases = HashMap::new();
+        for info in database_info {
+            let database = Database::new(info, server_connections.clone())?;
+            databases.insert(database.name().to_owned(), Arc::new(database));
+        }
+        Ok(Self { server_connections, databases_cache: RwLock::new(databases) })
     }
 
     /// Retrieve the database with the given name.
@@ -53,12 +63,13 @@ impl DatabaseManager {
     #[cfg_attr(not(feature = "sync"), doc = "driver.databases().get(name).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
-        let name = name.into();
-        if !self.contains(name.clone()).await? {
-            return Err(ConnectionError::DatabaseDoesNotExist { name }.into());
+    pub async fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>> {
+        let name = name.as_ref();
+        if !self.contains(name.to_owned()).await? {
+            self.databases_cache.write().unwrap().remove(name);
+            return Err(ConnectionError::DatabaseDoesNotExist { name: name.to_owned() }.into());
         }
-        Database::get(name, self.connection.clone()).await
+        Ok(self.databases_cache.read().unwrap().get(name).unwrap().clone())
     }
 
     /// Checks if a database with the given name exists
@@ -95,8 +106,13 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
         let name = name.into();
-        self.run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await })
-            .await
+        let database_info = self.run_failsafe(
+            name,
+            |server_connection, name| async move { server_connection.create_database(name).await },
+        ).await?;
+        let database = Database::new(database_info, self.server_connections.clone())?;
+        self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));
+        Ok(())
     }
 
     /// Retrieves all databases present on the TypeDB server
@@ -108,12 +124,19 @@ impl DatabaseManager {
     #[cfg_attr(not(feature = "sync"), doc = "driver.databases().all().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn all(&self) -> Result<Vec<Database>> {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for (server_id, server_connection) in self.connection.connections() {
+    pub async fn all(&self) -> Result<Vec<Arc<Database>>> {
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.all_databases().await {
                 Ok(list) => {
-                    return list.into_iter().map(|db_info| Database::new(db_info, self.connection.clone())).collect()
+                    let mut new_databases: Vec<Arc<Database>> = Vec::new();
+                    for db_info in list {
+                        new_databases.push(Arc::new(Database::new(db_info, self.server_connections.clone())?));
+                    }
+                    let mut databases = self.databases_cache.write().unwrap();
+                    databases.clear();
+                    databases.extend(new_databases.iter().map(|database| (database.name().to_owned(), database.clone())));
+                    return Ok(new_databases);
                 }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
@@ -121,25 +144,39 @@ impl DatabaseManager {
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
+        let databases = self.databases_cache.read().unwrap();
+        if databases.contains_key(name) {
+            return Ok(databases.get(name).unwrap().clone());
+        } else {
+            self.get(name).await
+        }
+    }
+
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection, String) -> P,
-        P: Future<Output = Result<R>>,
+        where
+            F: Fn(ServerConnection, String) -> P,
+            P: Future<Output=Result<R>>,
     {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for (server_id, server_connection) in self.connection.connections() {
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
             match task(server_connection.clone(), name.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
-                    return Database::get(name, self.connection.clone())
-                        .await?
-                        .run_on_primary_replica(|database| {
-                            let task = &task;
-                            async move { task(database.connection().clone(), database.name().to_owned()).await }
-                        })
-                        .await
-                }
+                // TODO: database manager should never encounter NOT PRIMARY errors since we are failing over server connections, not replicas
+
+                // Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
+                //     return Database::get(name, self.connection.clone())
+                //         .await?
+                //         .run_on_primary_replica(|database| {
+                //             let task = &task;
+                //             async move { task(database.connection().clone(), database.name().to_owned()).await }
+                //         })
+                //         .await
+                // }
+
                 err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
