@@ -275,10 +275,15 @@ impl Replica {
             .replicas
             .into_iter()
             .map(|replica| {
-                let server_connection = server_connections
-                    .get(&replica.server)
-                    .ok_or_else(|| InternalError::UnknownServer { server: replica.server.clone() })?;
-                Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
+                if server_connections.len() == 1{
+                    Ok(Self::new(database_info.name.clone(), replica, server_connections.values().next().unwrap().clone()))
+                } else {
+                    // TODO: actually check the advertised == provided, if that is the strategy we want
+                    let server_connection = server_connections
+                        .get(&replica.server)
+                        .ok_or_else(|| InternalError::UnknownServer { server: replica.server.clone() })?;
+                    Ok(Self::new(database_info.name.clone(), replica, server_connection.clone()))
+                }
             })
             .collect()
     }
