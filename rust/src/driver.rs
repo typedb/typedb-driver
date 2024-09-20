@@ -59,7 +59,8 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        Self::new_core_with_description(address, "rust", "0.0.0.testing").await
+        // TODO: pass correct version number automatically
+        Self::new_core_with_description(address, "rust", "3.0.0-alpha-0").await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
