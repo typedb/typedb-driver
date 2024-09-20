@@ -766,8 +766,8 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-release-unix
-      - deploy-maven-release-unix
-      - deploy-npm-release-unix
+#      - deploy-maven-release-unix
+#      - deploy-npm-release-unix
 
   deploy-release-dotnet-any:
     executor: linux-x86_64-ubuntu-2204
