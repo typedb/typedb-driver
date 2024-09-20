@@ -610,8 +610,8 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
-      - deploy-maven-snapshot-unix
-      - deploy-npm-snapshot-unix
+#      - deploy-maven-snapshot-unix
+#      - deploy-npm-snapshot-unix
 
   deploy-snapshot-dotnet-any:
     executor: linux-x86_64-ubuntu-2204
@@ -818,169 +818,169 @@ jobs:
 workflows:
   typedb-driver-snapshot:
     jobs:
-      - deploy-snapshot-linux-arm64:
-          filters:
-            branches:
-              only: [development, master]
-
-      - deploy-snapshot-linux-x86_64:
-          filters:
-            branches:
-              only: [development, master]
-
-      - deploy-snapshot-mac-arm64:
-          filters:
-            branches:
-              only: [development, master]
-
-      - deploy-snapshot-mac-x86_64:
-          filters:
-            branches:
-              only: [development, master]
-
-      - deploy-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [development, master]
+#      - deploy-snapshot-linux-arm64:
+#          filters:
+#            branches:
+#              only: [development, master]
+#
+#      - deploy-snapshot-linux-x86_64:
+#          filters:
+#            branches:
+#              only: [development, master]
+#
+#      - deploy-snapshot-mac-arm64:
+#          filters:
+#            branches:
+#              only: [development, master]
+#
+#      - deploy-snapshot-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [development, master]
+#
+#      - deploy-snapshot-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [development, master]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [development, master]
-          requires:
-            - deploy-snapshot-linux-arm64
-            - deploy-snapshot-linux-x86_64
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-mac-x86_64
-            - deploy-snapshot-windows-x86_64
-
-      - deploy-snapshot-dotnet-any:
-          filters:
-            branches:
-              only: [development, master]
-          requires:
-            - deploy-snapshot-linux-arm64
-            - deploy-snapshot-linux-x86_64
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-mac-x86_64
-            - deploy-snapshot-windows-x86_64
-
-      - test-snapshot-linux-arm64:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-linux-arm64
-            - deploy-snapshot-any
-            - deploy-snapshot-dotnet-any
-
-      - test-snapshot-linux-x86_64:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-linux-x86_64
-            - deploy-snapshot-any
-            - deploy-snapshot-dotnet-any
-
-      - test-snapshot-mac-arm64:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-any
-            - deploy-snapshot-dotnet-any
-
-      - test-snapshot-mac-x86_64:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-mac-x86_64
-            - deploy-snapshot-any
-            - deploy-snapshot-dotnet-any
-
-      - test-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-windows-x86_64
-            - deploy-snapshot-any
-            - deploy-snapshot-dotnet-any
-
-      - test-snapshot-any:
-          filters:
-            branches:
-              only: [master]
-          requires:
-            - deploy-snapshot-any
+              only: [development, master, "3.0"]
+#          requires:
+#            - deploy-snapshot-linux-arm64
+#            - deploy-snapshot-linux-x86_64
+#            - deploy-snapshot-mac-arm64
+#            - deploy-snapshot-mac-x86_64
+#            - deploy-snapshot-windows-x86_64
+#
+#      - deploy-snapshot-dotnet-any:
+#          filters:
+#            branches:
+#              only: [development, master]
+#          requires:
+#            - deploy-snapshot-linux-arm64
+#            - deploy-snapshot-linux-x86_64
+#            - deploy-snapshot-mac-arm64
+#            - deploy-snapshot-mac-x86_64
+#            - deploy-snapshot-windows-x86_64
+#
+#      - test-snapshot-linux-arm64:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-linux-arm64
+#            - deploy-snapshot-any
+#            - deploy-snapshot-dotnet-any
+#
+#      - test-snapshot-linux-x86_64:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-linux-x86_64
+#            - deploy-snapshot-any
+#            - deploy-snapshot-dotnet-any
+#
+#      - test-snapshot-mac-arm64:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-mac-arm64
+#            - deploy-snapshot-any
+#            - deploy-snapshot-dotnet-any
+#
+#      - test-snapshot-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-mac-x86_64
+#            - deploy-snapshot-any
+#            - deploy-snapshot-dotnet-any
+#
+#      - test-snapshot-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-windows-x86_64
+#            - deploy-snapshot-any
+#            - deploy-snapshot-dotnet-any
+#
+#      - test-snapshot-any:
+#          filters:
+#            branches:
+#              only: [master]
+#          requires:
+#            - deploy-snapshot-any
 
   release:
     jobs:
-      - deploy-release-linux-arm64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-linux-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-mac-arm64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-mac-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-windows-x86_64:
-          filters:
-            branches:
-              only: [release]
+#      - deploy-release-linux-arm64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-linux-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-mac-arm64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
 
       - deploy-release-any:
           filters:
             branches:
               only: [release]
-          requires:
-            - deploy-release-linux-arm64
-            - deploy-release-linux-x86_64
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-windows-x86_64
-
-      - deploy-release-dotnet-any:
-          filters:
-            branches:
-              only: [release]
-          requires:
-            - deploy-release-linux-arm64
-            - deploy-release-linux-x86_64
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-windows-x86_64
-
-      - deploy-github:
-          filters:
-            branches:
-              only: [release]
-          requires:
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-linux-arm64
-            - deploy-release-linux-x86_64
-            - deploy-release-windows-x86_64
-            - deploy-release-any
-            - deploy-release-dotnet-any
-
-      - sync-dependencies:
-          filters:
-            branches:
-              only: [release]
-          requires:
-            - deploy-github
+#          requires:
+#            - deploy-release-linux-arm64
+#            - deploy-release-linux-x86_64
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-windows-x86_64
+#
+#      - deploy-release-dotnet-any:
+#          filters:
+#            branches:
+#              only: [release]
+#          requires:
+#            - deploy-release-linux-arm64
+#            - deploy-release-linux-x86_64
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-windows-x86_64
+#
+#      - deploy-github:
+#          filters:
+#            branches:
+#              only: [release]
+#          requires:
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-linux-arm64
+#            - deploy-release-linux-x86_64
+#            - deploy-release-windows-x86_64
+#            - deploy-release-any
+#            - deploy-release-dotnet-any
+#
+#      - sync-dependencies:
+#          filters:
+#            branches:
+#              only: [release]
+#          requires:
+#            - deploy-github
       - release-cleanup:
           filters:
             branches:
