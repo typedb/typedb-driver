@@ -7,7 +7,7 @@
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
 [![Hosted By: Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat)](https://cloudsmith.com)
 
-This repository stores all TypeDB Drivers built by Vaticle.
+This repository stores all TypeDB Drivers built and supported by TypeDB.
 
 See the table below for links to README files, documentation, and source code.
 

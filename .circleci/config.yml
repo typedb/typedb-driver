@@ -985,5 +985,5 @@ workflows:
           filters:
             branches:
               only: [release]
-          requires:
-            - sync-dependencies
+#          requires:
+#            - sync-dependencies
