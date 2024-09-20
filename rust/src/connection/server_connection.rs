@@ -24,14 +24,16 @@ use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
+
 use tokio::time::Instant;
 use uuid::Uuid;
+
+use crate::{Credential, Options, TransactionType, User};
 use crate::common::address::Address;
 use crate::common::RequestID;
 use crate::connection::message::{Request, Response, TransactionRequest};
 use crate::connection::network::transmitter::{RPCTransmitter, TransactionTransmitter};
 use crate::connection::runtime::BackgroundRuntime;
-use crate::{Credential, Database, Options, TransactionType, User};
 use crate::connection::TransactionStream;
 use crate::error::{ConnectionError, InternalError};
 use crate::info::DatabaseInfo;
@@ -40,8 +42,8 @@ use crate::info::DatabaseInfo;
 pub(crate) struct ServerConnection {
     background_runtime: Arc<BackgroundRuntime>,
     connection_id: Uuid,
-    open_transactions: Arc<Mutex<HashMap<RequestID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
+    transaction_shutdown_senders: Arc<Mutex<HashMap<RequestID, UnboundedSender<()>>>>,
     latency_tracker: LatencyTracker,
 }
 
@@ -59,8 +61,8 @@ impl ServerConnection {
         let server_connection = Self {
             background_runtime,
             connection_id,
-            open_transactions: Default::default(),
             request_transmitter,
+            transaction_shutdown_senders: Default::default(),
             latency_tracker,
         };
         Ok((server_connection, database_info))
@@ -109,12 +111,10 @@ impl ServerConnection {
     }
 
     pub(crate) fn force_close(&self) -> crate::Result {
-        // let session_ids: Vec<SessionID> = self.open_sessions.lock().unwrap().keys().cloned().collect();
-        // for session_id in session_ids {
-        //     self.close_session(session_id).ok();
-        // }
-        todo!()
-        // self.request_transmitter.force_close()
+        for (id, sender) in self.transaction_shutdown_senders.lock().unwrap().drain() {
+            let _ = sender.send(());
+        }
+        self.request_transmitter.force_close()
     }
 
     pub(crate) fn servers_all(&self) -> crate::Result<Vec<Address>> {
@@ -222,7 +222,7 @@ impl ServerConnection {
         database_name: &str,
         transaction_type: TransactionType,
         options: Options,
-    ) -> crate::Result<(TransactionStream, UnboundedSender<()>)> {
+    ) -> crate::Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
         match self
             .request(Request::Transaction(TransactionRequest::Open {
@@ -233,7 +233,7 @@ impl ServerConnection {
             }))
             .await?
         {
-            Response::TransactionOpen { request_sink, response_source } => {
+            Response::TransactionOpen { request_id, request_sink, response_source } => {
                 let transmitter = TransactionTransmitter::new(
                     self.background_runtime.clone(),
                     request_sink,
@@ -241,7 +241,8 @@ impl ServerConnection {
                 );
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
-                Ok((transaction_stream, transmitter_shutdown_sink))
+                self.transaction_shutdown_senders.lock().unwrap().insert(request_id, transmitter_shutdown_sink);
+                Ok(transaction_stream)
             }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }

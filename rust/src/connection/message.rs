@@ -98,8 +98,8 @@ pub(super) enum Response {
     DatabaseRuleSchema {
         schema: String,
     },
-
     TransactionOpen {
+        request_id: RequestID,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
     },

@@ -20,17 +20,14 @@
 use std::{
     collections::{HashMap, HashSet},
     fmt,
-    sync::Arc
-    ,
+    sync::Arc,
 };
 
 use itertools::Itertools;
 
 use crate::{common::{
     address::Address,
-    error::{ConnectionError, Error}
-
-    , Result,
+    error::{ConnectionError, Error}, Result,
 }, Credential, DatabaseManager, Options, Transaction, TransactionType, UserManager};
 use crate::connection::runtime::BackgroundRuntime;
 use crate::connection::server_connection::ServerConnection;
@@ -279,54 +276,9 @@ impl TypeDBDriver {
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
-        let (transaction_stream, transaction_shutdown_sink) = database.run_failsafe(|database| async move {
+        let transaction_stream  = database.run_failsafe(|database| async move {
             database.connection().open_transaction(database.name(), transaction_type, options).await
         }).await?;
-
-        // TODO: who holds onto the transaction shutdown sink? Probably Connection?
-
-        //
-        // let (transaction_stream, transaction_shutdown_sink) = match self.connection
-        //     .open_transaction(transaction_type, options, network_latency)
-        //     .await
-        // {
-        //     Ok((transaction_stream, transaction_shutdown_sink)) => (transaction_stream, transaction_shutdown_sink),
-        //     Err(_err) => {
-        //         self.is_open.store(false);
-        //         server_connection.close_session(session_id).ok();
-        //
-        //         let (server_session, (transaction_stream, transaction_shutdown_sink)) = self
-        //             .database
-        //             .run_failsafe(|database| {
-        //                 let session_type = self.session_type;
-        //                 async move {
-        //                     let connection = database.connection();
-        //                     let database_name = database.name().to_owned();
-        //                     let session_info = connection.open_session(database_name, session_type, options).await?;
-        //                     Ok((
-        //                         ServerSession { connection: connection.clone(), info: session_info.clone() },
-        //                         connection
-        //                             .open_transaction(
-        //                                 transaction_type,
-        //                                 options,
-        //                                 session_info.network_latency,
-        //                             )
-        //                             .await?,
-        //                     ))
-        //                 }
-        //             })
-        //             .await?;
-        //         *self.server_session.write().unwrap() = server_session;
-        //         self.is_open.store(true);
-        //         self.reopened();
-        //         (transaction_stream, transaction_shutdown_sink)
-        //     }
-        // };
-        //
-        // self.on_server_session_close(move || {
-        //     transaction_shutdown_sink.send(()).ok();
-        // });
-        //
         Ok(Transaction::new(transaction_stream))
     }
 
@@ -338,9 +290,7 @@ impl TypeDBDriver {
     /// connection.force_close()
     /// ```
     pub fn force_close(&self) -> Result {
-        // TODO: force close transactions
-        let result =
-            self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
+        let result = self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
         self.background_runtime.force_close().and(result)
     }
 
