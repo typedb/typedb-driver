@@ -21,7 +21,7 @@ use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
 use typeql::parse_query;
 
-use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
+use typedb_driver::{answer::JSON, concept::Value, Error, Result as TypeDBResult};
 use util::{
     equals_approximate, iter_table_map, json_matches_str, match_answer_concept, match_answer_concept_map,
     match_templated_answer,
@@ -36,7 +36,7 @@ use crate::{
 generic_step_impl! {
     #[step(expr = "typeql query")]
     pub async fn typeql_query(context: &mut Context, step: &Step) -> TypeDBResult<typedb_driver::answer::QueryAnswer> {
-        let parsed = parse_query(step.docstring().unwrap())?;
+        let parsed = parse_query(step.docstring().unwrap()).map_err(|err| Error::Other(err.to_string()))?;
         context.transaction().query(&parsed.to_string()).await
     }
     // #[step(expr = "typeql define")]

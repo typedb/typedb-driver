@@ -31,14 +31,9 @@ use futures::{
 use tokio::time::sleep;
 use typeql::parse_query;
 
-use typedb_driver::{
-    answer::{ConceptRow, JSON},
-    concept::{
-        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
-    },
-    DatabaseManager,
-    Result as TypeDBResult,
-};
+use typedb_driver::{answer::{ConceptRow, JSON}, concept::{
+    Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+}, DatabaseManager, Error, Result as TypeDBResult};
 
 use crate::{assert_with_timeout, behaviour::Context};
 
@@ -245,7 +240,7 @@ pub async fn match_templated_answer(
     answer: &ConceptRow,
 ) -> TypeDBResult<Vec<ConceptRow>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
-    let parsed = parse_query(&query)?;
+    // let parsed = parse_query(&query).map_err(|err| Error::Other(err.to_string()))?;
     // context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
     todo!()
 }
