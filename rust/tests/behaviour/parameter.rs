@@ -21,8 +21,9 @@ use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 
 use chrono::NaiveDateTime;
 use cucumber::Parameter;
+
 use typedb_driver::{
-    concept::{Annotation, ScopedLabel, Transitivity, Value, ValueType},
+    concept::{Annotation, Value, ValueType},
     TransactionType,
 };
 
@@ -83,10 +84,24 @@ impl ValueParam {
             ValueType::Double => Value::Double(self.0.parse().unwrap()),
             ValueType::Long => Value::Long(self.0.parse().unwrap()),
             ValueType::String => Value::String(self.0),
-            ValueType::DateTime => {
-                Value::DateTime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
+            ValueType::Datetime => {
+                Value::Datetime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
             }
-            ValueType::Object => unreachable!(),
+            ValueType::Decimal => {
+                todo!()
+            }
+            ValueType::Date => {
+                todo!()
+            }
+            ValueType::DatetimeTZ => {
+                todo!()
+            }
+            ValueType::Duration => {
+                todo!()
+            }
+            ValueType::Struct(_) => {
+                todo!()
+            }
         }
     }
 }
@@ -99,8 +114,8 @@ impl FromStr for ValueParam {
     }
 }
 
-#[derive(Clone, Copy, Debug, Parameter)]
-#[param(name = "value_type", regex = r"boolean|long|double|string|datetime")]
+#[derive(Clone, Debug, Parameter)]
+#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration")]
 pub struct ValueTypeParam {
     pub value_type: ValueType,
 }
@@ -114,14 +129,14 @@ impl FromStr for ValueTypeParam {
             "long" => Self { value_type: ValueType::Long },
             "double" => Self { value_type: ValueType::Double },
             "string" => Self { value_type: ValueType::String },
-            "datetime" => Self { value_type: ValueType::DateTime },
+            "datetime" => Self { value_type: ValueType::Datetime },
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }
 }
 
-#[derive(Clone, Copy, Debug, Parameter)]
-#[param(name = "optional_value_type", regex = r" as\((boolean|long|double|string|datetime)\)|()")]
+#[derive(Clone, Debug, Parameter)]
+#[param(name = "optional_value_type", regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime_tz|duration)\)|()")]
 pub struct OptionalAsValueTypeParam {
     pub value_type: Option<ValueType>,
 }
@@ -137,18 +152,13 @@ impl FromStr for OptionalAsValueTypeParam {
 #[derive(Clone, Copy, Debug, Parameter)]
 #[param(name = "optional_explicit", regex = r" explicit|")]
 pub struct OptionalExplicitParam {
-    pub transitivity: Transitivity,
 }
 
 impl FromStr for OptionalExplicitParam {
     type Err = Infallible;
 
     fn from_str(text: &str) -> Result<Self, Self::Err> {
-        Ok(match text {
-            "" => Self { transitivity: Transitivity::Transitive },
-            " explicit" => Self { transitivity: Transitivity::Explicit },
-            _ => unreachable!(),
-        })
+        todo!()
     }
 }
 
@@ -219,33 +229,28 @@ impl FromStr for OptionalOverrideLabelParam {
 #[derive(Clone, Debug, Parameter)]
 #[param(name = "scoped_label", regex = r"\S+:\S+")]
 pub struct ScopedLabelParam {
-    pub label: ScopedLabel,
+    pub label: String,
 }
 
 impl FromStr for ScopedLabelParam {
     type Err = Infallible;
 
     fn from_str(label: &str) -> Result<Self, Self::Err> {
-        let Some((scope, name)) = label.split_once(':') else { unreachable!() };
-        Ok(Self { label: ScopedLabel { scope: scope.to_owned(), name: name.to_owned() } })
+        todo!()
     }
 }
 
 #[derive(Clone, Debug, Parameter)]
 #[param(name = "optional_override_scoped_label", regex = r" as (\S+:\S+)|()")]
 pub struct OptionalOverrideScopedLabelParam {
-    pub label: Option<ScopedLabel>,
+    pub label: Option<String>,
 }
 
 impl FromStr for OptionalOverrideScopedLabelParam {
     type Err = Infallible;
 
     fn from_str(label: &str) -> Result<Self, Self::Err> {
-        if let Some((scope, name)) = label.split_once(':') {
-            Ok(Self { label: Some(ScopedLabel { scope: scope.to_owned(), name: name.to_owned() }) })
-        } else {
-            Ok(Self { label: None })
-        }
+        todo!()
     }
 }
 

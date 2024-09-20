@@ -17,25 +17,9 @@
  * under the License.
  */
 
-use super::{AttributeType, EntityType, RelationType, Value};
 use crate::common::IID;
 
-#[derive(Clone, Debug, PartialEq)]
-pub enum Thing {
-    Entity(Entity),
-    Relation(Relation),
-    Attribute(Attribute),
-}
-
-impl Thing {
-    pub fn iid(&self) -> &IID {
-        match self {
-            Self::Entity(entity) => &entity.iid,
-            Self::Relation(relation) => &relation.iid,
-            Self::Attribute(attribute) => &attribute.iid,
-        }
-    }
-}
+use super::{AttributeType, EntityType, RelationType, Value};
 
 // TODO: Storing the Type here is *extremely* inefficient; we could be effectively creating
 //       1 million copies of the same data when matching concepts of homogeneous types
@@ -47,10 +31,25 @@ impl Thing {
 pub struct Entity {
     /// The unique id of this Entity
     pub iid: IID,
-    /// The type which this Entity belongs to
-    pub type_: EntityType,
-    /// If this Thing is inferred by a [Reasoning Rule] or not
-    pub is_inferred: bool,
+    /// The label of the entity type this instance belongs to
+    pub type_: Option<EntityType>,
+}
+
+impl Entity {
+    /// Retrieves the unique id of the `Entity`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// entity.iid();
+    /// ```
+    fn iid(&self) -> &IID {
+        &self.iid
+    }
+
+    pub(crate) fn type_(&self) -> Option<&EntityType> {
+        self.type_.as_ref()
+    }
 }
 
 /// Relation is an instance of a relation type and can be uniquely addressed by
@@ -59,10 +58,25 @@ pub struct Entity {
 pub struct Relation {
     /// The unique id of this Relation
     pub iid: IID,
-    /// The type which this Relation belongs to
-    pub type_: RelationType,
-    /// If this Relation is inferred by a [Reasoning Rule] or not
-    pub is_inferred: bool,
+    /// The label of the relation type this instance belongs to
+    pub type_: Option<RelationType>,
+}
+
+impl Relation {
+    /// Retrieves the unique id of the `Relation`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// relation.iid();
+    /// ```
+    fn iid(&self) -> &IID {
+        &self.iid
+    }
+
+    pub(crate) fn type_(&self) -> Option<&RelationType> {
+        self.type_.as_ref()
+    }
 }
 
 /// Attribute is an instance of the attribute type and has a value.
@@ -70,12 +84,17 @@ pub struct Relation {
 /// Attributes can be uniquely addressed by their type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
-    /// The unique id of this Attribute
+    /// The unique id of this Attribute (internal use only)
     pub iid: IID,
-    /// The type which this Attribute belongs to
-    pub type_: AttributeType,
-    /// The value which this Attribute instance holds.
+    /// The (dataful) value of this attribute
     pub value: Value,
-    /// If this Attribute is inferred by a [Reasoning Rule] or not
-    pub is_inferred: bool,
+    /// The type which this Attribute belongs to
+    /// The label of the attribute type this instance belongs to
+    pub type_: Option<AttributeType>,
+}
+
+impl Attribute {
+    pub(crate) fn type_(&self) -> Option<&AttributeType> {
+        self.type_.as_ref()
+    }
 }

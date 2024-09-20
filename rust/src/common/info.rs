@@ -17,18 +17,7 @@
  * under the License.
  */
 
-use std::time::Duration;
-
-use tokio::sync::mpsc::UnboundedSender;
-
-use super::{address::Address, Callback, SessionID};
-
-#[derive(Clone, Debug)]
-pub(crate) struct SessionInfo {
-    pub(crate) session_id: SessionID,
-    pub(crate) network_latency: Duration,
-    pub(crate) on_close_register_sink: UnboundedSender<Callback>,
-}
+use super::address::Address;
 
 #[derive(Debug)]
 pub(crate) struct DatabaseInfo {

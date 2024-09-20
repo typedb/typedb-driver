@@ -22,28 +22,27 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-mod steps;
-
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::gherkin::Step;
 use futures::{
-    stream::{self, StreamExt},
+    stream::StreamExt,
     TryFutureExt, TryStreamExt,
 };
-use regex::{Captures, Regex};
 use tokio::time::sleep;
+use typeql::parse_query;
+
 use typedb_driver::{
-    answer::{ConceptMap, JSON},
+    answer::{ConceptRow, JSON},
     concept::{
-        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
-    logic::Rule,
-    transaction::concept::api::ThingAPI,
-    DatabaseManager, Result as TypeDBResult,
+    DatabaseManager,
+    Result as TypeDBResult,
 };
-use typeql::{parse_pattern, parse_query, parse_statement, pattern::Statement};
 
 use crate::{assert_with_timeout, behaviour::Context};
+
+mod steps;
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
@@ -57,14 +56,15 @@ pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> 
 pub async fn match_answer_concept_map(
     context: &Context,
     answer_identifiers: &HashMap<&str, &str>,
-    answer: &ConceptMap,
+    answer: &ConceptRow,
 ) -> bool {
-    stream::iter(answer_identifiers.keys())
-        .all(|key| async {
-            answer.map.contains_key(*key)
-                && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
-        })
-        .await
+    // stream::iter(answer_identifiers.keys())
+    //     .all(|key| async {
+    //         answer.map.contains_key(*key)
+    //             && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
+    //     })
+    //     .await
+    todo!()
 }
 
 pub async fn match_answer_concept(context: &Context, answer_identifier: &str, answer: &Concept) -> bool {
@@ -81,38 +81,38 @@ pub async fn match_answer_concept(context: &Context, answer_identifier: &str, an
 async fn key_values_equal(context: &Context, expected_label_and_value: &str, answer: &Concept) -> bool {
     let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
-
-    let res = match answer {
-        Concept::Entity(entity) => {
-            async { entity.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        Concept::Relation(rel) => {
-            async { rel.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        Concept::Attribute(attr) => {
-            async { attr.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-                .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-                .await
-        }
-        _ => unreachable!("Unexpected Concept type: {answer:?}"),
-    };
-    match res {
-        Ok(keys) => keys
-            .into_iter()
-            .find(|key| key.type_.label == identifiers[0])
-            .map(|attr| value_equals_str(&attr.value, identifiers[1]))
-            .unwrap_or(false),
-        Err(_) => false,
-    }
+    //
+    // let res = match answer {
+    //     Concept::Entity(entity) => {
+    //         async { entity.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     Concept::Relation(rel) => {
+    //         async { rel.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     Concept::Attribute(attr) => {
+    //         async { attr.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
+    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
+    //             .await
+    //     }
+    //     _ => unreachable!("Unexpected Concept type: {answer:?}"),
+    // };
+    // match res {
+    //     Ok(keys) => keys
+    //         .into_iter()
+    //         .find(|key| key.type_.label == identifiers[0])
+    //         .map(|attr| value_equals_str(&attr.value, identifiers[1]))
+    //         .unwrap_or(false),
+    //     Err(_) => false,
+    // }
+    todo!()
 }
 
 fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
     match answer {
-        Concept::RootThingType(_) => expected_label == "thing",
         Concept::EntityType(EntityType { label, .. }) => expected_label == label,
         Concept::RelationType(RelationType { label, .. }) => expected_label == label,
         Concept::RoleType(RoleType { label, .. }) => expected_label == label.to_string(),
@@ -143,7 +143,7 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
             expected.parse::<f64>().map(|expected| equals_approximate(expected, *val)).unwrap_or(false)
         }
         Value::Boolean(val) => expected.parse::<bool>().map(|expected| expected.eq(val)).unwrap_or(false),
-        Value::DateTime(val) => {
+        Value::Datetime(val) => {
             if expected.contains(':') {
                 val == &NaiveDateTime::parse_from_str(expected, "%Y-%m-%dT%H:%M:%S").unwrap()
             } else {
@@ -151,6 +151,21 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
                 let my_time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
                 val == &NaiveDateTime::new(my_date, my_time)
             }
+        }
+        Value::Decimal(_) => {
+            todo!()
+        }
+        Value::Date(_) => {
+            todo!()
+        }
+        Value::DatetimeTZ(_) => {
+            todo!()
+        }
+        Value::Duration(_) => {
+            todo!()
+        }
+        Value::Struct(_, _) => {
+            todo!()
         }
     }
 }
@@ -227,16 +242,18 @@ pub fn equals_approximate(first: f64, second: f64) -> bool {
 pub async fn match_templated_answer(
     context: &Context,
     step: &Step,
-    answer: &ConceptMap,
-) -> TypeDBResult<Vec<ConceptMap>> {
+    answer: &ConceptRow,
+) -> TypeDBResult<Vec<ConceptRow>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
-    context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    // context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    todo!()
 }
 
-fn apply_query_template(query_template: &str, answer: &ConceptMap) -> String {
-    let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
-    re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
+fn apply_query_template(query_template: &str, answer: &ConceptRow) -> String {
+    // let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
+    // re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
+    todo!()
 }
 
 fn get_iid(concept: &Concept) -> String {
@@ -247,14 +264,6 @@ fn get_iid(concept: &Concept) -> String {
         _ => unreachable!("Unexpected Concept type: {concept:?}"),
     };
     iid.to_string()
-}
-
-pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> TypeDBResult<bool> {
-    let when = parse_pattern(answer_identifiers.get("when").unwrap())?.into_conjunction();
-    let then = parse_statement(answer_identifiers.get("then").unwrap())?;
-    Ok(*answer_identifiers.get("label").unwrap() == answer.label
-        && when == answer.when
-        && then == Statement::Thing(answer.then.clone()))
 }
 
 pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {

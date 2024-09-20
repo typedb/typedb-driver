@@ -119,7 +119,8 @@ rust_register_toolchains(
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
     ],
-    rust_analyzer_version = rust_common.default_version,
+    rust_analyzer_version = "1.80.1",
+    versions = ["1.80.1"],
 )
 
 rust_analyzer_toolchain_tools_repository(

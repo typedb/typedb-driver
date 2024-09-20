@@ -21,7 +21,7 @@ use std::{future::Future, thread, thread::JoinHandle};
 
 use crossbeam::{
     atomic::AtomicCell,
-    channel::{bounded as bounded_blocking, unbounded, Sender},
+    channel::{bounded as bounded_blocking, Sender, unbounded},
 };
 use log::error;
 use tokio::{
@@ -34,7 +34,7 @@ use tokio::{
 
 use crate::common::{Callback, Result};
 
-pub(super) struct BackgroundRuntime {
+pub(crate) struct BackgroundRuntime {
     async_runtime_handle: runtime::Handle,
     is_open: AtomicCell<bool>,
     shutdown_sink: UnboundedSender<()>,
@@ -44,7 +44,7 @@ pub(super) struct BackgroundRuntime {
 }
 
 impl BackgroundRuntime {
-    pub(super) fn new() -> Result<Self> {
+    pub(crate) fn new() -> Result<Self> {
         let is_open = AtomicCell::new(true);
         let (shutdown_sink, mut shutdown_source) = unbounded_async();
         let async_runtime = runtime::Builder::new_current_thread().enable_time().enable_io().build()?;
@@ -76,11 +76,11 @@ impl BackgroundRuntime {
         self.callback_handler_sink.clone().unwrap()
     }
 
-    pub(super) fn is_open(&self) -> bool {
+    pub(crate) fn is_open(&self) -> bool {
         self.is_open.load()
     }
 
-    pub(super) fn force_close(&self) -> Result {
+    pub(crate) fn force_close(&self) -> Result {
         self.is_open.store(false);
         self.shutdown_sink.send(())?;
         Ok(())

@@ -21,21 +21,23 @@
 use std::future::Future;
 
 use crate::{
-    common::Result, connection::ServerConnection, error::ConnectionError, Connection, DatabaseManager, Error, User,
+    common::Result, DatabaseManager, Error, error::ConnectionError, User,
 };
+use crate::connection::server_connection::ServerConnection;
+use crate::driver::TypeDBDriver;
 
 /// Provides access to all user management methods.
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct UserManager {
     // FIXME: currently required to be `pub` because we refer to it in bindings and over FFI
     #[doc(hidden)]
-    pub connection: Connection,
+    pub connection: TypeDBDriver,
 }
 
 impl UserManager {
     const SYSTEM_DB: &'static str = "_system";
 
-    pub fn new(connection: Connection) -> Self {
+    pub fn new(connection: TypeDBDriver) -> Self {
         Self { connection }
     }
 
@@ -184,14 +186,15 @@ impl UserManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        if !self.connection.is_cloud() {
-            Err(Error::Connection(ConnectionError::UserManagementCloudOnly))
-        } else {
-            DatabaseManager::new(self.connection.clone())
-                .get(Self::SYSTEM_DB)
-                .await?
-                .run_failsafe(|database| task(database.connection().clone()))
-                .await
-        }
+        // if !self.connection.is_cloud() {
+        //     Err(Error::Connection(ConnectionError::UserManagementCloudOnly))
+        // } else {
+        //     DatabaseManager::new(self.connection.clone())
+        //         .get(Self::SYSTEM_DB)
+        //         .await?
+        //         .run_failsafe(|database| task(database.connection().clone()))
+        //         .await
+        // }
+        todo!()
     }
 }

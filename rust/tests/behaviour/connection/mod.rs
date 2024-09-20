@@ -18,7 +18,6 @@
  */
 
 pub(crate) mod database;
-pub(crate) mod session;
 pub(crate) mod steps;
 pub(crate) mod transaction;
 mod user;

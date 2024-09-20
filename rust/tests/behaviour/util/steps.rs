@@ -20,7 +20,7 @@
 use std::env;
 
 use cucumber::{given, then, when};
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 
 use crate::{behaviour::Context, generic_step_impl};
 

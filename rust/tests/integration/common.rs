@@ -20,18 +20,19 @@
 use std::path::PathBuf;
 
 use futures::TryFutureExt;
-use typedb_driver::{
-    Connection, Credential, Database, DatabaseManager, Session, SessionType::Schema, TransactionType::Write,
-};
+
+use typedb_driver::{Credential, Database, DatabaseManager, Options, TransactionType};
+use typedb_driver::answer::QueryAnswer;
+use typedb_driver::driver::TypeDBDriver;
 
 pub const TEST_DATABASE: &str = "test";
 
-pub fn new_core_connection() -> typedb_driver::Result<Connection> {
-    Connection::new_core("0.0.0.0:1729")
+pub async fn new_core_driver() -> typedb_driver::Result<TypeDBDriver> {
+    TypeDBDriver::new_core("127.0.0.1:1729").await
 }
 
-pub fn new_cloud_connection() -> typedb_driver::Result<Connection> {
-    Connection::new_cloud(
+pub async fn new_cloud_driver() -> typedb_driver::Result<TypeDBDriver> {
+    TypeDBDriver::new_cloud(
         &["localhost:11729", "localhost:21729", "localhost:31729"],
         Credential::with_tls(
             "admin",
@@ -43,18 +44,20 @@ pub fn new_cloud_connection() -> typedb_driver::Result<Connection> {
     )
 }
 
-pub async fn create_test_database_with_schema(connection: Connection, schema: &str) -> typedb_driver::Result {
-    let databases = DatabaseManager::new(connection);
+pub async fn create_test_database_with_schema(driver: &TypeDBDriver, schema: &str) -> typedb_driver::Result {
+    let databases = driver.databases();
     if databases.contains(TEST_DATABASE).await? {
         databases.get(TEST_DATABASE).and_then(Database::delete).await?;
     }
     databases.create(TEST_DATABASE).await?;
 
-    let database = databases.get(TEST_DATABASE).await?;
-    let session = Session::new(database, Schema).await?;
-    let transaction = session.transaction(Write).await?;
-    transaction.query().define(schema).await?;
-    transaction.commit().await?;
+    let transaction = driver.transaction(TEST_DATABASE, TransactionType::Schema).await?;
+
+    let answer = transaction.query(schema).await?;
+    assert!(matches!(answer, QueryAnswer::Ok()));
+
+    let result = transaction.commit().await;
+    assert!(matches!(result, Ok(_)));
     Ok(())
 }
 

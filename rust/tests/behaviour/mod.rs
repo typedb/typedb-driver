@@ -17,14 +17,6 @@
  * under the License.
  */
 
-mod concept;
-mod connection;
-mod driver;
-mod parameter;
-mod query;
-mod session_tracker;
-mod util;
-
 use std::{
     collections::{HashMap, HashSet},
     iter, mem,
@@ -33,19 +25,22 @@ use std::{
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
-    future::{try_join_all, Either},
+    future::{Either, try_join_all},
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
-    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
-    logic::Rule,
-    Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
-};
+use tokio::time::{Duration, sleep};
 
-use self::session_tracker::SessionTracker;
+use typedb_driver::{answer::{ConceptRow, JSON}, concept::{Value}, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager};
+
+use self::transaction_tracker::TransactionTracker;
+
+mod connection;
+mod driver;
+mod parameter;
+mod query;
+mod transaction_tracker;
+mod util;
 
 #[derive(Debug, Default)]
 struct SingletonParser {
@@ -94,16 +89,11 @@ pub struct Context {
     pub tls_root_ca: PathBuf,
     pub session_options: Options,
     pub transaction_options: Options,
-    pub connection: Connection,
-    pub databases: DatabaseManager,
-    pub users: UserManager,
-    pub session_trackers: Vec<SessionTracker>,
-    pub things: HashMap<String, Option<Thing>>,
-    pub answer: Vec<ConceptMap>,
-    pub answer_group: Vec<ConceptMapGroup>,
+    pub driver: TypeDBDriver,
+    pub transaction_trackers: Vec<TransactionTracker>,
+    pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
-    pub value_answer_group: Vec<ValueGroup>,
 }
 
 impl Context {
@@ -145,8 +135,8 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.session_options = Options::new();
-        self.transaction_options = Options::new().infer(true);
-        self.set_connection(Connection::new_cloud(
+        self.transaction_options = Options::new();
+        self.set_connection(TypeDBDriver::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
@@ -156,112 +146,42 @@ impl Context {
     }
 
     pub async fn all_databases(&self) -> HashSet<String> {
-        self.databases.all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
+        self.driver.databases().all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
     }
 
     pub async fn cleanup_databases(&mut self) {
-        try_join_all(self.databases.all().await.unwrap().into_iter().map(Database::delete)).await.ok();
+        try_join_all(self.driver.databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
     }
 
     pub async fn cleanup_users(&mut self) {
         try_join_all(
-            self.users
+            self.driver
+                .users()
                 .all()
                 .await
                 .unwrap()
                 .into_iter()
                 .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.users.delete(user.username)),
+                .map(|user| self.driver.users().delete(user.username)),
         )
         .await
         .ok();
     }
 
     pub fn transaction(&self) -> &Transaction {
-        self.session_trackers.get(0).unwrap().transaction()
+        self.transaction_trackers.get(0).unwrap().transaction()
     }
 
     pub fn take_transaction(&mut self) -> Transaction {
-        self.session_trackers.get_mut(0).unwrap().take_transaction()
+        self.transaction_trackers.get_mut(0).unwrap().take_transaction()
     }
 
-    pub async fn get_entity_type(&self, type_label: String) -> TypeDBResult<EntityType> {
-        self.transaction().concept().get_entity_type(type_label).await.map(|entity_type| {
-            assert!(entity_type.is_some());
-            entity_type.unwrap()
-        })
-    }
-
-    pub async fn get_relation_type(&self, type_label: String) -> TypeDBResult<RelationType> {
-        self.transaction().concept().get_relation_type(type_label).await.map(|relation_type| {
-            assert!(relation_type.is_some());
-            relation_type.unwrap()
-        })
-    }
-
-    pub async fn get_attribute_type(&self, type_label: String) -> TypeDBResult<AttributeType> {
-        self.transaction().concept().get_attribute_type(type_label).await.map(|attribute_type| {
-            assert!(attribute_type.is_some());
-            attribute_type.unwrap()
-        })
-    }
-
-    pub fn get_thing(&self, var_name: String) -> &Thing {
-        assert!(&self.things.contains_key(&var_name));
-        self.things.get(&var_name).unwrap().as_ref().unwrap()
-    }
-
-    pub fn get_entity(&self, var_name: String) -> &Entity {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Entity(_)));
-        let Thing::Entity(entity) = thing else { unreachable!() };
-        entity
-    }
-
-    pub fn get_relation(&self, var_name: String) -> &Relation {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Relation(_)));
-        let Thing::Relation(relation) = thing else { unreachable!() };
-        relation
-    }
-
-    pub fn get_attribute(&self, var_name: String) -> &Attribute {
-        let thing = self.get_thing(var_name);
-        assert!(matches!(thing, Thing::Attribute(_)));
-        let Thing::Attribute(attribute) = thing else { unreachable!() };
-        attribute
-    }
-
-    pub fn insert_thing(&mut self, var_name: String, thing: Option<Thing>) {
-        self.things.insert(var_name, thing);
-    }
-
-    pub fn insert_entity(&mut self, var_name: String, entity: Option<Entity>) {
-        self.insert_thing(var_name, entity.map(Thing::Entity));
-    }
-
-    pub fn insert_relation(&mut self, var_name: String, relation: Option<Relation>) {
-        self.insert_thing(var_name, relation.map(Thing::Relation));
-    }
-
-    pub fn insert_attribute(&mut self, var_name: String, attribute: Option<Attribute>) {
-        self.insert_thing(var_name, attribute.map(Thing::Attribute));
-    }
-
-    pub async fn get_rule(&self, label: String) -> TypeDBResult<Option<Rule>> {
-        self.transaction().logic().get_rule(label).await
-    }
-
-    pub fn set_connection(&mut self, new_connection: Connection) {
-        self.connection = new_connection;
-        self.databases = DatabaseManager::new(self.connection.clone());
-        self.users = UserManager::new(self.connection.clone());
-        self.session_trackers.clear();
+    pub fn set_connection(&mut self, new_connection: TypeDBDriver) {
+        self.driver = new_connection;
+        self.transaction_trackers.clear();
         self.answer.clear();
-        self.answer_group.clear();
         self.fetch_answer = None;
         self.value_answer = None;
-        self.value_answer_group.clear();
     }
 }
 
@@ -271,28 +191,21 @@ impl Default for Context {
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
         );
         let session_options = Options::new();
-        let transaction_options = Options::new().infer(true);
-        let connection = Connection::new_cloud(
+        let transaction_options = Options::new();
+        let typedb_driver = TypeDBDriver::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )
         .unwrap();
-        let databases = DatabaseManager::new(connection.clone());
-        let users = UserManager::new(connection.clone());
         Self {
             tls_root_ca,
             session_options,
             transaction_options,
-            connection,
-            databases,
-            users,
-            session_trackers: Vec::new(),
-            things: HashMap::new(),
+            driver: typedb_driver,
+            transaction_trackers: Vec::new(),
             answer: Vec::new(),
-            answer_group: Vec::new(),
             fetch_answer: None,
             value_answer: None,
-            value_answer_group: Vec::new(),
         }
     }
 }

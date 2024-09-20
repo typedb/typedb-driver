@@ -17,39 +17,27 @@
  * under the License.
  */
 
-pub mod concept;
-pub mod logic;
-pub mod query;
-
 use std::{fmt, marker::PhantomData, pin::Pin};
 
-use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
-use crate::{
-    common::{Promise, Result, TransactionType},
-    connection::TransactionStream,
-    error::ConnectionError,
-    Options,
-};
+use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, Error, Options};
+use crate::answer::QueryAnswer;
 
 /// A transaction with a TypeDB database.
-pub struct Transaction<'a> {
+pub struct Transaction {
     /// The transaction’s type (READ or WRITE)
     type_: TransactionType,
     /// The options for the transaction
     options: Options,
     transaction_stream: Pin<Box<TransactionStream>>,
-
-    _lifetime_guard: PhantomData<&'a ()>,
 }
 
-impl Transaction<'_> {
+impl Transaction {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
         let transaction_stream = Box::pin(transaction_stream);
         Transaction {
             type_: transaction_stream.type_(),
             options: transaction_stream.options(),
             transaction_stream,
-            _lifetime_guard: PhantomData,
         }
     }
 
@@ -64,24 +52,37 @@ impl Transaction<'_> {
         self.transaction_stream.is_open()
     }
 
+
+    /// Performs a TypeQL query with default options.
+    /// See [`Transaction::query_with_options`]
+    pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
+        self.query_with_options(query, Options::new())
+    }
+
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` -- The TypeQL query to be executed
+    /// * `options` -- Query options
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query_with_options(query, options)
+    /// ```
+    pub fn query_with_options(
+        &self,
+        query: impl AsRef<str>,
+        options: Options,
+    ) -> impl Promise<'static, Result<QueryAnswer>> {
+        let query = query.as_ref();
+        self.transaction_stream.query(query, options)
+    }
+
     /// Retrieves the transaction’s type (READ or WRITE).
     pub fn type_(&self) -> TransactionType {
         self.type_
-    }
-
-    /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
-    pub fn query(&self) -> QueryManager<'_> {
-        QueryManager::new(self.transaction_stream.as_ref())
-    }
-
-    /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
-    pub fn concept(&self) -> ConceptManager<'_> {
-        ConceptManager::new(self.transaction_stream.as_ref())
-    }
-
-    /// Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
-    pub fn logic(&self) -> LogicManager<'_> {
-        LogicManager::new(self.transaction_stream.as_ref())
     }
 
     /// Registers a callback function which will be executed when this transaction is closed.
@@ -95,7 +96,7 @@ impl Transaction<'_> {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
         self.transaction_stream.on_close(callback)
     }
 
@@ -136,7 +137,7 @@ impl Transaction<'_> {
     }
 }
 
-impl fmt::Debug for Transaction<'_> {
+impl fmt::Debug for Transaction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }

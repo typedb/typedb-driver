@@ -29,6 +29,7 @@ typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
 typedb_driver_deps = [
     "@crates//:chrono",
+    "@crates//:chrono-tz",
     "@crates//:crossbeam",
     "@crates//:futures",
     "@crates//:http",
@@ -38,6 +39,7 @@ typedb_driver_deps = [
     "@crates//:tokio",
     "@crates//:tokio-stream",
     "@crates//:tonic",
+    "@crates//:tonic-types",
     "@crates//:uuid",
     "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
     "@vaticle_typeql//rust:typeql",

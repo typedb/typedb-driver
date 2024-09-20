@@ -25,12 +25,13 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    connection, database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC,
+    connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC,
     user, user_manager,
 };
 
+use crate::common::{Error, error::ConnectionError, Result, StdResult};
+
 use super::channel::{CallCredentials, GRPCChannel};
-use crate::common::{error::ConnectionError, Error, Result, StdResult};
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 
@@ -65,13 +66,14 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn renew_token(&mut self) -> Result {
         if let Some(call_credentials) = &self.call_credentials {
-            trace!("renewing token...");
-            call_credentials.reset_token();
-            let req = user::token::Req { username: call_credentials.username().to_owned() };
-            trace!("sending token request...");
-            let token = self.grpc.user_token(req).await?.into_inner().token;
-            call_credentials.set_token(token);
-            trace!("renewed token");
+            todo!()
+            // trace!("renewing token...");
+            // call_credentials.reset_token();
+            // let req = user::token::Req { username: call_credentials.username().to_owned() };
+            // trace!("sending token request...");
+            // let token = self.grpc.user_token(req).await?.into_inner().token;
+            // call_credentials.set_token(token);
+            // trace!("renewed token");
         }
         Ok(())
     }
@@ -127,26 +129,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.database_type_schema(req.clone()))).await
     }
 
-    pub(super) async fn database_rule_schema(
-        &mut self,
-        req: database::rule_schema::Req,
-    ) -> Result<database::rule_schema::Res> {
-        self.single(|this| Box::pin(this.grpc.database_rule_schema(req.clone()))).await
-    }
-
-    pub(super) async fn session_open(&mut self, req: session::open::Req) -> Result<session::open::Res> {
-        self.single(|this| Box::pin(this.grpc.session_open(req.clone()))).await
-    }
-
-    pub(super) async fn session_close(&mut self, req: session::close::Req) -> Result<session::close::Res> {
-        debug!("closing session");
-        self.single(|this| Box::pin(this.grpc.session_close(req.clone()))).await
-    }
-
-    pub(super) async fn session_pulse(&mut self, req: session::pulse::Req) -> Result<session::pulse::Res> {
-        self.single(|this| Box::pin(this.grpc.session_pulse(req.clone()))).await
-    }
-
     pub(super) async fn transaction(
         &mut self,
         open_req: transaction::Req,
@@ -167,40 +149,47 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     pub(super) async fn users_all(&mut self, req: user_manager::all::Req) -> Result<user_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.users_all(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_all(req.clone()))).await
     }
 
     pub(super) async fn users_contain(
         &mut self,
         req: user_manager::contains::Req,
     ) -> Result<user_manager::contains::Res> {
-        self.single(|this| Box::pin(this.grpc.users_contains(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_contains(req.clone()))).await
     }
 
     pub(super) async fn users_create(&mut self, req: user_manager::create::Req) -> Result<user_manager::create::Res> {
-        self.single(|this| Box::pin(this.grpc.users_create(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_create(req.clone()))).await
     }
 
     pub(super) async fn users_delete(&mut self, req: user_manager::delete::Req) -> Result<user_manager::delete::Res> {
-        self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
     }
 
     pub(super) async fn users_get(&mut self, req: user_manager::get::Req) -> Result<user_manager::get::Res> {
-        self.single(|this| Box::pin(this.grpc.users_get(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_get(req.clone()))).await
     }
 
     pub(super) async fn users_password_set(
         &mut self,
         req: user_manager::password_set::Req,
     ) -> Result<user_manager::password_set::Res> {
-        self.single(|this| Box::pin(this.grpc.users_password_set(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_password_set(req.clone()))).await
     }
 
     pub(super) async fn user_password_update(
         &mut self,
         req: user::password_update::Req,
     ) -> Result<user::password_update::Res> {
-        self.single(|this| Box::pin(this.grpc.user_password_update(req.clone()))).await
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.user_password_update(req.clone()))).await
     }
 
     async fn single<F, R>(&mut self, call: F) -> Result<R>

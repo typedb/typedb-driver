@@ -17,32 +17,18 @@
  * under the License.
  */
 
-use typedb_protocol::{session, transaction, Exception, Options as OptionsProto};
+use typedb_protocol::{Options as OptionsProto, transaction};
 
-use super::{FromProto, IntoProto};
-use crate::{concept::SchemaException, Options, SessionType, TransactionType};
+use crate::{Options, TransactionType};
 
-impl FromProto<Exception> for SchemaException {
-    fn from_proto(proto: Exception) -> Self {
-        let Exception { code, message } = proto;
-        Self { code, message }
-    }
-}
-
-impl IntoProto<i32> for SessionType {
-    fn into_proto(self) -> i32 {
-        match self {
-            Self::Data => session::Type::Data.into(),
-            Self::Schema => session::Type::Schema.into(),
-        }
-    }
-}
+use super::IntoProto;
 
 impl IntoProto<i32> for TransactionType {
     fn into_proto(self) -> i32 {
         match self {
             Self::Read => transaction::Type::Read.into(),
             Self::Write => transaction::Type::Write.into(),
+            Self::Schema => transaction::Type::Schema.into(),
         }
     }
 }
@@ -50,15 +36,11 @@ impl IntoProto<i32> for TransactionType {
 impl IntoProto<OptionsProto> for Options {
     fn into_proto(self) -> OptionsProto {
         OptionsProto {
-            infer: self.infer,
-            trace_inference: self.trace_inference,
-            explain: self.explain,
             parallel: self.parallel,
             prefetch_size: self.prefetch_size,
             prefetch: self.prefetch,
-            session_idle_timeout_millis: self.session_idle_timeout.map(|val| val.as_millis() as i32),
-            transaction_timeout_millis: self.transaction_timeout.map(|val| val.as_millis() as i32),
-            schema_lock_acquire_timeout_millis: self.schema_lock_acquire_timeout.map(|val| val.as_millis() as i32),
+            transaction_timeout_millis: self.transaction_timeout.map(|val| val.as_millis() as u64),
+            schema_lock_acquire_timeout_millis: self.schema_lock_acquire_timeout.map(|val| val.as_millis() as u64),
             read_any_replica: self.read_any_replica,
         }
     }

@@ -20,22 +20,24 @@
 #![deny(elided_lifetimes_in_paths)]
 #![deny(unused_must_use)]
 
+pub use self::{
+    common::{
+        box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result,
+        TransactionType,
+    },
+    connection::{Credential},
+    database::{Database, DatabaseManager},
+    transaction::Transaction,
+    user::{User, UserManager},
+    driver::TypeDBDriver,
+};
+
 pub mod answer;
 mod common;
 pub mod concept;
 mod connection;
 mod database;
-pub mod logic;
 pub mod transaction;
 mod user;
+pub mod driver;
 
-pub use self::{
-    common::{
-        box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, SessionType, TransactionType,
-        IID,
-    },
-    connection::{Connection, Credential},
-    database::{Database, DatabaseManager, Session},
-    transaction::Transaction,
-    user::{User, UserManager},
-};

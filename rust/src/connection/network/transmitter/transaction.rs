@@ -31,42 +31,47 @@ use futures::TryStreamExt;
 use itertools::Itertools;
 use log::{debug, error};
 use prost::Message;
-#[cfg(not(feature = "sync"))]
-use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     select,
     sync::{
         mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
         oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
     },
-    time::{sleep_until, Instant},
+    time::{Instant, sleep_until},
 };
+#[cfg(not(feature = "sync"))]
+use tokio::sync::oneshot::channel as oneshot;
 use tonic::Streaming;
-use typedb_protocol::transaction::{self, server::Server, stream::State};
+use typedb_protocol::transaction::{self, server::Server,
+};
+use typedb_protocol::transaction::res_part::ResPart;
+use typedb_protocol::transaction::stream_signal::res_part::State;
+
+use crate::{common::{
+    box_promise,
+    Callback,
+    error::ConnectionError,
+    Promise, RequestID, Result, stream::{NetworkStream, Stream},
+}, connection::{
+    message::{TransactionRequest, TransactionResponse},
+    network::proto::{IntoProto, TryFromProto},
+    runtime::BackgroundRuntime,
+}, Error};
+use crate::connection::message::QueryResponse;
+use crate::connection::network::proto::FromProto;
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::ResponseSink;
-use crate::{
-    common::{
-        box_promise,
-        error::ConnectionError,
-        stream::{NetworkStream, Stream},
-        Callback, Promise, RequestID, Result,
-    },
-    connection::{
-        message::{TransactionRequest, TransactionResponse},
-        network::proto::{IntoProto, TryFromProto},
-        runtime::BackgroundRuntime,
-    },
-};
 
 pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
     is_open: Arc<AtomicCell<bool>>,
-    error: Arc<RwLock<Option<ConnectionError>>>,
-    on_close_register_sink: UnboundedSender<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
+    error: Arc<RwLock<Option<Error>>>,
+    on_close_register_sink: UnboundedSender<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
     shutdown_sink: UnboundedSender<()>,
+    // runtime is alive as long as the transaction transmitter is alive:
+    background_runtime: Arc<BackgroundRuntime>,
 }
 
 impl Drop for TransactionTransmitter {
@@ -77,11 +82,11 @@ impl Drop for TransactionTransmitter {
 
 impl TransactionTransmitter {
     pub(in crate::connection) fn new(
-        background_runtime: &BackgroundRuntime,
+        background_runtime: Arc<BackgroundRuntime>,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
-        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     ) -> Self {
+        let callback_handler_sink = background_runtime.callback_handler_sink();
         let (buffer_sink, buffer_source) = unbounded_async();
         let (on_close_register_sink, on_close_register_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
@@ -99,7 +104,7 @@ impl TransactionTransmitter {
             shutdown_sink.clone(),
             shutdown_source,
         ));
-        Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink }
+        Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink, background_runtime }
     }
 
     pub(in crate::connection) fn is_open(&self) -> bool {
@@ -112,12 +117,12 @@ impl TransactionTransmitter {
 
     pub(in crate::connection) fn force_close(&self) {
         if self.is_open.compare_exchange(true, false).is_ok() {
-            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed);
+            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
             self.shutdown_sink.send(()).ok();
         }
     }
 
-    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
         self.on_close_register_sink.send(Box::new(callback)).ok();
     }
 
@@ -157,7 +162,7 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn stream(
         &self,
         req: TransactionRequest,
-    ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
+    ) -> Result<impl Stream<Item=Result<TransactionResponse>>> {
         if !self.is_open() {
             return Err(self.error().into());
         }
@@ -168,12 +173,12 @@ impl TransactionTransmitter {
         Ok(NetworkStream::new(recv).map_ok(Into::into))
     }
 
-    fn error(&self) -> ConnectionError {
+    fn error(&self) -> Error {
         match self.error.read().unwrap().as_ref() {
             Some(err) => err.clone(),
             None => {
                 debug!("Transaction is closed with no message.");
-                ConnectionError::TransactionIsClosed
+                ConnectionError::TransactionIsClosed.into()
             }
         }
     }
@@ -184,8 +189,8 @@ impl TransactionTransmitter {
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
         is_open: Arc<AtomicCell<bool>>,
-        error: Arc<RwLock<Option<ConnectionError>>>,
-        on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
+        error: Arc<RwLock<Option<Error>>>,
+        on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
         callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
@@ -212,7 +217,7 @@ impl TransactionTransmitter {
         mut request_source: UnboundedReceiver<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
         request_sink: UnboundedSender<transaction::Client>,
         mut collector: ResponseCollector,
-        mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
+        mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
@@ -265,12 +270,12 @@ impl TransactionTransmitter {
         loop {
             match grpc_source.next().await {
                 Some(Ok(message)) => collector.collect(message).await,
-                Some(Err(err)) => {
+                Some(Err(status)) => {
                     break collector
-                        .close(ConnectionError::TransactionIsClosedWithErrors { errors: err.message().to_owned() })
-                        .await
+                        .close_with_error(status.into())
+                        .await;
                 }
-                None => break collector.close(ConnectionError::TransactionIsClosed).await,
+                None => break collector.close().await,
             }
         }
         shutdown_sink.send(()).ok();
@@ -308,8 +313,8 @@ struct ResponseCollector {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
     callbacks: Arc<RwLock<HashMap<RequestID, ResponseSink<TransactionResponse>>>>,
     is_open: Arc<AtomicCell<bool>>,
-    error: Arc<RwLock<Option<ConnectionError>>>,
-    on_close: Arc<RwLock<Vec<Box<dyn FnOnce(ConnectionError) + Send + Sync>>>>,
+    error: Arc<RwLock<Option<Error>>>,
+    on_close: Arc<RwLock<Vec<Box<dyn FnOnce(Option<Error>) + Send + Sync>>>>,
     callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
 }
 
@@ -327,46 +332,106 @@ impl ResponseCollector {
     }
 
     fn collect_res(&self, res: transaction::Res) {
-        if matches!(res.res, Some(transaction::res::Res::OpenRes(_))) {
-            // Transaction::Open responses don't need to be collected.
+        let request_id = res.req_id.clone().into();
+        if !self.callbacks.read().unwrap().contains_key(&request_id) {
+            error!("{}", ConnectionError::UnknownRequestId { request_id });
             return;
         }
-        let request_id = res.req_id.clone().into();
-        match self.callbacks.write().unwrap().remove(&request_id) {
-            Some(sink) => sink.finish(TransactionResponse::try_from_proto(res)),
-            _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
+
+        let ok_response = match TransactionResponse::try_from_proto(res) {
+            Ok(response) => response,
+            Err(err) => {
+                let sink = self.callbacks.write().unwrap().remove(&request_id).unwrap();
+                sink.error(err);
+                return;
+            }
+        };
+
+        if matches!(&ok_response, TransactionResponse::Query(_)) {
+            let guard = self.callbacks.write().unwrap();
+            let sink = guard.get(&request_id).unwrap();
+            sink.send(Ok(ok_response));
+        } else {
+            let sink = self.callbacks.write().unwrap().remove(&request_id).unwrap();
+            sink.finish(Ok(ok_response));
         }
     }
 
     async fn collect_res_part(&self, res_part: transaction::ResPart) {
         let request_id = res_part.req_id.clone().into();
 
-        match res_part.res {
-            Some(transaction::res_part::Res::StreamResPart(stream_res_part)) => {
-                match State::from_i32(stream_res_part.state).expect("enum out of range") {
-                    State::Done => {
-                        self.callbacks.write().unwrap().remove(&request_id);
+        match res_part.res_part {
+            Some(ResPart::QueryRes(query_res)) => {
+                match self.callbacks.read().unwrap().get(&request_id) {
+                    Some(sink) => {
+                        let response = TransactionResponse::try_from_proto(query_res);
+                        if let Err(err) = &response {
+                            self.callbacks.write().unwrap().remove(&request_id);
+                            error!("{}", err);
+                        }
+                        sink.send(response)
                     }
-                    State::Continue => {
-                        match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
-                            Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
-                                let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
-                                callback.error(ConnectionError::TransactionIsClosed);
+                    _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
+                }
+            }
+            Some(ResPart::StreamRes(stream_res)) => {
+                match stream_res.state {
+                    None => {
+                        self.callbacks.write().unwrap().remove(&request_id);
+                        error!("{}", ConnectionError::MissingResponseField { field: "transaction.res_part.res_part.stream_res.state"})
+                    }
+                    Some(state) => {
+                        match state {
+                            State::Continue(_) => {
+                                // TODO: we should not be immediately sending the request for the next batch,
+                                //       otherwise we will end up pulling the entire response stream at once
+                                //       which makes the streaming/continue model useless!
+                                match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
+                                    Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
+                                        let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
+                                        callback.error(ConnectionError::TransactionIsClosed);
+                                    }
+                                    _ => (),
+                                }
                             }
-                            _ => (),
+                            State::Done(_) => {
+                                self.callbacks.write().unwrap().remove(&request_id);
+                            }
+                            State::Error(error) => {
+                                match self.callbacks.read().unwrap().get(&request_id) {
+                                    Some(sink) => {
+                                        sink.send(Ok(TransactionResponse::Query(QueryResponse::from_proto(error))));
+                                    }
+                                    _ => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
+                                }
+                                self.callbacks.write().unwrap().remove(&request_id);
+                            }
                         }
                     }
                 }
             }
-            Some(_) => match self.callbacks.read().unwrap().get(&request_id) {
-                Some(sink) => sink.send(TransactionResponse::try_from_proto(res_part)),
-                _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
-            },
-            None => error!("{}", ConnectionError::MissingResponseField { field: "res_part.res" }),
+            None => {
+                self.callbacks.write().unwrap().remove(&request_id);
+                error!("{}", ConnectionError::MissingResponseField { field: "transaction.res_part.res_part" })
+            }
         }
     }
 
-    async fn close(self, error: ConnectionError) {
+    async fn close(self) {
+        self.is_open.store(false);
+        let mut listeners = std::mem::take(&mut *self.callbacks.write().unwrap());
+        for (_, listener) in listeners.drain() {
+            listener.finish(Ok(TransactionResponse::Close));
+        }
+        let callbacks = std::mem::take(&mut *self.on_close.write().unwrap());
+        for callback in callbacks {
+            let (response_sink, response) = oneshot_async();
+            self.callback_handler_sink.send((Box::new(move || callback(None)), response_sink)).unwrap();
+            response.await.ok();
+        }
+    }
+
+    async fn close_with_error(self, error: Error) {
         self.is_open.store(false);
         *self.error.write().unwrap() = Some(error.clone());
         let mut listeners = std::mem::take(&mut *self.callbacks.write().unwrap());
@@ -377,7 +442,7 @@ impl ResponseCollector {
         for callback in callbacks {
             let error = error.clone();
             let (response_sink, response) = oneshot_async();
-            self.callback_handler_sink.send((Box::new(move || callback(error)), response_sink)).unwrap();
+            self.callback_handler_sink.send((Box::new(move || callback(Some(error))), response_sink)).unwrap();
             response.await.ok();
         }
     }

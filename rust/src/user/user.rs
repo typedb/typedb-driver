@@ -17,7 +17,8 @@
  * under the License.
  */
 
-use crate::{common::Result, error::ConnectionError, Connection};
+use crate::{common::Result, error::ConnectionError};
+use crate::driver::TypeDBDriver;
 
 #[derive(Clone, Debug)]
 /// User information
@@ -45,7 +46,7 @@ impl User {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn password_update(
         &self,
-        connection: &Connection,
+        connection: &TypeDBDriver,
         password_old: impl Into<String>,
         password_new: impl Into<String>,
     ) -> Result {

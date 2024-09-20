@@ -17,8 +17,6 @@
  * under the License.
  */
 
-use std::fmt;
-
 use super::ValueType;
 
 /// Annotations are used to specify extra schema constraints.
@@ -28,54 +26,23 @@ pub enum Annotation {
     Unique,
 }
 
-#[derive(Clone, Debug, PartialEq)]
-pub enum ThingType {
-    RootThingType(RootThingType),
-    EntityType(EntityType),
-    RelationType(RelationType),
-    AttributeType(AttributeType),
-}
-
-impl ThingType {
-    /// Retrieves the unique label of the `ThingType`.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// thing_type.label()
-    /// ```
-    pub fn label(&self) -> &str {
-        match self {
-            Self::RootThingType(_) => RootThingType::LABEL,
-            Self::EntityType(entity_type) => &entity_type.label,
-            Self::RelationType(relation_type) => &relation_type.label,
-            Self::AttributeType(attribute_type) => &attribute_type.label,
-        }
-    }
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RootThingType;
-
-impl RootThingType {
-    pub(crate) const LABEL: &'static str = "thing";
-}
-
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct EntityType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
 }
 
 impl EntityType {
-    pub(crate) const ROOT_LABEL: &'static str = "entity";
-
-    /// Returns the root `EntityType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
+    /// Retrieves the unique label of the `EntityType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// entity_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
     }
 }
 
@@ -88,16 +55,18 @@ impl EntityType {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RelationType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
 }
 
 impl RelationType {
-    pub(crate) const ROOT_LABEL: &'static str = "relation";
-
-    /// Returns the root `RelationType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
+    /// Retrieves the unique label of the `RelationType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// relation_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
     }
 }
 
@@ -115,17 +84,30 @@ impl RelationType {
 #[derive(Clone, Debug, PartialEq)]
 pub struct AttributeType {
     pub label: String,
-    pub is_root: bool,
-    pub is_abstract: bool,
-    pub value_type: ValueType,
+    pub value_type: Option<ValueType>,
 }
 
 impl AttributeType {
-    pub(crate) const ROOT_LABEL: &'static str = "attribute";
+    /// Retrieves the unique label of the `AttributeType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// attribute_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
+    }
 
-    /// Returns the root `AttributeType`
-    pub fn root() -> Self {
-        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true, value_type: ValueType::Object }
+    /// Retrieves the `ValueType` of the `AttributeType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// attribute_type.value_type()
+    /// ```
+    pub fn value_type(&self) -> Option<&ValueType> {
+        self.value_type.as_ref()
     }
 }
 
@@ -136,19 +118,19 @@ impl AttributeType {
 /// Roles allow a schema to enforce logical constraints on types of role players.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RoleType {
-    pub label: ScopedLabel,
-    pub is_root: bool,
-    pub is_abstract: bool,
+    pub label: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ScopedLabel {
-    pub scope: String,
-    pub name: String,
-}
 
-impl fmt::Display for ScopedLabel {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}:{}", self.scope, self.name)
+impl RoleType {
+    /// Retrieves the unique label of the `RoleType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// role_type.label()
+    /// ```
+    pub fn label(&self) -> &str {
+        &self.label
     }
 }

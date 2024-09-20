@@ -17,8 +17,8 @@
  * under the License.
  */
 
+pub use self::{database::Database, database_manager::DatabaseManager};
+
 mod database;
 mod database_manager;
-mod session;
 
-pub use self::{database::Database, database_manager::DatabaseManager, session::Session};

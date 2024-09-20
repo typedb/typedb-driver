@@ -19,16 +19,17 @@
 
 use std::path::PathBuf;
 
-use futures::StreamExt;
 use serial_test::serial;
-use typedb_driver::{Connection, Credential, DatabaseManager, Session, SessionType::Data, TransactionType::Write};
+
+use typedb_driver::{Credential, DatabaseManager, };
+use typedb_driver::driver::TypeDBDriver;
 
 use super::common;
 
 #[tokio::test]
 #[serial]
 async fn address_translation() {
-    let connection = Connection::new_cloud_with_translation(
+    let typedb_driver = TypeDBDriver::new_cloud_with_translation(
         [
             ("localhost:11729", "localhost:11729"),
             ("localhost:21729", "localhost:21729"),
@@ -46,15 +47,15 @@ async fn address_translation() {
     )
     .unwrap();
 
-    common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await.unwrap();
-    let databases = DatabaseManager::new(connection);
-    assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
-
-    let session = Session::new(databases.get(common::TEST_DATABASE).await.unwrap(), Data).await.unwrap();
-    let transaction = session.transaction(Write).await.unwrap();
-    let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
-    let results: Vec<_> = answer_stream.collect().await;
-    transaction.commit().await.unwrap();
-    assert_eq!(results.len(), 5);
-    assert!(results.into_iter().all(|res| res.is_ok()));
+    todo!()
+    // common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await.unwrap();
+    // let databases = DatabaseManager::new(typedb_driver);
+    // assert!(databases.contains(common::TEST_DATABASE).await.unwrap());
+    //
+    // let transaction = session.transaction(Write).await.unwrap();
+    // let answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
+    // let results: Vec<_> = answer_stream.collect().await;
+    // transaction.commit().await.unwrap();
+    // assert_eq!(results.len(), 5);
+    // assert!(results.into_iter().all(|res| res.is_ok()));
 }

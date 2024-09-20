@@ -25,13 +25,12 @@ use tokio::{
     },
 };
 
-use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
     common::{address::Address, Result},
     connection::{
         message::{Request, Response},
         network::{
-            channel::{open_callcred_channel, open_plaintext_channel, GRPCChannel},
+            channel::{GRPCChannel, open_callcred_channel, open_plaintext_channel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },
@@ -39,6 +38,9 @@ use crate::{
     },
     Credential, Error,
 };
+use crate::common::RequestID;
+
+use super::{oneshot_blocking, response_sink::ResponseSink};
 
 pub(in crate::connection) struct RPCTransmitter {
     request_sink: UnboundedSender<(Request, ResponseSink<Response>)>,
@@ -119,7 +121,9 @@ impl RPCTransmitter {
 
     async fn send_request<Channel: GRPCChannel>(mut rpc: RPCStub<Channel>, request: Request) -> Result<Response> {
         match request {
-            Request::ConnectionOpen => rpc.connection_open(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::ConnectionOpen { .. } => {
+                rpc.connection_open(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            },
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
 
@@ -127,7 +131,7 @@ impl RPCTransmitter {
                 rpc.databases_contains(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseCreate { .. } => {
-                rpc.databases_create(request.try_into_proto()?).await.map(Response::from_proto)
+                rpc.databases_create(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
             Request::DatabaseGet { .. } => {
                 rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)
@@ -145,21 +149,12 @@ impl RPCTransmitter {
             Request::DatabaseTypeSchema { .. } => {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
             }
-            Request::DatabaseRuleSchema { .. } => {
-                rpc.database_rule_schema(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-
-            Request::SessionOpen { .. } => rpc.session_open(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::SessionPulse { .. } => {
-                rpc.session_pulse(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-            Request::SessionClose { .. } => {
-                rpc.session_close(request.try_into_proto()?).await.map(Response::from_proto)
-            }
 
             Request::Transaction(transaction_request) => {
-                let (request_sink, response_source) = rpc.transaction(transaction_request.into_proto()).await?;
-                Ok(Response::TransactionOpen { request_sink, response_source })
+                let req = transaction_request.into_proto();
+                let req_id = RequestID::from(req.req_id.clone());
+                let (request_sink, response_source) = rpc.transaction(req).await?;
+                Ok(Response::TransactionOpen { request_id: req_id, request_sink, response_source })
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),

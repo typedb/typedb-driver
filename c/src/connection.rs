@@ -20,7 +20,7 @@
 use std::{ffi::c_char, path::Path};
 
 use itertools::Itertools;
-use typedb_driver::{Connection, Credential};
+use typedb_driver::{TypeDBDriver, Credential};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -31,8 +31,8 @@ use super::{
 ///
 /// @param address The address of the TypeDB server
 #[no_mangle]
-pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connection {
-    try_release(Connection::new_core(string_view(address)))
+pub extern "C" fn connection_open_core(address: *const c_char) -> *mut TypeDBDriver {
+    try_release(TypeDBDriver::new_core(string_view(address)))
 }
 
 /// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
@@ -44,9 +44,9 @@ pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connectio
 pub extern "C" fn connection_open_cloud(
     addresses: *const *const c_char,
     credential: *const Credential,
-) -> *mut Connection {
+) -> *mut TypeDBDriver {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
+    try_release(TypeDBDriver::new_cloud(&addresses, borrow(credential).clone()))
 }
 
 /// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
@@ -62,27 +62,27 @@ pub extern "C" fn connection_open_cloud_translated(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
     credential: *const Credential,
-) -> *mut Connection {
+) -> *mut TypeDBDriver {
     let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
-    try_release(Connection::new_cloud_with_translation(addresses, borrow(credential).clone()))
+    try_release(TypeDBDriver::new_cloud_with_translation(addresses, borrow(credential).clone()))
 }
 
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 /// Closing a connction frees the underlying rust object.
 #[no_mangle]
-pub extern "C" fn connection_close(connection: *mut Connection) {
+pub extern "C" fn connection_close(connection: *mut TypeDBDriver) {
     free(connection);
 }
 
 /// Checks whether this connection is presently open.
 #[no_mangle]
-pub extern "C" fn connection_is_open(connection: *const Connection) -> bool {
+pub extern "C" fn connection_is_open(connection: *const TypeDBDriver) -> bool {
     borrow(connection).is_open()
 }
 
 /// Forcibly closes the driver. To be used in exceptional cases.
 #[no_mangle]
-pub extern "C" fn connection_force_close(connection: *mut Connection) {
+pub extern "C" fn connection_force_close(connection: *mut TypeDBDriver) {
     unwrap_void(borrow(connection).force_close());
 }
 

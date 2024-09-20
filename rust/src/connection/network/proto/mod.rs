@@ -17,14 +17,13 @@
  * under the License.
  */
 
+use crate::Result;
+
 mod common;
 mod concept;
 mod database;
-mod logic;
 mod message;
 mod user;
-
-use crate::Result;
 
 pub(super) trait IntoProto<Proto> {
     fn into_proto(self) -> Proto;
