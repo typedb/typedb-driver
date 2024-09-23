@@ -18,6 +18,7 @@
  */
 
 use crossbeam::channel::Sender as SyncSender;
+use itertools::Either;
 use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 
@@ -26,12 +27,18 @@ use crate::{
     error::{ConnectionError, InternalError},
     Error,
 };
+use crate::common::RequestID;
 
 #[derive(Debug)]
 pub(super) enum ResponseSink<T> {
     AsyncOneShot(AsyncOneshotSender<Result<T>>),
     BlockingOneShot(SyncSender<Result<T>>),
-    Streamed(UnboundedSender<Result<T>>),
+    Streamed(UnboundedSender<StreamResponse<T>>),
+}
+
+pub(super) enum StreamResponse<T>{
+    Result(Result<T>),
+    Continue(RequestID),
 }
 
 impl<T> ResponseSink<T> {
@@ -39,7 +46,7 @@ impl<T> ResponseSink<T> {
         let result = match self {
             Self::AsyncOneShot(sink) => sink.send(response).map_err(|_| InternalError::SendError.into()),
             Self::BlockingOneShot(sink) => sink.send(response).map_err(Error::from),
-            Self::Streamed(sink) => sink.send(response).map_err(Error::from),
+            Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
         };
         match result {
             Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
@@ -48,9 +55,21 @@ impl<T> ResponseSink<T> {
         }
     }
 
-    pub(super) fn send(&self, response: Result<T>) {
+    pub(super) fn send_result(&self, response: Result<T>) {
         let result = match self {
-            Self::Streamed(sink) => sink.send(response).map_err(Error::from),
+            Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
+            _ => unreachable!("attempted to stream over a one-shot callback"),
+        };
+        match result {
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
+            Err(err) => error!("{err}"),
+            Ok(()) => (),
+        }
+    }
+
+    pub(super) fn send_continuable(&self, request_id: RequestID) {
+        let result = match self {
+            Self::Streamed(sink) => sink.send(StreamResponse::Continue(request_id)).map_err(Error::from),
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
@@ -64,7 +83,7 @@ impl<T> ResponseSink<T> {
         match self {
             Self::AsyncOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::BlockingOneShot(sink) => sink.send(Err(error.into())).ok(),
-            Self::Streamed(sink) => sink.send(Err(error.into())).ok(),
+            Self::Streamed(sink) => sink.send(StreamResponse::Result(Err(error.into()))).ok(),
         };
     }
 }

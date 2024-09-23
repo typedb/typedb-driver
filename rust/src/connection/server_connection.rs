@@ -329,6 +329,7 @@ impl LatencyTracker {
     pub(crate) fn update_latency(&self, latency_millis: Duration) {
         let previous_latency = self.latency_millis.load(Ordering::Relaxed);
         // TODO: this is a strange but simple averaging scheme
+        //       it might actually be useful as it weights the recent measurement the same as the entire history
         self.latency_millis.store((latency_millis.as_millis() as u64 + previous_latency) / 2, Ordering::Relaxed);
     }
 
