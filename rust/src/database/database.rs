@@ -17,23 +17,34 @@
  * under the License.
  */
 
-use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fmt,
+    sync::{
+        Arc,
+        atomic::{AtomicU64, Ordering}, RwLock,
+    },
+    thread::sleep,
+    time::Duration,
+};
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
+
 use itertools::Itertools;
 use log::{debug, error};
 
-use crate::{common::{
-    address::Address,
-    Error,
-    error::ConnectionError,
-    info::{DatabaseInfo, ReplicaInfo}, Result,
-}, error::InternalError, Options, Transaction, TransactionType};
-use crate::connection::server_connection::ServerConnection;
-use crate::driver::TypeDBDriver;
+use crate::{
+    common::{
+        address::Address,
+        Error,
+        error::ConnectionError,
+        info::{DatabaseInfo, ReplicaInfo}, Result,
+    },
+    connection::server_connection::ServerConnection,
+    driver::TypeDBDriver,
+    error::InternalError,
+    Options, Transaction, TransactionType,
+};
 
 /// A TypeDB database
 pub struct Database {
@@ -47,7 +58,10 @@ impl Database {
     const FETCH_REPLICAS_MAX_RETRIES: usize = 10;
     const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
 
-    pub(super) fn new(database_info: DatabaseInfo, server_connections: HashMap<Address, ServerConnection>) -> Result<Self> {
+    pub(super) fn new(
+        database_info: DatabaseInfo,
+        server_connections: HashMap<Address, ServerConnection>,
+    ) -> Result<Self> {
         let name = database_info.name.clone();
         let replicas = RwLock::new(Replica::try_from_info(database_info, &server_connections)?);
         Ok(Self { name, replicas, server_connections })
@@ -136,9 +150,9 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
-        where
-            F: Fn(ServerDatabase) -> P,
-            P: Future<Output=Result<R>>,
+    where
+        F: Fn(ServerDatabase) -> P,
+        P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
             Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
@@ -151,16 +165,16 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
-        where
-            F: Fn(ServerDatabase) -> P,
-            P: Future<Output=Result<R>>,
+    where
+        F: Fn(ServerDatabase) -> P,
+        P: Future<Output = Result<R>>,
     {
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
             match task(replica.database.clone()).await {
                 Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                    )) => {
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                )) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.server);
                 }
                 res => return res,
@@ -171,9 +185,9 @@ impl Database {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
-        where
-            F: Fn(ServerDatabase) -> P,
-            P: Future<Output=Result<R>>,
+    where
+        F: Fn(ServerDatabase) -> P,
+        P: Future<Output = Result<R>>,
     {
         let mut primary_replica =
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
@@ -181,10 +195,10 @@ impl Database {
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             match task(primary_replica.database.clone()).await {
                 Err(Error::Connection(
-                        ConnectionError::CloudReplicaNotPrimary
-                        | ConnectionError::ServerConnectionFailedStatusError { .. }
-                        | ConnectionError::ConnectionFailed,
-                    )) => {
+                    ConnectionError::CloudReplicaNotPrimary
+                    | ConnectionError::ServerConnectionFailedStatusError { .. }
+                    | ConnectionError::ConnectionFailed,
+                )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
                     primary_replica = self.seek_primary_replica().await?;
@@ -268,13 +282,20 @@ impl Replica {
         }
     }
 
-    fn try_from_info(database_info: DatabaseInfo, server_connections: &HashMap<Address, ServerConnection>) -> Result<Vec<Self>> {
+    fn try_from_info(
+        database_info: DatabaseInfo,
+        server_connections: &HashMap<Address, ServerConnection>,
+    ) -> Result<Vec<Self>> {
         database_info
             .replicas
             .into_iter()
             .map(|replica| {
-                if server_connections.len() == 1{
-                    Ok(Self::new(database_info.name.clone(), replica, server_connections.values().next().unwrap().clone()))
+                if server_connections.len() == 1 {
+                    Ok(Self::new(
+                        database_info.name.clone(),
+                        replica,
+                        server_connections.values().next().unwrap().clone(),
+                    ))
                 } else {
                     // TODO: actually check the advertised == provided, if that is the strategy we want
                     let server_connection = server_connections
@@ -304,10 +325,10 @@ impl Replica {
                     return Self::try_from_info(info, server_connections);
                 }
                 Err(Error::Connection(
-                        ConnectionError::DatabaseDoesNotExist { .. }
-                        | ConnectionError::ServerConnectionFailedStatusError { .. }
-                        | ConnectionError::ConnectionFailed,
-                    )) => {
+                    ConnectionError::DatabaseDoesNotExist { .. }
+                    | ConnectionError::ServerConnectionFailedStatusError { .. }
+                    | ConnectionError::ConnectionFailed,
+                )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name, server

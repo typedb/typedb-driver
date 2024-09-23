@@ -22,6 +22,7 @@ package com.vaticle.typedb.driver.concept.thing;
 import com.vaticle.typedb.driver.api.concept.thing.Entity;
 import com.vaticle.typedb.driver.concept.type.EntityTypeImpl;
 
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_get_iid;
 import static com.vaticle.typedb.driver.jni.typedb_driver.entity_get_type;
 
 public class EntityImpl extends ThingImpl implements Entity {
@@ -37,5 +38,17 @@ public class EntityImpl extends ThingImpl implements Entity {
     @Override
     public final EntityImpl asEntity() {
         return this;
+    }
+
+
+    @Override
+    public final String getIID() {
+        return entity_get_iid(nativeObject);
+    }
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) hash = getIID().hashCode();
+        return hash;
     }
 }

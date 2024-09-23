@@ -18,24 +18,23 @@
  */
 
 use itertools::Itertools;
-use typedb_protocol::{connection, database, database_manager, server_manager, transaction, user, user_manager, Version::Version};
-use typedb_protocol::query::initial_res::Res;
+use typedb_protocol::{
+    connection, database, database_manager, query::initial_res::Res, server_manager, transaction, user, user_manager,
+    Version::Version,
+};
 use uuid::Uuid;
 
+use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    common::{info::DatabaseInfo, RequestID, Result}
-    ,
-    connection::message::{
-        QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse,
+    answer::{
+        concept_row::ConceptRowHeader,
+        concept_tree::{ConceptTree, ConceptTreesHeader},
     },
-    error::{ConnectionError, InternalError},
+    common::{info::DatabaseInfo, RequestID, Result},
+    connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
+    error::{ConnectionError, InternalError, ServerError},
     user::User,
 };
-use crate::answer::concept_row::ConceptRowHeader;
-use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
-use crate::error::ServerError;
-
-use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
@@ -224,9 +223,7 @@ impl FromProto<database_manager::contains::Res> for Response {
 
 impl TryFromProto<database_manager::create::Res> for Response {
     fn try_from_proto(proto: database_manager::create::Res) -> Result<Self> {
-        Ok(Self::DatabaseCreate {
-            database: DatabaseInfo::try_from_proto(proto.database.unwrap())?
-        })
+        Ok(Self::DatabaseCreate { database: DatabaseInfo::try_from_proto(proto.database.unwrap())? })
     }
 }
 
@@ -303,30 +300,21 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
             }
             Some(transaction::res::Res::CommitRes(_)) => Ok(Self::Commit),
             Some(transaction::res::Res::RollbackRes(_)) => Ok(Self::Rollback),
-            Some(transaction::res::Res::QueryInitialRes(initial_res)) => {
-                match initial_res.res {
-                    Some(res) => {
-                        match res {
-                            Res::Error(error) => {
-                                Ok(TransactionResponse::Query(QueryResponse::from_proto(error)))
-                            }
-                            Res::Ok(header) => {
-                                match header.ok {
-                                    None => {
-                                        Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res.Ok.ok" }.into())
-                                    }
-                                    Some(header) => {
-                                        Ok(TransactionResponse::Query(QueryResponse::from_proto(header)))
-                                    }
-                                }
-                            }
+            Some(transaction::res::Res::QueryInitialRes(initial_res)) => match initial_res.res {
+                Some(res) => match res {
+                    Res::Error(error) => Ok(TransactionResponse::Query(QueryResponse::from_proto(error))),
+                    Res::Ok(header) => match header.ok {
+                        None => Err(ConnectionError::MissingResponseField {
+                            field: "transaction.res.query.initial_res.res.Ok.ok",
                         }
-                    }
-                    None => {
-                        Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res" }.into())
-                    }
+                        .into()),
+                        Some(header) => Ok(TransactionResponse::Query(QueryResponse::from_proto(header))),
+                    },
+                },
+                None => {
+                    Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res" }.into())
                 }
-            }
+            },
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
@@ -347,7 +335,7 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
             typedb_protocol::query::res_part::Res::TreesRes(trees) => {
                 let mut converted = Vec::with_capacity(trees.trees.len());
                 for tree_proto in trees.trees.into_iter() {
-                    converted.push(Tree::try_from_proto(tree_proto)?);
+                    converted.push(ConceptTree::try_from_proto(tree_proto)?);
                 }
                 Ok(QueryResponse::StreamConceptTrees(converted))
             }
@@ -365,15 +353,13 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
 impl FromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
     fn from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Self {
         match proto {
-            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => {
-                QueryResponse::Ok()
-            }
+            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => QueryResponse::Ok(),
             typedb_protocol::query::initial_res::ok::Ok::ReadableConceptTreeStream(_tree_stream_header) => {
                 QueryResponse::ConceptTreesHeader(ConceptTreesHeader {})
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
                 QueryResponse::ConceptRowsHeader(ConceptRowHeader {
-                    column_names: rows_stream_header.column_variable_names
+                    column_names: rows_stream_header.column_variable_names,
                 })
             }
         }
@@ -432,10 +418,7 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
         match self {
             QueryRequest::Query { query, options } => {
-                typedb_protocol::query::Req {
-                    query,
-                    options: Some(options.into_proto()),
-                }
+                typedb_protocol::query::Req { query, options: Some(options.into_proto()) }
             }
         }
     }

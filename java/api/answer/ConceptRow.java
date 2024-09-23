@@ -17,56 +17,62 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.logic;
+package com.vaticle.typedb.driver.api.answer;
 
-import com.vaticle.typedb.driver.common.Promise;
-import com.vaticle.typeql.lang.pattern.Pattern;
+import com.vaticle.typedb.driver.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
- * Provides methods for manipulating rules in the database.
+ * Contains a row of concepts with a header.
  */
-public interface LogicManager {
-
+public interface ConceptRow {
     /**
-     * Retrieves the Rule that has the given label.
+     * Produces a stream over all column names (header) in this <code>ConceptRow</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRule(label).resolve();
+     * conceptRow.header();
      * </pre>
-     *
-     * @param label The label of the Rule to create or retrieve
      */
     @CheckReturnValue
-    Promise<Rule> getRule(String label);
+    Stream<String> header();
 
     /**
-     * Retrieves all rules.
+     * Retrieves a concept for a given variable name.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRules()
+     * conceptRow.get(columnName);
      * </pre>
+     *
+     * @param columnName the column name (header)
      */
     @CheckReturnValue
-    Stream<? extends Rule> getRules();
-
+    Concept get(String columnName);
+    
     /**
-     * Creates a new Rule if none exists with the given label, or replaces the existing one.
+     * Retrieves a concept for a given variable name.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().putRule(label, when, then).resolve();
+     * conceptRow.getIndex(columnIndex);
      * </pre>
      *
-     * @param label The label of the Rule to create or replace
-     * @param when The when body of the rule to create
-     * @param then The then body of the rule to create
+     * @param columnIndex the column index
      */
     @CheckReturnValue
-    Promise<Rule> putRule(String label, Pattern when, Pattern then);
+    Concept getIndex(long columnIndex);
+
+    /**
+     * Produces an iterator over all concepts in this `ConceptRow`, skipping empty results.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptRow.concepts();
+     * </pre>
+     */
+    @CheckReturnValue
+    Stream<?extends Concept> concepts();
 }

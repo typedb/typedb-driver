@@ -19,9 +19,8 @@
 
 package com.vaticle.typedb.driver.api;
 
-import com.vaticle.typedb.driver.api.concept.ConceptManager;
-import com.vaticle.typedb.driver.api.logic.LogicManager;
-import com.vaticle.typedb.driver.api.query.QueryManager;
+import com.vaticle.typedb.driver.api.answer.QueryAnswer;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
@@ -39,34 +38,29 @@ public interface TypeDBTransaction extends AutoCloseable {
     boolean isOpen();
 
     /**
-     * The transaction’s type (READ or WRITE)
+     * The transaction’s type (READ/WRITE/SCHEMA)
      */
     @CheckReturnValue
     Type type();
 
-    /**
-     * The options for the transaction
-     */
-    @CheckReturnValue
-    TypeDBOptions options();
+//    /**
+//     * The options for the transaction
+//     */
+//    @CheckReturnValue
+//    TypeDBOptions options();
 
     /**
-     * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
+     * Execute a TypeQL query in this transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre> // TODO: Add more usage examples, how to unpack answers!
+     * transaction.query("define entity person;");
+     * </pre>
+     *
+     * @param query The query to execute.
      */
     @CheckReturnValue
-    ConceptManager concepts();
-
-    /**
-     * The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods.
-     */
-    @CheckReturnValue
-    LogicManager logic();
-
-    /**
-     * The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed.
-     */
-    @CheckReturnValue
-    QueryManager query();
+    Promise<? extends QueryAnswer> query(String query);
 
     /**
      * Registers a callback function which will be executed when this transaction is closed.
@@ -120,17 +114,15 @@ public interface TypeDBTransaction extends AutoCloseable {
      */
     enum Type {
         READ(0, com.vaticle.typedb.driver.jni.TransactionType.Read),
-        WRITE(1, com.vaticle.typedb.driver.jni.TransactionType.Write);
+        WRITE(1, com.vaticle.typedb.driver.jni.TransactionType.Write),
+        SCHEMA(2, com.vaticle.typedb.driver.jni.TransactionType.Schema);
 
         private final int id;
-        private final boolean isWrite;
         public final com.vaticle.typedb.driver.jni.TransactionType nativeObject;
 
         Type(int id, com.vaticle.typedb.driver.jni.TransactionType nativeObject) {
             this.id = id;
             this.nativeObject = nativeObject;
-
-            this.isWrite = nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Write;
         }
 
         public int id() {
@@ -138,11 +130,15 @@ public interface TypeDBTransaction extends AutoCloseable {
         }
 
         public boolean isRead() {
-            return !isWrite;
+            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Read;
         }
 
         public boolean isWrite() {
-            return isWrite;
+            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Write;
+        }
+
+        public boolean isSchema() {
+            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Schema;
         }
     }
 }

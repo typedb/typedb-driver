@@ -25,16 +25,13 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::concept_tree,
-    common::{address::Address, info::DatabaseInfo, RequestID}
-    ,
-    Options,
-    TransactionType, user::User,
+    answer::{concept_row::ConceptRowHeader, concept_tree, concept_tree::ConceptTreesHeader},
+    common::{address::Address, info::DatabaseInfo, RequestID},
+    concept::Concept,
+    error::ServerError,
+    user::User,
+    Options, TransactionType,
 };
-use crate::answer::concept_row::ConceptRowHeader;
-use crate::answer::concept_tree::ConceptTreesHeader;
-use crate::concept::Concept;
-use crate::error::ServerError;
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -79,7 +76,7 @@ pub(super) enum Response {
         contains: bool,
     },
     DatabaseCreate {
-        database: DatabaseInfo
+        database: DatabaseInfo,
     },
     DatabaseGet {
         database: DatabaseInfo,
@@ -140,7 +137,7 @@ pub(super) enum TransactionResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: Options }
+    Query { query: String, options: Options },
 }
 
 #[derive(Debug)]
@@ -149,9 +146,8 @@ pub(super) enum QueryResponse {
     ConceptRowsHeader(ConceptRowHeader),
     ConceptTreesHeader(ConceptTreesHeader),
     StreamConceptRows(Vec<Vec<Option<Concept>>>),
-    StreamConceptTrees(Vec<concept_tree::Tree>),
+    StreamConceptTrees(Vec<concept_tree::ConceptTree>),
     Error(ServerError),
-
     // Define,
     // Undefine,
     // Delete,

@@ -116,7 +116,6 @@ macro_rules! error_messages {
     };
 }
 
-
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
@@ -213,23 +212,27 @@ impl ServerError {
         &self.error_code
     }
 
-    pub(crate) fn message(&self) -> &str {
-        &self.message
+    pub(crate) fn message(&self) -> String {
+        self.to_string()
+    }
+
+    fn to_string(&self) -> String {
+        if self.stack_trace.is_empty() {
+            format!("[{}] {}. {}", self.error_code, self.error_domain, self.message)
+        } else {
+            format!("\n{}", self.stack_trace.join("\nCaused: "))
+        }
     }
 }
 
 impl fmt::Display for ServerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if self.stack_trace.is_empty() {
-            write!( f, "[{}] {}. {}", self.error_code, self.error_domain, self.message)
-        } else {
-            write!( f, "{}", format!("\n{}", self.stack_trace.join("\nCaused: ")))
-        }
+        write!(f, "{}", self.to_string())
     }
 }
 
 impl fmt::Debug for ServerError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
 }
@@ -257,7 +260,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.message(),
             Self::Internal(error) => error.message(),
-            Self::Server(error) => error.message().to_owned(),
+            Self::Server(error) => error.message(),
             Self::Other(error) => error.clone(),
         }
     }
@@ -327,7 +330,6 @@ impl From<InternalError> for Error {
 impl From<ServerError> for Error {
     fn from(error: ServerError) -> Self {
         Self::Server(error)
-
     }
 }
 
@@ -335,15 +337,15 @@ impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if let Ok(details) = status.check_error_details() {
             if let Some(bad_request) = details.bad_request() {
-                Self::Connection(ConnectionError::ServerConnectionFailedWithError { error: format!("{:?}", bad_request) })
+                Self::Connection(ConnectionError::ServerConnectionFailedWithError {
+                    error: format!("{:?}", bad_request),
+                })
             } else if let Some(error_info) = details.error_info() {
                 let code = error_info.reason.clone();
                 let domain = error_info.domain.clone();
-                let stack_trace = if let Some(debug_info) = details.debug_info() {
-                    debug_info.stack_entries.clone()
-                } else {
-                    vec![]
-                };
+                let stack_trace =
+                    if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
+                println!("NEw error building vot message: {:?}", status.message().to_owned());
                 Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
                 Self::from_message(status.message())
@@ -357,7 +359,9 @@ impl From<Status> for Error {
                 || status.code() == Code::FailedPrecondition
                 || status.code() == Code::AlreadyExists
             {
-                Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
+                Self::Connection(ConnectionError::ServerConnectionFailedStatusError {
+                    error: status.message().to_owned(),
+                })
             } else if status.code() == Code::Unimplemented {
                 Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
             } else {

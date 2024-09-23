@@ -17,9 +17,11 @@
  * under the License.
  */
 
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::sync::Arc;
+use std::{
+    fmt,
+    fmt::{Debug, Formatter},
+    sync::Arc,
+};
 
 use itertools::Itertools;
 
@@ -32,8 +34,7 @@ pub struct ConceptRowHeader {
 
 impl ConceptRowHeader {
     fn get_index(&self, name: &str) -> Option<usize> {
-        self.column_names.iter().find_position(|column_name| **column_name == name)
-            .map(|(pos, _)| pos)
+        self.column_names.iter().find_position(|column_name| **column_name == name).map(|(pos, _)| pos)
     }
 }
 
@@ -77,10 +78,7 @@ impl ConceptRow {
     /// concept_row.get(var_name)
     /// ```
     pub fn get(&self, column_name: &str) -> Option<&Concept> {
-        self.header
-            .get_index(column_name)
-            .map(|index| self.get_index(index))
-            .flatten()
+        self.header.get_index(column_name).map(|index| self.get_index(index)).flatten()
     }
 
     /// Retrieves a concept for a given column index. Returns an empty optional if
@@ -106,7 +104,7 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.concepts()
     /// ```
-    pub fn get_concepts(&self) -> impl Iterator<Item=&Concept> {
+    pub fn get_concepts(&self) -> impl Iterator<Item = &Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }

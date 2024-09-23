@@ -22,13 +22,14 @@ use std::fmt::{Debug, Display, Formatter};
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
-use crate::concept::value::{Decimal, Duration};
-use crate::IID;
-
 pub use self::{
     thing::{Attribute, Entity, Relation},
     type_::{Annotation, AttributeType, EntityType, RelationType, RoleType},
     value::{Value, ValueType},
+};
+use crate::{
+    concept::value::{Decimal, Duration},
+    IID,
 };
 
 pub mod thing;
@@ -113,7 +114,7 @@ impl Concept {
             Self::Entity(entity) => entity.type_().map(|type_| type_.label()).unwrap(),
             Self::Relation(relation) => relation.type_().map(|type_| type_.label()).unwrap(),
             Self::Attribute(attribute) => attribute.type_().map(|type_| type_.label()).unwrap(),
-            Self::Value(value) => value.get_type_name()
+            Self::Value(value) => value.get_type_name(),
         }
     }
 
@@ -153,7 +154,7 @@ impl Concept {
         match self {
             Self::Attribute(attribute) => Some(&attribute.value),
             Self::Value(value) => Some(value),
-            _ => None
+            _ => None,
         }
     }
 
@@ -366,7 +367,7 @@ impl Display for Concept {
 impl Debug for Concept {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         if self.is_type() {
-            write!( f, "{}({})", self.get_category(), self.get_label())
+            write!(f, "{}({})", self.get_category(), self.get_label())
         } else {
             write!(f, "{}({}", self.get_category(), self.get_label())?;
             if self.get_iid().is_some() {
@@ -383,4 +384,3 @@ impl Debug for Concept {
         }
     }
 }
-

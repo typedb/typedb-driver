@@ -17,26 +17,31 @@
  * under the License.
  */
 
+use std::{
+    collections::HashMap,
+    fmt,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Arc, Mutex,
+    },
+    time::Duration,
+};
 
-use std::collections::HashMap;
-use std::fmt;
-use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::time::Duration;
-use tokio::sync::mpsc::UnboundedSender;
-
-use tokio::time::Instant;
+use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
-use crate::{Credential, Options, TransactionType, User};
-use crate::common::address::Address;
-use crate::common::RequestID;
-use crate::connection::message::{Request, Response, TransactionRequest};
-use crate::connection::network::transmitter::{RPCTransmitter, TransactionTransmitter};
-use crate::connection::runtime::BackgroundRuntime;
-use crate::connection::TransactionStream;
-use crate::error::{ConnectionError, InternalError};
-use crate::info::DatabaseInfo;
+use crate::{
+    common::{address::Address, RequestID},
+    connection::{
+        message::{Request, Response, TransactionRequest},
+        network::transmitter::{RPCTransmitter, TransactionTransmitter},
+        runtime::BackgroundRuntime,
+        TransactionStream,
+    },
+    error::{ConnectionError, InternalError},
+    info::DatabaseInfo,
+    Credential, Options, TransactionType, User,
+};
 
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
@@ -56,7 +61,8 @@ impl ServerConnection {
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
         let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
-        let (connection_id, latency, database_info) = Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
+        let (connection_id, latency, database_info) =
+            Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
             background_runtime,
@@ -68,7 +74,11 @@ impl ServerConnection {
         Ok((server_connection, database_info))
     }
 
-    pub(crate) fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> crate::Result<Self> {
+    pub(crate) fn new_cloud(
+        background_runtime: Arc<BackgroundRuntime>,
+        address: Address,
+        credential: Credential,
+    ) -> crate::Result<Self> {
         todo!()
         // let request_transmitter = Arc::new(RPCTransmitter::start_cloud(address, credential, &background_runtime)?);
         // Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
@@ -78,17 +88,16 @@ impl ServerConnection {
     async fn open_connection(
         request_transmitter: &RPCTransmitter,
         driver_lang: &str,
-        driver_version: &str
+        driver_version: &str,
     ) -> crate::Result<(Uuid, Duration, Vec<DatabaseInfo>)> {
-        let message = Request::ConnectionOpen {
-            driver_lang: driver_lang.to_owned(),
-            driver_version: driver_version.to_owned(),
-        };
+        let message =
+            Request::ConnectionOpen { driver_lang: driver_lang.to_owned(), driver_version: driver_version.to_owned() };
 
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
             Response::ConnectionOpen { connection_id, server_duration_millis, databases: database_info } => {
-                let latency = Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
+                let latency =
+                    Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
                 Ok((connection_id, latency, database_info))
             }
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
@@ -234,11 +243,8 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionOpen { request_id, request_sink, response_source } => {
-                let transmitter = TransactionTransmitter::new(
-                    self.background_runtime.clone(),
-                    request_sink,
-                    response_source,
-                );
+                let transmitter =
+                    TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 self.transaction_shutdown_senders.lock().unwrap().insert(request_id, transmitter_shutdown_sink);

@@ -19,29 +19,29 @@
 
 package com.vaticle.typedb.driver.api.user;
 
-import javax.annotation.CheckReturnValue;
-import java.util.Optional;
+// TODO: Currently disabled in 3.0
+
 
 /**
  *  TypeDB user information
  */
-public interface User {
-    /**
-     * Returns the name of this user.
-     */
-    @CheckReturnValue
-    String username();
-
-    /**
-     * Returns the number of seconds remaining till this user’s current password expires.
-     */
-    Optional<Long> passwordExpirySeconds();
-
-    /**
-     * Updates the password for this user.
-     *
-     * @param passwordOld The current password of this user
-     * @param passwordNew The new password
-     */
-    void passwordUpdate(String passwordOld, String passwordNew);
-}
+//public interface User {
+//    /**
+//     * Returns the name of this user.
+//     */
+//    @CheckReturnValue
+//    String username();
+//
+//    /**
+//     * Returns the number of seconds remaining till this user’s current password expires.
+//     */
+//    Optional<Long> passwordExpirySeconds();
+//
+//    /**
+//     * Updates the password for this user.
+//     *
+//     * @param passwordOld The current password of this user
+//     * @param passwordNew The new password
+//     */
+//    void passwordUpdate(String passwordOld, String passwordNew);
+//}

@@ -17,9 +17,8 @@
  * under the License.
  */
 
-use crate::common::IID;
-
 use super::{AttributeType, EntityType, RelationType, Value};
+use crate::common::IID;
 
 // TODO: Storing the Type here is *extremely* inefficient; we could be effectively creating
 //       1 million copies of the same data when matching concepts of homogeneous types
@@ -43,11 +42,11 @@ impl Entity {
     /// ```rust
     /// entity.iid();
     /// ```
-    fn iid(&self) -> &IID {
+    pub fn iid(&self) -> &IID {
         &self.iid
     }
 
-    pub(crate) fn type_(&self) -> Option<&EntityType> {
+    pub fn type_(&self) -> Option<&EntityType> {
         self.type_.as_ref()
     }
 }
@@ -70,11 +69,11 @@ impl Relation {
     /// ```rust
     /// relation.iid();
     /// ```
-    fn iid(&self) -> &IID {
+    pub fn iid(&self) -> &IID {
         &self.iid
     }
 
-    pub(crate) fn type_(&self) -> Option<&RelationType> {
+    pub fn type_(&self) -> Option<&RelationType> {
         self.type_.as_ref()
     }
 }
@@ -94,7 +93,7 @@ pub struct Attribute {
 }
 
 impl Attribute {
-    pub(crate) fn type_(&self) -> Option<&AttributeType> {
+    pub fn type_(&self) -> Option<&AttributeType> {
         self.type_.as_ref()
     }
 }

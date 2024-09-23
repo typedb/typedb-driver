@@ -19,7 +19,6 @@
 
 package com.vaticle.typedb.driver.api.concept;
 
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.thing.Entity;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
@@ -35,8 +34,8 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static com.vaticle.typedb.common.util.Objects.className;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 public interface Concept {
     /**
@@ -312,24 +311,5 @@ public interface Concept {
      */
     default Value asValue() {
         throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
-    }
-
-    /**
-     * This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attributeType.getOwners(transaction, annotation, Concept.Transitivity.EXPLICIT);
-     * </pre>
-     */
-    enum Transitivity {
-        TRANSITIVE(com.vaticle.typedb.driver.jni.Transitivity.Transitive),
-        EXPLICIT(com.vaticle.typedb.driver.jni.Transitivity.Explicit);
-
-        public final com.vaticle.typedb.driver.jni.Transitivity nativeObject;
-
-        Transitivity(com.vaticle.typedb.driver.jni.Transitivity nativeObject) {
-            this.nativeObject = nativeObject;
-        }
     }
 }

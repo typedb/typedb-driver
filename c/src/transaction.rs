@@ -17,36 +17,42 @@
  * under the License.
  */
 
-use typedb_driver::{Error, Options, Session, Transaction, TransactionType};
+use std::{ffi::c_char, ptr::null_mut};
 
-use super::{
-    error::try_release,
-    memory::{borrow, borrow_mut, free, release, take_ownership},
-};
-use crate::promise::VoidPromise;
+use typedb_driver::{DatabaseManager, Error, Transaction, TransactionType, TypeDBDriver};
+
+use super::memory::{borrow, borrow_mut, free, release, take_ownership};
+use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
 
 /// Opens a transaction to perform read or write queries on the database connected to the session.
 ///
-/// @param type_ The type of transaction to be created (Write or Read).
-/// @param options Options for the transaction
+/// @param databases The <code>DatabaseManager</code> object on this connection.
+/// @param database_name The name of the database with which the transaction connects.
+/// @param type_ The type of transaction to be created (Write / Read / Schema).
 #[no_mangle]
 pub extern "C" fn transaction_new(
-    session: *const Session,
+    driver: *mut TypeDBDriver,
+    database_name: *const c_char,
     type_: TransactionType,
-    options: *const Options,
-) -> *mut Transaction<'static> {
-    try_release(borrow(session).transaction_with_options(type_, *borrow(options)))
+) -> *mut Transaction {
+    try_release(borrow(driver).transaction(string_view(database_name), type_))
+}
+
+/// Performs a TypeQL query in the transaction.
+#[no_mangle]
+pub extern "C" fn transaction_query(transaction: *mut Transaction, query: *const c_char) -> *mut QueryAnswerPromise {
+    release(QueryAnswerPromise::new(Box::new(borrow(transaction).query(string_view(query)))))
 }
 
 /// Closes the transaction and frees the native rust object.
 #[no_mangle]
-pub extern "C" fn transaction_close(txn: *mut Transaction<'static>) {
+pub extern "C" fn transaction_close(txn: *mut Transaction) {
     free(txn);
 }
 
 /// Forcibly closes this transaction. To be used in exceptional cases.
 #[no_mangle]
-pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
+pub extern "C" fn transaction_force_close(txn: *mut Transaction) {
     borrow_mut(txn).force_close();
 }
 
@@ -54,19 +60,19 @@ pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
 /// Whether or not the transaction is commited successfully, the transaction is closed after
 /// the commit call and the native rust object is freed.
 #[no_mangle]
-pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) -> *mut VoidPromise {
+pub extern "C" fn transaction_commit(txn: *mut Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(take_ownership(txn).commit())))
 }
 
 /// Rolls back the uncommitted changes made via this transaction.
 #[no_mangle]
-pub extern "C" fn transaction_rollback(txn: *const Transaction<'static>) -> *mut VoidPromise {
+pub extern "C" fn transaction_rollback(txn: *const Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow(txn).rollback())))
 }
 
 /// Checks whether this transaction is open.
 #[no_mangle]
-pub extern "C" fn transaction_is_open(txn: *const Transaction<'static>) -> bool {
+pub extern "C" fn transaction_is_open(txn: *const Transaction) -> bool {
     borrow(txn).is_open()
 }
 
@@ -77,9 +83,10 @@ pub extern "C" fn transaction_is_open(txn: *const Transaction<'static>) -> bool 
 /// @param callback The function to be called
 #[no_mangle]
 pub extern "C" fn transaction_on_close(
-    txn: *const Transaction<'static>,
+    txn: *const Transaction,
     callback_id: usize,
     callback: extern "C" fn(usize, *mut Error),
 ) {
-    borrow(txn).on_close(move |error| callback(callback_id, release(error.into())));
+    borrow(txn)
+        .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut())));
 }

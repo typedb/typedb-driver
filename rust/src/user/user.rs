@@ -17,8 +17,7 @@
  * under the License.
  */
 
-use crate::{common::Result, error::ConnectionError};
-use crate::driver::TypeDBDriver;
+use crate::{common::Result, driver::TypeDBDriver, error::ConnectionError};
 
 #[derive(Clone, Debug)]
 /// User information

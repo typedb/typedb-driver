@@ -19,13 +19,10 @@
 
 package com.vaticle.typedb.driver.api.concept.thing;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.type.ThingType;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
 /**
  * <p>Attribute is an instance of the attribute type and has a value.
@@ -82,31 +79,4 @@ public interface Attribute extends Thing {
      * </pre>
      */
     Value getValue();
-
-    /**
-     * Retrieves the instances that own this <code>Attribute</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attribute.getOwners(transaction);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Stream<? extends Thing> getOwners(TypeDBTransaction transaction);
-
-    /**
-     * Retrieves the instances that own this <code>Attribute</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attribute.getOwners(transaction, ownerType);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param ownerType Filter results for only owners of the given type
-     */
-    @CheckReturnValue
-    Stream<? extends Thing> getOwners(TypeDBTransaction transaction, ThingType ownerType);
 }

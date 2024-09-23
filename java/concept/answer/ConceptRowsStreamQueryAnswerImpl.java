@@ -17,36 +17,29 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.answer;
+package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.answer.ConceptRow;
+import com.vaticle.typedb.driver.api.answer.ConceptRowsStreamQueryAnswer;
+import com.vaticle.typedb.driver.common.NativeIterator;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-/**
- * Contains an element of the group query result.
- */
-public interface ConceptMapGroup {
-    /**
-     * Retrieves the concept that is the group owner.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * conceptMapGroup.owner();
-     * </pre>
-     */
-    @CheckReturnValue
-    Concept owner();
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_answer_get_rows;
 
-    /**
-     * Retrieves the <code>ConceptMap</code>s of the group.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * conceptMapGroup.conceptMaps();
-     * </pre>
-     */
+public class ConceptRowsStreamQueryAnswerImpl extends QueryAnswerImpl implements ConceptRowsStreamQueryAnswer {
+    protected ConceptRowsStreamQueryAnswerImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+        super(answer);
+    }
+
+    @Override
     @CheckReturnValue
-    Stream<ConceptMap> conceptMaps();
+    public ConceptRowsStreamQueryAnswer asConceptRowsStream() {
+        return this;
+    }
+
+    public Stream<ConceptRow> rows() {
+        return new NativeIterator<>(query_answer_get_rows(nativeObject)).stream().map(ConceptRowImpl::new);
+    }
 }

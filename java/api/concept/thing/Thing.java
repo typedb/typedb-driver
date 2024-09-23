@@ -19,30 +19,12 @@
 
 package com.vaticle.typedb.driver.api.concept.thing;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType;
-import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
-import java.util.Set;
-import java.util.stream.Stream;
 
 public interface Thing extends Concept {
-    /**
-     * Retrieves the unique id of the <code>Thing</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.getIID();
-     * </pre>
-     */
-    @CheckReturnValue
-    String getIID();
-
     /**
      * Retrieves the type which this <code>Thing</code> belongs to.
      *
@@ -53,17 +35,6 @@ public interface Thing extends Concept {
      */
     @CheckReturnValue
     ThingType getType();
-
-    /**
-     * Checks if this <code>Thing</code> is inferred by a [Reasoning Rule].
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.isInferred();
-     * </pre>
-     */
-    @CheckReturnValue
-    boolean isInferred();
 
     /**
      * Checks if the concept is a <code>Thing</code>.
@@ -92,118 +63,4 @@ public interface Thing extends Concept {
     default Thing asThing() {
         return this;
     }
-
-    /**
-     * Assigns an <code>Attribute</code> to be owned by this <code>Thing</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.setHas(transaction, attribute).resolve();
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param attribute The <code>Attribute</code> to be owned by this <code>Thing</code>.
-     */
-    @CheckReturnValue
-    Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute);
-
-    /**
-     * Unassigns an <code>Attribute</code> from this <code>Thing</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.unsetHas(transaction, attribute).resolve();
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param attribute The <code>Attribute</code> to be disowned from this <code>Thing</code>.
-     */
-    @CheckReturnValue
-    Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute);
-
-    /**
-     * Retrieves the <code>Attribute</code>s that this <code>Thing</code> owns,
-     * optionally filtered by <code>AttributeType</code>s.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.getHas(transaction);
-     * thing.getHas(transaction, attributeType);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param attributeTypes The <code>AttributeType</code>s to filter the attributes by
-     */
-    @CheckReturnValue
-    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes);
-
-    /**
-     * Retrieves the <code>Attribute</code>s that this <code>Thing</code> owns,
-     * filtered by <code>Annotation</code>s.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.getHas(transaction);
-     * thing.getHas(transaction, set(Annotation.key()));
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param annotations Only retrieve attributes with all given <code>Annotation</code>s
-     */
-    @CheckReturnValue
-    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<Annotation> annotations);
-
-    /**
-     * Retrieves all the <code>Relations</code> which this <code>Thing</code> plays a role in,
-     * optionally filtered by one or more given roles.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.getRelations(transaction, roleTypes);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param roleTypes The array of roles to filter the relations by.
-     */
-    @CheckReturnValue
-    Stream<? extends Relation> getRelations(TypeDBTransaction transaction, RoleType... roleTypes);
-
-    /**
-     * Retrieves the roles that this <code>Thing</code> is currently playing.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.getPlaying(transaction);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Stream<? extends RoleType> getPlaying(TypeDBTransaction transaction);
-
-    /**
-     * Deletes this <code>Thing</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.delete(transaction).resolve();
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Promise<Void> delete(TypeDBTransaction transaction);
-
-    /**
-     * Checks if this <code>Thing</code> is deleted.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.isDeleted(transaction).resolve();
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Promise<Boolean> isDeleted(TypeDBTransaction transaction);
 }

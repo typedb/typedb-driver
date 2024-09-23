@@ -19,7 +19,6 @@
 
 use cucumber::{given, then, when};
 use tokio::time::sleep;
-
 use typedb_driver::{Credential, Result as TypeDBResult, TypeDBDriver};
 
 use crate::{assert_with_timeout, behaviour::Context, generic_step_impl};

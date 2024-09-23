@@ -18,18 +18,15 @@
  */
 
 use serial_test::serial;
-
-use typedb_driver::{
-    Credential, Error, error::ConnectionError
-
-    ,
-};
-use typedb_driver::driver::TypeDBDriver;
+use typedb_driver::{driver::TypeDBDriver, error::ConnectionError, Credential, Error};
 
 #[tokio::test]
 #[serial]
 async fn missing_port() {
-    assert!(matches!(TypeDBDriver::new_core("localhost").await, Err(Error::Connection(ConnectionError::MissingPort { .. }))));
+    assert!(matches!(
+        TypeDBDriver::new_core("localhost").await,
+        Err(Error::Connection(ConnectionError::MissingPort { .. }))
+    ));
     assert!(matches!(
         TypeDBDriver::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
         Err(Error::Connection(ConnectionError::MissingPort { .. }))

@@ -21,7 +21,6 @@ use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 
 use chrono::NaiveDateTime;
 use cucumber::Parameter;
-
 use typedb_driver::{
     concept::{Annotation, Value, ValueType},
     TransactionType,
@@ -136,7 +135,10 @@ impl FromStr for ValueTypeParam {
 }
 
 #[derive(Clone, Debug, Parameter)]
-#[param(name = "optional_value_type", regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime_tz|duration)\)|()")]
+#[param(
+    name = "optional_value_type",
+    regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime_tz|duration)\)|()"
+)]
 pub struct OptionalAsValueTypeParam {
     pub value_type: Option<ValueType>,
 }
@@ -151,8 +153,7 @@ impl FromStr for OptionalAsValueTypeParam {
 
 #[derive(Clone, Copy, Debug, Parameter)]
 #[param(name = "optional_explicit", regex = r" explicit|")]
-pub struct OptionalExplicitParam {
-}
+pub struct OptionalExplicitParam {}
 
 impl FromStr for OptionalExplicitParam {
     type Err = Infallible;

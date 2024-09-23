@@ -17,20 +17,23 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.type;
+package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.concept.type.RelationType;
-import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.api.answer.ConceptTree;
+import com.vaticle.typedb.driver.api.answer.ConceptTreesStreamQueryAnswer;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_type_get_label;
+import java.util.stream.Stream;
 
-public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
-    public RelationTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
-        super(concept);
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
+
+public class ConceptTreesStreamQueryAnswerImpl extends QueryAnswerImpl implements ConceptTreesStreamQueryAnswer {
+    public ConceptTreesStreamQueryAnswerImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+        super(answer);
     }
 
-    @Override
-    public Label getLabel() {
-        return Label.of(relation_type_get_label(nativeObject));
+    public Stream<?extends ConceptTree> trees() {
+        throw new TypeDBDriverException(UNIMPLEMENTED);
+//        return new NativeIterator<>(query_answer_get_trees(nativeObject)).stream();
     }
 }

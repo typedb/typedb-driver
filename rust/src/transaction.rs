@@ -19,8 +19,12 @@
 
 use std::{fmt, marker::PhantomData, pin::Pin};
 
-use crate::{common::{Promise, Result, TransactionType}, connection::TransactionStream, Error, Options};
-use crate::answer::QueryAnswer;
+use crate::{
+    answer::QueryAnswer,
+    common::{Promise, Result, TransactionType},
+    connection::TransactionStream,
+    Error, Options,
+};
 
 /// A transaction with a TypeDB database.
 pub struct Transaction {
@@ -34,11 +38,7 @@ pub struct Transaction {
 impl Transaction {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
         let transaction_stream = Box::pin(transaction_stream);
-        Transaction {
-            type_: transaction_stream.type_(),
-            options: transaction_stream.options(),
-            transaction_stream,
-        }
+        Transaction { type_: transaction_stream.type_(), options: transaction_stream.options(), transaction_stream }
     }
 
     /// Closes the transaction.
@@ -51,7 +51,6 @@ impl Transaction {
     pub fn is_open(&self) -> bool {
         self.transaction_stream.is_open()
     }
-
 
     /// Performs a TypeQL query with default options.
     /// See [`Transaction::query_with_options`]

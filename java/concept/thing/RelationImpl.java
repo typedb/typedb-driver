@@ -19,32 +19,11 @@
 
 package com.vaticle.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
-import com.vaticle.typedb.driver.api.concept.thing.Thing;
-import com.vaticle.typedb.driver.api.concept.type.RoleType;
-import com.vaticle.typedb.driver.common.NativeIterator;
-import com.vaticle.typedb.driver.common.Promise;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
-import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_add_role_player;
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_players_by_role_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_relating;
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_role_players;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_iid;
 import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_remove_role_player;
-import static com.vaticle.typedb.driver.jni.typedb_driver.role_player_get_player;
-import static com.vaticle.typedb.driver.jni.typedb_driver.role_player_get_role_type;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
@@ -58,53 +37,13 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public Promise<Void> addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        return new Promise<>(relation_add_role_player(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
+    public final String getIID() {
+        return relation_get_iid(nativeObject);
     }
 
     @Override
-    public Promise<Void> removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        return new Promise<>(relation_remove_role_player(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
-    }
-
-    @Override
-    public Stream<ThingImpl> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes) {
-        try {
-            return new NativeIterator<>(
-                relation_get_players_by_role_type(
-                    nativeTransaction(transaction), nativeObject,
-                    Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new)
-                )
-            ).stream().map(ThingImpl::of);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public Map<RoleTypeImpl, List<ThingImpl>> getPlayers(TypeDBTransaction transaction) {
-        Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
-        try {
-            new NativeIterator<>(relation_get_role_players(nativeTransaction(transaction), nativeObject)).stream().forEach(rolePlayer -> {
-                RoleTypeImpl role = new RoleTypeImpl(role_player_get_role_type(rolePlayer));
-                ThingImpl player = ThingImpl.of(role_player_get_player(rolePlayer));
-                if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
-                else rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
-            });
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-        return rolePlayerMap;
-    }
-
-    @Override
-    public Stream<? extends RoleType> getRelating(TypeDBTransaction transaction) {
-        try {
-            return new NativeIterator<>(relation_get_relating(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public int hashCode() {
+        if (hash == 0) hash = getIID().hashCode();
+        return hash;
     }
 }

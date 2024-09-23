@@ -38,8 +38,6 @@ java_library(
         "//java/api",
         "//java/common",
         "//java/concept",
-        "//java/logic",
-        "//java/query",
         "//java/user",
         "//java:typedb_driver_jni",
     ],

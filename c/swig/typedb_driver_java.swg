@@ -82,75 +82,62 @@
 %nojavaexception init_logging;
 
 /* simple getters do not throw */
-%nojavaexception options_new;
-%nojavaexception options_get_infer;
-%nojavaexception options_get_trace_inference;
-%nojavaexception options_get_explain;
-%nojavaexception options_get_parallel;
-%nojavaexception options_get_prefetch;
-%nojavaexception options_get_prefetch_size;
-%nojavaexception options_get_session_idle_timeout_millis;
-%nojavaexception options_get_transaction_timeout_millis;
-%nojavaexception options_get_schema_lock_acquire_timeout_millis;
-%nojavaexception options_get_read_any_replica;
-%nojavaexception options_set_infer;
-%nojavaexception options_set_trace_inference;
-%nojavaexception options_set_explain;
-%nojavaexception options_set_parallel;
-%nojavaexception options_set_prefetch;
-%nojavaexception options_set_prefetch_size;
-%nojavaexception options_set_session_idle_timeout_millis;
-%nojavaexception options_set_transaction_timeout_millis;
-%nojavaexception options_set_schema_lock_acquire_timeout_millis;
-%nojavaexception options_set_read_any_replica;
-%nojavaexception options_has_infer;
-%nojavaexception options_has_trace_inference;
-%nojavaexception options_has_explain;
-%nojavaexception options_has_parallel;
-%nojavaexception options_has_prefetch;
-%nojavaexception options_has_prefetch_size;
-%nojavaexception options_has_session_idle_timeout_millis;
-%nojavaexception options_has_transaction_timeout_millis;
-%nojavaexception options_has_schema_lock_acquire_timeout_millis;
-%nojavaexception options_has_read_any_replica;
-
-%nojavaexception annotation_new_key;
-%nojavaexception annotation_new_unique;
-%nojavaexception annotation_is_key;
-%nojavaexception annotation_is_unique;
-%nojavaexception annotation_to_string;
-%nojavaexception annotation_equals;
+// %nojavaexception options_new;
+// %nojavaexception options_get_infer;
+// %nojavaexception options_get_trace_inference;
+// %nojavaexception options_get_explain;
+// %nojavaexception options_get_parallel;
+// %nojavaexception options_get_prefetch;
+// %nojavaexception options_get_prefetch_size;
+// %nojavaexception options_get_session_idle_timeout_millis;
+// %nojavaexception options_get_transaction_timeout_millis;
+// %nojavaexception options_get_schema_lock_acquire_timeout_millis;
+// %nojavaexception options_get_read_any_replica;
+// %nojavaexception options_set_infer;
+// %nojavaexception options_set_trace_inference;
+// %nojavaexception options_set_explain;
+// %nojavaexception options_set_parallel;
+// %nojavaexception options_set_prefetch;
+// %nojavaexception options_set_prefetch_size;
+// %nojavaexception options_set_session_idle_timeout_millis;
+// %nojavaexception options_set_transaction_timeout_millis;
+// %nojavaexception options_set_schema_lock_acquire_timeout_millis;
+// %nojavaexception options_set_read_any_replica;
+// %nojavaexception options_has_infer;
+// %nojavaexception options_has_trace_inference;
+// %nojavaexception options_has_explain;
+// %nojavaexception options_has_parallel;
+// %nojavaexception options_has_prefetch;
+// %nojavaexception options_has_prefetch_size;
+// %nojavaexception options_has_session_idle_timeout_millis;
+// %nojavaexception options_has_transaction_timeout_millis;
+// %nojavaexception options_has_schema_lock_acquire_timeout_millis;
+// %nojavaexception options_has_read_any_replica;
 
 %nojavaexception error_code;
 %nojavaexception error_message;
-%nojavaexception schema_exception_code;
-%nojavaexception schema_exception_message;
 
 %nojavaexception connection_is_open;
 
-%nojavaexception session_is_open;
-%nojavaexception session_get_database_name;
-
 %nojavaexception transaction_is_open;
 
-%nojavaexception user_get_username;
-%nojavaexception user_get_password_expiry_seconds;
+//%nojavaexception user_get_username;
+//%nojavaexception user_get_password_expiry_seconds;
 
-%nojavaexception replica_info_get_server;
-%nojavaexception replica_info_is_primary;
-%nojavaexception replica_info_is_preferred;
-%nojavaexception replica_info_get_term;
+//%nojavaexception replica_info_get_server;
+//%nojavaexception replica_info_is_primary;
+//%nojavaexception replica_info_is_preferred;
+//%nojavaexception replica_info_get_term;
 
 %nojavaexception database_get_name;
-%nojavaexception database_get_replicas_info;
-%nojavaexception database_get_primary_replica_info;
-%nojavaexception database_get_preferred_replica_info;
+//%nojavaexception database_get_replicas_info;
+//%nojavaexception database_get_primary_replica_info;
+//%nojavaexception database_get_preferred_replica_info;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;
 %nojavaexception concept_is_attribute;
 %nojavaexception concept_is_value;
-%nojavaexception concept_is_root_thing_type;
 %nojavaexception concept_is_entity_type;
 %nojavaexception concept_is_relation_type;
 %nojavaexception concept_is_attribute_type;
@@ -159,85 +146,66 @@
 %nojavaexception concept_as_relation;
 %nojavaexception concept_as_attribute;
 %nojavaexception concept_as_value;
-%nojavaexception concept_as_root_thing_type;
 %nojavaexception concept_as_entity_type;
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
 %nojavaexception concept_to_string;
 %nojavaexception concept_equals;
 
-%nojavaexception concepts_get_root_entity_type;
-%nojavaexception concepts_get_root_relation_type;
-%nojavaexception concepts_get_root_attribute_type;
-
-%nojavaexception attribute_type_get_value_type;
-
-%nojavaexception role_type_is_root;
-%nojavaexception role_type_is_abstract;
-%nojavaexception role_type_get_scope;
-%nojavaexception role_type_get_name;
-
-%nojavaexception thing_get_iid;
-%nojavaexception thing_get_is_inferred;
+%nojavaexception entity_get_iid;
+%nojavaexception relation_get_iid;
 %nojavaexception entity_get_type;
 %nojavaexception relation_get_type;
 %nojavaexception attribute_get_type;
 %nojavaexception attribute_get_value;
 
 %nojavaexception value_get_boolean;
-%nojavaexception value_get_date_time_as_millis;
+%nojavaexception value_get_date_as_millis;
+%nojavaexception value_get_datetime_as_millis;
+%nojavaexception value_get_datetime_tz_as_millis;
+%nojavaexception value_get_decimal;
 %nojavaexception value_get_double;
+%nojavaexception value_get_duration;
 %nojavaexception value_get_long;
 %nojavaexception value_get_string;
+%nojavaexception value_get_struct;
 %nojavaexception value_is_boolean;
-%nojavaexception value_is_date_time;
+%nojavaexception value_is_date;
+%nojavaexception value_is_datetime;
+%nojavaexception value_is_datetime_tz;
+%nojavaexception value_is_decimal;
 %nojavaexception value_is_double;
+%nojavaexception value_is_duration;
 %nojavaexception value_is_long;
 %nojavaexception value_is_string;
-%nojavaexception value_new_boolean;
-%nojavaexception value_new_date_time_from_millis;
-%nojavaexception value_new_double;
-%nojavaexception value_new_long;
-%nojavaexception value_new_string;
+%nojavaexception value_is_struct;
 
-%nojavaexception role_player_get_role_type;
-%nojavaexception role_player_get_player;
+%nojavaexception value_get_value_type;
+%nojavaexception attribute_type_get_value_type;
 
-%nojavaexception rule_get_label;
-%nojavaexception rule_get_when;
-%nojavaexception rule_get_then;
-%nojavaexception rule_to_string;
+%nojavaexception attribute_type_is_boolean;
+%nojavaexception attribute_type_is_date;
+%nojavaexception attribute_type_is_datetime;
+%nojavaexception attribute_type_is_datetime_tz;
+%nojavaexception attribute_type_is_decimal;
+%nojavaexception attribute_type_is_double;
+%nojavaexception attribute_type_is_duration;
+%nojavaexception attribute_type_is_long;
+%nojavaexception attribute_type_is_string;
+%nojavaexception attribute_type_is_struct;
+%nojavaexception attribute_type_is_untyped;
 
-%nojavaexception concept_map_equals;
-%nojavaexception concept_map_get;
-%nojavaexception concept_map_get_explainables;
-%nojavaexception concept_map_get_values;
-%nojavaexception concept_map_get_variables;
-%nojavaexception concept_map_to_string;
+%nojavaexception concept_row_equals;
+%nojavaexception concept_row_get;
+%nojavaexception concept_row_get_header;
+%nojavaexception concept_row_get_concepts;
+%nojavaexception concept_row_get_index;
+%nojavaexception concept_row_to_string;
 
-%nojavaexception explainable_get_conjunction;
-%nojavaexception explainable_get_id;
-%nojavaexception explainables_equals;
-%nojavaexception explainables_get_attribute;
-%nojavaexception explainables_get_attributes_keys;
-%nojavaexception explainables_get_ownership;
-%nojavaexception explainables_get_ownerships_keys;
-%nojavaexception explainables_get_relation;
-%nojavaexception explainables_get_relations_keys;
-%nojavaexception explainables_to_string;
-
-%nojavaexception explanation_equals;
-%nojavaexception explanation_to_string;
-%nojavaexception explanation_get_rule;
-%nojavaexception explanation_get_conclusion;
-%nojavaexception explanation_get_condition;
-%nojavaexception explanation_get_mapped_variables;
-%nojavaexception explanation_get_mapping;
-
-%nojavaexception concept_map_group_get_owner;
-%nojavaexception concept_map_group_get_concept_maps;
-%nojavaexception concept_map_group_to_string;
-%nojavaexception concept_map_group_equals;
+%nojavaexception query_answer_get_rows;
+%nojavaexception query_answer_is_ok;
+%nojavaexception query_answer_is_concept_rows_stream;
+%nojavaexception query_answer_is_concept_trees_stream;
 
 %nojavaexception value_group_to_string;
 %nojavaexception value_group_equals;
@@ -247,113 +215,54 @@
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
+%nojavaexception DatetimeAndZoneId::datetime_in_millis;
+%nojavaexception DatetimeAndZoneId::zone_id;
+
+%nojavaexception Decimal::integer;
+%nojavaexception Decimal::fractional;
+
+%nojavaexception Duration::months;
+%nojavaexception Duration::days;
+%nojavaexception Duration::nanos;
+
 /* director constructors do not throw */
-%nojavaexception SessionCallbackDirector;
 %nojavaexception TransactionCallbackDirector;
 
 /* destructors do not throw */
-%nojavaexception ~Annotation;
 %nojavaexception ~Concept;
 %nojavaexception ~ConceptIterator;
-%nojavaexception ~ConceptMap;
-%nojavaexception ~ConceptMapGroup;
-%nojavaexception ~ConceptMapGroupIterator;
-%nojavaexception ~ConceptMapIterator;
-%nojavaexception ~Connection;
-%nojavaexception ~Credential;
+%nojavaexception ~ConceptRow;
+%nojavaexception ~ConceptRowIterator;
+//%nojavaexception ~Credential;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
 %nojavaexception ~DatabaseManager;
-%nojavaexception ~DatabaseManager;
+%nojavaexception ~DatetimeAndZoneId;
+%nojavaexception ~Decimal;
+%nojavaexception ~Duration;
 %nojavaexception ~Error;
-%nojavaexception ~Error;
-%nojavaexception ~Explainable;
-%nojavaexception ~Explainables;
-%nojavaexception ~Explanation;
-%nojavaexception ~ExplanationIterator;
-%nojavaexception ~Options;
-%nojavaexception ~ReplicaInfo;
-%nojavaexception ~ReplicaInfoIterator;
-%nojavaexception ~RolePlayer;
-%nojavaexception ~RolePlayerIterator;
-%nojavaexception ~Rule;
-%nojavaexception ~RuleIterator;
-%nojavaexception ~SchemaException;
-%nojavaexception ~SchemaExceptionIterator;
-%nojavaexception ~Session;
-%nojavaexception ~SessionCallbackDirector;
+//%nojavaexception ~Options;
+//%nojavaexception ~ReplicaInfo;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringPair;
 %nojavaexception ~StringPairIterator;
 %nojavaexception ~Transaction;
 %nojavaexception ~TransactionCallbackDirector;
-%nojavaexception ~User;
-%nojavaexception ~UserIterator;
-%nojavaexception ~UserManager;
+%nojavaexception ~TypeDBDriver;
+%nojavaexception ~QueryAnswer;
+%nojavaexception ~ValueType;
+//%nojavaexception ~User;
+//%nojavaexception ~UserIterator;
+//%nojavaexception ~UserManager;
 %nojavaexception ~Value;
 %nojavaexception ~ValueGroup;
 %nojavaexception ~ValueGroupIterator;
 
 /* one-shot network requests do not throw when first constructed, only when resolved */
-%nojavaexception concepts_get_entity_type;
-%nojavaexception concepts_get_relation_type;
-%nojavaexception concepts_get_attribute_type;
-%nojavaexception concepts_put_entity_type;
-%nojavaexception concepts_put_relation_type;
-%nojavaexception concepts_put_attribute_type;
-%nojavaexception concepts_get_entity;
-%nojavaexception concepts_get_relation;
-%nojavaexception concepts_get_attribute;
-%nojavaexception thing_delete;
-%nojavaexception thing_is_deleted;
-%nojavaexception thing_set_has;
-%nojavaexception thing_unset_has;
-%nojavaexception relation_add_role_player;
-%nojavaexception relation_remove_role_player;
-%nojavaexception thing_type_is_deleted;
-%nojavaexception thing_type_delete;
-%nojavaexception thing_type_get_label;
-%nojavaexception thing_type_set_label;
-%nojavaexception thing_type_set_abstract;
-%nojavaexception thing_type_unset_abstract;
-%nojavaexception thing_type_get_owns_overridden;
-%nojavaexception thing_type_set_owns;
-%nojavaexception thing_type_unset_owns;
-%nojavaexception thing_type_get_plays_overridden;
-%nojavaexception thing_type_set_plays;
-%nojavaexception thing_type_unset_plays;
-%nojavaexception thing_type_get_syntax;
-%nojavaexception entity_type_create;
-%nojavaexception entity_type_get_supertype;
-%nojavaexception entity_type_set_supertype;
-%nojavaexception relation_type_create;
-%nojavaexception relation_type_get_supertype;
-%nojavaexception relation_type_set_supertype;
-%nojavaexception relation_type_get_relates_for_role_label;
-%nojavaexception relation_type_get_relates_overridden;
-%nojavaexception relation_type_set_relates;
-%nojavaexception relation_type_unset_relates;
-%nojavaexception attribute_type_put;
-%nojavaexception attribute_type_get;
-%nojavaexception attribute_type_get_supertype;
-%nojavaexception attribute_type_set_supertype;
-%nojavaexception attribute_type_get_regex;
-%nojavaexception attribute_type_set_regex;
-%nojavaexception attribute_type_unset_regex;
-%nojavaexception role_type_is_deleted;
-%nojavaexception role_type_get_relation_type;
-%nojavaexception role_type_delete;
-%nojavaexception role_type_set_label;
-%nojavaexception role_type_get_supertype;
-%nojavaexception rule_set_label;
-%nojavaexception rule_delete;
-%nojavaexception rule_is_deleted;
-%nojavaexception logic_manager_put_rule;
-%nojavaexception logic_manager_get_rule;
-%nojavaexception query_define;
-%nojavaexception query_undefine;
-%nojavaexception query_delete;
-%nojavaexception query_get_aggregate;
+%nojavaexception entity_type_get_label;
+%nojavaexception relation_type_get_label;
+%nojavaexception attribute_type_get_label;
+%nojavaexception role_type_get_label;
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
 
@@ -401,6 +310,7 @@
 }%}
 %enddef
 
+%promise(QueryAnswer, query_answer)
 %promise(Concept, concept)
 %promise(Rule, rule)
 %promise(String, string)
@@ -493,18 +403,13 @@
 %enddef
 
 %iterator(Concept, concept)
-%iterator(RolePlayer, role_player) 
-%iterator(ConceptMap, concept_map)
-%iterator(ConceptMapGroup, concept_map_group)
+%iterator(ConceptRow, concept_row)
 %iterator(ValueGroup, value_group)
-%iterator(Explanation, explanation)
 %iterator(String, string)
 %iterator(StringPair, string_pair)
-%iterator(Rule, rule)
-%iterator(User, user)
+//%iterator(User, user)
 %iterator(Database, database)
-%iterator(ReplicaInfo, replica_info)
-%iterator(SchemaException, schema_exception)
+//%iterator(ReplicaInfo, replica_info)
 
 %define %array(Type)
 %typemap(in) Type ** (jint size) {
@@ -531,7 +436,6 @@
 }
 %enddef
 
-%array(Annotation)
 %array(Concept)
 
 /* char** needs special handling */
@@ -587,5 +491,29 @@
       and vice versa */
 %typemap(javain) enum ValueType * "$javainput == null ? -1 : $javainput.swigValue()"
 %typemap(javaout) enum ValueType * {
+    return $jnicall;
+}
+
+
+/* QueryAnswer* needs special handling */
+%typemap(in) enum QueryAnswer * {
+    if ($input >= 0) {
+        $1 = (enum QueryAnswer *) malloc(sizeof(enum QueryAnswer));
+        *$1 = (enum QueryAnswer)$input;
+    }
+}
+
+/* This cleans up the memory we malloc'd before the function call */
+%typemap(freearg) enum QueryAnswer * { free($1); }
+
+/* These 3 typemaps tell SWIG what JNI and Java types to use */
+%typemap(jni) enum QueryAnswer * "jlong"
+%typemap(jtype) enum QueryAnswer * "long"
+%typemap(jstype) enum QueryAnswer * "QueryAnswer"
+
+/* These 2 typemaps handle the conversion of the jtype to jstype typemap type
+      and vice versa */
+%typemap(javain) enum QueryAnswer * "$javainput == null ? -1 : $javainput.swigValue()"
+%typemap(javaout) enum QueryAnswer * {
     return $jnicall;
 }

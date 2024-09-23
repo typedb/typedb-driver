@@ -33,21 +33,17 @@ use futures::TryStreamExt;
 use itertools::Itertools;
 use log::{debug, error};
 use prost::Message;
+#[cfg(not(feature = "sync"))]
+use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     select,
     sync::{
         mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
         oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
     },
-    time::{Instant, sleep_until},
+    time::{sleep_until, Instant},
 };
-#[cfg(not(feature = "sync"))]
-use tokio::sync::oneshot::channel as oneshot;
 use tonic::Streaming;
-use typedb_protocol::transaction::{self, server::Server,
-};
-use typedb_protocol::transaction::res_part::ResPart;
-use typedb_protocol::transaction::stream_signal::res_part::State;
 
 use crate::{common::{
     box_promise,
@@ -65,6 +61,7 @@ use crate::connection::network::proto::FromProto;
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::{ResponseSink, StreamResponse};
+use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
@@ -163,7 +160,7 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn stream(
         &self,
         req: TransactionRequest,
-    ) -> Result<impl Stream<Item=Result<TransactionResponse>>> {
+    ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
         if !self.is_open() {
             return Err(self.error().into());
         }
@@ -308,9 +305,7 @@ impl TransactionTransmitter {
             match grpc_source.next().await {
                 Some(Ok(message)) => collector.collect(message).await,
                 Some(Err(status)) => {
-                    break collector
-                        .close_with_error(status.into())
-                        .await;
+                    break collector.close_with_error(status.into()).await;
                 }
                 None => break collector.close().await,
             }
@@ -414,7 +409,12 @@ impl ResponseCollector {
                 match stream_res.state {
                     None => {
                         self.callbacks.write().unwrap().remove(&request_id);
-                        error!("{}", ConnectionError::MissingResponseField { field: "transaction.res_part.res_part.stream_res.state"})
+                        error!(
+                            "{}",
+                            ConnectionError::MissingResponseField {
+                                field: "transaction.res_part.res_part.stream_res.state"
+                            }
+                        )
                     }
                     Some(state) => {
                         match state {
@@ -434,7 +434,10 @@ impl ResponseCollector {
                                     Some(sink) => {
                                         sink.send_result(Ok(TransactionResponse::Query(QueryResponse::from_proto(error))));
                                     }
-                                    _ => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
+                                    _ => error!(
+                                        "{}",
+                                        ConnectionError::UnknownRequestId { request_id: request_id.clone() }
+                                    ),
                                 }
                                 self.callbacks.write().unwrap().remove(&request_id);
                             }

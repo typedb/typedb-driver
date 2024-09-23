@@ -21,26 +21,13 @@ package com.vaticle.typedb.driver.connection;
 
 import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.DATABASE_DELETED;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_delete;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_name;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_preferred_replica_info;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_primary_replica_info;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_replicas_info;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_rule_schema;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_schema;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_type_schema;
-import static com.vaticle.typedb.driver.jni.typedb_driver.replica_info_get_server;
-import static com.vaticle.typedb.driver.jni.typedb_driver.replica_info_get_term;
-import static com.vaticle.typedb.driver.jni.typedb_driver.replica_info_is_preferred;
-import static com.vaticle.typedb.driver.jni.typedb_driver.replica_info_is_primary;
 
 public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Database> implements Database {
     public TypeDBDatabaseImpl(com.vaticle.typedb.driver.jni.Database database) {
@@ -74,16 +61,6 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.j
     }
 
     @Override
-    public String ruleSchema() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-        try {
-            return database_rule_schema(nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
     public void delete() {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
@@ -99,51 +76,51 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.j
         return name();
     }
 
-    @Override
-    public Set<? extends Database.Replica> replicas() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-        return new NativeIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
-    }
-
-    @Override
-    public Optional<? extends Database.Replica> primaryReplica() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
-        if (res != null) return Optional.of(new Replica(res));
-        else return Optional.empty();
-    }
-
-    @Override
-    public Optional<? extends Database.Replica> preferredReplica() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
-        if (res != null) return Optional.of(new Replica(res));
-        else return Optional.empty();
-    }
-
-    public static class Replica extends NativeObject<com.vaticle.typedb.driver.jni.ReplicaInfo> implements Database.Replica {
-        Replica(com.vaticle.typedb.driver.jni.ReplicaInfo replicaInfo) {
-            super(replicaInfo);
-        }
-
-        @Override
-        public String server() {
-            return replica_info_get_server(nativeObject);
-        }
-
-        @Override
-        public boolean isPrimary() {
-            return replica_info_is_primary(nativeObject);
-        }
-
-        @Override
-        public boolean isPreferred(){
-            return replica_info_is_preferred(nativeObject);
-        }
-
-        @Override
-        public long term() {
-            return replica_info_get_term(nativeObject);
-        }
-    }
+//    @Override
+//    public Set<? extends Database.Replica> replicas() {
+//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
+//        return new NativeIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
+//    }
+//
+//    @Override
+//    public Optional<? extends Database.Replica> primaryReplica() {
+//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
+//        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
+//        if (res != null) return Optional.of(new Replica(res));
+//        else return Optional.empty();
+//    }
+//
+//    @Override
+//    public Optional<? extends Database.Replica> preferredReplica() {
+//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
+//        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
+//        if (res != null) return Optional.of(new Replica(res));
+//        else return Optional.empty();
+//    }
+//
+//    public static class Replica extends NativeObject<com.vaticle.typedb.driver.jni.ReplicaInfo> implements Database.Replica {
+//        Replica(com.vaticle.typedb.driver.jni.ReplicaInfo replicaInfo) {
+//            super(replicaInfo);
+//        }
+//
+//        @Override
+//        public String server() {
+//            return replica_info_get_server(nativeObject);
+//        }
+//
+//        @Override
+//        public boolean isPrimary() {
+//            return replica_info_is_primary(nativeObject);
+//        }
+//
+//        @Override
+//        public boolean isPreferred(){
+//            return replica_info_is_preferred(nativeObject);
+//        }
+//
+//        @Override
+//        public long term() {
+//            return replica_info_get_term(nativeObject);
+//        }
+//    }
 }

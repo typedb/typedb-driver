@@ -17,7 +17,10 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt};
+use std::{
+    collections::HashMap,
+    fmt,
+};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
@@ -25,7 +28,6 @@ use chrono_tz::Tz;
 use crate::Error;
 
 /// Represents the type of primitive value is held by a Value or Attribute.
-#[repr(C)]
 #[derive(Clone, PartialEq, Eq)]
 pub enum ValueType {
     Boolean,
@@ -43,14 +45,14 @@ pub enum ValueType {
 impl ValueType {
     pub fn name(&self) -> &str {
         match self {
-            Self::Boolean => "bool",
+            Self::Boolean => "boolean",
             Self::Long => "long",
             Self::Double => "double",
             Self::Decimal => "decimal",
             Self::String => "string",
             Self::Date => "date",
             Self::Datetime => "datetime",
-            Self::DatetimeTZ => "datetime_tz",
+            Self::DatetimeTZ => "datetime-tz",
             Self::Duration => "duration",
             Self::Struct(name) => &name,
         }
@@ -235,6 +237,7 @@ impl fmt::Debug for Value {
 
 /// A fixed-point decimal number.
 /// Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
+#[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Decimal {
     integer: i64,
@@ -283,10 +286,8 @@ impl fmt::Debug for Decimal {
                 fractional /= 10;
             }
 
-            // count number of leading 0's that have to be represented
-            let digits = fractional.ilog10() as u64; // `fractional` cannot be a power of 10 here, so ilog10 correctly gives the number of digits
-            let leading_0s = Self::FRACTIONAL_PART_DENOMINATOR - digits - tail_0s;
-            write!(f, "{}.{:0width$}{}", self.integer, "", digits, width = leading_0s as usize)?;
+            let fractional_width = Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - tail_0s;
+            write!(f, "{}.{:0width$}", self.integer_part(), fractional, width = fractional_width as usize)?;
         }
         Ok(())
     }
@@ -295,6 +296,7 @@ impl fmt::Debug for Decimal {
 /// A relative duration, which contains months, days, and nanoseconds.
 /// Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component
 /// When used as an absolute duration, convertible to chrono::Duration
+#[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Duration {
     pub months: u32,

@@ -17,24 +17,39 @@
  * under the License.
  */
 
-use std::collections::HashMap;
-use std::str::FromStr;
+use std::{collections::HashMap, str::FromStr};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone};
 use chrono_tz::Tz;
 use itertools::Itertools;
-use typedb_protocol::{Attribute as AttributeProto, AttributeType as AttributeTypeProto, concept, Concept as ConceptProto, ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto, readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto}, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Value as ValueProto, value::Value as ValueProtoInner, value_type::ValueType as ValueTypeProto};
-use typedb_protocol::row_entry::Entry;
-use typedb_protocol::value::datetime_tz::Timezone as TimezoneProto;
-
-use crate::{answer::concept_tree, concept::{
-    Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
-    Value, ValueType,
-}, Error, error::ConnectionError, Result};
-use crate::concept::value::Decimal;
-use crate::error::ConnectionError::{ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotRecognised, ValueTimeZoneOffsetNotImplemented};
+use typedb_protocol::{
+    concept,
+    readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
+    row_entry::Entry,
+    value::{datetime_tz::Timezone as TimezoneProto, Value as ValueProtoInner},
+    value_type::ValueType as ValueTypeProto,
+    Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
+    ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto,
+    ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto, RelationType as RelationTypeProto,
+    RoleType as RoleTypeProto, Value as ValueProto,
+};
 
 use super::{FromProto, TryFromProto};
+use crate::{
+    answer::concept_tree,
+    concept::{
+        value::Decimal, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        ValueType,
+    },
+    error::{
+        ConnectionError,
+        ConnectionError::{
+            ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotRecognised,
+            ValueTimeZoneOffsetNotImplemented,
+        },
+    },
+    Error, Result,
+};
 
 impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
     fn try_from_proto(proto: ConceptRowProto) -> Result<Self> {
@@ -44,8 +59,7 @@ impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
                 Entry::Empty(_) => row.push(None),
                 Entry::Concept(concept_proto) => row.push(Some(Concept::try_from_proto(concept_proto)?)),
                 Entry::Value(value_proto) => row.push(Some(Concept::Value(Value::try_from_proto(value_proto)?))),
-                Entry::ConceptList(_)
-                | Entry::ValueList(_) => {
+                Entry::ConceptList(_) | Entry::ValueList(_) => {
                     return Err(ListsNotImplemented.into());
                 }
             }
@@ -81,13 +95,12 @@ impl TryFromProto<ConceptProto> for Concept {
             }
 
             // Some(concept::Concept::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
-
             None => Err(ConnectionError::MissingResponseField { field: "concept" }.into()),
         }
     }
 }
 
-impl TryFromProto<ReadableConceptTreeProto> for concept_tree::Tree {
+impl TryFromProto<ReadableConceptTreeProto> for concept_tree::ConceptTree {
     fn try_from_proto(proto: ReadableConceptTreeProto) -> Result<Self> {
         let ReadableConceptTreeProto { root: root_proto } = proto;
         Ok(Self {
@@ -171,7 +184,7 @@ impl FromProto<AttributeTypeProto> for AttributeType {
         let AttributeTypeProto { label, value_type } = proto;
         let value_type = match value_type {
             None => None,
-            Some(proto) => Some(ValueType::from_proto(proto.value_type.unwrap()))
+            Some(proto) => Some(ValueType::from_proto(proto.value_type.unwrap())),
         };
         Self { label, value_type }
     }
@@ -203,27 +216,21 @@ impl FromProto<RoleTypeProto> for RoleType {
 
 impl TryFromProto<EntityProto> for Entity {
     fn try_from_proto(proto: EntityProto) -> Result<Self> {
-        let EntityProto { iid, entity_type, } = proto;
-        Ok(Self {
-            iid: iid.into(),
-            type_: entity_type.map(|type_| EntityType::from_proto(type_)),
-        })
+        let EntityProto { iid, entity_type } = proto;
+        Ok(Self { iid: iid.into(), type_: entity_type.map(|type_| EntityType::from_proto(type_)) })
     }
 }
 
 impl TryFromProto<RelationProto> for Relation {
     fn try_from_proto(proto: RelationProto) -> Result<Self> {
-        let RelationProto { iid, relation_type, } = proto;
-        Ok(Self {
-            iid: iid.into(),
-            type_: relation_type.map(|type_| RelationType::from_proto(type_)),
-        })
+        let RelationProto { iid, relation_type } = proto;
+        Ok(Self { iid: iid.into(), type_: relation_type.map(|type_| RelationType::from_proto(type_)) })
     }
 }
 
 impl TryFromProto<AttributeProto> for Attribute {
     fn try_from_proto(proto: AttributeProto) -> Result<Self> {
-        let AttributeProto { iid, attribute_type, value, } = proto;
+        let AttributeProto { iid, attribute_type, value } = proto;
         let type_ = match attribute_type {
             None => None,
             Some(attribute_type) => Some(AttributeType::from_proto(attribute_type)),
@@ -253,19 +260,24 @@ impl TryFromProto<ValueProto> for Value {
                 Ok(Self::Datetime(naive_datetime_from_timestamp(datetime.seconds, datetime.nanos)))
             }
             Some(ValueProtoInner::DatetimeTz(datetime_tz)) => {
-                let datetime = datetime_tz.datetime.ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.datetime" }))?;
-                let timezone = datetime_tz.timezone.ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.timezone" }))?;
+                let datetime = datetime_tz
+                    .datetime
+                    .ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.datetime" }))?;
+                let timezone = datetime_tz
+                    .timezone
+                    .ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.timezone" }))?;
 
                 let tz = match timezone {
-                    TimezoneProto::Named(name) => {
-                        Tz::from_str(&name).map_err(|_| Error::from(ValueTimeZoneNameNotRecognised { time_zone: name.to_owned() }))?
-                    }
+                    TimezoneProto::Named(name) => Tz::from_str(&name)
+                        .map_err(|_| Error::from(ValueTimeZoneNameNotRecognised { time_zone: name.to_owned() }))?,
                     TimezoneProto::Offset(offset) => {
                         Err(Error::from(ValueTimeZoneOffsetNotImplemented { offset }))?
                         // TODO: not implemented yet
                     }
                 };
-                Ok(Self::DatetimeTZ(tz.from_utc_datetime(&naive_datetime_from_timestamp(datetime.seconds, datetime.nanos))))
+                Ok(Self::DatetimeTZ(
+                    tz.from_utc_datetime(&naive_datetime_from_timestamp(datetime.seconds, datetime.nanos)),
+                ))
             }
             Some(ValueProtoInner::Duration(duration)) => {
                 Ok(Self::Duration(crate::concept::value::Duration::new(duration.months, duration.days, duration.nanos)))
@@ -282,4 +294,3 @@ impl TryFromProto<ValueProto> for Value {
 fn naive_datetime_from_timestamp(seconds: i64, nanos: u32) -> NaiveDateTime {
     DateTime::from_timestamp(seconds, nanos).unwrap().naive_utc()
 }
-

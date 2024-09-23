@@ -17,17 +17,20 @@
  * under the License.
  */
 
-use std::collections::HashMap;
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
-use std::sync::{Arc, RwLock};
-
-use crate::{common::{error::ConnectionError, Result}, Error};
-use crate::common::address::Address;
-use crate::connection::server_connection::ServerConnection;
-use crate::info::DatabaseInfo;
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock},
+};
 
 use super::Database;
+use crate::{
+    common::{address::Address, error::ConnectionError, Result},
+    connection::server_connection::ServerConnection,
+    info::DatabaseInfo,
+    Error,
+};
 
 /// Provides access to all database management methods.
 #[derive(Debug)]
@@ -106,10 +109,9 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
         let name = name.into();
-        let database_info = self.run_failsafe(
-            name,
-            |server_connection, name| async move { server_connection.create_database(name).await },
-        ).await?;
+        let database_info = self
+            .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await })
+            .await?;
         let database = Database::new(database_info, self.server_connections.clone())?;
         self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));
         Ok(())
@@ -135,7 +137,8 @@ impl DatabaseManager {
                     }
                     let mut databases = self.databases_cache.write().unwrap();
                     databases.clear();
-                    databases.extend(new_databases.iter().map(|database| (database.name().to_owned(), database.clone())));
+                    databases
+                        .extend(new_databases.iter().map(|database| (database.name().to_owned(), database.clone())));
                     return Ok(new_databases);
                 }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
@@ -143,7 +146,6 @@ impl DatabaseManager {
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
-
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
@@ -157,9 +159,9 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
-        where
-            F: Fn(ServerConnection, String) -> P,
-            P: Future<Output=Result<R>>,
+    where
+        F: Fn(ServerConnection, String) -> P,
+        P: Future<Output = Result<R>>,
     {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
@@ -176,7 +178,6 @@ impl DatabaseManager {
                 //         })
                 //         .await
                 // }
-
                 err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }

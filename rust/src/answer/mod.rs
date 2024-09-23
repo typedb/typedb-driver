@@ -17,30 +17,24 @@
  * under the License.
  */
 
-use crate::answer::concept_tree::{ConceptTreesHeader, Tree};
-use crate::BoxStream;
-use crate::Result;
-
-pub use self::{
-    concept_row::ConceptRow,
-    json::JSON,
-    value_group::ValueGroup,
+pub use self::{concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
+use crate::{
+    answer::concept_tree::{ConceptTree, ConceptTreesHeader},
+    BoxStream, Result,
 };
 
 pub mod concept_row;
-mod json;
 pub(crate) mod concept_tree;
+mod json;
 mod value_group;
-
 
 pub enum QueryAnswer {
     Ok(),
     ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>),
-    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, crate::Result<Tree>>),
+    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, crate::Result<ConceptTree>>),
 }
 
 impl QueryAnswer {
-
     pub fn is_ok(&self) -> bool {
         matches!(self, Self::Ok())
     }
@@ -61,4 +55,3 @@ impl QueryAnswer {
         }
     }
 }
-

@@ -17,5 +17,12 @@
  * under the License.
  */
 
-mod language;
-mod reasoner;
+package com.vaticle.typedb.driver.concept.answer;
+
+import com.vaticle.typedb.driver.api.answer.OkQueryAnswer;
+
+public class OkQueryAnswerImpl extends QueryAnswerImpl implements OkQueryAnswer {
+    protected OkQueryAnswerImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+        super(answer);
+    }
+}

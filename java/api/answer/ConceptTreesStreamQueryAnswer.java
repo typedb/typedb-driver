@@ -17,15 +17,22 @@
  * under the License.
  */
 
-use serial_test::serial;
+package com.vaticle.typedb.driver.api.answer;
 
-use crate::behaviour::Context;
+import javax.annotation.CheckReturnValue;
+import java.util.stream.Stream;
 
-#[tokio::test]
-#[serial]
-async fn test() {
-    // Bazel specific path: when running the test in bazel, the external data from
-    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
-    // the working directory.
-    assert!(Context::test("../vaticle_typedb_behaviour/query/reasoner/relation-inference.feature").await);
+public interface ConceptTreesStreamQueryAnswer extends QueryAnswer {
+    @Override
+    default boolean isConceptTreesStream() {
+        return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default ConceptTreesStreamQueryAnswer asConceptTreesStream() {
+        return this;
+    }
+
+    Stream<?extends ConceptTree> trees();
 }

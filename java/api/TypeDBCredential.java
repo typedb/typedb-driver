@@ -19,13 +19,7 @@
 
 package com.vaticle.typedb.driver.api;
 
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-
-import javax.annotation.Nullable;
-import java.nio.file.Path;
-
-import static com.vaticle.typedb.driver.jni.typedb_driver.credential_new;
+// TODO: Currently disabled in 3.0
 
 /**
  * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
@@ -39,37 +33,37 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.credential_new;
  * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
  * </pre>
  */
-public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
-    /**
-     *
-     * @param username The name of the user to connect as
-     * @param password The password for the user
-     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
-     */
-    public TypeDBCredential(String username, String password, boolean tlsEnabled) {
-        this(username, password, null, tlsEnabled);
-    }
-
-    /**
-     *
-     * @param username The name of the user to connect as
-     * @param password The password for the user
-     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
-     */
-    public TypeDBCredential(String username, String password, Path tlsRootCAPath) {
-        this(username, password, tlsRootCAPath.toString(), true);
-    }
-
-    private TypeDBCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
-        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
-    }
-
-    private static com.vaticle.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
-        assert tlsEnabled || tlsRootCAPath == null;
-        try {
-            return credential_new(username, password, tlsRootCAPath, tlsEnabled);
-        } catch (com.vaticle.typedb.driver.jni.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-}
+//public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
+//    /**
+//     *
+//     * @param username The name of the user to connect as
+//     * @param password The password for the user
+//     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
+//     */
+//    public TypeDBCredential(String username, String password, boolean tlsEnabled) {
+//        this(username, password, null, tlsEnabled);
+//    }
+//
+//    /**
+//     *
+//     * @param username The name of the user to connect as
+//     * @param password The password for the user
+//     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
+//     */
+//    public TypeDBCredential(String username, String password, Path tlsRootCAPath) {
+//        this(username, password, tlsRootCAPath.toString(), true);
+//    }
+//
+//    private TypeDBCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
+//        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
+//    }
+//
+//    private static com.vaticle.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
+//        assert tlsEnabled || tlsRootCAPath == null;
+//        try {
+//            return credential_new(username, password, tlsRootCAPath, tlsEnabled);
+//        } catch (com.vaticle.typedb.driver.jni.Error error) {
+//            throw new TypeDBDriverException(error);
+//        }
+//    }
+//}

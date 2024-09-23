@@ -19,54 +19,45 @@
 
 package com.vaticle.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.concept.ConceptManager;
-import com.vaticle.typedb.driver.api.logic.LogicManager;
-import com.vaticle.typedb.driver.api.query.QueryManager;
+import com.vaticle.typedb.driver.api.answer.QueryAnswer;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
-import com.vaticle.typedb.driver.logic.LogicManagerImpl;
-import com.vaticle.typedb.driver.query.QueryManagerImpl;
+import com.vaticle.typedb.driver.concept.answer.QueryAnswerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.MISSING_QUERY;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_commit;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_is_open;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_new;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_on_close;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_query;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_rollback;
 
 public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Transaction> implements TypeDBTransaction {
     private final TypeDBTransaction.Type type;
-    private final TypeDBOptions options;
-
-    private final ConceptManager conceptManager;
-    private final LogicManager logicManager;
-    private final QueryManager queryManager;
+//    private final TypeDBOptions options;
 
     private final List<TransactionOnClose> callbacks;
 
-    TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
-        super(newNative(session, type, options));
+    TypeDBTransactionImpl(TypeDBDriver driver, String database, Type type/*, TypeDBOptions options*/) {
+        super(newNative(driver, database, type/*, options*/));
         this.type = type;
-        this.options = options;
-
-        conceptManager = new ConceptManagerImpl(nativeObject);
-        logicManager = new LogicManagerImpl(nativeObject);
-        queryManager = new QueryManagerImpl(nativeObject);
+//        this.options = options;
 
         callbacks = new ArrayList<>();
     }
 
-    private static com.vaticle.typedb.driver.jni.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
+    private static com.vaticle.typedb.driver.jni.Transaction newNative(TypeDBDriver driver, String database, Type type/*, TypeDBOptions options*/) {
         try {
-            return transaction_new(session.nativeObject, type.nativeObject, options.nativeObject);
+            return transaction_new(((TypeDBDriverImpl)driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -77,10 +68,10 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
         return type;
     }
 
-    @Override
-    public TypeDBOptions options() {
-        return options;
-    }
+//    @Override
+//    public TypeDBOptions options() {
+//        return options;
+//    }
 
     @Override
     public boolean isOpen() {
@@ -89,18 +80,13 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     }
 
     @Override
-    public ConceptManager concepts() {
-        return conceptManager;
-    }
-
-    @Override
-    public LogicManager logic() {
-        return logicManager;
-    }
-
-    @Override
-    public QueryManager query() {
-        return queryManager;
+    public Promise<? extends QueryAnswer> query(String query) {
+        if (query == null || query.isBlank()) throw new TypeDBDriverException(MISSING_QUERY);
+        try {
+            return Promise.map(transaction_query(nativeObject, query/*, options.nativeObject*/), QueryAnswerImpl::of);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override

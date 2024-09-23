@@ -17,15 +17,10 @@
  * under the License.
  */
 
-use serial_test::serial;
+package com.vaticle.typedb.driver.api.answer;
 
-use crate::behaviour::Context;
-
-#[tokio::test]
-#[serial]
-async fn test() {
-    // Bazel specific path: when running the test in bazel, the external data from
-    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
-    // the working directory.
-    assert!(Context::test("../vaticle_typedb_behaviour/query/language/update.feature").await);
+/**
+ * Contains a tree of concepts.
+ */
+public interface ConceptTree {
 }
