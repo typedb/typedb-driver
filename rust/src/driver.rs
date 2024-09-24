@@ -45,7 +45,6 @@ impl TypeDBDriver {
 }
 
 impl TypeDBDriver {
-    // const VERSION: &'static str = include_str!("../VERSION");
     const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION"){
         None => "0.0.0",
         Some(version) => version
