@@ -24,7 +24,6 @@ use std::future::Future;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 use itertools::Itertools;
-
 use log::{debug, error};
 
 use crate::{common::{
@@ -107,7 +106,6 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self: Arc<Self>) -> Result {
         self.run_on_primary_replica(|database| database.delete()).await
-        // TODO: set flag
     }
 
     /// Returns a full schema text as a valid TypeQL define query string.

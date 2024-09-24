@@ -53,7 +53,7 @@ rust_library(
     deps = typedb_driver_deps,
     proc_macro_deps = typedb_driver_proc_macro_deps,
     tags = typedb_driver_tags,
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
 )
 
 rust_library(

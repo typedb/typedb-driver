@@ -45,6 +45,11 @@ impl TypeDBDriver {
 }
 
 impl TypeDBDriver {
+    const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION"){
+        None => "0.0.0",
+        Some(version) => version
+    };
+
     /// Creates a new TypeDB Server connection.
     ///
     /// # Arguments
@@ -59,12 +64,11 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        // TODO: pass correct version number automatically
-        Self::new_core_with_description(address, "rust", "3.0.0-alpha-0").await
+        Self::new_core_with_description(address, "rust").await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>, driver_version: impl AsRef<str>) -> Result<Self> {
+    pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>) -> Result<Self> {
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
@@ -73,7 +77,7 @@ impl TypeDBDriver {
             background_runtime.clone(),
             address.clone(),
             driver_lang.as_ref(),
-            driver_version.as_ref()
+            TypeDBDriver::VERSION
         ).await?;
 
         // // validate
