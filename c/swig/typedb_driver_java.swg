@@ -414,6 +414,39 @@
 %iterator(Database, database)
 //%iterator(ReplicaInfo, replica_info)
 
+%typemap(javabody) QueryAnswer %{
+    private transient long swigCPtr;
+    protected transient boolean swigCMemOwn;
+
+    protected $javaclassname(long cPtr, boolean cMemoryOwn) {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = cPtr;
+    }
+
+    protected static long getCPtr($javaclassname obj) {
+        return (obj == null) ? 0 : obj.swigCPtr;
+    }
+
+    public ConceptRowIterator intoRows() {
+        swigCMemOwn = false;
+        try {
+            return typedb_driver.query_answer_into_rows(this);
+        } catch (Error e) {
+            throw new Error.Unchecked(e);
+        }
+    }
+%}
+
+%typemap(javadestruct, methodname="delete", methodmodifiers="public synchronized") QueryAnswer %{{
+    if (swigCPtr != 0) {
+        if (swigCMemOwn) {
+            swigCMemOwn = false;
+            typedb_driverJNI.delete_QueryAnswer(swigCPtr);
+        }
+        swigCPtr = 0;
+    }
+}%}
+
 %define %array(Type)
 %typemap(in) Type ** (jint size) {
     int i = 0;

@@ -74,5 +74,5 @@ public interface ConceptRow {
      * </pre>
      */
     @CheckReturnValue
-    Stream<?extends Concept> concepts();
+    Stream<? extends Concept> concepts();
 }

@@ -20,9 +20,10 @@
 package com.vaticle.typedb.driver.api.answer;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
-public interface ConceptTreesStreamQueryAnswer extends QueryAnswer {
+public interface ConceptTreeIterator extends QueryAnswer, Iterator<ConceptTree> {
     @Override
     default boolean isConceptTreesStream() {
         return true;
@@ -30,9 +31,10 @@ public interface ConceptTreesStreamQueryAnswer extends QueryAnswer {
 
     @Override
     @CheckReturnValue
-    default ConceptTreesStreamQueryAnswer asConceptTreesStream() {
+    default ConceptTreeIterator asConceptTreesStream() {
         return this;
     }
 
-    Stream<?extends ConceptTree> trees();
+    @CheckReturnValue
+    Stream<ConceptTree> stream();
 }

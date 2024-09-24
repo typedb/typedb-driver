@@ -73,7 +73,7 @@ pub extern "C" fn query_answer_is_concept_trees_stream(query_answer: *const Quer
 
 /// Produces an <code>Iterator</code> over all <code>ConceptRow</code> in this <code>QueryAnswer</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_get_rows(query_answer: *mut QueryAnswer) -> *mut ConceptRowIterator {
+pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut ConceptRowIterator {
     release(ConceptRowIterator(CIterator(take_ownership(query_answer).into_rows())))
 }
 

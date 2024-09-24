@@ -20,26 +20,47 @@
 package com.vaticle.typedb.driver.concept.answer;
 
 import com.vaticle.typedb.driver.api.answer.ConceptRow;
-import com.vaticle.typedb.driver.api.answer.ConceptRowsStreamQueryAnswer;
+import com.vaticle.typedb.driver.api.answer.ConceptRowIterator;
 import com.vaticle.typedb.driver.common.NativeIterator;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.query_answer_get_rows;
+public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRowIterator {
+    NativeIterator<com.vaticle.typedb.driver.jni.ConceptRow> nativeIterator;
 
-public class ConceptRowsStreamQueryAnswerImpl extends QueryAnswerImpl implements ConceptRowsStreamQueryAnswer {
-    protected ConceptRowsStreamQueryAnswerImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+    protected ConceptRowIteratorImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
+        nativeIterator = new NativeIterator<>(nativeObject.intoRows());
     }
 
     @Override
     @CheckReturnValue
-    public ConceptRowsStreamQueryAnswer asConceptRowsStream() {
+    public ConceptRowIterator asConceptRows() {
         return this;
     }
 
-    public Stream<ConceptRow> rows() {
-        return new NativeIterator<>(query_answer_get_rows(nativeObject)).stream().map(ConceptRowImpl::new);
+    @Override
+    public boolean hasNext() {
+        try {
+            return nativeIterator.hasNext();
+        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public ConceptRow next() {
+        try {
+            return new ConceptRowImpl(nativeIterator.next());
+        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public Stream<ConceptRow> stream() {
+        return nativeIterator.stream().map(ConceptRowImpl::new);
     }
 }

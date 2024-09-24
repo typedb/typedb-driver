@@ -52,7 +52,7 @@ public interface QueryAnswer {
      * </pre>
      */
     @CheckReturnValue
-    default boolean isConceptRowsStream() {
+    default boolean isConceptRows() {
         return false;
     }
 
@@ -89,8 +89,8 @@ public interface QueryAnswer {
      * concept.asConceptRowsStream();
      * </pre>
      */
-    default ConceptRowsStreamQueryAnswer asConceptRowsStream() {
-        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptRowsStreamQueryAnswer.class));
+    default ConceptRowIterator asConceptRows() {
+        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptRowIterator.class));
     }
 
     /**
@@ -101,7 +101,7 @@ public interface QueryAnswer {
      * concept.asConceptTreesStream();
      * </pre>
      */
-    default ConceptTreesStreamQueryAnswer asConceptTreesStream() {
-        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptTreesStreamQueryAnswer.class));
+    default ConceptTreeIterator asConceptTreesStream() {
+        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptTreeIterator.class));
     }
 }

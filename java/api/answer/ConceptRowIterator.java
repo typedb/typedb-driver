@@ -20,19 +20,21 @@
 package com.vaticle.typedb.driver.api.answer;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
-public interface ConceptRowsStreamQueryAnswer extends QueryAnswer {
+public interface ConceptRowIterator extends QueryAnswer, Iterator<ConceptRow> {
     @Override
-    default boolean isConceptRowsStream() {
+    default boolean isConceptRows() {
         return true;
     }
 
     @Override
     @CheckReturnValue
-    default ConceptRowsStreamQueryAnswer asConceptRowsStream() {
+    default ConceptRowIterator asConceptRows() {
         return this;
     }
 
-    Stream<ConceptRow> rows();
+    @CheckReturnValue
+    Stream<ConceptRow> stream();
 }

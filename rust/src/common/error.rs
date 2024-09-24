@@ -345,7 +345,6 @@ impl From<Status> for Error {
                 let domain = error_info.domain.clone();
                 let stack_trace =
                     if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
-                println!("NEw error building vot message: {:?}", status.message().to_owned());
                 Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
                 Self::from_message(status.message())

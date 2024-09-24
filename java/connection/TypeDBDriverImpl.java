@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core;
 
@@ -108,10 +109,10 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
     @Override
     public void close() {
         if (!isOpen()) return;
-//        try { // TODO: Not implemented, fails tests!
-//            connection_force_close(nativeObject);
-//        } catch (com.vaticle.typedb.driver.jni.Error error) {
-//            throw new TypeDBDriverException(error);
-//        }
+        try {
+            connection_force_close(nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
     }
 }

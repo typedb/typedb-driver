@@ -20,20 +20,42 @@
 package com.vaticle.typedb.driver.concept.answer;
 
 import com.vaticle.typedb.driver.api.answer.ConceptTree;
-import com.vaticle.typedb.driver.api.answer.ConceptTreesStreamQueryAnswer;
+import com.vaticle.typedb.driver.api.answer.ConceptTreeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
 
-public class ConceptTreesStreamQueryAnswerImpl extends QueryAnswerImpl implements ConceptTreesStreamQueryAnswer {
-    public ConceptTreesStreamQueryAnswerImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptTreeIterator {
+    public ConceptTreeIteratorImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
+        throw new TypeDBDriverException(UNIMPLEMENTED);
     }
 
-    public Stream<?extends ConceptTree> trees() {
+    @Override
+    public boolean hasNext() {
         throw new TypeDBDriverException(UNIMPLEMENTED);
-//        return new NativeIterator<>(query_answer_get_trees(nativeObject)).stream();
+//        try {
+//            return nativeIterator.hasNext();
+//        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+//            throw new TypeDBDriverException(e);
+//        }
+    }
+
+    @Override
+    public ConceptTree next() {
+        throw new TypeDBDriverException(UNIMPLEMENTED);
+//        try {
+//            return new ConceptRowImpl(nativeIterator.next());
+//        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+//            throw new TypeDBDriverException(e);
+//        }
+    }
+
+    @Override
+    public Stream<ConceptTree> stream() {
+        throw new TypeDBDriverException(UNIMPLEMENTED);
+//        return nativeIterator.stream().map(ConceptRowImpl::new);
     }
 }
