@@ -68,7 +68,7 @@ impl ConceptCategory {
             ConceptCategory::EntityType => "EntityType",
             ConceptCategory::RelationType => "RelationType",
             ConceptCategory::RoleType => "RoleType",
-            ConceptCategory::AttributeType => "AttriuteType",
+            ConceptCategory::AttributeType => "AttributeType",
             ConceptCategory::Entity => "Entity",
             ConceptCategory::Relation => "Relation",
             ConceptCategory::Attribute => "Attribute",

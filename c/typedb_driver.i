@@ -81,9 +81,10 @@ struct Type {};
 %dropproxy(ConceptRowIterator, concept_row_iterator)
 
 %dropproxydefined(DatetimeAndZoneId, datetime_and_zone_id)
+%dropproxydefined(StringAndOptValue, string_and_opt_value)
+%dropproxy(StringAndOptValueIterator, string_and_opt_value_iterator)
 
 %dropproxy(StringIterator, string_iterator)
-%dropproxy(StringPairIterator, string_pair_iterator)
 
 %dropproxy(QueryAnswer, query_answer)
 
@@ -210,7 +211,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject database_iterator_next;
 %newobject value_group_iterator_next;
 %newobject string_iterator_next;
-%newobject string_pair_iterator_next;
+%newobject string_and_opt_value_iterator_next;
 //%newobject user_iterator_next;
 
 %newobject transaction_new;

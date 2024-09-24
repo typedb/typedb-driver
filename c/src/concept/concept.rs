@@ -19,13 +19,19 @@
 
 use std::ffi::c_char;
 
-use chrono::{DateTime, NaiveTime};
-use typedb_driver::concept::{
-    value::{Decimal, Duration},
-    Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value, ValueType,
+use chrono::NaiveTime;
+use typedb_driver::{
+    box_stream,
+    concept::{
+        value::{Decimal, Duration},
+        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value, ValueType,
+    },
 };
 
-use crate::memory::{borrow, borrow_mut, free, release_string, string_free};
+use crate::{
+    iterator::CIterator,
+    memory::{borrow, borrow_mut, free, release, release_optional, release_string, string_free},
+};
 
 /// A <code>DateTimeAndZoneId</code> used to represent IANA time zoned datetime in FFI.
 #[repr(C)]
@@ -58,6 +64,49 @@ impl Drop for DatetimeAndZoneId {
 #[no_mangle]
 pub extern "C" fn datetime_and_zone_id_drop(datetime_tz: *mut DatetimeAndZoneId) {
     free(datetime_tz);
+}
+
+/// Iterator over the <code>StringAndOptValue</code>s representing struct value {field_name: value?} info.
+pub struct StringAndOptValueIterator(pub CIterator<StringAndOptValue>);
+
+/// Forwards the <code>StringAndOptValueIterator</code> and returns the next <code>StringAndOptValue</code> if it exists,
+/// or null if there are no more elements.
+#[no_mangle]
+pub extern "C" fn string_and_opt_value_iterator_next(it: *mut StringAndOptValueIterator) -> *mut StringAndOptValue {
+    release_optional(borrow_mut(it).0 .0.next())
+}
+
+/// Frees the native rust <code>StringAndOptValueIterator</code> object
+#[no_mangle]
+pub extern "C" fn string_and_opt_value_iterator_drop(it: *mut StringAndOptValueIterator) {
+    free(it);
+}
+
+/// A <code>StringAndOptValue</code> used to represent the pair of variables involved in an ownership.
+/// <code>_0</code> and <code>_1</code> are the owner and attribute variables respectively.
+#[repr(C)]
+pub struct StringAndOptValue {
+    string: *mut c_char,
+    value: *mut Concept,
+}
+
+impl From<(String, Option<Value>)> for StringAndOptValue {
+    fn from((field_name, value): (String, Option<Value>)) -> Self {
+        Self { string: release_string(field_name), value: release_optional(value.map(Concept::Value)) }
+    }
+}
+
+impl Drop for StringAndOptValue {
+    fn drop(&mut self) {
+        string_free(self.string);
+        concept_drop(self.value);
+    }
+}
+
+/// Frees the native rust <code>StringAndOptValue</code> object
+#[no_mangle]
+pub extern "C" fn string_and_opt_value_drop(string_and_opt_value: *mut StringAndOptValue) {
+    free(string_and_opt_value);
 }
 
 /// Returns <code>true</code> if the attribute type does not have a value type.
@@ -308,13 +357,14 @@ pub extern "C" fn value_get_duration(value: *const Concept) -> Duration {
     }
 }
 
-/// Returns the value of this struct value concept.
+/// Returns the value of this struct value concept represented as an iterator of {field_name: value?} pairs.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_struct(value: *const Concept) -> i64 {
-    // TODO: fix
-    if let Value::Struct(struct_val, struct_name) = borrow_as_value(value) {
-        todo!()
+pub extern "C" fn value_get_struct(value: *const Concept) -> *mut StringAndOptValueIterator {
+    if let Value::Struct(struct_value, _) = borrow_as_value(value) {
+        release(StringAndOptValueIterator(CIterator(box_stream(
+            struct_value.fields().clone().into_iter().map(|pair| pair.into()),
+        ))))
     } else {
         unreachable!("Attempting to unwrap a non-duration {:?} as duration", borrow_as_value(value))
     }

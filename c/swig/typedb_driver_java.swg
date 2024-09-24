@@ -218,6 +218,9 @@
 %nojavaexception DatetimeAndZoneId::datetime_in_millis;
 %nojavaexception DatetimeAndZoneId::zone_id;
 
+%nojavaexception StringAndOptValue::string;
+%nojavaexception StringAndOptValue::value;
+
 %nojavaexception Decimal::integer;
 %nojavaexception Decimal::fractional;
 
@@ -244,8 +247,8 @@
 //%nojavaexception ~Options;
 //%nojavaexception ~ReplicaInfo;
 %nojavaexception ~StringIterator;
-%nojavaexception ~StringPair;
-%nojavaexception ~StringPairIterator;
+%nojavaexception ~StringAndOptValue;
+%nojavaexception ~StringAndOptValueIterator;
 %nojavaexception ~Transaction;
 %nojavaexception ~TransactionCallbackDirector;
 %nojavaexception ~TypeDBDriver;
@@ -406,7 +409,7 @@
 %iterator(ConceptRow, concept_row)
 %iterator(ValueGroup, value_group)
 %iterator(String, string)
-%iterator(StringPair, string_pair)
+%iterator(StringAndOptValue, string_and_opt_value)
 //%iterator(User, user)
 %iterator(Database, database)
 //%iterator(ReplicaInfo, replica_info)
@@ -468,52 +471,5 @@
 
 %typemap(javain) char ** "$javainput"
 %typemap(javaout) char ** {
-    return $jnicall;
-}
-
-/* ValueType* needs special handling */
-%typemap(in) enum ValueType * {
-    if ($input >= 0) {
-        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
-        *$1 = (enum ValueType)$input;
-    }
-}
-
-/* This cleans up the memory we malloc'd before the function call */
-%typemap(freearg) enum ValueType * { free($1); }
-
-/* These 3 typemaps tell SWIG what JNI and Java types to use */
-%typemap(jni) enum ValueType * "jlong"
-%typemap(jtype) enum ValueType * "long"
-%typemap(jstype) enum ValueType * "ValueType"
-
-/* These 2 typemaps handle the conversion of the jtype to jstype typemap type
-      and vice versa */
-%typemap(javain) enum ValueType * "$javainput == null ? -1 : $javainput.swigValue()"
-%typemap(javaout) enum ValueType * {
-    return $jnicall;
-}
-
-
-/* QueryAnswer* needs special handling */
-%typemap(in) enum QueryAnswer * {
-    if ($input >= 0) {
-        $1 = (enum QueryAnswer *) malloc(sizeof(enum QueryAnswer));
-        *$1 = (enum QueryAnswer)$input;
-    }
-}
-
-/* This cleans up the memory we malloc'd before the function call */
-%typemap(freearg) enum QueryAnswer * { free($1); }
-
-/* These 3 typemaps tell SWIG what JNI and Java types to use */
-%typemap(jni) enum QueryAnswer * "jlong"
-%typemap(jtype) enum QueryAnswer * "long"
-%typemap(jstype) enum QueryAnswer * "QueryAnswer"
-
-/* These 2 typemaps handle the conversion of the jtype to jstype typemap type
-      and vice versa */
-%typemap(javain) enum QueryAnswer * "$javainput == null ? -1 : $javainput.swigValue()"
-%typemap(javaout) enum QueryAnswer * {
     return $jnicall;
 }

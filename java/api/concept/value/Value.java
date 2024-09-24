@@ -27,10 +27,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public interface Value extends Concept {
-    int DECIMAL_FRACTIONAL_PART_DENOMINATOR_LOG10 = 19;
-    int DECIMAL_SCALE = DECIMAL_FRACTIONAL_PART_DENOMINATOR_LOG10 - 1;
+    int DECIMAL_SCALE = 19;
 
     DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
@@ -278,68 +280,14 @@ public interface Value extends Concept {
      */
     Duration asDuration();
 
-//    /**
-//     * Returns a <code>struct</code> value of this value concept.
-//     * If the value has another type, raises an exception.
-//     *
-//     * <h3>Examples</h3>
-//     * <pre>
-//     * value.asStruct();
-//     * </pre>
-//     */
-//    LocalDateTime asStruct();
-
-    // TODO: Not sure if it's needed (and efficient) to address jni.ValueType.XXX directly now. Use "isXXX" on concepts and attribute types for now...
-//    /**
-//     * Used to specify the type of the value.
-//     *
-//     * <h3>Examples</h3>
-//     * <pre>
-//     * // TODO: Example
-//     * </pre>
-//     */
-//    enum Type {
-//        OBJECT(Object.class, com.vaticle.typedb.driver.jni.ValueType.Object),
-//        BOOLEAN(Boolean.class, com.vaticle.typedb.driver.jni.ValueType.Boolean),
-//        LONG(Long.class,  com.vaticle.typedb.driver.jni.ValueType.Long),
-//        DOUBLE(Double.class, com.vaticle.typedb.driver.jni.ValueType.Double),
-//        DECIMAL(Double.class, com.vaticle.typedb.driver.jni.ValueType.Decimal), // TODO: use correct value class
-//        STRING(String.class, com.vaticle.typedb.driver.jni.ValueType.String),
-//        DATE(LocalDateTime.class, com.vaticle.typedb.driver.jni.ValueType.Date), // TODO: use correct value class
-//        DATETIME(LocalDateTime.class, com.vaticle.typedb.driver.jni.ValueType.Datetime),
-//        DATETIME_TZ(LocalDateTime.class, com.vaticle.typedb.driver.jni.ValueType.DatetimeTZ), // TODO: use correct value class
-//        DURATION(LocalDateTime.class, com.vaticle.typedb.driver.jni.ValueType.Duration), // TODO: use correct value class
-//        STRUCT(LocalDateTime.class, com.vaticle.typedb.driver.jni.ValueType.Struct); // TODO: use correct value class
-//
-//        private final Class<?> valueClass;
-//        public final com.vaticle.typedb.driver.jni.ValueType nativeObject;
-//
-//        Type(Class<?> valueClass, com.vaticle.typedb.driver.jni.ValueType nativeObject) {
-//            this.valueClass = valueClass;
-//            this.nativeObject = nativeObject;
-//        }
-//
-//        @CheckReturnValue
-//        public static Type of(com.vaticle.typedb.driver.jni.ValueType valueType) {
-//            for (Type type : Type.values()) {
-//                if (type.nativeObject == valueType) {
-//                    return type;
-//                }
-//            }
-//            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
-//        }
-//
-//        /**
-//         * Returns a <code>Class</code> equivalent of this value concept for this programming language.
-//         *
-//         * <h3>Examples</h3>
-//         * <pre>
-//         * valueType.valueClass();
-//         * </pre>
-//         */
-//        @CheckReturnValue
-//        public Class<?> valueClass() {
-//            return valueClass;
-//        }
-//    }
+    /**
+     * Returns a <code>struct</code> value of this value concept represented as a map from field names to values.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asStruct();
+     * </pre>
+     */
+    Map<String, Optional<Value>> asStruct();
 }

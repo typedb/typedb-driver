@@ -19,9 +19,11 @@
 
 package com.vaticle.typedb.driver.concept.value;
 
+import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.Duration;
-import com.vaticle.typedb.driver.common.exception.ErrorMessage;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.driver.jni.DatetimeAndZoneId;
@@ -36,7 +38,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static com.vaticle.typedb.common.collection.Collections.pair;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_boolean;
@@ -48,6 +54,7 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_double;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_duration;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_long;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_struct;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_value_type;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_boolean;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_date;
@@ -127,13 +134,13 @@ public class ValueImpl extends ConceptImpl implements Value {
         if (isBoolean()) return asBoolean();
         else if (isLong()) return asLong();
         else if (isDouble()) return asDouble();
-        else if (isDecimal()) asDecimal();
+        else if (isDecimal()) return asDecimal();
         else if (isString()) return asString();
         else if (isDate()) return asDate();
         else if (isDatetime()) return asDatetime();
         else if (isDatetimeTZ()) return asDatetimeTZ();
         else if (isDuration()) return asDuration();
-//        else if (isStruct()) return asStruct();
+        else if (isStruct()) return asStruct();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
@@ -163,7 +170,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         BigDecimal integerPart = new BigDecimal(nativeDecimal.getInteger());
         BigDecimal fractionalPart = new BigDecimal(nativeFractional)
                 .setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY)
-                .divide(BigDecimal.TEN.pow(DECIMAL_FRACTIONAL_PART_DENOMINATOR_LOG10), RoundingMode.UNNECESSARY);
+                .divide(BigDecimal.TEN.pow(DECIMAL_SCALE), RoundingMode.UNNECESSARY);
         return integerPart.add(fractionalPart);
     }
 
@@ -198,12 +205,23 @@ public class ValueImpl extends ConceptImpl implements Value {
         return new Duration(value_get_duration(nativeObject));
     }
 
-    // TODO: Structs are not supported!
-//    @Override
-//    public LocalDateTime asStruct() {
-//        if (!isStruct()) throw new TypeDBDriverException(ILLEGAL_CAST, "struct");
-//        return ...;
-//    }
+    @Override
+    public Map<String, Optional<Value>> asStruct() {
+        if (!isStruct()) throw new TypeDBDriverException(ILLEGAL_CAST, "struct");
+        return new NativeIterator<>(value_get_struct(nativeObject)).stream().map(fieldAndValue -> {
+            String fieldName = fieldAndValue.getString();
+            com.vaticle.typedb.driver.jni.Concept nativeValue = fieldAndValue.getValue();
+            Optional<Value> resultValue;
+            if (nativeValue != null) {
+                Concept value = ConceptImpl.of(nativeValue);
+                if (!value.isValue()) throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+                resultValue = Optional.of(value.asValue());
+            } else {
+                resultValue = Optional.empty();
+            }
+            return pair(fieldName, resultValue);
+        }).collect(Collectors.toMap(Pair::first, Pair::second));
+    }
 
     @Override
     public String toString() {
@@ -216,7 +234,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDatetime()) return asDatetime().toString();
         else if (isDatetimeTZ()) return asDatetimeTZ().toString();
         else if (isDuration()) return asDuration().toString();
-//        else if (isStruct()) return asStruct().toString();
+        else if (isStruct()) return asStruct().toString();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 

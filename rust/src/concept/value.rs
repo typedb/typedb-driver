@@ -355,7 +355,13 @@ impl fmt::Debug for Duration {
 
 #[derive(Clone, PartialEq)]
 pub struct Struct {
-    fields: HashMap<String, Value>,
+    fields: HashMap<String, Option<Value>>,
+}
+
+impl Struct {
+    pub fn fields(&self) -> &HashMap<String, Option<Value>> {
+        &self.fields
+    }
 }
 
 impl fmt::Display for Struct {
