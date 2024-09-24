@@ -22,6 +22,8 @@ use std::{
     sync::{Arc, RwLock},
     time::Duration,
 };
+use std::future::Future;
+use std::pin::Pin;
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
@@ -57,7 +59,7 @@ use crate::{common::{
     network::proto::{IntoProto, TryFromProto},
     runtime::BackgroundRuntime,
 }, Error};
-use crate::connection::message::QueryResponse;
+use crate::connection::message::{QueryResponse, Request, Response};
 use crate::connection::network::proto::FromProto;
 
 #[cfg(feature = "sync")]
@@ -172,18 +174,42 @@ impl TransactionTransmitter {
         let movable_sink = self.request_sink.clone();
         Ok(NetworkStream::new(recv).filter_map(move |response| {
             let moveable_sink = movable_sink.clone();
-            Box::pin(async move {
-                match response {
-                    StreamResponse::Result(result) => Some(result),
-                    StreamResponse::Continue(request_id) => {
-                        match moveable_sink.send((TransactionRequest::Stream { request_id }, None)) {
-                            Ok(_) => None,
-                            Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
-                        }
+            Self::process_response(response, moveable_sink)
+        }))
+    }
+
+    #[cfg(not(feature = "sync"))]
+    fn process_response(
+        response: StreamResponse<TransactionResponse>,
+        sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
+    ) -> Pin<Box<impl Future<Output=Option<Result<TransactionResponse>>>>> {
+        Box::pin(async move {
+            match response {
+                StreamResponse::Result(result) => Some(result),
+                StreamResponse::Continue(request_id) => {
+                    match sink.send((TransactionRequest::Stream { request_id }, None)) {
+                        Ok(_) => None,
+                        Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
                     }
                 }
-            })
-        }))
+            }
+        })
+    }
+
+    #[cfg(feature = "sync")]
+    pub(in crate::connection) fn process_response(
+        response: StreamResponse<TransactionResponse>,
+        sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>
+    ) -> Option<Result<TransactionResponse>> {
+        match response {
+            StreamResponse::Result(result) => Some(result),
+            StreamResponse::Continue(request_id) => {
+                match sink.send((TransactionRequest::Stream { request_id }, None)) {
+                    Ok(_) => None,
+                    Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
+                }
+            }
+        }
     }
 
     fn error(&self) -> Error {
