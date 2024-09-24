@@ -169,14 +169,20 @@ impl TransactionTransmitter {
         self.request_sink
             .send((req, Some(ResponseSink::Streamed(res_part_sink))))
             .map_err(|_| ConnectionError::TransactionIsClosed)?;
-        Ok(NetworkStream::new(recv).filter_map( |response| match response {
-            StreamResponse::Result(result) => Some(result),
-            StreamResponse::Continue(request_id) => {
-                match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
-                    Ok(_) => None,
-                    Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
+        let movable_sink = self.request_sink.clone();
+        Ok(NetworkStream::new(recv).filter_map(move |response| {
+            let moveable_sink = movable_sink.clone();
+            Box::pin(async move {
+                match response {
+                    StreamResponse::Result(result) => Some(result),
+                    StreamResponse::Continue(request_id) => {
+                        match moveable_sink.send((TransactionRequest::Stream { request_id }, None)) {
+                            Ok(_) => None,
+                            Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
+                        }
+                    }
                 }
-            }
+            })
         }))
     }
 
@@ -387,25 +393,12 @@ impl ResponseCollector {
                     Some(state) => {
                         match state {
                             State::Continue(_) => {
-
                                 match self.callbacks.read().unwrap().get(&request_id) {
                                     Some(sink) => {
                                         sink.send_continuable(request_id)
                                     }
                                     None => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
                                 }
-
-                                //
-                                //     // TODO: we should not be immediately sending the request for the next batch,
-                                // //       otherwise we will end up pulling the entire response stream at once
-                                // //       which makes the streaming/continue model useless!
-                                // match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
-                                //     Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
-                                //         let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
-                                //         callback.error(ConnectionError::TransactionIsClosed);
-                                //     }
-                                //     _ => (),
-                                // }
                             }
                             State::Done(_) => {
                                 self.callbacks.write().unwrap().remove(&request_id);
