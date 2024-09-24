@@ -77,7 +77,7 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
         return self._query_manager
 
     def is_open(self) -> bool:
-        if not self.native_object.thisown:
+        if not self._native_object.thisown:
             return False
         return transaction_is_open(self.native_object)
 
@@ -95,7 +95,7 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
 
     def commit(self):
         try:
-            self.native_object.thisown = 0
+            self._native_object.thisown = 0
             void_promise_resolve(transaction_commit(self._native_object))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)

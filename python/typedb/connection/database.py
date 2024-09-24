@@ -69,7 +69,7 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
 
     def delete(self) -> None:
         try:
-            self.native_object.thisown = 0
+            self._native_object.thisown = 0
             database_delete(self._native_object)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
