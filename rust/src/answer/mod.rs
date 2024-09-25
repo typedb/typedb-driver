@@ -20,6 +20,7 @@
 pub use self::{concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
 use crate::{
     answer::concept_tree::{ConceptTree, ConceptTreesHeader},
+    concept::EntityType,
     BoxStream, Result,
 };
 
@@ -54,4 +55,12 @@ impl QueryAnswer {
             panic!("Query answer is not a rows stream.")
         }
     }
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
+pub enum QueryType {
+    ReadQuery,
+    WriteQuery,
+    SchemaQuery,
 }

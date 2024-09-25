@@ -64,7 +64,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     }
 
     @Override
-    public Type type() {
+    public Type getType() {
         return type;
     }
 

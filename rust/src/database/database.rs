@@ -17,18 +17,18 @@
  * under the License.
  */
 
+#[cfg(not(feature = "sync"))]
+use std::future::Future;
 use std::{
     collections::HashMap,
     fmt,
     sync::{
-        Arc,
-        atomic::{AtomicU64, Ordering}, RwLock,
+        atomic::{AtomicU64, Ordering},
+        Arc, RwLock,
     },
     thread::sleep,
     time::Duration,
 };
-#[cfg(not(feature = "sync"))]
-use std::future::Future;
 
 use itertools::Itertools;
 use log::{debug, error};
@@ -36,9 +36,9 @@ use log::{debug, error};
 use crate::{
     common::{
         address::Address,
-        Error,
         error::ConnectionError,
-        info::{DatabaseInfo, ReplicaInfo}, Result,
+        info::{DatabaseInfo, ReplicaInfo},
+        Error, Result,
     },
     connection::server_connection::ServerConnection,
     driver::TypeDBDriver,

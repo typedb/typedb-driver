@@ -107,14 +107,14 @@ impl ServerConnection {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn request(&self, request: Request) -> crate::Result<Response> {
         if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ConnectionIsClosed.into());
+            return Err(ConnectionError::ServerConnectionIsClosed.into());
         }
         self.request_transmitter.request(request).await
     }
 
     fn request_blocking(&self, request: Request) -> crate::Result<Response> {
         if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ConnectionIsClosed.into());
+            return Err(ConnectionError::ServerConnectionIsClosed.into());
         }
         self.request_transmitter.request_blocking(request)
     }

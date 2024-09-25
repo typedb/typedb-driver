@@ -39,9 +39,14 @@ public interface TypeDBTransaction extends AutoCloseable {
 
     /**
      * The transaction’s type (READ/WRITE/SCHEMA)
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.getType();
+     * </pre>
      */
     @CheckReturnValue
-    Type type();
+    Type getType();
 
 //    /**
 //     * The options for the transaction
@@ -109,7 +114,7 @@ public interface TypeDBTransaction extends AutoCloseable {
      *
      * <h3>Examples</h3>
      * <pre>
-     * session.transaction(TransactionType.READ);
+     * driver.transaction(dbName, TransactionType.READ);
      * </pre>
      */
     enum Type {

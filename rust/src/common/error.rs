@@ -120,63 +120,60 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ConnectionOpenError =
-        100: "Error opening connection.",
-    ConnectionIsClosed =
-        2: "The connection has been closed and no further operation is allowed.",
-    TransactionIsClosed =
-        3: "The transaction is closed and no further operation is allowed.",
-    TransactionIsClosedWithErrors { errors: String } =
-        4: "The transaction is closed because of the error(s):\n{errors}",
-    DatabaseDoesNotExist { name: String } =
-        5: "The database '{name}' does not exist.",
-    MissingResponseField { field: &'static str } =
-        6: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
-    UnknownRequestId { request_id: RequestID } =
-        7: "Received a response with unknown request id '{request_id}'",
-    QueryStreamNoResponse =
-        101: "Didn't receive any server responses for the query.",
-    InvalidResponseField { name: &'static str } =
-        8: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
-    UnexpectedResponse { response: String } =
-        9: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
     ServerConnectionFailed { addresses: Vec<Address> } =
-        10: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
+        2: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
-        11: "Unable to connect to TypeDB server(s), received errors: \n{error}",
+        3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
-        12: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
+        4: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
+    ServerConnectionIsClosed =
+        5: "The connection has been closed and no further operation is allowed.",
+    TransactionIsClosed =
+        6: "The transaction is closed and no further operation is allowed.",
+    TransactionIsClosedWithErrors { errors: String } =
+        7: "The transaction is closed because of the error(s):\n{errors}",
+    DatabaseDoesNotExist { name: String } =
+        8: "The database '{name}' does not exist.",
+    MissingResponseField { field: &'static str } =
+        9: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
+    UnknownRequestId { request_id: RequestID } =
+        10: "Received a response with unknown request id '{request_id}'",
+    UnexpectedResponse { response: String } =
+        11: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
+    InvalidResponseField { name: &'static str } =
+        12: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
+    QueryStreamNoResponse =
+        13: "Didn't receive any server responses for the query.",
+    UnexpectedQueryType { query_type: i32 } =
+        14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     UserManagementCloudOnly =
-        13: "User management is only available in TypeDB Cloud servers.",
+        15: "User management is only available in TypeDB Cloud servers.",
     CloudReplicaNotPrimary =
-        14: "The replica is not the primary replica.",
+        16: "The replica is not the primary replica.",
     CloudAllNodesFailed { errors: String } =
-        15: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
+        17: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
     CloudTokenCredentialInvalid =
-        16: "Invalid token credential.",
-    SessionCloseFailed =
-        17: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
+        18: "Invalid token credential.",
     CloudEncryptionSettingsMismatch =
-        18: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
+        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
-        19: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
+        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
     ConnectionFailed =
-        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
-        22: "Invalid URL '{address}': missing port.",
+        23: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
-
+        24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
-        24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
+        25: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotImplemented { offset: i32 } =
-        25: "Time zone provided by the server has numerical offset '{offset}', which is not yet supported by the driver.",
+        26: "Time zone provided by the server has numerical offset '{offset}', which is not yet supported by the driver.",
     ValueStructNotImplemented =
-        26: "Struct valued responses are not yet supported by the driver.",
+        27: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        27: "Lists are not yet supported by the driver."
+        28: "Lists are not yet supported by the driver."
 }
 
 error_messages! { InternalError

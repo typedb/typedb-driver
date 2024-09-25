@@ -25,11 +25,12 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::concept::Concept;
+use crate::{answer::QueryType, concept::Concept};
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptRowHeader {
     pub column_names: Vec<String>,
+    pub query_type: QueryType,
 }
 
 impl ConceptRowHeader {
@@ -52,17 +53,30 @@ impl ConceptRow {
         Self { header, row }
     }
 
-    /// Retrieve the row header (shared by all elements in this stream).
+    /// Retrieve the row column names (shared by all elements in this stream).
     ///
     /// # Arguments
     ///
     /// # Examples
     ///
     /// ```rust
-    /// concept_row.get_header()
+    /// concept_row.get_column_names()
     /// ```
-    pub fn get_header(&self) -> &[String] {
+    pub fn get_column_names(&self) -> &[String] {
         &self.header.column_names
+    }
+
+    /// Retrieve the executed query's type (shared by all elements in this stream).
+    ///
+    /// # Arguments
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_query_type()
+    /// ```
+    pub fn get_query_type(&self) -> QueryType {
+        self.header.query_type
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if

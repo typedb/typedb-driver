@@ -47,9 +47,9 @@ pub struct TypeDBDriver {
 impl TypeDBDriver {}
 
 impl TypeDBDriver {
-    const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION"){
+    const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION") {
         None => "0.0.0",
-        Some(version) => version
+        Some(version) => version,
     };
 
     /// Creates a new TypeDB Server connection.
@@ -69,6 +69,19 @@ impl TypeDBDriver {
         Self::new_core_with_description(address, "rust").await
     }
 
+    /// Creates a new TypeDB Server connection with a description.
+    ///
+    /// # Arguments
+    ///
+    /// * `address` -- The address (host:port) on which the TypeDB Server is running
+    /// * `driver_lang` -- The language of the driver connecting to the server
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\").await")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>) -> Result<Self> {
         let id = address.as_ref().to_string();
@@ -79,8 +92,9 @@ impl TypeDBDriver {
             background_runtime.clone(),
             address.clone(),
             driver_lang.as_ref(),
-            TypeDBDriver::VERSION
-        ).await?;
+            TypeDBDriver::VERSION,
+        )
+        .await?;
 
         // // validate
         // let advertised_address = server_connection

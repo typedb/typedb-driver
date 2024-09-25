@@ -20,7 +20,7 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, ValueGroup},
+    answer::{ConceptRow, QueryAnswer, QueryType, ValueGroup},
     box_stream,
     concept::Concept,
     BoxPromise, Promise, Result,
@@ -91,8 +91,14 @@ pub extern "C" fn concept_row_drop(concept_row: *mut ConceptRow) {
 
 /// Produces an <code>Iterator</code> over all <code>String</code> column names of the <code>ConceptRow</code>'s header.
 #[no_mangle]
-pub extern "C" fn concept_row_get_header(concept_row: *const ConceptRow) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(concept_row).get_header().into_iter().cloned().map(Ok)))))
+pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -> *mut StringIterator {
+    release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
+}
+
+/// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.
+#[no_mangle]
+pub extern "C" fn concept_row_get_query_type(concept_row: *const ConceptRow) -> QueryType {
+    borrow(concept_row).get_query_type()
 }
 
 /// Produces an <code>Iterator</code> over all <code>Concepts</code> in this <code>ConceptRow</code>.

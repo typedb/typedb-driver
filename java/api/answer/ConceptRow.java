@@ -19,6 +19,7 @@
 
 package com.vaticle.typedb.driver.api.answer;
 
+import com.vaticle.typedb.driver.api.TypeDBQueryType;
 import com.vaticle.typedb.driver.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
@@ -30,6 +31,7 @@ import java.util.stream.Stream;
 public interface ConceptRow {
     /**
      * Produces a stream over all column names (header) in this <code>ConceptRow</code>.
+     * Shared between all the rows in a QueryAnswer.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -37,7 +39,19 @@ public interface ConceptRow {
      * </pre>
      */
     @CheckReturnValue
-    Stream<String> header();
+    Stream<String> columnNames();
+
+    /**
+     * Retrieves the executed query's type of this <code>ConceptRow</code>.
+     * Shared between all the rows in a QueryAnswer.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptRow.queryType();
+     * </pre>
+     */
+    @CheckReturnValue
+    TypeDBQueryType getQueryType();
 
     /**
      * Retrieves a concept for a given variable name.

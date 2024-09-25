@@ -23,6 +23,7 @@
 #include <typedb_driver.h>
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
+const char* DRIVER_LANG = "c";
 
 
 bool check_error_may_print(const char* filename, int lineno) {
@@ -48,7 +49,7 @@ int main() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);

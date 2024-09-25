@@ -163,7 +163,7 @@ public class TransactionSteps {
             Iterator<TypeDBTransaction.Type> typesIterator = types.iterator();
             Iterator<TypeDBTransaction> transactionIterator = transactions.iterator();
             while (typesIterator.hasNext()) {
-                assertEquals(typesIterator.next(), transactionIterator.next().type());
+                assertEquals(typesIterator.next(), transactionIterator.next().getType());
             }
         }
     }
@@ -224,7 +224,7 @@ public class TransactionSteps {
             while (typesIter.hasNext()) {
                 TypeDBTransaction.Type type = typesIter.next();
                 futureTxsIter.next().thenApplyAsync(tx -> {
-                    assertEquals(type, tx.type());
+                    assertEquals(type, tx.getType());
                     return null;
                 });
             }

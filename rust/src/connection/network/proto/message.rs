@@ -29,6 +29,7 @@ use crate::{
     answer::{
         concept_row::ConceptRowHeader,
         concept_tree::{ConceptTree, ConceptTreesHeader},
+        QueryType,
     },
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
@@ -308,7 +309,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                             field: "transaction.res.query.initial_res.res.Ok.ok",
                         }
                         .into()),
-                        Some(header) => Ok(TransactionResponse::Query(QueryResponse::from_proto(header))),
+                        Some(header) => Ok(TransactionResponse::Query(QueryResponse::try_from_proto(header)?)),
                     },
                 },
                 None => {
@@ -350,17 +351,18 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
     }
 }
 
-impl FromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
-    fn from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Self {
+impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
+    fn try_from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Result<Self> {
         match proto {
-            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => QueryResponse::Ok(),
+            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => Ok(QueryResponse::Ok()),
             typedb_protocol::query::initial_res::ok::Ok::ReadableConceptTreeStream(_tree_stream_header) => {
-                QueryResponse::ConceptTreesHeader(ConceptTreesHeader {})
+                Ok(QueryResponse::ConceptTreesHeader(ConceptTreesHeader {}))
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
-                QueryResponse::ConceptRowsHeader(ConceptRowHeader {
+                Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
                     column_names: rows_stream_header.column_variable_names,
-                })
+                    query_type: QueryType::try_from_proto(rows_stream_header.query_type)?,
+                }))
             }
         }
     }

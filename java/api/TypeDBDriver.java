@@ -24,6 +24,7 @@ import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import javax.annotation.CheckReturnValue;
 
 public interface TypeDBDriver extends AutoCloseable {
+    String LANGUAGE = "java";
 
     /**
      * Checks whether this connection is presently open.

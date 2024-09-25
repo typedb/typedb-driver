@@ -49,7 +49,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     private static com.vaticle.typedb.driver.jni.TypeDBDriver openCore(String address) {
         try {
-            return connection_open_core(address);
+            return connection_open_core(address, LANGUAGE);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -33,7 +33,7 @@ bool test_database_management() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -87,7 +87,7 @@ bool test_query_schema() {
     bool success = false;
 
     // Set up connection & database
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -160,7 +160,7 @@ bool test_query_data() {
     bool success = false;
 
     // Set up connection & database
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -253,7 +253,7 @@ bool test_concept_api_schema() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -338,7 +338,7 @@ bool test_concept_api_data() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);

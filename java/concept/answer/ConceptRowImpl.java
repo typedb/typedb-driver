@@ -19,6 +19,7 @@
 
 package com.vaticle.typedb.driver.concept.answer;
 
+import com.vaticle.typedb.driver.api.TypeDBQueryType;
 import com.vaticle.typedb.driver.api.answer.ConceptRow;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.NativeIterator;
@@ -32,9 +33,10 @@ import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MI
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_equals;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get_column_names;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get_concepts;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get_header;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get_index;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_get_query_type;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concept_row_to_string;
 
 public class ConceptRowImpl extends NativeObject<com.vaticle.typedb.driver.jni.ConceptRow> implements ConceptRow {
@@ -45,8 +47,13 @@ public class ConceptRowImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
     }
 
     @Override
-    public Stream<String> header() {
-        return new NativeIterator<>(concept_row_get_header(nativeObject)).stream();
+    public Stream<String> columnNames() {
+        return new NativeIterator<>(concept_row_get_column_names(nativeObject)).stream();
+    }
+
+    @Override
+    public TypeDBQueryType getQueryType() {
+        return TypeDBQueryType.of(concept_row_get_query_type(nativeObject));
     }
 
     @Override

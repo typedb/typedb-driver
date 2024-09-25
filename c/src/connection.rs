@@ -28,10 +28,11 @@ use super::{
 
 /// Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 ///
-/// @param address The address of the TypeDB server
+/// @param address The address (host:port) on which the TypeDB Server is running
+/// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn connection_open_core(address: *const c_char) -> *mut TypeDBDriver {
-    try_release(TypeDBDriver::new_core(string_view(address)))
+pub extern "C" fn connection_open_core(address: *const c_char, driver_lang: *const c_char) -> *mut TypeDBDriver {
+    try_release(TypeDBDriver::new_core_with_description(string_view(address), string_view(driver_lang)))
 }
 
 ///// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using

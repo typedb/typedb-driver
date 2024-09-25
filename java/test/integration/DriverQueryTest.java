@@ -90,7 +90,7 @@ public class DriverQueryTest {
             assertEquals(rows.size(), 1);
 
             ConceptRow row = rows.get(0);
-            List<String> header = row.header().collect(Collectors.toList());
+            List<String> header = row.columnNames().collect(Collectors.toList());
             assertEquals(header.size(), 1);
 
             String columnName = header.get(0);
@@ -118,7 +118,7 @@ public class DriverQueryTest {
             assertEquals(rows.size(), 1);
 
             ConceptRow row = rows.get(0);
-            List<String> header = row.header().collect(Collectors.toList());
+            List<String> header = row.columnNames().collect(Collectors.toList());
             assertEquals(header.size(), 1);
 
             String columnName = header.get(0);
@@ -151,7 +151,7 @@ public class DriverQueryTest {
             assertEquals(rows.size(), 1);
 
             ConceptRow row = rows.get(0);
-            List<String> header = row.header().collect(Collectors.toList());
+            List<String> header = row.columnNames().collect(Collectors.toList());
             assertEquals(header.size(), 2);
             assertTrue(header.contains("x"));
             assertTrue(header.contains("z"));
@@ -319,7 +319,7 @@ public class DriverQueryTest {
                 assertEquals(rows.size(), 1);
 
                 ConceptRow row = rows.get(0);
-                List<String> header = row.header().collect(Collectors.toList());
+                List<String> header = row.columnNames().collect(Collectors.toList());
                 assertEquals(header.size(), 1);
                 assertTrue(row.getIndex(header.indexOf("a")).isEntity());
             }

@@ -178,7 +178,7 @@ impl DatabaseManager {
                 //         })
                 //         .await
                 // }
-                err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
+                err @ Err(Error::Connection(ConnectionError::ServerConnectionIsClosed)) => return err,
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }

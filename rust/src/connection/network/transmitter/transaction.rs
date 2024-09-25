@@ -19,11 +19,11 @@
 
 use std::{
     collections::HashMap,
+    future::Future,
+    pin::Pin,
     sync::{Arc, RwLock},
     time::Duration,
 };
-use std::future::Future;
-use std::pin::Pin;
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
@@ -44,24 +44,25 @@ use tokio::{
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
-
-use crate::{common::{
-    box_promise,
-    Callback,
-    error::ConnectionError,
-    Promise, RequestID, Result, stream::{NetworkStream, Stream},
-}, connection::{
-    message::{TransactionRequest, TransactionResponse},
-    network::proto::{IntoProto, TryFromProto},
-    runtime::BackgroundRuntime,
-}, Error};
-use crate::connection::message::{QueryResponse, Request, Response};
-use crate::connection::network::proto::FromProto;
+use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::{ResponseSink, StreamResponse};
-use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
+use crate::{
+    common::{
+        box_promise,
+        error::ConnectionError,
+        stream::{NetworkStream, Stream},
+        Callback, Promise, RequestID, Result,
+    },
+    connection::{
+        message::{QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
+        network::proto::{FromProto, IntoProto, TryFromProto},
+        runtime::BackgroundRuntime,
+    },
+    Error,
+};
 
 pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
@@ -179,14 +180,14 @@ impl TransactionTransmitter {
     fn process_response(
         response: StreamResponse<TransactionResponse>,
         sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
-    ) -> Pin<Box<impl Future<Output=Option<Result<TransactionResponse>>>>> {
+    ) -> Pin<Box<impl Future<Output = Option<Result<TransactionResponse>>>>> {
         Box::pin(async move {
             match response {
                 StreamResponse::Result(result) => Some(result),
                 StreamResponse::Continue(request_id) => {
                     match sink.send((TransactionRequest::Stream { request_id }, None)) {
                         Ok(_) => None,
-                        Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
+                        Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into())),
                     }
                 }
             }
@@ -196,14 +197,14 @@ impl TransactionTransmitter {
     #[cfg(feature = "sync")]
     pub(in crate::connection) fn process_response(
         response: StreamResponse<TransactionResponse>,
-        sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>
+        sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
     ) -> Option<Result<TransactionResponse>> {
         match response {
             StreamResponse::Result(result) => Some(result),
             StreamResponse::Continue(request_id) => {
                 match sink.send((TransactionRequest::Stream { request_id }, None)) {
                     Ok(_) => None,
-                    Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into()))
+                    Err(_) => Some(Err(ConnectionError::TransactionIsClosed.into())),
                 }
             }
         }
@@ -392,59 +393,46 @@ impl ResponseCollector {
         let request_id = res_part.req_id.clone().into();
 
         match res_part.res_part {
-            Some(ResPart::QueryRes(query_res)) => {
-                match self.callbacks.read().unwrap().get(&request_id) {
-                    Some(sink) => {
-                        let response = TransactionResponse::try_from_proto(query_res);
-                        if let Err(err) = &response {
-                            self.callbacks.write().unwrap().remove(&request_id);
-                            error!("{}", err);
-                        }
-                        sink.send_result(response)
-                    }
-                    _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
-                }
-            }
-            Some(ResPart::StreamRes(stream_res)) => {
-                match stream_res.state {
-                    None => {
+            Some(ResPart::QueryRes(query_res)) => match self.callbacks.read().unwrap().get(&request_id) {
+                Some(sink) => {
+                    let response = TransactionResponse::try_from_proto(query_res);
+                    if let Err(err) = &response {
                         self.callbacks.write().unwrap().remove(&request_id);
-                        error!(
-                            "{}",
-                            ConnectionError::MissingResponseField {
-                                field: "transaction.res_part.res_part.stream_res.state"
-                            }
-                        )
+                        error!("{}", err);
                     }
-                    Some(state) => {
-                        match state {
-                            State::Continue(_) => {
-                                match self.callbacks.read().unwrap().get(&request_id) {
-                                    Some(sink) => {
-                                        sink.send_continuable(request_id)
-                                    }
-                                    None => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
-                                }
-                            }
-                            State::Done(_) => {
-                                self.callbacks.write().unwrap().remove(&request_id);
-                            }
-                            State::Error(error) => {
-                                match self.callbacks.read().unwrap().get(&request_id) {
-                                    Some(sink) => {
-                                        sink.send_result(Ok(TransactionResponse::Query(QueryResponse::from_proto(error))));
-                                    }
-                                    _ => error!(
-                                        "{}",
-                                        ConnectionError::UnknownRequestId { request_id: request_id.clone() }
-                                    ),
-                                }
-                                self.callbacks.write().unwrap().remove(&request_id);
-                            }
-                        }
-                    }
+                    sink.send_result(response)
                 }
-            }
+                _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
+            },
+            Some(ResPart::StreamRes(stream_res)) => match stream_res.state {
+                None => {
+                    self.callbacks.write().unwrap().remove(&request_id);
+                    error!(
+                        "{}",
+                        ConnectionError::MissingResponseField {
+                            field: "transaction.res_part.res_part.stream_res.state"
+                        }
+                    )
+                }
+                Some(state) => match state {
+                    State::Continue(_) => match self.callbacks.read().unwrap().get(&request_id) {
+                        Some(sink) => sink.send_continuable(request_id),
+                        None => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
+                    },
+                    State::Done(_) => {
+                        self.callbacks.write().unwrap().remove(&request_id);
+                    }
+                    State::Error(error) => {
+                        match self.callbacks.read().unwrap().get(&request_id) {
+                            Some(sink) => {
+                                sink.send_result(Ok(TransactionResponse::Query(QueryResponse::from_proto(error))));
+                            }
+                            _ => error!("{}", ConnectionError::UnknownRequestId { request_id: request_id.clone() }),
+                        }
+                        self.callbacks.write().unwrap().remove(&request_id);
+                    }
+                },
+            },
             None => {
                 self.callbacks.write().unwrap().remove(&request_id);
                 error!("{}", ConnectionError::MissingResponseField { field: "transaction.res_part.res_part" })
