@@ -17,9 +17,7 @@
  * under the License.
  */
 
-use std::collections::HashMap;
-use std::fmt;
-use std::fmt::{Debug, Display, Formatter};
+use std::{collections::HashMap, fmt};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
@@ -60,13 +58,13 @@ impl ValueType {
 }
 
 impl fmt::Display for ValueType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Debug::fmt(self, f)
     }
 }
 
 impl fmt::Debug for ValueType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.name())
     }
 }
@@ -211,14 +209,14 @@ impl Value {
     }
 }
 
-impl Display for Value {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Value {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for Value {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+impl fmt::Debug for Value {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}: ", self.get_type_name())?;
         match self {
             Value::Boolean(bool) => write!(f, "{}", bool),
@@ -230,7 +228,7 @@ impl Debug for Value {
             Value::Datetime(datetime) => write!(f, "{}", datetime),
             Value::DatetimeTZ(datetime_tz) => write!(f, "{}", datetime_tz),
             Value::Duration(duration) => write!(f, "{}", duration),
-            Value::Struct(value, name) => write!(f, "{} {}", name, value)
+            Value::Struct(value, name) => write!(f, "{} {}", name, value),
         }
     }
 }
@@ -266,26 +264,31 @@ impl Decimal {
     }
 }
 
-impl Display for Decimal {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Decimal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for Decimal {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        // count number of tailing 0's that don't have to be represented
-        let mut tail_0s = 0;
-        let mut fractional = self.fractional;
-        while fractional % 10 == 0 {
-            tail_0s += 1;
-            fractional /= 10;
-        }
+impl fmt::Debug for Decimal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.fractional == 0 {
+            write!(f, "{}.0", self.integer_part())?;
+        } else {
+            // count number of tailing 0's that don't have to be represented
+            let mut tail_0s = 0;
+            let mut fractional = self.fractional;
+            while fractional % 10 == 0 {
+                tail_0s += 1;
+                fractional /= 10;
+            }
 
-        // count number of leading 0's that have to be represented
-        let digits = (fractional as f64).log10().floor() as u64;
-        let leading_0s = Self::FRACTIONAL_PART_DENOMINATOR - digits - tail_0s;
-        write!(f, "{}.{:0width$}{}", self.integer_part(), "", digits, width = leading_0s as usize)
+            // count number of leading 0's that have to be represented
+            let digits = fractional.ilog10() as u64; // `fractional` cannot be a power of 10 here, so ilog10 correctly gives the number of digits
+            let leading_0s = Self::FRACTIONAL_PART_DENOMINATOR - digits - tail_0s;
+            write!(f, "{}.{:0width$}{}", self.integer, "", digits, width = leading_0s as usize)?;
+        }
+        Ok(())
     }
 }
 
@@ -322,24 +325,28 @@ impl TryFrom<Duration> for chrono::Duration {
 
     fn try_from(duration: Duration) -> Result<Self, Self::Error> {
         if duration.months != 0 || duration.days != 0 {
-            Err(Error::Other(String::from("Converting TypeDB duration to chrono::Duration is only possible when months and days are not set.")))
+            Err(Error::Other(String::from(
+                "Converting TypeDB duration to chrono::Duration is only possible when months and days are not set.",
+            )))
         } else {
             match i64::try_from(duration.nanos) {
                 Ok(nanos) => Ok(chrono::Duration::nanoseconds(nanos)),
-                Err(err) => Err(Error::Other(String::from("Duration u64 nanos exceeded i64 required for chrono::Duration")))
+                Err(_) => {
+                    Err(Error::Other(String::from("Duration u64 nanos exceeded i64 required for chrono::Duration")))
+                }
             }
         }
     }
 }
 
-impl Display for Duration {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Duration {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for Duration {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+impl fmt::Debug for Duration {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "months: {}, days: {}, nanos: {}", self.months, self.days, self.nanos)
     }
 }
@@ -349,14 +356,14 @@ pub struct Struct {
     fields: HashMap<String, Value>,
 }
 
-impl Display for Struct {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Display::fmt(self, f)
+impl fmt::Display for Struct {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for Struct {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+impl fmt::Debug for Struct {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self.fields)
     }
 }
