@@ -47,6 +47,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //rust/...
+        bazel build //java/...
 
 #    build:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against

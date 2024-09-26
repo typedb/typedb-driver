@@ -34,6 +34,7 @@ java_library(
         # Package dependencies
         "//java/api",
         "//java/common",
+        "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util",
 

@@ -23,6 +23,7 @@
 #include "common.h"
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
+const char* DRIVER_LANG = "c";
 
 bool check_error_may_print(const char* filename, int lineno) {
     if (check_error()) {

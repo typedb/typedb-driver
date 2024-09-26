@@ -33,6 +33,7 @@ typedb_java_test(
         # Internal dependencies
         "//java:driver-java",
         "//java/api",
+        "//java/common",
 
         # External dependencies from @vaticle
         "@vaticle_typeql//common/java:common",

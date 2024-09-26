@@ -25,12 +25,15 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::{common::{
-    address::Address,
-    error::{ConnectionError, Error}, Result,
-}, Credential, DatabaseManager, Options, Transaction, TransactionType, UserManager};
-use crate::connection::runtime::BackgroundRuntime;
-use crate::connection::server_connection::ServerConnection;
+use crate::{
+    common::{
+        address::Address,
+        error::{ConnectionError, Error},
+        Result,
+    },
+    connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
+    Credential, DatabaseManager, Options, Transaction, TransactionType, UserManager,
+};
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
 pub struct TypeDBDriver {
@@ -41,13 +44,12 @@ pub struct TypeDBDriver {
     is_cloud: bool,
 }
 
-impl TypeDBDriver {
-}
+impl TypeDBDriver {}
 
 impl TypeDBDriver {
-    const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION"){
+    const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION") {
         None => "0.0.0",
-        Some(version) => version
+        Some(version) => version,
     };
 
     /// Creates a new TypeDB Server connection.
@@ -67,6 +69,19 @@ impl TypeDBDriver {
         Self::new_core_with_description(address, "rust").await
     }
 
+    /// Creates a new TypeDB Server connection with a description.
+    ///
+    /// # Arguments
+    ///
+    /// * `address` -- The address (host:port) on which the TypeDB Server is running
+    /// * `driver_lang` -- The language of the driver connecting to the server
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\").await")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>) -> Result<Self> {
         let id = address.as_ref().to_string();
@@ -77,8 +92,9 @@ impl TypeDBDriver {
             background_runtime.clone(),
             address.clone(),
             driver_lang.as_ref(),
-            TypeDBDriver::VERSION
-        ).await?;
+            TypeDBDriver::VERSION,
+        )
+        .await?;
 
         // // validate
         // let advertised_address = server_connection
@@ -91,13 +107,7 @@ impl TypeDBDriver {
         let server_connections: HashMap<Address, ServerConnection> = [(address, server_connection)].into();
         let database_manager = DatabaseManager::new(server_connections.clone(), database_info)?;
 
-        Ok(Self {
-            server_connections,
-            database_manager,
-            background_runtime,
-            username: None,
-            is_cloud: false,
-        })
+        Ok(Self { server_connections, database_manager, background_runtime, username: None, is_cloud: false })
     }
 
     /// Creates a new TypeDB Cloud connection.
@@ -151,9 +161,9 @@ impl TypeDBDriver {
     /// )
     /// ```
     pub fn new_cloud_with_translation<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
-        where
-            T: AsRef<str> + Sync,
-            U: AsRef<str> + Sync,
+    where
+        T: AsRef<str> + Sync,
+        U: AsRef<str> + Sync,
     {
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         //
@@ -209,7 +219,7 @@ impl TypeDBDriver {
 
     fn fetch_server_list(
         background_runtime: Arc<BackgroundRuntime>,
-        addresses: impl IntoIterator<Item=impl AsRef<str>> + Clone,
+        addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credential,
     ) -> Result<HashSet<Address>> {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
@@ -220,13 +230,13 @@ impl TypeDBDriver {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                            ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                        )) => (),
+                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    )) => (),
                     Err(err) => Err(err)?,
                 },
                 Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                    )) => (),
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                )) => (),
                 Err(err) => Err(err)?,
             }
         }
@@ -277,13 +287,15 @@ impl TypeDBDriver {
         &self,
         database_name: impl AsRef<str>,
         transaction_type: TransactionType,
-        options: Options
+        options: Options,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
-        let transaction_stream  = database.run_failsafe(|database| async move {
-            database.connection().open_transaction(database.name(), transaction_type, options).await
-        }).await?;
+        let transaction_stream = database
+            .run_failsafe(|database| async move {
+                database.connection().open_transaction(database.name(), transaction_type, options).await
+            })
+            .await?;
         Ok(Transaction::new(transaction_stream))
     }
 
@@ -295,7 +307,8 @@ impl TypeDBDriver {
     /// connection.force_close()
     /// ```
     pub fn force_close(&self) -> Result {
-        let result = self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
+        let result =
+            self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
         self.background_runtime.force_close().and(result)
     }
 
@@ -303,7 +316,7 @@ impl TypeDBDriver {
         self.server_connections.len()
     }
 
-    pub(crate) fn servers(&self) -> impl Iterator<Item=&Address> {
+    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
         self.server_connections.keys()
     }
 
@@ -311,7 +324,7 @@ impl TypeDBDriver {
         self.server_connections.get(id)
     }
 
-    pub(crate) fn connections(&self) -> impl Iterator<Item=(&Address, &ServerConnection)> + '_ {
+    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
         self.server_connections.iter()
     }
 

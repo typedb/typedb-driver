@@ -19,13 +19,8 @@
 
 package com.vaticle.typedb.driver.concept.type;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.Type;
-import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
-
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 public abstract class TypeImpl extends ConceptImpl implements Type {
     private int hash = 0;
@@ -33,19 +28,6 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     TypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
-
-    @Nullable
-    @Override
-    public abstract Promise<? extends TypeImpl> getSupertype(TypeDBTransaction transaction);
-
-    @Override
-    public abstract Stream<? extends TypeImpl> getSupertypes(TypeDBTransaction transaction);
-
-    @Override
-    public abstract Stream<? extends TypeImpl> getSubtypes(TypeDBTransaction transaction);
-
-    @Override
-    public abstract Stream<? extends TypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     public int hashCode() {

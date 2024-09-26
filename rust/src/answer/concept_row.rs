@@ -17,23 +17,25 @@
  * under the License.
  */
 
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::sync::Arc;
+use std::{
+    fmt,
+    fmt::{Debug, Formatter},
+    sync::Arc,
+};
 
 use itertools::Itertools;
 
-use crate::concept::Concept;
+use crate::{answer::QueryType, concept::Concept};
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptRowHeader {
     pub column_names: Vec<String>,
+    pub query_type: QueryType,
 }
 
 impl ConceptRowHeader {
     fn get_index(&self, name: &str) -> Option<usize> {
-        self.column_names.iter().find_position(|column_name| **column_name == name)
-            .map(|(pos, _)| pos)
+        self.column_names.iter().find_position(|column_name| **column_name == name).map(|(pos, _)| pos)
     }
 }
 
@@ -51,17 +53,30 @@ impl ConceptRow {
         Self { header, row }
     }
 
-    /// Retrieve the row header (shared by all elements in this stream).
+    /// Retrieve the row column names (shared by all elements in this stream).
     ///
     /// # Arguments
     ///
     /// # Examples
     ///
     /// ```rust
-    /// concept_row.get_header()
+    /// concept_row.get_column_names()
     /// ```
-    pub fn get_header(&self) -> &[String] {
+    pub fn get_column_names(&self) -> &[String] {
         &self.header.column_names
+    }
+
+    /// Retrieve the executed query's type (shared by all elements in this stream).
+    ///
+    /// # Arguments
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_query_type()
+    /// ```
+    pub fn get_query_type(&self) -> QueryType {
+        self.header.query_type
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if
@@ -77,10 +92,7 @@ impl ConceptRow {
     /// concept_row.get(var_name)
     /// ```
     pub fn get(&self, column_name: &str) -> Option<&Concept> {
-        self.header
-            .get_index(column_name)
-            .map(|index| self.get_index(index))
-            .flatten()
+        self.header.get_index(column_name).map(|index| self.get_index(index)).flatten()
     }
 
     /// Retrieves a concept for a given column index. Returns an empty optional if
@@ -106,7 +118,7 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.concepts()
     /// ```
-    pub fn get_concepts(&self) -> impl Iterator<Item=&Concept> {
+    pub fn get_concepts(&self) -> impl Iterator<Item = &Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
     }
 }

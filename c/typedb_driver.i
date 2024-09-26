@@ -47,59 +47,49 @@ struct Type {};
 %extend Type { ~Type() { function_prefix ## _drop(self); } }
 %enddef
 
+%define %dropproxydefined(Type, function_prefix)
+%ignore function_prefix ## _drop;
+%extend Type { ~Type() { function_prefix ## _drop(self); } }
+%enddef
+
 %dropproxy(Error, error)
-%dropproxy(SchemaException, schema_exception)
-%dropproxy(SchemaExceptionIterator, schema_exception_iterator)
 
-%dropproxy(Credential, credential)
-%dropproxy(Options, options)
+//%dropproxy(Credential, credential)
+//%dropproxy(Options, options)
 
-#define connection_drop connection_close
-#define session_drop session_close
+#define typedb_driver_drop driver_close
 #define transaction_drop transaction_close
 #define database_drop database_close
 
-%dropproxy(Connection, connection)
-%dropproxy(Session, session)
+%dropproxy(TypeDBDriver, typedb_driver)
 %dropproxy(Transaction, transaction)
 
-%dropproxy(DatabaseManager, database_manager);
+// %dropproxy(DatabaseManager, database_manager);
 %dropproxy(Database, database)
 %dropproxy(DatabaseIterator, database_iterator)
-%dropproxy(ReplicaInfo, replica_info)
-%dropproxy(ReplicaInfoIterator, replica_info_iterator)
+//%dropproxy(ReplicaInfo, replica_info)
+//%dropproxy(ReplicaInfoIterator, replica_info_iterator)
 
-%dropproxy(UserManager, user_manager);
-%dropproxy(User, user)
-%dropproxy(UserIterator, user_iterator)
+//%dropproxy(UserManager, user_manager);
+//%dropproxy(User, user)
+//%dropproxy(UserIterator, user_iterator)
 
 %dropproxy(Concept, concept)
 %dropproxy(ConceptIterator, concept_iterator)
 
-%dropproxy(Annotation, annotation)
+%dropproxy(ConceptRow, concept_row)
+%dropproxy(ConceptRowIterator, concept_row_iterator)
 
-%dropproxy(RolePlayer, role_player)
-%dropproxy(RolePlayerIterator, role_player_iterator)
-
-%dropproxy(ConceptMap, concept_map)
-%dropproxy(ConceptMapIterator, concept_map_iterator)
-%dropproxy(Explainables, explainables)
-%dropproxy(Explainable, explainable)
-
-%dropproxy(ConceptMapGroup, concept_map_group)
-%dropproxy(ConceptMapGroupIterator, concept_map_group_iterator)
+%dropproxydefined(DatetimeAndZoneId, datetime_and_zone_id)
+%dropproxydefined(StringAndOptValue, string_and_opt_value)
+%dropproxy(StringAndOptValueIterator, string_and_opt_value_iterator)
 
 %dropproxy(StringIterator, string_iterator)
-%dropproxy(StringPairIterator, string_pair_iterator)
+
+%dropproxy(QueryAnswer, query_answer)
 
 %dropproxy(ValueGroup, value_group)
 %dropproxy(ValueGroupIterator, value_group_iterator)
-
-%dropproxy(Explanation, explanation)
-%dropproxy(ExplanationIterator, explanation_iterator)
-
-%dropproxy(Rule, rule)
-%dropproxy(RuleIterator, rule_iterator)
 
 %define %promiseproxy(Type, function_prefix)
 struct Type {};
@@ -110,66 +100,9 @@ struct Type {};
 
 %promiseproxy(BoolPromise, bool_promise)
 %promiseproxy(ConceptPromise, concept_promise)
-%promiseproxy(RulePromise, rule_promise)
 %promiseproxy(StringPromise, string_promise)
+%promiseproxy(QueryAnswerPromise, query_answer_promise)
 %promiseproxy(VoidPromise, void_promise)
-
-%feature("director") SessionCallbackDirector;
-%inline %{
-struct SessionCallbackDirector {
-    SessionCallbackDirector() {}
-    virtual ~SessionCallbackDirector() {}
-    virtual void callback() = 0;
-};
-%}
-
-%inline %{
-#include <atomic>
-#include <memory>
-#include <iostream>
-#include <unordered_map>
-
-static std::unordered_map<std::uintptr_t, SessionCallbackDirector*> sessionCallbacks {};
-
-std::uintptr_t session_callback_register(SessionCallbackDirector* handler) {
-    static std::atomic_uintptr_t nextID;
-    std::uintptr_t ID = nextID.fetch_add(1);
-    sessionCallbacks.insert({ID, handler});
-    return ID;
-}
-
-static void session_callback_execute(void* ID) {
-    try {
-        sessionCallbacks.at(reinterpret_cast<std::uintptr_t>(ID))->callback();
-    } catch (std::exception const& e) {
-        std::cerr << "[ERROR] " << e.what() << std::endl;
-    }
-}
-
-static void session_callback_erase(void* ID) {
-    try {
-        sessionCallbacks.erase(reinterpret_cast<std::uintptr_t>(ID));
-    } catch (std::exception const& e) {
-        std::cerr << "[ERROR] " << e.what() << std::endl;
-    }
-}
-%}
-
-%rename(session_on_close) session_on_close_register;
-%ignore session_on_close;
-%rename(session_on_reopen) session_on_reopen_register;
-%ignore session_on_reopen;
-%inline %{
-void session_on_close_register(const Session* session, SessionCallbackDirector* handler) {
-    std::uintptr_t ID = session_callback_register(handler);
-    session_on_close(session, reinterpret_cast<void*>(ID), &session_callback_execute, &session_callback_erase);
-}
-
-void session_on_reopen_register(const Session* session, SessionCallbackDirector* handler) {
-    std::uintptr_t ID = session_callback_register(handler);
-    session_on_reopen(session, reinterpret_cast<void*>(ID), &session_callback_execute, &session_callback_erase);
-}
-%}
 
 %feature("director") TransactionCallbackDirector;
 %inline %{
@@ -214,152 +147,56 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %typemap(newfree) char* "string_free($1);";
 %ignore string_free;
 
-%newobject concept_map_get_variables;
-%newobject concept_map_get_values;
-%newobject concept_map_get;
-%newobject concept_map_get_explainables;
-%newobject concept_map_to_string;
-
-%newobject explainables_get_relation;
-%newobject explainables_get_attribute;
-%newobject explainables_get_ownership;
-%newobject explainables_get_relations_keys;
-%newobject explainables_get_attributes_keys;
-%newobject explainables_get_ownerships_keys;
-%newobject explainables_to_string;
-%newobject explanation_to_string;
-
-%newobject explainable_get_conjunction;
-
-%newobject explanation_get_rule;
-%newobject explanation_get_conclusion;
-%newobject explanation_get_condition;
-
-%newobject concept_map_group_get_owner;
-%newobject concept_map_group_get_concept_maps;
-%newobject concept_map_group_to_string;
+%newobject concept_row_get;
+%newobject concept_row_get_column_names;
+%newobject concept_row_get_query_type;
+%newobject concept_row_get_concepts;
+%newobject concept_row_get_index;
+%newobject concept_row_to_string;
 
 %newobject value_group_get_owner;
 %newobject value_group_get_value;
 %newobject value_group_to_string;
 
-%newobject string_iterator_next;
-
-%newobject string_pair_iterator_next;
-
-%newobject value_new_boolean;
-%newobject value_new_long;
-%newobject value_new_double;
-%newobject value_new_string;
-%newobject value_new_date_time_from_millis;
 %newobject value_get_string;
+%newobject value_get_datetime_tz;
 
-%newobject annotation_new_key;
-%newobject annotation_new_unique;
-%newobject annotation_to_string;
+%newobject query_answer_get_rows;
 
 %newobject concept_to_string;
 
-%newobject concepts_get_entity_type;
-%newobject concepts_get_relation_type;
-%newobject concepts_get_attribute_type;
-%newobject concepts_get_root_entity_type;
-%newobject concepts_get_root_relation_type;
-%newobject concepts_get_root_attribute_type;
-%newobject concepts_put_entity_type;
-%newobject concepts_put_relation_type;
-%newobject concepts_put_attribute_type;
-%newobject concepts_get_entity;
-%newobject concepts_get_relation;
-%newobject concepts_get_attribute;
-%newobject concepts_get_schema_exceptions;
-
-%newobject concept_iterator_next;
-
-%newobject role_player_iterator_next;
-
-%newobject role_player_get_role_type;
-%newobject role_player_get_player;
-
-%newobject thing_get_iid;
+%newobject entity_get_iid;
+%newobject relation_get_iid;
 
 %newobject entity_get_type;
 %newobject relation_get_type;
 %newobject attribute_get_type;
 
-%newobject thing_get_has;
-%newobject thing_get_relations;
-%newobject thing_get_playing;
-
-%newobject relation_get_players_by_role_type;
-%newobject relation_get_role_players;
-%newobject relation_get_relating;
-
 %newobject attribute_get_value;
-%newobject attribute_get_owners;
+%newobject attribute_type_get_value_type;
+%newobject value_get_value_type;
 
-%newobject thing_type_get_label;
-%newobject thing_type_get_owns;
-%newobject thing_type_get_owns_overridden;
-%newobject thing_type_get_plays;
-%newobject thing_type_get_plays_overridden;
-%newobject thing_type_get_syntax;
+%newobject entity_type_get_label;
+%newobject relation_type_get_label;
+%newobject attribute_type_get_label;
+%newobject role_type_get_label;
 
-%newobject entity_type_create;
-%newobject entity_type_get_supertype;
-%newobject entity_type_get_supertypes;
-%newobject entity_type_get_subtypes;
-%newobject entity_type_get_instances;
+%newobject driver_open_core;
+//%newobject driver_open_cloud;
+//%newobject driver_open_cloud_translated;
 
-%newobject relation_type_create;
-%newobject relation_type_get_supertype;
-%newobject relation_type_get_supertypes;
-%newobject relation_type_get_subtypes;
-%newobject relation_type_get_instances;
-%newobject relation_type_get_relates;
-%newobject relation_type_get_relates_for_role_label;
-%newobject relation_type_get_relates_overridden;
-
-%newobject attribute_type_put;
-%newobject attribute_type_get;
-%newobject attribute_type_get_supertype;
-%newobject attribute_type_get_supertypes;
-%newobject attribute_type_get_subtypes;
-%newobject attribute_type_get_subtypes_with_value_type;
-%newobject attribute_type_get_instances;
-%newobject attribute_type_get_regex;
-%newobject attribute_type_get_owners;
-
-%newobject role_type_get_relation_type;
-%newobject role_type_get_scope;
-%newobject role_type_get_name;
-%newobject role_type_get_supertype;
-%newobject role_type_get_supertypes;
-%newobject role_type_get_subtypes;
-%newobject role_type_get_relation_types;
-%newobject role_type_get_player_types;
-%newobject role_type_get_relation_instances;
-%newobject role_type_get_player_instances;
-
-%newobject connection_open_core;
-%newobject connection_open_cloud;
-%newobject connection_open_cloud_translated;
-
-%newobject credential_new;
+//%newobject credential_new;
 
 %newobject database_get_name;
 %newobject database_schema;
 %newobject database_type_schema;
-%newobject database_rule_schema;
-%newobject database_manager_new;
-%newobject database_iterator_next;
 
-%newobject database_get_preferred_replica_info;
-%newobject database_get_primary_replica_info;
-%newobject database_get_replicas_info;
-
-%newobject replica_info_get_server;
-%newobject replica_info_iterator_next;
+//%newobject database_get_preferred_replica_info;
+//%newobject database_get_primary_replica_info;
+//%newobject database_get_replicas_info;
+//
+//%newobject replica_info_get_server;
+//%newobject replica_info_iterator_next;
 
 %newobject databases_all;
 %newobject databases_get;
@@ -368,50 +205,24 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject error_code;
 %newobject error_message;
 
-%newobject schema_exception_code;
-%newobject schema_exception_iterator_next;
-%newobject schema_exception_message;
+//%newobject options_new;
 
-%newobject rule_get_label;
-%newobject rule_get_when;
-%newobject rule_get_then;
-%newobject rule_to_string;
-
-%newobject logic_manager_put_rule;
-%newobject logic_manager_get_rule;
-
-%newobject rule_iterator_next;
-
-%newobject logic_manager_get_rules;
-
-%newobject options_new;
-
-%newobject concept_map_iterator_next;
-
-%newobject query_match;
-%newobject query_insert;
-%newobject query_update;
-%newobject query_match_aggregate;
-%newobject query_match_group;
-%newobject query_match_group_aggregate;
-%newobject query_explain;
-
-%newobject concept_map_group_iterator_next;
+%newobject concept_iterator_next;
+%newobject concept_row_iterator_next;
+%newobject database_iterator_next;
 %newobject value_group_iterator_next;
-%newobject explanation_get_mapping;
-%newobject explanation_iterator_next;
-
-%newobject session_new;
-%newobject session_get_database_name;
+%newobject string_iterator_next;
+%newobject string_and_opt_value_iterator_next;
+//%newobject user_iterator_next;
 
 %newobject transaction_new;
+%newobject transaction_query;
 
-%newobject users_all;
-%newobject users_current_user;
-%newobject users_get;
+//%newobject users_all;
+//%newobject users_current_user;
+//%newobject users_get;
 
-%newobject user_get_username;
-%newobject user_iterator_next;
-%newobject user_manager_new;
+//%newobject user_get_username;
+//%newobject user_manager_new;
 
 %include "typedb_driver.h"

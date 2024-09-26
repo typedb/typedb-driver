@@ -19,7 +19,6 @@
 
 use cucumber::{given, then, when};
 use tokio::time::sleep;
-
 use typedb_driver::{Credential, Result as TypeDBResult, TypeDBDriver};
 
 use crate::{assert_with_timeout, behaviour::Context, generic_step_impl};
@@ -63,7 +62,7 @@ generic_step_impl! {
     }
 
     #[step("connection closes")]
-    async fn connection_closes(context: &mut Context) {
+    async fn driver_closes(context: &mut Context) {
         assert!(context.driver.force_close().is_ok());
     }
 }

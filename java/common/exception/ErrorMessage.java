@@ -50,6 +50,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Driver(11, "Value cannot be less than 1, was: '%d'.");
         public static final Driver MISSING_DB_NAME =
                 new Driver(12, "Database name cannot be null.");
+        public static final Driver UNIMPLEMENTED =
+                new Driver(13, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
@@ -62,22 +64,24 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
     public static class Concept extends ErrorMessage {
         public static final Concept INVALID_CONCEPT_CASTING =
                 new Concept(1, "Invalid concept conversion from '%s' to '%s'.");
+        public static final Concept INVALID_QUERY_ANSWER_CASTING =
+                new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
         public static final Concept MISSING_TRANSACTION =
-                new Concept(2, "Transaction cannot be null.");
+                new Concept(3, "Transaction cannot be null.");
         public static final Concept MISSING_IID =
-                new Concept(3, "IID cannot be null or empty.");
+                new Concept(4, "IID cannot be null or empty.");
         public static final Concept MISSING_LABEL =
-                new Concept(4, "Label cannot be null or empty.");
+                new Concept(5, "Label cannot be null or empty.");
         public static final Concept MISSING_VARIABLE =
-                new Concept(5, "Variable name cannot be null or empty.");
+                new Concept(6, "Variable name cannot be null or empty.");
         public static final Concept MISSING_VALUE =
-                new Concept(6, "Value cannot be null.");
+                new Concept(7, "Value cannot be null.");
         public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
-                new Concept(7, "The concept identified by '%s' is not explainable.");
+                new Concept(8, "The concept identified by '%s' is not explainable.");
         public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
-                new Concept(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
+                new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
         public static final Concept UNRECOGNISED_ANNOTATION =
-                new Concept(9, "The annotation '%s' is not recognised.");
+                new Concept(10, "The annotation '%s' is not recognised.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
@@ -91,7 +95,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Query VARIABLE_DOES_NOT_EXIST =
                 new Query(1, "The variable '%s' does not exist.");
         public static final Query MISSING_QUERY =
-                new Query(2, "Query cannot be null or empty.");
+                new Query(2, "Query cannot be null or blank.");
 
         private static final String codePrefix = "JQR";
         private static final String messagePrefix = "Query Error";

@@ -24,6 +24,7 @@ java_library(
     deps = [
         "//java/api:api",
         "//java/common:common",
+        "//java/test/behaviour/util:util",
 
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java"

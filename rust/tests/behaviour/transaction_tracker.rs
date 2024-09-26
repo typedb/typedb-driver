@@ -38,7 +38,6 @@ impl Drop for TransactionTracker {
 }
 
 impl TransactionTracker {
-
     pub async fn open_transaction(
         &mut self,
         transaction_type: TransactionType,

@@ -20,230 +20,116 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
-    answer::{ConceptRow, ConceptMapGroup, Explainable, Explainables, ValueGroup},
+    answer::{ConceptRow, QueryAnswer, QueryType, ValueGroup},
     box_stream,
     concept::Concept,
-    logic::{Explanation, Rule},
+    BoxPromise, Promise, Result,
 };
 
 use super::{
-    common::{StringIterator, StringPairIterator},
     concept::ConceptIterator,
     iterator::CIterator,
     memory::{borrow, free, release, release_optional, release_string, string_view},
-    query::ConceptMapIterator,
 };
+use crate::{common::StringIterator, concept::ConceptRowIterator, error::try_release, memory::take_ownership};
 
-/// Frees the native rust <code>ConceptMap</code> object
-#[no_mangle]
-pub extern "C" fn concept_map_drop(concept_map: *mut ConceptRow) {
-    free(concept_map);
+/// Promise object representing the result of an asynchronous operation.
+/// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
+pub struct QueryAnswerPromise(BoxPromise<'static, Result<QueryAnswer>>);
+
+impl QueryAnswerPromise {
+    pub fn new(promise: impl Promise<'static, Result<QueryAnswer>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?)))
+    }
 }
 
-/// Produces an <code>Iterator</code> over all variables in this <code>ConceptMap</code>.
+/// Waits for and returns the result of the operation represented by the <code>QueryAnswer</code> object.
+/// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
-pub extern "C" fn concept_map_get_variables(concept_map: *const ConceptRow) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_keys().map(Ok)))))
+pub extern "C" fn query_answer_promise_resolve(promise: *mut QueryAnswerPromise) -> *mut QueryAnswer {
+    try_release(take_ownership(promise).0.resolve())
 }
 
-/// Produces an <code>Iterator</code> over all <code>Concepts</code> in this <code>ConceptMap</code>.
+/// Checks if the query answer is an <code>Ok</code>.
 #[no_mangle]
-pub extern "C" fn concept_map_get_values(concept_map: *const ConceptRow) -> *mut ConceptIterator {
-    release(ConceptIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_values().map(Ok)))))
+pub extern "C" fn query_answer_is_ok(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_ok()
 }
 
-/// Retrieves a concept for a given variable name.
+/// Checks if the query answer is a <code>ConceptRowsStream</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_is_concept_rows_stream(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_rows_stream()
+}
+
+/// Checks if the query answer is a <code>ConceptTreesStream</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_is_concept_trees_stream(query_answer: *const QueryAnswer) -> bool {
+    // TODO: Rename?
+    borrow(query_answer).is_json_stream()
+}
+
+/// Produces an <code>Iterator</code> over all <code>ConceptRow</code> in this <code>QueryAnswer</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut ConceptRowIterator {
+    release(ConceptRowIterator(CIterator(take_ownership(query_answer).into_rows())))
+}
+
+/// Frees the native rust <code>QueryAnswer</code> object.
+#[no_mangle]
+pub extern "C" fn query_answer_drop(query_answer: *mut QueryAnswer) {
+    free(query_answer);
+}
+
+/// Frees the native rust <code>ConceptRow</code> object.
+#[no_mangle]
+pub extern "C" fn concept_row_drop(concept_row: *mut ConceptRow) {
+    free(concept_row);
+}
+
+/// Produces an <code>Iterator</code> over all <code>String</code> column names of the <code>ConceptRow</code>'s header.
+#[no_mangle]
+pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -> *mut StringIterator {
+    release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
+}
+
+/// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.
+#[no_mangle]
+pub extern "C" fn concept_row_get_query_type(concept_row: *const ConceptRow) -> QueryType {
+    borrow(concept_row).get_query_type()
+}
+
+/// Produces an <code>Iterator</code> over all <code>Concepts</code> in this <code>ConceptRow</code>.
+#[no_mangle]
+pub extern "C" fn concept_row_get_concepts(concept_row: *const ConceptRow) -> *mut ConceptIterator {
+    release(ConceptIterator(CIterator(box_stream(borrow(concept_row).get_concepts().cloned().map(Ok)))))
+}
+
+/// Retrieves a concept for a given column name.
 ///
 #[no_mangle]
-pub extern "C" fn concept_map_get(concept_map: *const ConceptRow, var: *const c_char) -> *mut Concept {
-    release_optional(borrow(concept_map).get(string_view(var)).cloned())
+pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *const c_char) -> *mut Concept {
+    release_optional(borrow(concept_row).get(string_view(column_name)).cloned())
 }
 
-/// Gets the <code>Explainables</code> object for this <code>ConceptMap</code>, exposing
-/// which of the concepts in this <code>ConceptMap</code> are explainable.
+/// Retrieves a concept for a given column index.
+///
 #[no_mangle]
-pub extern "C" fn concept_map_get_explainables(concept_map: *const ConceptRow) -> *mut Explainables {
-    release(borrow(concept_map).explainables.clone())
+pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
+    release_optional(borrow(concept_row).get_index(column_index).cloned())
 }
 
-/// Checks whether the provided <code>ConceptMap</code> objects are equal
+/// Checks whether the provided <code>ConceptRow</code> objects are equal
 #[no_mangle]
-pub extern "C" fn concept_map_equals(lhs: *const ConceptRow, rhs: *const ConceptRow) -> bool {
+pub extern "C" fn concept_row_equals(lhs: *const ConceptRow, rhs: *const ConceptRow) -> bool {
     borrow(lhs) == borrow(rhs)
 }
 
-/// A string representation of this ConceptMap.
+/// A string representation of this ConceptRow.
 #[no_mangle]
-pub extern "C" fn concept_map_to_string(concept_map: *const ConceptRow) -> *mut c_char {
-    release_string(format!("{:?}", borrow(concept_map)))
-}
-
-/// Frees the native rust <code>Explainables</code> object
-#[no_mangle]
-pub extern "C" fn explainables_drop(explainables: *mut Explainables) {
-    free(explainables);
-}
-
-/// Checks whether the provided <code>Explainables</code> objects are equal
-#[no_mangle]
-pub extern "C" fn explainables_equals(lhs: *const Explainables, rhs: *const Explainables) -> bool {
-    borrow(lhs) == borrow(rhs)
-}
-
-/// A string representation of this <code>Explainables</code> object
-#[no_mangle]
-pub extern "C" fn explainables_to_string(explainables: *const Explainables) -> *mut c_char {
-    release_string(format!("{:?}", borrow(explainables)))
-}
-
-/// Retrieves the explainable relation with the given variable name.
-#[no_mangle]
-pub extern "C" fn explainables_get_relation(explainables: *const Explainables, var: *const c_char) -> *mut Explainable {
-    release_optional(borrow(explainables).relations.get(string_view(var)).cloned())
-}
-
-/// Retrieves the explainable attribute with the given variable name.
-#[no_mangle]
-pub extern "C" fn explainables_get_attribute(
-    explainables: *const Explainables,
-    var: *const c_char,
-) -> *mut Explainable {
-    release_optional(borrow(explainables).attributes.get(string_view(var)).cloned())
-}
-
-/// Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
-#[no_mangle]
-pub extern "C" fn explainables_get_ownership(
-    explainables: *const Explainables,
-    owner: *const c_char,
-    attribute: *const c_char,
-) -> *mut Explainable {
-    release_optional(
-        borrow(explainables)
-            .ownerships
-            .get(&(string_view(owner).to_owned(), string_view(attribute).to_owned()))
-            .cloned(),
-    )
-}
-
-/// Retrieves all variables corresponding to this <code>ConceptMap</code>’s explainable relations.
-#[no_mangle]
-pub extern "C" fn explainables_get_relations_keys(explainables: *const Explainables) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explainables).relations.clone().into_keys().map(Ok)))))
-}
-
-/// Retrieves all variables corresponding to this <code>ConceptMap</code>’s explainable attributes.
-#[no_mangle]
-pub extern "C" fn explainables_get_attributes_keys(explainables: *const Explainables) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explainables).attributes.clone().into_keys().map(Ok)))))
-}
-
-/// Retrieves all variables corresponding to this <code>ConceptMap</code>’s explainable ownerships.
-#[no_mangle]
-pub extern "C" fn explainables_get_ownerships_keys(explainables: *const Explainables) -> *mut StringPairIterator {
-    release(StringPairIterator(CIterator(box_stream(borrow(explainables).ownerships.clone().into_keys()))))
-}
-
-/// Frees the native rust <code>Explainable</code> object
-#[no_mangle]
-pub extern "C" fn explainable_drop(explainable: *mut Explainable) {
-    free(explainable);
-}
-
-/// Retrieves the unique ID that identifies this <code>Explainable</code>.
-#[no_mangle]
-pub extern "C" fn explainable_get_id(explainable: *const Explainable) -> i64 {
-    borrow(explainable).id
-}
-
-/// Retrieves the subquery of the original query that is actually being explained.
-#[no_mangle]
-pub extern "C" fn explainable_get_conjunction(explainable: *const Explainable) -> *mut c_char {
-    release_string(borrow(explainable).conjunction.clone())
-}
-
-/// Frees the native rust <code>Explanation</code> object
-#[no_mangle]
-pub extern "C" fn explanation_drop(explanation: *mut Explanation) {
-    free(explanation);
-}
-
-/// Checks whether the provided <code>Explanation</code> objects are equal
-#[no_mangle]
-pub extern "C" fn explanation_equals(lhs: *const Explanation, rhs: *const Explanation) -> bool {
-    borrow(lhs) == borrow(rhs)
-}
-
-/// A string representation of this <code>Explanation</code> object
-#[no_mangle]
-pub extern "C" fn explanation_to_string(explanation: *const Explanation) -> *mut c_char {
-    release_string(format!("{:?}", borrow(explanation)))
-}
-
-/// Retrieves the Rule for this Explanation.
-#[no_mangle]
-pub extern "C" fn explanation_get_rule(explanation: *const Explanation) -> *mut Rule {
-    release(borrow(explanation).rule.clone())
-}
-
-/// Retrieves the Conclusion for this Explanation.
-#[no_mangle]
-pub extern "C" fn explanation_get_conclusion(explanation: *const Explanation) -> *mut ConceptRow {
-    release(borrow(explanation).conclusion.clone())
-}
-
-/// Retrieves the Condition for this Explanation.
-#[no_mangle]
-pub extern "C" fn explanation_get_condition(explanation: *const Explanation) -> *mut ConceptRow {
-    release(borrow(explanation).condition.clone())
-}
-
-/// Retrieves the query variables for this <code>Explanation</code>.
-#[no_mangle]
-pub extern "C" fn explanation_get_mapped_variables(explanation: *const Explanation) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explanation).variable_mapping.keys().cloned().map(Ok)))))
-}
-
-/// Retrieves the rule variables corresponding to the query variable var for this <code>Explanation</code>.
-#[no_mangle]
-pub extern "C" fn explanation_get_mapping(explanation: *const Explanation, var: *const c_char) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(
-        borrow(explanation).variable_mapping.get(string_view(var)).into_iter().flatten().cloned().map(Ok),
-    ))))
-}
-
-/// Frees the native rust <code>ConceptMapGroup</code> object
-#[no_mangle]
-pub extern "C" fn concept_map_group_drop(concept_map_group: *mut ConceptMapGroup) {
-    free(concept_map_group);
-}
-
-/// Retrieves the concept that is the group owner.
-#[no_mangle]
-pub extern "C" fn concept_map_group_get_owner(concept_map_group: *const ConceptMapGroup) -> *mut Concept {
-    release(borrow(concept_map_group).owner.clone())
-}
-
-/// Retrieves the <code>ConceptMap</code>s of the group.
-#[no_mangle]
-pub extern "C" fn concept_map_group_get_concept_maps(
-    concept_map_group: *const ConceptMapGroup,
-) -> *mut ConceptMapIterator {
-    release(ConceptMapIterator(CIterator(box_stream(
-        borrow(concept_map_group).concept_maps.clone().into_iter().map(Ok),
-    ))))
-}
-
-/// A string representation of this <code>ConceptMapGroup</code> object
-#[no_mangle]
-pub extern "C" fn concept_map_group_to_string(concept_map_group: *const ConceptMapGroup) -> *mut c_char {
-    release_string(format!("{:?}", borrow(concept_map_group)))
-}
-
-/// Checks whether the provided <code>ConceptMapGroup</code> objects are equal
-#[no_mangle]
-pub extern "C" fn concept_map_group_equals(lhs: *const ConceptMapGroup, rhs: *const ConceptMapGroup) -> bool {
-    borrow(lhs) == borrow(rhs)
+pub extern "C" fn concept_row_to_string(concept_row: *const ConceptRow) -> *mut c_char {
+    release_string(format!("{:?}", borrow(concept_row)))
 }
 
 /// Frees the native rust <code>ValueGroup</code> object

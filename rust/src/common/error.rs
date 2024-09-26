@@ -116,68 +116,64 @@ macro_rules! error_messages {
     };
 }
 
-
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ConnectionOpenError =
-        100: "Error opening connection.",
-    ConnectionIsClosed =
-        2: "The connection has been closed and no further operation is allowed.",
-    TransactionIsClosed =
-        3: "The transaction is closed and no further operation is allowed.",
-    TransactionIsClosedWithErrors { errors: String } =
-        4: "The transaction is closed because of the error(s):\n{errors}",
-    DatabaseDoesNotExist { name: String } =
-        5: "The database '{name}' does not exist.",
-    MissingResponseField { field: &'static str } =
-        6: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
-    UnknownRequestId { request_id: RequestID } =
-        7: "Received a response with unknown request id '{request_id}'",
-    QueryStreamNoResponse =
-        101: "Didn't receive any server responses for the query.",
-    InvalidResponseField { name: &'static str } =
-        8: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
-    UnexpectedResponse { response: String } =
-        9: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
     ServerConnectionFailed { addresses: Vec<Address> } =
-        10: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
+        2: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
-        11: "Unable to connect to TypeDB server(s), received errors: \n{error}",
+        3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
-        12: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
+        4: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
+    ServerConnectionIsClosed =
+        5: "The connection has been closed and no further operation is allowed.",
+    TransactionIsClosed =
+        6: "The transaction is closed and no further operation is allowed.",
+    TransactionIsClosedWithErrors { errors: String } =
+        7: "The transaction is closed because of the error(s):\n{errors}",
+    DatabaseDoesNotExist { name: String } =
+        8: "The database '{name}' does not exist.",
+    MissingResponseField { field: &'static str } =
+        9: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
+    UnknownRequestId { request_id: RequestID } =
+        10: "Received a response with unknown request id '{request_id}'",
+    UnexpectedResponse { response: String } =
+        11: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
+    InvalidResponseField { name: &'static str } =
+        12: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
+    QueryStreamNoResponse =
+        13: "Didn't receive any server responses for the query.",
+    UnexpectedQueryType { query_type: i32 } =
+        14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     UserManagementCloudOnly =
-        13: "User management is only available in TypeDB Cloud servers.",
+        15: "User management is only available in TypeDB Cloud servers.",
     CloudReplicaNotPrimary =
-        14: "The replica is not the primary replica.",
+        16: "The replica is not the primary replica.",
     CloudAllNodesFailed { errors: String } =
-        15: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
+        17: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
     CloudTokenCredentialInvalid =
-        16: "Invalid token credential.",
-    SessionCloseFailed =
-        17: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
+        18: "Invalid token credential.",
     CloudEncryptionSettingsMismatch =
-        18: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
+        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
-        19: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
+        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
     ConnectionFailed =
-        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
-        22: "Invalid URL '{address}': missing port.",
+        23: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
-
+        24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
-        24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
+        25: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotImplemented { offset: i32 } =
-        25: "Time zone provided by the server has numerical offset '{offset}', which is not yet supported by the driver.",
+        26: "Time zone provided by the server has numerical offset '{offset}', which is not yet supported by the driver.",
     ValueStructNotImplemented =
-        26: "Struct valued responses are not yet supported by the driver.",
+        27: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        27: "Lists are not yet supported by the driver."
+        28: "Lists are not yet supported by the driver."
 }
 
 error_messages! { InternalError
@@ -213,23 +209,27 @@ impl ServerError {
         &self.error_code
     }
 
-    pub(crate) fn message(&self) -> &str {
-        &self.message
+    pub(crate) fn message(&self) -> String {
+        self.to_string()
+    }
+
+    fn to_string(&self) -> String {
+        if self.stack_trace.is_empty() {
+            format!("[{}] {}. {}", self.error_code, self.error_domain, self.message)
+        } else {
+            format!("\n{}", self.stack_trace.join("\nCaused: "))
+        }
     }
 }
 
 impl fmt::Display for ServerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if self.stack_trace.is_empty() {
-            write!( f, "[{}] {}. {}", self.error_code, self.error_domain, self.message)
-        } else {
-            write!( f, "{}", format!("\n{}", self.stack_trace.join("\nCaused: ")))
-        }
+        write!(f, "{}", self.to_string())
     }
 }
 
 impl fmt::Debug for ServerError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
 }
@@ -257,7 +257,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.message(),
             Self::Internal(error) => error.message(),
-            Self::Server(error) => error.message().to_owned(),
+            Self::Server(error) => error.message(),
             Self::Other(error) => error.clone(),
         }
     }
@@ -327,7 +327,6 @@ impl From<InternalError> for Error {
 impl From<ServerError> for Error {
     fn from(error: ServerError) -> Self {
         Self::Server(error)
-
     }
 }
 
@@ -335,15 +334,14 @@ impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if let Ok(details) = status.check_error_details() {
             if let Some(bad_request) = details.bad_request() {
-                Self::Connection(ConnectionError::ServerConnectionFailedWithError { error: format!("{:?}", bad_request) })
+                Self::Connection(ConnectionError::ServerConnectionFailedWithError {
+                    error: format!("{:?}", bad_request),
+                })
             } else if let Some(error_info) = details.error_info() {
                 let code = error_info.reason.clone();
                 let domain = error_info.domain.clone();
-                let stack_trace = if let Some(debug_info) = details.debug_info() {
-                    debug_info.stack_entries.clone()
-                } else {
-                    vec![]
-                };
+                let stack_trace =
+                    if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
                 Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
                 Self::from_message(status.message())
@@ -357,7 +355,9 @@ impl From<Status> for Error {
                 || status.code() == Code::FailedPrecondition
                 || status.code() == Code::AlreadyExists
             {
-                Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
+                Self::Connection(ConnectionError::ServerConnectionFailedStatusError {
+                    error: status.message().to_owned(),
+                })
             } else if status.code() == Code::Unimplemented {
                 Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
             } else {

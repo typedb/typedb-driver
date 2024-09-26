@@ -59,7 +59,6 @@ typedb_java_test(
         ":steps",
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-cloud",
-        "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",

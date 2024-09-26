@@ -17,13 +17,12 @@
  * under the License.
  */
 
-pub use self::{credential::Credential};
-pub(crate) use self::{transaction_stream::TransactionStream};
+pub use self::credential::Credential;
+pub(crate) use self::transaction_stream::TransactionStream;
 
 mod credential;
 mod message;
 mod network;
 pub(crate) mod runtime;
-pub(crate) mod transaction_stream;
 pub(crate) mod server_connection;
-
+pub(crate) mod transaction_stream;

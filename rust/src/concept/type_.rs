@@ -121,7 +121,6 @@ pub struct RoleType {
     pub label: String,
 }
 
-
 impl RoleType {
     /// Retrieves the unique label of the `RoleType`.
     ///

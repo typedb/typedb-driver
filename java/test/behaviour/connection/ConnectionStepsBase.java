@@ -20,25 +20,19 @@
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
 import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBOptions;
-import com.vaticle.typedb.driver.api.TypeDBSession;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.Driver;
+import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.common.collection.Collections.map;
-import static com.vaticle.typedb.common.collection.Collections.pair;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -46,25 +40,20 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static TypeDBDriver driver;
-    public static List<TypeDBSession> sessions = new ArrayList<>();
-    public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
-    public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
-    public static Map<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
-    public static Map<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
-    public static TypeDBOptions sessionOptions;
-    public static TypeDBOptions transactionOptions;
+    public static Driver driver;
+    public static List<Transaction> transactions = new ArrayList<>();
+    public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
+//    public static Options transactionOptions;
     static boolean isBeforeAllRan = false;
 
-    public static final Map<String, BiConsumer<TypeDBOptions, String>> optionSetters = map(
-            pair("session-idle-timeout-millis", (option, val) -> option.sessionIdleTimeoutMillis(Integer.parseInt(val))),
-            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
-    );
+//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
+//            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
+//    );
 
     public static final Map<String, String> serverOptions = Collections.emptyMap();
 
-    public static TypeDBTransaction tx() {
-        return sessionsToTransactions.get(sessions.get(0)).get(0);
+    public static Transaction tx() {
+        return transactions.get(0);
     }
 
     void beforeAll() {
@@ -79,26 +68,21 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-        sessionOptions = createOptions().infer(true);
-        transactionOptions = createOptions().infer(true);
 
         System.out.println("ConnectionSteps.before");
     }
 
     void after() {
-        sessions.parallelStream().forEach(TypeDBSession::close);
-        sessions.clear();
+        transactions.parallelStream().forEach(Transaction::close);
+        transactions.clear();
 
-        Stream<CompletableFuture<Void>> closures = sessionsParallel
-                .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
-                    session.close();
+        Stream<CompletableFuture<Void>> closures = transactionsParallel
+                .stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
+                    transaction.close();
                     return null;
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
-        sessionsParallel.clear();
-        sessionsToTransactions.clear();
-        sessionsToTransactionsParallel.clear();
-        sessionsParallelToTransactionsParallel.clear();
+        transactionsParallel.clear();
         driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
         driver.databases().all().forEach(Database::delete);
         driver.close();
@@ -106,13 +90,13 @@ public abstract class ConnectionStepsBase {
         System.out.println("ConnectionSteps.after");
     }
 
-    abstract TypeDBDriver createTypeDBDriver(String address);
+    abstract Driver createTypeDBDriver(String address);
 
-    abstract TypeDBOptions createOptions();
+//    abstract Options createOptions();
 
     abstract void connection_opens_with_default_authentication();
 
-    void connection_closes() {
+    void driver_closes() {
         driver.close();
         driver = null;
     }

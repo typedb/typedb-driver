@@ -17,11 +17,9 @@
  * under the License.
  */
 
-use serial_test::serial;
-
 use futures::StreamExt;
-use typedb_driver::{TransactionType, TypeDBDriver};
-use typedb_driver::answer::QueryAnswer;
+use serial_test::serial;
+use typedb_driver::{answer::QueryAnswer, TransactionType, TypeDBDriver};
 
 #[test]
 #[serial]
@@ -29,6 +27,11 @@ fn basic_async_std() {
     async_std::task::block_on(async {
         // Connection has been replaced with Driver:
         let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
+
+        if driver.databases().contains("db-name").await.unwrap() {
+            let db = driver.databases().get("db-name").await.unwrap();
+            db.delete().await.unwrap();
+        }
 
         driver.databases().create("db-name").await.unwrap();
 
@@ -38,7 +41,7 @@ fn basic_async_std() {
         // All queries just use a simple .query() API
         let result = transaction.query("define entity person, owns age; attribute age, value long;").await;
         let answer = result.unwrap(); // result could contain an error returned by the server
-        // Define queries return OK answers
+                                      // Define queries return OK answers
         assert!(matches!(answer, QueryAnswer::Ok()));
 
         transaction.commit().await.unwrap();
@@ -54,7 +57,6 @@ fn basic_async_std() {
             println!("{:?}", &row);
             println!("{:?}", row.get("x"));
         }
-
 
         //
         //

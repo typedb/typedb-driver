@@ -20,12 +20,11 @@
 use itertools::Itertools;
 use typedb_protocol::{database_replicas::Replica as ReplicaProto, DatabaseReplicas as DatabaseProto};
 
+use super::TryFromProto;
 use crate::common::{
     info::{DatabaseInfo, ReplicaInfo},
     Result,
 };
-
-use super::TryFromProto;
 
 impl TryFromProto<DatabaseProto> for DatabaseInfo {
     fn try_from_proto(proto: DatabaseProto) -> Result<Self> {

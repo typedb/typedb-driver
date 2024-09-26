@@ -19,98 +19,83 @@
 
 package com.vaticle.typedb.driver.user;
 
-import com.vaticle.typedb.driver.api.user.User;
-import com.vaticle.typedb.driver.api.user.UserManager;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NativeIterator;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+// TODO: Currently disabled in 3.0
 
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.user_manager_new;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_all;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_contains;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_create;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_current_user;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_delete;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_get;
-import static com.vaticle.typedb.driver.jni.typedb_driver.users_set_password;
-
-public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.UserManager> implements UserManager {
-    public UserManagerImpl(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
-        super(newNative(nativeConnection));
-    }
-
-    private static com.vaticle.typedb.driver.jni.UserManager newNative(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
-        try {
-            return user_manager_new(nativeConnection);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public boolean contains(String username) {
-        try {
-            return users_contains(nativeObject, username);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void create(String username, String password) {
-        try {
-            users_create(nativeObject, username, password);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void delete(String username) {
-        try {
-            users_delete(nativeObject, username);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public Set<User> all() {
-        try {
-            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public User get(String username) {
-        try {
-            com.vaticle.typedb.driver.jni.User user = users_get(nativeObject, username);
-            if (user != null) return new UserImpl(user, this);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void passwordSet(String username, String password) {
-        try {
-            users_set_password(nativeObject, username, password);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    public User getCurrentUser() {
-        try {
-            return new UserImpl(users_current_user(nativeObject), this);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-}
+//public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.UserManager> implements UserManager {
+//    public UserManagerImpl(com.vaticle.typedb.driver.jni.TypeDBDriver nativeDriver) {
+//        super(newNative(nativeDriver));
+//    }
+//
+//    private static com.vaticle.typedb.driver.jni.UserManager newNative(com.vaticle.typedb.driver.jni.TypeDBDriver nativeDriver) {
+//        try {
+//            return user_manager_new(nativeDriver);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public boolean contains(String username) {
+//        try {
+//            return users_contains(nativeObject, username);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public void create(String username, String password) {
+//        try {
+//            users_create(nativeObject, username, password);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public void delete(String username) {
+//        try {
+//            users_delete(nativeObject, username);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public Set<User> all() {
+//        try {
+//            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public User get(String username) {
+//        try {
+//            com.vaticle.typedb.driver.jni.User user = users_get(nativeObject, username);
+//            if (user != null) return new UserImpl(user, this);
+//            else return null;
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    @Override
+//    public void passwordSet(String username, String password) {
+//        try {
+//            users_set_password(nativeObject, username, password);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//
+//    public User getCurrentUser() {
+//        try {
+//            return new UserImpl(users_current_user(nativeObject), this);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//}

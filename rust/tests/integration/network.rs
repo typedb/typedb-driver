@@ -20,9 +20,7 @@
 use std::path::PathBuf;
 
 use serial_test::serial;
-
-use typedb_driver::{Credential, DatabaseManager, };
-use typedb_driver::driver::TypeDBDriver;
+use typedb_driver::{driver::TypeDBDriver, Credential, DatabaseManager};
 
 use super::common;
 

@@ -19,9 +19,8 @@
 
 use typedb_protocol::User as UserProto;
 
-use crate::user::User;
-
 use super::FromProto;
+use crate::user::User;
 
 impl FromProto<UserProto> for User {
     fn from_proto(proto: UserProto) -> Self {

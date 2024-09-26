@@ -25,13 +25,12 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC,
-    user, user_manager,
+    connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC, user,
+    user_manager,
 };
 
-use crate::common::{Error, error::ConnectionError, Result, StdResult};
-
 use super::channel::{CallCredentials, GRPCChannel};
+use crate::common::{error::ConnectionError, Error, Result, StdResult};
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 

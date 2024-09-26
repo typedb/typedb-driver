@@ -23,11 +23,10 @@ use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 
 use crate::{
-    common::Result,
+    common::{RequestID, Result},
     error::{ConnectionError, InternalError},
     Error,
 };
-use crate::common::RequestID;
 
 #[derive(Debug)]
 pub(super) enum ResponseSink<T> {
@@ -36,7 +35,7 @@ pub(super) enum ResponseSink<T> {
     Streamed(UnboundedSender<StreamResponse<T>>),
 }
 
-pub(super) enum StreamResponse<T>{
+pub(super) enum StreamResponse<T> {
     Result(Result<T>),
     Continue(RequestID),
 }

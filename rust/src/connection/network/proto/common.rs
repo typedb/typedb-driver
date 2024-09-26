@@ -17,11 +17,10 @@
  * under the License.
  */
 
-use typedb_protocol::{Options as OptionsProto, transaction};
+use typedb_protocol::{query, transaction, Options as OptionsProto};
 
-use crate::{Options, TransactionType};
-
-use super::IntoProto;
+use super::{IntoProto, TryFromProto};
+use crate::{answer::QueryType, error::ConnectionError, Options, Result, TransactionType};
 
 impl IntoProto<i32> for TransactionType {
     fn into_proto(self) -> i32 {
@@ -29,6 +28,17 @@ impl IntoProto<i32> for TransactionType {
             Self::Read => transaction::Type::Read.into(),
             Self::Write => transaction::Type::Write.into(),
             Self::Schema => transaction::Type::Schema.into(),
+        }
+    }
+}
+
+impl TryFromProto<i32> for QueryType {
+    fn try_from_proto(query_type: i32) -> Result<Self> {
+        match query_type {
+            0 => Ok(Self::ReadQuery),
+            1 => Ok(Self::WriteQuery),
+            2 => Ok(Self::SchemaQuery),
+            _ => Err(ConnectionError::UnexpectedQueryType { query_type }.into()),
         }
     }
 }

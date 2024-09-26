@@ -19,42 +19,35 @@
 
 package com.vaticle.typedb.driver.user;
 
-import com.vaticle.typedb.driver.api.user.User;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+// TODO: Currently disabled in 3.0
 
-import java.util.Optional;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.user_get_password_expiry_seconds;
-import static com.vaticle.typedb.driver.jni.typedb_driver.user_get_username;
-import static com.vaticle.typedb.driver.jni.typedb_driver.user_password_update;
-
-public class UserImpl extends NativeObject<com.vaticle.typedb.driver.jni.User> implements User {
-    private final UserManagerImpl users;
-
-    UserImpl(com.vaticle.typedb.driver.jni.User user, UserManagerImpl users) {
-        super(user);
-        this.users = users;
-    }
-
-    @Override
-    public String username() {
-        return user_get_username(nativeObject);
-    }
-
-    @Override
-    public Optional<Long> passwordExpirySeconds() {
-        var res = user_get_password_expiry_seconds(nativeObject);
-        if (res >= 0) return Optional.of(res);
-        else return Optional.empty();
-    }
-
-    @Override
-    public void passwordUpdate(String passwordOld, String passwordNew) {
-        try {
-            user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-}
+//public class UserImpl extends NativeObject<com.vaticle.typedb.driver.jni.User> implements User {
+//    private final UserManagerImpl users;
+//
+//    UserImpl(com.vaticle.typedb.driver.jni.User user, UserManagerImpl users) {
+//        super(user);
+//        this.users = users;
+//    }
+//
+//    @Override
+//    public String username() {
+//        return user_get_username(nativeObject);
+//    }
+//
+//    @Override
+//    public Optional<Long> passwordExpirySeconds() {
+//        var res = user_get_password_expiry_seconds(nativeObject);
+//        if (res >= 0) return Optional.of(res);
+//        else return Optional.empty();
+//    }
+//
+//    @Override
+//    public void passwordUpdate(String passwordOld, String passwordNew) {
+//        try {
+//            user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
+//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//            throw new TypeDBDriverException(e);
+//        }
+//    }
+//}

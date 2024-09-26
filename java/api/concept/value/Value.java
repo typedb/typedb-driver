@@ -20,15 +20,19 @@
 package com.vaticle.typedb.driver.api.concept.value;
 
 import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.common.Duration;
 
-import javax.annotation.CheckReturnValue;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import java.util.Map;
+import java.util.Optional;
 
 public interface Value extends Concept {
+    int DECIMAL_SCALE = 19;
+
     DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     /**
@@ -48,14 +52,14 @@ public interface Value extends Concept {
     }
 
     /**
-     * Retrieves the <code>Value.Type</code> of this value concept.
+     * Retrieves the string representation of the type of this value concept.
      *
      * <h3>Examples</h3>
      * <pre>
      * value.getType()
      * </pre>
      */
-    Type getType();
+    String getType();
 
     /**
      * Returns <code>True</code> if the value which this value concept holds is of type <code>boolean</code>.
@@ -91,6 +95,17 @@ public interface Value extends Concept {
     boolean isDouble();
 
     /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>decimal</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDecimal();
+     * </pre>
+     */
+    boolean isDecimal();
+
+    /**
      * Returns <code>True</code> if the value which this value concept holds is of type <code>string</code>.
      * Otherwise, returns <code>false</code>.
      *
@@ -102,6 +117,17 @@ public interface Value extends Concept {
     boolean isString();
 
     /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>date</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDate();
+     * </pre>
+     */
+    boolean isDate();
+
+    /**
      * Returns <code>True</code> if the value which this value concept holds is of type <code>datetime</code>.
      * Otherwise, returns <code>false</code>.
      *
@@ -110,7 +136,40 @@ public interface Value extends Concept {
      * value.isDatetime();
      * </pre>
      */
-    boolean isDateTime();
+    boolean isDatetime();
+
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>datetime-tz</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDatetimeTZ();
+     * </pre>
+     */
+    boolean isDatetimeTZ();
+
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>duration</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDuration();
+     * </pre>
+     */
+    boolean isDuration();
+
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>struct</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isStruct();
+     * </pre>
+     */
+    boolean isStruct();
 
     /**
      * Returns an untyped <code>Object</code> value of this value concept.
@@ -156,6 +215,17 @@ public interface Value extends Concept {
     double asDouble();
 
     /**
+     * Returns a <code>decimal</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asDecimal();
+     * </pre>
+     */
+    BigDecimal asDecimal();
+
+    /**
      * Returns a <code>string</code> value of this value concept. If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -166,6 +236,17 @@ public interface Value extends Concept {
     String asString();
 
     /**
+     * Returns a <code>date</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asDate();
+     * </pre>
+     */
+    LocalDate asDate();
+
+    /**
      * Returns a <code>datetime</code> value of this value concept.
      * If the value has another type, raises an exception.
      *
@@ -174,86 +255,38 @@ public interface Value extends Concept {
      * value.asDatetime();
      * </pre>
      */
-    LocalDateTime asDateTime();
+    LocalDateTime asDatetime();
 
     /**
-     * Used to specify the type of the value.
+     * Returns a <code>datetime-tz</code> value of this value concept.
+     * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.getOwns(transaction, Value.Type.STRING);
+     * value.asDatetimeTZ();
      * </pre>
      */
-    enum Type {
-        OBJECT(Object.class, false, false, com.vaticle.typedb.driver.jni.ValueType.Object),
-        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.driver.jni.ValueType.Boolean),
-        LONG(Long.class, true, true, com.vaticle.typedb.driver.jni.ValueType.Long),
-        DOUBLE(Double.class, true, false, com.vaticle.typedb.driver.jni.ValueType.Double),
-        STRING(String.class, true, true, com.vaticle.typedb.driver.jni.ValueType.String),
-        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.driver.jni.ValueType.DateTime);
+    ZonedDateTime asDatetimeTZ();
 
-        private final Class<?> valueClass;
-        private final boolean isWritable;
-        private final boolean isKeyable;
-        public final com.vaticle.typedb.driver.jni.ValueType nativeObject;
+    /**
+     * Returns a <code>duration</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asDuration();
+     * </pre>
+     */
+    Duration asDuration();
 
-        Type(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.driver.jni.ValueType nativeObject) {
-            this.valueClass = valueClass;
-            this.isWritable = isWritable;
-            this.isKeyable = isKeyable;
-            this.nativeObject = nativeObject;
-        }
-
-        @CheckReturnValue
-        public static Type of(com.vaticle.typedb.driver.jni.ValueType valueType) {
-            for (Type type : Type.values()) {
-                if (type.nativeObject == valueType) {
-                    return type;
-                }
-            }
-            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
-        }
-
-        /**
-         * Returns a <code>Class</code> equivalent of this value concept for this programming language.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * valueType.valueClass();
-         * </pre>
-         */
-        @CheckReturnValue
-        public Class<?> valueClass() {
-            return valueClass;
-        }
-
-        /**
-         * Returns <code>true</code> if this value concept can be written to a database.
-         * Otherwise, returns <code>false</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * valueType.isWritable();
-         * </pre>
-         */
-        @CheckReturnValue
-        public boolean isWritable() {
-            return isWritable;
-        }
-
-        /**
-         * Returns <code>true</code> if this value concept can be used as a key via the @key annotation.
-         * Otherwise, returns <code>false</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * valueType.isKeyable();
-         * </pre>
-         */
-        @CheckReturnValue
-        public boolean isKeyable() {
-            return isKeyable;
-        }
-    }
-
+    /**
+     * Returns a <code>struct</code> value of this value concept represented as a map from field names to values.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asStruct();
+     * </pre>
+     */
+    Map<String, Optional<Value>> asStruct();
 }

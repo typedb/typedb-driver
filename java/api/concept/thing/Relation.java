@@ -19,15 +19,9 @@
 
 package com.vaticle.typedb.driver.api.concept.thing;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
-import com.vaticle.typedb.driver.api.concept.type.RoleType;
-import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Relation is an instance of a relation type and can be uniquely addressed
@@ -75,72 +69,13 @@ public interface Relation extends Thing {
     RelationType getType();
 
     /**
-     * Adds a new role player to play the given role in this <code>Relation</code>.
+     * Retrieves the unique id of the <code>Relation</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.addPlayer(transaction, roleType, player).resolve();
+     * relation.getIID();
      * </pre>
-     *
-     * @param transaction The current transaction
-     * @param roleType The role to be played by the <code>player</code>
-     * @param player The thing to play the role
      */
     @CheckReturnValue
-    Promise<Void> addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
-
-    /**
-     * Removes the association of the given instance that plays the given role in this <code>Relation</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * relation.removePlayer(transaction, roleType, player).resolve();
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param roleType The role to no longer be played by the thing in this <code>Relation</code>
-     * @param player The instance to no longer play the role in this <code>Relation</code>
-     */
-    @CheckReturnValue
-    Promise<Void> removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
-
-    /**
-     * Retrieves all role players of this <code>Relation</code>, optionally filtered by given role types.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * relation.getPlayersByRoleType(transaction, roleTypes);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     * @param roleTypes 0 or more role types
-     */
-    @CheckReturnValue
-    Stream<? extends Thing> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes);
-
-    /**
-     * Retrieves a mapping of all instances involved in the <code>Relation</code> and the role each play.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * relation.getPlayers(transaction)
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Map<? extends RoleType, ? extends List<? extends Thing>> getPlayers(TypeDBTransaction transaction);
-
-    /**
-     * Retrieves all role types currently played in this <code>Relation</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * relation.getRelating(transaction);
-     * </pre>
-     *
-     * @param transaction The current transaction
-     */
-    @CheckReturnValue
-    Stream<? extends RoleType> getRelating(TypeDBTransaction transaction);
+    String getIID();
 }

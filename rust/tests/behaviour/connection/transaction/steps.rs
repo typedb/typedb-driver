@@ -20,11 +20,10 @@
 use std::time::Duration;
 
 use cucumber::{gherkin::Step, given, then, when};
-
 use typedb_driver::TransactionType;
 
 use crate::{
-    behaviour::{Context, parameter::TransactionTypeParam, util::iter_table},
+    behaviour::{parameter::TransactionTypeParam, util::iter_table, Context},
     generic_step_impl,
 };
 

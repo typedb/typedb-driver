@@ -21,15 +21,12 @@
 #![deny(unused_must_use)]
 
 pub use self::{
-    common::{
-        box_stream, BoxPromise, BoxStream, error, Error, IID, info, Options, Promise, Result,
-        TransactionType,
-    },
-    connection::{Credential},
+    common::{box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, TransactionType, IID},
+    connection::Credential,
     database::{Database, DatabaseManager},
+    driver::TypeDBDriver,
     transaction::Transaction,
     user::{User, UserManager},
-    driver::TypeDBDriver,
 };
 
 pub mod answer;
@@ -37,7 +34,6 @@ mod common;
 pub mod concept;
 mod connection;
 mod database;
+pub mod driver;
 pub mod transaction;
 mod user;
-pub mod driver;
-

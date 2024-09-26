@@ -20,10 +20,9 @@
 use std::path::PathBuf;
 
 use futures::TryFutureExt;
-
-use typedb_driver::{Credential, Database, DatabaseManager, Options, TransactionType};
-use typedb_driver::answer::QueryAnswer;
-use typedb_driver::driver::TypeDBDriver;
+use typedb_driver::{
+    answer::QueryAnswer, driver::TypeDBDriver, Credential, Database, DatabaseManager, Options, TransactionType,
+};
 
 pub const TEST_DATABASE: &str = "test";
 

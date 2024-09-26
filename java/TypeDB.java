@@ -19,14 +19,8 @@
 
 package com.vaticle.typedb.driver;
 
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBCredential;
-import com.vaticle.typedb.driver.connection.TypeDBDriverImpl;
-
-import java.util.Map;
-import java.util.Set;
-
-import static com.vaticle.typedb.common.collection.Collections.set;
+import com.vaticle.typedb.driver.api.Driver;
+import com.vaticle.typedb.driver.connection.DriverImpl;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
@@ -41,56 +35,56 @@ public class TypeDB {
      *
      * @param address The address of the TypeDB server
      */
-    public static TypeDBDriver coreDriver(String address) {
-        return new TypeDBDriverImpl(address);
+    public static Driver coreDriver(String address) {
+        return new DriverImpl(address);
     }
 
-    /**
-     * Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(address, credential);
-     * </pre>
-     *
-     * @param address The address of the TypeDB server
-     * @param credential The credential to connect with
-     */
-    public static TypeDBDriver cloudDriver(String address, TypeDBCredential credential) {
-        return cloudDriver(set(address), credential);
-    }
-
-    /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(addresses, credential);
-     * </pre>
-     *
-     * @param addresses The address(es) of the TypeDB server(s)
-     * @param credential The credential to connect with
-     */
-    public static TypeDBDriver cloudDriver(Set<String> addresses, TypeDBCredential credential) {
-        return new TypeDBDriverImpl(addresses, credential);
-    }
-
-    /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(addressTranslation, credential);
-     * </pre>
-     *
-     * @param addressTranslation Translation map from addresses to be used by the driver for connection
-     * to addresses received from the TypeDB server(s)
-     * @param credential The credential to connect with
-     */
-    public static TypeDBDriver cloudDriver(Map<String, String> addressTranslation, TypeDBCredential credential) {
-        return new TypeDBDriverImpl(addressTranslation, credential);
-    }
+//    /**
+//     * Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using
+//     * the provided credential.
+//     *
+//     * <h3>Examples</h3>
+//     * <pre>
+//     * TypeDB.cloudDriver(address, credential);
+//     * </pre>
+//     *
+//     * @param address The address of the TypeDB server
+//     * @param credential The credential to connect with
+//     */
+//    public static Driver cloudDriver(String address, Credential credential) {
+//        return cloudDriver(set(address), credential);
+//    }
+//
+//    /**
+//     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+//     * the provided credential.
+//     *
+//     * <h3>Examples</h3>
+//     * <pre>
+//     * TypeDB.cloudDriver(addresses, credential);
+//     * </pre>
+//     *
+//     * @param addresses The address(es) of the TypeDB server(s)
+//     * @param credential The credential to connect with
+//     */
+//    public static Driver cloudDriver(Set<String> addresses, Credential credential) {
+//        return new DriverImpl(addresses, credential);
+//    }
+//
+//    /**
+//     * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
+//     * the provided credential.
+//     *
+//     * <h3>Examples</h3>
+//     * <pre>
+//     * TypeDB.cloudDriver(addressTranslation, credential);
+//     * </pre>
+//     *
+//     * @param addressTranslation Translation map from addresses to be used by the driver for connection
+//     * to addresses received from the TypeDB server(s)
+//     * @param credential The credential to connect with
+//     */
+//    public static Driver cloudDriver(Map<String, String> addressTranslation, Credential credential) {
+//        return new DriverImpl(addressTranslation, credential);
+//    }
 }

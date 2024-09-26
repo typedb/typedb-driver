@@ -21,10 +21,9 @@
 use std::future::Future;
 
 use crate::{
-    common::Result, DatabaseManager, Error, error::ConnectionError, User,
+    common::Result, connection::server_connection::ServerConnection, driver::TypeDBDriver, error::ConnectionError,
+    DatabaseManager, Error, User,
 };
-use crate::connection::server_connection::ServerConnection;
-use crate::driver::TypeDBDriver;
 
 /// Provides access to all user management methods.
 #[derive(Debug)]

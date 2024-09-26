@@ -17,22 +17,23 @@
  * under the License.
  */
 
-use std::{fmt, iter, pin::Pin};
-use std::sync::Arc;
+use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
 
-use crate::{box_stream, common::{
-    Promise,
-    Result, stream::{BoxStream, Stream},
-}, connection::message::{
-    QueryRequest, QueryResponse,
-    TransactionRequest, TransactionResponse,
-}, error::{ConnectionError, InternalError}, Error, Options, promisify, resolve, TransactionType};
-use crate::answer::{ConceptRow, QueryAnswer};
-
 use super::network::transmitter::TransactionTransmitter;
+use crate::{
+    answer::{ConceptRow, QueryAnswer},
+    box_stream,
+    common::{
+        stream::{BoxStream, Stream},
+        Promise, Result,
+    },
+    connection::message::{QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
+    error::{ConnectionError, InternalError},
+    promisify, resolve, Error, Options, TransactionType,
+};
 
 pub(crate) struct TransactionStream {
     type_: TransactionType,
@@ -86,8 +87,7 @@ impl TransactionStream {
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn query(&self, query: &str, options: Options) -> impl Promise<'static, Result<QueryAnswer>>
-    {
+    pub(crate) fn query(&self, query: &str, options: Options) -> impl Promise<'static, Result<QueryAnswer>> {
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
             let mut stream = stream?;
@@ -147,11 +147,11 @@ impl TransactionStream {
         self.transaction_transmitter.single(req)
     }
 
-    fn stream(&self, req: TransactionRequest) -> Result<impl Stream<Item=Result<TransactionResponse>>> {
+    fn stream(&self, req: TransactionRequest) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
         self.transaction_transmitter.stream(req)
     }
 
-    fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item=Result<QueryResponse>>> {
+    fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item = Result<QueryResponse>>> {
         Ok(self.stream(TransactionRequest::Query(req))?.map(|response| match response {
             Ok(TransactionResponse::Query(res)) => Ok(res),
             Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -171,11 +171,11 @@ fn stream_once<'a, T: Send + 'a>(value: T) -> BoxStream<'a, T> {
 }
 
 #[cfg(feature = "sync")]
-fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item=T> + Send + 'a) -> BoxStream<'a, T> {
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
     Box::new(iter)
 }
 
 #[cfg(not(feature = "sync"))]
-fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item=T> + Send + 'a) -> BoxStream<'a, T> {
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
     Box::pin(stream::iter(iter))
 }

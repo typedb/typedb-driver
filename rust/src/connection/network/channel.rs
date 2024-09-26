@@ -22,12 +22,12 @@ use std::sync::{Arc, RwLock};
 use tonic::{
     body::BoxBody,
     client::GrpcService,
-    Request,
     service::{
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,
     },
-    Status, transport::{Channel, channel::ResponseFuture as ChannelResponseFuture, Error as TonicError},
+    transport::{channel::ResponseFuture as ChannelResponseFuture, Channel, Error as TonicError},
+    Request, Status,
 };
 
 use crate::{

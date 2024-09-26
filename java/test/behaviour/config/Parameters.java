@@ -19,28 +19,23 @@
 
 package com.vaticle.typedb.driver.test.behaviour.config;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.common.Label;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.READ;
-import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.WRITE;
-import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.key;
-import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.unique;
+import static com.vaticle.typedb.driver.api.Transaction.Type.READ;
+import static com.vaticle.typedb.driver.api.Transaction.Type.WRITE;
+import static com.vaticle.typedb.driver.api.Transaction.Type.SCHEMA;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 
 public class Parameters {
 
@@ -61,8 +56,8 @@ public class Parameters {
     }
 
     @ParameterType("entity|attribute|relation|thing")
-    public RootLabel root_label(String type) {
-        return RootLabel.of(type);
+    public Kind root_label(String type) {
+        return Kind.of(type);
     }
 
     @ParameterType("[a-zA-Z0-9-_]+")
@@ -90,44 +85,28 @@ public class Parameters {
         return scopedLabels;
     }
 
-    @ParameterType("long|double|string|boolean|datetime")
-    public Value.Type value_type(String type) {
-        switch (type) {
-            case "long":
-                return Value.Type.LONG;
-            case "double":
-                return Value.Type.DOUBLE;
-            case "string":
-                return Value.Type.STRING;
-            case "boolean":
-                return Value.Type.BOOLEAN;
-            case "datetime":
-                return Value.Type.DATETIME;
-            default:
-                return null;
-        }
-    }
-
     @ParameterType("\\$([a-zA-Z0-9]+)")
     public String var(String variable) {
         return variable;
     }
 
-    @ParameterType("read|write")
-    public TypeDBTransaction.Type transaction_type(String type) {
+    @ParameterType("read|write|schema")
+    public Transaction.Type transaction_type(String type) {
         if (type.equals("read")) {
             return READ;
         } else if (type.equals("write")) {
             return WRITE;
+        } else if (type.equals("schema")) {
+            return SCHEMA;
         }
         return null;
     }
 
     @DataTableType
-    public List<TypeDBTransaction.Type> transaction_types(List<String> values) {
-        List<TypeDBTransaction.Type> typeList = new ArrayList<>();
+    public List<Transaction.Type> transaction_types(List<String> values) {
+        List<Transaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            TypeDBTransaction.Type type = transaction_type(value);
+            Transaction.Type type = transaction_type(value);
             assertNotNull(type);
             typeList.add(type);
         }
@@ -135,32 +114,19 @@ public class Parameters {
         return typeList;
     }
 
-    @ParameterType("(\\s*([\\w\\-_]+,\\s*)*[\\w\\-_]*\\s*)")
-    public List<Annotation> annotations(String stringList) {
-        List<String> strings = Arrays.asList(stringList.split(",\\s?"));
-        List<Annotation> annotations = new ArrayList<>();
-        strings.forEach(string -> {
-            if (string.equals("key")) annotations.add(key());
-            else if (string.equals("unique")) annotations.add(unique());
-            else throw new TypeDBDriverException(UNRECOGNISED_ANNOTATION, string);
-        });
-        return annotations;
-    }
-
-    public enum RootLabel {
+    public enum Kind {
         ENTITY("entity"),
         ATTRIBUTE("attribute"),
-        RELATION("relation"),
-        THING("thing");
+        RELATION("relation");
 
         private final String label;
 
-        RootLabel(String label) {
+        Kind(String label) {
             this.label = label;
         }
 
-        public static RootLabel of(String label) {
-            for (RootLabel t : RootLabel.values()) {
+        public static Kind of(String label) {
+            for (Kind t : Kind.values()) {
                 if (t.label.equals(label)) {
                     return t;
                 }
@@ -171,5 +137,34 @@ public class Parameters {
         public String label() {
             return label;
         }
+    }
+
+    public enum MayError {
+        TRUE(true),
+        FALSE(false);
+
+        MayError(boolean mayError) {
+            this.mayError = mayError;
+        }
+
+        boolean mayError;
+
+        public void check(Runnable function) {
+            if (mayError) {
+                assertThrows(function);
+            } else {
+                function.run();
+            }
+        }
+    }
+
+    @ParameterType("; fails|; parsing fails|")
+    public MayError may_error(String result) {
+        if (result.equals("")) {
+            return MayError.FALSE;
+        } else if (result.equals("; fails") || result.equals("; parsing fails")) {
+            return MayError.TRUE;
+        }
+        return null;
     }
 }

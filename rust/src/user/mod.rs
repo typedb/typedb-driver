@@ -21,4 +21,3 @@ pub use self::{user::User, user_manager::UserManager};
 
 mod user;
 mod user_manager;
-

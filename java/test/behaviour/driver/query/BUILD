@@ -32,7 +32,6 @@ typedb_behaviour_java_test(
     connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
     steps = [
         "//java/test/behaviour/query:steps",
-        "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/util:steps",
     ],
     deps = [

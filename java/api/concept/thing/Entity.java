@@ -68,4 +68,15 @@ public interface Entity extends Thing {
     @Override
     @CheckReturnValue
     EntityType getType();
+
+    /**
+     * Retrieves the unique id of the <code>Entity</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entity.getIID();
+     * </pre>
+     */
+    @CheckReturnValue
+    String getIID();
 }
