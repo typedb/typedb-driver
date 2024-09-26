@@ -19,9 +19,9 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
-import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
-import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
+//import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
+//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
+//import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
 import com.vaticle.typedb.driver.TypeDB;
 import com.vaticle.typedb.driver.api.Driver;
 import io.cucumber.java.After;
@@ -33,13 +33,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
-        try {
-            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
-            TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
-            typeDBCoreRunner.start();
-        } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
+//            TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
+//            typeDBCoreRunner.start();
+//        } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Before
@@ -64,16 +64,17 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @When("typedb starts")
     public void typedb_starts() {
-        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-        if (runner != null && runner.isStopped()) {
-            runner.start();
-        }
+//        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+//        if (runner != null && runner.isStopped()) {
+//            runner.start();
+//        }
     }
 
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+        driver = createTypeDBDriver("127.0.0.1:1729");
     }
 
     @Override

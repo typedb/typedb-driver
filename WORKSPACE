@@ -211,9 +211,9 @@ vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
 
 # Load artifacts
-load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cloud_artifact")
+load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact")
 vaticle_typedb_artifact()
-vaticle_typedb_cloud_artifact()
+#vaticle_typedb_cloud_artifact()
 
 ####################
 # Load npm modules #
@@ -291,7 +291,7 @@ load(
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 # Load Vaticle maven artifacts
-load("//dependencies/vaticle:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
+#load("//dependencies/vaticle:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
@@ -299,7 +299,7 @@ maven(
     vaticle_dependencies_tool_maven_artifacts +
     vaticle_typedb_driver_maven_artifacts +
     vaticle_bazel_distribution_maven_artifacts,
-    internal_artifacts = vaticle_typedb_driver_vaticle_maven_artifacts,
+#    internal_artifacts = vaticle_typedb_driver_vaticle_maven_artifacts,
     override_targets = vaticle_typedb_driver_maven_overrides,
 )
 

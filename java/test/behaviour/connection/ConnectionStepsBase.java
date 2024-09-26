@@ -19,7 +19,7 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
+//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.Driver;
 import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.api.database.Database;
@@ -57,7 +57,7 @@ public abstract class ConnectionStepsBase {
     }
 
     void beforeAll() {
-        TypeDBSingleton.deleteTypeDBRunner();
+//        TypeDBSingleton.deleteTypeDBRunner();
     }
 
     void before() {
@@ -83,7 +83,8 @@ public abstract class ConnectionStepsBase {
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         transactionsParallel.clear();
-        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+        driver = createTypeDBDriver("127.0.0.1:1729");
         driver.databases().all().forEach(Database::delete);
         driver.close();
 

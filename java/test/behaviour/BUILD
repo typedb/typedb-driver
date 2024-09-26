@@ -24,7 +24,7 @@ java_library(
     deps = [
         # External Maven Dependencies
         "@maven//:junit_junit",
-        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
     ],
 )
 

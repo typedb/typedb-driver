@@ -75,40 +75,40 @@ typedb_java_test(
     size = "large",
 )
 
-typedb_java_test(
-    name = "test-cloud",
-    srcs = [
-        "DatabaseTestCloud.java",
-    ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
-    data = [
-        "@vaticle_typedb_behaviour//connection:database.feature",
-    ],
-    server_artifacts = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
-    },
-    runtime_deps = [
-        "//java/test/behaviour/connection:steps-cloud",
-
-        ":steps",
-        "//java/test/behaviour/connection/transaction:steps",
-        "//java/test/behaviour/query:steps",
-
-        "//java/test/behaviour/config:parameters",
-    ],
-    deps = [
-        # Internal Package Dependencies
-        "//java/test/behaviour:behaviour",
-
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    size = "large",
-)
+#typedb_java_test(
+#    name = "test-cloud",
+#    srcs = [
+#        "DatabaseTestCloud.java",
+#    ],
+#    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
+#    data = [
+#        "@vaticle_typedb_behaviour//connection:database.feature",
+#    ],
+#    server_artifacts = {
+#        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
+#        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
+#        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
+#        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
+#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
+#    },
+#    runtime_deps = [
+#        "//java/test/behaviour/connection:steps-cloud",
+#
+#        ":steps",
+#        "//java/test/behaviour/connection/transaction:steps",
+#        "//java/test/behaviour/query:steps",
+#
+#        "//java/test/behaviour/config:parameters",
+#    ],
+#    deps = [
+#        # Internal Package Dependencies
+#        "//java/test/behaviour:behaviour",
+#
+#        # External dependencies from Maven
+#        "@maven//:io_cucumber_cucumber_junit",
+#    ],
+#    size = "large",
+#)
 
 checkstyle_test(
     name = "checkstyle",

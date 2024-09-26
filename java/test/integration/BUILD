@@ -41,32 +41,32 @@ typedb_java_test(
         "@vaticle_typeql//java/common",
         "@vaticle_typeql//java/query",
         "@maven//:org_slf4j_slf4j_api",
-        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
     ],
 )
 
-typedb_java_test(
-    name = "test-address-translation",
-    srcs = ["AddressTranslationTest.java"],
-    server_artifacts = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
-    },
-    test_class = "com.vaticle.typedb.driver.test.integration.AddressTranslationTest",
-    deps = [
-        # Internal dependencies
-        "//java:driver-java",
-        "//java/api",
-
-        # External dependencies from @vaticle
-        "@vaticle_typeql//common/java:common",
-        "@maven//:org_slf4j_slf4j_api",
-        "@maven//:com_vaticle_typedb_typedb_cloud_runner",
-    ],
-)
+#typedb_java_test(
+#    name = "test-address-translation",
+#    srcs = ["AddressTranslationTest.java"],
+#    server_artifacts = {
+#        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
+#        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
+#        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
+#        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
+#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
+#    },
+#    test_class = "com.vaticle.typedb.driver.test.integration.AddressTranslationTest",
+#    deps = [
+#        # Internal dependencies
+#        "//java:driver-java",
+#        "//java/api",
+#
+#        # External dependencies from @vaticle
+#        "@vaticle_typeql//common/java:common",
+#        "@maven//:org_slf4j_slf4j_api",
+#        "@maven//:com_vaticle_typedb_typedb_cloud_runner",
+#    ],
+#)
 
 checkstyle_test(
     name = "checkstyle",

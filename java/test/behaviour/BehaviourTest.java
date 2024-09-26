@@ -19,7 +19,7 @@
 
 package com.vaticle.typedb.driver.test.behaviour;
 
-import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
+//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import org.junit.AfterClass;
 
 public abstract class BehaviourTest {
@@ -30,6 +30,6 @@ public abstract class BehaviourTest {
 
     @AfterClass
     public static void afterAll() {
-        TypeDBSingleton.deleteTypeDBRunner();
+//        TypeDBSingleton.deleteTypeDBRunner();
     }
 }

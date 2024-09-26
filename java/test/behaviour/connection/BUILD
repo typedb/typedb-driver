@@ -29,7 +29,7 @@ java_library(
 
         # External dependencies from Maven
         "@maven//:junit_junit",
-        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
     ],
 )
 
@@ -44,7 +44,7 @@ java_library(
         ":steps-base",
         "//java:driver-java",
         "//java/api",
-        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
         "@maven//:io_cucumber_cucumber_java",
     ],
 )
@@ -61,8 +61,8 @@ java_library(
         "//java:driver-java",
         "//java/api",
         "//java/test/behaviour/util",
-        "@maven//:com_vaticle_typedb_typedb_runner",
-        "@maven//:com_vaticle_typedb_typedb_cloud_runner",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_vaticle_typedb_typedb_cloud_runner",
         "@maven//:io_cucumber_cucumber_java",
     ],
 )
