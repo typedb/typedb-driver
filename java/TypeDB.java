@@ -19,8 +19,8 @@
 
 package com.vaticle.typedb.driver;
 
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.connection.TypeDBDriverImpl;
+import com.vaticle.typedb.driver.api.Driver;
+import com.vaticle.typedb.driver.connection.DriverImpl;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
@@ -35,8 +35,8 @@ public class TypeDB {
      *
      * @param address The address of the TypeDB server
      */
-    public static TypeDBDriver coreDriver(String address) {
-        return new TypeDBDriverImpl(address);
+    public static Driver coreDriver(String address) {
+        return new DriverImpl(address);
     }
 
 //    /**
@@ -51,7 +51,7 @@ public class TypeDB {
 //     * @param address The address of the TypeDB server
 //     * @param credential The credential to connect with
 //     */
-//    public static TypeDBDriver cloudDriver(String address, TypeDBCredential credential) {
+//    public static Driver cloudDriver(String address, Credential credential) {
 //        return cloudDriver(set(address), credential);
 //    }
 //
@@ -67,8 +67,8 @@ public class TypeDB {
 //     * @param addresses The address(es) of the TypeDB server(s)
 //     * @param credential The credential to connect with
 //     */
-//    public static TypeDBDriver cloudDriver(Set<String> addresses, TypeDBCredential credential) {
-//        return new TypeDBDriverImpl(addresses, credential);
+//    public static Driver cloudDriver(Set<String> addresses, Credential credential) {
+//        return new DriverImpl(addresses, credential);
 //    }
 //
 //    /**
@@ -84,7 +84,7 @@ public class TypeDB {
 //     * to addresses received from the TypeDB server(s)
 //     * @param credential The credential to connect with
 //     */
-//    public static TypeDBDriver cloudDriver(Map<String, String> addressTranslation, TypeDBCredential credential) {
-//        return new TypeDBDriverImpl(addressTranslation, credential);
+//    public static Driver cloudDriver(Map<String, String> addressTranslation, Credential credential) {
+//        return new DriverImpl(addressTranslation, credential);
 //    }
 }

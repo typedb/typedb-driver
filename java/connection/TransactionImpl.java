@@ -19,8 +19,8 @@
 
 package com.vaticle.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.Driver;
+import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.api.answer.QueryAnswer;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.Promise;
@@ -41,13 +41,13 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_on_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_query;
 import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_rollback;
 
-public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Transaction> implements TypeDBTransaction {
-    private final TypeDBTransaction.Type type;
-//    private final TypeDBOptions options;
+public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Transaction> implements Transaction {
+    private final Transaction.Type type;
+//    private final Options options;
 
     private final List<TransactionOnClose> callbacks;
 
-    TypeDBTransactionImpl(TypeDBDriver driver, String database, Type type/*, TypeDBOptions options*/) {
+    TransactionImpl(Driver driver, String database, Type type/*, Options options*/) {
         super(newNative(driver, database, type/*, options*/));
         this.type = type;
 //        this.options = options;
@@ -55,9 +55,9 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
         callbacks = new ArrayList<>();
     }
 
-    private static com.vaticle.typedb.driver.jni.Transaction newNative(TypeDBDriver driver, String database, Type type/*, TypeDBOptions options*/) {
+    private static com.vaticle.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type/*, Options options*/) {
         try {
-            return transaction_new(((TypeDBDriverImpl)driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
+            return transaction_new(((DriverImpl)driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -69,7 +69,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     }
 
 //    @Override
-//    public TypeDBOptions options() {
+//    public Options options() {
 //        return options;
 //    }
 

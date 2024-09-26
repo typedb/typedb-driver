@@ -29,8 +29,8 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_name;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_schema;
 import static com.vaticle.typedb.driver.jni.typedb_driver.database_type_schema;
 
-public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Database> implements Database {
-    public TypeDBDatabaseImpl(com.vaticle.typedb.driver.jni.Database database) {
+public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Database> implements Database {
+    public DatabaseImpl(com.vaticle.typedb.driver.jni.Database database) {
         super(database);
     }
 

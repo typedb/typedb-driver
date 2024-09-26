@@ -28,8 +28,8 @@ fn basic_async_std() {
         // Connection has been replaced with Driver:
         let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
 
-        if driver.databases().contains("testing-db").await.unwrap() {
-            let db = driver.databases().get("testing-db").await.unwrap();
+        if driver.databases().contains("db-name").await.unwrap() {
+            let db = driver.databases().get("db-name").await.unwrap();
             db.delete().await.unwrap();
         }
 

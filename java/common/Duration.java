@@ -24,20 +24,28 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Objects;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.init_logging;
-
 public class Duration {
+    private static final int YEARS = 0;
+    private static final int MONTHS_IN_YEAR = 12;
+
     private final java.time.Period datePart;
     private final java.time.Duration timePart;
+    private int hash = 0;
 
+    /**
+     * @hidden
+     */
     public Duration(com.vaticle.typedb.driver.jni.Duration nativeDuration) {
         if (nativeDuration == null) throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
-        this.datePart = java.time.Period.of(0, (int) nativeDuration.getMonths(), (int) nativeDuration.getDays());
+        this.datePart = java.time.Period.of(YEARS, (int) nativeDuration.getMonths(), (int) nativeDuration.getDays());
         this.timePart = java.time.Duration.ofNanos(nativeDuration.getNanos().longValue());
     }
 
+    /**
+     * @hidden
+     */
     public Duration(java.time.Period datePart, java.time.Duration timePart) {
-        this.datePart = datePart;
+        this.datePart = java.time.Period.of(YEARS, datePart.getYears() * MONTHS_IN_YEAR + datePart.getMonths(), datePart.getDays());
         this.timePart = timePart;
     }
 
@@ -76,5 +84,39 @@ public class Duration {
     @Override
     public String toString() {
         return datePart.toString() + " " + timePart.toString();
+    }
+
+    /**
+     * Checks if this Label is equal to another object.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * label.equals(obj);
+     * </pre>
+     *
+     * @param obj Object to compare with
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Duration that = (Duration) obj;
+        return getDatePart().equals(that.getDatePart()) && getTimePart().equals(that.getTimePart());
+    }
+
+    /**
+     * @hidden
+     */
+    @Override
+    public int hashCode() {
+        if (hash == 0) hash = computeHash();
+        return hash;
+    }
+
+    /**
+     * @hidden
+     */
+    private int computeHash() {
+        return Objects.hash(getDatePart(), getTimePart());
     }
 }

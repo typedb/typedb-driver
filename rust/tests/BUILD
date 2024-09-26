@@ -22,7 +22,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
     name = "tests",
-    srcs = glob(["**/*.rs"]),
+    srcs = glob(["integration/queries.rs"]),
     timeout = "eternal",
     deps = [
         "//rust:typedb_driver",

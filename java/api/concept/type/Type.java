@@ -19,13 +19,10 @@
 
 package com.vaticle.typedb.driver.api.concept.type;
 
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.Label;
-import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
 public interface Type extends Concept {
     /**

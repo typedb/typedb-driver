@@ -28,15 +28,15 @@
 bool test_database_management() {
     const char databaseName[] = "test_database_management";
 
-    Connection* connection = NULL;
+    Driver* driver = NULL;
     DatabaseManager* databaseManager = NULL;
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    driver = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
-    databaseManager = database_manager_new(connection);
+    databaseManager = database_manager_new(driver);
     if (FAILED()) goto cleanup;
 
     delete_database_if_exists(databaseManager, databaseName);
@@ -71,7 +71,7 @@ cleanup:
     delete_database_if_exists(databaseManager, databaseName);
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
     return success;
 }
 
@@ -87,7 +87,7 @@ bool test_query_schema() {
     bool success = false;
 
     // Set up connection & database
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -144,7 +144,7 @@ cleanup:
     delete_database_if_exists(databaseManager, databaseName);
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
     return success;
 }
 
@@ -160,7 +160,7 @@ bool test_query_data() {
     bool success = false;
 
     // Set up connection & database
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -238,7 +238,7 @@ cleanup:
     delete_database_if_exists(databaseManager, databaseName);
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
     return success;
 }
 
@@ -253,7 +253,7 @@ bool test_concept_api_schema() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -321,7 +321,7 @@ cleanup:
     delete_database_if_exists(databaseManager, databaseName);
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
     return success;
 }
 
@@ -338,7 +338,7 @@ bool test_concept_api_data() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -434,6 +434,6 @@ cleanup:
     delete_database_if_exists(databaseManager, databaseName);
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
     return success;
 }

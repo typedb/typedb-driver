@@ -19,7 +19,7 @@
 
 package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.TypeDBQueryType;
+import com.vaticle.typedb.driver.api.QueryType;
 import com.vaticle.typedb.driver.api.answer.ConceptRow;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.NativeIterator;
@@ -52,8 +52,8 @@ public class ConceptRowImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
     }
 
     @Override
-    public TypeDBQueryType getQueryType() {
-        return TypeDBQueryType.of(concept_row_get_query_type(nativeObject));
+    public QueryType getQueryType() {
+        return QueryType.of(concept_row_get_query_type(nativeObject));
     }
 
     @Override

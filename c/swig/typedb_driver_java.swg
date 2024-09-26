@@ -117,7 +117,7 @@
 %nojavaexception error_code;
 %nojavaexception error_message;
 
-%nojavaexception connection_is_open;
+%nojavaexception driver_is_open;
 
 %nojavaexception transaction_is_open;
 
@@ -160,9 +160,9 @@
 %nojavaexception attribute_get_value;
 
 %nojavaexception value_get_boolean;
-%nojavaexception value_get_date_as_millis;
-%nojavaexception value_get_datetime_as_millis;
-%nojavaexception value_get_datetime_tz_as_millis;
+%nojavaexception value_get_date_as_seconds;
+%nojavaexception value_get_datetime;
+%nojavaexception value_get_datetime_tz;
 %nojavaexception value_get_decimal;
 %nojavaexception value_get_double;
 %nojavaexception value_get_duration;
@@ -216,8 +216,11 @@
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
-%nojavaexception DatetimeAndZoneId::datetime_in_millis;
+%nojavaexception DatetimeAndZoneId::datetime_in_nanos;
 %nojavaexception DatetimeAndZoneId::zone_id;
+
+%nojavaexception DatetimeInNanos::seconds;
+%nojavaexception DatetimeInNanos::subsec_nanos;
 
 %nojavaexception StringAndOptValue::string;
 %nojavaexception StringAndOptValue::value;
@@ -242,6 +245,7 @@
 %nojavaexception ~DatabaseIterator;
 %nojavaexception ~DatabaseManager;
 %nojavaexception ~DatetimeAndZoneId;
+%nojavaexception ~DatetimeInNanos;
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;

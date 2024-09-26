@@ -29,6 +29,7 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//java/api:api",
+        "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util:util",
 
@@ -57,7 +58,6 @@ typedb_behaviour_java_test(
     steps = [
         ":steps",
         "//java/test/behaviour/connection/database:steps",
-        "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",
     ],

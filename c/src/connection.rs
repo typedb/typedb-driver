@@ -31,7 +31,8 @@ use super::{
 /// @param address The address (host:port) on which the TypeDB Server is running
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn connection_open_core(address: *const c_char, driver_lang: *const c_char) -> *mut TypeDBDriver {
+pub extern "C" fn driver_open_core(address: *const c_char, driver_lang: *const c_char) -> *mut TypeDBDriver {
+    // TODO: Add a separate entry point for C with a provided "c" driver_lang!
     try_release(TypeDBDriver::new_core_with_description(string_view(address), string_view(driver_lang)))
 }
 
@@ -41,7 +42,7 @@ pub extern "C" fn connection_open_core(address: *const c_char, driver_lang: *con
 ///// @param addresses a null-terminated array holding the address(es) of the TypeDB server(s)
 ///// @param credential The <code>Credential</code> to connect with
 // #[no_mangle]
-// pub extern "C" fn connection_open_cloud(
+// pub extern "C" fn driver_open_cloud(
 //     addresses: *const *const c_char,
 //     credential: *const Credential,
 // ) -> *mut TypeDBDriver {
@@ -58,7 +59,7 @@ pub extern "C" fn connection_open_core(address: *const c_char, driver_lang: *con
 ///// are configured to advertise
 ///// @param credential The <code>Credential</code> to connect with
 // #[no_mangle]
-// pub extern "C" fn connection_open_cloud_translated(
+// pub extern "C" fn driver_open_cloud_translated(
 //     public_addresses: *const *const c_char,
 //     private_addresses: *const *const c_char,
 //     credential: *const Credential,
@@ -70,20 +71,20 @@ pub extern "C" fn connection_open_core(address: *const c_char, driver_lang: *con
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 /// Closing a connction frees the underlying rust object.
 #[no_mangle]
-pub extern "C" fn connection_close(connection: *mut TypeDBDriver) {
-    free(connection);
+pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
+    free(driver);
 }
 
 /// Checks whether this connection is presently open.
 #[no_mangle]
-pub extern "C" fn connection_is_open(connection: *const TypeDBDriver) -> bool {
-    borrow(connection).is_open()
+pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
+    borrow(driver).is_open()
 }
 
 /// Forcibly closes the driver. To be used in exceptional cases.
 #[no_mangle]
-pub extern "C" fn connection_force_close(connection: *mut TypeDBDriver) {
-    unwrap_void(borrow(connection).force_close());
+pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
+    unwrap_void(borrow(driver).force_close());
 }
 
 ///// Creates a new <code>Credential</code> for connecting to TypeDB Cloud.

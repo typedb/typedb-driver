@@ -20,21 +20,28 @@
 package com.vaticle.typedb.driver.test.integration;
 
 import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.Driver;
+import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.api.answer.ConceptRow;
 import com.vaticle.typedb.driver.api.answer.QueryAnswer;
 import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.thing.Entity;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.database.Database;
+import com.vaticle.typedb.driver.common.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,7 +60,7 @@ import static org.junit.Assert.fail;
 public class DriverQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(DriverQueryTest.class);
     private static final String ADDRESS = "0.0.0.0:1729";
-    private static TypeDBDriver typedbDriver;
+    private static Driver typedbDriver;
 
     @BeforeClass
     public static void setUpClass() {
@@ -80,7 +87,7 @@ public class DriverQueryTest {
             assertTrue(answer.isOk());
 
             tx.commit();
-        }, TypeDBTransaction.Type.SCHEMA);
+        }, Transaction.Type.SCHEMA);
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("match entity $x;").resolve();
@@ -108,7 +115,7 @@ public class DriverQueryTest {
             assertEquals(conceptByName.asEntityType().getLabel().scope(), Optional.empty());
             assertNotEquals(conceptByName.asEntityType().getLabel().scopedName(), "not person");
             assertNotEquals(conceptByName.asEntityType().getLabel().scopedName(), "age");
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("match attribute $a;").resolve();
@@ -141,7 +148,7 @@ public class DriverQueryTest {
             assertEquals(conceptByName.asAttributeType().getLabel().name(), "age");
             assertEquals(conceptByName.asAttributeType().getLabel().scope(), Optional.empty());
             assertNotEquals(conceptByName.asAttributeType().getLabel().scopedName(), "person");
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $z isa person, has age 10; $x isa person, has age 20;").resolve();
@@ -180,7 +187,7 @@ public class DriverQueryTest {
             assertNotEquals(zEntity.getType().asEntityType().getLabel().scopedName(), "not person");
 
             tx.commit();
-        }, TypeDBTransaction.Type.WRITE);
+        }, Transaction.Type.WRITE);
 
         localhostTypeDBTX(tx -> {
             String var = "x";
@@ -203,7 +210,7 @@ public class DriverQueryTest {
                 count.incrementAndGet();
             });
             assertEquals(count.get(), 2);
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
             String var = "x";
@@ -226,7 +233,7 @@ public class DriverQueryTest {
                 count.incrementAndGet();
             });
             assertEquals(count.get(), 2);
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
             String var = "x";
@@ -249,7 +256,7 @@ public class DriverQueryTest {
                 count.incrementAndGet();
             });
             assertEquals(count.get(), 2);
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
     }
 
     @Test
@@ -275,12 +282,12 @@ public class DriverQueryTest {
                 "age", "25",
                 "name", "\"John\"",
                 "is-new", "true",
-//                "success", "66.6",
+                "success", "66.6",
                 "balance", "1234567890.0001234567890",
                 "birth-date", "2024-09-20",
-                "birth-time", "1999-02-26T12:15:05"
-//                "current-time", "2024-09-20T16:40:05 Europe/Belfast",
-//                "expiration", "P1Y6M7D15H"
+                "birth-time", "1999-02-26T12:15:05",
+                "current-time", "2024-09-20T16:40:05 Europe/Belfast",
+                "expiration", "P1Y6M7DT15H"
         );
 
         localhostTypeDBTX(tx -> {
@@ -294,7 +301,7 @@ public class DriverQueryTest {
                 assertTrue(tx.query(query).resolve().isOk());
             }
             tx.commit();
-        }, TypeDBTransaction.Type.SCHEMA);
+        }, Transaction.Type.SCHEMA);
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("match attribute $a;").resolve();
@@ -309,7 +316,7 @@ public class DriverQueryTest {
                 count.incrementAndGet();
             });
             assertEquals(count.get(), attribute_value_types.size());
-        }, TypeDBTransaction.Type.READ);
+        }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
             for (Map.Entry<String, String> entry : attribute_values.entrySet()) {
@@ -324,121 +331,44 @@ public class DriverQueryTest {
                 assertTrue(row.getIndex(header.indexOf("a")).isEntity());
             }
             tx.commit();
-        }, TypeDBTransaction.Type.WRITE);
+        }, Transaction.Type.WRITE);
 
-//        localhostTypeDBTX(tx -> {
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value long; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asLong(), Long.parseLong(attribute_values.get(attributeName)));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value string; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asString(), attribute_values.get(attributeName).substring(1, attribute_values.get(attributeName).length() - 1));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value boolean; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asBoolean(), Boolean.parseBoolean(attribute_values.get(attributeName)));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value double; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asDouble(), Double.parseDouble(attribute_values.get(attributeName)), 0.00000001);
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value decimal; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asDecimal(), new BigDecimal(attribute_values.get(attributeName)));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value date; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asDate(), LocalDate.parse(attribute_values.get(attributeName)));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value datetime; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                assertEquals(value.asDatetime(), LocalDateTime.parse(attribute_values.get(attributeName)));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value datetime-tz; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                String[] expectedValue = attribute_values.get(attributeName).split(" ");
-//                assertEquals(value.asDatetimeTZ(), LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1])));
-//            }
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t value duration; $a isa! $t; $v = $a;").resolve();
-//                assertTrue(answer.isConceptRowsStream());
-//                List<ConceptRow> rows = answer.asConceptRowsStream().rows().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//                ConceptRow row = rows.stream().findFirst().get();
-//                Attribute attribute = row.get("a").asAttribute();
-//                String attributeName = attribute.getType().getLabel().scopedName();
-//                Value value = row.get("v").asValue();
-//                assertEquals(value.getType(), attribute_value_types.get(attributeName));
-//                String[] expectedValue = attribute_values.get(attributeName).split("D"); // if no D, use W, M, etc...
-//                assertEquals(value.asDuration(), new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse(expectedValue[1])));
-//            }
-//        }, TypeDBTransaction.Type.READ);
-        // TODO: Add structs
+        localhostTypeDBTX(tx -> {
+            {
+                QueryAnswer answer = tx.query("match attribute $t; $a isa! $t;").resolve();
+                assertTrue(answer.isConceptRows());
+                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(rows.size(), attribute_values.size());
+                rows.forEach(row -> {
+                    Attribute attribute = row.get("a").asAttribute();
+                    String attributeName = attribute.getType().getLabel().scopedName();
+                    Value value = attribute.getValue();
+                    assertEquals(value.getType(), attribute_value_types.get(attributeName));
+                    if (value.isLong()) {
+                        assertEquals(Long.parseLong(attribute_values.get(attributeName)), value.asLong());
+                    } else if (value.isString()) {
+                        assertEquals(value.asString(), attribute_values.get(attributeName).substring(1, attribute_values.get(attributeName).length() - 1), value.asString());
+                    } else if (value.isBoolean()) {
+                        assertEquals(Boolean.parseBoolean(attribute_values.get(attributeName)), value.asBoolean());
+                    } else if (value.isDouble()) {
+                        assertEquals(Double.parseDouble(attribute_values.get(attributeName)), value.asDouble(), 0.00000001);
+                    } else if (value.isDouble()) {
+                        assertEquals(new BigDecimal(attribute_values.get(attributeName)), value.asDecimal());
+                    } else if (value.isDate()) {
+                        assertEquals(LocalDate.parse(attribute_values.get(attributeName)), value.asDate());
+                    } else if (value.isDatetime()) {
+                        assertEquals(LocalDateTime.parse(attribute_values.get(attributeName)), value.asDatetime());
+                    } else if (value.isDatetimeTZ()) {
+                        String[] expectedValue = attribute_values.get(attributeName).split(" ");
+                        assertEquals(LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1])), value.asDatetimeTZ());
+                    } else if (value.isDuration()) {
+                        String[] expectedValue = attribute_values.get(attributeName).split("T");
+                        assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
+                    }
+                    // TODO: Add structs
+                });
+            }
+        }, Transaction.Type.READ);
     }
 
 //    @Test
@@ -462,7 +392,7 @@ public class DriverQueryTest {
 //            tx.query().define(ruleQuery).resolve();
 //            tx.commit();
 //            LOG.info("driverJavaE2E() - done.");
-//        }, TypeDBTransaction.Type.SCHEMA);
+//        }, Transaction.Type.SCHEMA);
 //
 //        localhostTypeDBTX(tx -> {
 //            String[] names = lionNames();
@@ -511,7 +441,7 @@ public class DriverQueryTest {
 //            tx.query().define(defineQuery).resolve();
 //            tx.commit();
 //            LOG.info("driverJavaE2E() - done.");
-//        }, TypeDBTransaction.Type.SCHEMA);
+//        }, Transaction.Type.SCHEMA);
 //
 //
 //        localhostTypeDBTX(tx -> {
@@ -674,12 +604,12 @@ public class DriverQueryTest {
                 tx.query(String.format("define entity person, owns name%d; attribute name%d, value string;", i, i)).resolve();
             }
             tx.commit();
-        }, TypeDBTransaction.Type.SCHEMA);
+        }, Transaction.Type.SCHEMA);
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 50; i++) {
                 Optional<ConceptRow> conceptRows = tx.query("match entity $et; $e isa $et; limit 1;").resolve().asConceptRows().stream().findFirst();
             }
-        }, TypeDBTransaction.Type.READ/*, new TypeDBOptions().prefetch(true).prefetchSize(50)*/);
+        }, Transaction.Type.READ/*, new Options().prefetch(true).prefetchSize(50)*/);
     }
 
     @Test
@@ -697,9 +627,9 @@ public class DriverQueryTest {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type/*, TypeDBOptions options*/) {
+    private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {
         String database = "typedb";
-        try (TypeDBTransaction transaction = typedbDriver.transaction(database, type/*, options*/)) {
+        try (Transaction transaction = typedbDriver.transaction(database, type/*, options*/)) {
             fn.accept(transaction);
         }
     }

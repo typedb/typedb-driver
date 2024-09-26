@@ -60,7 +60,6 @@ pub extern "C" fn query_answer_is_ok(query_answer: *const QueryAnswer) -> bool {
 /// Checks if the query answer is a <code>ConceptRowsStream</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_is_concept_rows_stream(query_answer: *const QueryAnswer) -> bool {
-    // TODO: Rename?
     borrow(query_answer).is_rows_stream()
 }
 

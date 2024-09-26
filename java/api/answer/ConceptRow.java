@@ -19,7 +19,7 @@
 
 package com.vaticle.typedb.driver.api.answer;
 
-import com.vaticle.typedb.driver.api.TypeDBQueryType;
+import com.vaticle.typedb.driver.api.QueryType;
 import com.vaticle.typedb.driver.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
@@ -51,7 +51,7 @@ public interface ConceptRow {
      * </pre>
      */
     @CheckReturnValue
-    TypeDBQueryType getQueryType();
+    QueryType getQueryType();
 
     /**
      * Retrieves a concept for a given variable name.

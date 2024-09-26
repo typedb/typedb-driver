@@ -22,24 +22,24 @@ package com.vaticle.typedb.driver.api;
 // TODO: Currently disabled in 3.0
 
 /**
- * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override
+ * TypeDB session and transaction options. <code>Options</code> object can be used to override
  * the default server behaviour.
  */
-//public class TypeDBOptions extends NativeObject<com.vaticle.typedb.driver.jni.Options> {
+//public class Options extends NativeObject<com.vaticle.typedb.driver.jni.Options> {
 //    /**
-//     * Produces a new <code>TypeDBOptions</code> object.
+//     * Produces a new <code>Options</code> object.
 //     *
 //     * <h3>Examples</h3>
 //     * <pre>
-//     * TypeDBOptions options = TypeDBOptions();
+//     * Options options = Options();
 //     * </pre>
 //     */
-//    public TypeDBOptions() {
+//    public Options() {
 //        super(options_new());
 //    }
 //
 //    /**
-//     * Returns the value set for the inference in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the inference in this <code>Options</code> object.
 //     *
 //     * <h3>Examples</h3>
 //     * <pre>
@@ -63,13 +63,13 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param infer Explicitly enable or disable inference
 //     */
-//    public TypeDBOptions infer(boolean infer) {
+//    public Options infer(boolean infer) {
 //        options_set_infer(nativeObject, infer);
 //        return this;
 //    }
 //
 //    /**
-//     * Returns the value set for reasoning tracing in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for reasoning tracing in this <code>Options</code> object.
 //     * If set to <code>true</code>, reasoning tracing graphs are output in the logging directory.
 //     *
 //     * <h3>Examples</h3>
@@ -95,13 +95,13 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param traceInference Explicitly enable or disable reasoning tracing
 //     */
-//    public TypeDBOptions traceInference(boolean traceInference) {
+//    public Options traceInference(boolean traceInference) {
 //        options_set_trace_inference(nativeObject, traceInference);
 //        return this;
 //    }
 //
 //    /**
-//     * Returns the value set for the explanation in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the explanation in this <code>Options</code> object.
 //     * If set to <code>true</code>, explanations for queries are enabled.
 //     *
 //     * <h3>Examples</h3>
@@ -126,13 +126,13 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param explain Explicitly enable or disable explanations
 //     */
-//    public TypeDBOptions explain(boolean explain) {
+//    public Options explain(boolean explain) {
 //        options_set_explain(nativeObject, explain);
 //        return this;
 //    }
 //
 //    /**
-//     * Returns the value set for the parallel execution in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the parallel execution in this <code>Options</code> object.
 //     * If set to <code>true</code>, the server uses parallel instead of single-threaded execution.
 //     *
 //     * <h3>Examples</h3>
@@ -157,13 +157,13 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param parallel Explicitly enable or disable parallel execution
 //     */
-//    public TypeDBOptions parallel(boolean parallel) {
+//    public Options parallel(boolean parallel) {
 //        options_set_parallel(nativeObject, parallel);
 //        return this;
 //    }
 //
 //    /**
-//     * Returns the value set for the prefetching in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the prefetching in this <code>Options</code> object.
 //     * If set to <code>true</code>, the first batch of answers is streamed to the driver even without
 //     * an explicit request for it.
 //     *
@@ -190,13 +190,13 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param prefetch Explicitly enable or disable prefetching
 //     */
-//    public TypeDBOptions prefetch(boolean prefetch) {
+//    public Options prefetch(boolean prefetch) {
 //        options_set_prefetch(nativeObject, prefetch);
 //        return this;
 //    }
 //
 //    /**
-//     * Returns the value set for the prefetch size in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the prefetch size in this <code>Options</code> object.
 //     * If set, specifies a guideline number of answers that the server should send before the driver
 //     * issues a fresh request.
 //     *
@@ -223,7 +223,7 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param prefetchSize Number of answers that the server should send before the driver issues a fresh request
 //     */
-//    public TypeDBOptions prefetchSize(int prefetchSize) {
+//    public Options prefetchSize(int prefetchSize) {
 //        if (prefetchSize < 1) {
 //            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, prefetchSize);
 //        }
@@ -232,7 +232,7 @@ package com.vaticle.typedb.driver.api;
 //    }
 //
 //    /**
-//     * Returns the value set for the session idle timeout in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the session idle timeout in this <code>Options</code> object.
 //     * If set, specifies a timeout that allows the server to close sessions if the driver terminates
 //     * or becomes unresponsive.
 //     *
@@ -261,7 +261,7 @@ package com.vaticle.typedb.driver.api;
 //     * @param sessionIdleTimeoutMillis timeout that allows the server to close sessions if the driver terminates
 //     *                                 or becomes unresponsive
 //     */
-//    public TypeDBOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
+//    public Options sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
 //        if (sessionIdleTimeoutMillis < 1) {
 //            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
 //        }
@@ -270,7 +270,7 @@ package com.vaticle.typedb.driver.api;
 //    }
 //
 //    /**
-//     * Returns the value set for the transaction timeout in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the transaction timeout in this <code>Options</code> object.
 //     * If set, specifies a timeout for killing transactions automatically, preventing memory leaks
 //     * in unclosed transactions.
 //     *
@@ -298,7 +298,7 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param transactionTimeoutMillis Timeout for killing transactions automatically
 //     */
-//    public TypeDBOptions transactionTimeoutMillis(int transactionTimeoutMillis) {
+//    public Options transactionTimeoutMillis(int transactionTimeoutMillis) {
 //        if (transactionTimeoutMillis < 1) {
 //            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
 //        }
@@ -307,7 +307,7 @@ package com.vaticle.typedb.driver.api;
 //    }
 //
 //    /**
-//     * Returns the value set for the schema lock acquire timeout in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for the schema lock acquire timeout in this <code>Options</code> object.
 //     * If set, specifies how long the driver should wait if opening a session or transaction is blocked
 //     * by a schema write lock.
 //     *
@@ -335,7 +335,7 @@ package com.vaticle.typedb.driver.api;
 //     * @param schemaLockAcquireTimeoutMillis How long the driver should wait if opening a session
 //     *                                       or transaction is blocked by a schema write lock
 //     */
-//    public TypeDBOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
+//    public Options schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
 //        if (schemaLockAcquireTimeoutMillis < 1) {
 //            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
 //        }
@@ -344,7 +344,7 @@ package com.vaticle.typedb.driver.api;
 //    }
 //
 //    /**
-//     * Returns the value set for reading data from any replica in this <code>TypeDBOptions</code> object.
+//     * Returns the value set for reading data from any replica in this <code>Options</code> object.
 //     * If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput.
 //     *
 //     * <h3>Examples</h3>
@@ -370,7 +370,7 @@ package com.vaticle.typedb.driver.api;
 //     *
 //     * @param readAnyReplica Explicitly enable or disable reading data from any replica
 //     */
-//    public TypeDBOptions readAnyReplica(boolean readAnyReplica) {
+//    public Options readAnyReplica(boolean readAnyReplica) {
 //        options_set_read_any_replica(nativeObject, readAnyReplica);
 //        return this;
 //    }

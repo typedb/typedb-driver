@@ -26,8 +26,6 @@ import com.vaticle.typedb.driver.common.Duration;
 import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
-import com.vaticle.typedb.driver.jni.DatetimeAndZoneId;
-import com.vaticle.typedb.driver.jni.Decimal;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -46,9 +44,9 @@ import static com.vaticle.typedb.common.collection.Collections.pair;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_boolean;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_date_as_millis;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime_as_millis;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime_tz_as_millis;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_date_as_seconds;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime_tz;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_decimal;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_double;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_duration;
@@ -165,7 +163,7 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public BigDecimal asDecimal() {
         if (!isDecimal()) throw new TypeDBDriverException(ILLEGAL_CAST, "decimal");
-        Decimal nativeDecimal = value_get_decimal(nativeObject);
+        com.vaticle.typedb.driver.jni.Decimal nativeDecimal = value_get_decimal(nativeObject);
         BigInteger nativeFractional = nativeDecimal.getFractional();
         BigDecimal integerPart = new BigDecimal(nativeDecimal.getInteger());
         BigDecimal fractionalPart = new BigDecimal(nativeFractional)
@@ -183,20 +181,20 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public LocalDate asDate() {
         if (!isDate()) throw new TypeDBDriverException(ILLEGAL_CAST, "date");
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_date_as_millis(nativeObject)), ZoneOffset.UTC).toLocalDate();
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(value_get_date_as_seconds(nativeObject)), ZoneOffset.UTC).toLocalDate();
     }
 
     @Override
     public LocalDateTime asDatetime() {
         if (!isDatetime()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime");
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_datetime_as_millis(nativeObject)), ZoneOffset.UTC);
+        return LocalDateTime.ofInstant(instantFromNativeDatetime(value_get_datetime(nativeObject)), ZoneOffset.UTC);
     }
 
     @Override
     public ZonedDateTime asDatetimeTZ() {
         if (!isDatetimeTZ()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime-tz");
-        DatetimeAndZoneId nativeDatetime = value_get_datetime_tz_as_millis(nativeObject);
-        return Instant.ofEpochMilli(nativeDatetime.getDatetime_in_millis()).atZone(ZoneId.of(nativeDatetime.getZone_id()));
+        com.vaticle.typedb.driver.jni.DatetimeAndZoneId nativeDatetime = value_get_datetime_tz(nativeObject);
+        return instantFromNativeDatetime(nativeDatetime.getDatetime_in_nanos()).atZone(ZoneId.of(nativeDatetime.getZone_id()));
     }
 
     @Override
@@ -221,6 +219,10 @@ public class ValueImpl extends ConceptImpl implements Value {
             }
             return pair(fieldName, resultValue);
         }).collect(Collectors.toMap(Pair::first, Pair::second));
+    }
+
+    private Instant instantFromNativeDatetime(com.vaticle.typedb.driver.jni.DatetimeInNanos nativeDatetime) {
+        return Instant.ofEpochSecond(nativeDatetime.getSeconds(), nativeDatetime.getSubsec_nanos());
     }
 
     @Override

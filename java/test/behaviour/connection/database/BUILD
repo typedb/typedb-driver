@@ -60,7 +60,6 @@ typedb_java_test(
         "//java/test/behaviour/connection:steps-core",
 
         ":steps",
-        "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/query:steps",
 
@@ -96,7 +95,6 @@ typedb_java_test(
         "//java/test/behaviour/connection:steps-cloud",
 
         ":steps",
-        "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/query:steps",
 

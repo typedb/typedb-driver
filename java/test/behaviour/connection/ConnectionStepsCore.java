@@ -23,8 +23,7 @@ import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
 import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
 import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -54,14 +53,14 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBDriver createTypeDBDriver(String address) {
+    Driver createTypeDBDriver(String address) {
         return TypeDB.coreDriver(address);
     }
 
-    @Override
-    TypeDBOptions createOptions() {
-        return new TypeDBOptions();
-    }
+//    @Override
+//    Options createOptions() {
+//        return new Options();
+//    }
 
     @When("typedb starts")
     public void typedb_starts() {
@@ -79,8 +78,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @Override
     @When("connection closes")
-    public void connection_closes() {
-        super.connection_closes();
+    public void driver_closes() {
+        super.driver_closes();
     }
 
     @Override

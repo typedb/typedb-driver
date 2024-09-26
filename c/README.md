@@ -22,14 +22,14 @@ Code examples can be found in the [integration tests](https://github.com/vaticle
 
 Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
-Connection *connection_open_core(const char *address);
+Driver *driver_open_core(const char *address);
 ``` 
 
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    Connection *connection = connection_open_core("127.0.0.1:1729");
-    DatabaseManager* databaseManager = database_manager_new(connection);
+    Driver *driver = driver_open_core("127.0.0.1:1729");
+    DatabaseManager* databaseManager = database_manager_new(driver);
     databases_create(databaseManager, dbName);
     Database* database = databases_get(databaseManager, dbName);
     char* gotName = database_name(database);
@@ -47,7 +47,7 @@ Types which have `*_close` methods will be freed on close.
     string_free(gotName);
     database_close(database);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
 ```
 
 ### Error handling

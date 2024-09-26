@@ -19,7 +19,7 @@
 
 use std::ffi::c_char;
 
-use chrono::NaiveTime;
+use chrono::{DateTime, NaiveTime, TimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
@@ -33,20 +33,43 @@ use crate::{
     memory::{borrow, borrow_mut, free, release, release_optional, release_string, string_free},
 };
 
-/// A <code>DateTimeAndZoneId</code> used to represent IANA time zoned datetime in FFI.
+/// A <code>DatetimeInNanos</code> used to represent datetime as a pair of seconds part and
+/// a number of nanosecnds since the last seconds boundary.
+#[repr(C)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
+pub struct DatetimeInNanos {
+    seconds: i64,
+    subsec_nanos: u32,
+}
+
+impl DatetimeInNanos {
+    pub fn new<TZ: TimeZone>(datetime: &DateTime<TZ>) -> Self {
+        Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
+    }
+
+    pub fn get_seconds(self) -> i64 {
+        self.seconds
+    }
+
+    pub fn get_subsec_nanos(self) -> u32 {
+        self.subsec_nanos
+    }
+}
+
+/// A <code>DatetimeAndZoneId</code> used to represent IANA time zoned datetime in FFI.
 #[repr(C)]
 pub struct DatetimeAndZoneId {
-    datetime_in_millis: i64,
+    datetime_in_nanos: DatetimeInNanos,
     zone_id: *mut c_char,
 }
 
 impl DatetimeAndZoneId {
-    pub fn new(datetime_in_millis: i64, zone_id: String) -> Self {
-        Self { datetime_in_millis, zone_id: release_string(zone_id) }
+    pub fn new(datetime_in_nanos: DatetimeInNanos, zone_id: String) -> Self {
+        Self { datetime_in_nanos, zone_id: release_string(zone_id) }
     }
 
-    pub fn get_datetime_in_millis(self) -> i64 {
-        self.datetime_in_millis
+    pub fn get_datetime_in_nanos(self) -> DatetimeInNanos {
+        self.datetime_in_nanos
     }
 
     pub fn get_zone_id(self) -> *mut c_char {
@@ -293,7 +316,6 @@ pub extern "C" fn value_get_double(value: *const Concept) -> f64 {
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_decimal(value: *const Concept) -> Decimal {
-    // TODO: setInteger and setFractional are exposed this way!
     if let Value::Decimal(decimal) = borrow_as_value(value) {
         decimal.clone()
     } else {
@@ -312,35 +334,35 @@ pub extern "C" fn value_get_string(value: *const Concept) -> *mut c_char {
     }
 }
 
-/// Returns the value of this date value concept as milliseconds since the start of the UNIX epoch.
+/// Returns the value of this date value concept as seconds since the start of the UNIX epoch.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_date_as_millis(value: *const Concept) -> i64 {
+pub extern "C" fn value_get_date_as_seconds(value: *const Concept) -> i64 {
     if let Value::Date(date) = borrow_as_value(value) {
-        date.and_time(NaiveTime::MIN).and_utc().timestamp_millis()
+        date.and_time(NaiveTime::MIN).and_utc().timestamp()
     } else {
         unreachable!("Attempting to unwrap a non-date {:?} as date", borrow_as_value(value))
     }
 }
 
-/// Returns the value of this datetime value concept as milliseconds since the start of the UNIX epoch.
+/// Returns the value of this datetime value concept as seconds and nanoseconds parts since the start of the UNIX epoch.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_datetime_as_millis(value: *const Concept) -> i64 {
+pub extern "C" fn value_get_datetime(value: *const Concept) -> DatetimeInNanos {
     if let Value::Datetime(date_time) = borrow_as_value(value) {
-        date_time.and_utc().timestamp_millis()
+        DatetimeInNanos::new(&date_time.and_utc())
     } else {
         unreachable!("Attempting to unwrap a non-datetime {:?} as datetime", borrow_as_value(value))
     }
 }
 
-/// Returns the value of this datetime-tz value concept as milliseconds since the start of the UNIX epoch.
+/// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and an IANA TZ name.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_datetime_tz_as_millis(value: *const Concept) -> DatetimeAndZoneId {
-    // TODO: add timezone...
+pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndZoneId {
+    // TODO: support offset format...
     if let Value::DatetimeTZ(datetime_tz) = borrow_as_value(value) {
-        DatetimeAndZoneId::new(datetime_tz.timestamp_millis(), datetime_tz.timezone().name().clone().to_owned())
+        DatetimeAndZoneId::new(DatetimeInNanos::new(datetime_tz), datetime_tz.timezone().name().clone().to_owned())
     } else {
         unreachable!("Attempting to unwrap a non-datetime-tz {:?} as datetime-tz", borrow_as_value(value))
     }

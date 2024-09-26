@@ -54,7 +54,7 @@ public class Promise<T> {
      * promise.resolve()
      * </pre>
      */
-    public T resolve() {
+    public T resolve() { // TODO: Can have a checked exception in some cases!
         try {
             return this.inner.get();
         } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {

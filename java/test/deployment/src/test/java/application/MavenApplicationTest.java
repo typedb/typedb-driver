@@ -20,9 +20,9 @@
 package application;
 
 import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.Driver;
 import com.vaticle.typedb.driver.api.TypeDBSession;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.Transaction;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import org.junit.Test;
 
@@ -36,10 +36,10 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        TypeDBDriver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
+        Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
         driver.databases().create("typedb");
         TypeDBSession session = driver.session("typedb", TypeDBSession.Type.DATA);
-        TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE);
+        Transaction tx = session.transaction(Transaction.Type.WRITE);
         EntityType root = tx.concepts().getRootEntityType();
         assertNotNull(root);
         assertEquals(1, root.getSubtypes(tx).collect(Collectors.toList()).size());

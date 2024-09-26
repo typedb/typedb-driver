@@ -27,20 +27,20 @@ package com.vaticle.typedb.driver.api;
  * <h3>Examples</h3>
  * <pre>
  * // Creates a credential as above, but the connection will be made over TLS.
- * TypeDBCredential credential = new TypeDBCredential(username, password, true);
+ * Credential credential = new Credential(username, password, true);
  *
  * // Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
- * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
+ * Credential credential = new Credential(username, password, Path.of("path/to/ca-certificate.pem"));
  * </pre>
  */
-//public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
+//public class Credential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
 //    /**
 //     *
 //     * @param username The name of the user to connect as
 //     * @param password The password for the user
 //     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
 //     */
-//    public TypeDBCredential(String username, String password, boolean tlsEnabled) {
+//    public Credential(String username, String password, boolean tlsEnabled) {
 //        this(username, password, null, tlsEnabled);
 //    }
 //
@@ -50,11 +50,11 @@ package com.vaticle.typedb.driver.api;
 //     * @param password The password for the user
 //     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
 //     */
-//    public TypeDBCredential(String username, String password, Path tlsRootCAPath) {
+//    public Credential(String username, String password, Path tlsRootCAPath) {
 //        this(username, password, tlsRootCAPath.toString(), true);
 //    }
 //
-//    private TypeDBCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
+//    private Credential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
 //        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
 //    }
 //

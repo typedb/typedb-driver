@@ -23,7 +23,7 @@ import com.vaticle.typedb.driver.api.database.DatabaseManager;
 
 import javax.annotation.CheckReturnValue;
 
-public interface TypeDBDriver extends AutoCloseable {
+public interface Driver extends AutoCloseable {
     String LANGUAGE = "java";
 
     /**
@@ -55,10 +55,10 @@ public interface TypeDBDriver extends AutoCloseable {
      * @param type The type of session to be created (DATA or SCHEMA)
      */
     @CheckReturnValue
-    TypeDBTransaction transaction(String database, TypeDBTransaction.Type type);
+    Transaction transaction(String database, Transaction.Type type);
 
 //    @CheckReturnValue
-//    TypeDBTransaction transaction(String database, TypeDBTransaction.Type type, TypeDBOptions options);
+//    Transaction transaction(String database, Transaction.Type type, Options options);
 
     /**
      * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.

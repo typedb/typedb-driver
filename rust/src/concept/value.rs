@@ -17,10 +17,7 @@
  * under the License.
  */
 
-use std::{
-    collections::HashMap,
-    fmt,
-};
+use std::{collections::HashMap, fmt};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;

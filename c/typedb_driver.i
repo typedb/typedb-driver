@@ -57,7 +57,7 @@ struct Type {};
 //%dropproxy(Credential, credential)
 //%dropproxy(Options, options)
 
-#define typedb_driver_drop connection_close
+#define typedb_driver_drop driver_close
 #define transaction_drop transaction_close
 #define database_drop database_close
 
@@ -159,7 +159,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject value_group_to_string;
 
 %newobject value_get_string;
-%newobject value_get_datetime_tz_as_millis;
+%newobject value_get_datetime_tz;
 
 %newobject query_answer_get_rows;
 
@@ -181,9 +181,9 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject attribute_type_get_label;
 %newobject role_type_get_label;
 
-%newobject connection_open_core;
-//%newobject connection_open_cloud;
-//%newobject connection_open_cloud_translated;
+%newobject driver_open_core;
+//%newobject driver_open_cloud;
+//%newobject driver_open_cloud_translated;
 
 //%newobject credential_new;
 

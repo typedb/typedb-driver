@@ -25,7 +25,7 @@ import com.vaticle.typedb.driver.common.Promise;
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
 
-public interface TypeDBTransaction extends AutoCloseable {
+public interface Transaction extends AutoCloseable {
     /**
      * Checks whether this transaction is open.
      *
@@ -52,7 +52,7 @@ public interface TypeDBTransaction extends AutoCloseable {
 //     * The options for the transaction
 //     */
 //    @CheckReturnValue
-//    TypeDBOptions options();
+//    Options options();
 
     /**
      * Execute a TypeQL query in this transaction.

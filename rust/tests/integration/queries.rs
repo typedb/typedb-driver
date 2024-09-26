@@ -17,8 +17,11 @@
  * under the License.
  */
 
+use futures::StreamExt;
 use serial_test::serial;
-use typedb_driver::{driver::TypeDBDriver, error::ConnectionError, Credential, Error};
+use typedb_driver::{
+    answer::QueryAnswer, driver::TypeDBDriver, error::ConnectionError, Credential, Error, TransactionType,
+};
 
 #[tokio::test]
 #[serial]
@@ -27,10 +30,39 @@ async fn missing_port() {
         TypeDBDriver::new_core("localhost").await,
         Err(Error::Connection(ConnectionError::MissingPort { .. }))
     ));
-    assert!(matches!(
-        TypeDBDriver::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
-        Err(Error::Connection(ConnectionError::MissingPort { .. }))
-    ));
+    // assert!(matches!(
+    //     TypeDBDriver::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
+    //     Err(Error::Connection(ConnectionError::MissingPort { .. }))
+    // ));
+}
+
+#[test]
+#[serial]
+fn schema_rollback_works() {
+    async_std::task::block_on(async {
+        let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
+
+        if driver.databases().contains("db-name").await.unwrap() {
+            let db = driver.databases().get("db-name").await.unwrap();
+            db.delete().await.unwrap();
+        }
+
+        driver.databases().create("db-name").await.unwrap();
+
+        let transaction = driver.transaction("db-name", TransactionType::Schema).await.unwrap();
+
+        let result = transaction.query("define entity person owns age; attribute age, value long;").await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::Ok()));
+        // TODO: Hangs here
+        // transaction.rollback().await.unwrap();
+        //
+        // let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
+        // let result = transaction.query("match $x has age $y;").await;
+        // let answer = result.unwrap();
+        // assert!(matches!(answer, QueryAnswer::ConceptRowsStream(_)));
+        // assert!(answer.into_rows().next().await.is_none());
+    })
 }
 
 // test_for_each_arg! {

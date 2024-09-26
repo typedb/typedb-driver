@@ -181,7 +181,7 @@
 %noexception schema_exception_code;
 %noexception schema_exception_message;
 
-%noexception connection_is_open;
+%noexception driver_is_open;
 
 %noexception session_is_open;
 %noexception session_get_database_name;

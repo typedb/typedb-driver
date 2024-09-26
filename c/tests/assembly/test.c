@@ -49,7 +49,7 @@ int main() {
 
     bool success = false;
 
-    connection = connection_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);
@@ -67,7 +67,7 @@ int main() {
 cleanup:
     check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
-    connection_close(connection);
+    driver_close(connection);
 
     printf("Success: %s\n", success ? "true" : "false");
     return success ? 0 : 1;
