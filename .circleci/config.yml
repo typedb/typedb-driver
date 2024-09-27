@@ -950,7 +950,7 @@ workflows:
             - deploy-release-mac-arm64
             - deploy-release-mac-x86_64
             - deploy-release-windows-x86_64
-#
+
 #      - deploy-release-dotnet-any:
 #          filters:
 #            branches:
@@ -961,18 +961,18 @@ workflows:
 #            - deploy-release-mac-arm64
 #            - deploy-release-mac-x86_64
 #            - deploy-release-windows-x86_64
-#
-#      - deploy-github:
-#          filters:
-#            branches:
-#              only: [release]
-#          requires:
-#            - deploy-release-mac-arm64
-#            - deploy-release-mac-x86_64
-#            - deploy-release-linux-arm64
-#            - deploy-release-linux-x86_64
-#            - deploy-release-windows-x86_64
-#            - deploy-release-any
+
+      - deploy-github:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - deploy-release-mac-arm64
+            - deploy-release-mac-x86_64
+            - deploy-release-linux-arm64
+            - deploy-release-linux-x86_64
+            - deploy-release-windows-x86_64
+            - deploy-release-any
 #            - deploy-release-dotnet-any
 #
 #      - sync-dependencies:
