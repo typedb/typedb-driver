@@ -700,13 +700,13 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-      - deploy-pip-release-unix
+#      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
-      - deploy-cpp-release-unix
+#      - deploy-clib-release-unix
+#      - deploy-cpp-release-unix
 
-      - install-libicu-linux
-      - deploy-dotnet-runtime-release-unix
+#      - install-libicu-linux
+#      - deploy-dotnet-runtime-release-unix
 
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -714,13 +714,13 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-      - deploy-pip-release-unix
+#      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
-      - deploy-cpp-release-unix
+#      - deploy-clib-release-unix
+#      - deploy-cpp-release-unix
 
-      - install-libicu-linux
-      - deploy-dotnet-runtime-release-unix
+#      - install-libicu-linux
+#      - deploy-dotnet-runtime-release-unix
 
   deploy-release-mac-arm64:
     executor: mac-arm64
@@ -728,11 +728,11 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-      - deploy-pip-release-unix
+#      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
-      - deploy-cpp-release-unix
-      - deploy-dotnet-runtime-release-unix
+#      - deploy-clib-release-unix
+#      - deploy-cpp-release-unix
+#      - deploy-dotnet-runtime-release-unix
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -741,11 +741,11 @@ jobs:
       - macos/install-rosetta
       - install-bazel-brew:
           bazel-arch: amd64
-      - deploy-pip-release-unix
+#      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
-      - deploy-cpp-release-unix
-      - deploy-dotnet-runtime-release-unix
+#      - deploy-clib-release-unix
+#      - deploy-cpp-release-unix
+#      - deploy-dotnet-runtime-release-unix
 
   deploy-release-windows-x86_64:
     executor: win-x86_64
@@ -766,7 +766,7 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-release-unix
-#      - deploy-maven-release-unix
+      - deploy-maven-release-unix
 #      - deploy-npm-release-unix
 
   deploy-release-dotnet-any:
@@ -944,12 +944,12 @@ workflows:
           filters:
             branches:
               only: [release]
-#          requires:
-#            - deploy-release-linux-arm64
-#            - deploy-release-linux-x86_64
-#            - deploy-release-mac-arm64
-#            - deploy-release-mac-x86_64
-#            - deploy-release-windows-x86_64
+          requires:
+            - deploy-release-linux-arm64
+            - deploy-release-linux-x86_64
+            - deploy-release-mac-arm64
+            - deploy-release-mac-x86_64
+            - deploy-release-windows-x86_64
 #
 #      - deploy-release-dotnet-any:
 #          filters:
