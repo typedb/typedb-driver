@@ -919,26 +919,26 @@ workflows:
 
   release:
     jobs:
-#      - deploy-release-linux-arm64:
-#          filters:
-#            branches:
-#              only: [release]
-#      - deploy-release-linux-x86_64:
-#          filters:
-#            branches:
-#              only: [release]
-#      - deploy-release-mac-arm64:
-#          filters:
-#            branches:
-#              only: [release]
-#      - deploy-release-mac-x86_64:
-#          filters:
-#            branches:
-#              only: [release]
-#      - deploy-release-windows-x86_64:
-#          filters:
-#            branches:
-#              only: [release]
+      - deploy-release-linux-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-release-mac-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-release-windows-x86_64:
+          filters:
+            branches:
+              only: [release]
 
       - deploy-release-any:
           filters:
