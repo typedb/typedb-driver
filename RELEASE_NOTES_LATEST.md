@@ -37,6 +37,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
 ## New Features
 - **Introduce 3.0 Java driver**
   We introduce the updated Java driver for the upcoming 3.0 release, featuring all the Rust driver's features in another language.
+  Learn more about TypeDB 3.0 incoming features here: https://typedb.com/blog/typedb-3-roadmap
 
 
 ## Bugs Fixed
