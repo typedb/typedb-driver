@@ -753,11 +753,11 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\python\deploy_release.bat
+#      - run: .circleci\windows\python\deploy_release.bat
       - run: .circleci\windows\java\deploy_release.bat
-      - run: .circleci\windows\clib\deploy_release.bat
-      - run: .circleci\windows\cpp\deploy_release.bat
-      - run: .circleci\windows\csharp\deploy_release.bat
+#      - run: .circleci\windows\clib\deploy_release.bat
+#      - run: .circleci\windows\cpp\deploy_release.bat
+#      - run: .circleci\windows\csharp\deploy_release.bat
 
   deploy-release-any:
     executor: linux-x86_64-ubuntu-2204
