@@ -28,7 +28,7 @@ def sphinx_to_adoc(name, data, docs_dirs):
         srcs = [
             "//tool/docs:python/PythonDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.docs.python.PythonDocsParserKt",
+        main_class = "com.typedb.driver.tool.docs.python.PythonDocsParserKt",
         args = args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",

@@ -31,7 +31,7 @@ def doxygen_c_to_adoc(name, data, docs_dirs, force_file, output_dir, args = [], 
         srcs = [
             "//tool/docs:c/DoxygenParserC.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.docs.c.DoxygenParserCKt",
+        main_class = "com.typedb.driver.tool.docs.c.DoxygenParserCKt",
         args = extended_args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",

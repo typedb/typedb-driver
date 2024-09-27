@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.docs.java
+package com.typedb.driver.tool.docs.java
 
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
-import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
-import com.vaticle.typedb.driver.tool.docs.util.*
+import com.typedb.driver.tool.docs.dataclasses.Class
+import com.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.typedb.driver.tool.docs.dataclasses.Method
+import com.typedb.driver.tool.docs.dataclasses.Variable
+import com.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine

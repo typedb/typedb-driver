@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.type;
+package com.typedb.driver.concept.type;
 
-import com.vaticle.typedb.driver.api.concept.type.EntityType;
-import com.vaticle.typedb.driver.common.Label;
+import com.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.common.Label;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_get_label;
+import static com.typedb.driver.jni.typedb_driver.entity_type_get_label;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
-    public EntityTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public EntityTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

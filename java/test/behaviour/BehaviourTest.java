@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour;
+package com.typedb.driver.test.behaviour;
 
 //import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import org.junit.AfterClass;

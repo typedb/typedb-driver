@@ -33,10 +33,6 @@ java_library(
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util:util",
 
-        # Internal Repository Dependencies
-        "@vaticle_typeql//common/java:common",
-        "@vaticle_typeql//java:typeql-lang",
-
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
@@ -49,7 +45,7 @@ typedb_behaviour_java_test(
     srcs = [
         "TransactionTest.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.transaction.TransactionTest",
+    test_class = "com.typedb.driver.test.behaviour.connection.transaction.TransactionTest",
     data = [
         "@vaticle_typedb_behaviour//connection:transaction.feature",
     ],

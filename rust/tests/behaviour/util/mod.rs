@@ -31,7 +31,6 @@ use typedb_driver::{
     concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
     DatabaseManager, Error, Result as TypeDBResult,
 };
-use typeql::parse_query;
 
 use crate::{assert_with_timeout, behaviour::Context};
 

@@ -24,7 +24,7 @@ typedb_java_test(
     srcs = [
         "DebugTest.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.debug.DebugTest",
+    test_class = "com.typedb.driver.test.behaviour.debug.DebugTest",
     deps = [
         # Internal package dependencies
         "//java/test/behaviour:behaviour",

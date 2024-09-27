@@ -43,8 +43,6 @@ rust_static_library(
     deps = [
         "//rust:typedb_driver_sync",
 
-        "@vaticle_typeql//rust:typeql",
-
         "@crates//:chrono",
         "@crates//:itertools",
         "@crates//:env_logger",
@@ -69,8 +67,6 @@ rust_shared_library(
     },
     deps = [
         "//rust:typedb_driver_sync",
-
-        "@vaticle_typeql//rust:typeql",
 
         "@crates//:chrono",
         "@crates//:itertools",

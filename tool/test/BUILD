@@ -30,7 +30,7 @@ java_binary(
     name = "echo-java-home",
     srcs = ["EchoJavaHome.java"],
     deps = [],
-    main_class = "com.vaticle.typedb.driver.tool.test.EchoJavaHome"
+    main_class = "com.typedb.driver.tool.test.EchoJavaHome"
 )
 
 native_typedb_artifact(

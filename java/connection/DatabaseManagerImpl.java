@@ -17,26 +17,26 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
+package com.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.database.Database;
-import com.vaticle.typedb.driver.api.database.DatabaseManager;
-import com.vaticle.typedb.driver.common.NativeIterator;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.database.Database;
+import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.List;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.MISSING_DB_NAME;
-import static com.vaticle.typedb.driver.jni.typedb_driver.databases_all;
-import static com.vaticle.typedb.driver.jni.typedb_driver.databases_contains;
-import static com.vaticle.typedb.driver.jni.typedb_driver.databases_create;
-import static com.vaticle.typedb.driver.jni.typedb_driver.databases_get;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.MISSING_DB_NAME;
+import static com.typedb.driver.jni.typedb_driver.databases_all;
+import static com.typedb.driver.jni.typedb_driver.databases_contains;
+import static com.typedb.driver.jni.typedb_driver.databases_create;
+import static com.typedb.driver.jni.typedb_driver.databases_get;
 import static java.util.stream.Collectors.toList;
 
 public class DatabaseManagerImpl implements DatabaseManager {
-    com.vaticle.typedb.driver.jni.TypeDBDriver nativeDriver;
+    com.typedb.driver.jni.TypeDBDriver nativeDriver;
 
-    public DatabaseManagerImpl(com.vaticle.typedb.driver.jni.TypeDBDriver driver) {
+    public DatabaseManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
     }
 
@@ -45,7 +45,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
         if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return new DatabaseImpl(databases_get(nativeDriver, name));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -55,7 +55,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
         if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return databases_contains(nativeDriver, name);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -65,7 +65,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
         if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             databases_create(nativeDriver, name);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -74,7 +74,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     public List<Database> all() {
         try {
             return new NativeIterator<>(databases_all(nativeDriver)).stream().map(DatabaseImpl::new).collect(toList());
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }

@@ -19,17 +19,16 @@
 
 package application;
 
-import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.api.TypeDBSession;
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TypeDBSession;
+import com.typedb.driver.api.concept.type.EntityType;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
 
 // TODO: implement more advanced tests using TypeQL queries once TypeDB 2.0 supports them
 public class MavenApplicationTest {

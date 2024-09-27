@@ -17,8 +17,8 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.answer;
+package com.typedb.driver.concept.answer;
 
 // TODO: Implement
-//public class ConceptTreeImpl extends NativeObject<com.vaticle.typedb.driver.jni.ConceptTree> implements ConceptTree {
+//public class ConceptTreeImpl extends NativeObject<com.typedb.driver.jni.ConceptTree> implements ConceptTree {
 //}

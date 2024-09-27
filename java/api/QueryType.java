@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api;
+package com.typedb.driver.api;
 
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 /**
  * Used to specify the type of the executed query.
@@ -32,22 +32,22 @@ import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.U
  * </pre>
  */
 public enum QueryType {
-    READ(0, com.vaticle.typedb.driver.jni.QueryType.ReadQuery),
-    WRITE(1, com.vaticle.typedb.driver.jni.QueryType.WriteQuery),
-    SCHEMA(2, com.vaticle.typedb.driver.jni.QueryType.SchemaQuery);
+    READ(0, com.typedb.driver.jni.QueryType.ReadQuery),
+    WRITE(1, com.typedb.driver.jni.QueryType.WriteQuery),
+    SCHEMA(2, com.typedb.driver.jni.QueryType.SchemaQuery);
 
     private final int id;
-    public final com.vaticle.typedb.driver.jni.QueryType nativeObject;
+    public final com.typedb.driver.jni.QueryType nativeObject;
 
-    QueryType(int id, com.vaticle.typedb.driver.jni.QueryType nativeObject) {
+    QueryType(int id, com.typedb.driver.jni.QueryType nativeObject) {
         this.id = id;
         this.nativeObject = nativeObject;
     }
 
-    public static QueryType of(com.vaticle.typedb.driver.jni.QueryType nativeType) {
-        if (nativeType == com.vaticle.typedb.driver.jni.QueryType.ReadQuery) return READ;
-        else if (nativeType == com.vaticle.typedb.driver.jni.QueryType.WriteQuery) return WRITE;
-        else if (nativeType == com.vaticle.typedb.driver.jni.QueryType.SchemaQuery) return SCHEMA;
+    public static QueryType of(com.typedb.driver.jni.QueryType nativeType) {
+        if (nativeType == com.typedb.driver.jni.QueryType.ReadQuery) return READ;
+        else if (nativeType == com.typedb.driver.jni.QueryType.WriteQuery) return WRITE;
+        else if (nativeType == com.typedb.driver.jni.QueryType.SchemaQuery) return SCHEMA;
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
@@ -56,14 +56,14 @@ public enum QueryType {
     }
 
     public boolean isRead() {
-        return nativeObject == com.vaticle.typedb.driver.jni.QueryType.ReadQuery;
+        return nativeObject == com.typedb.driver.jni.QueryType.ReadQuery;
     }
 
     public boolean isWrite() {
-        return nativeObject == com.vaticle.typedb.driver.jni.QueryType.WriteQuery;
+        return nativeObject == com.typedb.driver.jni.QueryType.WriteQuery;
     }
 
     public boolean isSchema() {
-            return nativeObject == com.vaticle.typedb.driver.jni.QueryType.SchemaQuery;
+            return nativeObject == com.typedb.driver.jni.QueryType.SchemaQuery;
         }
 }

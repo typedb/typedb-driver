@@ -17,27 +17,27 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.type;
+package com.typedb.driver.concept.type;
 
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.common.Label;
+import com.typedb.driver.api.concept.type.AttributeType;
+import com.typedb.driver.common.Label;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_get_label;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_get_value_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_boolean;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_date;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_datetime;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_datetime_tz;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_decimal;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_double;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_duration;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_long;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_string;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_struct;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_type_is_untyped;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_get_label;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_get_value_type;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_boolean;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_date;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_datetime;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_datetime_tz;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_decimal;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_double;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_duration;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_long;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_string;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_struct;
+import static com.typedb.driver.jni.typedb_driver.attribute_type_is_untyped;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
-    public AttributeTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public AttributeTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

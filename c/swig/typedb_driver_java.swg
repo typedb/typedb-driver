@@ -22,7 +22,7 @@
 %include "various.i"
 %include "enums.swg"
 
-#define PACKAGE_ "com.vaticle.typedb.driver.jni"
+#define PACKAGE_ "com.typedb.driver.jni"
 #define PACKAGE_PATH_ "com/vaticle/typedb/driver/jni"
 
 %typemap(javacode) SWIGTYPE %{

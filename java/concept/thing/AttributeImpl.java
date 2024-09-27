@@ -17,18 +17,18 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.thing;
+package com.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
-import com.vaticle.typedb.driver.concept.value.ValueImpl;
+import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.concept.type.AttributeTypeImpl;
+import com.typedb.driver.concept.value.ValueImpl;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_get_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_get_value;
+import static com.typedb.driver.jni.typedb_driver.attribute_get_type;
+import static com.typedb.driver.jni.typedb_driver.attribute_get_value;
 
 public class AttributeImpl extends ThingImpl implements Attribute {
-    public AttributeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public AttributeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

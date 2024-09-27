@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api;
+package com.typedb.driver.api;
 
 // TODO: Currently disabled in 3.0
 
@@ -33,7 +33,7 @@ package com.vaticle.typedb.driver.api;
  * Credential credential = new Credential(username, password, Path.of("path/to/ca-certificate.pem"));
  * </pre>
  */
-//public class Credential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
+//public class Credential extends NativeObject<com.typedb.driver.jni.Credential> {
 //    /**
 //     *
 //     * @param username The name of the user to connect as
@@ -58,11 +58,11 @@ package com.vaticle.typedb.driver.api;
 //        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
 //    }
 //
-//    private static com.vaticle.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
+//    private static com.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
 //        assert tlsEnabled || tlsRootCAPath == null;
 //        try {
 //            return credential_new(username, password, tlsRootCAPath, tlsEnabled);
-//        } catch (com.vaticle.typedb.driver.jni.Error error) {
+//        } catch (com.typedb.driver.jni.Error error) {
 //            throw new TypeDBDriverException(error);
 //        }
 //    }

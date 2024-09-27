@@ -17,14 +17,14 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.answer;
+package com.typedb.driver.api.answer;
 
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.common.util.Objects.className;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_QUERY_ANSWER_CASTING;
+import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_QUERY_ANSWER_CASTING;
+import static com.typedb.driver.common.util.Objects.className;
 
 /**
  * TODO: docs

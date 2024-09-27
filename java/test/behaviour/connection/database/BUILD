@@ -29,10 +29,8 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//java/api:api",
+        "//java/common:common",
         "//java/test/behaviour/connection:steps-base",
-
-        # Internal Repository Dependencies
-        "@vaticle_typeql//common/java:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -45,7 +43,7 @@ typedb_java_test(
     srcs = [
         "DatabaseTestCore.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCore",
+    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCore",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
@@ -80,7 +78,7 @@ typedb_java_test(
 #    srcs = [
 #        "DatabaseTestCloud.java",
 #    ],
-#    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
+#    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
 #    data = [
 #        "@vaticle_typedb_behaviour//connection:database.feature",
 #    ],

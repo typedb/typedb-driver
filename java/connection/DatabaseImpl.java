@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
+package com.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.database.Database;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.database.Database;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.DATABASE_DELETED;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_delete;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_get_name;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_schema;
-import static com.vaticle.typedb.driver.jni.typedb_driver.database_type_schema;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.DATABASE_DELETED;
+import static com.typedb.driver.jni.typedb_driver.database_delete;
+import static com.typedb.driver.jni.typedb_driver.database_get_name;
+import static com.typedb.driver.jni.typedb_driver.database_schema;
+import static com.typedb.driver.jni.typedb_driver.database_type_schema;
 
-public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Database> implements Database {
-    public DatabaseImpl(com.vaticle.typedb.driver.jni.Database database) {
+public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> implements Database {
+    public DatabaseImpl(com.typedb.driver.jni.Database database) {
         super(database);
     }
 
@@ -45,7 +45,7 @@ public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Dat
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             return database_schema(nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -55,7 +55,7 @@ public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Dat
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             return database_type_schema(nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -66,7 +66,7 @@ public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Dat
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
             database_delete(nativeObject.released());
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -85,7 +85,7 @@ public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Dat
 //    @Override
 //    public Optional<? extends Database.Replica> primaryReplica() {
 //        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-//        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
+//        com.typedb.driver.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
 //        if (res != null) return Optional.of(new Replica(res));
 //        else return Optional.empty();
 //    }
@@ -93,13 +93,13 @@ public class DatabaseImpl extends NativeObject<com.vaticle.typedb.driver.jni.Dat
 //    @Override
 //    public Optional<? extends Database.Replica> preferredReplica() {
 //        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-//        com.vaticle.typedb.driver.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
+//        com.typedb.driver.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
 //        if (res != null) return Optional.of(new Replica(res));
 //        else return Optional.empty();
 //    }
 //
-//    public static class Replica extends NativeObject<com.vaticle.typedb.driver.jni.ReplicaInfo> implements Database.Replica {
-//        Replica(com.vaticle.typedb.driver.jni.ReplicaInfo replicaInfo) {
+//    public static class Replica extends NativeObject<com.typedb.driver.jni.ReplicaInfo> implements Database.Replica {
+//        Replica(com.typedb.driver.jni.ReplicaInfo replicaInfo) {
 //            super(replicaInfo);
 //        }
 //

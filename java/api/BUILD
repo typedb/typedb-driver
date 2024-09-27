@@ -28,11 +28,6 @@ java_library(
 
         "//java:typedb_driver_jni",
 
-        # External dependencies from @vaticle
-        "@vaticle_typeql//common/java:common",
-        "@vaticle_typeql//java/pattern",
-        "@vaticle_typeql//java/query",
-
         # External dependencies from Maven
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
         "@maven//:com_google_code_findbugs_jsr305",

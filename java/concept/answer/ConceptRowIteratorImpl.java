@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.answer;
+package com.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.answer.ConceptRow;
-import com.vaticle.typedb.driver.api.answer.ConceptRowIterator;
-import com.vaticle.typedb.driver.common.NativeIterator;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.answer.ConceptRow;
+import com.typedb.driver.api.answer.ConceptRowIterator;
+import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRowIterator {
-    NativeIterator<com.vaticle.typedb.driver.jni.ConceptRow> nativeIterator;
+    NativeIterator<com.typedb.driver.jni.ConceptRow> nativeIterator;
 
-    protected ConceptRowIteratorImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+    protected ConceptRowIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
         nativeIterator = new NativeIterator<>(nativeObject.intoRows());
     }
@@ -45,7 +45,7 @@ public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRo
     public boolean hasNext() {
         try {
             return nativeIterator.hasNext();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -54,7 +54,7 @@ public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRo
     public ConceptRow next() {
         try {
             return new ConceptRowImpl(nativeIterator.next());
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }

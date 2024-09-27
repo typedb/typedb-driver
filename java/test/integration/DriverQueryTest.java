@@ -17,21 +17,21 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.integration;
+package com.typedb.driver.test.integration;
 
-import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.api.answer.ConceptRow;
-import com.vaticle.typedb.driver.api.answer.QueryAnswer;
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
-import com.vaticle.typedb.driver.api.concept.thing.Entity;
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.type.EntityType;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.api.database.Database;
-import com.vaticle.typedb.driver.common.Duration;
+import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.answer.ConceptRow;
+import com.typedb.driver.api.answer.QueryAnswer;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.api.concept.type.AttributeType;
+import com.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.api.database.Database;
+import com.typedb.driver.common.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

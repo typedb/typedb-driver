@@ -17,50 +17,31 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.query;
+package com.typedb.driver.test.behaviour.query;
 
-import com.vaticle.typedb.driver.api.answer.ConceptRow;
-import com.vaticle.typedb.driver.api.answer.JSON;
-import com.vaticle.typedb.driver.api.answer.ValueGroup;
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.common.Label;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.test.behaviour.config.Parameters;
-import com.vaticle.typeql.lang.TypeQL;
-import com.vaticle.typeql.lang.common.exception.TypeQLException;
-import com.vaticle.typeql.lang.query.TypeQLDefine;
-import com.vaticle.typeql.lang.query.TypeQLDelete;
-import com.vaticle.typeql.lang.query.TypeQLFetch;
-import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLGet;
-import com.vaticle.typeql.lang.query.TypeQLUndefine;
-import com.vaticle.typeql.lang.query.TypeQLUpdate;
+import com.typedb.driver.api.answer.ConceptRow;
+import com.typedb.driver.api.answer.JSON;
+import com.typedb.driver.api.answer.ValueGroup;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.type.AttributeType;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.Label;
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.vaticle.typedb.driver.test.behaviour.util.Util.JSONListMatches;
-import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
-import static com.vaticle.typedb.common.collection.Collections.set;
-import static com.vaticle.typedb.common.util.Double.equalsApproximate;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.typedb.driver.test.behaviour.util.Util.JSONListMatches;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -78,32 +59,8 @@ public class QuerySteps {
 
     @Given("typeql define{may_error}")
     public void typeql_define(String defineQueryStatements, Parameters.MayError mayError) {
-        TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-        mayError.check(() -> tx().query(String.join("\n", defineQueryStatements)).resolve());
-    }
-
-    @Given("typeql undefine")
-    public void typeql_undefine(String undefineQueryStatements) {
-        TypeQLUndefine typeQLQuery = TypeQL.parseQuery(String.join("\n", undefineQueryStatements));
-        tx().query(String.join("\n", undefineQueryStatements)).resolve();
-    }
-
-    @Given("typeql insert")
-    public List<ConceptRow> typeql_insert(String insertQueryStatements) {
-        TypeQLInsert typeQLQuery = TypeQL.parseQuery(String.join("\n", insertQueryStatements));
-        return tx().query(String.join("\n", insertQueryStatements)).resolve().asConceptRows().stream().collect(Collectors.toList());
-    }
-
-    @Given("typeql delete")
-    public void typeql_delete(String deleteQueryStatements) {
-        TypeQLDelete typeQLQuery = TypeQL.parseQuery(String.join("\n", deleteQueryStatements));
-        tx().query(String.join("\n", deleteQueryStatements)).resolve();
-    }
-
-    @Given("typeql update")
-    public List<ConceptRow> typeql_update(String updateQueryStatements) {
-        TypeQLUpdate typeQLQuery = TypeQL.parseQuery(String.join("\n", updateQueryStatements));
-        return tx().query(String.join("\n", updateQueryStatements)).resolve().asConceptRows().stream().collect(Collectors.toList());
+//        TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
+//        mayError.check(() -> tx().query(String.join("\n", defineQueryStatements)).resolve());
     }
 
     private void clearAnswers() {

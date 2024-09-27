@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.user;
+package com.typedb.driver.user;
 
 // TODO: Currently disabled in 3.0
 
 
-//public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.UserManager> implements UserManager {
-//    public UserManagerImpl(com.vaticle.typedb.driver.jni.TypeDBDriver nativeDriver) {
+//public class UserManagerImpl extends NativeObject<com.typedb.driver.jni.UserManager> implements UserManager {
+//    public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver nativeDriver) {
 //        super(newNative(nativeDriver));
 //    }
 //
-//    private static com.vaticle.typedb.driver.jni.UserManager newNative(com.vaticle.typedb.driver.jni.TypeDBDriver nativeDriver) {
+//    private static com.typedb.driver.jni.UserManager newNative(com.typedb.driver.jni.TypeDBDriver nativeDriver) {
 //        try {
 //            return user_manager_new(nativeDriver);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -39,7 +39,7 @@ package com.vaticle.typedb.driver.user;
 //    public boolean contains(String username) {
 //        try {
 //            return users_contains(nativeObject, username);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -48,7 +48,7 @@ package com.vaticle.typedb.driver.user;
 //    public void create(String username, String password) {
 //        try {
 //            users_create(nativeObject, username, password);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -57,7 +57,7 @@ package com.vaticle.typedb.driver.user;
 //    public void delete(String username) {
 //        try {
 //            users_delete(nativeObject, username);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -66,7 +66,7 @@ package com.vaticle.typedb.driver.user;
 //    public Set<User> all() {
 //        try {
 //            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -74,10 +74,10 @@ package com.vaticle.typedb.driver.user;
 //    @Override
 //    public User get(String username) {
 //        try {
-//            com.vaticle.typedb.driver.jni.User user = users_get(nativeObject, username);
+//            com.typedb.driver.jni.User user = users_get(nativeObject, username);
 //            if (user != null) return new UserImpl(user, this);
 //            else return null;
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -86,7 +86,7 @@ package com.vaticle.typedb.driver.user;
 //    public void passwordSet(String username, String password) {
 //        try {
 //            users_set_password(nativeObject, username, password);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -94,7 +94,7 @@ package com.vaticle.typedb.driver.user;
 //    public User getCurrentUser() {
 //        try {
 //            return new UserImpl(users_current_user(nativeObject), this);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }

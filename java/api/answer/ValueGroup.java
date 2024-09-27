@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.answer;
+package com.typedb.driver.api.answer;
 
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.value.Value;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;

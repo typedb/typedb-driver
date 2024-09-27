@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.user;
+package com.typedb.driver.user;
 
 // TODO: Currently disabled in 3.0
 
 
-//public class UserImpl extends NativeObject<com.vaticle.typedb.driver.jni.User> implements User {
+//public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
 //    private final UserManagerImpl users;
 //
-//    UserImpl(com.vaticle.typedb.driver.jni.User user, UserManagerImpl users) {
+//    UserImpl(com.typedb.driver.jni.User user, UserManagerImpl users) {
 //        super(user);
 //        this.users = users;
 //    }
@@ -46,7 +46,7 @@ package com.vaticle.typedb.driver.user;
 //    public void passwordUpdate(String passwordOld, String passwordNew) {
 //        try {
 //            user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }

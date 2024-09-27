@@ -31,9 +31,6 @@ java_library(
     deps = [
         "//java:typedb_driver_jni",
 
-        # External dependencies from @vaticle
-        "@vaticle_typeql//common/java:common",
-
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",
     ],

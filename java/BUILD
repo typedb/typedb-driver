@@ -37,9 +37,6 @@ java_library(
         # Internal dependencies
         "//java/api",
         "//java/connection",
-
-        # External dependencies from @vaticle
-        "@vaticle_typeql//common/java:common",
     ],
 )
 
@@ -73,7 +70,7 @@ deploy_maven(
 swig_native_java_library(
     name = "typedb_driver_jni",
     lib = "//c:typedb_driver_clib_headers",
-    package = "com.vaticle.typedb.driver.jni",
+    package = "com.typedb.driver.jni",
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_java.swg"],
     enable_cxx = True,
@@ -117,7 +114,6 @@ javadoc_library(
         "//java:driver-java",
         "//java/api",
         "//java/common",
-        "@vaticle_typeql//common/java:common",
     ],
 )
 

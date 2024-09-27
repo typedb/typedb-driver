@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection;
+package com.typedb.driver.test.behaviour.connection;
 
 //import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.api.database.Database;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;
 import java.util.Collections;

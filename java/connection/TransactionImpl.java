@@ -17,31 +17,31 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
+package com.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.api.answer.QueryAnswer;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.Promise;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.answer.QueryAnswerImpl;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.answer.QueryAnswer;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Promise;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.concept.answer.QueryAnswerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.MISSING_QUERY;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_commit;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_force_close;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_is_open;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_new;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_on_close;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_query;
-import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_rollback;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
+import static com.typedb.driver.common.exception.ErrorMessage.Query.MISSING_QUERY;
+import static com.typedb.driver.jni.typedb_driver.transaction_commit;
+import static com.typedb.driver.jni.typedb_driver.transaction_force_close;
+import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
+import static com.typedb.driver.jni.typedb_driver.transaction_new;
+import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
+import static com.typedb.driver.jni.typedb_driver.transaction_query;
+import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
 
-public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Transaction> implements Transaction {
+public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {
     private final Transaction.Type type;
 //    private final Options options;
 
@@ -55,10 +55,10 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         callbacks = new ArrayList<>();
     }
 
-    private static com.vaticle.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type/*, Options options*/) {
+    private static com.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type/*, Options options*/) {
         try {
             return transaction_new(((DriverImpl)driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -84,7 +84,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         if (query == null || query.isBlank()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
             return Promise.map(transaction_query(nativeObject, query/*, options.nativeObject*/), QueryAnswerImpl::of);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -96,7 +96,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
             TransactionOnClose callback = new TransactionOnClose(function);
             callbacks.add(callback);
             transaction_on_close(nativeObject, callback.released());
-        } catch (com.vaticle.typedb.driver.jni.Error error) {
+        } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
     }
@@ -107,7 +107,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
             transaction_commit(nativeObject.released()).get();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -117,7 +117,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             transaction_rollback(nativeObject).get();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -127,7 +127,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         if (nativeObject.isOwned()) {
             try {
                 transaction_force_close(nativeObject);
-            } catch (com.vaticle.typedb.driver.jni.Error error) {
+            } catch (com.typedb.driver.jni.Error error) {
                 throw new TypeDBDriverException(error);
             } finally {
                 callbacks.clear();
@@ -135,7 +135,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         }
     }
 
-    static class TransactionOnClose extends com.vaticle.typedb.driver.jni.TransactionCallbackDirector {
+    static class TransactionOnClose extends com.typedb.driver.jni.TransactionCallbackDirector {
         private final Consumer<Throwable> function;
 
         public TransactionOnClose(Consumer<Throwable> function) {
@@ -143,7 +143,7 @@ public class TransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.
         }
 
         @Override
-        public void callback(com.vaticle.typedb.driver.jni.Error e) {
+        public void callback(com.typedb.driver.jni.Error e) {
             function.accept(e);
         }
     }

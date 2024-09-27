@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common;
+package com.typedb.driver.common;
 
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -41,7 +41,7 @@ public class NativeIterator<T> implements Iterator<T> {
     public boolean hasNext() {
         try {
             return inner.hasNext();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -50,7 +50,7 @@ public class NativeIterator<T> implements Iterator<T> {
     public T next() {
         try {
             return inner.next();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }

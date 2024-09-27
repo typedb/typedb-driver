@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.driver.query;
+package com.typedb.driver.test.behaviour.driver.query;
 
-import com.vaticle.typedb.driver.test.behaviour.BehaviourTest;
+import com.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "com.vaticle.typedb.driver.test.behaviour",
+        glue = "com.typedb.driver.test.behaviour",
         features = "external/vaticle_typedb_behaviour/driver/query.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
@@ -46,7 +46,7 @@ public class QueryTest extends BehaviourTest {
     //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.driver.*'
+    //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed

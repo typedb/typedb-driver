@@ -54,7 +54,7 @@ java_library(
 #        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
 #        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
 #    },
-#    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.user.UserTestCloud",
+#    test_class = "com.typedb.driver.test.behaviour.connection.user.UserTestCloud",
 #    runtime_deps = [
 #        ":steps",
 #        "//java/test/behaviour/config:parameters",

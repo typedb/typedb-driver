@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
+package com.typedb.driver.connection;
 
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.api.database.DatabaseManager;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.driver_force_close;
-import static com.vaticle.typedb.driver.jni.typedb_driver.driver_is_open;
-import static com.vaticle.typedb.driver.jni.typedb_driver.driver_open_core;
+import static com.typedb.driver.jni.typedb_driver.driver_force_close;
+import static com.typedb.driver.jni.typedb_driver.driver_is_open;
+import static com.typedb.driver.jni.typedb_driver.driver_open_core;
 
-public class DriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.TypeDBDriver> implements Driver {
+public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 
     public DriverImpl(String address) throws TypeDBDriverException {
         this(openCore(address));
@@ -43,27 +43,27 @@ public class DriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.TypeD
 //        this(openCloud(addressTranslation, credential));
 //    }
 
-    private DriverImpl(com.vaticle.typedb.driver.jni.TypeDBDriver connection) {
+    private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
         super(connection);
     }
 
-    private static com.vaticle.typedb.driver.jni.TypeDBDriver openCore(String address) {
+    private static com.typedb.driver.jni.TypeDBDriver openCore(String address) {
         try {
             return driver_open_core(address, LANGUAGE);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+        } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
-//    private static com.vaticle.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credential credential) {
+//    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credential credential) {
 //        try {
 //            return driver_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject);
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
 
-//    private static com.vaticle.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credential credential) {
+//    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credential credential) {
 //        try {
 //            List<String> publicAddresses = new ArrayList();
 //            List<String> privateAddresses = new ArrayList();
@@ -76,7 +76,7 @@ public class DriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.TypeD
 //                privateAddresses.toArray(new String[0]),
 //                credential.nativeObject
 //            );
-//        } catch (com.vaticle.typedb.driver.jni.Error e) {
+//        } catch (com.typedb.driver.jni.Error e) {
 //            throw new TypeDBDriverException(e);
 //        }
 //    }
@@ -111,7 +111,7 @@ public class DriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.TypeD
         if (!isOpen()) return;
         try {
             driver_force_close(nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error error) {
+        } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
     }

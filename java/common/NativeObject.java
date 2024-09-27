@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common;
+package com.typedb.driver.common;
 
-import com.vaticle.typedb.driver.common.exception.ErrorMessage;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.ErrorMessage;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.init_logging;
+import static com.typedb.driver.jni.typedb_driver.init_logging;
 
 public abstract class NativeObject<T> {
     static {

@@ -17,27 +17,27 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.answer;
+package com.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.answer.ValueGroup;
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.concept.ConceptImpl;
-import com.vaticle.typedb.driver.concept.value.ValueImpl;
+import com.typedb.driver.api.answer.ValueGroup;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.concept.value.ValueImpl;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_equals;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_get_value;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_get_owner;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_to_string;
+import static com.typedb.driver.jni.typedb_driver.value_group_equals;
+import static com.typedb.driver.jni.typedb_driver.value_group_get_owner;
+import static com.typedb.driver.jni.typedb_driver.value_group_get_value;
+import static com.typedb.driver.jni.typedb_driver.value_group_to_string;
 
-public class ValueGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.ValueGroup> implements ValueGroup {
+public class ValueGroupImpl extends NativeObject<com.typedb.driver.jni.ValueGroup> implements ValueGroup {
     private int hash = 0;
 
-    public ValueGroupImpl(com.vaticle.typedb.driver.jni.ValueGroup valueGroup) {
+    public ValueGroupImpl(com.typedb.driver.jni.ValueGroup valueGroup) {
         super(valueGroup);
     }
 
@@ -48,7 +48,7 @@ public class ValueGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.V
 
     @Override
     public Optional<Value> value() {
-        com.vaticle.typedb.driver.jni.Concept nativeValue = value_group_get_value(nativeObject);
+        com.typedb.driver.jni.Concept nativeValue = value_group_get_value(nativeObject);
         if (nativeValue == null) return Optional.empty();
         else return Optional.of(new ValueImpl(nativeValue));
     }

@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api;
+package com.typedb.driver.api;
 
-import com.vaticle.typedb.driver.api.answer.QueryAnswer;
-import com.vaticle.typedb.driver.common.Promise;
+import com.typedb.driver.api.answer.QueryAnswer;
+import com.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
@@ -118,14 +118,14 @@ public interface Transaction extends AutoCloseable {
      * </pre>
      */
     enum Type {
-        READ(0, com.vaticle.typedb.driver.jni.TransactionType.Read),
-        WRITE(1, com.vaticle.typedb.driver.jni.TransactionType.Write),
-        SCHEMA(2, com.vaticle.typedb.driver.jni.TransactionType.Schema);
+        READ(0, com.typedb.driver.jni.TransactionType.Read),
+        WRITE(1, com.typedb.driver.jni.TransactionType.Write),
+        SCHEMA(2, com.typedb.driver.jni.TransactionType.Schema);
 
         private final int id;
-        public final com.vaticle.typedb.driver.jni.TransactionType nativeObject;
+        public final com.typedb.driver.jni.TransactionType nativeObject;
 
-        Type(int id, com.vaticle.typedb.driver.jni.TransactionType nativeObject) {
+        Type(int id, com.typedb.driver.jni.TransactionType nativeObject) {
             this.id = id;
             this.nativeObject = nativeObject;
         }
@@ -135,15 +135,15 @@ public interface Transaction extends AutoCloseable {
         }
 
         public boolean isRead() {
-            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Read;
+            return nativeObject == com.typedb.driver.jni.TransactionType.Read;
         }
 
         public boolean isWrite() {
-            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Write;
+            return nativeObject == com.typedb.driver.jni.TransactionType.Write;
         }
 
         public boolean isSchema() {
-            return nativeObject == com.vaticle.typedb.driver.jni.TransactionType.Schema;
+            return nativeObject == com.typedb.driver.jni.TransactionType.Schema;
         }
     }
 }
