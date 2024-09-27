@@ -500,20 +500,20 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-unix
+#      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-linux:
-          target-arch: arm64
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-linux:
+#          target-arch: arm64
 
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-linux:
-          target-arch: arm64
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-linux:
+#          target-arch: arm64
 
-      - install-libicu-linux
-      - deploy-dotnet-runtime-snapshot-unix
+#      - install-libicu-linux
+#      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -522,20 +522,20 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-unix
+#      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-linux:
-          target-arch: x86_64
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-linux:
+#          target-arch: x86_64
 
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-linux:
-          target-arch: x86_64
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-linux:
+#          target-arch: x86_64
 
-      - install-libicu-linux
-      - deploy-dotnet-runtime-snapshot-unix
+#      - install-libicu-linux
+#      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-arm64:
     executor: mac-arm64
@@ -544,21 +544,21 @@ jobs:
       - install-bazel-brew:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-unix
+#      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
-      - run: brew install cmake
+#      - run: brew install cmake
 
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-mac:
-          target-arch: arm64
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-mac:
+#          target-arch: arm64
 
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-mac:
-          target-arch: arm64
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-mac:
+#          target-arch: arm64
 
-      - deploy-dotnet-runtime-snapshot-unix
+#      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -568,21 +568,21 @@ jobs:
       - install-bazel-brew:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-unix
+#      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
-      - run: brew install cmake
+#      - run: brew install cmake
 
-      - deploy-clib-snapshot-unix
-      - test-clib-assembly-mac:
-          target-arch: x86_64
+#      - deploy-clib-snapshot-unix
+#      - test-clib-assembly-mac:
+#          target-arch: x86_64
 
-      - deploy-cpp-snapshot-unix
-      - test-cpp-assembly-mac:
-          target-arch: x86_64
+#      - deploy-cpp-snapshot-unix
+#      - test-cpp-assembly-mac:
+#          target-arch: x86_64
 
-      - deploy-dotnet-runtime-snapshot-unix
+#      - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-windows-x86_64:
     executor: win-x86_64
@@ -591,17 +591,17 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
 
-      - run: .circleci\windows\python\deploy_snapshot.bat
+#      - run: .circleci\windows\python\deploy_snapshot.bat
 
       - run: .circleci\windows\java\deploy_snapshot.bat
 
-      - run: .circleci\windows\clib\deploy_snapshot.bat
-      - run: .circleci\windows\clib\test_assembly.bat
+#      - run: .circleci\windows\clib\deploy_snapshot.bat
+#      - run: .circleci\windows\clib\test_assembly.bat
 
-      - run: .circleci\windows\cpp\deploy_snapshot.bat
-      - run: .circleci\windows\cpp\test_assembly.bat
+#      - run: .circleci\windows\cpp\deploy_snapshot.bat
+#      - run: .circleci\windows\cpp\test_assembly.bat
 
-      - run: .circleci\windows\csharp\deploy_snapshot.bat
+#      - run: .circleci\windows\csharp\deploy_snapshot.bat
 
   deploy-snapshot-any:
     executor: linux-x86_64-ubuntu-2204
@@ -610,7 +610,7 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
-#      - deploy-maven-snapshot-unix
+      - deploy-maven-snapshot-unix
 #      - deploy-npm-snapshot-unix
 
   deploy-snapshot-dotnet-any:
@@ -818,41 +818,41 @@ jobs:
 workflows:
   typedb-driver-snapshot:
     jobs:
-#      - deploy-snapshot-linux-arm64:
-#          filters:
-#            branches:
-#              only: [development, master]
-#
-#      - deploy-snapshot-linux-x86_64:
-#          filters:
-#            branches:
-#              only: [development, master]
-#
-#      - deploy-snapshot-mac-arm64:
-#          filters:
-#            branches:
-#              only: [development, master]
-#
-#      - deploy-snapshot-mac-x86_64:
-#          filters:
-#            branches:
-#              only: [development, master]
-#
-#      - deploy-snapshot-windows-x86_64:
-#          filters:
-#            branches:
-#              only: [development, master]
+      - deploy-snapshot-linux-arm64:
+          filters:
+            branches:
+              only: [development, master, "3.0"]
+
+      - deploy-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [development, master, "3.0"]
+
+      - deploy-snapshot-mac-arm64:
+          filters:
+            branches:
+              only: [development, master, "3.0"]
+
+      - deploy-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [development, master, "3.0"]
+
+      - deploy-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [development, master, "3.0"]
 
       - deploy-snapshot-any:
           filters:
             branches:
               only: [development, master, "3.0"]
-#          requires:
-#            - deploy-snapshot-linux-arm64
-#            - deploy-snapshot-linux-x86_64
-#            - deploy-snapshot-mac-arm64
-#            - deploy-snapshot-mac-x86_64
-#            - deploy-snapshot-windows-x86_64
+          requires:
+            - deploy-snapshot-linux-arm64
+            - deploy-snapshot-linux-x86_64
+            - deploy-snapshot-mac-arm64
+            - deploy-snapshot-mac-x86_64
+            - deploy-snapshot-windows-x86_64
 #
 #      - deploy-snapshot-dotnet-any:
 #          filters:
