@@ -32,7 +32,7 @@ public abstract class ErrorMessage {
     private final String message;
     private String code = null;
 
-    private ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
+    protected ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
         this.codePrefix = codePrefix;
         this.codeNumber = codeNumber;
         this.message = messagePrefix + ": " + messageBody;
