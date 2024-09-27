@@ -27,7 +27,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
 </repositories>
 <dependencies>
     <dependency>
-        <groupid>com.vaticle.typedb</groupid>
+        <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
         <version>{version}</version>
     </dependency>
