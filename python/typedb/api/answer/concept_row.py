@@ -45,6 +45,7 @@ class ConceptRow(ABC):
         """
         pass
 
+    @property
     @abstractmethod
     def query_type(self) -> QueryType:
         """

@@ -29,7 +29,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database import _Database
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import TypeDBDriver as DriverNative
+    from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
 
 
 def _not_blank(name: str) -> str:
@@ -40,7 +40,7 @@ def _not_blank(name: str) -> str:
 
 class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDatabaseManager]):
 
-    def __init__(self, native_driver: DriverNative):
+    def __init__(self, native_driver: NativeDriver):
         super().__init__(native_driver)
 
     @property

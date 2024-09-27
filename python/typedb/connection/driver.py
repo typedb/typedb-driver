@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
-        driver_is_open, driver_force_close, TypeDBDriver as DriverNative, TypeDBDriverExceptionNative
+        driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 
 from typedb.api.connection.driver import Driver
 # from typedb.api.connection.options import Options
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     # from typedb.api.user.user import UserManager, User
 
 
-class _Driver(Driver, NativeWrapper[DriverNative]):
+class _Driver(Driver, NativeWrapper[NativeDriver]):
 
     def __init__(self, addresses: list[str] | dict[str]): # , credential: Optional[Credential] = None
         # if credential:
@@ -62,7 +62,7 @@ class _Driver(Driver, NativeWrapper[DriverNative]):
         return TypeDBDriverException(DRIVER_CLOSED)
 
     @property
-    def _native_driver(self) -> DriverNative:
+    def _native_driver(self) -> NativeDriver:
         return self.native_object
 
     def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Options = None

@@ -32,20 +32,19 @@ from typedb.logic.logic_manager import _LogicManager
 from typedb.query.query_manager import _QueryManager
 
 if TYPE_CHECKING:
-    from typedb.connection.session import _Session
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
 
 class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
-    def __init__(self, session: _Session, transaction_type: TransactionType, options: Options = None):
-        if not options:
-            options = Options()
-        self._transaction_type = transaction_type
-        self._options = options
+    def __init__(self, driver: Driver, transaction_type: TransactionType): # , options: Options = None
+        # if not options:
+        #     options = Options()
+        self._type = transaction_type
+        # self._options = options
         try:
-            super().__init__(transaction_new(session.native_object, transaction_type.value, options.native_object))
+            super().__init__(transaction_new(driver.native_object, transaction_type.value)) # , options.native_object
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
         self._concept_manager = _ConceptManager(self._native_object)
@@ -57,24 +56,19 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         return TypeDBDriverException(TRANSACTION_CLOSED)
 
     @property
-    def transaction_type(self) -> TransactionType:
-        return self._transaction_type
+    def type(self) -> TransactionType:
+        return self._type
 
-    @property
-    def options(self) -> Options:
-        return self._options
+    # @property
+    # def options(self) -> Options:
+    #     return self._options
 
-    @property
-    def concepts(self) -> _ConceptManager:
-        return self._concept_manager
+    def query(self, query: str) -> Promise[QueryAnswer]:
+        if not query or query.isspace():
+            raise TypeDBDriverException(MISSING_QUERY)
 
-    @property
-    def logic(self) -> _LogicManager:
-        return self._logic_manager
-
-    @property
-    def query(self) -> _QueryManager:
-        return self._query_manager
+        promise = transaction_query(self.native_object, query)
+        return Promise(lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
         if not self._native_object.thisown:

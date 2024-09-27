@@ -17,15 +17,14 @@
 
 from __future__ import annotations
 
-from typing import Mapping, Iterator, TYPE_CHECKING
+from typing import Iterator, TYPE_CHECKING
 
 from typedb.native_driver_wrapper import concept_row_get_variables, string_iterator_next, concept_row_get_values, \
     concept_iterator_next, concept_row_get, concept_row_get_explainables, concept_row_to_string, concept_row_equals, \
     explainables_get_relation, explainables_get_attribute, explainables_get_ownership, \
     explainables_get_relations_keys, explainables_get_attributes_keys, explainables_get_ownerships_keys, \
     string_pair_iterator_next, explainables_to_string, explainables_equals, explainable_get_conjunction, \
-    explainable_get_id, ConceptRow as NativeConceptRow, Explainables as NativeExplainables, \
-    Explainable as NativeExplainable
+    explainable_get_id, ConceptRow as NativeConceptRow
 
 from typedb.api.answer.concept_row import ConceptRow
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
