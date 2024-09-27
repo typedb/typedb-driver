@@ -13,8 +13,8 @@ The driver is distributed as an archive containing the headers & a shared librar
 ```
 
 As usual, add the include paths to your compile step & the library to your link step. For Windows, the 'import-lib' `typedb_driver_clib.dll.lib` is provided to link against.
-A sample [CMakeLists.txt](https://github.com/vaticle/typedb-driver/blob/master/c/tests/assembly/CMakeLists.txt) file is available in the TypeDB Driver repository.
-Code examples can be found in the [integration tests](https://github.com/vaticle/typedb-driver/blob/master/c/tests/integration/driver_test.c). 
+A sample [CMakeLists.txt](https://github.com/typedb/typedb-driver/blob/master/c/tests/assembly/CMakeLists.txt) file is available in the TypeDB Driver repository.
+Code examples can be found in the [integration tests](https://github.com/typedb/typedb-driver/blob/master/c/tests/integration/driver_test.c). 
 
 ## Architecture
 ### Interface

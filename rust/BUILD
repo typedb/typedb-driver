@@ -75,11 +75,11 @@ rust_test(
 assemble_crate(
     name = "assemble_crate",
     description = "TypeDB Rust Driver",
-    homepage = "https://github.com/vaticle/typedb-driver",
+    homepage = "https://github.com/typedb/typedb-driver",
     license = "Apache-2.0",
     license_file = "//:LICENSE",
     readme_file = ":README.md",
-    repository = "https://github.com/vaticle/typedb-driver",
+    repository = "https://github.com/typedb/typedb-driver",
     target = ":typedb_driver",
     universe_manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
     crate_features = { "sync": [] },

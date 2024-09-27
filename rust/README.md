@@ -1,11 +1,5 @@
 # TypeDB Rust Driver
 
-[![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-driver/badge.svg)](https://factory.vaticle.com/vaticle/typedb-driver)
-[![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
-[![Discussion Forum](https://img.shields.io/discourse/https/forum.typedb.com/topics.svg)](https://forum.typedb.com)
-[![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)
-[![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
-
 ## Driver Architecture
 To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Clients Overview](https://typedb.com/docs/drivers/overview).
 

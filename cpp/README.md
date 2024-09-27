@@ -14,7 +14,7 @@ The driver is distributed as an archive containing the headers & a shared librar
 ```
 
 As usual, Add the include paths to your compile step & the library to your link step. For windows, the 'import-lib' `typedb-driver-cpp-<platform>.if.lib` is provided to link against.
-A [sample `CMakeLists`](https://github.com/vaticle/typedb-driver/blob/master/cpp/test/assembly/CMakeLists.txt) is available on the TypeDB Driver repository.
+A [sample `CMakeLists`](https://github.com/typedb/typedb-driver/blob/master/cpp/test/assembly/CMakeLists.txt) is available on the TypeDB Driver repository.
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using the C++ driver, refer to the [API Reference](https://typedb.com/docs/drivers/cpp/api-reference).
