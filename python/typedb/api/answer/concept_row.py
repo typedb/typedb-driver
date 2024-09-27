@@ -46,7 +46,6 @@ class ConceptRow(ABC):
         pass
 
     @abstractmethod
-    @property
     def query_type(self) -> QueryType:
         """
         Retrieves the executed query's type of this ``ConceptRow``.

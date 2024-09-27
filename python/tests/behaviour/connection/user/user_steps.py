@@ -24,7 +24,7 @@ from tests.behaviour.context import Context
 
 def _get_driver(context: Context):
     driver = context.driver
-    assert isinstance(driver, TypeDBDriver)
+    assert isinstance(driver, Driver)
     return driver
 
 

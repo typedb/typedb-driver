@@ -73,13 +73,13 @@ def step_impl(context: Context):
     open_transactions_of_type_throws_exception(context, list(map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
 
 
-def for_each_session_transactions_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
+def for_each_session_transactions_are(context: Context, assertion: Callable[[Transaction], None]):
     for session in context.sessions:
         for transaction in context.sessions_to_transactions[session]:
             assertion(transaction)
 
 
-def assert_transaction_null(transaction: TypeDBTransaction, is_null: bool):
+def assert_transaction_null(transaction: Transaction, is_null: bool):
     assert_that(transaction is None, is_(is_null))
 
 
@@ -91,7 +91,7 @@ def step_impl(context: Context, is_null):
     for_each_session_transactions_are(context, lambda tx: assert_transaction_null(tx, is_null))
 
 
-def assert_transaction_open(transaction: TypeDBTransaction, is_open: bool):
+def assert_transaction_open(transaction: Transaction, is_open: bool):
     assert_that(transaction.is_open(), is_(is_open))
 
 
@@ -196,7 +196,7 @@ def step_impl(context: Context):
                 context.sessions_to_transactions_parallel[session].append(executor.submit(partial(session.transaction, type_)))
 
 
-def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
+def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[Transaction], None]):
     for session in context.sessions:
         for future_transaction in context.sessions_to_transactions_parallel[session]:
             assertion(future_transaction.result())

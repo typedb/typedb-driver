@@ -19,70 +19,68 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
-from typedb.native_driver_wrapper import connection_open_core, connection_open_cloud, connection_open_cloud_translated, \
-        connection_is_open, connection_force_close, Connection as NativeConnection, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
+        driver_is_open, driver_force_close, TypeDBDriver as DriverNative, TypeDBDriverExceptionNative
 
-from typedb.api.connection.driver import TypeDBDriver
-from typedb.api.connection.options import TypeDBOptions
+from typedb.api.connection.driver import Driver
+# from typedb.api.connection.options import Options
 from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
-from typedb.connection.session import _Session
-from typedb.user.user_manager import _UserManager
+# from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
-    from typedb.api.connection.credential import TypeDBCredential
-    from typedb.api.connection.session import SessionType
-    from typedb.api.user.user import UserManager, User
+    # from typedb.api.connection.credential import Credential
+    from typedb.api.connection.transaction import TransactionType
+    # from typedb.api.user.user import UserManager, User
 
 
-class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
+class _Driver(Driver, NativeWrapper[DriverNative]):
 
-    def __init__(self, addresses: list[str] | dict[str], credential: Optional[TypeDBCredential] = None):
-        if credential:
-            try:
-                if isinstance(addresses, list):
-                    native_connection = connection_open_cloud(addresses, credential.native_object)
-                else:
-                    public_addresses = list(addresses.keys())
-                    private_addresses = [addresses[public] for public in public_addresses]
-                    native_connection = connection_open_cloud_translated(
-                            public_addresses, private_addresses, credential.native_object)
-            except TypeDBDriverExceptionNative as e:
-                raise TypeDBDriverException.of(e)
-        else:
-            try:
-                native_connection = connection_open_core(addresses[0])
-            except TypeDBDriverExceptionNative as e:
-                raise TypeDBDriverException.of(e)
-        super().__init__(native_connection)
-        self._database_manager = _DatabaseManager(native_connection)
-        self._user_manager = _UserManager(native_connection)
+    def __init__(self, addresses: list[str] | dict[str]): # , credential: Optional[Credential] = None
+        # if credential:
+        #     try:
+        #         if isinstance(addresses, list):
+        #             native_connection = driver_open_cloud(addresses, credential.native_object)
+        #         else:
+        #             public_addresses = list(addresses.keys())
+        #             private_addresses = [addresses[public] for public in public_addresses]
+        #             native_connection = driver_open_cloud_translated(
+        #                     public_addresses, private_addresses, credential.native_object)
+        #     except TypeDBDriverExceptionNative as e:
+        #         raise TypeDBDriverException.of(e)
+        # else:
+        try:
+            native_driver = driver_open_core(addresses[0], Driver.LANGUAGE)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
+        super().__init__(native_driver)
+        # self._user_manager = _UserManager(native_connection)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(DRIVER_CLOSED)
 
     @property
-    def _native_connection(self) -> NativeConnection:
+    def _native_driver(self) -> DriverNative:
         return self.native_object
 
-    def session(self, database_name: str, session_type: SessionType, options: TypeDBOptions = None) -> _Session:
-        return _Session(self.databases, database_name, session_type, options if options else TypeDBOptions())
+    def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Options = None
+        return _Transaction(self.databases, database_name, session_type, options if options else Options())
 
     def is_open(self) -> bool:
-        return connection_is_open(self._native_connection)
+        return driver_is_open(self._native_driver)
 
     @property
     def databases(self) -> _DatabaseManager:
-        return self._database_manager
+        return _DatabaseManager(self._native_driver)
 
-    @property
-    def users(self) -> UserManager:
-        return self._user_manager
-
-    def user(self) -> User:
-        return self._user_manager.get_current_user()
+    # @property
+    # def users(self) -> UserManager:
+    #     return self._user_manager
+    #
+    # def user(self) -> User:
+    #     return self._user_manager.get_current_user()
 
     def __enter__(self):
         return self
@@ -94,4 +92,4 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
 
     def close(self) -> None:
         if self.is_open():
-            connection_force_close(self._native_connection)
+            driver_force_close(self._native_driver)

@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.thing.relation import Relation
     from typedb.api.concept.type.relation_type import RelationType
     from typedb.api.concept.type.thing_type import ThingType
-    from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.api.connection.transaction import Transaction
     from typedb.common.promise import Promise
 
 
@@ -72,7 +72,7 @@ class RoleType(Type, ABC):
         return self
 
     @abstractmethod
-    def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[RoleType]]:
+    def get_supertype(self, transaction: Transaction) -> Promise[Optional[RoleType]]:
         """
         Retrieves the most immediate supertype of the ``RoleType``.
 
@@ -88,7 +88,7 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_supertypes(self, transaction: TypeDBTransaction) -> Iterator[RoleType]:
+    def get_supertypes(self, transaction: Transaction) -> Iterator[RoleType]:
         """
         Retrieves all supertypes of the ``RoleType``.
 
@@ -106,7 +106,7 @@ class RoleType(Type, ABC):
     @abstractmethod
     def get_subtypes(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[RoleType]:
         """
@@ -127,7 +127,7 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_relation_type(self, transaction: TypeDBTransaction) -> Promise[RelationType]:
+    def get_relation_type(self, transaction: Transaction) -> Promise[RelationType]:
         """
         Retrieves the ``RelationType`` that this role is directly related to.
 
@@ -143,7 +143,7 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_relation_types(self, transaction: TypeDBTransaction) -> Iterator[RelationType]:
+    def get_relation_types(self, transaction: Transaction) -> Iterator[RelationType]:
         """
         Retrieves ``RelationType``\ s that this role is related to
         (directly or indirectly).
@@ -162,7 +162,7 @@ class RoleType(Type, ABC):
     @abstractmethod
     def get_player_types(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[ThingType]:
         """
@@ -185,7 +185,7 @@ class RoleType(Type, ABC):
     @abstractmethod
     def get_relation_instances(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[Relation]:
         """
@@ -208,7 +208,7 @@ class RoleType(Type, ABC):
     @abstractmethod
     def get_player_instances(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[Thing]:
         """

@@ -48,7 +48,7 @@ class TestStream(TestCase):
             # 50 answers -> CONTINUE -> 1 answer [compensating for latency] -> DONE. The driver will respond to
             # CONTINUE with STREAM to keep iterating, and the server responds to STREAM with a 2nd DONE message.
             # This is expected and should be handled correctly (ie: ignored) by the driver.
-            tx_options = TypeDBOptions(prefetch=True, prefetch_size=50)
+            tx_options = Options(prefetch=True, prefetch_size=50)
             for i in range(50):
                 with driver.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
                     person_type = tx.getQueryType.get_entity_type("person").resolve()

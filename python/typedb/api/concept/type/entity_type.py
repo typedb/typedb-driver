@@ -25,7 +25,7 @@ from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
     from typedb.api.concept.thing.entity import Entity
-    from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.api.connection.transaction import Transaction
     from typedb.common.promise import Promise
 
 
@@ -64,7 +64,7 @@ class EntityType(ThingType, ABC):
         return self
 
     @abstractmethod
-    def create(self, transaction: TypeDBTransaction) -> Promise[Entity]:
+    def create(self, transaction: Transaction) -> Promise[Entity]:
         """
         Creates and returns a new instance of this ``EntityType``.
 
@@ -82,7 +82,7 @@ class EntityType(ThingType, ABC):
     @abstractmethod
     def get_subtypes(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[EntityType]:
         """
@@ -106,7 +106,7 @@ class EntityType(ThingType, ABC):
     @abstractmethod
     def get_instances(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[Entity]:
         """
@@ -128,7 +128,7 @@ class EntityType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, super_entity_type: EntityType) -> Promise[None]:
+    def set_supertype(self, transaction: Transaction, super_entity_type: EntityType) -> Promise[None]:
         """
         Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 

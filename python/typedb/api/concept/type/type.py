@@ -24,7 +24,7 @@ from typedb.api.concept.concept import Concept
 from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
-    from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.api.connection.transaction import Transaction
     from typedb.common.label import Label
     from typedb.common.promise import Promise
 
@@ -46,7 +46,7 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def set_label(self, transaction: TypeDBTransaction, new_label: str) -> Promise[None]:
+    def set_label(self, transaction: Transaction, new_label: str) -> Promise[None]:
         """
         Renames the label of the type. The new label must remain unique.
 
@@ -107,7 +107,7 @@ class Type(Concept, ABC):
         return True
 
     @abstractmethod
-    def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[Type]]:
+    def get_supertype(self, transaction: Transaction) -> Promise[Optional[Type]]:
         """
         Retrieves the most immediate supertype of the type.
 
@@ -123,7 +123,7 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_supertypes(self, transaction: TypeDBTransaction) -> Iterator[Type]:
+    def get_supertypes(self, transaction: Transaction) -> Iterator[Type]:
         """
         Retrieves all supertypes of the type.
 
@@ -141,7 +141,7 @@ class Type(Concept, ABC):
     @abstractmethod
     def get_subtypes(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         transitivity: Transitivity = Transitivity.TRANSITIVE,
     ) -> Iterator[Type]:
         """
@@ -163,7 +163,7 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def delete(self, transaction: TypeDBTransaction) -> Promise[None]:
+    def delete(self, transaction: Transaction) -> Promise[None]:
         """
         Deletes this type from the database.
 

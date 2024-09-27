@@ -23,8 +23,8 @@ from typedb.native_driver_wrapper import error_code, error_message, transaction_
     transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
-from typedb.api.connection.options import TypeDBOptions
-from typedb.api.connection.transaction import TypeDBTransaction
+from typedb.api.connection.options import Options
+from typedb.api.connection.transaction import Transaction
 from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.concept_manager import _ConceptManager
@@ -37,11 +37,11 @@ if TYPE_CHECKING:
     from typedb.native_driver_wrapper import Error as NativeError
 
 
-class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
+class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
-    def __init__(self, session: _Session, transaction_type: TransactionType, options: TypeDBOptions = None):
+    def __init__(self, session: _Session, transaction_type: TransactionType, options: Options = None):
         if not options:
-            options = TypeDBOptions()
+            options = Options()
         self._transaction_type = transaction_type
         self._options = options
         try:
@@ -61,7 +61,7 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
         return self._transaction_type
 
     @property
-    def options(self) -> TypeDBOptions:
+    def options(self) -> Options:
         return self._options
 
     @property

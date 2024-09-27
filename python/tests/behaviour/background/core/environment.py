@@ -40,8 +40,8 @@ def setup_context_driver(context, username=None, password=None):
     if username is not None or password is not None:
         raise Exception("Core driver does not support authentication")
     context.driver = TypeDB.core_driver(address="localhost:%d" % int(context.config.userdata["port"]))
-    context.session_options = TypeDBOptions(infer=True)
-    context.transaction_options = TypeDBOptions(infer=True)
+    context.session_options = Options(infer=True)
+    context.transaction_options = Options(infer=True)
 
 
 def after_scenario(context: Context, scenario):

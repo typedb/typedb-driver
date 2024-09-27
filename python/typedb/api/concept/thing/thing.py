@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.role_type import RoleType
     from typedb.api.concept.type.thing_type import ThingType
     from typedb.api.concept.type.annotation import Annotation
-    from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.api.connection.transaction import Transaction
     from typedb.common.promise import Promise
 
 
@@ -108,7 +108,7 @@ class Thing(Concept, ABC):
         return self
 
     @abstractmethod
-    def set_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]:
+    def set_has(self, transaction: Transaction, attribute: Attribute) -> Promise[None]:
         """
         Assigns an ``Attribute`` to be owned by this ``Thing``.
 
@@ -125,7 +125,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def unset_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]:
+    def unset_has(self, transaction: Transaction, attribute: Attribute) -> Promise[None]:
         """
         Unassigns an ``Attribute`` from this ``Thing``.
 
@@ -144,7 +144,7 @@ class Thing(Concept, ABC):
     @abstractmethod
     def get_has(
         self,
-        transaction: TypeDBTransaction,
+        transaction: Transaction,
         attribute_type: AttributeType = None,
         attribute_types: list[AttributeType] = None,
         annotations: set[Annotation] = frozenset()
@@ -176,7 +176,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_relations(self, transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Relation]:
+    def get_relations(self, transaction: Transaction, *role_types: RoleType) -> Iterator[Relation]:
         """
         Retrieves all the ``Relation``\ s which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.
@@ -195,7 +195,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_playing(self, transaction: TypeDBTransaction) -> Iterator[RoleType]:
+    def get_playing(self, transaction: Transaction) -> Iterator[RoleType]:
         """
         Retrieves the roles that this ``Thing`` is currently playing.
 
@@ -211,7 +211,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def delete(self, transaction: TypeDBTransaction) -> Promise[None]:
+    def delete(self, transaction: Transaction) -> Promise[None]:
         """
         Deletes this ``Thing``.
 
@@ -227,7 +227,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def is_deleted(self, transaction: TypeDBTransaction) -> Promise[bool]:
+    def is_deleted(self, transaction: Transaction) -> Promise[bool]:
         """
         Checks if this ``Thing`` is deleted.
 

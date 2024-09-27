@@ -27,7 +27,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.value.value import ValueType
     from typedb.api.concept.type.attribute_type import AttributeType
     from typedb.api.concept.type.thing_type import ThingType
-    from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.api.connection.transaction import Transaction
 
 
 class Attribute(Thing, ABC):
@@ -272,7 +272,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def get_owners(self, transaction: TypeDBTransaction, owner_type: Optional[ThingType] = None) -> Iterator[Thing]:
+    def get_owners(self, transaction: Transaction, owner_type: Optional[ThingType] = None) -> Iterator[Thing]:
         """
         Retrieves the instances that own this ``Attribute``.
 

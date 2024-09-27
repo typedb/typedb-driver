@@ -31,7 +31,7 @@ class TestCloudFailover(TestCase):
 
     def setUp(self):
         root_ca_path = os.environ["ROOT_CA"]
-        credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
+        credential = Credential("admin", "password", tls_root_ca_path=root_ca_path)
         print("SetUp", flush=True)
         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
             if driver.databases.contains("typedb"):
@@ -77,7 +77,7 @@ class TestCloudFailover(TestCase):
 
     def test_put_entity_type_to_crashed_primary_replica(self):
         root_ca_path = os.environ["ROOT_CA"]
-        credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
+        credential = Credential("admin", "password", tls_root_ca_path=root_ca_path)
         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
             assert driver.databases.contains("typedb")
             primary_replica = self.get_primary_replica(driver.databases)

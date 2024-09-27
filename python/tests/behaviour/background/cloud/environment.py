@@ -40,11 +40,11 @@ def before_scenario(context: Context, scenario):
 
 
 def setup_context_driver(context, username, password):
-    credential = TypeDBCredential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
+    credential = Credential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
     context.driver = TypeDB.cloud_driver(addresses=["localhost:" + context.config.userdata["port"]],
                                               credential=credential)
-    context.session_options = TypeDBOptions(infer=True)
-    context.transaction_options = TypeDBOptions(infer=True)
+    context.session_options = Options(infer=True)
+    context.transaction_options = Options(infer=True)
 
 
 def after_scenario(context: Context, scenario):

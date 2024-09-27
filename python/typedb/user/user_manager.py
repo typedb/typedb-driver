@@ -31,12 +31,12 @@
 #
 # if TYPE_CHECKING:
 #     from typedb.api.user.user import User
-#     from typedb.native_driver_wrapper import Connection as NativeConnection
+#     from typedb.native_driver_wrapper import TypeDBDriver as DriverNative
 #
 #
 # class _UserManager(UserManager, NativeWrapper[NativeUserManager]):
 #
-#     def __init__(self, connection: NativeConnection):
+#     def __init__(self, connection: DriverNative):
 #         super().__init__(user_manager_new(connection))
 #
 #     @property

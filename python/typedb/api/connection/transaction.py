@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typedb.api.concept.concept_manager import ConceptManager
     from typedb.api.logic.logic_manager import LogicManager
-    from typedb.api.connection.options import TypeDBOptions
+    from typedb.api.connection.options import Options
     from typedb.api.query.query_manager import QueryManager
 
 
@@ -48,7 +48,7 @@ class TransactionType(enum.Enum):
         return self is TransactionType.WRITE
 
 
-class TypeDBTransaction(ABC):
+class Transaction(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:
@@ -75,7 +75,7 @@ class TypeDBTransaction(ABC):
 
     @property
     @abstractmethod
-    def options(self) -> TypeDBOptions:
+    def options(self) -> Options:
         """
         The options for the transaction
         """

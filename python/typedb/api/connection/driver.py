@@ -22,12 +22,13 @@ from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typedb.api.connection.database import DatabaseManager
-    from typedb.api.connection.options import TypeDBOptions
-    from typedb.api.connection.session import TypeDBSession, SessionType
-    from typedb.api.user.user import UserManager, User
+    # from typedb.api.connection.options import Options
+    from typedb.api.connection.transaction import Transaction, TransactionType
+    # from typedb.api.user.user import UserManager, User
 
 
-class TypeDBDriver(ABC):
+class Driver(ABC):
+    LANGUAGE = "python"
 
     @abstractmethod
     def is_open(self) -> bool:
@@ -53,22 +54,19 @@ class TypeDBDriver(ABC):
         pass
 
     @abstractmethod
-    def session(self, database_name: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
-                ) -> TypeDBSession:
+    def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Optional[Options] = None
         """
-        Opens a communication tunnel (session) to the given database on the running TypeDB server.
-        For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
+        Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
 
-        :param database_name: The name of the database with which the session connects
-        :param session_type: The type of session to be created (DATA or SCHEMA)
-        :param options: ``TypeDBOptions`` for the session
+        :param database_name: The name of the database with which the transaction connects
+        :param transaction_type: The type of transaction to be created (READ, WRITE, or SCHEMA)
         :return:
 
         Examples:
         ---------
         ::
 
-            driver.session(database, session_type, options)
+            driver.transaction(database, transaction_type)
         """
         pass
 
@@ -87,29 +85,29 @@ class TypeDBDriver(ABC):
         """
         pass
 
-    @property
-    @abstractmethod
-    def users(self) -> UserManager:
-        """
-        The ``UserManager`` instance for this connection, providing access to user management methods.
-        Only for TypeDB Cloud.
-        """
-        pass
-
-    @abstractmethod
-    def user(self) -> User:
-        """
-        Returns the logged-in user for the connection. Only for TypeDB Cloud.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            driver.user()
-        """
-        pass
+    # @property
+    # @abstractmethod
+    # def users(self) -> UserManager:
+    #     """
+    #     The ``UserManager`` instance for this connection, providing access to user management methods.
+    #     Only for TypeDB Cloud.
+    #     """
+    #     pass
+    # 
+    # @abstractmethod
+    # def user(self) -> User:
+    #     """
+    #     Returns the logged-in user for the connection. Only for TypeDB Cloud.
+    # 
+    #     :return:
+    # 
+    #     Examples:
+    #     ---------
+    #     ::
+    # 
+    #         driver.user()
+    #     """
+    #     pass
 
     @abstractmethod
     def __enter__(self):

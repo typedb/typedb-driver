@@ -42,13 +42,13 @@ class Context(behave.runner.Context):
     def __init__(self):
         self.table: Optional[Table] = None
         self.THREAD_POOL_SIZE = 0
-        self.driver: Optional[TypeDBDriver] = None
+        self.driver: Optional[Driver] = None
         self.sessions: list[TypeDBSession] = []
-        self.sessions_to_transactions: dict[TypeDBSession, list[TypeDBTransaction]] = {}
+        self.sessions_to_transactions: dict[TypeDBSession, list[Transaction]] = {}
         self.sessions_parallel: list[TypeDBSession] = []
-        self.sessions_parallel_to_transactions_parallel: dict[TypeDBSession, list[TypeDBTransaction]] = {}
-        self.session_options: Optional[TypeDBOptions] = None
-        self.transaction_options: Optional[TypeDBOptions] = None
+        self.sessions_parallel_to_transactions_parallel: dict[TypeDBSession, list[Transaction]] = {}
+        self.session_options: Optional[Options] = None
+        self.transaction_options: Optional[Options] = None
         self.things: dict[str, Thing] = {}
         self.answers: Optional[list[ConceptRow]] = None
         self.fetch_answers: Optional[list[dict]] = None
@@ -57,7 +57,7 @@ class Context(behave.runner.Context):
         self.config = Config()
         self.option_setters = {}
 
-    def tx(self) -> TypeDBTransaction:
+    def tx(self) -> Transaction:
         return self.sessions_to_transactions[self.sessions[0]][0]
 
     def put(self, var: str, thing: Thing) -> None:

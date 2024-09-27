@@ -46,20 +46,6 @@ class Database(ABC):
         """
         pass
 
-    def rule_schema(self) -> str:
-        """
-        Returns the rules in the schema as a valid TypeQL define query string.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            database.rule_schema()
-        """
-        pass
-
     def type_schema(self) -> str:
         """
         Returns the types in the schema as a valid TypeQL define query string.
@@ -89,107 +75,107 @@ class Database(ABC):
         """
         pass
 
-    @abstractmethod
-    def replicas(self) -> Set[Replica]:
-        """
-        Set of ``Replica`` instances for this database.
-        *Only works in TypeDB Cloud*
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            database.replicas()
-        """
-        pass
-
-    @abstractmethod
-    def primary_replica(self) -> Optional[Replica]:
-        """
-        Returns the primary replica for this database.
-        *Only works in TypeDB Cloud*
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            database.primary_replica()
-        """
-        pass
-
-    @abstractmethod
-    def preferred_replica(self) -> Optional[Replica]:
-        """
-        Returns the preferred replica for this database.
-        Operations which can be run on any replica will prefer to use this replica.
-        *Only works in TypeDB Cloud*
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            database.preferred_replica()
-        """
-        pass
-
-
-class Replica(ABC):
-    """
-    The metadata and state of an individual raft replica of a database.
-    """
-
-    @abstractmethod
-    def database(self) -> Database:
-        """
-        Retrieves the database for which this is a replica
-
-        :return:
-        """
-        pass
-
-    @abstractmethod
-    def server(self) -> str:
-        """
-        The server hosting this replica
-
-        :return:
-        """
-        pass
-
-    @abstractmethod
-    def is_primary(self) -> bool:
-        """
-        Checks whether this is the primary replica of the raft cluster.
-
-        :return:
-        """
-
-        pass
-
-    @abstractmethod
-    def is_preferred(self) -> bool:
-        """
-        Checks whether this is the preferred replica of the raft cluster.
-        If true, Operations which can be run on any replica will prefer to use this replica.
-
-        :return:
-        """
-        pass
-
-    @abstractmethod
-    def term(self) -> int:
-        """
-        The raft protocol 'term' of this replica.
-
-        :return:
-        """
-        pass
+    # @abstractmethod
+    # def replicas(self) -> Set[Replica]:
+    #     """
+    #     Set of ``Replica`` instances for this database.
+    #     *Only works in TypeDB Cloud*
+    #
+    #     :return:
+    #
+    #     Examples:
+    #     ---------
+    #     ::
+    #
+    #         database.replicas()
+    #     """
+    #     pass
+    #
+    # @abstractmethod
+    # def primary_replica(self) -> Optional[Replica]:
+    #     """
+    #     Returns the primary replica for this database.
+    #     *Only works in TypeDB Cloud*
+    #
+    #     :return:
+    #
+    #     Examples:
+    #     ---------
+    #     ::
+    #
+    #         database.primary_replica()
+    #     """
+    #     pass
+    #
+    # @abstractmethod
+    # def preferred_replica(self) -> Optional[Replica]:
+    #     """
+    #     Returns the preferred replica for this database.
+    #     Operations which can be run on any replica will prefer to use this replica.
+    #     *Only works in TypeDB Cloud*
+    #
+    #     :return:
+    #
+    #     Examples:
+    #     ---------
+    #     ::
+    #
+    #         database.preferred_replica()
+    #     """
+    #     pass
+#
+#
+# class Replica(ABC):
+#     """
+#     The metadata and state of an individual raft replica of a database.
+#     """
+#
+#     @abstractmethod
+#     def database(self) -> Database:
+#         """
+#         Retrieves the database for which this is a replica
+#
+#         :return:
+#         """
+#         pass
+#
+#     @abstractmethod
+#     def server(self) -> str:
+#         """
+#         The server hosting this replica
+#
+#         :return:
+#         """
+#         pass
+#
+#     @abstractmethod
+#     def is_primary(self) -> bool:
+#         """
+#         Checks whether this is the primary replica of the raft cluster.
+#
+#         :return:
+#         """
+#
+#         pass
+#
+#     @abstractmethod
+#     def is_preferred(self) -> bool:
+#         """
+#         Checks whether this is the preferred replica of the raft cluster.
+#         If true, Operations which can be run on any replica will prefer to use this replica.
+#
+#         :return:
+#         """
+#         pass
+#
+#     @abstractmethod
+#     def term(self) -> int:
+#         """
+#         The raft protocol 'term' of this replica.
+#
+#         :return:
+#         """
+#         pass
 
 
 class DatabaseManager(ABC):

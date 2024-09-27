@@ -26,12 +26,12 @@ from typedb.driver import *
 TYPEDB = "typedb"
 DATA = SessionType.DATA
 WRITE = TransactionType.WRITE
-CREDENTIAL = TypeDBCredential("admin", "password", tls_enabled=True, tls_root_ca_path=os.environ["ROOT_CA"])
+CREDENTIAL = Credential("admin", "password", tls_enabled=True, tls_root_ca_path=os.environ["ROOT_CA"])
 
 
 class TestDebug(TestCase):
 
-    def test_core_connection_while_running_cloud(self):
+    def test_core_driver_while_running_cloud(self):
         assert_that(calling(lambda: TypeDB.core_driver("localhost:11729")), raises(TypeDBDriverException))
 
     def test_open_close_transaction(self):

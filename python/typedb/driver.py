@@ -58,7 +58,7 @@ class TypeDB:
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod
-    def core_driver(address: str) -> TypeDBDriver:
+    def core_driver(address: str) -> Driver:
         """
         Creates a connection to TypeDB.
 
@@ -67,18 +67,18 @@ class TypeDB:
         """
         return _Driver([address])
 
-    @staticmethod
-    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
-        """
-        Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
-
-        :param addresses:
-        :param credential:
-        :return:
-        """
-        if isinstance(addresses, str):
-            return _Driver([addresses], credential)
-        elif isinstance(addresses, ABCMapping):
-            return _Driver(dict(addresses), credential)
-        else:
-            return _Driver(list(addresses), credential)
+    # @staticmethod
+    # def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential) -> Driver:
+    #     """
+    #     Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+    #
+    #     :param addresses:
+    #     :param credential:
+    #     :return:
+    #     """
+    #     if isinstance(addresses, str):
+    #         return _Driver([addresses], credential)
+    #     elif isinstance(addresses, ABCMapping):
+    #         return _Driver(dict(addresses), credential)
+    #     else:
+    #         return _Driver(list(addresses), credential)

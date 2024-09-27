@@ -56,27 +56,28 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
 
-    def variables(self) -> Iterator[str]:
-        return IteratorWrapper(concept_row_get_variables(self.native_object), string_iterator_next)
-
-    def concepts(self) -> Iterator[Concept]:
-        return map(concept_factory.wrap_concept, IteratorWrapper(concept_row_get_values(self.native_object),
-                                                                 concept_iterator_next))
+    def column_names(self) -> Iterator[str]:
+        return IteratorWrapper(concept_row_get_column_names(self.native_object), string_iterator_next)
 
     @property
-    def map(self) -> Mapping[str, Concept]:
-        if self.cached_map is None:
-            self.cached_map = {v: self.get(v) for v in self.variables()}
-        return self.cached_map
+    def query_type(self) -> QueryType:
+        return QueryType(concept_row_get_query_type(self.native_object))
 
-    def get(self, variable: str) -> Concept:
-        concept = concept_row_get(self.native_object, _not_blank_var(variable))
+    def concepts(self) -> Iterator[Concept]:
+        return map(concept_factory.wrap_concept, IteratorWrapper(concept_row_get_concepts(self.native_object),
+                                                                 concept_iterator_next))
+
+    def get(self, column_name: str) -> Concept:
+        concept = concept_row_get(self.native_object, _not_blank_var(column_name))
         if not concept:
-            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, variable)
+            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_name)
         return concept_factory.wrap_concept(concept)
 
-    def explainables(self) -> ConceptRow.Explainables:
-        return _ConceptRow.Explainables(concept_row_get_explainables(self.native_object))
+    def get_index(self, column_index: str) -> Concept:
+        concept = concept_row_get_index(self.native_object, _not_blank_var(column_index))
+        if not concept:
+            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_index)
+        return concept_factory.wrap_concept(concept)
 
     def __repr__(self):
         return concept_row_to_string(self.native_object)
@@ -90,91 +91,3 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
 
     def __hash__(self):
         return hash((tuple(self.variables()), tuple(self.concepts())))
-
-    class Explainables(ConceptRow.Explainables, NativeWrapper[NativeExplainables]):
-
-        def __init__(self, explainables: NativeExplainables):
-            if not explainables:
-                raise TypeDBDriverException(NULL_NATIVE_OBJECT)
-            super().__init__(explainables)
-
-        @property
-        def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-            return TypeDBDriverException(ILLEGAL_STATE)
-
-        def relation(self, variable: str) -> ConceptRow.Explainable:
-            explainable = explainables_get_relation(self.native_object, _not_blank_var(variable))
-            if not explainable:
-                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
-            return _ConceptRow.Explainable(explainable)
-
-        def attribute(self, variable: str) -> ConceptRow.Explainable:
-            explainable = explainables_get_attribute(self.native_object, _not_blank_var(variable))
-            if not explainable:
-                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
-            return _ConceptRow.Explainable(explainable)
-
-        def ownership(self, owner: str, attribute: str) -> ConceptRow.Explainable:
-            explainable = explainables_get_ownership(self.native_object, _not_blank_var(owner),
-                                                     _not_blank_var(attribute))
-            if not explainable:
-                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, (owner, attribute))
-            return _ConceptRow.Explainable(explainable)
-
-        def relations(self) -> Mapping[str, ConceptRow.Explainable]:
-            return {key: self.relation(key)
-                    for key in IteratorWrapper(explainables_get_relations_keys(self.native_object),
-                                               string_iterator_next)}
-
-        def attributes(self) -> Mapping[str, ConceptRow.Explainable]:
-            return {key: self.attribute(key)
-                    for key in IteratorWrapper(explainables_get_attributes_keys(self.native_object),
-                                               string_iterator_next)}
-
-        def ownerships(self) -> Mapping[tuple[str, str], ConceptRow.Explainable]:
-            return {key: self.ownership(*key)
-                    for key in IteratorWrapper(explainables_get_ownerships_keys(self.native_object),
-                                               string_pair_iterator_next)}
-
-        def __repr__(self):
-            return explainables_to_string(self.native_object)
-
-        def __eq__(self, other):
-            if other is self:
-                return True
-            if not other or type(other) != type(self):
-                return False
-            return explainables_equals(self.native_object, other.native_object)
-
-        def __hash__(self):
-            return hash((tuple(self.relations()), tuple(self.attributes()), tuple(self.ownerships())))
-
-    class Explainable(ConceptRow.Explainable, NativeWrapper[NativeExplainable]):
-
-        def __init__(self, explainable: NativeExplainable):
-            if not explainable:
-                raise TypeDBDriverException(NULL_NATIVE_OBJECT)
-            super().__init__(explainable)
-
-        @property
-        def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-            return TypeDBDriverException(ILLEGAL_STATE)
-
-        def conjunction(self) -> str:
-            return explainable_get_conjunction(self.native_object)
-
-        def id(self) -> int:
-            return explainable_get_id(self.native_object)
-
-        def __repr__(self):
-            return f"Explainable {{ id: {self.id()}, conjunction: {self.conjunction()} }}"
-
-        def __eq__(self, other):
-            if other is self:
-                return True
-            if not other or type(other) != type(self):
-                return False
-            return self.id() == other.id()
-
-        def __hash__(self):
-            return hash(self.id())
