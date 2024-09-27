@@ -28,7 +28,6 @@ java_library(
     runtime_deps = [
         "//java/test/behaviour/connection/database:steps",
         "//java/test/behaviour/connection/transaction:steps",
-        "@vaticle_typeql//java/pattern",
     ],
     deps = [
         # Package dependencies
@@ -37,12 +36,6 @@ java_library(
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util",
-
-        # Vaticle dependencies
-        "@vaticle_typeql//common/java:common",
-        "@vaticle_typeql//java:typeql-lang",
-        "@vaticle_typeql//java/common",
-        "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

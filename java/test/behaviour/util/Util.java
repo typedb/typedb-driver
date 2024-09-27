@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.util;
+package com.typedb.driver.test.behaviour.util;
 
-import com.vaticle.typedb.driver.api.answer.JSON;
+import com.typedb.driver.api.answer.JSON;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.vaticle.typedb.common.util.Double.equalsApproximate;
+import static com.typedb.driver.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

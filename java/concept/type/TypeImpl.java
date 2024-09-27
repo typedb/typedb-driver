@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.type;
+package com.typedb.driver.concept.type;
 
-import com.vaticle.typedb.driver.api.concept.type.Type;
-import com.vaticle.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.api.concept.type.Type;
+import com.typedb.driver.concept.ConceptImpl;
 
 public abstract class TypeImpl extends ConceptImpl implements Type {
     private int hash = 0;
 
-    TypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    TypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

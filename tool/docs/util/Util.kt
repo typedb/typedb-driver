@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.docs.util
+package com.typedb.driver.tool.docs.util
 
 fun replaceCodeTags(html: String): String {
     return Regex("<code[^>]*>").replace(html, "``").replace("</code>", "``")

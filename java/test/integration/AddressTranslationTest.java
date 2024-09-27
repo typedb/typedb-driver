@@ -17,15 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.integration;
+package com.typedb.driver.test.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.vaticle.typedb.common.collection.Collections.map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 public class AddressTranslationTest {

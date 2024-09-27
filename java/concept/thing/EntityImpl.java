@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.thing;
+package com.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.driver.api.concept.thing.Entity;
-import com.vaticle.typedb.driver.concept.type.EntityTypeImpl;
+import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.concept.type.EntityTypeImpl;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.entity_get_iid;
-import static com.vaticle.typedb.driver.jni.typedb_driver.entity_get_type;
+import static com.typedb.driver.jni.typedb_driver.entity_get_iid;
+import static com.typedb.driver.jni.typedb_driver.entity_get_type;
 
 public class EntityImpl extends ThingImpl implements Entity {
-    public EntityImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public EntityImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

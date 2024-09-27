@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.database;
+package com.typedb.driver.api.database;
 
 import javax.annotation.CheckReturnValue;
 

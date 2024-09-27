@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.docs.nodejs
+package com.typedb.driver.tool.docs.nodejs
 
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
-import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
-import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
-import com.vaticle.typedb.driver.tool.docs.util.removeAllTags
-import com.vaticle.typedb.driver.tool.docs.util.replaceCodeTags
-import com.vaticle.typedb.driver.tool.docs.util.replaceEmTags
-import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
+import com.typedb.driver.tool.docs.dataclasses.Class
+import com.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.typedb.driver.tool.docs.dataclasses.Method
+import com.typedb.driver.tool.docs.dataclasses.Variable
+import com.typedb.driver.tool.docs.util.removeAllTags
+import com.typedb.driver.tool.docs.util.replaceCodeTags
+import com.typedb.driver.tool.docs.util.replaceEmTags
+import com.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine

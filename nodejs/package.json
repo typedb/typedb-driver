@@ -8,7 +8,7 @@
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vaticle/typedb-driver-nodejs"
+    "url": "https://github.com/typedb/typedb-driver-nodejs"
   },
   "scripts": {
     "clean": "rimraf dist",

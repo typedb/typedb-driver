@@ -17,10 +17,7 @@
  *  under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection.user;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+package com.typedb.driver.test.behaviour.connection.user;
 
 public class UserSteps {
 //    private TypeDBDriver getDriver() {

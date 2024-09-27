@@ -17,18 +17,18 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.answer;
+package com.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.answer.ConceptTree;
-import com.vaticle.typedb.driver.api.answer.ConceptTreeIterator;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.answer.ConceptTree;
+import com.typedb.driver.api.answer.ConceptTreeIterator;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
 
 public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptTreeIterator {
-    public ConceptTreeIteratorImpl(com.vaticle.typedb.driver.jni.QueryAnswer answer) {
+    public ConceptTreeIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
         throw new TypeDBDriverException(UNIMPLEMENTED);
     }
@@ -38,7 +38,7 @@ public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptT
         throw new TypeDBDriverException(UNIMPLEMENTED);
 //        try {
 //            return nativeIterator.hasNext();
-//        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+//        } catch (com.typedb.driver.jni.Error.Unchecked e) {
 //            throw new TypeDBDriverException(e);
 //        }
     }
@@ -48,7 +48,7 @@ public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptT
         throw new TypeDBDriverException(UNIMPLEMENTED);
 //        try {
 //            return new ConceptRowImpl(nativeIterator.next());
-//        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+//        } catch (com.typedb.driver.jni.Error.Unchecked e) {
 //            throw new TypeDBDriverException(e);
 //        }
     }

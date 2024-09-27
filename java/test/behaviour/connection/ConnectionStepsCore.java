@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection;
+package com.typedb.driver.test.behaviour.connection;
 
 //import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
 //import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 //import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
-import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.Driver;
+import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;

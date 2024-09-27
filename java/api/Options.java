@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api;
+package com.typedb.driver.api;
 
 // TODO: Currently disabled in 3.0
 
@@ -25,7 +25,7 @@ package com.vaticle.typedb.driver.api;
  * TypeDB session and transaction options. <code>Options</code> object can be used to override
  * the default server behaviour.
  */
-//public class Options extends NativeObject<com.vaticle.typedb.driver.jni.Options> {
+//public class Options extends NativeObject<com.typedb.driver.jni.Options> {
 //    /**
 //     * Produces a new <code>Options</code> object.
 //     *

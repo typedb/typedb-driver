@@ -26,7 +26,6 @@ rust_test(
     timeout = "eternal",
     deps = [
         "//rust:typedb_driver",
-        "@vaticle_typeql//rust:typeql",
         "@crates//:async-std",
         "@crates//:chrono",
         "@crates//:cucumber",

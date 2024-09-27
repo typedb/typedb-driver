@@ -24,7 +24,7 @@ typedb_behaviour_java_test(
     srcs = [
         "QueryTest.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.driver.query.QueryTest",
+    test_class = "com.typedb.driver.test.behaviour.driver.query.QueryTest",
     data = [
         "@vaticle_typedb_behaviour//driver:query.feature",
     ],

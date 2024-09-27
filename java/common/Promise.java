@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common;
+package com.typedb.driver.common;
 
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -57,7 +57,7 @@ public class Promise<T> {
     public T resolve() { // TODO: Can have a checked exception in some cases!
         try {
             return this.inner.get();
-        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }

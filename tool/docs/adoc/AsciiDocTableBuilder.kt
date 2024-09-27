@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.docs.adoc
+package com.typedb.driver.tool.docs.adoc
 
 class AsciiDocTableBuilder(private val headers: List<String>) {
     private val rows: MutableList<List<String?>> = mutableListOf()

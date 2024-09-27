@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.config;
+package com.typedb.driver.test.behaviour.config;
 
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.common.Label;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.vaticle.typedb.driver.api.Transaction.Type.READ;
-import static com.vaticle.typedb.driver.api.Transaction.Type.WRITE;
-import static com.vaticle.typedb.driver.api.Transaction.Type.SCHEMA;
-import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
+import static com.typedb.driver.api.Transaction.Type.READ;
+import static com.typedb.driver.api.Transaction.Type.SCHEMA;
+import static com.typedb.driver.api.Transaction.Type.WRITE;
+import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 

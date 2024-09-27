@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection;
+package com.typedb.driver.test.behaviour.connection;
 
 //import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
 //import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 //import com.vaticle.typedb.cloud.tool.runner.TypeDBCloudRunner;
-//import com.vaticle.typedb.driver.TypeDB;
-//import com.vaticle.typedb.driver.api.TypeDBDriver;
-//import com.vaticle.typedb.driver.api.Credential;
-//import com.vaticle.typedb.driver.api.Options;
-//import com.vaticle.typedb.driver.api.database.Database;
+//import com.typedb.driver.TypeDB;
+//import com.typedb.driver.api.TypeDBDriver;
+//import com.typedb.driver.api.Credential;
+//import com.typedb.driver.api.Options;
+//import com.typedb.driver.api.database.Database;
 //import io.cucumber.java.After;
 //import io.cucumber.java.Before;
 //import io.cucumber.java.en.Given;
@@ -36,7 +36,7 @@ package com.vaticle.typedb.driver.test.behaviour.connection;
 //import java.util.HashMap;
 //import java.util.Map;
 //
-//import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
+//import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
 //
 //public class ConnectionStepsCloud extends ConnectionStepsBase {
 //

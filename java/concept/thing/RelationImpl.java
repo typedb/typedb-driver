@@ -17,17 +17,17 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.thing;
+package com.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.driver.api.concept.thing.Relation;
-import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
+import com.typedb.driver.api.concept.thing.Relation;
+import com.typedb.driver.concept.type.RelationTypeImpl;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_iid;
-import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_type;
+import static com.typedb.driver.jni.typedb_driver.relation_get_iid;
+import static com.typedb.driver.jni.typedb_driver.relation_get_type;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
-    public RelationImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public RelationImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

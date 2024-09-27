@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.value;
+package com.typedb.driver.concept.value;
 
-import com.vaticle.typedb.common.collection.Pair;
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.common.Duration;
-import com.vaticle.typedb.driver.common.NativeIterator;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.Duration;
+import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.common.collection.Pair;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.concept.ConceptImpl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -40,35 +40,35 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.common.collection.Collections.pair;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_boolean;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_date_as_seconds;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_datetime_tz;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_decimal;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_double;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_duration;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_long;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_string;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_struct;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_value_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_boolean;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_date;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_datetime;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_datetime_tz;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_decimal;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_double;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_duration;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_long;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_string;
-import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_struct;
+import static com.typedb.driver.common.collection.Collections.pair;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.typedb.driver.jni.typedb_driver.value_get_boolean;
+import static com.typedb.driver.jni.typedb_driver.value_get_date_as_seconds;
+import static com.typedb.driver.jni.typedb_driver.value_get_datetime;
+import static com.typedb.driver.jni.typedb_driver.value_get_datetime_tz;
+import static com.typedb.driver.jni.typedb_driver.value_get_decimal;
+import static com.typedb.driver.jni.typedb_driver.value_get_double;
+import static com.typedb.driver.jni.typedb_driver.value_get_duration;
+import static com.typedb.driver.jni.typedb_driver.value_get_long;
+import static com.typedb.driver.jni.typedb_driver.value_get_string;
+import static com.typedb.driver.jni.typedb_driver.value_get_struct;
+import static com.typedb.driver.jni.typedb_driver.value_get_value_type;
+import static com.typedb.driver.jni.typedb_driver.value_is_boolean;
+import static com.typedb.driver.jni.typedb_driver.value_is_date;
+import static com.typedb.driver.jni.typedb_driver.value_is_datetime;
+import static com.typedb.driver.jni.typedb_driver.value_is_datetime_tz;
+import static com.typedb.driver.jni.typedb_driver.value_is_decimal;
+import static com.typedb.driver.jni.typedb_driver.value_is_double;
+import static com.typedb.driver.jni.typedb_driver.value_is_duration;
+import static com.typedb.driver.jni.typedb_driver.value_is_long;
+import static com.typedb.driver.jni.typedb_driver.value_is_string;
+import static com.typedb.driver.jni.typedb_driver.value_is_struct;
 
 public class ValueImpl extends ConceptImpl implements Value {
     private int hash = 0;
 
-    public ValueImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    public ValueImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
@@ -163,7 +163,7 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public BigDecimal asDecimal() {
         if (!isDecimal()) throw new TypeDBDriverException(ILLEGAL_CAST, "decimal");
-        com.vaticle.typedb.driver.jni.Decimal nativeDecimal = value_get_decimal(nativeObject);
+        com.typedb.driver.jni.Decimal nativeDecimal = value_get_decimal(nativeObject);
         BigInteger nativeFractional = nativeDecimal.getFractional();
         BigDecimal integerPart = new BigDecimal(nativeDecimal.getInteger());
         BigDecimal fractionalPart = new BigDecimal(nativeFractional)
@@ -193,7 +193,7 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public ZonedDateTime asDatetimeTZ() {
         if (!isDatetimeTZ()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime-tz");
-        com.vaticle.typedb.driver.jni.DatetimeAndZoneId nativeDatetime = value_get_datetime_tz(nativeObject);
+        com.typedb.driver.jni.DatetimeAndZoneId nativeDatetime = value_get_datetime_tz(nativeObject);
         return instantFromNativeDatetime(nativeDatetime.getDatetime_in_nanos()).atZone(ZoneId.of(nativeDatetime.getZone_id()));
     }
 
@@ -208,7 +208,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         if (!isStruct()) throw new TypeDBDriverException(ILLEGAL_CAST, "struct");
         return new NativeIterator<>(value_get_struct(nativeObject)).stream().map(fieldAndValue -> {
             String fieldName = fieldAndValue.getString();
-            com.vaticle.typedb.driver.jni.Concept nativeValue = fieldAndValue.getValue();
+            com.typedb.driver.jni.Concept nativeValue = fieldAndValue.getValue();
             Optional<Value> resultValue;
             if (nativeValue != null) {
                 Concept value = ConceptImpl.of(nativeValue);
@@ -221,7 +221,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         }).collect(Collectors.toMap(Pair::first, Pair::second));
     }
 
-    private Instant instantFromNativeDatetime(com.vaticle.typedb.driver.jni.DatetimeInNanos nativeDatetime) {
+    private Instant instantFromNativeDatetime(com.typedb.driver.jni.DatetimeInNanos nativeDatetime) {
         return Instant.ofEpochSecond(nativeDatetime.getSeconds(), nativeDatetime.getSubsec_nanos());
     }
 

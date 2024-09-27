@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common;
+package com.typedb.driver.common;
 
-import com.vaticle.typedb.driver.common.exception.ErrorMessage;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.exception.ErrorMessage;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Objects;
 
@@ -35,7 +35,7 @@ public class Duration {
     /**
      * @hidden
      */
-    public Duration(com.vaticle.typedb.driver.jni.Duration nativeDuration) {
+    public Duration(com.typedb.driver.jni.Duration nativeDuration) {
         if (nativeDuration == null) throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
         this.datePart = java.time.Period.of(YEARS, (int) nativeDuration.getMonths(), (int) nativeDuration.getDays());
         this.timePart = java.time.Duration.ofNanos(nativeDuration.getNanos().longValue());

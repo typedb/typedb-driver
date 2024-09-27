@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.test;
+package com.typedb.driver.tool.test;
 
 public class EchoJavaHome {
     public static void main(String[] args) {

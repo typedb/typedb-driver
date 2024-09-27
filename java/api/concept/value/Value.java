@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.concept.value;
+package com.typedb.driver.api.concept.value;
 
-import com.vaticle.typedb.driver.api.concept.Concept;
-import com.vaticle.typedb.driver.common.Duration;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.common.Duration;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -17,25 +17,25 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.concept;
+package com.typedb.driver.api.concept;
 
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
-import com.vaticle.typedb.driver.api.concept.thing.Entity;
-import com.vaticle.typedb.driver.api.concept.thing.Relation;
-import com.vaticle.typedb.driver.api.concept.thing.Thing;
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.type.EntityType;
-import com.vaticle.typedb.driver.api.concept.type.RelationType;
-import com.vaticle.typedb.driver.api.concept.type.RoleType;
-import com.vaticle.typedb.driver.api.concept.type.ThingType;
-import com.vaticle.typedb.driver.api.concept.type.Type;
-import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.api.concept.thing.Relation;
+import com.typedb.driver.api.concept.thing.Thing;
+import com.typedb.driver.api.concept.type.AttributeType;
+import com.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.api.concept.type.RelationType;
+import com.typedb.driver.api.concept.type.RoleType;
+import com.typedb.driver.api.concept.type.ThingType;
+import com.typedb.driver.api.concept.type.Type;
+import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.common.util.Objects.className;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.typedb.driver.common.util.Objects.className;
 
 public interface Concept {
     /**

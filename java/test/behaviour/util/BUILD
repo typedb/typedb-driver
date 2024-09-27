@@ -26,9 +26,7 @@ java_library(
     deps = [
         # Package dependencies
         "//java/api",
-
-        # Internal Repository Dependencies
-        "@vaticle_typeql//common/java:common",
+        "//java/common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common.exception;
+package com.typedb.driver.common.exception;
 
 import javax.annotation.Nullable;
 
@@ -58,7 +58,7 @@ public class TypeDBDriverException extends RuntimeException {
     /**
      * @hidden
      */
-    public TypeDBDriverException(com.vaticle.typedb.driver.jni.Error error) {
+    public TypeDBDriverException(com.typedb.driver.jni.Error error) {
         super(error.getMessage());
         assert !getMessage().contains("%s");
         this.errorMessage = null;

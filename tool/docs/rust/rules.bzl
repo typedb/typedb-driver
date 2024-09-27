@@ -41,7 +41,7 @@ def rustdoc_to_adoc(name, data, docs_dirs, modes = {}):
         srcs = [
             "//tool/docs:rust/RustDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.docs.rust.RustDocsParserKt",
+        main_class = "com.typedb.driver.tool.docs.rust.RustDocsParserKt",
         args = args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",

@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection.database;
+package com.typedb.driver.test.behaviour.connection.database;
 
-import com.vaticle.typedb.driver.api.database.Database;
+import com.typedb.driver.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,11 +28,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static com.vaticle.typedb.common.collection.Collections.list;
-import static com.vaticle.typedb.common.collection.Collections.set;
+import static com.typedb.driver.common.collection.Collections.list;
+import static com.typedb.driver.common.collection.Collections.set;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

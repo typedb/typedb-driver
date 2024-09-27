@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common.exception;
+package com.typedb.driver.common.exception;
 
 public class TypeDBException extends RuntimeException {
 

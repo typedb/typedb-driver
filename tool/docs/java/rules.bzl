@@ -28,7 +28,7 @@ def javadoc_to_adoc(name, data, docs_dirs):
         srcs = [
             "//tool/docs:java/JavaDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.docs.java.JavaDocsParserKt",
+        main_class = "com.typedb.driver.tool.docs.java.JavaDocsParserKt",
         args = args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",

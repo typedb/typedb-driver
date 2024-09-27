@@ -13,7 +13,7 @@
 @maven//:com_google_code_gson_gson_2_9_0
 @maven//:com_google_errorprone_error_prone_annotations_2_14_0
 @maven//:com_google_guava_failureaccess_1_0_1
-@maven//:com_google_guava_guava_30_1_jre
+@maven//:com_google_guava_guava_31_1_android
 @maven//:com_google_guava_listenablefuture_9999_0_empty_to_avoid_conflict_with_guava
 @maven//:com_google_http_client_google_http_client_1_41_4
 @maven//:com_google_j2objc_j2objc_annotations_1_3
@@ -88,13 +88,12 @@
 @maven//:javax_annotation_javax_annotation_api_1_3_2
 @maven//:junit_junit_4_12
 @maven//:net_jcip_jcip_annotations_1_0
-@maven//:org_antlr_antlr4_runtime_4_8
 @maven//:org_apache_commons_commons_compress_1_21
 @maven//:org_apache_commons_commons_lang3_3_9
 @maven//:org_apache_httpcomponents_httpclient_4_5_13
 @maven//:org_apache_httpcomponents_httpcore_4_4_15
 @maven//:org_apiguardian_apiguardian_api_1_1_0
-@maven//:org_checkerframework_checker_qual_3_5_0
+@maven//:org_checkerframework_checker_qual_3_12_0
 @maven//:org_codehaus_mojo_animal_sniffer_annotations_1_21
 @maven//:org_hamcrest_hamcrest_all_1_3
 @maven//:org_hamcrest_hamcrest_core_1_3
@@ -106,5 +105,4 @@
 @maven//:org_slf4j_log4j_over_slf4j_2_0_0
 @maven//:org_slf4j_slf4j_api_2_0_0
 @maven//:org_slf4j_slf4j_simple_2_0_0
-@maven//:org_yaml_snakeyaml_2_2
 @maven//:org_zeroturnaround_zt_exec_1_10

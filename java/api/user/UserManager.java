@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.user;
+package com.typedb.driver.api.user;
 
 // TODO: Currently disabled in 3.0
 

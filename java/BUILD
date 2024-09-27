@@ -37,9 +37,6 @@ java_library(
         # Internal dependencies
         "//java/api",
         "//java/connection",
-
-        # External dependencies from @vaticle
-        "@vaticle_typeql//common/java:common",
     ],
 )
 
@@ -47,8 +44,8 @@ assemble_maven(
     name = "assemble-maven",
     project_description = "TypeDB Java Driver",
     project_name = "TypeDB Java Driver",
-    project_url = "https://github.com/vaticle/typedb-driver-java",
-    scm_url = "https://github.com/vaticle/typedb-driver-java",
+    project_url = "https://github.com/typedb/typedb-driver-java",
+    scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":driver-java",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
@@ -73,7 +70,7 @@ deploy_maven(
 swig_native_java_library(
     name = "typedb_driver_jni",
     lib = "//c:typedb_driver_clib_headers",
-    package = "com.vaticle.typedb.driver.jni",
+    package = "com.typedb.driver.jni",
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_java.swg"],
     enable_cxx = True,
@@ -91,8 +88,8 @@ assemble_maven(
     name = "assemble-maven-jni",
     project_description = "Java TypeDB Driver JNI",
     project_name = "Java TypeDB Driver JNI",
-    project_url = "https://github.com/vaticle/typedb-driver-java",
-    scm_url = "https://github.com/vaticle/typedb-driver-java",
+    project_url = "https://github.com/typedb/typedb-driver-java",
+    scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":typedb_driver_jni",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
@@ -117,7 +114,6 @@ javadoc_library(
         "//java:driver-java",
         "//java/api",
         "//java/common",
-        "@vaticle_typeql//common/java:common",
     ],
 )
 

@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.connection.transaction;
+package com.typedb.driver.test.behaviour.connection.transaction;
 
-import com.vaticle.typedb.driver.api.Transaction;
-import com.vaticle.typedb.driver.test.behaviour.config.Parameters;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactions;
-import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactions;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

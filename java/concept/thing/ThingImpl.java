@@ -17,26 +17,26 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.thing;
+package com.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.driver.api.concept.thing.Thing;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptImpl;
-import com.vaticle.typedb.driver.concept.type.ThingTypeImpl;
+import com.typedb.driver.api.concept.thing.Thing;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.concept.type.ThingTypeImpl;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_attribute;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_entity;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_relation;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
+import static com.typedb.driver.jni.typedb_driver.concept_is_entity;
+import static com.typedb.driver.jni.typedb_driver.concept_is_relation;
 
 public abstract class ThingImpl extends ConceptImpl implements Thing {
     protected int hash = 0;
 
-    ThingImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    ThingImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
-    public static ThingImpl of(com.vaticle.typedb.driver.jni.Concept concept) {
+    public static ThingImpl of(com.typedb.driver.jni.Concept concept) {
         if (concept_is_entity(concept)) return new EntityImpl(concept);
         else if (concept_is_relation(concept)) return new RelationImpl(concept);
         else if (concept_is_attribute(concept)) return new AttributeImpl(concept);

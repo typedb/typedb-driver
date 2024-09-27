@@ -17,22 +17,22 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept.type;
+package com.typedb.driver.concept.type;
 
-import com.vaticle.typedb.driver.api.concept.type.ThingType;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.concept.type.ThingType;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_entity_type;
-import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_relation_type;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
+import static com.typedb.driver.jni.typedb_driver.concept_is_entity_type;
+import static com.typedb.driver.jni.typedb_driver.concept_is_relation_type;
 
 public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
-    ThingTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
+    ThingTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
-    public static ThingTypeImpl of(com.vaticle.typedb.driver.jni.Concept concept) {
+    public static ThingTypeImpl of(com.typedb.driver.jni.Concept concept) {
         if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
         else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
         else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);

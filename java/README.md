@@ -18,7 +18,7 @@ To learn about the methods available for executing queries and retrieving their 
 
 <dependencies>
     <dependency>
-        <groupId>com.vaticle.typedb</groupId>
+        <groupId>com.typedb</groupId>
         <artifactId>typedb-driver</artifactId>
         <version>{version}</version>
     </dependency>
@@ -49,7 +49,7 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
    ```
    The Maven JAR and POM will be produced at: 
    ```
-   bazel-bin/java/com.vaticle.typedb:api.jar
+   bazel-bin/java/com.typedb:api.jar
    bazel-bin/java/pom.xml
    ```
 

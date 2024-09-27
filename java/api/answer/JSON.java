@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.answer;
+package com.typedb.driver.api.answer;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
-import com.vaticle.typedb.common.collection.Pair;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.collection.Pair;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.vaticle.typedb.common.util.Objects.className;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.typedb.driver.common.util.Objects.className;
 import static java.util.stream.Collectors.joining;
 
 public abstract class JSON {

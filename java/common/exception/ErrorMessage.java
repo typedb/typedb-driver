@@ -17,12 +17,51 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common.exception;
+package com.typedb.driver.common.exception;
 
-public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.ErrorMessage {
+import java.util.HashMap;
+import java.util.Map;
 
-    private ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
-        super(codePrefix, codeNumber, messagePrefix, messageBody);
+public abstract class ErrorMessage {
+    private static Map<String, Map<Integer, ErrorMessage>> errors = new HashMap<>();
+    private static int maxCodeNumber = 0;
+    private static int maxCodeDigits = 0;
+
+    private final String codePrefix;
+    private final int codeNumber;
+    private final String message;
+    private String code = null;
+
+    protected ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
+        this.codePrefix = codePrefix;
+        this.codeNumber = codeNumber;
+        this.message = messagePrefix + ": " + messageBody;
+
+        assert errors.get(codePrefix) == null || errors.get(codePrefix).get(codeNumber) == null;
+        errors.computeIfAbsent(codePrefix, s -> new HashMap<>()).put(codeNumber, this);
+        maxCodeNumber = Math.max(codeNumber, maxCodeNumber);
+        maxCodeDigits = (int) Math.ceil(Math.log10(maxCodeNumber));
+    }
+
+    public String code() {
+        if (code != null) return code;
+
+        StringBuilder zeros = new StringBuilder();
+        for (int digits = (int) Math.floor(Math.log10(codeNumber)) + 1; digits < maxCodeDigits; digits++) {
+            zeros.append("0");
+        }
+
+        code = codePrefix + zeros.toString() + codeNumber;
+        return code;
+    }
+
+    public String message(Object... parameters) {
+        return String.format(toString(), parameters);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s", code(), message);
     }
 
     public static class Driver extends ErrorMessage {

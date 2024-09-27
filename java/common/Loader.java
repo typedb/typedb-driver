@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.common;
+package com.typedb.driver.common;
 
-import com.vaticle.typedb.common.collection.Pair;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.collection.Pair;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,11 +29,11 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.JNI_LIBRARY_NOT_FOUND;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.JNI_PLATFORM_LIBRARY_NOT_FOUND;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_ARCH;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS;
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS_ARCH;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.JNI_LIBRARY_NOT_FOUND;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.JNI_PLATFORM_LIBRARY_NOT_FOUND;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_ARCH;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS_ARCH;
 
 public class Loader {
 

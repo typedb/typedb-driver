@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.docs.dataclasses
+package com.typedb.driver.tool.docs.dataclasses
 
 data class EnumConstant(
     val name: String,

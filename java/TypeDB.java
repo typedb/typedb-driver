@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver;
+package com.typedb.driver;
 
-import com.vaticle.typedb.driver.api.Driver;
-import com.vaticle.typedb.driver.connection.DriverImpl;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.connection.DriverImpl;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";

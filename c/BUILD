@@ -43,8 +43,6 @@ rust_static_library(
     deps = [
         "//rust:typedb_driver_sync",
 
-        "@vaticle_typeql//rust:typeql",
-
         "@crates//:chrono",
         "@crates//:itertools",
         "@crates//:env_logger",
@@ -69,8 +67,6 @@ rust_shared_library(
     },
     deps = [
         "//rust:typedb_driver_sync",
-
-        "@vaticle_typeql//rust:typeql",
 
         "@crates//:chrono",
         "@crates//:itertools",
@@ -222,7 +218,7 @@ filegroup(
     output_group = "header"
 )
 
-# TODO: Not hermetic - requires doxygen on the host (https://github.com/vaticle/bazel-distribution/issues/412)
+# TODO: Not hermetic - requires doxygen on the host (https://github.com/typedb/bazel-distribution/issues/412)
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C Driver",
