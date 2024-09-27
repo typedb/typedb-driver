@@ -46,7 +46,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
   1. correctly passing the driver version string into the driver via the build system, instead of hard-coding it into the sources. This use a Cargo environment variable, which will always be available in released versions and is provided from the crate's Cargo.toml. During development, we just set the version to `0.0.0` because we don't particularly care about it!
   2. correctly request more answers from the query stream once a BatchContinue flag has been read by the user, as they consume the query answer stream. Previously, we immediately request more answers from the server as soon as we see the StreamContinue signal, in the network layer, which meant the whole stream was actually not lazy at all!
 
-- **Fix Decimal, Datetime, Datetime-tz value types**
+- **Fix decimal, datetime, datetime-tz value types processing**
   
 
 ## Code Refactors
