@@ -18,8 +18,8 @@
 from collections.abc import Mapping as ABCMapping
 from typing import Iterable, Mapping, Union
 
-from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
-from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.concept_row_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept_manager import *  # noqa # pylint: disable=unused-import

@@ -66,7 +66,7 @@ class _AttributeType(AttributeType, _ThingType):
 
     def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_AttributeType]]:
         promise = attribute_type_get_supertype(transaction.native_object, self.native_object)
-        return Promise.map(_AttributeType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_AttributeType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_AttributeType]:
         try:
@@ -150,7 +150,7 @@ class _AttributeType(AttributeType, _ThingType):
 
     def put(self, transaction: _Transaction, value: Union[Value, bool, int, float, str, datetime]) -> Promise[_Attribute]:
         promise = attribute_type_put(transaction.native_object, self.native_object, _Value.of(value).native_object)
-        return Promise.map(wrap_attribute, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_attribute, lambda: concept_promise_resolve(promise))
 
     def get(
         self,
@@ -158,7 +158,7 @@ class _AttributeType(AttributeType, _ThingType):
         value: Union[Value, bool, int, float, str, datetime],
     ) -> Promise[Optional[_Attribute]]:
         promise = attribute_type_get(transaction.native_object, self.native_object, _Value.of(value).native_object)
-        return Promise.map(wrap_attribute, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_attribute, lambda: concept_promise_resolve(promise))
 
     def get_regex(self, transaction: _Transaction) -> Promise[str]:
         promise = attribute_type_get_regex(transaction.native_object, self.native_object)

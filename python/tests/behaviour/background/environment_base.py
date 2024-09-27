@@ -52,11 +52,11 @@ def _put_impl(context: Context, variable: str, thing: Thing):
 
 def _get_thing_type_impl(context: Context, root_label: RootLabel, type_label: str):
     if root_label == RootLabel.ENTITY:
-        return context.tx().concepts.get_entity_type(type_label).resolve()
+        return context.tx().getQueryType.get_entity_type(type_label).resolve()
     elif root_label == RootLabel.ATTRIBUTE:
-        return context.tx().concepts.get_attribute_type(type_label).resolve()
+        return context.tx().getQueryType.get_attribute_type(type_label).resolve()
     elif root_label == RootLabel.RELATION:
-        return context.tx().concepts.get_relation_type(type_label).resolve()
+        return context.tx().getQueryType.get_relation_type(type_label).resolve()
     else:
         raise ValueError("Unrecognised value")
 

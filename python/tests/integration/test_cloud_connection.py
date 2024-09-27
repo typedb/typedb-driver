@@ -55,7 +55,7 @@ class TestDebug(TestCase):
             if TYPEDB not in [db.name for db in driver.databases.all()]:
                 driver.databases.create(TYPEDB)
             with driver.session(TYPEDB, DATA) as session, session.transaction(WRITE) as tx:
-                root = tx.concepts.get_root_entity_type()
+                root = tx.getQueryType.get_root_entity_type()
                 assert_that(len(list(root.get_subtypes(tx))), equal_to(1))
 
 

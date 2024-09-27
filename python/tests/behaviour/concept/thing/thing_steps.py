@@ -117,7 +117,7 @@ def step_impl(context: Context, var1: str, var2: str):
 @step("attribute {var1:Var} get attributes({type_label}) as(datetime) contain: {var2:Var}")
 @step("relation {var1:Var} get attributes({type_label}) as(datetime) contain: {var2:Var}")
 def step_impl(context: Context, var1: str, type_label: str, var2: str):
-    assert_that(context.get(var1).get_has(context.tx(), attribute_type=context.tx().concepts.get_attribute_type(type_label).resolve()), has_item(context.get(var2).as_attribute()))
+    assert_that(context.get(var1).get_has(context.tx(), attribute_type=context.tx().getQueryType.get_attribute_type(type_label).resolve()), has_item(context.get(var2).as_attribute()))
 
 
 @step("entity {var1:Var} get attributes do not contain: {var2:Var}")
@@ -146,7 +146,7 @@ def step_impl(context: Context, var1: str, var2: str):
 @step("attribute {var1:Var} get attributes({type_label}) as(datetime) do not contain: {var2:Var}")
 @step("relation {var1:Var} get attributes({type_label}) as(datetime) do not contain: {var2:Var}")
 def step_impl(context: Context, var1: str, type_label: str, var2: str):
-    assert_that(context.get(var1).get_has(context.tx(), attribute_type=context.tx().concepts.get_attribute_type(type_label).resolve()),
+    assert_that(context.get(var1).get_has(context.tx(), attribute_type=context.tx().getQueryType.get_attribute_type(type_label).resolve()),
                 not_(has_item(context.get(var2).as_attribute())))
 
 
@@ -156,7 +156,7 @@ def step_impl(context: Context, var1: str, type_label: str, var2: str):
 def step_impl(context: Context, var1: str, label: Label, var2: str):
     assert_that(context.get(var1).get_relations(
         context.tx(),
-        context.tx().concepts.get_relation_type(label.scope).resolve().get_relates(context.tx(), label.name).resolve()),
+        context.tx().getQueryType.get_relation_type(label.scope).resolve().get_relates(context.tx(), label.name).resolve()),
         has_item(context.get(var2)))
 
 
@@ -173,7 +173,7 @@ def step_impl(context: Context, var1: str, var2: str):
 def step_impl(context: Context, var1: str, label: Label, var2: str):
     assert_that(context.get(var1).get_relations(
         context.tx(),
-        context.tx().concepts.get_relation_type(label.scope).resolve().get_relates(context.tx(), label.name).resolve()),
+        context.tx().getQueryType.get_relation_type(label.scope).resolve().get_relates(context.tx(), label.name).resolve()),
         not_(has_item(context.get(var2))))
 
 

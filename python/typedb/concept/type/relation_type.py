@@ -43,7 +43,7 @@ if TYPE_CHECKING:
 class _RelationType(RelationType, _ThingType):
     def create(self, transaction: _Transaction) -> Promise[_Relation]:
         promise = relation_type_create(transaction.native_object, self.native_object)
-        return Promise.map(wrap_relation, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_relation, lambda: concept_promise_resolve(promise))
 
     def get_instances(
         self,
@@ -69,7 +69,7 @@ class _RelationType(RelationType, _ThingType):
     ) -> Union[Promise[Optional[_RoleType]], Iterator[_RoleType]]:
         if role_label:
             promise = relation_type_get_relates_for_role_label(transaction.native_object, self.native_object, role_label)
-            return Promise.map(wrap_role_type, lambda: concept_promise_resolve(promise))
+            return Promise.concepts(wrap_role_type, lambda: concept_promise_resolve(promise))
         else:
             try:
                 return map(
@@ -84,7 +84,7 @@ class _RelationType(RelationType, _ThingType):
 
     def get_relates_overridden(self, transaction: _Transaction, role_label: str) -> Promise[Optional[_RoleType]]:
         promise = relation_type_get_relates_overridden(transaction.native_object, self.native_object, role_label)
-        return Promise.map(wrap_role_type, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_role_type, lambda: concept_promise_resolve(promise))
 
     def set_relates(self, transaction: _Transaction, role_label: str, overridden_label: Optional[str] = None) -> Promise[None]:
         promise = relation_type_set_relates(transaction.native_object, self.native_object, role_label, overridden_label)
@@ -112,7 +112,7 @@ class _RelationType(RelationType, _ThingType):
 
     def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_RelationType]]:
         promise = relation_type_get_supertype(transaction.native_object, self.native_object)
-        return Promise.map(_RelationType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_RelationType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_RelationType]:
         try:

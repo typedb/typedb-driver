@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 class _EntityType(EntityType, _ThingType):
     def create(self, transaction: _Transaction) -> Promise[_Entity]:
         promise = entity_type_create(transaction.native_object, self.native_object)
-        return Promise.map(wrap_entity, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_entity, lambda: concept_promise_resolve(promise))
 
     def set_supertype(self, transaction: _Transaction, super_entity_type: _EntityType) -> Promise[None]:
         promise = entity_type_set_supertype(transaction.native_object, self.native_object, super_entity_type.native_object)
@@ -49,7 +49,7 @@ class _EntityType(EntityType, _ThingType):
 
     def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_EntityType]]:
         promise = entity_type_get_supertype(transaction.native_object, self.native_object)
-        return Promise.map(_EntityType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_EntityType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_EntityType]:
         try:

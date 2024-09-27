@@ -77,39 +77,39 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
 
     def get_entity_type(self, label: str) -> Promise[Optional[_EntityType]]:
         promise = concepts_get_entity_type(self.native_transaction, _not_blank_label(label))
-        return Promise.map(_EntityType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_EntityType, lambda: concept_promise_resolve(promise))
 
     def get_relation_type(self, label: str) -> Promise[Optional[_RelationType]]:
         promise = concepts_get_relation_type(self.native_transaction, _not_blank_label(label))
-        return Promise.map(_RelationType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_RelationType, lambda: concept_promise_resolve(promise))
 
     def get_attribute_type(self, label: str) -> Promise[Optional[_AttributeType]]:
         promise = concepts_get_attribute_type(self.native_transaction, _not_blank_label(label))
-        return Promise.map(_AttributeType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_AttributeType, lambda: concept_promise_resolve(promise))
 
     def put_entity_type(self, label: str) -> Promise[_EntityType]:
         promise = concepts_put_entity_type(self.native_transaction, _not_blank_label(label))
-        return Promise.map(_EntityType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_EntityType, lambda: concept_promise_resolve(promise))
 
     def put_relation_type(self, label: str) -> Promise[_RelationType]:
         promise = concepts_put_relation_type(self.native_transaction, _not_blank_label(label))
-        return Promise.map(_RelationType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_RelationType, lambda: concept_promise_resolve(promise))
 
     def put_attribute_type(self, label: str, value_type: ValueType) -> Promise[_AttributeType]:
         promise = concepts_put_attribute_type(self.native_transaction, _not_blank_label(label), value_type.native_object)
-        return Promise.map(_AttributeType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_AttributeType, lambda: concept_promise_resolve(promise))
 
     def get_entity(self, iid: str) -> Promise[Optional[_Entity]]:
         promise = concepts_get_entity(self.native_transaction, _not_blank_iid(iid))
-        return Promise.map(_Entity, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_Entity, lambda: concept_promise_resolve(promise))
 
     def get_relation(self, iid: str) -> Promise[Optional[_Relation]]:
         promise = concepts_get_relation(self.native_transaction, _not_blank_iid(iid))
-        return Promise.map(_Relation, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_Relation, lambda: concept_promise_resolve(promise))
 
     def get_attribute(self, iid: str) -> Promise[Optional[_Attribute]]:
         promise = concepts_get_attribute(self.native_transaction, _not_blank_iid(iid))
-        return Promise.map(_Attribute, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_Attribute, lambda: concept_promise_resolve(promise))
 
     def get_schema_exception(self) -> list[TypeDBException]:
         try:

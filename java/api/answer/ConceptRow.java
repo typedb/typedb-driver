@@ -30,12 +30,12 @@ import java.util.stream.Stream;
  */
 public interface ConceptRow {
     /**
-     * Produces a stream over all column names (header) in this <code>ConceptRow</code>.
+     * Produces a stream over all column names (variables) in the header of this <code>ConceptRow</code>.
      * Shared between all the rows in a QueryAnswer.
      *
      * <h3>Examples</h3>
      * <pre>
-     * conceptRow.header();
+     * conceptRow.columnNames();
      * </pre>
      */
     @CheckReturnValue
@@ -47,27 +47,27 @@ public interface ConceptRow {
      *
      * <h3>Examples</h3>
      * <pre>
-     * conceptRow.queryType();
+     * conceptRow.getQueryType();
      * </pre>
      */
     @CheckReturnValue
     QueryType getQueryType();
 
     /**
-     * Retrieves a concept for a given variable name.
+     * Retrieves a concept for a given column name (variable).
      *
      * <h3>Examples</h3>
      * <pre>
      * conceptRow.get(columnName);
      * </pre>
      *
-     * @param columnName the column name (header)
+     * @param columnName the variable (column name from ``column_names``)
      */
     @CheckReturnValue
     Concept get(String columnName);
     
     /**
-     * Retrieves a concept for a given variable name.
+     * Retrieves a concept for a given index of the header (<code>columnNames</code>).
      *
      * <h3>Examples</h3>
      * <pre>
@@ -80,7 +80,7 @@ public interface ConceptRow {
     Concept getIndex(long columnIndex);
 
     /**
-     * Produces an iterator over all concepts in this `ConceptRow`, skipping empty results.
+     * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.
      *
      * <h3>Examples</h3>
      * <pre>

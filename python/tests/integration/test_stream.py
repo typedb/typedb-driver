@@ -51,7 +51,7 @@ class TestStream(TestCase):
             tx_options = TypeDBOptions(prefetch=True, prefetch_size=50)
             for i in range(50):
                 with driver.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
-                    person_type = tx.concepts.get_entity_type("person").resolve()
+                    person_type = tx.getQueryType.get_entity_type("person").resolve()
                     _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))
                     next(tx.query.get("match $x sub thing; get; limit 1;"))
 

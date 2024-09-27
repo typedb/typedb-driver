@@ -26,9 +26,9 @@ from tests.behaviour.context import Context
 @step("put {root_label:RootLabel} type: {type_label}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str):
     if root_label == RootLabel.ENTITY:
-        context.tx().concepts.put_entity_type(type_label).resolve()
+        context.tx().getQueryType.put_entity_type(type_label).resolve()
     elif root_label == RootLabel.RELATION:
-        context.tx().concepts.put_relation_type(type_label).resolve()
+        context.tx().getQueryType.put_relation_type(type_label).resolve()
     else:
         raise ValueError("Unrecognised value")
 
@@ -96,23 +96,23 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, is_abstr
 @step("{root_label:RootLabel}({type_label}) set supertype: {super_label}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, super_label: str):
     if root_label == RootLabel.ENTITY:
-        entity_supertype = context.tx().concepts.get_entity_type(super_label).resolve()
+        entity_supertype = context.tx().getQueryType.get_entity_type(super_label).resolve()
         try:
-            context.tx().concepts.get_entity_type(type_label).resolve().set_supertype(context.tx(), entity_supertype).resolve()
+            context.tx().getQueryType.get_entity_type(type_label).resolve().set_supertype(context.tx(), entity_supertype).resolve()
             assert False
         except TypeDBDriverException:
             pass
     elif root_label == RootLabel.ATTRIBUTE:
-        attribute_supertype = context.tx().concepts.get_attribute_type(super_label).resolve()
+        attribute_supertype = context.tx().getQueryType.get_attribute_type(super_label).resolve()
         try:
-            context.tx().concepts.get_attribute_type(type_label).resolve().set_supertype(context.tx(), attribute_supertype).resolve()
+            context.tx().getQueryType.get_attribute_type(type_label).resolve().set_supertype(context.tx(), attribute_supertype).resolve()
             assert False
         except TypeDBDriverException:
             pass
     elif root_label == RootLabel.RELATION:
-        relation_supertype = context.tx().concepts.get_relation_type(super_label).resolve()
+        relation_supertype = context.tx().getQueryType.get_relation_type(super_label).resolve()
         try:
-            context.tx().concepts.get_relation_type(type_label).resolve().set_supertype(context.tx(), relation_supertype).resolve()
+            context.tx().getQueryType.get_relation_type(type_label).resolve().set_supertype(context.tx(), relation_supertype).resolve()
             assert False
         except TypeDBDriverException:
             pass
@@ -123,14 +123,14 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, super_la
 @step("{root_label:RootLabel}({type_label}) set supertype: {super_label}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, super_label: str):
     if root_label == RootLabel.ENTITY:
-        entity_supertype = context.tx().concepts.get_entity_type(super_label).resolve()
-        context.tx().concepts.get_entity_type(type_label).resolve().set_supertype(context.tx(), entity_supertype).resolve()
+        entity_supertype = context.tx().getQueryType.get_entity_type(super_label).resolve()
+        context.tx().getQueryType.get_entity_type(type_label).resolve().set_supertype(context.tx(), entity_supertype).resolve()
     elif root_label == RootLabel.ATTRIBUTE:
-        attribute_supertype = context.tx().concepts.get_attribute_type(super_label).resolve()
-        context.tx().concepts.get_attribute_type(type_label).resolve().set_supertype(context.tx(), attribute_supertype).resolve()
+        attribute_supertype = context.tx().getQueryType.get_attribute_type(super_label).resolve()
+        context.tx().getQueryType.get_attribute_type(type_label).resolve().set_supertype(context.tx(), attribute_supertype).resolve()
     elif root_label == RootLabel.RELATION:
-        relation_supertype = context.tx().concepts.get_relation_type(super_label).resolve()
-        context.tx().concepts.get_relation_type(type_label).resolve().set_supertype(context.tx(), relation_supertype).resolve()
+        relation_supertype = context.tx().getQueryType.get_relation_type(super_label).resolve()
+        context.tx().getQueryType.get_relation_type(type_label).resolve().set_supertype(context.tx(), relation_supertype).resolve()
     else:
         raise ValueError("Unrecognised value")
 
@@ -176,8 +176,8 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str):
 def set_owns_attribute_type_as_type_with_annotations_throws_exception(context: Context, root_label: RootLabel, type_label: str,
                                                                       att_type_label: str, overridden_label: str,
                                                                       annotations: set["Annotation"]):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
-    overridden_type = context.tx().concepts.get_attribute_type(overridden_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
+    overridden_type = context.tx().getQueryType.get_attribute_type(overridden_label).resolve()
     try:
         context.get_thing_type(root_label, type_label).set_owns(context.tx(), attribute_type, overridden_type, annotations=annotations).resolve()
         assert False
@@ -197,7 +197,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
 
 def set_owns_attribute_type_with_annotations_throws_exception(context: Context, root_label: RootLabel, type_label: str,
                                                               att_type_label: str, annotations: set["Annotation"]):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
     try:
         context.get_thing_type(root_label, type_label).set_owns(context.tx(), attribute_type, annotations=annotations).resolve()
         assert False
@@ -215,8 +215,8 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
 
 
 def set_owns_attribute_type_as_type_with_annotations(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, overridden_label: str, annotations: set["Annotation"]):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
-    overridden_type = context.tx().concepts.get_attribute_type(overridden_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
+    overridden_type = context.tx().getQueryType.get_attribute_type(overridden_label).resolve()
     context.get_thing_type(root_label, type_label).set_owns(context.tx(), attribute_type, overridden_type, annotations=annotations).resolve()
 
 
@@ -231,7 +231,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
 
 
 def set_owns_attribute_type_with_annotations(context: Context, root_label: RootLabel, type_label: str, att_type_label: str, annotations: set["Annotation"]):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
     context.get_thing_type(root_label, type_label).set_owns(context.tx(), attribute_type, annotations=annotations).resolve()
 
 
@@ -247,7 +247,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
 
 @step("{root_label:RootLabel}({type_label}) unset owns attribute type: {att_type_label}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
     try:
         context.get_thing_type(root_label, type_label).unset_owns(context.tx(), attribute_type).resolve()
         assert False
@@ -257,7 +257,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type
 
 @step("{root_label:RootLabel}({type_label}) unset owns attribute type: {att_type_label}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, att_type_label: str):
-    attribute_type = context.tx().concepts.get_attribute_type(att_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(att_type_label).resolve()
     context.get_thing_type(root_label, type_label).unset_owns(context.tx(), attribute_type)
 
 
@@ -338,20 +338,20 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str):
 @step("{root_label:RootLabel}({type_label:Label}) get owns overridden attribute({attr_type_label}) is null: {is_null}")
 def step_impl(context: Context, root_label: RootLabel, type_label: Label, attr_type_label: str, is_null):
     is_null = parse_bool(is_null)
-    attribute_type = context.tx().concepts.get_attribute_type(attr_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(attr_type_label).resolve()
     assert_that(context.get_thing_type(root_label, type_label.name).get_owns_overridden(context.tx(), attribute_type).resolve() is None, is_(is_null))
 
 
 @step("{root_label:RootLabel}({type_label:Label}) get owns overridden attribute({attr_type_label}) get label: {label}")
 def step_impl(context: Context, root_label: RootLabel, type_label: Label, attr_type_label: str, label: str):
-    attribute_type = context.tx().concepts.get_attribute_type(attr_type_label).resolve()
+    attribute_type = context.tx().getQueryType.get_attribute_type(attr_type_label).resolve()
     assert_that(context.get_thing_type(root_label, type_label.name).get_owns_overridden(context.tx(), attribute_type).resolve().get_label().name, is_(label))
 
 
 @step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel} as {overridden_label:ScopedLabel}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label, overridden_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
-    overridden_type = context.tx().concepts.get_relation_type(overridden_label.scope).resolve().get_relates(context.tx(), overridden_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    overridden_type = context.tx().getQueryType.get_relation_type(overridden_label.scope).resolve().get_relates(context.tx(), overridden_label.name).resolve()
     try:
         context.get_thing_type(root_label, type_label).set_plays(context.tx(), role_type, overridden_type).resolve()
         assert False
@@ -361,14 +361,14 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
 
 @step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel} as {overridden_label:ScopedLabel}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label, overridden_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
-    overridden_type = context.tx().concepts.get_relation_type(overridden_label.scope).resolve().get_relates(context.tx(), overridden_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    overridden_type = context.tx().getQueryType.get_relation_type(overridden_label.scope).resolve().get_relates(context.tx(), overridden_label.name).resolve()
     context.get_thing_type(root_label, type_label).set_plays(context.tx(), role_type, overridden_type).resolve()
 
 
 @step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
     try:
         context.get_thing_type(root_label, type_label).set_plays(context.tx(), role_type).resolve()
         assert False
@@ -378,13 +378,13 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
 
 @step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
     context.get_thing_type(root_label, type_label).set_plays(context.tx(), role_type).resolve()
 
 
 @step("{root_label:RootLabel}({type_label}) unset plays role: {role_label:ScopedLabel}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
     try:
         context.get_thing_type(root_label, type_label).unset_plays(context.tx(), role_type).resolve()
         assert False
@@ -394,7 +394,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: str, role_lab
 
 @step("{root_label:RootLabel}({type_label}) unset plays role: {role_label:ScopedLabel}")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
+    role_type = context.tx().getQueryType.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
     context.get_thing_type(root_label, type_label).unset_plays(context.tx(), role_type).resolve()
 
 

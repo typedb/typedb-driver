@@ -363,7 +363,7 @@ class AnswerMatchResult:
 
 
 def match_answer_concepts(context: Context, answer_identifier: list[tuple[str, str]],
-                          answer: ConceptMap) -> AnswerMatchResult:
+                          answer: ConceptRow) -> AnswerMatchResult:
     results = []
     for var, concept_identifier in answer_identifier:
         matcher = parse_concept_identifier(concept_identifier)
@@ -473,7 +473,7 @@ def step_impl(context: Context):
 
         result_set = [(ai, [], []) for ai in answer_identifier_group.answer_identifiers]
         for answer_identifier, matched_answers, match_attempts in result_set:
-            for answer in answer_group.concept_maps():
+            for answer in answer_group.concept_rows():
                 result = match_answer_concepts(context, answer_identifier, answer)
                 match_attempts.append(result)
                 if result.matches():
@@ -482,7 +482,7 @@ def step_impl(context: Context):
                         "Each answer identifier should match precisely 1 answer, but [%d] answers matched the identifier [%s].\nThe match results were: %s" % (
                             len(matched_answers), answer_identifier, [str(x) for x in match_attempts]))
 
-        for answer in answer_group.concept_maps():
+        for answer in answer_group.concept_rows():
             matches = 0
             for answer_identifier, matched_answers, match_attempts in result_set:
                 if answer in matched_answers:
@@ -537,14 +537,14 @@ def variable_from_template_placeholder(placeholder: str):
         raise ValueError("Cannot replace template not based on IID.")
 
 
-def apply_query_template(template: str, answer: ConceptMap):
+def apply_query_template(template: str, answer: ConceptRow):
     query = ""
     matches = re.finditer(r"<(.+?)>", template)
     i = 0
     for match in matches:
         required_variable = variable_from_template_placeholder(match.group(1))
         query += template[i:match.span()[0]]
-        if required_variable in answer.variables():
+        if required_variable in answer.column_names():
             concept = answer.get(required_variable)
             if not concept.is_thing():
                 raise TypeError("Cannot apply IID templating to Types")

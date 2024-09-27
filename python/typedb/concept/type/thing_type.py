@@ -175,7 +175,7 @@ class _ThingType(ThingType, _Type, ABC):
 
     def get_owns_overridden(self, transaction: _Transaction, attribute_type: _AttributeType) -> Promise[Optional[AttributeType]]:
         promise = thing_type_get_owns_overridden(transaction.native_object, self.native_object, attribute_type.native_object)
-        return Promise.map(wrap_attribute_type, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_attribute_type, lambda: concept_promise_resolve(promise))
 
     def get_syntax(self, transaction: _Transaction) -> Promise[str]:
         return thing_type_get_syntax(transaction.native_object, self.native_object)
@@ -200,9 +200,9 @@ class _Root(_ThingType):
     ) -> Iterator[Any]:
         return chain(
             (self,),
-            transaction.concepts.get_root_entity_type().get_subtypes(transaction, transitivity),
-            transaction.concepts.get_root_relation_type().get_subtypes(transaction, transitivity),
-            transaction.concepts.get_root_attribute_type().get_subtypes(transaction, transitivity),
+            transaction.getQueryType.get_root_entity_type().get_subtypes(transaction, transitivity),
+            transaction.getQueryType.get_root_relation_type().get_subtypes(transaction, transitivity),
+            transaction.getQueryType.get_root_attribute_type().get_subtypes(transaction, transitivity),
         )
 
     def get_instances(
@@ -212,7 +212,7 @@ class _Root(_ThingType):
     ) -> Iterator[Any]:
         return chain(
             (self,),
-            transaction.concepts.get_root_entity_type().get_instances(transaction, transitivity),
-            transaction.concepts.get_root_relation_type().get_instances(transaction, transitivity),
-            transaction.concepts.get_root_attribute_type().get_instances(transaction, transitivity),
+            transaction.getQueryType.get_root_entity_type().get_instances(transaction, transitivity),
+            transaction.getQueryType.get_root_relation_type().get_instances(transaction, transitivity),
+            transaction.getQueryType.get_root_attribute_type().get_instances(transaction, transitivity),
         )

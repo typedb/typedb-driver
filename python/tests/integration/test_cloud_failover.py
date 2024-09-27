@@ -83,11 +83,11 @@ class TestCloudFailover(TestCase):
             primary_replica = self.get_primary_replica(driver.databases)
             print("Performing operations against the primary replica " + str(primary_replica))
             with driver.session("typedb", SCHEMA) as session, session.transaction(WRITE) as tx:
-                tx.concepts.put_entity_type("person")
+                tx.getQueryType.put_entity_type("person")
                 print("Put the entity type 'person'.")
                 tx.commit()
             with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
-                person = tx.concepts.get_entity_type("person").resolve()
+                person = tx.getQueryType.get_entity_type("person").resolve()
                 print("Retrieved entity type with label '%s' from primary replica." % person.get_label())
                 assert person.get_label().name == "person"
             iteration = 0
@@ -103,7 +103,7 @@ class TestCloudFailover(TestCase):
                 print("Primary replica stopped successfully.")
                 sleep(5)  # TODO: This ensures the server is actually shut down, but it's odd that it needs to be so long
                 with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
-                    person = tx.concepts.get_entity_type("person").resolve()
+                    person = tx.getQueryType.get_entity_type("person").resolve()
                     print("Retrieved entity type with label '%s' from new primary replica." % person.get_label())
                     assert person.get_label().name == "person"
                 idx = str(primary_replica.address())[10]

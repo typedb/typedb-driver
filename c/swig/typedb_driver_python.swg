@@ -37,9 +37,7 @@
 %typemap(freearg) Type ** { free($1); }
 %enddef
 
-%array(Annotation)
 %array(Concept)
-%array(Thing)
 
 /* char** needs special handling */
 %typemap(in) char ** (int size = 0) {
@@ -99,14 +97,3 @@ static PyObject* PyExc_TypeDBDriverError;
 
     native_driver_python.init_logging()
 %}
-
-/* ValueType* needs special handling */
-%typemap(in) enum ValueType * {
-    if ($input != Py_None) {
-        long value = PyInt_AsLong($input);
-        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
-        *$1 = (enum ValueType) value;
-    }
-}
-
-%typemap(freearg) enum ValueType * { free($1); }

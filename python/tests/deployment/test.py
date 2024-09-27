@@ -66,7 +66,7 @@ class TestDriverPython(TestCase):
         with driver.session("typedb", SCHEMA) as session:
             with session.transaction(WRITE) as tx:
                 tx.query.define("define lionfight sub relation, relates victor, relates loser;")
-                lionfight_type = tx.concepts.get_relation_type("lionfight").resolve()
+                lionfight_type = tx.getQueryType.get_relation_type("lionfight").resolve()
                 print("define: " + lionfight_type.get_label().name)
                 tx.query.undefine("undefine lionfight sub relation;")
                 tx.commit()

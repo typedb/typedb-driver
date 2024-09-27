@@ -24,37 +24,37 @@ from tests.behaviour.context import Context
 
 @step("entity({type_label}) create new instance; throws exception")
 def step_impl(context: Context, type_label: str):
-    assert_that(calling(lambda tx: context.tx().concepts.get_entity_type(type_label).resolve().create(tx).resolve()).with_args(context.tx()),
+    assert_that(calling(lambda tx: context.tx().getQueryType.get_entity_type(type_label).resolve().create(tx).resolve()).with_args(context.tx()),
                 raises(TypeDBDriverException))
 
 
 @step("{var:Var} = entity({type_label}) create new instance")
 def step_impl(context: Context, var: str, type_label: str):
-    context.put(var, context.tx().concepts.get_entity_type(type_label).resolve().create(context.tx()).resolve())
+    context.put(var, context.tx().getQueryType.get_entity_type(type_label).resolve().create(context.tx()).resolve())
 
 
 @step("{var:Var} = entity({type_label}) create new instance with key({key_type}): {key_value}")
 def step_impl(context: Context, var: str, type_label: str, key_type: str, key_value: str):
-    key = context.tx().concepts.get_attribute_type(key_type).resolve().put(context.tx(), key_value).resolve()
-    entity = context.tx().concepts.get_entity_type(type_label).resolve().create(context.tx()).resolve()
+    key = context.tx().getQueryType.get_attribute_type(key_type).resolve().put(context.tx(), key_value).resolve()
+    entity = context.tx().getQueryType.get_entity_type(type_label).resolve().create(context.tx()).resolve()
     entity.set_has(context.tx(), key).resolve()
     context.put(var, entity)
 
 
 @step("{var:Var} = entity({type_label}) get instance with key({key_type}): {key_value}")
 def step_impl(context: Context, var: str, type_label: str, key_type: str, key_value: str):
-    context.put(var, next((owner for owner in context.tx().concepts.get_attribute_type(key_type).resolve()
+    context.put(var, next((owner for owner in context.tx().getQueryType.get_attribute_type(key_type).resolve()
                           .get(context.tx(), key_value).resolve().get_owners(context.tx())
                            if owner.get_type().get_label() == Label.of(type_label)), None))
 
 
 @step("entity({type_label}) get instances contain: {var:Var}")
 def step_impl(context: Context, type_label: str, var: str):
-    assert_that(context.tx().concepts.get_entity_type(type_label).resolve().get_instances(context.tx()),
+    assert_that(context.tx().getQueryType.get_entity_type(type_label).resolve().get_instances(context.tx()),
                 has_item(context.get(var)))
 
 
 @step("entity({type_label}) get instances is empty")
 def step_impl(context: Context, type_label: str):
-    assert_that(calling(next).with_args(context.tx().concepts.get_entity_type(type_label).resolve().get_instances(context.tx())),
+    assert_that(calling(next).with_args(context.tx().getQueryType.get_entity_type(type_label).resolve().get_instances(context.tx())),
                 raises(StopIteration))

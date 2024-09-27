@@ -69,7 +69,7 @@ class _RoleType(_Type, RoleType):
 
     def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_RoleType]]:
         promise = role_type_get_supertype(transaction.native_object, self.native_object)
-        return Promise.map(_RoleType, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(_RoleType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_RoleType]:
         try:
@@ -98,7 +98,7 @@ class _RoleType(_Type, RoleType):
 
     def get_relation_type(self, transaction: _Transaction) -> Promise[_RelationType]:
         promise = wrap_relation_type(role_type_get_relation_type(transaction.native_object, self.native_object))
-        return Promise.map(wrap_relation_type, lambda: concept_promise_resolve(promise))
+        return Promise.concepts(wrap_relation_type, lambda: concept_promise_resolve(promise))
 
     def get_relation_types(self, transaction: _Transaction) -> Iterator[_RelationType]:
         try:

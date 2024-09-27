@@ -19,15 +19,15 @@ from __future__ import annotations
 
 from typing import Mapping, Iterator, TYPE_CHECKING
 
-from typedb.native_driver_wrapper import concept_map_get_variables, string_iterator_next, concept_map_get_values, \
-    concept_iterator_next, concept_map_get, concept_map_get_explainables, concept_map_to_string, concept_map_equals, \
+from typedb.native_driver_wrapper import concept_row_get_variables, string_iterator_next, concept_row_get_values, \
+    concept_iterator_next, concept_row_get, concept_row_get_explainables, concept_row_to_string, concept_row_equals, \
     explainables_get_relation, explainables_get_attribute, explainables_get_ownership, \
     explainables_get_relations_keys, explainables_get_attributes_keys, explainables_get_ownerships_keys, \
     string_pair_iterator_next, explainables_to_string, explainables_equals, explainable_get_conjunction, \
-    explainable_get_id, ConceptMap as NativeConceptMap, Explainables as NativeExplainables, \
+    explainable_get_id, ConceptRow as NativeConceptRow, Explainables as NativeExplainables, \
     Explainable as NativeExplainable
 
-from typedb.api.answer.concept_map import ConceptMap
+from typedb.api.answer.concept_row import ConceptRow
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
     NONEXISTENT_EXPLAINABLE_CONCEPT, NONEXISTENT_EXPLAINABLE_OWNERSHIP, NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
 from typedb.common.iterator_wrapper import IteratorWrapper
@@ -44,12 +44,12 @@ def _not_blank_var(var: str) -> str:
     return var
 
 
-class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
+class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
 
-    def __init__(self, concept_map: NativeConceptMap):
-        if not concept_map:
+    def __init__(self, concept_row: NativeConceptRow):
+        if not concept_row:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
-        super().__init__(concept_map)
+        super().__init__(concept_row)
         self.cached_map = None
 
     @property
@@ -57,10 +57,10 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
         return TypeDBDriverException(ILLEGAL_STATE)
 
     def variables(self) -> Iterator[str]:
-        return IteratorWrapper(concept_map_get_variables(self.native_object), string_iterator_next)
+        return IteratorWrapper(concept_row_get_variables(self.native_object), string_iterator_next)
 
     def concepts(self) -> Iterator[Concept]:
-        return map(concept_factory.wrap_concept, IteratorWrapper(concept_map_get_values(self.native_object),
+        return map(concept_factory.wrap_concept, IteratorWrapper(concept_row_get_values(self.native_object),
                                                                  concept_iterator_next))
 
     @property
@@ -70,28 +70,28 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
         return self.cached_map
 
     def get(self, variable: str) -> Concept:
-        concept = concept_map_get(self.native_object, _not_blank_var(variable))
+        concept = concept_row_get(self.native_object, _not_blank_var(variable))
         if not concept:
             raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, variable)
         return concept_factory.wrap_concept(concept)
 
-    def explainables(self) -> ConceptMap.Explainables:
-        return _ConceptMap.Explainables(concept_map_get_explainables(self.native_object))
+    def explainables(self) -> ConceptRow.Explainables:
+        return _ConceptRow.Explainables(concept_row_get_explainables(self.native_object))
 
     def __repr__(self):
-        return concept_map_to_string(self.native_object)
+        return concept_row_to_string(self.native_object)
 
     def __eq__(self, other):
         if other is self:
             return True
         if not other or type(other) != type(self):
             return False
-        return concept_map_equals(self.native_object, other.native_object)
+        return concept_row_equals(self.native_object, other.native_object)
 
     def __hash__(self):
         return hash((tuple(self.variables()), tuple(self.concepts())))
 
-    class Explainables(ConceptMap.Explainables, NativeWrapper[NativeExplainables]):
+    class Explainables(ConceptRow.Explainables, NativeWrapper[NativeExplainables]):
 
         def __init__(self, explainables: NativeExplainables):
             if not explainables:
@@ -102,36 +102,36 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
         def _native_object_not_owned_exception(self) -> TypeDBDriverException:
             return TypeDBDriverException(ILLEGAL_STATE)
 
-        def relation(self, variable: str) -> ConceptMap.Explainable:
+        def relation(self, variable: str) -> ConceptRow.Explainable:
             explainable = explainables_get_relation(self.native_object, _not_blank_var(variable))
             if not explainable:
                 raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
-            return _ConceptMap.Explainable(explainable)
+            return _ConceptRow.Explainable(explainable)
 
-        def attribute(self, variable: str) -> ConceptMap.Explainable:
+        def attribute(self, variable: str) -> ConceptRow.Explainable:
             explainable = explainables_get_attribute(self.native_object, _not_blank_var(variable))
             if not explainable:
                 raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
-            return _ConceptMap.Explainable(explainable)
+            return _ConceptRow.Explainable(explainable)
 
-        def ownership(self, owner: str, attribute: str) -> ConceptMap.Explainable:
+        def ownership(self, owner: str, attribute: str) -> ConceptRow.Explainable:
             explainable = explainables_get_ownership(self.native_object, _not_blank_var(owner),
                                                      _not_blank_var(attribute))
             if not explainable:
                 raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, (owner, attribute))
-            return _ConceptMap.Explainable(explainable)
+            return _ConceptRow.Explainable(explainable)
 
-        def relations(self) -> Mapping[str, ConceptMap.Explainable]:
+        def relations(self) -> Mapping[str, ConceptRow.Explainable]:
             return {key: self.relation(key)
                     for key in IteratorWrapper(explainables_get_relations_keys(self.native_object),
                                                string_iterator_next)}
 
-        def attributes(self) -> Mapping[str, ConceptMap.Explainable]:
+        def attributes(self) -> Mapping[str, ConceptRow.Explainable]:
             return {key: self.attribute(key)
                     for key in IteratorWrapper(explainables_get_attributes_keys(self.native_object),
                                                string_iterator_next)}
 
-        def ownerships(self) -> Mapping[tuple[str, str], ConceptMap.Explainable]:
+        def ownerships(self) -> Mapping[tuple[str, str], ConceptRow.Explainable]:
             return {key: self.ownership(*key)
                     for key in IteratorWrapper(explainables_get_ownerships_keys(self.native_object),
                                                string_pair_iterator_next)}
@@ -149,7 +149,7 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
         def __hash__(self):
             return hash((tuple(self.relations()), tuple(self.attributes()), tuple(self.ownerships())))
 
-    class Explainable(ConceptMap.Explainable, NativeWrapper[NativeExplainable]):
+    class Explainable(ConceptRow.Explainable, NativeWrapper[NativeExplainable]):
 
         def __init__(self, explainable: NativeExplainable):
             if not explainable:

@@ -25,14 +25,14 @@ from tests.behaviour.context import Context
 @step("attribute({type_label}) get instances contain: {var:Var}")
 def step_impl(context: Context, type_label: str, var: str):
     assert_that(
-        context.get(var), is_in(context.tx().concepts.get_attribute_type(type_label).resolve().get_instances(context.tx()))
+        context.get(var), is_in(context.tx().getQueryType.get_attribute_type(type_label).resolve().get_instances(context.tx()))
     )
 
 
 @step("attribute({type_label}) get instances is empty")
 def step_impl(context: Context, type_label: str):
     assert_that(
-        calling(next).with_args(context.tx().concepts.get_attribute_type(type_label).resolve().get_instances(context.tx())),
+        calling(next).with_args(context.tx().getQueryType.get_attribute_type(type_label).resolve().get_instances(context.tx())),
         raises(StopIteration)
     )
 
@@ -55,92 +55,92 @@ def step_impl(context: Context, var: str, value_type: ValueType):
 @step("attribute({type_label}) as(boolean) put: {value:Bool}; throws exception")
 def step_impl(context: Context, type_label: str, value: bool):
     assert_that(
-        calling(lambda tx, value: context.tx().concepts.get_attribute_type(type_label).resolve().put(tx, value).resolve()
+        calling(lambda tx, value: context.tx().getQueryType.get_attribute_type(type_label).resolve().put(tx, value).resolve()
                 ).with_args(context.tx(), value), raises(TypeDBDriverException)
     )
 
 
 @step("{var:Var} = attribute({type_label}) as(boolean) put: {value:Bool}")
 def step_impl(context: Context, var: str, type_label: str, value: bool):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
 
 
 @step("attribute({type_label}) as(long) put: {value:Int}; throws exception")
 def step_impl(context: Context, type_label: str, value: int):
     assert_that(
-        calling(lambda tx, value: context.tx().concepts.get_attribute_type(type_label).resolve().put(tx, value).resolve()
+        calling(lambda tx, value: context.tx().getQueryType.get_attribute_type(type_label).resolve().put(tx, value).resolve()
                 ).with_args(context.tx(), value), raises(TypeDBDriverException)
     )
 
 
 @step("{var:Var} = attribute({type_label}) as(long) put: {value:Int}")
 def step_impl(context: Context, var: str, type_label: str, value: int):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
 
 
 @step("attribute({type_label}) as(double) put: {value:Float}; throws exception")
 def step_impl(context: Context, type_label: str, value: float):
     assert_that(
-        calling(lambda tx, value: context.tx().concepts.get_attribute_type(type_label).resolve().put(tx, value).resolve()
+        calling(lambda tx, value: context.tx().getQueryType.get_attribute_type(type_label).resolve().put(tx, value).resolve()
                 ).with_args(context.tx(), value), raises(TypeDBDriverException)
     )
 
 
 @step("{var:Var} = attribute({type_label}) as(double) put: {value:Float}")
 def step_impl(context: Context, var: str, type_label: str, value: float):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
 
 
 @step("attribute({type_label}) as(string) put: {value}; throws exception")
 def step_impl(context: Context, type_label: str, value: str):
     assert_that(
-        calling(lambda tx, value: context.tx().concepts.get_attribute_type(type_label).resolve().put(tx, value).resolve()
+        calling(lambda tx, value: context.tx().getQueryType.get_attribute_type(type_label).resolve().put(tx, value).resolve()
                 ).with_args(context.tx(), value), raises(TypeDBDriverException)
     )
 
 
 @step("{var:Var} = attribute({type_label}) as(string) put: {value}")
 def step_impl(context: Context, var: str, type_label: str, value: str):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
 
 
 @step("attribute({type_label}) as(datetime) put: {value:DateTime}; throws exception")
 def step_impl(context: Context, type_label: str, value: datetime):
     assert_that(
-        calling(lambda tx, value: context.tx().concepts.get_attribute_type(type_label).resolve().put(tx, value).resolve()
+        calling(lambda tx, value: context.tx().getQueryType.get_attribute_type(type_label).resolve().put(tx, value).resolve()
                 ).with_args(context.tx(), value), raises(TypeDBDriverException)
     )
 
 
 @step("{var:Var} = attribute({type_label}) as(datetime) put: {value:DateTime}")
 def step_impl(context: Context, var: str, type_label: str, value: datetime):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().put(context.tx(), value).resolve())
 
 
 @step("{var:Var} = attribute({type_label}) as(boolean) get: {value:Bool}")
 def step_impl(context: Context, var: str, type_label: str, value: bool):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
 
 
 @step("{var:Var} = attribute({type_label}) as(long) get: {value:Int}")
 def step_impl(context: Context, var: str, type_label: str, value: int):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
 
 
 @step("{var:Var} = attribute({type_label}) as(double) get: {value:Float}")
 def step_impl(context: Context, var: str, type_label: str, value: float):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
 
 
 @step("{var:Var} = attribute({type_label}) as(string) get: {value}")
 def step_impl(context: Context, var: str, type_label: str, value: str):
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
 
 
 @step("{var:Var} = attribute({type_label}) as(datetime) get: {value:DateTime}")
 def step_impl(context: Context, var: str, type_label: str, value: datetime):
-    print(context.tx().concepts.get_attribute_type(type_label).resolve(), flush=True)
-    context.put(var, context.tx().concepts.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
+    print(context.tx().getQueryType.get_attribute_type(type_label).resolve(), flush=True)
+    context.put(var, context.tx().getQueryType.get_attribute_type(type_label).resolve().get(context.tx(), value).resolve())
 
 
 @step("attribute {var:Var} has boolean value: {value:Bool}")
