@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-0
+cargo add typedb-driver@3.0.0-alpha-3
 ```
 
 
@@ -29,66 +29,28 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-0</version>
+        <version>3.0.0-alpha-3</version>
     </dependency>
 </dependencies>
 ```
 
-### Python driver
-
-PyPI package: https://pypi.org/project/typedb-driver
-Documentation: https://typedb.com/docs/drivers/python/overview
-
-Available through https://pypi.org
-
-```
-pip install typedb-driver==3.0.0-alpha-0
-```
-
-### NodeJS driver
-
-NPM package: https://www.npmjs.com/package/typedb-driver
-Documentation: https://typedb.com/docs/drivers/nodejs/overview
-
-```
-npm install typedb-driver@3.0.0-alpha-0
-```
-
-### C# driver
-
-NuGet package: https://www.nuget.org/packages/TypeDB.Driver
-Documentation: https://typedb.com/docs/drivers/csharp/overview
-
-```xml
-<ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.0.0-alpha-0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.0.0-alpha-0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.0.0-alpha-0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.0.0-alpha-0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.0.0-alpha-0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.0.0-alpha-0" />
-</ItemGroup>
-```
-
-### C++ driver
-
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:3.0.0-alpha-0
-Documentation: https://typedb.com/docs/drivers/cpp/overview
-
-### C driver
-
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.0.0-alpha-0
-
-
 ## New Features
+- **Introduce 3.0 Java driver**
+  We introduce the updated Java driver for the upcoming 3.0 release, featuring all the Rust driver's features in another language.
 
 
 ## Bugs Fixed
+- **Rust driver refinements**
+  We fix major issues:
 
+  1. correctly passing the driver version string into the driver via the build system, instead of hard-coding it into the sources. This use a Cargo environment variable, which will always be available in released versions and is provided from the crate's Cargo.toml. During development, we just set the version to `0.0.0` because we don't particularly care about it!
+  2. correctly request more answers from the query stream once a BatchContinue flag has been read by the user, as they consume the query answer stream. Previously, we immediately request more answers from the server as soon as we see the StreamContinue signal, in the network layer, which meant the whole stream was actually not lazy at all!
+
+- **Fix decimal, datetime, datetime-tz value types processing**
+  
 
 ## Code Refactors
 
 
 ## Other Improvements
 
-    
