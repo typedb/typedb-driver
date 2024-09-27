@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-3
+cargo add typedb-driver@3.0.0-alpha-4
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-3</version>
+        <version>3.0.0-alpha-4</version>
     </dependency>
 </dependencies>
 ```
@@ -51,7 +51,10 @@ Documentation: https://typedb.com/docs/drivers/java/overview
   
 
 ## Code Refactors
+- **Rename Java package com.vaticle.typedb to com.typedb and remove typeql dependencies.**
+  We rename the Java driver's package from `com.vaticle.typedb` to `com.typedb`.
+  We remove excessive dependencies on `typeql`.
 
 
 ## Other Improvements
-
+    
