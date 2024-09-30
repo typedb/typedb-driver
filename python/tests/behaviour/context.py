@@ -20,7 +20,7 @@ import behave.runner
 from behave.model import Table
 from typedb.driver import *
 
-from tests.behaviour.config.parameters import RootLabel
+from tests.behaviour.config.parameters import Kind
 
 
 class Config:
@@ -43,22 +43,18 @@ class Context(behave.runner.Context):
         self.table: Optional[Table] = None
         self.THREAD_POOL_SIZE = 0
         self.driver: Optional[Driver] = None
-        self.sessions: list[TypeDBSession] = []
-        self.sessions_to_transactions: dict[TypeDBSession, list[Transaction]] = {}
-        self.sessions_parallel: list[TypeDBSession] = []
-        self.sessions_parallel_to_transactions_parallel: dict[TypeDBSession, list[Transaction]] = {}
-        self.session_options: Optional[Options] = None
-        self.transaction_options: Optional[Options] = None
+        self.transactions: list[Transaction] = []
+        self.transactions_parallel: list[Transaction] = []
+        # self.transaction_options: Optional[Options] = None
         self.things: dict[str, Thing] = {}
         self.answers: Optional[list[ConceptRow]] = None
         self.fetch_answers: Optional[list[dict]] = None
         self.value_answer: Optional[Value] = None
-        self.value_answer_groups: Optional[list[ValueGroup]] = None
         self.config = Config()
         self.option_setters = {}
 
     def tx(self) -> Transaction:
-        return self.sessions_to_transactions[self.sessions[0]][0]
+        return self.transactions[0]
 
     def put(self, var: str, thing: Thing) -> None:
         pass
@@ -66,7 +62,7 @@ class Context(behave.runner.Context):
     def get(self, var: str) -> Thing:
         pass
 
-    def get_thing_type(self, root_label: RootLabel, type_label: str) -> ThingType:
+    def get_thing_type(self, root_label: Kind, type_label: str) -> ThingType:
         pass
 
     def clear_answers(self) -> None:

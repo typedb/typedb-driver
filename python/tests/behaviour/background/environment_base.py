@@ -18,7 +18,7 @@
 from behave.model_core import Status
 from typedb.driver import *
 
-from tests.behaviour.config.parameters import RootLabel
+from tests.behaviour.config.parameters import Kind
 from tests.behaviour.context import Context
 
 
@@ -28,21 +28,17 @@ def before_all(context: Context):
 
 def before_scenario(context: Context):
     # setup context state
-    context.sessions = []
-    context.sessions_to_transactions = {}
-    context.sessions_parallel = []
-    context.sessions_to_transactions_parallel = {}
-    context.sessions_parallel_to_transactions_parallel = {}
+    context.transactions = {}
+    context.transactions_parallel = []
     context.things = {}
     # setup context functions
-    context.tx = lambda: context.sessions_to_transactions[context.sessions[0]][0]
+    context.tx = lambda: context.transactions[0]
     context.get = lambda var: context.things[var]
     context.put = lambda var, thing: _put_impl(context, var, thing)
     context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.option_setters = {
-        "session-idle-timeout-millis": lambda options, value: setattr(options, "session_idle_timeout_millis", value),
-        "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
+        # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
     }
 
 
@@ -50,12 +46,12 @@ def _put_impl(context: Context, variable: str, thing: Thing):
     context.things[variable] = thing
 
 
-def _get_thing_type_impl(context: Context, root_label: RootLabel, type_label: str):
-    if root_label == RootLabel.ENTITY:
+def _get_thing_type_impl(context: Context, root_label: Kind, type_label: str):
+    if root_label == Kind.ENTITY:
         return context.tx().getQueryType.get_entity_type(type_label).resolve()
-    elif root_label == RootLabel.ATTRIBUTE:
+    elif root_label == Kind.ATTRIBUTE:
         return context.tx().getQueryType.get_attribute_type(type_label).resolve()
-    elif root_label == RootLabel.RELATION:
+    elif root_label == Kind.RELATION:
         return context.tx().getQueryType.get_relation_type(type_label).resolve()
     else:
         raise ValueError("Unrecognised value")
@@ -64,7 +60,6 @@ def _get_thing_type_impl(context: Context, root_label: RootLabel, type_label: st
 def _clear_answers_impl(context: Context):
     context.answers = None
     context.fetch_answers = None
-    context.answer_groups = None
     context.value_answer = None
     context.value_answer_groups = None
 

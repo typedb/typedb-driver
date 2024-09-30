@@ -37,7 +37,7 @@ class TransactionType(enum.Enum):
     """
     READ = 0
     WRITE = 1
-    SCHEMa = 2
+    SCHEMA = 2
 
     def is_read(self) -> bool:
         return self is TransactionType.READ

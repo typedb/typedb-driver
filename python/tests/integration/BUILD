@@ -54,8 +54,8 @@ py_test(
 )
 
 py_test(
-    name = "test_debug",
-    srcs = ["test_debug.py"],
+    name = "test_query",
+    srcs = ["test_query.py"],
     deps = [
         "//python:driver_python",
     ],
@@ -66,6 +66,16 @@ py_test(
 py_test(
     name = "test_stream",
     srcs = ["test_stream.py"],
+    deps = [
+        "//python:driver_python",
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    python_version = "PY3"
+)
+
+py_test(
+    name = "test_debug",
+    srcs = ["test_query.py"],
     deps = [
         "//python:driver_python",
     ],
