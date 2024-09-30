@@ -43,5 +43,6 @@ public class MavenApplicationTest {
         assertTrue(answer.isOk());
         tx.close();
         driver.close();
+        System.out.println("Driver is tested successfully!");
     }
 }
