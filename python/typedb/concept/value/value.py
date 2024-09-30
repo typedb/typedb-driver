@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
+from decimal import Decimal
 from functools import singledispatchmethod
 from typing import Union
 
@@ -88,23 +89,29 @@ class _Value(Value, _Concept):
     def as_double(self) -> float:
         return value_get_double(self.native_object)
 
-    def as_decimal(self) -> float:
-        return value_get_decimal(self.native_object)
+    def as_decimal(self) -> Decimal:
+        native_decimal = value_is_decimal(self.native_object)
+        native_integer = native_decimal.get_integer()
+        native_fractional = native_decimal.get_fractional()
+        fractional_digits = len(str(native_fractional))
+        return Decimal(native_integer) + Decimal(native_fractional) / Decimal(10**fractional_digits)
 
     def as_string(self) -> str:
         return value_get_string(self.native_object)
 
     def as_date(self) -> date:
-        return datetime.utcfromtimestamp(value_get_date(self.native_object))
+        return date.fromtimestamp(value_get_date(self.native_object))
 
     def as_datetime(self) -> datetime:
-        return datetime.utcfromtimestamp(value_get_datetime(self.native_object) / 1000)
+        return datetime.utcfromtimestamp(value_get_datetime(self.native_object) // 1_000_000_000)
 
     def as_datetime_tz(self) -> datetime:
-        return datetime.fromtimestamp(value_get_datetime_tz(self.native_object) / 1000, timezone.utc)
+        native_datetime = value_get_datetime_tz(self.native_object)
+        return datetime.fromtimestamp(native_datetime.get_datetime_in_nanos() // 1_000_000_000, ZoneInfo(native_datetime.get_zone_id()))
 
-    def as_duration(self) -> datetime:
-        return datetime.utcfromtimestamp(value_get_duration(self.native_object))
+    def as_duration(self) -> timedelta:
+        native_duration = value_get_duration(self.native_object)
+        return timedelta(months=native_duration.get_months(), days=native_duration.get_days(), nanos=native_duration.get_nanos())
 
     def as_struct(self) -> {str, Optional[Value]}:
         result = {}

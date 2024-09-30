@@ -274,7 +274,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_decimal(self) -> float: # TODO: Finish type
+    def as_decimal(self) -> Decimal:
         """
         Returns a ``decimal`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -306,7 +306,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_date(self) -> date: # TODO: Finish tyope
+    def as_date(self) -> date:
         """
         Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -354,7 +354,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_duration(self) -> datetime: # TODO: Finish type
+    def as_duration(self) -> timedelta:
         """
         Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.

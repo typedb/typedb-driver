@@ -90,7 +90,7 @@ class _Attribute(Attribute, _Thing):
     def as_double(self) -> float:
         return self._value().as_double()
 
-    def as_decimal(self) -> float:
+    def as_decimal(self) -> Decimal:
         return self._value().as_decimal()
 
     def as_string(self) -> str:
@@ -105,7 +105,7 @@ class _Attribute(Attribute, _Thing):
     def as_datetime_tz(self) -> datetime:
         return self._value().as_datetime_tz()
 
-    def as_duration(self) -> datetime:
+    def as_duration(self) -> timedelta:
         return self._value().as_duration()
 
     def as_struct(self) -> {str, Optional[Value]}:
