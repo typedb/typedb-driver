@@ -22,28 +22,26 @@ package application;
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
-import com.typedb.driver.api.TypeDBSession;
-import com.typedb.driver.api.concept.type.EntityType;
 import org.junit.Test;
 
-import java.util.stream.Collectors;
-
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-// TODO: implement more advanced tests using TypeQL queries once TypeDB 2.0 supports them
 public class MavenApplicationTest {
+    private static final String DB_NAME = "typedb";
 
     @Test
     public void test() {
         Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
-        driver.databases().create("typedb");
-        TypeDBSession session = driver.session("typedb", TypeDBSession.Type.DATA);
-        Transaction tx = session.transaction(Transaction.Type.WRITE);
-        EntityType root = tx.concepts().getRootEntityType();
-        assertNotNull(root);
-        assertEquals(1, root.getSubtypes(tx).collect(Collectors.toList()).size());
+        if (driver.databases().contains(DB_NAME)) {
+            driver.databases().get(DB_NAME).delete();
+        }
+        driver.databases().create(DB_NAME);
+        Transaction tx = driver.transaction(DB_NAME, Transaction.Type.SCHEMA);
+        com.typedb.driver.api.answer.QueryAnswer answer = tx.query("define entity person;").resolve();
+        assertNotNull(answer);
+        assertTrue(answer.isOk());
         tx.close();
-        session.close();
         driver.close();
     }
 }

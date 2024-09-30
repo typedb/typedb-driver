@@ -19,9 +19,9 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
-//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
-//import com.vaticle.typedb.cloud.tool.runner.TypeDBCloudRunner;
+//import com.typedb.core.tool.runner.TypeDBRunner;
+//import com.typedb.core.tool.runner.TypeDBSingleton;
+//import com.typedb.cloud.tool.runner.TypeDBCloudRunner;
 //import com.typedb.driver.TypeDB;
 //import com.typedb.driver.api.TypeDBDriver;
 //import com.typedb.driver.api.Credential;

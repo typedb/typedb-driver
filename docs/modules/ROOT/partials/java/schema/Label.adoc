@@ -1,7 +1,7 @@
 [#_Label]
 === Label
 
-*Package*: `com.vaticle.typedb.driver.common`
+*Package*: `com.typedb.driver.common`
 
 A ``Label`` holds the uniquely identifying name of a type.
 

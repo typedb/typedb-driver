@@ -1,0 +1,117 @@
+[#_Driver]
+=== Driver
+
+*Package*: `com.typedb.driver.api`
+
+*Superinterfaces:*
+
+* `java.lang.AutoCloseable`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `LANGUAGE` a| `static java.lang.String` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_Driver_close_]
+==== close
+
+[source,java]
+----
+void close()
+----
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.close()
+----
+
+[#_Driver_databases_]
+==== databases
+
+[source,java]
+----
+@CheckReturnValue
+DatabaseManager databases()
+----
+
+The ``DatabaseManager`` for this connection, providing access to database management methods.
+
+[caption=""]
+.Returns
+`DatabaseManager`
+
+[#_Driver_isOpen_]
+==== isOpen
+
+[source,java]
+----
+@CheckReturnValue
+boolean isOpen()
+----
+
+Checks whether this connection is presently open. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.isOpen();
+----
+
+[#_Driver_transaction_java_lang_String_Transaction_Type]
+==== transaction
+
+[source,java]
+----
+@CheckReturnValue
+Transaction transaction​(java.lang.String database,
+                        Transaction.Type type)
+----
+
+Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database with which the session connects a| `java.lang.String`
+a| `type` a| The type of session to be created (DATA or SCHEMA) a| `Transaction.Type`
+|===
+
+[caption=""]
+.Returns
+`Transaction`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.transaction(database, sessionType);
+----
+
+// end::methods[]
+

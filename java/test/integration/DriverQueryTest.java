@@ -59,14 +59,15 @@ import static org.junit.Assert.fail;
 @SuppressWarnings("Duplicates")
 public class DriverQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(DriverQueryTest.class);
+    private static final String DB_NAME = "typedb";
     private static final String ADDRESS = "0.0.0.0:1729";
     private static Driver typedbDriver;
 
     @BeforeClass
     public static void setUpClass() {
         typedbDriver = TypeDB.coreDriver(ADDRESS);
-        if (typedbDriver.databases().contains("typedb")) typedbDriver.databases().get("typedb").delete();
-        typedbDriver.databases().create("typedb");
+        if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
+        typedbDriver.databases().create(DB_NAME);
     }
 
     @AfterClass
@@ -76,11 +77,12 @@ public class DriverQueryTest {
 
     @Test
     public void basicTest() {
-        Database db = typedbDriver.databases().get("typedb");
-        db.delete();
-        typedbDriver.databases().create("typedb");
-        Database database = typedbDriver.databases().get("typedb");
-        assertEquals(database.name(), "typedb");
+        if (typedbDriver.databases().contains(DB_NAME)) {
+            typedbDriver.databases().get(DB_NAME).delete();
+        }
+        typedbDriver.databases().create(DB_NAME);
+        Database database = typedbDriver.databases().get(DB_NAME);
+        assertEquals(database.name(), DB_NAME);
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("define entity person, owns age; attribute age, value long;").resolve();
@@ -261,9 +263,9 @@ public class DriverQueryTest {
 
     @Test
     public void attributesTest() {
-        Database db = typedbDriver.databases().get("typedb");
+        Database db = typedbDriver.databases().get(DB_NAME);
         db.delete();
-        typedbDriver.databases().create("typedb");
+        typedbDriver.databases().create(DB_NAME);
 
         Map<String, String> attribute_value_types = Map.of(
                 "root", "none",
@@ -628,7 +630,7 @@ public class DriverQueryTest {
     }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {
-        String database = "typedb";
+        String database = DB_NAME;
         try (Transaction transaction = typedbDriver.transaction(database, type/*, options*/)) {
             fn.accept(transaction);
         }

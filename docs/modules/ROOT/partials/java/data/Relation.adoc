@@ -1,7 +1,7 @@
 [#_Relation]
 === Relation
 
-*Package*: `com.vaticle.typedb.driver.api.concept.thing`
+*Package*: `com.typedb.driver.api.concept.thing`
 
 *Superinterfaces:*
 
@@ -11,42 +11,6 @@
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_Relation_addPlayer_TypeDBTransaction_RoleType_Thing]
-==== addPlayer
-
-[source,java]
-----
-@CheckReturnValue
-Promise<java.lang.Void> addPlayer​(TypeDBTransaction transaction,
-                                  RoleType roleType,
-                                  Thing player)
-----
-
-Adds a new role player to play the given role in this ``Relation``. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleType` a| The role to be played by the ``player`` a| `RoleType`
-a| `player` a| The thing to play the role a| `Thing`
-|===
-
-[caption=""]
-.Returns
-`Promise<java.lang.Void>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.addPlayer(transaction, roleType, player).resolve();
-----
-
 [#_Relation_asAttribute_]
 ==== asAttribute
 
@@ -268,102 +232,27 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Relation_getPlayers_TypeDBTransaction]
-==== getPlayers
+[#_Relation_getIID_]
+==== getIID
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>> getPlayers​(TypeDBTransaction transaction)
+java.lang.String getIID()
 ----
 
-Retrieves a mapping of all instances involved in the ``Relation`` and the role each play. 
+Retrieves the unique id of the ``Relation``. 
 
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
 
 [caption=""]
 .Returns
-`java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>>`
+`java.lang.String`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relation.getPlayers(transaction)
-----
-
-[#_Relation_getPlayersByRoleType_TypeDBTransaction_RoleType_]
-==== getPlayersByRoleType
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getPlayersByRoleType​(TypeDBTransaction transaction,
-                                                              RoleType... roleTypes)
-----
-
-Retrieves all role players of this ``Relation``, optionally filtered by given role types. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleTypes` a| 0 or more role types a| `RoleType[]`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getPlayersByRoleType(transaction, roleTypes);
-----
-
-[#_Relation_getRelating_TypeDBTransaction]
-==== getRelating
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends RoleType> getRelating​(TypeDBTransaction transaction)
-----
-
-Retrieves all role types currently played in this ``Relation``. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends RoleType>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getRelating(transaction);
+relation.getIID();
 ----
 
 [#_Relation_getType_]
@@ -617,42 +506,6 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
-----
-
-[#_Relation_removePlayer_TypeDBTransaction_RoleType_Thing]
-==== removePlayer
-
-[source,java]
-----
-@CheckReturnValue
-Promise<java.lang.Void> removePlayer​(TypeDBTransaction transaction,
-                                     RoleType roleType,
-                                     Thing player)
-----
-
-Removes the association of the given instance that plays the given role in this ``Relation``. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
-a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
-|===
-
-[caption=""]
-.Returns
-`Promise<java.lang.Void>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.removePlayer(transaction, roleType, player).resolve();
 ----
 
 // end::methods[]

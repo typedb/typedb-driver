@@ -53,7 +53,7 @@ under the License.
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.vaticle.typedb</groupId>
+            <groupId>com.typedb</groupId>
             <artifactId>typedb-driver</artifactId>
             <version>DRIVER_JAVA_VERSION_MARKER</version>
         </dependency>

@@ -19,9 +19,9 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
-//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
-//import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
+//import com.typedb.core.tool.runner.TypeDBRunner;
+//import com.typedb.core.tool.runner.TypeDBSingleton;
+//import com.typedb.core.tool.runner.TypeDBCoreRunner;
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import io.cucumber.java.After;

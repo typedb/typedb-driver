@@ -1,7 +1,7 @@
 [#_Value]
 === Value
 
-*Package*: `com.vaticle.typedb.driver.api.concept.value`
+*Package*: `com.typedb.driver.api.concept.value`
 
 *Superinterfaces:*
 
@@ -14,6 +14,7 @@
 [options="header"]
 |===
 |Name |Type |Description
+a| `DECIMAL_SCALE` a| `static int` a| 
 a| `ISO_LOCAL_DATE_TIME_MILLIS` a| `static java.time.format.DateTimeFormatter` a| 
 |===
 // end::properties[]
@@ -85,12 +86,34 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 value.asBoolean();
 ----
 
-[#_Value_asDateTime_]
-==== asDateTime
+[#_Value_asDate_]
+==== asDate
 
 [source,java]
 ----
-java.time.LocalDateTime asDateTime()
+java.time.LocalDate asDate()
+----
+
+Returns a ``date`` value of this value concept. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.time.LocalDate`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asDate();
+----
+
+[#_Value_asDatetime_]
+==== asDatetime
+
+[source,java]
+----
+java.time.LocalDateTime asDatetime()
 ----
 
 Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception. 
@@ -105,6 +128,50 @@ Returns a ``datetime`` value of this value concept. If the value has another typ
 [source,java]
 ----
 value.asDatetime();
+----
+
+[#_Value_asDatetimeTZ_]
+==== asDatetimeTZ
+
+[source,java]
+----
+java.time.ZonedDateTime asDatetimeTZ()
+----
+
+Returns a ``datetime-tz`` value of this value concept. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.time.ZonedDateTime`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asDatetimeTZ();
+----
+
+[#_Value_asDecimal_]
+==== asDecimal
+
+[source,java]
+----
+java.math.BigDecimal asDecimal()
+----
+
+Returns a ``decimal`` value of this value concept. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.math.BigDecimal`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asDecimal();
 ----
 
 [#_Value_asDouble_]
@@ -127,6 +194,28 @@ Returns a ``double`` value of this value concept. If the value has another type,
 [source,java]
 ----
 value.asDouble();
+----
+
+[#_Value_asDuration_]
+==== asDuration
+
+[source,java]
+----
+com.typedb.driver.common.Duration asDuration()
+----
+
+Returns a ``duration`` value of this value concept. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`com.typedb.driver.common.Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asDuration();
 ----
 
 [#_Value_asEntity_]
@@ -283,6 +372,28 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.asString();
 ----
 
+[#_Value_asStruct_]
+==== asStruct
+
+[source,java]
+----
+java.util.Map<java.lang.String,​java.util.Optional<Value>> asStruct()
+----
+
+Returns a ``struct`` value of this value concept represented as a map from field names to values. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.util.Map<java.lang.String,​java.util.Optional<Value>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asStruct();
+----
+
 [#_Value_asThing_]
 ==== asThing
 
@@ -398,15 +509,15 @@ concept.asValue();
 
 [source,java]
 ----
-Value.Type getType()
+java.lang.String getType()
 ----
 
-Retrieves the ``Value.Type`` of this value concept. 
+Retrieves the string representation of the type of this value concept. 
 
 
 [caption=""]
 .Returns
-`Value.Type`
+`java.lang.String`
 
 [caption=""]
 .Code examples
@@ -483,12 +594,34 @@ Returns ``True`` if the value which this value concept holds is of type ``boolea
 value.isBoolean()
 ----
 
-[#_Value_isDateTime_]
-==== isDateTime
+[#_Value_isDate_]
+==== isDate
 
 [source,java]
 ----
-boolean isDateTime()
+boolean isDate()
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``date``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.isDate();
+----
+
+[#_Value_isDatetime_]
+==== isDatetime
+
+[source,java]
+----
+boolean isDatetime()
 ----
 
 Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``false``. 
@@ -503,6 +636,50 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 [source,java]
 ----
 value.isDatetime();
+----
+
+[#_Value_isDatetimeTZ_]
+==== isDatetimeTZ
+
+[source,java]
+----
+boolean isDatetimeTZ()
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``datetime-tz``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.isDatetimeTZ();
+----
+
+[#_Value_isDecimal_]
+==== isDecimal
+
+[source,java]
+----
+boolean isDecimal()
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``decimal``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.isDecimal();
 ----
 
 [#_Value_isDouble_]
@@ -525,6 +702,28 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 [source,java]
 ----
 value.isDouble();
+----
+
+[#_Value_isDuration_]
+==== isDuration
+
+[source,java]
+----
+boolean isDuration()
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``duration``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.isDuration();
 ----
 
 [#_Value_isEntity_]
@@ -684,6 +883,28 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 [source,java]
 ----
 value.isString();
+----
+
+[#_Value_isStruct_]
+==== isStruct
+
+[source,java]
+----
+boolean isStruct()
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``struct``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.isStruct();
 ----
 
 [#_Value_isThing_]

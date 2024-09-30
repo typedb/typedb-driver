@@ -1,7 +1,7 @@
 [#_JSON]
 === JSON
 
-*Package*: `com.vaticle.typedb.driver.api.answer`
+*Package*: `com.typedb.driver.api.answer`
 
 // tag::methods[]
 [#_JSON_JSON_]

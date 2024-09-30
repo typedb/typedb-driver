@@ -1,7 +1,7 @@
 [#_DatabaseManager]
 === DatabaseManager
 
-*Package*: `com.vaticle.typedb.driver.api.database`
+*Package*: `com.typedb.driver.api.database`
 
 Provides access to all database management methods.
 

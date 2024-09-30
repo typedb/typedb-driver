@@ -1,7 +1,7 @@
 [#_Promise_T]
 === Promise<T>
 
-*Package*: `com.vaticle.typedb.driver.common`
+*Package*: `com.typedb.driver.common`
 
 A ``Promise`` represents an asynchronous network operation.
 
