@@ -1,0 +1,133 @@
+[#_OkQueryAnswer]
+=== OkQueryAnswer
+
+*Package*: `com.typedb.driver.api.answer`
+
+*Superinterfaces:*
+
+* `QueryAnswer`
+
+// tag::methods[]
+[#_OkQueryAnswer_asConceptRows_]
+==== asConceptRows
+
+[source,java]
+----
+default ConceptRowIterator asConceptRows()
+----
+
+Casts the query answer to ``ConceptRowsStreamQueryAnswer``. 
+
+
+[caption=""]
+.Returns
+`ConceptRowIterator`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asConceptRowsStream();
+----
+
+[#_OkQueryAnswer_asConceptTreesStream_]
+==== asConceptTreesStream
+
+[source,java]
+----
+default ConceptTreeIterator asConceptTreesStream()
+----
+
+Casts the query answer to ``ConceptTreesStreamQueryAnswer``. 
+
+
+[caption=""]
+.Returns
+`ConceptTreeIterator`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asConceptTreesStream();
+----
+
+[#_OkQueryAnswer_asOk_]
+==== asOk
+
+[source,java]
+----
+@CheckReturnValue
+default OkQueryAnswer asOk()
+----
+
+Casts the query answer to ``OkQueryAnswer``. 
+
+
+[caption=""]
+.Returns
+`OkQueryAnswer`
+
+[#_OkQueryAnswer_isConceptRows_]
+==== isConceptRows
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isConceptRows()
+----
+
+Checks if the query answer is a ``ConceptRowsStream``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isConceptRowsStream();
+----
+
+[#_OkQueryAnswer_isConceptTreesStream_]
+==== isConceptTreesStream
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isConceptTreesStream()
+----
+
+Checks if the query answer is a ``ConceptTreesStream``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isConceptTreesStream();
+----
+
+[#_OkQueryAnswer_isOk_]
+==== isOk
+
+[source,java]
+----
+default boolean isOk()
+----
+
+Checks if the query answer is an ``Ok``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+// end::methods[]
+

@@ -1,7 +1,7 @@
 [#_Entity]
 === Entity
 
-*Package*: `com.vaticle.typedb.driver.api.concept.thing`
+*Package*: `com.typedb.driver.api.concept.thing`
 
 *Superinterfaces:*
 
@@ -230,6 +230,29 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
+----
+
+[#_Entity_getIID_]
+==== getIID
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getIID()
+----
+
+Retrieves the unique id of the ``Entity``. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entity.getIID();
 ----
 
 [#_Entity_getType_]

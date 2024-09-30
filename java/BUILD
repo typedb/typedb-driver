@@ -32,7 +32,7 @@ java_library(
     name = "driver-java",
     srcs = glob(["*.java"]),
     resources = ["//:LICENSE"],
-    tags = ["maven_coordinates=com.vaticle.typedb:typedb-driver:{pom_version}"],
+    tags = ["maven_coordinates=com.typedb:typedb-driver:{pom_version}"],
     deps = [
         # Internal dependencies
         "//java/api",
@@ -51,11 +51,11 @@ assemble_maven(
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     platform_overrides = {
         ":typedb_driver_jni": json.encode([
-           "com.vaticle.typedb:typedb-driver-jni-linux-arm64:{pom_version}",
-           "com.vaticle.typedb:typedb-driver-jni-linux-x86_64:{pom_version}",
-           "com.vaticle.typedb:typedb-driver-jni-macosx-arm64:{pom_version}",
-           "com.vaticle.typedb:typedb-driver-jni-macosx-x86_64:{pom_version}",
-           "com.vaticle.typedb:typedb-driver-jni-windows-x86_64:{pom_version}",
+           "com.typedb:typedb-driver-jni-linux-arm64:{pom_version}",
+           "com.typedb:typedb-driver-jni-linux-x86_64:{pom_version}",
+           "com.typedb:typedb-driver-jni-macosx-arm64:{pom_version}",
+           "com.typedb:typedb-driver-jni-macosx-x86_64:{pom_version}",
+           "com.typedb:typedb-driver-jni-windows-x86_64:{pom_version}",
         ])
     }
 )
@@ -74,7 +74,7 @@ swig_native_java_library(
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_java.swg"],
     enable_cxx = True,
-    maven_coordinates = "com.vaticle.typedb:typedb-driver-jni-{platform}:{pom_version}",
+    maven_coordinates = "com.typedb:typedb-driver-jni-{platform}:{pom_version}",
     platforms = {
         "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
         "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",

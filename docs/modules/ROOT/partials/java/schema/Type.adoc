@@ -1,7 +1,7 @@
 [#_Type]
 === Type
 
-*Package*: `com.vaticle.typedb.driver.api.concept.type`
+*Package*: `com.typedb.driver.api.concept.type`
 
 *Superinterfaces:*
 
@@ -251,38 +251,6 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Type_delete_TypeDBTransaction]
-==== delete
-
-[source,java]
-----
-@CheckReturnValue
-Promise<java.lang.Void> delete​(TypeDBTransaction transaction)
-----
-
-Deletes this type from the database. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`Promise<java.lang.Void>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.delete(transaction).resolve();
-----
-
 [#_Type_getLabel_]
 ==== getLabel
 
@@ -304,147 +272,6 @@ Retrieves the unique label of the type.
 [source,java]
 ----
 type.getLabel();
-----
-
-[#_Type_getSubtypes_TypeDBTransaction]
-==== getSubtypes
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Type> getSubtypes​(TypeDBTransaction transaction)
-----
-
-Retrieves all direct and indirect subtypes of the type. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
-
-
-See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Type>`
-
-[#_Type_getSubtypes_TypeDBTransaction_Concept_Transitivity]
-==== getSubtypes
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Type> getSubtypes​(TypeDBTransaction transaction,
-                                                    Concept.Transitivity transitivity)
-----
-
-Retrieves all direct and indirect (or direct only) subtypes of the type. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Type>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.getSubtypes(transaction);
- type.getSubtypes(transaction, Transitivity.EXPLICIT);
-----
-
-[#_Type_getSupertype_TypeDBTransaction]
-==== getSupertype
-
-[source,java]
-----
-@CheckReturnValue
-Promise<? extends Type> getSupertype​(TypeDBTransaction transaction)
-----
-
-Retrieves the most immediate supertype of the type. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`Promise<? extends Type>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.getSupertype(transaction).resolve();
-----
-
-[#_Type_getSupertypes_TypeDBTransaction]
-==== getSupertypes
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Type> getSupertypes​(TypeDBTransaction transaction)
-----
-
-Retrieves all supertypes of the type. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Type>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.getSupertypes(transaction);
-----
-
-[#_Type_isAbstract_]
-==== isAbstract
-
-[source,java]
-----
-@CheckReturnValue
-boolean isAbstract()
-----
-
-Checks if the type is prevented from having data instances (i.e., ``abstract``). 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.isAbstract();
 ----
 
 [#_Type_isAttribute_]
@@ -491,38 +318,6 @@ Checks if the concept is an ``AttributeType``.
 [source,java]
 ----
 concept.isAttributeType();
-----
-
-[#_Type_isDeleted_TypeDBTransaction]
-==== isDeleted
-
-[source,java]
-----
-@CheckReturnValue
-Promise<java.lang.Boolean> isDeleted​(TypeDBTransaction transaction)
-----
-
-Check if the concept has been deleted 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`Promise<java.lang.Boolean>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.isDeleted(transaction).resolve();
 ----
 
 [#_Type_isEntity_]
@@ -640,29 +435,6 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Type_isRoot_]
-==== isRoot
-
-[source,java]
-----
-@CheckReturnValue
-boolean isRoot()
-----
-
-Checks if the type is a root type. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.isRoot();
-----
-
 [#_Type_isThing_]
 ==== isThing
 
@@ -753,40 +525,6 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
-----
-
-[#_Type_setLabel_TypeDBTransaction_java_lang_String]
-==== setLabel
-
-[source,java]
-----
-@CheckReturnValue
-Promise<java.lang.Void> setLabel​(TypeDBTransaction transaction,
-                                 java.lang.String label)
-----
-
-Renames the label of the type. The new label must remain unique. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `label` a| The new ``Label`` to be given to the type. a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`Promise<java.lang.Void>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-type.setLabel(transaction, newLabel).resolve();
 ----
 
 // end::methods[]

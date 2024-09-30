@@ -1,0 +1,59 @@
+[#_ConceptRowIterator]
+=== ConceptRowIterator
+
+*Package*: `com.typedb.driver.api.answer`
+
+*Superinterfaces:*
+
+* `java.util.Iterator<ConceptRow>`
+* `QueryAnswer`
+
+// tag::methods[]
+[#_ConceptRowIterator_asConceptRows_]
+==== asConceptRows
+
+[source,java]
+----
+@CheckReturnValue
+default ConceptRowIterator asConceptRows()
+----
+
+Casts the query answer to ``ConceptRowsStreamQueryAnswer``. 
+
+
+[caption=""]
+.Returns
+`ConceptRowIterator`
+
+[#_ConceptRowIterator_isConceptRows_]
+==== isConceptRows
+
+[source,java]
+----
+default boolean isConceptRows()
+----
+
+Checks if the query answer is a ``ConceptRowsStream``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_ConceptRowIterator_stream_]
+==== stream
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptRow> stream()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptRow>`
+
+// end::methods[]
+

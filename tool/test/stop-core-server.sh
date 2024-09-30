@@ -18,4 +18,4 @@
 
 set -xe
 
-kill $(ps aux | awk '/TypeDBServe[r]/ {print $2}')
+kill $(ps aux | awk '/typedb[_server_bin]/ {print $2}')

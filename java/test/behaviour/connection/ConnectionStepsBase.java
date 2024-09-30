@@ -19,7 +19,7 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
+//import com.typedb.core.tool.runner.TypeDBSingleton;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;

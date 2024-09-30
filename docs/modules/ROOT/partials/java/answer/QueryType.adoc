@@ -1,16 +1,16 @@
-[#_TypeDBTransaction_Type]
-=== TypeDBTransaction.Type
+[#_QueryType]
+=== QueryType
 
-*Package*: `com.vaticle.typedb.driver.api`
+*Package*: `com.typedb.driver.api`
 
-Used to specify the type of transaction. 
+Used to specify the type of the executed query. 
 
 
 [caption=""]
 .Examples
 [source,java]
 ----
-session.transaction(TransactionType.READ);
+conceptRow.queryType();
 ----
 
 [caption=""]
@@ -21,12 +21,13 @@ session.transaction(TransactionType.READ);
 |===
 |Name
 a| `READ`
+a| `SCHEMA`
 a| `WRITE`
 |===
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDBTransaction_Type_id_]
+[#_QueryType_id_]
 ==== id
 
 [source,java]
@@ -40,7 +41,7 @@ public int id()
 .Returns
 `public int`
 
-[#_TypeDBTransaction_Type_isRead_]
+[#_QueryType_isRead_]
 ==== isRead
 
 [source,java]
@@ -54,7 +55,21 @@ public boolean isRead()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction_Type_isWrite_]
+[#_QueryType_isSchema_]
+==== isSchema
+
+[source,java]
+----
+public boolean isSchema()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_QueryType_isWrite_]
 ==== isWrite
 
 [source,java]
@@ -68,12 +83,26 @@ public boolean isWrite()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction_Type_valueOf_java_lang_String]
+[#_QueryType_of_com_typedb_driver_jni_QueryType]
+==== of
+
+[source,java]
+----
+public static QueryType of​(com.typedb.driver.jni.QueryType nativeType)
+----
+
+
+
+[caption=""]
+.Returns
+`public static QueryType`
+
+[#_QueryType_valueOf_java_lang_String]
 ==== valueOf
 
 [source,java]
 ----
-public static TypeDBTransaction.Type valueOf​(java.lang.String name)
+public static QueryType valueOf​(java.lang.String name)
 ----
 
 Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
@@ -89,20 +118,20 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 
 [caption=""]
 .Returns
-`public static TypeDBTransaction.Type`
+`public static QueryType`
 
-[#_TypeDBTransaction_Type_values_]
+[#_QueryType_values_]
 ==== values
 
 [source,java]
 ----
-public static TypeDBTransaction.Type[] values()
+public static QueryType[] values()
 ----
 
 Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
 [source,java]
 ----
-for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+for (QueryType c : QueryType.values())
     System.out.println(c);
 
 ----
@@ -110,13 +139,13 @@ for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
 
 [caption=""]
 .Returns
-`public static TypeDBTransaction.Type[]`
+`public static QueryType[]`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+for (QueryType c : QueryType.values())
     System.out.println(c);
 ----
 

@@ -1,7 +1,7 @@
 [#_TypeDBDriverException]
 === TypeDBDriverException
 
-*Package*: `com.vaticle.typedb.driver.common.exception`
+*Package*: `com.typedb.driver.common.exception`
 
 Exceptions raised by the driver.
 
@@ -12,14 +12,14 @@ Exceptions raised by the driver.
 [source,java]
 ----
 @Nullable
-public com.vaticle.typedb.driver.common.exception.ErrorMessage getErrorMessage()
+public com.typedb.driver.common.exception.ErrorMessage getErrorMessage()
 ----
 
 
 
 [caption=""]
 .Returns
-`public com.vaticle.typedb.driver.common.exception.ErrorMessage`
+`public com.typedb.driver.common.exception.ErrorMessage`
 
 [#_TypeDBDriverException_getName_]
 ==== getName

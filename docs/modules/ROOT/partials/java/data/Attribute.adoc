@@ -1,7 +1,7 @@
 [#_Attribute]
 === Attribute
 
-*Package*: `com.vaticle.typedb.driver.api.concept.thing`
+*Package*: `com.typedb.driver.api.concept.thing`
 
 *Superinterfaces:*
 
@@ -234,72 +234,6 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
-----
-
-[#_Attribute_getOwners_TypeDBTransaction]
-==== getOwners
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction)
-----
-
-Retrieves the instances that own this ``Attribute``. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getOwners(transaction);
-----
-
-[#_Attribute_getOwners_TypeDBTransaction_ThingType]
-==== getOwners
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction,
-                                                   ThingType ownerType)
-----
-
-Retrieves the instances that own this ``Attribute``. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `ownerType` a| Filter results for only owners of the given type a| `ThingType`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getOwners(transaction, ownerType);
 ----
 
 [#_Attribute_getType_]

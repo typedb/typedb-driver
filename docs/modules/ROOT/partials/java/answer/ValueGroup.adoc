@@ -1,7 +1,7 @@
 [#_ValueGroup]
 === ValueGroup
 
-*Package*: `com.vaticle.typedb.driver.api.answer`
+*Package*: `com.typedb.driver.api.answer`
 
 Contains an element of the group aggregate query result.
 
