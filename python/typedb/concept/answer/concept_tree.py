@@ -15,29 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from __future__ import annotations
-
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Optional
-
-from typedb.api.concept.type.type import Type
-from typedb.common.transitivity import Transitivity
-from typedb.concept.concept import _Concept
-
-
-class _Type(Type, _Concept, ABC):
-    def as_type(self) -> Type:
-        return self
-
-    def __str__(self):
-        return type(self).__name__ + "[label: %s]" % self.get_label()
-
-    def __eq__(self, other):
-        if other is self:
-            return True
-        if not other or type(self) is not type(other):
-            return False
-        return self.get_label() == other.get_label()
-
-    def __hash__(self):
-        return self.get_label().__hash__()
+# class _ConceptTree(ConceptTree, NativeWrapper[NativeConceptTree]):

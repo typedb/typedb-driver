@@ -52,7 +52,7 @@ public interface Value extends Concept {
     }
 
     /**
-     * Retrieves the string representation of the type of this value concept.
+     * Retrieves the <code>String</code> describing the value type of this <code>Value</code> concept.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -170,6 +170,8 @@ public interface Value extends Concept {
      * </pre>
      */
     boolean isStruct();
+
+    // TODO: Could be useful to have isStruct(struct_name)
 
     /**
      * Returns an untyped <code>Object</code> value of this value concept.

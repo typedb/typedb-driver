@@ -163,6 +163,8 @@ public interface AttributeType extends ThingType {
      */
     boolean isStruct();
 
+    // TODO: Could be useful to have isStruct(struct_name)
+
     /**
      * {@inheritDoc}
      */

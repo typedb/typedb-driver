@@ -33,3 +33,19 @@ class _Entity(Entity, _Thing):
 
     def get_type(self) -> _EntityType:
         return wrap_entity_type(entity_get_type(self.native_object))
+
+    def get_iid(self) -> str:
+        return entity_get_iid(self.native_object)
+
+    def __repr__(self):
+        return "%s[%s:%s]" % (type(self).__name__, self.get_type().get_label(), self.get_iid())
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if not other or type(self) is not type(other):
+            return False
+        return self.get_iid() == other.get_iid()
+
+    def __hash__(self):
+        return hash(self.get_iid())

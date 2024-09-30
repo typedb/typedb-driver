@@ -17,14 +17,14 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from functools import singledispatchmethod
 from typing import Union
 
 from typedb.native_driver_wrapper import value_new_boolean, value_new_long, value_new_double, value_new_string, \
-    value_new_date_time_from_millis, value_is_boolean, value_is_long, value_is_double, value_is_string, \
-    value_is_date_time, value_get_boolean, value_get_long, value_get_double, value_get_string, \
-    value_get_date_time_as_millis
+    value_new_datetime_from_millis, value_is_boolean, value_is_long, value_is_double, value_is_string, \
+    value_is_datetime, value_get_boolean, value_get_long, value_get_double, value_get_string, \
+    value_get_datetime_as_millis
 
 from typedb.api.concept.value.value import Value, ValueType
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, MISSING_VALUE
@@ -32,52 +32,10 @@ from typedb.concept.concept import _Concept
 
 
 class _Value(Value, _Concept):
+    def get_value_type(self) -> str:
+        return value_get_value_type(self.native_object)
 
-    @singledispatchmethod
-    def of(value):
-        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
-
-    @of.register
-    def _(value: bool):
-        return _Value(value_new_boolean(value))
-
-    @of.register
-    def _(value: int):
-        return _Value(value_new_long(value))
-
-    @of.register
-    def _(value: float):
-        return _Value(value_new_double(value))
-
-    @of.register
-    def _(value: str):
-        if not value:
-            raise TypeDBDriverException(MISSING_VALUE)
-        return _Value(value_new_string(value))
-
-    @of.register
-    def _(value: datetime):
-        return _Value(value_new_date_time_from_millis(int(value.replace(tzinfo=timezone.utc).timestamp() * 1000)))
-
-    @of.register
-    def _(value: Value):
-        return value
-
-    def get_value_type(self) -> ValueType:
-        if self.is_boolean():
-            return ValueType.BOOLEAN
-        elif self.is_long():
-            return ValueType.LONG
-        elif self.is_double():
-            return ValueType.DOUBLE
-        elif self.is_string():
-            return ValueType.STRING
-        elif self.is_datetime():
-            return ValueType.DATETIME
-        else:
-            raise TypeDBDriverException(ILLEGAL_STATE)
-
-    def get(self) -> Union[bool, int, float, str, datetime]:
+    def get(self) -> VALUE:
         if self.is_boolean():
             return self.as_boolean()
         elif self.is_long():
@@ -100,11 +58,26 @@ class _Value(Value, _Concept):
     def is_double(self) -> bool:
         return value_is_double(self.native_object)
 
+    def is_decimal(self) -> bool:
+        return value_is_decimal(self.native_object)
+
     def is_string(self) -> bool:
         return value_is_string(self.native_object)
 
+    def is_date(self) -> bool:
+        return value_is_date(self.native_object)
+
     def is_datetime(self) -> bool:
-        return value_is_date_time(self.native_object)
+        return value_is_datetime(self.native_object)
+
+    def is_datetime_tz(self) -> bool:
+        return value_is_datetime_tz(self.native_object)
+
+    def is_duration(self) -> bool:
+        return value_is_duration(self.native_object)
+
+    def is_struct(self) -> bool:
+        return value_is_struct(self.native_object)
 
     def as_boolean(self) -> bool:
         return value_get_boolean(self.native_object)
@@ -115,14 +88,46 @@ class _Value(Value, _Concept):
     def as_double(self) -> float:
         return value_get_double(self.native_object)
 
+    def as_decimal(self) -> float:
+        return value_get_decimal(self.native_object)
+
     def as_string(self) -> str:
         return value_get_string(self.native_object)
 
+    def as_date(self) -> date:
+        return datetime.utcfromtimestamp(value_get_date(self.native_object))
+
     def as_datetime(self) -> datetime:
-        return datetime.utcfromtimestamp(value_get_date_time_as_millis(self.native_object) / 1000)
+        return datetime.utcfromtimestamp(value_get_datetime(self.native_object) / 1000)
+
+    def as_datetime_tz(self) -> datetime:
+        return datetime.fromtimestamp(value_get_datetime_tz(self.native_object) / 1000, timezone.utc)
+
+    def as_duration(self) -> datetime:
+        return datetime.utcfromtimestamp(value_get_duration(self.native_object))
+
+    def as_struct(self) -> {str, Optional[Value]}:
+        result = {}
+        for field_and_value in IteratorWrapper(value_get_struct(self.native_object), string_and_opt_value_iterator_next):
+            field_name = field_and_value.get_string()
+            native_value = field_and_value.get_value()
+            result_value = None
+            if native_value:
+                value = wrap_concept(native_value)
+                if not value.is_value():
+                    raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
+                result_value = value.as_value()
+            result[field_name] = result_value
 
     def __str__(self):
         return str(self.get())
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if not other or type(self) is not type(other) or self.get_value_type() != other.get_value_type():
+            return False
+        return self.get() == other.get()
 
     def __repr__(self):
         return f"{self.get_value_type()}({self.get()})"

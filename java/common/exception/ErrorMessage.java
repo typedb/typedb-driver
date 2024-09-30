@@ -75,22 +75,16 @@ public abstract class ErrorMessage {
                 new Driver(4, "Native JNI library not found (searching for '%s').");
         public static final Driver JNI_PLATFORM_LIBRARY_NOT_FOUND =
                 new Driver(5, "Found multiple JNI libraries in classpath, could not select one for target platform (searching for '%s' for platform '%s').");
-        public static final Driver DRIVER_CLOSED =
-                new Driver(6, "The driver has been closed and no further operation is allowed.");
-        public static final Driver SESSION_CLOSED =
-                new Driver(7, "The session has been closed and no further operation is allowed.");
         public static final Driver TRANSACTION_CLOSED =
-                new Driver(8, "The transaction has been closed and no further operation is allowed.");
-        public static final Driver TRANSACTION_CLOSED_WITH_ERRORS =
-                new Driver(9, "The transaction has been closed with error(s): \n%s.");
+                new Driver(6, "The transaction has been closed and no further operation is allowed.");
         public static final Driver DATABASE_DELETED =
-                new Driver(10, "The database has been deleted and no further operation is allowed.");
+                new Driver(7, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(11, "Value cannot be less than 1, was: '%d'.");
+                new Driver(8, "Value cannot be less than 1, was: '%d'.");
         public static final Driver MISSING_DB_NAME =
-                new Driver(12, "Database name cannot be null.");
+                new Driver(9, "Database name cannot be null.");
         public static final Driver UNIMPLEMENTED =
-                new Driver(13, "This operation is not implemented yet.");
+                new Driver(10, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
@@ -105,22 +99,8 @@ public abstract class ErrorMessage {
                 new Concept(1, "Invalid concept conversion from '%s' to '%s'.");
         public static final Concept INVALID_QUERY_ANSWER_CASTING =
                 new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
-        public static final Concept MISSING_TRANSACTION =
-                new Concept(3, "Transaction cannot be null.");
-        public static final Concept MISSING_IID =
-                new Concept(4, "IID cannot be null or empty.");
-        public static final Concept MISSING_LABEL =
-                new Concept(5, "Label cannot be null or empty.");
         public static final Concept MISSING_VARIABLE =
-                new Concept(6, "Variable name cannot be null or empty.");
-        public static final Concept MISSING_VALUE =
-                new Concept(7, "Value cannot be null.");
-        public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
-                new Concept(8, "The concept identified by '%s' is not explainable.");
-        public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
-                new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
-        public static final Concept UNRECOGNISED_ANNOTATION =
-                new Concept(10, "The annotation '%s' is not recognised.");
+                new Concept(3, "Variable name cannot be null or empty.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";

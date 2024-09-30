@@ -27,7 +27,7 @@ import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_QU
 import static com.typedb.driver.common.util.Objects.className;
 
 /**
- * TODO: docs
+ * General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
  */
 public interface QueryAnswer {
     /**
@@ -44,7 +44,7 @@ public interface QueryAnswer {
     }
 
     /**
-     * Checks if the query answer is a <code>ConceptRowsStream</code>.
+     * Checks if the query answer is a <code>ConceptRowIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -57,15 +57,15 @@ public interface QueryAnswer {
     }
 
     /**
-     * Checks if the query answer is a <code>ConceptTreesStream</code>.
+     * Checks if the query answer is a <code>ConceptTreeIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isConceptTreesStream();
+     * concept.isConceptTrees();
      * </pre>
      */
     @CheckReturnValue
-    default boolean isConceptTreesStream() {
+    default boolean isConceptTrees() {
         return false;
     }
 
@@ -82,7 +82,7 @@ public interface QueryAnswer {
     }
 
     /**
-     * Casts the query answer to <code>ConceptRowsStreamQueryAnswer</code>.
+     * Casts the query answer to <code>ConceptRowIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -94,7 +94,7 @@ public interface QueryAnswer {
     }
 
     /**
-     * Casts the query answer to <code>ConceptTreesStreamQueryAnswer</code>.
+     * Casts the query answer to <code>ConceptTreeIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>

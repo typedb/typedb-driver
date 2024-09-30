@@ -49,7 +49,6 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
         if not concept_row:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(concept_row)
-        self.cached_map = None
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

@@ -34,97 +34,10 @@ from typedb.common.transitivity import Transitivity
 from typedb.concept.concept_factory import wrap_relation, wrap_role_type
 from typedb.concept.type.thing_type import _ThingType
 
-if TYPE_CHECKING:
-    from typedb.concept.thing.relation import _Relation
-    from typedb.concept.type.role_type import _RoleType
-    from typedb.connection.transaction import _Transaction
-
 
 class _RelationType(RelationType, _ThingType):
-    def create(self, transaction: _Transaction) -> Promise[_Relation]:
-        promise = relation_type_create(transaction.native_object, self.native_object)
-        return Promise.concepts(wrap_relation, lambda: concept_promise_resolve(promise))
-
-    def get_instances(
-        self,
-        transaction: _Transaction,
-        transitivity: Transitivity = Transitivity.TRANSITIVE,
-    ) -> Iterator[_Relation]:
+    def get_label(self) -> Label:
         try:
-            return map(
-                wrap_relation,
-                IteratorWrapper(
-                    relation_type_get_instances(transaction.native_object, self.native_object, transitivity.value),
-                    concept_iterator_next
-                )
-            )
+            return Label.of(relation_type_get_label(self.native_object))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
-
-    def get_relates(
-        self,
-        transaction: _Transaction,
-        role_label: Optional[str] = None,
-        transitivity: Transitivity = Transitivity.TRANSITIVE,
-    ) -> Union[Promise[Optional[_RoleType]], Iterator[_RoleType]]:
-        if role_label:
-            promise = relation_type_get_relates_for_role_label(transaction.native_object, self.native_object, role_label)
-            return Promise.concepts(wrap_role_type, lambda: concept_promise_resolve(promise))
-        else:
-            try:
-                return map(
-                    wrap_role_type,
-                    IteratorWrapper(
-                        relation_type_get_relates(transaction.native_object, self.native_object, transitivity.value),
-                        concept_iterator_next
-                    )
-                )
-            except TypeDBDriverExceptionNative as e:
-                raise TypeDBDriverException.of(e)
-
-    def get_relates_overridden(self, transaction: _Transaction, role_label: str) -> Promise[Optional[_RoleType]]:
-        promise = relation_type_get_relates_overridden(transaction.native_object, self.native_object, role_label)
-        return Promise.concepts(wrap_role_type, lambda: concept_promise_resolve(promise))
-
-    def set_relates(self, transaction: _Transaction, role_label: str, overridden_label: Optional[str] = None) -> Promise[None]:
-        promise = relation_type_set_relates(transaction.native_object, self.native_object, role_label, overridden_label)
-        return Promise(lambda: void_promise_resolve(promise))
-
-    def unset_relates(self, transaction: _Transaction, role_label: str) -> Promise[None]:
-        promise = relation_type_unset_relates(transaction.native_object, self.native_object, role_label)
-        return Promise(lambda: void_promise_resolve(promise))
-
-    def get_subtypes(
-        self,
-        transaction: _Transaction,
-        transitivity: Transitivity = Transitivity.TRANSITIVE,
-    ) -> Iterator[_RelationType]:
-        try:
-            return map(
-                _RelationType,
-                IteratorWrapper(
-                    relation_type_get_subtypes(transaction.native_object, self.native_object, transitivity.value),
-                    concept_iterator_next
-                )
-            )
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
-
-    def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_RelationType]]:
-        promise = relation_type_get_supertype(transaction.native_object, self.native_object)
-        return Promise.concepts(_RelationType, lambda: concept_promise_resolve(promise))
-
-    def get_supertypes(self, transaction: _Transaction) -> Iterator[_RelationType]:
-        try:
-            return map(
-                _RelationType,
-                IteratorWrapper(
-                    relation_type_get_supertypes(transaction.native_object, self.native_object), concept_iterator_next
-                )
-            )
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
-
-    def set_supertype(self, transaction: _Transaction, super_relation_type: _RelationType) -> Promise[None]:
-        promise = relation_type_set_supertype(transaction.native_object, self.native_object, super_relation_type.native_object)
-        return Promise(lambda: void_promise_resolve(promise))

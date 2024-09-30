@@ -45,8 +45,8 @@ class _Attribute(Attribute, _Thing):
     def get_type(self) -> _AttributeType:
         return wrap_attribute_type(attribute_get_type(self.native_object))
 
-    def get_value(self) -> Union[bool, int, float, str, datetime]:
-        return wrap_value(attribute_get_value(self.native_object)).get()
+    def get_value(self) -> VALUE:
+        return self._value().get()
 
     def get_value_type(self) -> ValueType:
         return self._value().get_value_type()
@@ -60,11 +60,26 @@ class _Attribute(Attribute, _Thing):
     def is_double(self) -> bool:
         return self._value().is_double()
 
+    def is_decimal(self) -> bool:
+        return self._value().is_decimal()
+
     def is_string(self) -> bool:
         return self._value().is_string()
 
+    def is_date(self) -> bool:
+        return self._value().is_date()
+
     def is_datetime(self) -> bool:
         return self._value().is_datetime()
+
+    def is_datetime_tz(self) -> bool:
+        return self._value().is_datetime_tz()
+
+    def is_duration(self) -> bool:
+        return self._value().is_duration()
+
+    def is_struct(self) -> bool:
+        return self._value().is_struct()
 
     def as_boolean(self) -> bool:
         return self._value().as_boolean()
@@ -75,20 +90,26 @@ class _Attribute(Attribute, _Thing):
     def as_double(self) -> float:
         return self._value().as_double()
 
+    def as_decimal(self) -> float:
+        return self._value().as_decimal()
+
     def as_string(self) -> str:
         return self._value().as_string()
+
+    def as_date(self) -> date:
+        return self._value().as_date()
 
     def as_datetime(self) -> datetime:
         return self._value().as_datetime()
 
+    def as_datetime_tz(self) -> datetime:
+        return self._value().as_datetime_tz()
+
+    def as_duration(self) -> datetime:
+        return self._value().as_duration()
+
+    def as_struct(self) -> {str, Optional[Value]}:
+        return self._value().as_struct()
+
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
-
-    def get_owners(self, transaction: _Transaction, owner_type: Optional[_ThingType] = None) -> Iterator[Any]:
-        try:
-            return map(wrap_thing,
-                       IteratorWrapper(attribute_get_owners(transaction.native_object, self.native_object,
-                                                            owner_type.native_object if owner_type else None),
-                                       concept_iterator_next))
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)

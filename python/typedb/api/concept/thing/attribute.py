@@ -23,12 +23,7 @@ from typing import TYPE_CHECKING, Iterator, Mapping, Union, Optional
 from typedb.api.concept.thing.thing import Thing
 
 if TYPE_CHECKING:
-    from datetime import datetime
-    from typedb.api.concept.value.value import ValueType
     from typedb.api.concept.type.attribute_type import AttributeType
-    from typedb.api.concept.type.thing_type import ThingType
-    from typedb.api.connection.transaction import Transaction
-
 
 class Attribute(Thing, ABC):
     """
@@ -55,7 +50,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def get_value(self) -> Union[bool, int, float, str, datetime]:
+    def get_value(self) -> VALUE:
         """
         Retrieves the value which the ``Attribute`` instance holds.
 
@@ -70,16 +65,323 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def get_value_type(self) -> ValueType:
+    def is_boolean(self) -> bool:
         """
-        Retrieves the type of the value which the ``Attribute`` instance holds.
+        Returns ``True`` if this attribute holds a value of type ``boolean``.
+        Otherwise, returns ``False``.
 
         :return:
+
         Examples
         --------
         ::
 
-            attribute.get_value_type()
+            attribute.is_boolean()
+        """
+        pass
+
+    @abstractmethod
+    def is_long(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``long``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_long()
+        """
+        pass
+
+    @abstractmethod
+    def is_double(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``double``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_double()
+        """
+        pass
+
+    @abstractmethod
+    def is_decimal(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``decimal``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_decimal()
+        """
+        pass
+
+    @abstractmethod
+    def is_string(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``string``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_string()
+        """
+        pass
+
+    @abstractmethod
+    def is_date(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``date``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_date()
+        """
+        pass
+
+    @abstractmethod
+    def is_datetime(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``datetime``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_datetime()
+        """
+        pass
+
+    @abstractmethod
+    def is_datetime_tz(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``datetime_tz``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_datetime_tz()
+        """
+        pass
+
+    @abstractmethod
+    def is_duration(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``duration``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_duration()
+        """
+        pass
+
+    @abstractmethod
+    def is_struct(self) -> bool:
+        """
+        Returns ``True`` if this attribute holds a value of type ``struct``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.is_struct()
+        """
+        pass
+
+
+    @abstractmethod
+    def as_boolean(self) -> bool:
+        """
+        Returns a ``boolean`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_boolean()
+        """
+        pass
+
+    @abstractmethod
+    def as_long(self) -> int:
+        """
+        Returns a ``long`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_long()
+        """
+        pass
+
+    @abstractmethod
+    def as_double(self) -> float:
+        """
+        Returns a ``double`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_double()
+        """
+        pass
+
+    @abstractmethod
+    def as_decimal(self) -> float: # TODO: Finish type
+        """
+        Returns a ``decimal`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_decimal()
+        """
+        pass
+
+    @abstractmethod
+    def as_string(self) -> str:
+        """
+        Returns a ``string`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_string()
+        """
+        pass
+
+    @abstractmethod
+    def as_date(self) -> date: # TODO: Finish tyope
+        """
+        Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_date()
+        """
+        pass
+
+    @abstractmethod
+    def as_datetime(self) -> datetime:
+        """
+        Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_datetime()
+        """
+        pass
+
+    @abstractmethod
+    def as_datetime_tz(self) -> datetime: # TODO: Finish type
+        """
+        Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_datetime_tz()
+        """
+        pass
+
+    @abstractmethod
+    def as_duration(self) -> datetime: # TODO: Finish type
+        """
+        Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_duration()
+        """
+        pass
+
+    @abstractmethod
+    def as_struct(self) -> {str, Optional[Value]}:
+        """
+        Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names
+        to values. If the value has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            attribute.as_struct()
         """
         pass
 
@@ -110,182 +412,3 @@ class Attribute(Thing, ABC):
             attribute.as_attribute()
         """
         return self
-
-    @abstractmethod
-    def is_boolean(self) -> bool:
-        """
-        Returns ``True`` if the attribute value is of type ``boolean``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_boolean()
-        """
-        pass
-
-    @abstractmethod
-    def is_long(self) -> bool:
-        """
-        Returns ``True`` if the attribute value is of type ``long``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_long()
-        """
-        pass
-
-    @abstractmethod
-    def is_double(self) -> bool:
-        """
-        Returns ``True`` if the attribute value is of type ``double``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_double()
-        """
-        pass
-
-    @abstractmethod
-    def is_string(self) -> bool:
-        """
-        Returns ``True`` if the attribute value is of type ``string``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_string()
-        """
-        pass
-
-    @abstractmethod
-    def is_datetime(self) -> bool:
-        """
-        Returns ``True`` if the attribute value is of type ``datetime``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_datetime()
-        """
-        pass
-
-    @abstractmethod
-    def as_boolean(self) -> bool:
-        """
-        Returns a ``boolean`` value of the attribute. If the value has
-        another type, raises an exception.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.as_boolean()
-        """
-        pass
-
-    @abstractmethod
-    def as_long(self) -> int:
-        """
-        Returns a ``long`` value of the attribute. If the value has
-        another type, raises an exception.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.as_long()
-        """
-        pass
-
-    @abstractmethod
-    def as_double(self) -> float:
-        """
-        Returns a ``double`` value of the attribute. If the value has
-        another type, raises an exception.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.as_boolean()
-        """
-        pass
-
-    @abstractmethod
-    def as_string(self) -> str:
-        """
-        Returns a ``string`` value of the attribute. If the value has
-        another type, raises an exception.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.as_boolean()
-        """
-        pass
-
-    @abstractmethod
-    def as_datetime(self) -> datetime:
-        """
-        Returns a ``datetime`` value of the attribute. If the value has
-        another type, raises an exception.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.as_boolean()
-        """
-        pass
-
-    @abstractmethod
-    def get_owners(self, transaction: Transaction, owner_type: Optional[ThingType] = None) -> Iterator[Thing]:
-        """
-        Retrieves the instances that own this ``Attribute``.
-
-        :param transaction: The current transaction
-        :param owner_type: If specified, filter results for only owners
-            of the given type
-        :return:
-
-        Examples
-        --------
-        ::
-
-             attribute.get_owners(transaction)
-            attribute.get_owners(transaction, owner_type)
-        """
-        pass

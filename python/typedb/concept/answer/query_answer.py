@@ -17,22 +17,25 @@
 
 from __future__ import annotations
 
-from abc import ABC
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import Iterator, TYPE_CHECKING
 
-from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, bool_promise_resolve, concept_iterator_next, thing_delete, thing_get_has, thing_get_iid,
-    thing_get_is_inferred, thing_get_playing, thing_get_relations, thing_is_deleted, thing_set_has, thing_unset_has,
-    void_promise_resolve,
-)
-
-from typedb.api.concept.thing.thing import Thing
-from typedb.common.exception import TypeDBDriverException, GET_HAS_WITH_MULTIPLE_FILTERS
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
+    NONEXISTENT_EXPLAINABLE_CONCEPT, NONEXISTENT_EXPLAINABLE_OWNERSHIP, NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
 from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.promise import Promise
-from typedb.concept.concept import _Concept
-from typedb.concept.concept_factory import wrap_attribute, wrap_relation, wrap_role_type
+from typedb.common.native_wrapper import NativeWrapper
+from typedb.concept import concept_factory
+
+if TYPE_CHECKING:
+    from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
 
-class _Thing(Thing, _Concept, ABC):
-    pass
+class _QueryAnswer(QueryAnswer, NativeWrapper[NativeQueryAnswer], ABC):
+
+    def __init__(self, query_answer: NativeQueryAnswer):
+        if not query_answer:
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
+        super().__init__(query_answer)
+
+    @property
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)

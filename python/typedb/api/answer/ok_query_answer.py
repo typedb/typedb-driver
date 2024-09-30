@@ -15,22 +15,38 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from enum import Enum
-
-from typedb.native_driver_wrapper import Transitive, Explicit
+from abc import ABC
 
 
-class Transitivity(Enum):
+class OkQueryAnswer(QueryAnswer, ABC):
     """
-    This class is used for specifying whether we need explicit
-    or transitive subtyping, instances, etc.
-
-    Examples
-    --------
-
-    ::
-
-       attribute_type.get_owners(transaction, annotations=annotations, transitivity=Transitivity.EXPLICIT)
+    Represents a simple Ok message as a server answer. Doesn't contain concepts.
     """
-    TRANSITIVE = Transitive
-    EXPLICIT = Explicit
+
+    def is_ok(self) -> bool:
+        """
+        Checks if the query answer is an ``Ok``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.is_ok()
+        """
+        return True
+
+    def as_ok(self) -> OkQueryAnswer:
+        """
+        Casts the query answer to <code>OkQueryAnswer</code>.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.as_ok()
+        """
+        return self

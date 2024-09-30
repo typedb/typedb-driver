@@ -15,22 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from __future__ import annotations
-
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Mapping
-
-from typedb.api.concept.concept import Concept
-
-if TYPE_CHECKING:
-    from typedb.api.concept.type.thing_type import ThingType
+from abc import ABC
 
 
-class Thing(Concept, ABC):
-    @abstractmethod
-    def get_type(self) -> ThingType:
+class ConceptTreeIterator(QueryAnswer, ABC):
+    """
+    Represents an iterator over ``ConceptRow``s returned as a server answer.
+    """
+
+    def is_concept_trees(self) -> bool:
         """
-        Retrieves the type which this ``Thing`` belongs to.
+        Checks if the query answer is a ``ConceptTreeIterator``.
 
         :return:
 
@@ -38,27 +33,13 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.get_type()
-        """
-        pass
-
-    def is_thing(self) -> bool:
-        """
-        Checks if the concept is a ``Thing``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            thing.is_thing()
+          query_answer.is_concept_trees()
         """
         return True
 
-    def as_thing(self) -> Thing:
+    def as_concept_trees(self) -> ConceptTreeIterator:
         """
-        Casts the concept to ``Thing``.
+        Casts the query answer to <code>ConceptTreeIterator</code>.
 
         :return:
 
@@ -66,6 +47,6 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.as_thing()
+          query_answer.as_concept_trees()
         """
         return self

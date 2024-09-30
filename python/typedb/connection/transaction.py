@@ -68,7 +68,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             raise TypeDBDriverException(MISSING_QUERY)
 
         promise = transaction_query(self.native_object, query)
-        return Promise(lambda: query_answer_promise_resolve(promise))
+        return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
         if not self._native_object.thisown:

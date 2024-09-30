@@ -77,3 +77,18 @@ class Entity(Thing, ABC):
             entity.get_type()
         """
         pass
+
+    @abstractmethod
+    def get_iid(self) -> str:
+        """
+        Retrieves the unique id of the ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            entity.get_iid()
+        """
+        pass
