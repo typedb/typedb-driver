@@ -213,52 +213,6 @@ public class DriverQueryTest {
             });
             assertEquals(count.get(), 2);
         }, Transaction.Type.READ);
-
-        localhostTypeDBTX(tx -> {
-            String var = "x";
-            QueryAnswer answer = tx.query(String.format("match $%s isa person;", var)).resolve();
-            assertTrue(answer.isConceptRows());
-
-            AtomicInteger count = new AtomicInteger(0);
-            answer.asConceptRows().stream().forEach(row -> {
-                Concept x = row.get(var);
-                assertTrue(x.isEntity());
-                assertFalse(x.isEntityType());
-                assertFalse(x.isAttribute());
-                assertFalse(x.isType());
-                assertTrue(x.isThing());
-                EntityType xType = x.asEntity().getType().asEntityType();
-                assertEquals(xType.getLabel().scopedName(), "person");
-                assertEquals(xType.getLabel().name(), "person");
-                assertEquals(xType.getLabel().scope(), Optional.empty());
-                assertNotEquals(xType.getLabel().scopedName(), "not person");
-                count.incrementAndGet();
-            });
-            assertEquals(count.get(), 2);
-        }, Transaction.Type.READ);
-
-        localhostTypeDBTX(tx -> {
-            String var = "x";
-            QueryAnswer answer = tx.query(String.format("match $%s isa person;", var)).resolve();
-            assertTrue(answer.isConceptRows());
-
-            AtomicInteger count = new AtomicInteger(0);
-            answer.asConceptRows().stream().forEach(row -> {
-                Concept x = row.get(var);
-                assertTrue(x.isEntity());
-                assertFalse(x.isEntityType());
-                assertFalse(x.isAttribute());
-                assertFalse(x.isType());
-                assertTrue(x.isThing());
-                EntityType xType = x.asEntity().getType().asEntityType();
-                assertEquals(xType.getLabel().scopedName(), "person");
-                assertEquals(xType.getLabel().name(), "person");
-                assertEquals(xType.getLabel().scope(), Optional.empty());
-                assertNotEquals(xType.getLabel().scopedName(), "not person");
-                count.incrementAndGet();
-            });
-            assertEquals(count.get(), 2);
-        }, Transaction.Type.READ);
     }
 
     @Test
