@@ -39,6 +39,17 @@
 
 %array(Concept)
 
+
+/* Disown resource when sending it to the native side */
+%define %disown(Function, Resource)
+%feature("pythonprepend") Function {
+    Resource.thisown = 0
+}
+%enddef
+
+%disown(query_answer_into_rows, query_answer)
+
+
 /* char** needs special handling */
 %typemap(in) char ** (int size = 0) {
     if (PyList_Check($input)) {
@@ -72,6 +83,7 @@
         free($1[i]);
     free((char *) $1);
 }
+
 
 /* Introduce TypeDBDriverExceptionNative and use it to wrap all native exceptions */
 %{

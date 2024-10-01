@@ -20,14 +20,14 @@ import unittest
 from unittest import TestCase
 
 from typedb.driver import *
-import sys
+
 TYPEDB = "typedb"
 WRITE = TransactionType.WRITE
 READ = TransactionType.READ
 SCHEMA = TransactionType.SCHEMA
 
 
-class TestDebug(TestCase):
+class TestQuery(TestCase):
 
     def setUp(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
@@ -55,7 +55,6 @@ class TestDebug(TestCase):
 
                 row = rows[0]
                 header = [name for name in row.column_names()]
-                sys.stdout.flush()
                 assert_that(len(header), is_(1))
 
                 column_name = header[0]
@@ -75,11 +74,7 @@ class TestDebug(TestCase):
                 assert_that(concept_by_name.as_entity_type().get_label().scoped_name(), is_not("age"))
 
             with driver.transaction(database.name, READ) as tx:
-                print("read")
-                sys.stdout.flush()
                 answer = tx.query("match attribute $a;").resolve()
-                print("after read")
-                sys.stdout.flush()
                 assert_that(answer.is_concept_rows(), is_(True))
 
                 rows = [row for row in answer.as_concept_rows()]
@@ -92,7 +87,7 @@ class TestDebug(TestCase):
                 column_name = header[0]
                 concept_by_name = row.get(column_name)
                 concept_by_index = row.get_index(0)
-                assert_that(concept_by_name, is_(concept_by_index))
+                assert_that(concept_by_name, is_(equal_to(concept_by_index)))
 
                 assert_that(concept_by_name.is_attribute_type(), is_(True))
                 assert_that(concept_by_name.is_attribute(), is_(False))
@@ -123,16 +118,16 @@ class TestDebug(TestCase):
                 assert_that("x" in header, is_(True))
                 assert_that("z" in header, is_(True))
 
-                x = row.get_index(header.indexOf("x"))
+                x = row.get_index(header.index("x"))
                 assert_that(x.is_entity(), is_(True))
                 assert_that(x.is_entity_type(), is_(False))
                 assert_that(x.is_attribute(), is_(False))
                 assert_that(x.is_type(), is_(False))
                 assert_that(x.is_thing(), is_(True))
-                assert_that(x.as_entity().getType().as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(x.as_entity().getType().as_entity_type().get_label().name, is_("person"))
-                assert_that(x.as_entity().getType().as_entity_type().get_label().scope, is_(None))
-                assert_that(x.as_entity().getType().as_entity_type().get_label().scoped_name(), is_not("not person"))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label().scoped_name(), is_("person"))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label().name, is_("person"))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label().scope, is_(None))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
 
                 z = row.get("z")
                 assert_that(z.is_entity(), is_(True))
@@ -141,10 +136,10 @@ class TestDebug(TestCase):
                 assert_that(z.is_type(), is_(False))
                 assert_that(z.is_thing(), is_(True))
                 zEntity = z.as_entity()
-                assert_that(zEntity.getType().as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(zEntity.getType().as_entity_type().get_label().name, is_("person"))
-                assert_that(zEntity.getType().as_entity_type().get_label().scope, is_(None))
-                assert_that(zEntity.getType().as_entity_type().get_label().scoped_name(), is_not("not person"))
+                assert_that(zEntity.get_type().as_entity_type().get_label().scoped_name(), is_("person"))
+                assert_that(zEntity.get_type().as_entity_type().get_label().name, is_("person"))
+                assert_that(zEntity.get_type().as_entity_type().get_label().scope, is_(None))
+                assert_that(zEntity.get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
 
                 tx.commit()
 
@@ -168,10 +163,7 @@ class TestDebug(TestCase):
                     assert_that(xType.get_label().scoped_name(), is_not("not person"))
                     count += 1
                 assert_that(count, is_(2))
-        print("FINISH")
-        sys.stdout.flush()
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-    unittest.main(buffer=False)

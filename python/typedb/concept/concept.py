@@ -24,7 +24,7 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_N
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
 
-import sys
+
 class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
 
     def __init__(self, concept: NativeConcept):

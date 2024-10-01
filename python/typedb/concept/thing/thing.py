@@ -17,16 +17,12 @@
 
 from __future__ import annotations
 
-from abc import ABC
-from typing import TYPE_CHECKING, Iterator, Optional
-
 from typedb.api.concept.thing.thing import Thing
-from typedb.common.exception import TypeDBDriverException, GET_HAS_WITH_MULTIPLE_FILTERS
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.promise import Promise
 from typedb.concept.concept import _Concept
-from typedb.concept.concept_factory import wrap_attribute, wrap_relation, wrap_role_type
+from typedb.native_driver_wrapper import Concept as NativeConcept
 
 
-class _Thing(Thing, _Concept, ABC):
-    pass
+class _Thing(Thing, _Concept):
+
+    def __init__(self, concept: NativeConcept):
+        super().__init__(concept)

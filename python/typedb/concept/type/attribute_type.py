@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.concept.type.thing_type import _ThingType
+from typedb.common.label import Label
 from typedb.native_driver_wrapper import (
     TypeDBDriverExceptionNative, attribute_type_get_value_type, attribute_type_get_label, attribute_type_is_untyped,
     attribute_type_is_boolean, attribute_type_is_long, attribute_type_is_double, attribute_type_is_decimal,

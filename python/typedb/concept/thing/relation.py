@@ -22,8 +22,7 @@ from typing import TYPE_CHECKING
 from typedb.api.concept.thing.relation import Relation
 from typedb.concept.concept_factory import wrap_relation_type
 from typedb.concept.thing.thing import _Thing
-from typedb.native_driver_wrapper import (
-    relation_get_type, )
+from typedb.native_driver_wrapper import relation_get_type, relation_get_iid
 
 if TYPE_CHECKING:
     from typedb.concept.type.relation_type import _RelationType

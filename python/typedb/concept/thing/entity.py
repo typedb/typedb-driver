@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING
 from typedb.api.concept.thing.entity import Entity
 from typedb.concept.concept_factory import wrap_entity_type
 from typedb.concept.thing.thing import _Thing
-from typedb.native_driver_wrapper import entity_get_type
+from typedb.native_driver_wrapper import entity_get_type, entity_get_iid
 
 if TYPE_CHECKING:
     from typedb.concept.type.entity_type import _EntityType

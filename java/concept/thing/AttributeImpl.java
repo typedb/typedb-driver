@@ -130,6 +130,11 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     }
 
     @Override
+    public Object asUntyped() {
+        return getValue().asUntyped();
+    }
+
+    @Override
     public boolean asBoolean() {
         return getValue().asBoolean();
     }
