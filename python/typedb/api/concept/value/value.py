@@ -19,11 +19,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from enum import Enum
-from typing import Mapping, Union
+from typing import Union
 
 from typedb.api.concept.concept import Concept
-from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
+from typedb.common.duration import Duration
+from typedb.common.datetime import Datetime
 
 VALUE = Union[bool, int, float, str, datetime]
 
@@ -347,7 +347,7 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def as_datetime(self) -> datetime:
+    def as_datetime(self) -> Datetime:
         """
         Returns a timezone naive ``datetime`` value of this value concept. If the value has
         another type, raises an exception.
@@ -379,7 +379,7 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def as_duration(self) -> timedelta:
+    def as_duration(self) -> Duration:
         """
         Returns a timezone naive ``duration`` value of this value concept. If the value has
         another type, raises an exception.

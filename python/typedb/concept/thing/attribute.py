@@ -17,17 +17,16 @@
 
 from __future__ import annotations
 
-from typing import Mapping, Optional, TYPE_CHECKING, Union
+from typing import Mapping, Optional, Union
 
 from typedb.api.concept.thing.attribute import Attribute
 from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
 from typedb.concept.value.value import _Value
+from typedb.common.duration import Duration
+from typedb.common.datetime import Datetime
 from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value
-
-if TYPE_CHECKING:
-    from datetime import datetime
 
 
 class _Attribute(Attribute, _Thing):
@@ -92,13 +91,13 @@ class _Attribute(Attribute, _Thing):
     def as_date(self) -> date:
         return self._value().as_date()
 
-    def as_datetime(self) -> datetime:
+    def as_datetime(self) -> Datetime:
         return self._value().as_datetime()
 
     def as_datetime_tz(self) -> datetime:
         return self._value().as_datetime_tz()
 
-    def as_duration(self) -> timedelta:
+    def as_duration(self) -> Duration:
         return self._value().as_duration()
 
     def as_struct(self) -> {str, Optional[Value]}:

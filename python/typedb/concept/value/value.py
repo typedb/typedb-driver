@@ -17,16 +17,23 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from datetime import date, datetime
 from decimal import Decimal
+from zoneinfo import ZoneInfo
 
 from typedb.api.concept.value.value import Value
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE
 from typedb.concept.concept import _Concept
+from typedb.concept.concept_factory import wrap_concept
+from typedb.common.duration import Duration
+from typedb.common.datetime import Datetime, NANOS_IN_SECOND
+from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.native_driver_wrapper import (value_get_value_type, value_is_boolean, value_is_long, value_is_double,
     value_is_decimal, value_is_string, value_is_date, value_is_datetime, value_is_datetime_tz, value_is_duration,
     value_is_struct, value_get_boolean, value_get_long, value_get_double, value_get_decimal, value_get_string,
-    value_get_date_as_seconds, value_get_datetime, value_get_datetime_tz, value_get_duration, value_get_struct)
+    value_get_date_as_seconds, value_get_datetime, value_get_datetime_tz, value_get_duration, value_get_struct,
+    string_and_opt_value_iterator_next)
 
 
 class _Value(Value, _Concept):
@@ -100,16 +107,20 @@ class _Value(Value, _Concept):
     def as_date(self) -> date:
         return date.fromtimestamp(value_get_date_as_seconds(self.native_object))
 
-    def as_datetime(self) -> datetime:
-        return datetime.utcfromtimestamp(value_get_datetime(self.native_object) // 1_000_000_000)
+    def as_datetime(self) -> Datetime:
+        native_datetime = value_get_datetime(self.native_object)
+        std_datetime = datetime.utcfromtimestamp(native_datetime.get_seconds())
+        return Datetime(std_datetime, native_datetime.get_subsec_nanos())
 
     def as_datetime_tz(self) -> datetime:
-        native_datetime = value_get_datetime_tz(self.native_object)
-        return datetime.fromtimestamp(native_datetime.get_datetime_in_nanos() // 1_000_000_000, ZoneInfo(native_datetime.get_zone_id()))
+        native_datetime_tz = value_get_datetime_tz(self.native_object)
+        native_datetime = native_datetime_tz.get_datetime_in_nanos()
+        std_datetime_tz = datetime.fromtimestamp(native_datetime.get_seconds(), ZoneInfo(native_datetime_tz.get_zone_id()))
+        return Datetime(std_datetime_tz, native_datetime.get_subsec_nanos())
 
-    def as_duration(self) -> timedelta:
+    def as_duration(self) -> Duration:
         native_duration = value_get_duration(self.native_object)
-        return timedelta(months=native_duration.get_months(), days=native_duration.get_days(), nanos=native_duration.get_nanos())
+        return Duration(months=native_duration.get_months(), days=native_duration.get_days(), nanos=native_duration.get_nanos() // 1000)
 
     def as_struct(self) -> {str, Optional[Value]}:
         result = {}

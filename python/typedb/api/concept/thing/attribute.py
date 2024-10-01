@@ -21,6 +21,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 from typedb.api.concept.thing.thing import Thing
+from typedb.common.duration import Duration
+from typedb.common.datetime import Datetime
 
 if TYPE_CHECKING:
     from typedb.api.concept.type.attribute_type import AttributeType
@@ -322,7 +324,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_datetime(self) -> datetime:
+    def as_datetime(self) -> Datetime:
         """
         Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -354,7 +356,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_duration(self) -> timedelta:
+    def as_duration(self) -> Duration:
         """
         Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
