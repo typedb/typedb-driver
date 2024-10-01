@@ -20,6 +20,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
+from typedb.concept.answer.query_answer import _QueryAnswer
 from typedb.concept.answer.ok_query_answer import _OkQueryAnswer
 from typedb.concept.answer.concept_row_iterator import _ConceptRowIterator
 from typedb.concept.answer.concept_tree_iterator import _ConceptTreeIterator

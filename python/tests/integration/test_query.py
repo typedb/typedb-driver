@@ -55,6 +55,7 @@ class TestDebug(TestCase):
 
                 row = rows[0]
                 header = [name for name in row.column_names()]
+                sys.stdout.flush()
                 assert_that(len(header), is_(1))
 
                 column_name = header[0]
@@ -171,6 +172,6 @@ class TestDebug(TestCase):
         sys.stdout.flush()
 
 
-
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+    unittest.main(buffer=False)
