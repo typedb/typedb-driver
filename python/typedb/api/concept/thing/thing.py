@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Mapping
+from typing import TYPE_CHECKING
 
 from typedb.api.concept.concept import Concept
 
@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 
 
 class Thing(Concept, ABC):
+
     @abstractmethod
     def get_type(self) -> ThingType:
         """

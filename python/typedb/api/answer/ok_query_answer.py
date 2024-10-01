@@ -15,7 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from __future__ import annotations
+
 from abc import ABC
+
+from typedb.api.answer.query_answer import QueryAnswer
 
 
 class OkQueryAnswer(QueryAnswer, ABC):
@@ -39,7 +43,7 @@ class OkQueryAnswer(QueryAnswer, ABC):
 
     def as_ok(self) -> OkQueryAnswer:
         """
-        Casts the query answer to <code>OkQueryAnswer</code>.
+        Casts the query answer to ``OkQueryAnswer``.
 
         :return:
 

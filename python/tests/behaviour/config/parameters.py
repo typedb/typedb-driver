@@ -27,7 +27,6 @@ from behave.model import Table
 from typedb.driver import *
 
 
-
 @parse.with_pattern(r"true|false")
 def parse_bool(value: str) -> bool:
     return value == "true"
@@ -176,6 +175,7 @@ def parse_table(table: Table) -> list[list[tuple[str, str]]]:
 
 
 class MayError:
+
     def __init__(self, may_error: bool):
         self.may_error = may_error
 

@@ -16,11 +16,11 @@
 # under the License.
 
 from __future__ import annotations
+
 import behave.runner
 from behave.model import Table
-from typedb.driver import *
-
 from tests.behaviour.config.parameters import Kind
+from typedb.driver import *
 
 
 class Config:

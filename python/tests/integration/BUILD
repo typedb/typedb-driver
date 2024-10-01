@@ -36,6 +36,7 @@ py_test(
     srcs = ["test_query.py"],
     deps = [
         "//python:driver_python",
+        requirement("PyHamcrest"),
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"

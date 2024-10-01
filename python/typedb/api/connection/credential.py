@@ -17,10 +17,9 @@
 
 from typing import Optional
 
-from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
-
 from typedb.common.exception import TypeDBDriverException, CLOUD_CREDENTIAL_INCONSISTENT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
 
 
 class Credential(NativeWrapper[NativeCredential]):

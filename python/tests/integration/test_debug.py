@@ -15,29 +15,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from __future__ import annotations
+import unittest
+from unittest import TestCase
 
-from abc import ABC
-from typing import TYPE_CHECKING
+from typedb.driver import *
 
-from typedb.api.concept.type.type import Type
+TYPEDB = "typedb"
+SCHEMA = SessionType.SCHEMA
+DATA = SessionType.DATA
+READ = TransactionType.READ
+WRITE = TransactionType.WRITE
 
-if TYPE_CHECKING:
-    pass
+
+class TestStream(TestCase):
+
+    def setUp(self):
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            if TYPEDB not in [db.name for db in driver.databases.all()]:
+                driver.databases.create(TYPEDB)
+
+    def test_debug(self):
+        pass
 
 
-class ThingType(Type, ABC):
-
-    def is_thing_type(self) -> bool:
-        """
-        Checks if the concept is a ``ThingType``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-             thing_type.is_thing_type()
-        """
-        return True
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

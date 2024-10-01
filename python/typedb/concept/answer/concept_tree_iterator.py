@@ -17,27 +17,18 @@
 
 from __future__ import annotations
 
-from typing import Iterator, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from typedb.native_driver_wrapper import concept_row_get_variables, string_iterator_next, concept_row_get_values, \
-    concept_iterator_next, concept_row_get, concept_row_get_explainables, concept_row_to_string, concept_row_equals, \
-    explainables_get_relation, explainables_get_attribute, explainables_get_ownership, \
-    explainables_get_relations_keys, explainables_get_attributes_keys, explainables_get_ownerships_keys, \
-    string_pair_iterator_next, explainables_to_string, explainables_equals, explainable_get_conjunction, \
-    explainable_get_id, ConceptRow as NativeConceptRow
-
-from typedb.api.answer.concept_row import ConceptRow
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
-    NONEXISTENT_EXPLAINABLE_CONCEPT, NONEXISTENT_EXPLAINABLE_OWNERSHIP, NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.native_wrapper import NativeWrapper
-from typedb.concept import concept_factory
+from typedb.api.answer.concept_tree_iterator import ConceptTreeIterator
+from typedb.concept.answer.query_answer import _QueryAnswer
+from typedb.common.exception import TypeDBDriverException, UNIMPLEMENTED
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
 
 class _ConceptTreeIterator(_QueryAnswer, ConceptTreeIterator):
+
     def __init__(self, query_answer: NativeQueryAnswer):
         super().__init__(query_answer)
         raise TypeDBDriverException(UNIMPLEMENTED)

@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Mapping, Union, Optional
+from typing import TYPE_CHECKING, Optional
 
 from typedb.api.concept.thing.thing import Thing
 

@@ -17,16 +17,16 @@
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
-
-from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
-        driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+from typing import TYPE_CHECKING
 
 from typedb.api.connection.driver import Driver
 # from typedb.api.connection.options import Options
 from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
+from typedb.connection.transaction import _Transaction
+from typedb.native_driver_wrapper import driver_open_core, driver_is_open, driver_force_close, \
+    TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 # from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
@@ -66,7 +66,7 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         return self.native_object
 
     def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Options = None
-        return _Transaction(self.databases, database_name, session_type, options if options else Options())
+        return _Transaction(self, database_name, transaction_type) # , options if options else Options()
 
     def is_open(self) -> bool:
         return driver_is_open(self._native_driver)

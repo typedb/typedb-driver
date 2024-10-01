@@ -17,8 +17,8 @@
 
 from typing import Callable
 
-from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
 from typedb.common.exception import TypeDBDriverException
+from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
 
 
 class IteratorWrapper:

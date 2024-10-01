@@ -17,16 +17,11 @@
 
 from __future__ import annotations
 
-from typing import Iterator, TYPE_CHECKING
-
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
-    NONEXISTENT_EXPLAINABLE_CONCEPT, NONEXISTENT_EXPLAINABLE_OWNERSHIP, NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
-from typedb.common.iterator_wrapper import IteratorWrapper
+from abc import ABC
+from typedb.api.answer.query_answer import QueryAnswer
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.concept import concept_factory
-
-if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
+from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
 
 class _QueryAnswer(QueryAnswer, NativeWrapper[NativeQueryAnswer], ABC):

@@ -17,24 +17,15 @@
 
 from __future__ import annotations
 
-from typing import Iterator, Optional, TYPE_CHECKING
-
-from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, concept_iterator_next, concept_promise_resolve, entity_type_create, entity_type_get_instances,
-    entity_type_get_subtypes, entity_type_get_supertype, entity_type_get_supertypes, entity_type_set_supertype,
-    void_promise_resolve,
-)
-
 from typedb.api.concept.type.entity_type import EntityType
 from typedb.common.exception import TypeDBDriverException
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.promise import Promise
-from typedb.common.transitivity import Transitivity
-from typedb.concept.concept_factory import wrap_entity
+from typedb.common.label import Label
 from typedb.concept.type.thing_type import _ThingType
+from typedb.native_driver_wrapper import entity_type_get_label, TypeDBDriverExceptionNative
 
 
 class _EntityType(EntityType, _ThingType):
+
     def get_label(self) -> Label:
         try:
             return Label.of(entity_type_get_label(self.native_object))

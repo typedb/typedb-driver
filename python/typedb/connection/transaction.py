@@ -19,37 +19,30 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_commit, \
-    transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
-    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
-
-from typedb.api.connection.options import Options
 from typedb.api.connection.transaction import Transaction
+from typedb.concept.answer.query_answer_factory import wrap_query_answer
 from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.concept.concept_manager import _ConceptManager
-from typedb.logic.logic_manager import _LogicManager
-from typedb.query.query_manager import _QueryManager
+from typedb.common.promise import Promise
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, transaction_commit, \
+    transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, query_answer_promise_resolve, \
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 if TYPE_CHECKING:
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
-
 class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
-    def __init__(self, driver: Driver, transaction_type: TransactionType): # , options: Options = None
+    def __init__(self, driver: Driver, database_name: str, transaction_type: TransactionType): # , options: Options = None
         # if not options:
         #     options = Options()
         self._type = transaction_type
         # self._options = options
         try:
-            super().__init__(transaction_new(driver.native_object, transaction_type.value)) # , options.native_object
+            super().__init__(transaction_new(driver.native_object, database_name, transaction_type.value)) # , options.native_object
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
-        self._concept_manager = _ConceptManager(self._native_object)
-        self._query_manager = _QueryManager(self._native_object)
-        self._logic_manager = _LogicManager(self._native_object)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

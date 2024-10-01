@@ -17,19 +17,13 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Optional
+from abc import ABC
+from typing import TYPE_CHECKING
 
 from typedb.api.concept.type.type import Type
-from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
-    from typedb.api.concept.thing.thing import Thing
-    from typedb.api.concept.thing.relation import Relation
-    from typedb.api.concept.type.relation_type import RelationType
-    from typedb.api.concept.type.thing_type import ThingType
-    from typedb.api.connection.transaction import Transaction
-    from typedb.common.promise import Promise
+    pass
 
 
 class RoleType(Type, ABC):

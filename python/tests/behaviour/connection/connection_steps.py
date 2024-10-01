@@ -16,9 +16,8 @@
 # under the License.
 
 from behave import *
-from typedb.common.exception import TypeDBDriverException
-
 from tests.behaviour.context import Context
+from typedb.common.exception import TypeDBDriverException
 
 
 @step(u'typedb has configuration')

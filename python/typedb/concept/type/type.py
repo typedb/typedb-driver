@@ -17,15 +17,14 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Optional
+from abc import ABC
 
 from typedb.api.concept.type.type import Type
-from typedb.common.transitivity import Transitivity
 from typedb.concept.concept import _Concept
 
 
 class _Type(Type, _Concept, ABC):
+
     def as_type(self) -> Type:
         return self
 

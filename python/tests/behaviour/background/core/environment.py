@@ -15,10 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typedb.driver import *
-
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
+from typedb.driver import *
 
 IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 

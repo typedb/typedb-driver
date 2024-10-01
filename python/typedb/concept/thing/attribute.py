@@ -17,24 +17,17 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterator, Mapping, Optional, TYPE_CHECKING, Union
-
-from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value, attribute_get_owners, \
-    concept_iterator_next, TypeDBDriverExceptionNative
+from typing import Mapping, Optional, TYPE_CHECKING, Union
 
 from typedb.api.concept.thing.attribute import Attribute
-from typedb.api.concept.value.value import ValueType
-from typedb.common.exception import TypeDBDriverException
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.concept.concept_factory import wrap_attribute_type, wrap_thing, wrap_value
+from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
 from typedb.concept.value.value import _Value
+from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from typedb.concept.type.thing_type import _ThingType
-    from typedb.connection.transaction import _Transaction
 
 
 class _Attribute(Attribute, _Thing):

@@ -19,23 +19,18 @@ from __future__ import annotations
 
 from typing import Iterator, TYPE_CHECKING
 
-from typedb.native_driver_wrapper import concept_row_get_variables, string_iterator_next, concept_row_get_values, \
-    concept_iterator_next, concept_row_get, concept_row_get_explainables, concept_row_to_string, concept_row_equals, \
-    explainables_get_relation, explainables_get_attribute, explainables_get_ownership, \
-    explainables_get_relations_keys, explainables_get_attributes_keys, explainables_get_ownerships_keys, \
-    string_pair_iterator_next, explainables_to_string, explainables_equals, explainable_get_conjunction, \
-    explainable_get_id, ConceptRow as NativeConceptRow
-
 from typedb.api.answer.concept_row import ConceptRow
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
-    NONEXISTENT_EXPLAINABLE_CONCEPT, NONEXISTENT_EXPLAINABLE_OWNERSHIP, NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
+    NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
+from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
+    concept_row_get_index, concept_row_to_string, concept_row_equals, concept_row_get_column_names,
+    ConceptRow as NativeConceptRow)
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
-
 
 def _not_blank_var(var: str) -> str:
     if not var or var.isspace():
@@ -71,8 +66,8 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
             raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_name)
         return concept_factory.wrap_concept(concept)
 
-    def get_index(self, column_index: str) -> Concept:
-        concept = concept_row_get_index(self.native_object, _not_blank_var(column_index))
+    def get_index(self, column_index: int) -> Concept:
+        concept = concept_row_get_index(self.native_object, column_index)
         if not concept:
             raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_index)
         return concept_factory.wrap_concept(concept)

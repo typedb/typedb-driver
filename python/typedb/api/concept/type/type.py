@@ -18,18 +18,16 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterator, Mapping, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from typedb.api.concept.concept import Concept
-from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
-    from typedb.api.connection.transaction import Transaction
     from typedb.common.label import Label
-    from typedb.common.promise import Promise
 
 
 class Type(Concept, ABC):
+
     @abstractmethod
     def get_label(self) -> Label:
         """

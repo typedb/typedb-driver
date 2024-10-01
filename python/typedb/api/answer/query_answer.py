@@ -18,7 +18,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Mapping, Iterator, TYPE_CHECKING
 
 
 class QueryAnswer(ABC):
@@ -26,7 +25,6 @@ class QueryAnswer(ABC):
     General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
     """
 
-    @abstractmethod
     def is_ok(self) -> bool:
         """
         Checks if the query answer is an ``Ok``.
@@ -39,9 +37,8 @@ class QueryAnswer(ABC):
 
           query_answer.is_ok()
         """
-        pass
+        return False
 
-    @abstractmethod
     def is_concept_rows(self) -> bool:
         """
         Checks if the query answer is a ``ConceptRowIterator``.
@@ -54,9 +51,8 @@ class QueryAnswer(ABC):
 
           query_answer.is_concept_rows()
         """
-        pass
+        return False
 
-    @abstractmethod
     def is_concept_trees(self) -> bool:
         """
         Checks if the query answer is a ``ConceptTreeIterator``.
@@ -69,12 +65,11 @@ class QueryAnswer(ABC):
 
           query_answer.is_concept_trees()
         """
-        pass
+        return False
 
-    @abstractmethod
     def as_ok(self) -> OkQueryAnswer:
         """
-        Casts the query answer to <code>OkQueryAnswer</code>.
+        Casts the query answer to ``OkQueryAnswer``.
 
         :return:
 
@@ -86,10 +81,9 @@ class QueryAnswer(ABC):
         """
         raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "OkQueryAnswer"))
 
-    @abstractmethod
     def as_concept_rows(self) -> ConceptRowIterator:
         """
-        Casts the query answer to <code>ConceptRowIterator</code>.
+        Casts the query answer to ``ConceptRowIterator``.
 
         :return:
 
@@ -101,10 +95,9 @@ class QueryAnswer(ABC):
         """
         raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptRowIterator"))
 
-    @abstractmethod
     def as_concept_trees(self) -> ConceptTreeIterator:
         """
-        Casts the query answer to <code>ConceptTreeIterator</code>.
+        Casts the query answer to ``ConceptTreeIterator``.
 
         :return:
 

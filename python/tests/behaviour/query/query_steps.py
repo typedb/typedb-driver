@@ -14,15 +14,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import json
 import re
 from collections import defaultdict
 
 from behave import *
 from hamcrest import *
 
-from tests.behaviour.config.parameters import parse_bool, parse_int, parse_float, parse_datetime, parse_table, \
-    parse_label, parse_value_type
 from tests.behaviour.util.util import json_matches
 from tests.behaviour.context import Context
 from typedb.api.concept.value.value import Value

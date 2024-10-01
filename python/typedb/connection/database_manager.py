@@ -19,14 +19,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_driver_wrapper import databases_contains, databases_create, database_manager_new, databases_get, \
-    databases_all, database_iterator_next, DatabaseManager as NativeDatabaseManager, TypeDBDriverExceptionNative
-
 from typedb.api.connection.database import DatabaseManager
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, ILLEGAL_STATE, MISSING_DB_NAME
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database import _Database
+from typedb.native_driver_wrapper import databases_contains, databases_create, databases_get, \
+    databases_all, database_iterator_next, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
@@ -38,7 +37,7 @@ def _not_blank(name: str) -> str:
     return name
 
 
-class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDatabaseManager]):
+class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDriver]):
 
     def __init__(self, native_driver: NativeDriver):
         super().__init__(native_driver)

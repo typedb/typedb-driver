@@ -17,23 +17,20 @@
 
 from __future__ import annotations
 
-from typing import Iterator, Any, TYPE_CHECKING
-
-from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, concept_iterator_next, relation_add_role_player, relation_get_players_by_role_type,
-    relation_get_relating, relation_get_role_players, relation_get_type, relation_remove_role_player, role_player_get_player,
-    role_player_get_role_type, role_player_iterator_next,
-)
+from typing import TYPE_CHECKING
 
 from typedb.api.concept.thing.relation import Relation
-from typedb.concept.concept_factory import wrap_relation_type, wrap_role_type, wrap_thing
+from typedb.concept.concept_factory import wrap_relation_type
 from typedb.concept.thing.thing import _Thing
+from typedb.native_driver_wrapper import (
+    relation_get_type, )
 
 if TYPE_CHECKING:
     from typedb.concept.type.relation_type import _RelationType
 
 
 class _Relation(Relation, _Thing):
+
     def get_type(self) -> _RelationType:
         return wrap_relation_type(relation_get_type(self.native_object))
 

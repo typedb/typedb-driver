@@ -21,10 +21,9 @@ from typing import Callable
 
 from behave import *
 from hamcrest import *
-from typedb.driver import *
-
 from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
 from tests.behaviour.context import Context
+from typedb.driver import *
 
 
 def for_each_session_open_transaction_of_type(context: Context, transaction_types: list[TransactionType]):

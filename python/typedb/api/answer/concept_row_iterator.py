@@ -15,7 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from __future__ import annotations
 from abc import ABC
+
+from typedb.api.answer.query_answer import QueryAnswer
 
 
 class ConceptRowIterator(QueryAnswer, ABC):
@@ -39,7 +42,7 @@ class ConceptRowIterator(QueryAnswer, ABC):
 
     def as_concept_rows(self) -> ConceptRowIterator:
         """
-        Casts the query answer to <code>ConceptRowIterator</code>.
+        Casts the query answer to ``ConceptRowIterator``.
 
         :return:
 

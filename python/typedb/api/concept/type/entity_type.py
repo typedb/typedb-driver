@@ -17,16 +17,13 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator
+from abc import ABC
+from typing import TYPE_CHECKING
 
 from typedb.api.concept.type.thing_type import ThingType
-from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
-    from typedb.api.concept.thing.entity import Entity
-    from typedb.api.connection.transaction import Transaction
-    from typedb.common.promise import Promise
+    pass
 
 
 class EntityType(ThingType, ABC):

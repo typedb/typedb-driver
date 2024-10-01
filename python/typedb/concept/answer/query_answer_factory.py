@@ -17,26 +17,26 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
+from typedb.concept.answer.ok_query_answer import _OkQueryAnswer
+from typedb.concept.answer.concept_row_iterator import _ConceptRowIterator
+from typedb.concept.answer.concept_tree_iterator import _ConceptTreeIterator
 from typedb.native_driver_wrapper import \
     query_answer_is_ok, query_answer_is_concept_rows_stream, query_answer_is_concept_trees_stream
 
-import typedb.concept
-from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
-from typedb.concept.value.value import _Value
-
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
-
+import sys
 
 def wrap_query_answer(native_query_answer: NativeQueryAnswer) -> _QueryAnswer:
     if query_answer_is_ok(native_query_answer):
-        return typedb.concept.answer.ok_query_answer._OkQueryAnswer(native_query_answer)
+        return _OkQueryAnswer(native_query_answer)
     elif query_answer_is_concept_rows_stream(native_query_answer):
-        return typedb.concept.answer.concept_row_iterator._ConceptRowIterator(native_query_answer)
+        return _ConceptRowIterator(native_query_answer)
     elif query_answer_is_concept_trees_stream(native_query_answer):
-        return typedb.concept.answer.concept_tree_iterator._ConceptTreeIterator(native_query_answer)
+        return _ConceptTreeIterator(native_query_answer)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 

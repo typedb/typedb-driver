@@ -16,10 +16,9 @@
 # under the License.
 
 from behave.model_core import Status
-from typedb.driver import *
-
 from tests.behaviour.config.parameters import Kind
 from tests.behaviour.context import Context
+from typedb.driver import *
 
 
 def before_all(context: Context):

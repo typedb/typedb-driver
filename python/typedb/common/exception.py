@@ -91,6 +91,7 @@ DATABASE_DELETED = DriverErrorMessage(3, "The database '%s' has been deleted and
 MISSING_DB_NAME = DriverErrorMessage(4, "Database name cannot be empty.")
 POSITIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value should be positive, was: '%d'.")
 CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(6, "TLS disabled but the Root CA path provided.")
+UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
 
 
 class ConceptErrorMessage(ErrorMessage):

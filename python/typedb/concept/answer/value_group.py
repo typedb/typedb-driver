@@ -19,14 +19,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from typedb.native_driver_wrapper import value_group_get_owner, value_group_get_value, \
-    value_group_to_string, value_group_equals, ValueGroup as NativeValueGroup
-
 from typedb.api.answer.value_group import ValueGroup
 from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
 from typedb.concept.value.value import _Value
+from typedb.native_driver_wrapper import value_group_get_owner, value_group_get_value, \
+    value_group_to_string, value_group_equals, ValueGroup as NativeValueGroup
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept

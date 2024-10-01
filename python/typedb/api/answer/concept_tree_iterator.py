@@ -15,8 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from __future__ import annotations
 from abc import ABC
 
+from typedb.api.answer.query_answer import QueryAnswer
 
 class ConceptTreeIterator(QueryAnswer, ABC):
     """
@@ -39,7 +41,7 @@ class ConceptTreeIterator(QueryAnswer, ABC):
 
     def as_concept_trees(self) -> ConceptTreeIterator:
         """
-        Casts the query answer to <code>ConceptTreeIterator</code>.
+        Casts the query answer to ``ConceptTreeIterator``.
 
         :return:
 

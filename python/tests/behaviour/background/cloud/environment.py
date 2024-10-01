@@ -14,12 +14,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import os
 
 from typedb.driver import *
-
-from tests.behaviour.background import environment_base
-from tests.behaviour.context import Context
 
 # IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 #
