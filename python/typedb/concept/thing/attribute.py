@@ -17,9 +17,12 @@
 
 from __future__ import annotations
 
+from datetime import date
+from decimal import Decimal
 from typing import Mapping, Optional, Union
 
 from typedb.api.concept.thing.attribute import Attribute
+from typedb.api.concept.value.value import Value, VALUE
 from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
@@ -40,7 +43,7 @@ class _Attribute(Attribute, _Thing):
     def get_value(self) -> VALUE:
         return self._value().get()
 
-    def get_value_type(self) -> ValueType:
+    def get_value_type(self) -> str:
         return self._value().get_value_type()
 
     def is_boolean(self) -> bool:
@@ -94,7 +97,7 @@ class _Attribute(Attribute, _Thing):
     def as_datetime(self) -> Datetime:
         return self._value().as_datetime()
 
-    def as_datetime_tz(self) -> datetime:
+    def as_datetime_tz(self) -> Datetime:
         return self._value().as_datetime_tz()
 
     def as_duration(self) -> Duration:
@@ -105,3 +108,16 @@ class _Attribute(Attribute, _Thing):
 
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
+
+    def __repr__(self):
+        return "%s[%s:%s]" % (type(self).__name__, self.get_type().get_label(), self.get_value())
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if not other or type(self) is not type(other):
+            return False
+        return self.get_type().get_label() == other.get_type().get_label() and self.get_value() == other.get_value()
+
+    def __hash__(self):
+        return hash((self.get_type().get_label(), self.get_value()))

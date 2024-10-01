@@ -292,6 +292,5 @@ impl TryFromProto<ValueProto> for Value {
 }
 
 fn naive_datetime_from_timestamp(seconds: i64, nanos: u32) -> NaiveDateTime {
-    println!("NAIVE DATE: {}", DateTime::from_timestamp(seconds, nanos).unwrap().naive_utc());
     DateTime::from_timestamp(seconds, nanos).unwrap().naive_utc()
 }

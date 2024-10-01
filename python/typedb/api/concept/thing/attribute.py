@@ -340,7 +340,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_datetime_tz(self) -> datetime: # TODO: Finish type
+    def as_datetime_tz(self) -> Datetime:
         """
         Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.

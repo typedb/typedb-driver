@@ -135,11 +135,11 @@ class TestQuery(TestCase):
                 assert_that(z.is_attribute(), is_(False))
                 assert_that(z.is_type(), is_(False))
                 assert_that(z.is_thing(), is_(True))
-                zEntity = z.as_entity()
-                assert_that(zEntity.get_type().as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(zEntity.get_type().as_entity_type().get_label().name, is_("person"))
-                assert_that(zEntity.get_type().as_entity_type().get_label().scope, is_(None))
-                assert_that(zEntity.get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
+                z_entity = z.as_entity()
+                assert_that(z_entity.get_type().as_entity_type().get_label().scoped_name(), is_("person"))
+                assert_that(z_entity.get_type().as_entity_type().get_label().name, is_("person"))
+                assert_that(z_entity.get_type().as_entity_type().get_label().scope, is_(None))
+                assert_that(z_entity.get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
 
                 tx.commit()
 
@@ -156,13 +156,93 @@ class TestQuery(TestCase):
                     assert_that(x.is_attribute(), is_(False))
                     assert_that(x.is_type(), is_(False))
                     assert_that(x.is_thing(), is_(True))
-                    xType = x.as_entity().get_type().as_entity_type()
-                    assert_that(xType.get_label().scoped_name(), is_("person"))
-                    assert_that(xType.get_label().name, is_("person"))
-                    assert_that(xType.get_label().scope, is_(None))
-                    assert_that(xType.get_label().scoped_name(), is_not("not person"))
+                    x_type = x.as_entity().get_type().as_entity_type()
+                    assert_that(x_type.get_label().scoped_name(), is_("person"))
+                    assert_that(x_type.get_label().name, is_("person"))
+                    assert_that(x_type.get_label().scope, is_(None))
+                    assert_that(x_type.get_label().scoped_name(), is_not("not person"))
                     count += 1
                 assert_that(count, is_(2))
+
+    def test_attributes(self):
+        attribute_value_types = {
+            "root": "none",
+            "age": "long",
+            "name": "string",
+            "is-new": "boolean",
+            "success": "double",
+            "balance": "decimal",
+            "birth-date": "date",
+            "birth-time": "datetime",
+            "current-time": "datetime-tz",
+            "expiration": "duration"
+        }
+
+        attribute_values = {
+            "age": "25",
+            "name": "\"John\"",
+            "is-new": "true",
+            "success": "66.6",
+            "balance": "1234567890.0001234567890",
+            "birth-date": "2024-09-20",
+            "birth-time": "1999-02-26T12:15:05",
+            "current-time": "2024-09-20T16:40:05 Europe/Belfast",
+            "expiration": "P1Y6M7DT15H"
+        }
+
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            database = driver.databases.get(TYPEDB)
+
+            with driver.transaction(database.name, SCHEMA) as tx:
+                for attribute, value_type in attribute_value_types.items():
+                    query = f"define attribute {attribute} @abstract;" if value_type == "none" else f"define attribute {attribute}, value {value_type}; entity person owns {attribute};"
+                    assert_that(tx.query(query).resolve().is_ok(), is_(True))
+                tx.commit()
+
+            with driver.transaction(database.name, READ) as tx:
+                answer = tx.query("match attribute $a;").resolve()
+                assert_that(answer.is_concept_rows(), is_(True))
+
+                count = 0
+                for row in answer.as_concept_rows():
+                    a = row.get("a")
+                    assert_that(a.is_attribute_type(), is_(True))
+                    a_type = a.as_attribute_type()
+                    assert_that(a_type.get_value_type(), is_(equal_to(attribute_value_types[a_type.get_label().scoped_name()])))
+                    count += 1
+                assert_that(count, is_(len(attribute_value_types)))
+
+            with driver.transaction(database.name, WRITE) as tx:
+                for attribute, value in attribute_values.items():
+                    answer = tx.query(f"insert $a isa person, has {attribute} {value};").resolve()
+                    assert_that(answer.is_concept_rows(), is_(True))
+
+                    rows = [row for row in answer.as_concept_rows()]
+                    assert_that(len(rows), is_(1))
+
+                    row = rows[0]
+                    header = [name for name in row.column_names()]
+                    assert_that(len(header), is_(1))
+                    assert_that(row.get_index(header.index("a")).is_entity(), is_(True))
+
+                tx.commit()
+
+            with driver.transaction(database.name, READ) as tx:
+                answer = tx.query("match attribute $t; $a isa! $t;").resolve()
+                assert_that(answer.is_concept_rows(), is_(True))
+
+                rows = [row for row in answer.as_concept_rows()]
+                assert_that(len(rows), is_(len(attribute_values)))
+                for row in rows:
+                    attribute = row.get("a").as_attribute()
+                    attribute_name = attribute.get_type().get_label().scoped_name()
+                    assert_that(attribute.get_value_type(), is_(attribute_value_types[attribute_name]))
+                    value = attribute.get_value()
+
+                    # TODO: add values check
+
+
+
 
 
 if __name__ == "__main__":

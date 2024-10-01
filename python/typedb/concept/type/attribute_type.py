@@ -71,13 +71,3 @@ class _AttributeType(AttributeType, _ThingType):
 
     def is_struct(self) -> bool:
         return attribute_type_is_struct(self.native_object)
-
-    def __eq__(self, other):
-        if other is self:
-            return True
-        if not other or not isinstance(other, _AttributeType):
-            return False
-        return self.get_label() == other.get_label()
-
-    def __hash__(self):
-        return super(_AttributeType, self).__hash__()

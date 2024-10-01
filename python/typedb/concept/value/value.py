@@ -112,7 +112,7 @@ class _Value(Value, _Concept):
         std_datetime = datetime.utcfromtimestamp(native_datetime.get_seconds())
         return Datetime(std_datetime, native_datetime.get_subsec_nanos())
 
-    def as_datetime_tz(self) -> datetime:
+    def as_datetime_tz(self) -> Datetime:
         native_datetime_tz = value_get_datetime_tz(self.native_object)
         native_datetime = native_datetime_tz.get_datetime_in_nanos()
         std_datetime_tz = datetime.fromtimestamp(native_datetime.get_seconds(), ZoneInfo(native_datetime_tz.get_zone_id()))

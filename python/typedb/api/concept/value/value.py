@@ -31,7 +31,7 @@ VALUE = Union[bool, int, float, str, datetime]
 class Value(Concept, ABC):
 
     @abstractmethod
-    def get_value_type(self) -> ValueType:
+    def get_value_type(self) -> str:
         """
         Retrieves the ``ValueType`` of this value concept.
 
@@ -363,7 +363,7 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def as_datetime_tz(self) -> datetime: # TODO: Finish type
+    def as_datetime_tz(self) -> Datetime:
         """
         Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has
         another type, raises an exception.
