@@ -2,7 +2,7 @@
   "name": "typedb-driver",
   "version": "0.0.0",
   "description": "TypeDB Node.js Driver",
-  "author": "Vaticle",
+  "author": "TypeDB",
   "license": "Apache-2.0",
   "homepage": "https://typedb.com",
   "type": "commonjs",

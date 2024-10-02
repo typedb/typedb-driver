@@ -182,7 +182,7 @@ TEST(TestJSON, TestJSON) {
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
-        std::string insertQuery = "insert $user isa user, has name 'Bob', has email 'bob@vaticle.com';";
+        std::string insertQuery = "insert $user isa user, has name 'Bob', has email 'bob@typedb.com';";
         auto res = tx.query.insert(insertQuery, options);
         for (auto& it : res)
             ;
@@ -191,7 +191,7 @@ TEST(TestJSON, TestJSON) {
 
     {
         std::string expectedJSON = R"({"u": {)";
-        expectedJSON.append(R"("email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@vaticle.com"}], )");
+        expectedJSON.append(R"("email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@typedb.com"}], )");
         expectedJSON.append(R"("name": [{"type": {"label": "name", "root": "attribute", "value_type": "string"}, "value": "Bob"}], )");
         expectedJSON.append(R"("type": {"label": "user", "root": "entity"}}})");
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);

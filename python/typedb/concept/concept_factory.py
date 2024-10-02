@@ -25,16 +25,6 @@ from typedb.native_driver_wrapper import \
     concept_is_entity, concept_is_relation, concept_is_attribute, concept_is_value, concept_is_role_type
 
 if TYPE_CHECKING:
-    from typedb.concept.concept import _Concept
-    from typedb.concept.thing.attribute import _Attribute
-    from typedb.concept.thing.entity import _Entity
-    from typedb.concept.thing.relation import _Relation
-    from typedb.concept.thing.thing import _Thing
-    from typedb.concept.type.attribute_type import _AttributeType
-    from typedb.concept.type.entity_type import _EntityType
-    from typedb.concept.type.relation_type import _RelationType
-    from typedb.concept.type.role_type import _RoleType
-    from typedb.concept.type.thing_type import _ThingType
     from typedb.native_driver_wrapper import Concept as NativeConcept
 
 
