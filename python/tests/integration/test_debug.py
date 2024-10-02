@@ -21,10 +21,9 @@ from unittest import TestCase
 from typedb.driver import *
 
 TYPEDB = "typedb"
-SCHEMA = SessionType.SCHEMA
-DATA = SessionType.DATA
 READ = TransactionType.READ
 WRITE = TransactionType.WRITE
+SCHEMA = TransactionType.SCHEMA
 
 
 class TestStream(TestCase):

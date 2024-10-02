@@ -22,8 +22,6 @@ from hamcrest import *
 from typedb.driver import *
 
 TYPEDB = "typedb"
-DATA = SessionType.DATA
-WRITE = TransactionType.WRITE
 
 
 class TestDebug(TestCase):

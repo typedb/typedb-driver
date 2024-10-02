@@ -32,8 +32,8 @@ py_test(
 )
 
 py_test(
-    name = "test_query",
-    srcs = ["test_query.py"],
+    name = "test_core_query",
+    srcs = ["test_core_query.py"],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),
@@ -43,8 +43,8 @@ py_test(
 )
 
 py_test(
-    name = "test_stream",
-    srcs = ["test_stream.py"],
+    name = "test_core_stream",
+    srcs = ["test_core_stream.py"],
     deps = [
         "//python:driver_python",
     ],

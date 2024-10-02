@@ -19,7 +19,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 typedb_java_test(
-    name = "test-driver-query",
+    name = "test-query-core",
     srcs = ["DriverQueryTest.java"],
     server_artifacts = {
         "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
@@ -42,7 +42,7 @@ typedb_java_test(
 )
 
 #typedb_java_test(
-#    name = "test-address-translation",
+#    name = "test-address-translation-cloud",
 #    srcs = ["AddressTranslationTest.java"],
 #    server_artifacts = {
 #        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",

@@ -21,10 +21,9 @@ from unittest import TestCase
 from typedb.driver import *
 
 TYPEDB = "typedb"
-SCHEMA = SessionType.SCHEMA
-DATA = SessionType.DATA
 READ = TransactionType.READ
 WRITE = TransactionType.WRITE
+SCHEMA = TransactionType.SCHEMA
 
 
 class TestStream(TestCase):
@@ -36,9 +35,9 @@ class TestStream(TestCase):
 
     def test_multiple_done_response_handling(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
-            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
+            with driver.transaction(TYPEDB, SCHEMA) as tx:
                 promises = [
-                    tx.query.define(f"define person sub entity, owns name{i}; name{i} sub attribute, value string;")
+                    tx.query(f"define entity person, owns name{i}; attribute name{i}, value string;")
                     for i in range(51)
                 ]
                 for promise in promises:
@@ -48,12 +47,13 @@ class TestStream(TestCase):
             # 50 answers -> CONTINUE -> 1 answer [compensating for latency] -> DONE. The driver will respond to
             # CONTINUE with STREAM to keep iterating, and the server responds to STREAM with a 2nd DONE message.
             # This is expected and should be handled correctly (ie: ignored) by the driver.
-            tx_options = Options(prefetch=True, prefetch_size=50)
+            # tx_options = Options(prefetch=True, prefetch_size=50) # TODO: Return when Options are back
             for i in range(50):
-                with driver.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
-                    person_type = tx.getQueryType.get_entity_type("person").resolve()
-                    _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))
-                    next(tx.query.get("match $x sub thing; get; limit 1;"))
+                with driver.transaction(TYPEDB, READ) as tx: # driver.transaction(TYPEDB, READ, tx_options) as tx:
+                    person_type = list(tx.query("match $p sub person;").resolve().as_concept_rows())[0].get("p")
+                    # TODO: Rewrite
+                    # _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))
+                    # next(tx.query.get("match $x sub thing; get; limit 1;"))
 
 
 if __name__ == "__main__":
