@@ -17,13 +17,12 @@
 
 from __future__ import annotations
 
-from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, relation_type_get_relates_overridden, relation_type_set_relates
-)
-
 from typedb.api.concept.type.relation_type import RelationType
 from typedb.common.exception import TypeDBDriverException
 from typedb.concept.type.thing_type import _ThingType
+from typedb.native_driver_wrapper import (
+    TypeDBDriverExceptionNative
+)
 
 
 class _RelationType(RelationType, _ThingType):

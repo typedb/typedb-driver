@@ -16,6 +16,7 @@
 # under the License.
 
 from __future__ import annotations
+
 from abc import ABC
 
 from typedb.api.answer.query_answer import QueryAnswer

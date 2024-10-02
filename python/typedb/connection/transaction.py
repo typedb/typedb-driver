@@ -21,12 +21,14 @@ from typing import TYPE_CHECKING
 
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.transaction import Transaction
-from typedb.concept.answer.query_answer_factory import wrap_query_answer
 from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, MISSING_QUERY, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
-from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, transaction_commit, \
-    transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, query_answer_promise_resolve, \
+from typedb.concept.answer.query_answer_factory import wrap_query_answer
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
+    transaction_commit, \
+    transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
+    query_answer_promise_resolve, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 if TYPE_CHECKING:

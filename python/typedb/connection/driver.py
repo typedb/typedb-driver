@@ -27,6 +27,7 @@ from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_open_core, driver_is_open, driver_force_close, \
     TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+
 # from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:

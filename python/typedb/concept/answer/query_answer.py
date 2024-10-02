@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 from abc import ABC
+
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper

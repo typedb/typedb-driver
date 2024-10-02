@@ -15,15 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from datetime import datetime, date
-from decimal import Decimal
-from hamcrest import *
 import unittest
+from datetime import datetime
+from decimal import Decimal
 from unittest import TestCase
 
-from typedb.driver import *
+from hamcrest import *
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
+from typedb.driver import *
 
 TYPEDB = "typedb"
 WRITE = TransactionType.WRITE
@@ -238,6 +238,7 @@ class TestQuery(TestCase):
 
                 rows = [row for row in answer.as_concept_rows()]
                 assert_that(len(rows), is_(len(attribute_values)))
+                checked = 0
                 for row in rows:
                     attribute = row.get("a").as_attribute()
                     attribute_name = attribute.get_type().get_label().scoped_name()
@@ -245,7 +246,6 @@ class TestQuery(TestCase):
                     value = attribute.get_value()
                     expected = attribute_values[attribute_name]
 
-                    checked = 0
                     if attribute.is_long():
                         assert_that(value, is_(int(expected)))
                         checked += 1
@@ -277,7 +277,7 @@ class TestQuery(TestCase):
                         checked += 1
                     # TODO: Add structs!
 
-                    # assert_that(checked, is_(len(attribute_values))) # Make sure that every attribute is checked!
+                assert_that(checked, is_(len(attribute_values))) # Make sure that every attribute is checked!
 
 
 if __name__ == "__main__":

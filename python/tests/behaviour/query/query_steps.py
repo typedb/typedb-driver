@@ -14,15 +14,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import re
-from collections import defaultdict
 
 from behave import *
-from hamcrest import *
 
-from tests.behaviour.util.util import json_matches
 from tests.behaviour.context import Context
-from typedb.api.concept.value.value import Value
 from typedb.driver import *
 
 

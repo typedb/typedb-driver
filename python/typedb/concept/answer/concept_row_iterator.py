@@ -20,9 +20,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.answer.concept_row_iterator import ConceptRowIterator
+from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.answer.concept_row import _ConceptRow
 from typedb.concept.answer.query_answer import _QueryAnswer
-from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.native_driver_wrapper import query_answer_into_rows, concept_row_iterator_next
 
 if TYPE_CHECKING:

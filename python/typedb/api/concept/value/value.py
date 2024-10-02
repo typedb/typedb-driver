@@ -23,8 +23,8 @@ from decimal import Decimal
 from typing import Dict, Optional, Union
 
 from typedb.api.concept.concept import Concept
-from typedb.common.duration import Duration
 from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 
 
 class Value(Concept, ABC):

@@ -19,13 +19,10 @@ from __future__ import annotations
 
 from typedb.api.concept.type.role_type import RoleType
 from typedb.common.exception import TypeDBDriverException
-from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.label import Label
-from typedb.common.promise import Promise
 from typedb.concept.type.type import _Type
 from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, concept_iterator_next, concept_promise_resolve, role_type_get_relation_instances,
-    role_type_get_relation_types, role_type_get_scope, role_type_is_abstract, role_type_set_label, void_promise_resolve
+    TypeDBDriverExceptionNative
 )
 
 

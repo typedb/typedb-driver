@@ -16,6 +16,7 @@
 # under the License.
 
 from __future__ import annotations
+
 import re
 
 from typedb.common.datetime import NANOS_IN_SECOND

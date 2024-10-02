@@ -15,10 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from behave import step
 from typedb.driver import *
 
-from tests.behaviour.context import Context
 #
 #
 # def _get_driver(context: Context):

@@ -15,10 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from hamcrest import *
 from typedb.driver import *
-
-from tests.behaviour.context import Context
 
 # SCHEMA = SessionType.SCHEMA
 # DATA = SessionType.DATA

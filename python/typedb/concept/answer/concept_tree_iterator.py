@@ -20,8 +20,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.answer.concept_tree_iterator import ConceptTreeIterator
-from typedb.concept.answer.query_answer import _QueryAnswer
 from typedb.common.exception import TypeDBDriverException, UNIMPLEMENTED
+from typedb.concept.answer.query_answer import _QueryAnswer
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer

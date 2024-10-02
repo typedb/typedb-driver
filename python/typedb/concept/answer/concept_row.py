@@ -26,8 +26,9 @@ from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
 from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
-    concept_row_get_index, concept_row_to_string, concept_row_equals, concept_row_get_column_names,
-    ConceptRow as NativeConceptRow)
+                                          concept_row_get_index, concept_row_to_string, concept_row_equals,
+                                          concept_row_get_column_names,
+                                          ConceptRow as NativeConceptRow)
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept

@@ -17,22 +17,24 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
-from zoneinfo import ZoneInfo
 
 from typedb.api.concept.value.value import Value
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE
+from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.concept import _Concept
 from typedb.concept.concept_factory import wrap_concept
-from typedb.common.duration import Duration
-from typedb.common.datetime import Datetime, NANOS_IN_SECOND
-from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.native_driver_wrapper import (value_get_value_type, value_is_boolean, value_is_long, value_is_double,
-    value_is_decimal, value_is_string, value_is_date, value_is_datetime, value_is_datetime_tz, value_is_duration,
-    value_is_struct, value_get_boolean, value_get_long, value_get_double, value_get_decimal, value_get_string,
-    value_get_date_as_seconds, value_get_datetime, value_get_datetime_tz, value_get_duration, value_get_struct,
-    string_and_opt_value_iterator_next)
+                                          value_is_decimal, value_is_string, value_is_date, value_is_datetime,
+                                          value_is_datetime_tz, value_is_duration,
+                                          value_is_struct, value_get_boolean, value_get_long, value_get_double,
+                                          value_get_decimal, value_get_string,
+                                          value_get_date_as_seconds, value_get_datetime, value_get_datetime_tz,
+                                          value_get_duration, value_get_struct,
+                                          string_and_opt_value_iterator_next)
 
 
 class _Value(Value, _Concept):

@@ -20,10 +20,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.value.value import Value
 from typedb.api.concept.thing.thing import Thing
-from typedb.common.duration import Duration
+from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 
 if TYPE_CHECKING:
     from typedb.api.concept.type.attribute_type import AttributeType

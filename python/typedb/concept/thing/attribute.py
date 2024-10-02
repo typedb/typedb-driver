@@ -19,16 +19,16 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from typing import Mapping, Optional, Union
+from typing import Mapping, Union
 
 from typedb.api.concept.thing.attribute import Attribute
 from typedb.api.concept.value.value import Value
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
 from typedb.concept.value.value import _Value
-from typedb.common.duration import Duration
-from typedb.common.datetime import Datetime
 from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value
 
 
