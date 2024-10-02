@@ -21,7 +21,7 @@ from tests.behaviour.context import Context
 from typedb.driver import *
 
 
-@step("typeql define{MayError}")
+@step("typeql define{may_error}")
 def step_impl(context: Context, may_error: MayError):
     may_error.check(context.tx().query(query=context.text).resolve())
 

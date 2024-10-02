@@ -88,6 +88,6 @@ class Label:
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) != type(other):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return self.scope == other.scope and self.name == other.name

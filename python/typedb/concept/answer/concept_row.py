@@ -80,7 +80,7 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(other) != type(self):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return concept_row_equals(self.native_object, other.native_object)
 

@@ -137,7 +137,9 @@ register_type(Var=parse_var)
 
 @parse.with_pattern("read|write|schema")
 def parse_transaction_type(value: str) -> TransactionType:
-    return TransactionType.READ if value == "read" else TransactionType.WRITE if value == "write" else TransactionType.SCHEMA
+    return TransactionType.READ if value == "read" \
+        else TransactionType.WRITE if value == "write" \
+        else TransactionType.SCHEMA
 
 
 register_type(TransactionType=parse_transaction_type)
@@ -179,11 +181,11 @@ class MayError:
     def __init__(self, may_error: bool):
         self.may_error = may_error
 
-    def check(self, callable: Callable):
+    def check(self, func: Callable):
         if self.may_error:
-            assert_that(callable, raises(TypeDBDriverException))
+            assert_that(func, raises(TypeDBDriverException))
         else:
-            callable()
+            func()
 
 
 @parse.with_pattern("; fails|; parsing fails|")

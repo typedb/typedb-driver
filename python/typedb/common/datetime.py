@@ -162,20 +162,21 @@ class Datetime:
         else:
             datetime_part, subsec_part = datetime_str, "0"
 
-        timestamp_sec = datetime.strptime(datetime_part, datetime_fmt).timestamp()
+        timestamp_sec = int(datetime.strptime(datetime_part, datetime_fmt).timestamp())
         subsec_part = (subsec_part + "0" * NANOS_DIGITS)[:NANOS_DIGITS]
         nanos = int(subsec_part)
 
         return cls(timestamp_seconds=timestamp_sec, subsec_nanos=nanos, tz_name=tz_name, is_tz_aware_timestamp=True)
 
+    ISO_TZ_LEN = 6
+
     def isoformat(self) -> str:
         """Return the time formatted according to ISO."""
-        ISO_TZ_LEN = 6
         datetime_part = self._datetime_of_seconds.isoformat()
         tz_part = ""
         if self._tz_name is not None:
-            tz_part = datetime_part[-ISO_TZ_LEN:]
-            datetime_part = datetime_part[:-ISO_TZ_LEN]
+            tz_part = datetime_part[-self.ISO_TZ_LEN:]
+            datetime_part = datetime_part[:-self.ISO_TZ_LEN]
         return f"{datetime_part}.{self._nanos:09d}{tz_part}"
 
     def __str__(self):
@@ -190,7 +191,7 @@ class Datetime:
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) != type(other):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return (self.datetime_of_seconds == other.datetime_of_seconds
                 and self.nanos == other.nanos

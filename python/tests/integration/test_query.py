@@ -194,12 +194,13 @@ class TestQuery(TestCase):
             "expiration": "P1Y10M7DT15H44M5.00394892S"
         }
 
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:
                 for attribute, value_type in attribute_value_types.items():
-                    query = f"define attribute {attribute} @abstract;" if value_type == "none" else f"define attribute {attribute}, value {value_type}; entity person owns {attribute};"
+                    query = f"define attribute {attribute} @abstract;" if value_type == "none" \
+                        else f"define attribute {attribute}, value {value_type}; entity person owns {attribute};"
                     assert_that(tx.query(query).resolve().is_ok(), is_(True))
                 tx.commit()
 
