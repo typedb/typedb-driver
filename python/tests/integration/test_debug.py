@@ -26,7 +26,7 @@ WRITE = TransactionType.WRITE
 SCHEMA = TransactionType.SCHEMA
 
 
-class TestStream(TestCase):
+class TestDebug(TestCase):
 
     def setUp(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
