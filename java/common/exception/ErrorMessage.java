@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ErrorMessage {
-    private static Map<String, Map<Integer, ErrorMessage>> errors = new HashMap<>();
+    private static final Map<String, Map<Integer, ErrorMessage>> errors = new HashMap<>();
     private static int maxCodeNumber = 0;
     private static int maxCodeDigits = 0;
 
@@ -51,7 +51,7 @@ public abstract class ErrorMessage {
             zeros.append("0");
         }
 
-        code = codePrefix + zeros.toString() + codeNumber;
+        code = codePrefix + zeros + codeNumber;
         return code;
     }
 

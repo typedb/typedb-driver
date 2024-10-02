@@ -30,6 +30,7 @@ from typedb.native_driver_wrapper import \
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
+
 def wrap_query_answer(native_query_answer: NativeQueryAnswer) -> _QueryAnswer:
     if query_answer_is_ok(native_query_answer):
         return _OkQueryAnswer(native_query_answer)
@@ -39,5 +40,3 @@ def wrap_query_answer(native_query_answer: NativeQueryAnswer) -> _QueryAnswer:
         return _ConceptTreeIterator(native_query_answer)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
-
-

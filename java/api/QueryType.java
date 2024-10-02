@@ -64,6 +64,6 @@ public enum QueryType {
     }
 
     public boolean isSchema() {
-            return nativeObject == com.typedb.driver.jni.QueryType.SchemaQuery;
-        }
+        return nativeObject == com.typedb.driver.jni.QueryType.SchemaQuery;
+    }
 }

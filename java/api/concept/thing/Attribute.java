@@ -157,7 +157,7 @@ public interface Attribute extends Thing {
      * </pre>
      */
     boolean isStruct();
-    
+
     /**
      * Returns an untyped <code>Object</code> value of the value concept that this attribute holds.
      * This is useful for value equality or printing without having to switch on the actual contained value.

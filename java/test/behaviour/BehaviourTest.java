@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour;
 
 //import com.typedb.core.tool.runner.TypeDBSingleton;
+
 import org.junit.AfterClass;
 
 public abstract class BehaviourTest {

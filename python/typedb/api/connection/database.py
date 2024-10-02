@@ -123,6 +123,8 @@ class Database(ABC):
     #         database.preferred_replica()
     #     """
     #     pass
+
+
 #
 #
 # class Replica(ABC):

@@ -35,15 +35,18 @@ if TYPE_CHECKING:
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
+
 class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
-    def __init__(self, driver: Driver, database_name: str, transaction_type: TransactionType): # , options: Options = None
+    def __init__(self, driver: Driver, database_name: str,
+                 transaction_type: TransactionType):  # , options: Options = None
         # if not options:
         #     options = Options()
         self._type = transaction_type
         # self._options = options
         try:
-            super().__init__(transaction_new(driver.native_object, database_name, transaction_type.value)) # , options.native_object
+            super().__init__(
+                transaction_new(driver.native_object, database_name, transaction_type.value))  # , options.native_object
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 

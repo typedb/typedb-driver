@@ -28,6 +28,7 @@ from typedb.common.duration import Duration
 if TYPE_CHECKING:
     from typedb.api.concept.type.attribute_type import AttributeType
 
+
 class Attribute(Thing, ABC):
     """
     Attribute is an instance of the attribute type and has a value.
@@ -226,7 +227,6 @@ class Attribute(Thing, ABC):
             attribute.is_struct()
         """
         pass
-
 
     @abstractmethod
     def as_boolean(self) -> bool:

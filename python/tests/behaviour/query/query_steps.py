@@ -25,7 +25,6 @@ from typedb.driver import *
 def step_impl(context: Context, may_error: MayError):
     may_error.check(context.tx().query(query=context.text).resolve())
 
-
 # @step("typeql insert")
 # def step_impl(context: Context):
 #     list(context.tx().query.insert(query=context.text))

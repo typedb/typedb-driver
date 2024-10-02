@@ -69,7 +69,8 @@ def step_impl(context: Context, transaction_type):
 # TODO: transaction(s) in other implementations, simplify
 @step("for each session, open transactions of type; throws exception")
 def step_impl(context: Context):
-    open_transactions_of_type_throws_exception(context, list(map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
+    open_transactions_of_type_throws_exception(context, list(
+        map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
 
 
 def for_each_session_transactions_are(context: Context, assertion: Callable[[Transaction], None]):
@@ -107,9 +108,11 @@ def step_impl(context: Context, is_open):
 def step_impl(context: Context):
     context.tx().commit()
 
+
 @step("session transaction closes")
 def step_impl(context: Context):
     context.tx().close()
+
 
 @step("session transaction commits; throws exception")
 @step("transaction commits; throws exception")
@@ -192,7 +195,8 @@ def step_impl(context: Context):
         for session in context.sessions:
             context.sessions_to_transactions_parallel[session] = []
             for type_ in types:
-                context.sessions_to_transactions_parallel[session].append(executor.submit(partial(session.transaction, type_)))
+                context.sessions_to_transactions_parallel[session].append(
+                    executor.submit(partial(session.transaction, type_)))
 
 
 def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[Transaction], None]):

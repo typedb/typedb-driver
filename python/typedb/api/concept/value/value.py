@@ -28,7 +28,6 @@ from typedb.common.duration import Duration
 
 
 class Value(Concept, ABC):
-
     STRUCT = Dict[str, Optional["Value"]]
     VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
 

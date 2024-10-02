@@ -27,7 +27,7 @@ import java.util.TimeZone;
 public class UtilSteps {
 
     @When("set time-zone is: {word}")
-    public void set_timezone(String value){
+    public void set_timezone(String value) {
         TimeZone.setDefault(TimeZone.getTimeZone(value));
     }
 

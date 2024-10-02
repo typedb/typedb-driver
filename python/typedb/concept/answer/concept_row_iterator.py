@@ -28,11 +28,13 @@ from typedb.native_driver_wrapper import query_answer_into_rows, concept_row_ite
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
+
 class _ConceptRowIterator(_QueryAnswer, ConceptRowIterator):
 
     def __init__(self, query_answer: NativeQueryAnswer):
         super().__init__(query_answer)
-        self.iterator = map(_ConceptRow, IteratorWrapper(query_answer_into_rows(self.native_object), concept_row_iterator_next))
+        self.iterator = map(_ConceptRow,
+                            IteratorWrapper(query_answer_into_rows(self.native_object), concept_row_iterator_next))
 
     def __iter__(self):
         return iter(self.iterator)

@@ -94,7 +94,6 @@ class ConceptRow(ABC):
         """
         pass
 
-
     @abstractmethod
     def concepts(self) -> Iterator[Concept]:
         """

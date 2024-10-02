@@ -52,7 +52,7 @@ public interface Driver extends AutoCloseable {
      * </pre>
      *
      * @param database The name of the database with which the transaction connects
-     * @param type The type of transaction to be created (READ, WRITE, or SCHEMA)
+     * @param type     The type of transaction to be created (READ, WRITE, or SCHEMA)
      */
     @CheckReturnValue
     Transaction transaction(String database, Transaction.Type type);

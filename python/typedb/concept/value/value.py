@@ -38,7 +38,6 @@ from typedb.native_driver_wrapper import (value_get_value_type, value_is_boolean
 
 
 class _Value(Value, _Concept):
-
     DECIMAL_SCALE = 19
 
     def get_value_type(self) -> str:
@@ -132,7 +131,8 @@ class _Value(Value, _Concept):
 
     def as_struct(self) -> Value.STRUCT:
         result = {}
-        for field_and_value in IteratorWrapper(value_get_struct(self.native_object), string_and_opt_value_iterator_next):
+        for field_and_value in IteratorWrapper(value_get_struct(self.native_object),
+                                               string_and_opt_value_iterator_next):
             field_name = field_and_value.get_string()
             native_value = field_and_value.get_value()
             result_value = None

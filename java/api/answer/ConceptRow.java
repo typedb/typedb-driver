@@ -65,7 +65,7 @@ public interface ConceptRow {
      */
     @CheckReturnValue
     Concept get(String columnName);
-    
+
     /**
      * Retrieves a concept for a given index of the header (<code>columnNames</code>).
      *

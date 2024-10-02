@@ -28,7 +28,6 @@ if TYPE_CHECKING:
 
 
 class Driver(ABC):
-
     LANGUAGE = "python"
 
     @abstractmethod
@@ -55,7 +54,8 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Optional[Options] = None
+    def transaction(self, database_name: str,
+                    transaction_type: TransactionType) -> Transaction:  # , options: Optional[Options] = None
         """
         Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
 

@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):
 
-    def __init__(self, addresses: list[str] | dict[str]): # , credential: Optional[Credential] = None
+    def __init__(self, addresses: list[str] | dict[str]):  # , credential: Optional[Credential] = None
         # if credential:
         #     try:
         #         if isinstance(addresses, list):
@@ -66,8 +66,9 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def _native_driver(self) -> NativeDriver:
         return self.native_object
 
-    def transaction(self, database_name: str, transaction_type: TransactionType) -> Transaction: # , options: Options = None
-        return _Transaction(self, database_name, transaction_type) # , options if options else Options()
+    def transaction(self, database_name: str,
+                    transaction_type: TransactionType) -> Transaction:  # , options: Options = None
+        return _Transaction(self, database_name, transaction_type)  # , options if options else Options()
 
     def is_open(self) -> bool:
         return driver_is_open(self._native_driver)

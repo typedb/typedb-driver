@@ -24,7 +24,7 @@ from abc import ABC, abstractmethod
 # from typing import TYPE_CHECKING
 #
 # if TYPE_CHECKING:
-    # from typedb.api.connection.options import Options
+# from typedb.api.connection.options import Options
 
 
 class TransactionType(enum.Enum):
@@ -83,7 +83,6 @@ class Transaction(ABC):
     #     The options for the transaction
     #     """
     #     pass
-
 
     @abstractmethod
     def query(self, query: str) -> Promise[QueryAnswer]:

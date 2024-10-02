@@ -44,7 +44,6 @@ from typedb.connection.driver import _Driver
 
 
 class TypeDB:
-
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod

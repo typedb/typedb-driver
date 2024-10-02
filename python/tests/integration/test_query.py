@@ -277,7 +277,7 @@ class TestQuery(TestCase):
                         checked += 1
                     # TODO: Add structs!
 
-                assert_that(checked, is_(len(attribute_values))) # Make sure that every attribute is checked!
+                assert_that(checked, is_(len(attribute_values)))  # Make sure that every attribute is checked!
 
 
 if __name__ == "__main__":

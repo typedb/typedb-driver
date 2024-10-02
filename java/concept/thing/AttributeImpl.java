@@ -25,44 +25,14 @@ import com.typedb.driver.concept.type.AttributeTypeImpl;
 import com.typedb.driver.concept.value.ValueImpl;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static com.typedb.driver.common.collection.Collections.pair;
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_type;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_value;
-import static com.typedb.driver.jni.typedb_driver.value_get_boolean;
-import static com.typedb.driver.jni.typedb_driver.value_get_date_as_seconds;
-import static com.typedb.driver.jni.typedb_driver.value_get_datetime;
-import static com.typedb.driver.jni.typedb_driver.value_get_datetime_tz;
-import static com.typedb.driver.jni.typedb_driver.value_get_decimal;
-import static com.typedb.driver.jni.typedb_driver.value_get_double;
-import static com.typedb.driver.jni.typedb_driver.value_get_duration;
-import static com.typedb.driver.jni.typedb_driver.value_get_long;
-import static com.typedb.driver.jni.typedb_driver.value_get_string;
-import static com.typedb.driver.jni.typedb_driver.value_get_struct;
-import static com.typedb.driver.jni.typedb_driver.value_get_value_type;
-import static com.typedb.driver.jni.typedb_driver.value_is_boolean;
-import static com.typedb.driver.jni.typedb_driver.value_is_date;
-import static com.typedb.driver.jni.typedb_driver.value_is_datetime;
-import static com.typedb.driver.jni.typedb_driver.value_is_datetime_tz;
-import static com.typedb.driver.jni.typedb_driver.value_is_decimal;
-import static com.typedb.driver.jni.typedb_driver.value_is_double;
-import static com.typedb.driver.jni.typedb_driver.value_is_duration;
-import static com.typedb.driver.jni.typedb_driver.value_is_long;
-import static com.typedb.driver.jni.typedb_driver.value_is_string;
-import static com.typedb.driver.jni.typedb_driver.value_is_struct;
 
 public class AttributeImpl extends ThingImpl implements Attribute {
     public AttributeImpl(com.typedb.driver.jni.Concept concept) {

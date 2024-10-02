@@ -17,9 +17,6 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.typedb.driver.common.collection.Pair;
-import com.typedb.driver.common.collection.Triple;
-
 public class Collections {
 
     @SafeVarargs

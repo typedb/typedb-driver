@@ -33,6 +33,7 @@ from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
 
+
 def _not_blank_var(var: str) -> str:
     if not var or var.isspace():
         raise TypeDBDriverException(MISSING_VARIABLE)
