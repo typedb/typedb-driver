@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -234,7 +235,7 @@ public class DriverQueryTest {
                 "expiration", "duration"
         );
 
-        Map<String, String> AttributeValues = Map.of(
+        Map<String, String> attributeValues = Map.of(
                 "age", "25",
                 "name", "\"John\"",
                 "is-new", "true",
@@ -275,7 +276,7 @@ public class DriverQueryTest {
         }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
-            for (Map.Entry<String, String> entry : AttributeValues.entrySet()) {
+            for (Map.Entry<String, String> entry : attributeValues.entrySet()) {
                 QueryAnswer answer = tx.query(String.format("insert $a isa person, has %s %s;", entry.getKey(), entry.getValue())).resolve();
                 assertTrue(answer.isConceptRows());
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
@@ -294,35 +295,47 @@ public class DriverQueryTest {
                 QueryAnswer answer = tx.query("match attribute $t; $a isa! $t;").resolve();
                 assertTrue(answer.isConceptRows());
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-                assertEquals(rows.size(), AttributeValues.size());
+                assertEquals(rows.size(), attributeValues.size());
+                AtomicInteger checked = new AtomicInteger(0);
                 rows.forEach(row -> {
                     Attribute attribute = row.get("a").asAttribute();
                     String attributeName = attribute.getType().getLabel().scopedName();
                     Value value = attribute.getValue();
                     assertEquals(value.getType(), attributeValueTypes.get(attributeName));
                     if (value.isLong()) {
-                        assertEquals(Long.parseLong(AttributeValues.get(attributeName)), value.asLong());
+                        assertEquals(Long.parseLong(attributeValues.get(attributeName)), value.asLong());
+                        checked.incrementAndGet();
                     } else if (value.isString()) {
-                        assertEquals(value.asString(), AttributeValues.get(attributeName).substring(1, AttributeValues.get(attributeName).length() - 1), value.asString());
+                        assertEquals(attributeValues.get(attributeName).substring(1, attributeValues.get(attributeName).length() - 1), value.asString());
+                        checked.incrementAndGet();
                     } else if (value.isBoolean()) {
-                        assertEquals(Boolean.parseBoolean(AttributeValues.get(attributeName)), value.asBoolean());
+                        assertEquals(Boolean.parseBoolean(attributeValues.get(attributeName)), value.asBoolean());
+                        checked.incrementAndGet();
                     } else if (value.isDouble()) {
-                        assertEquals(Double.parseDouble(AttributeValues.get(attributeName)), value.asDouble(), 0.00000001);
-                    } else if (value.isDouble()) {
-                        assertEquals(new BigDecimal(AttributeValues.get(attributeName)), value.asDecimal());
+                        assertEquals(Double.parseDouble(attributeValues.get(attributeName)), value.asDouble(), 0.00000001);
+                        checked.incrementAndGet();
+                    } else if (value.isDecimal()) {
+                        BigDecimal valueAsDecimal = value.asDecimal();
+                        assertEquals(new BigDecimal(attributeValues.get(attributeName)).setScale(valueAsDecimal.scale(), RoundingMode.UNNECESSARY), valueAsDecimal);
+                        checked.incrementAndGet();
                     } else if (value.isDate()) {
-                        assertEquals(LocalDate.parse(AttributeValues.get(attributeName)), value.asDate());
+                        assertEquals(LocalDate.parse(attributeValues.get(attributeName)), value.asDate());
+                        checked.incrementAndGet();
                     } else if (value.isDatetime()) {
-                        assertEquals(LocalDateTime.parse(AttributeValues.get(attributeName)), value.asDatetime());
+                        assertEquals(LocalDateTime.parse(attributeValues.get(attributeName)), value.asDatetime());
+                        checked.incrementAndGet();
                     } else if (value.isDatetimeTZ()) {
-                        String[] expectedValue = AttributeValues.get(attributeName).split(" ");
+                        String[] expectedValue = attributeValues.get(attributeName).split(" ");
                         assertEquals(LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1])), value.asDatetimeTZ());
+                        checked.incrementAndGet();
                     } else if (value.isDuration()) {
-                        String[] expectedValue = AttributeValues.get(attributeName).split("T");
+                        String[] expectedValue = attributeValues.get(attributeName).split("T");
                         assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
+                        checked.incrementAndGet();
                     }
                     // TODO: Add structs
                 });
+                assertEquals(checked.get(), attributeValues.size()); // Make sure that every attribute is checked!
             }
         }, Transaction.Type.READ);
     }

@@ -17,7 +17,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
 from datetime import date, datetime
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -38,20 +37,32 @@ from typedb.native_driver_wrapper import (value_get_value_type, value_is_boolean
 
 class _Value(Value, _Concept):
 
+    DECIMAL_SCALE = 19
+
     def get_value_type(self) -> str:
         return value_get_value_type(self.native_object)
 
-    def get(self) -> VALUE:
+    def get(self) -> Value.VALUE:
         if self.is_boolean():
             return self.as_boolean()
         elif self.is_long():
             return self.as_long()
         elif self.is_double():
             return self.as_double()
+        elif self.is_decimal():
+            return self.as_decimal()
         elif self.is_string():
             return self.as_string()
+        elif self.is_date():
+            return self.as_date()
         elif self.is_datetime():
             return self.as_datetime()
+        elif self.is_datetime_tz():
+            return self.as_datetime_tz()
+        elif self.is_duration():
+            return self.as_duration()
+        elif self.is_struct():
+            return self.as_struct()
         else:
             raise TypeDBDriverException(ILLEGAL_STATE)
 
@@ -95,11 +106,8 @@ class _Value(Value, _Concept):
         return value_get_double(self.native_object)
 
     def as_decimal(self) -> Decimal:
-        native_decimal = value_is_decimal(self.native_object)
-        native_integer = native_decimal.get_integer()
-        native_fractional = native_decimal.get_fractional()
-        fractional_digits = len(str(native_fractional))
-        return Decimal(native_integer) + Decimal(native_fractional) / Decimal(10**fractional_digits)
+        native_decimal = value_get_decimal(self.native_object)
+        return Decimal(native_decimal.integer) + Decimal(native_decimal.fractional) / Decimal(10 ** self.DECIMAL_SCALE)
 
     def as_string(self) -> str:
         return value_get_string(self.native_object)
@@ -109,20 +117,18 @@ class _Value(Value, _Concept):
 
     def as_datetime(self) -> Datetime:
         native_datetime = value_get_datetime(self.native_object)
-        std_datetime = datetime.utcfromtimestamp(native_datetime.get_seconds())
-        return Datetime(std_datetime, native_datetime.get_subsec_nanos())
+        return Datetime(native_datetime.seconds, native_datetime.subsec_nanos)
 
     def as_datetime_tz(self) -> Datetime:
         native_datetime_tz = value_get_datetime_tz(self.native_object)
-        native_datetime = native_datetime_tz.get_datetime_in_nanos()
-        std_datetime_tz = datetime.fromtimestamp(native_datetime.get_seconds(), ZoneInfo(native_datetime_tz.get_zone_id()))
-        return Datetime(std_datetime_tz, native_datetime.get_subsec_nanos())
+        native_datetime = native_datetime_tz.datetime_in_nanos
+        return Datetime(native_datetime.seconds, native_datetime.subsec_nanos, native_datetime_tz.zone_id)
 
     def as_duration(self) -> Duration:
         native_duration = value_get_duration(self.native_object)
-        return Duration(months=native_duration.get_months(), days=native_duration.get_days(), nanos=native_duration.get_nanos() // 1000)
+        return Duration(months=native_duration.months, days=native_duration.days, nanos=native_duration.nanos // 1000)
 
-    def as_struct(self) -> {str, Optional[Value]}:
+    def as_struct(self) -> Value.STRUCT:
         result = {}
         for field_and_value in IteratorWrapper(value_get_struct(self.native_object), string_and_opt_value_iterator_next):
             field_name = field_and_value.get_string()

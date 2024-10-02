@@ -22,7 +22,7 @@ from decimal import Decimal
 from typing import Mapping, Optional, Union
 
 from typedb.api.concept.thing.attribute import Attribute
-from typedb.api.concept.value.value import Value, VALUE
+from typedb.api.concept.value.value import Value
 from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
@@ -40,7 +40,7 @@ class _Attribute(Attribute, _Thing):
     def get_type(self) -> _AttributeType:
         return wrap_attribute_type(attribute_get_type(self.native_object))
 
-    def get_value(self) -> VALUE:
+    def get_value(self) -> Value.VALUE:
         return self._value().get()
 
     def get_value_type(self) -> str:
@@ -103,7 +103,7 @@ class _Attribute(Attribute, _Thing):
     def as_duration(self) -> Duration:
         return self._value().as_duration()
 
-    def as_struct(self) -> {str, Optional[Value]}:
+    def as_struct(self) -> Value.STRUCT:
         return self._value().as_struct()
 
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:

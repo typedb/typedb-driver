@@ -18,17 +18,19 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Union
+from datetime import date
+from decimal import Decimal
+from typing import Dict, Optional, Union
 
 from typedb.api.concept.concept import Concept
 from typedb.common.duration import Duration
 from typedb.common.datetime import Datetime
 
-VALUE = Union[bool, int, float, str, datetime]
-
 
 class Value(Concept, ABC):
+
+    STRUCT = Dict[str, Optional["Value"]]
+    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
 
     @abstractmethod
     def get_value_type(self) -> str:
@@ -395,7 +397,7 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def as_struct(self) -> {str, Optional[Value]}:
+    def as_struct(self) -> STRUCT:
         """
         Returns a ``struct`` value of this value concept represented as a map from field names to values.
         If the value has another type, raises an exception.

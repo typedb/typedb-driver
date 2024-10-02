@@ -18,8 +18,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
+from typedb.api.concept.value.value import Value
 from typedb.api.concept.thing.thing import Thing
 from typedb.common.duration import Duration
 from typedb.common.datetime import Datetime
@@ -372,7 +373,7 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def as_struct(self) -> {str, Optional[Value]}:
+    def as_struct(self) -> Value.STRUCT:
         """
         Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names
         to values. If the value has another type, raises an exception.

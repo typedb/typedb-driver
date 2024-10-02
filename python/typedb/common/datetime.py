@@ -17,8 +17,11 @@
 
 from __future__ import annotations
 from datetime import date, datetime, tzinfo
+from typing import Optional
+from zoneinfo import ZoneInfo
 
-NANOS_IN_SECOND = 1_000_000_000
+NANOS_DIGITS = 9
+NANOS_IN_SECOND = 10 ** NANOS_DIGITS
 MICROS_IN_NANO = 1000
 
 
@@ -28,14 +31,41 @@ class Datetime:
     It is split to a timestamp (time zoned or not) based on the number of full seconds and a nanoseconds part.
     """
 
-    def __init__(self, sec_dt: datetime, subsec_nanos: int):
-        self._datetime_of_seconds = sec_dt
+    """
+    Initialise a new ``Datetime``.
+
+    :param timestamp_seconds: Amount of full seconds since the epoch.
+    :param subsec_nanos: A number of nanoseconds since the last seconds boundary. Should be between 0 and 999,999,999.
+    :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA.
+    :raises ValueError: If subsec_nanos is not within the valid range.
+    :raises ZoneInfoNotFoundError: If the tz_name is invalid.
+    """
+
+    def __init__(self, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str] = None,
+                 is_tz_aware_timestamp: bool = False):
+        if not (0 <= subsec_nanos < NANOS_IN_SECOND):
+            raise ValueError("subsec_nanos must be between 0 and 999,999,999")
+
+        self._tz_name = tz_name
+        if self._tz_name is None:
+            self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds)
+        else:
+            if is_tz_aware_timestamp:
+                self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds).replace(
+                    tzinfo=ZoneInfo(self._tz_name))
+            else:
+                self._datetime_of_seconds = datetime.fromtimestamp(timestamp_seconds, ZoneInfo(self._tz_name))
         self._nanos = subsec_nanos
 
     @property
     def datetime_of_seconds(self) -> datetime:
         """Return the original datetime.datetime part, containing data up to seconds."""
         return self._datetime_of_seconds
+
+    @property
+    def tz_name(self) -> Optional[str]:
+        """Return the timezone name."""
+        return self._tz_name
 
     @property
     def total_seconds(self) -> float:
@@ -88,6 +118,11 @@ class Datetime:
         return self._datetime_of_seconds.tzinfo
 
     @property
+    def tz_id(self) -> Optional[str]:
+        """Return the string representation of tz_id."""
+        return self._tz_id
+
+    @property
     def date(self) -> date:
         """Return the date part."""
         return self._datetime_of_seconds.date()
@@ -97,23 +132,65 @@ class Datetime:
         """Return the day of the week as an integer, where Monday == 0 ... Sunday == 6."""
         return self._datetime_of_seconds.weekday()
 
-    @property
+    @classmethod
+    def from_string(cls, datetime_str: str, tz_name: Optional[str] = None,
+                    datetime_fmt: str = "%Y-%m-%dT%H:%M:%S") -> Datetime:
+        """
+        Parses a Datetime object from a string with an optional nanoseconds part.
+
+        :param datetime_str: The timezone-aware datetime string to parse. Should either be "{datetime_fmt}" or
+                             "{datetime_fmt}.{nanos}". All digits of {nanos} after the 9th one are truncated!
+        :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g.
+        :param datetime_fmt: The format of the datetime string without the fractional (.%f) part. Default
+                             is "%Y-%m-%dT%H:%M:%S".
+        :return: A Datetime object.
+
+        Examples
+        --------
+
+        ::
+
+            Datetime.from_string("2024-09-21T18:34:22")
+            Datetime.from_string("2024-09-21T18:34:22.009257123")
+            Datetime.from_string("2024-09-21T18:34:22.009257123", "Europe/London")
+            Datetime.from_string("2024-09-21", datetime_fmt="%Y-%m-%d")
+            Datetime.from_string("21/09/24 18:34", "Europe/London", "%d/%m/%y %H:%M")
+        """
+        if '.' in datetime_str:
+            datetime_part, subsec_part = datetime_str.split('.')
+        else:
+            datetime_part, subsec_part = datetime_str, "0"
+
+        timestamp_sec = datetime.strptime(datetime_part, datetime_fmt).timestamp()
+        subsec_part = (subsec_part + "0" * NANOS_DIGITS)[:NANOS_DIGITS]
+        nanos = int(subsec_part)
+
+        return cls(timestamp_seconds=timestamp_sec, subsec_nanos=nanos, tz_name=tz_name, is_tz_aware_timestamp=True)
+
     def isoformat(self) -> str:
-        """Return the ISO format string of the datetime."""
-        return f"{self._datetime_of_seconds.isoformat()}.{self._nanos:09d}"
+        """Return the time formatted according to ISO."""
+        ISO_TZ_LEN = 6
+        datetime_part = self._datetime_of_seconds.isoformat()
+        tz_part = ""
+        if self._tz_name is not None:
+            tz_part = datetime_part[-ISO_TZ_LEN:]
+            datetime_part = datetime_part[:-ISO_TZ_LEN]
+        return f"{datetime_part}.{self._nanos:09d}{tz_part}"
 
     def __str__(self):
-        return f"{self.isoformat}"
+        return self.isoformat()
 
     def __repr__(self):
-        return f"Datetime({self._datetime_of_seconds!r}, {self._nanos})"
+        return f"Datetime({self._datetime_of_seconds!r}, {self._nanos}, {self._tz_name})"
 
     def __hash__(self):
-        return hash((self._datetime_of_seconds, self._nanos))
+        return hash((self._datetime_of_seconds, self._nanos, self._tz_name))
 
     def __eq__(self, other):
         if other is self:
             return True
         if not other or type(self) != type(other):
             return False
-        return self.datetime_of_seconds == other.datetime_of_seconds and self.nanos == other.nanos
+        return (self.datetime_of_seconds == other.datetime_of_seconds
+                and self.nanos == other.nanos
+                and self.tz_name == other.tz_name)

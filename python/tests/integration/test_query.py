@@ -15,11 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from datetime import datetime, date
+from decimal import Decimal
 from hamcrest import *
 import unittest
 from unittest import TestCase
 
 from typedb.driver import *
+from typedb.common.datetime import Datetime
 
 TYPEDB = "typedb"
 WRITE = TransactionType.WRITE
@@ -208,7 +211,8 @@ class TestQuery(TestCase):
                     a = row.get("a")
                     assert_that(a.is_attribute_type(), is_(True))
                     a_type = a.as_attribute_type()
-                    assert_that(a_type.get_value_type(), is_(equal_to(attribute_value_types[a_type.get_label().scoped_name()])))
+                    assert_that(a_type.get_value_type(),
+                                is_(equal_to(attribute_value_types[a_type.get_label().scoped_name()])))
                     count += 1
                 assert_that(count, is_(len(attribute_value_types)))
 
@@ -238,11 +242,42 @@ class TestQuery(TestCase):
                     attribute_name = attribute.get_type().get_label().scoped_name()
                     assert_that(attribute.get_value_type(), is_(attribute_value_types[attribute_name]))
                     value = attribute.get_value()
+                    expected = attribute_values[attribute_name]
 
-                    # TODO: add values check
+                    checked = 0
+                    if attribute.is_long():
+                        assert_that(value, is_(int(expected)))
+                        checked += 1
+                    elif attribute.is_string():
+                        assert_that(value, is_(expected[1:-1]))
+                        checked += 1
+                    elif attribute.is_boolean():
+                        assert_that(value, is_(bool(expected)))
+                        checked += 1
+                    elif attribute.is_double():
+                        assert_that(value, is_(float(expected)))
+                        checked += 1
+                    elif attribute.is_decimal():
+                        assert_that(value, is_(Decimal(expected)))
+                        checked += 1
+                    elif attribute.is_date():
+                        date_format = "%Y-%m-%d"
+                        assert_that(value, is_(datetime.strptime(expected, date_format).date()))
+                        checked += 1
+                    elif attribute.is_datetime():
+                        assert_that(value, is_(Datetime.from_string(expected)))
+                        checked += 1
+                    elif attribute.is_datetime_tz():
+                        expected_dt, expected_tz = expected.split(" ")
+                        assert_that(value, is_(Datetime.from_string(expected_dt, expected_tz)))
+                        checked += 1
+                    # elif attribute.is_duration():
+                    #     String[] valueValue = value.split("T")
+                    #     assert_that(new Duration(java.time.Period.parse(valueValue[0]), java.time.Duration.parse("PT" + valueValue[1])), is_(expected))
+                    #     checked += 1
+                    # TODO: Add structs!
 
-
-
+                    # assert_that(checked, is_(len(attribute_values))) # Make sure that every attribute is checked!
 
 
 if __name__ == "__main__":
