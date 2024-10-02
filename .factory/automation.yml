@@ -46,18 +46,18 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-# TODO: Temporarily build only the 3.0-reimplemented drivers:
-#        bazel build //...
+        # TODO: Temporarily build only the 3.0-reimplemented drivers:
+        # bazel build //...
         bazel build //rust/...
         bazel build //java/...
         bazel build //python/...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
-# TODO: Return these three steps when npm is reimplemented for 3.0
-#        cd nodejs
-#        npm install
-#        npm run lint
+        # TODO: Return these three steps when npm is reimplemented for 3.0
+        # cd nodejs
+        # npm install
+        # npm run lint
 
 #    build-dependency:
 #      image: vaticle-ubuntu-22.04
