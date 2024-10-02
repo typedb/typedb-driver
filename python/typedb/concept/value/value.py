@@ -126,7 +126,7 @@ class _Value(Value, _Concept):
 
     def as_duration(self) -> Duration:
         native_duration = value_get_duration(self.native_object)
-        return Duration(months=native_duration.months, days=native_duration.days, nanos=native_duration.nanos // 1000)
+        return Duration(months=native_duration.months, days=native_duration.days, nanos=native_duration.nanos)
 
     def as_struct(self) -> Value.STRUCT:
         result = {}

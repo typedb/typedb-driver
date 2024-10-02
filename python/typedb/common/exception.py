@@ -92,6 +92,7 @@ MISSING_DB_NAME = DriverErrorMessage(4, "Database name cannot be empty.")
 POSITIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value should be positive, was: '%d'.")
 CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(6, "TLS disabled but the Root CA path provided.")
 UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
+UNSUPPORTED_FOR_EARLIER_VERSIONS = DriverErrorMessage(8, "%s is not supported in python versions before %f")
 
 
 class ConceptErrorMessage(ErrorMessage):

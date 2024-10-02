@@ -23,6 +23,7 @@ from unittest import TestCase
 
 from typedb.driver import *
 from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 
 TYPEDB = "typedb"
 WRITE = TransactionType.WRITE
@@ -190,7 +191,7 @@ class TestQuery(TestCase):
             "birth-date": "2024-09-20",
             "birth-time": "1999-02-26T12:15:05",
             "current-time": "2024-09-20T16:40:05 Europe/Belfast",
-            "expiration": "P1Y6M7DT15H"
+            "expiration": "P1Y10M7DT15H44M5.00394892S"
         }
 
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
@@ -271,10 +272,9 @@ class TestQuery(TestCase):
                         expected_dt, expected_tz = expected.split(" ")
                         assert_that(value, is_(Datetime.from_string(expected_dt, expected_tz)))
                         checked += 1
-                    # elif attribute.is_duration():
-                    #     String[] valueValue = value.split("T")
-                    #     assert_that(new Duration(java.time.Period.parse(valueValue[0]), java.time.Duration.parse("PT" + valueValue[1])), is_(expected))
-                    #     checked += 1
+                    elif attribute.is_duration():
+                        assert_that(value, is_(Duration.from_string(expected)))
+                        checked += 1
                     # TODO: Add structs!
 
                     # assert_that(checked, is_(len(attribute_values))) # Make sure that every attribute is checked!

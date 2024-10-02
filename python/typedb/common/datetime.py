@@ -17,8 +17,13 @@
 
 from __future__ import annotations
 from datetime import date, datetime, tzinfo
+from sys import version_info
 from typing import Optional
 from zoneinfo import ZoneInfo
+
+from typedb.common.exception import TypeDBDriverException, UNSUPPORTED_FOR_EARLIER_VERSIONS
+
+TIMEZONE_MIN_VERSION = 9
 
 NANOS_DIGITS = 9
 NANOS_IN_SECOND = 10 ** NANOS_DIGITS
@@ -50,6 +55,9 @@ class Datetime:
         if self._tz_name is None:
             self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds)
         else:
+            if version_info.minor < TIMEZONE_MIN_VERSION: # TODO: Move somewhere?..
+                raise TypeDBDriverException(UNSUPPORTED_FOR_EARLIER_VERSIONS, ("Timezone", 3.9))
+
             if is_tz_aware_timestamp:
                 self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds).replace(
                     tzinfo=ZoneInfo(self._tz_name))
