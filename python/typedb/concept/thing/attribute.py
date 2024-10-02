@@ -115,7 +115,7 @@ class _Attribute(Attribute, _Thing):
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) is not type(other):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return self.get_type().get_label() == other.get_type().get_label() and self.get_value() == other.get_value()
 
