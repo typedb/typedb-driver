@@ -75,7 +75,10 @@ commands:
           ./configure --enable-optimizations
           make altinstall
           
-          ln -s /usr/bin/python3.9 /usr/bin/python3
+          #ln -s /usr/bin/python3.9 /usr/bin/python3
+          which findme
+          which python3.9
+          which python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -115,8 +118,8 @@ commands:
   install-pip-requirements:
     steps:
       - run: |
-          python3 -m pip install pip==21.3.1
-          python3 -m pip install -r python/requirements_dev.txt
+          python3.9 -m pip install pip==21.3.1
+          python3.9 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-snapshot-unix:
     steps:
