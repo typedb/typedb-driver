@@ -20,7 +20,7 @@ load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 typedb_behaviour_cpp_test(
     name = "test",
-    feature = "@vaticle_typedb_behaviour//driver:query.feature"
+    feature = "@vaticle_typedb_behaviour//driver:driver.feature"
 )
 
 checkstyle_test(

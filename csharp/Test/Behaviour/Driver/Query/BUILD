@@ -33,7 +33,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-core",
     ],
-    features = ["@vaticle_typedb_behaviour//driver:query.feature"],
+    features = ["@vaticle_typedb_behaviour//driver:driver.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
@@ -56,7 +56,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
-    features = ["@vaticle_typedb_behaviour//driver:query.feature"],
+    features = ["@vaticle_typedb_behaviour//driver:driver.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",

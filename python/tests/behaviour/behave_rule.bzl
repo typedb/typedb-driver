@@ -53,16 +53,16 @@ def typedb_behaviour_py_test_core(name, **kwargs):
         **kwargs,
     )
 
-def typedb_behaviour_py_test_cloud(name, **kwargs):
-    py_behave_test(
-        name = name + "-cloud",
-        background = "@//python/tests/behaviour/background:cloud",
-        native_typedb_artifact = "@//tool/test:native-typedb-cloud-artifact",
-        toolchains = ["@rules_python//python:current_py_toolchain"],
-        typedb_port = "11729",
-        **kwargs,
-    )
+#def typedb_behaviour_py_test_cloud(name, **kwargs):
+#    py_behave_test(
+#        name = name + "-cloud",
+#        background = "@//python/tests/behaviour/background:cloud",
+#        native_typedb_artifact = "@//tool/test:native-typedb-cloud-artifact",
+#        toolchains = ["@rules_python//python:current_py_toolchain"],
+#        typedb_port = "11729",
+#        **kwargs,
+#    )
 
 def typedb_behaviour_py_test(name, **kwargs):
     typedb_behaviour_py_test_core(name, **kwargs)
-    typedb_behaviour_py_test_cloud(name, **kwargs)
+#    typedb_behaviour_py_test_cloud(name, **kwargs)

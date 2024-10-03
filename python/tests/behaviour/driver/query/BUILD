@@ -21,7 +21,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test(
     name = "test",
-    feats = ["@vaticle_typedb_behaviour//driver:query.feature"],
+    feats = ["@vaticle_typedb_behaviour//driver:driver.feature"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",

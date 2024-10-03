@@ -23,7 +23,11 @@ from typing import Callable
 import parse
 from behave import register_type
 from behave.model import Table
-# TODO: We aren't consistently using typed parameters in step implementations - we should be.
+from datetime import date, datetime
+from decimal import Decimal
+
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 from typedb.driver import *
 
 
@@ -49,6 +53,13 @@ def parse_float(text: str) -> float:
 register_type(Float=parse_float)
 
 
+def parse_decimal(text: str) -> Decimal:
+    return Decimal(text)
+
+
+register_type(Decimal=parse_decimal)
+
+
 @parse.with_pattern("[\w_-]+")
 def parse_words(text):
     return text
@@ -57,22 +68,34 @@ def parse_words(text):
 register_type(Words=parse_words)
 
 
-@parse.with_pattern(r"\d\d\d\d-\d\d-\d\d(?: \d\d:\d\d:\d\d)?")
-def parse_datetime_pattern(text: str) -> datetime:
-    return parse_datetime(text)
+def parse_date(text: str) -> date:
+    datetime.strptime(text, "%Y-%m-%d").date()
+    return Datetime.from_string(text)
 
 
-def parse_datetime(text: str) -> datetime:
-    try:
-        return datetime.strptime(text, "%Y-%m-%dT%H:%M:%S")
-    except ValueError:
-        try:
-            return datetime.strptime(text, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            return datetime.strptime(text, "%Y-%m-%d")
+register_type(Date=parse_date)
 
 
-register_type(DateTime=parse_datetime)
+def parse_datetime(text: str) -> Datetime:
+    return Datetime.from_string(text)
+
+
+register_type(Datetime=parse_datetime)
+
+
+def parse_datetime_tz(text: str) -> Datetime:
+    expected_dt, expected_tz = text.split(" ")
+    return Datetime.from_string(expected_dt, expected_tz)
+
+
+register_type(DatetimeTZ=parse_datetime_tz)
+
+
+def parse_duration(text: str) -> Duration:
+    return Duration.from_string(text)
+
+
+register_type(Duration=parse_duration)
 
 
 class Kind(Enum):
@@ -82,7 +105,7 @@ class Kind(Enum):
 
 
 @parse.with_pattern(r"entity|attribute|relation")
-def parse_root_label(text: str) -> Kind:
+def parse_kind(text: str) -> Kind:
     if text == "entity":
         return Kind.ENTITY
     elif text == "attribute":
@@ -93,18 +116,10 @@ def parse_root_label(text: str) -> Kind:
         raise ValueError("Unrecognised kind: " + text)
 
 
-register_type(Kind=parse_root_label)
+register_type(Kind=parse_kind)
 
 
-@parse.with_pattern(r"[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
-def parse_scoped_label(text: str) -> Label:
-    return parse_label(text)
-
-
-register_type(ScopedLabel=parse_scoped_label)
-
-
-@parse.with_pattern(r"[a-zA-Z0-9:]+")
+@parse.with_pattern(r"[a-zA-Z0-9-_]+:([a-zA-Z0-9-_]+)?")
 def parse_label(text: str):
     return Label.of(*text.split(":"))
 
@@ -118,21 +133,6 @@ def parse_var(text: str):
 
 
 register_type(Var=parse_var)
-
-
-# @parse.with_pattern(r"long|double|string|boolean|datetime")
-# def parse_value_type(value: str) -> ValueType:
-#     mapping = {
-#         "long": ValueType.LONG,
-#         "double": ValueType.DOUBLE,
-#         "string": ValueType.STRING,
-#         "boolean": ValueType.BOOLEAN,
-#         "datetime": ValueType.DATETIME
-#     }
-#     return mapping[value]
-#
-#
-# register_type(ValueType=parse_value_type)
 
 
 @parse.with_pattern("read|write|schema")

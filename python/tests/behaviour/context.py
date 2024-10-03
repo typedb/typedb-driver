@@ -50,7 +50,6 @@ class Context(behave.runner.Context):
         # self.transaction_options: Optional[Options] = None
         self.things: dict[str, Thing] = {}
         self.answers: Optional[list[ConceptRow]] = None
-        self.fetch_answers: Optional[list[dict]] = None
         self.value_answer: Optional[Value] = None
         self.config = Config()
         self.option_setters = {}

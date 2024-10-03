@@ -26,7 +26,7 @@ checkstyle_test(
 
 typedb_behaviour_node_test(
     name = "test",
-    features = ["@vaticle_typedb_behaviour//driver:query.feature"],
+    features = ["@vaticle_typedb_behaviour//driver:driver.feature"],
     data = [
         "//nodejs/test/behaviour/connection/database:steps",
         "//nodejs/test/behaviour/connection/session:steps",
