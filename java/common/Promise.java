@@ -71,9 +71,9 @@ public class Promise<T> {
      * </pre>
      *
      * @param promise The supplier function to wrap into the promise
-     * @param fn The mapping function
+     * @param fn      The mapping function
      */
-    static public<T, U> Promise<U> map(Supplier<T> promise, Function<T, U> fn) {
+    static public <T, U> Promise<U> map(Supplier<T> promise, Function<T, U> fn) {
         return new Promise<>(() -> {
             T res = promise.get();
             if (res != null) return fn.apply(res);

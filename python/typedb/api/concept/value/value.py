@@ -18,20 +18,21 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import datetime
-from enum import Enum
-from typing import Mapping, Union
-
-from typedb.native_driver_wrapper import Object, Boolean, Long, Double, String, DateTime
+from datetime import date
+from decimal import Decimal
+from typing import Dict, Optional, Union
 
 from typedb.api.concept.concept import Concept
-from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 
 
 class Value(Concept, ABC):
+    STRUCT = Dict[str, Optional["Value"]]
+    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
 
     @abstractmethod
-    def get_value_type(self) -> ValueType:
+    def get_value_type(self) -> str:
         """
         Retrieves the ``ValueType`` of this value concept.
 
@@ -46,7 +47,7 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def get(self) -> Union[bool, int, float, str, datetime]:
+    def get(self) -> VALUE:
         """
         Retrieves the value which this value concept holds.
 
@@ -137,6 +138,22 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
+    def is_decimal(self) -> bool:
+        """
+        Returns ``True`` if the value which this value concept holds is of type ``decimal``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.is_decimal()
+        """
+        pass
+
+    @abstractmethod
     def is_string(self) -> bool:
         """
         Returns ``True`` if the value which this value concept holds is of type ``string``.
@@ -149,6 +166,22 @@ class Value(Concept, ABC):
         ::
 
             value.is_string()
+        """
+        pass
+
+    @abstractmethod
+    def is_date(self) -> bool:
+        """
+        Returns ``True`` if the value which this value concept holds is of type ``date``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.is_date()
         """
         pass
 
@@ -167,6 +200,56 @@ class Value(Concept, ABC):
             value.is_datetime()
         """
         pass
+
+    @abstractmethod
+    def is_datetime_tz(self) -> bool:
+        """
+        Returns ``True`` if the value which this value concept holds is of type ``datetime-tz``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.is_datetime_tz()
+        """
+        pass
+
+    @abstractmethod
+    def is_duration(self) -> bool:
+        """
+        Returns ``True`` if the value which this value concept holds is of type ``duration``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.is_duration()
+        """
+        pass
+
+    @abstractmethod
+    def is_struct(self) -> bool:
+        """
+        Returns ``True`` if the value which this value concept holds is of type ``struct``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.is_struct()
+        """
+        pass
+
+    # TODO: Could be useful to have isStruct(struct_name)
 
     @abstractmethod
     def as_boolean(self) -> bool:
@@ -217,6 +300,22 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
+    def as_decimal(self) -> Decimal:
+        """
+        Returns a ``decimal`` value of this value concept. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.as_decimal()
+        """
+        pass
+
+    @abstractmethod
     def as_string(self) -> str:
         """
         Returns a ``string`` value of this value concept. If the value has
@@ -233,7 +332,23 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def as_datetime(self) -> datetime:
+    def as_date(self) -> date:
+        """
+        Returns a timezone naive ``date`` value of this value concept. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.as_date()
+        """
+        pass
+
+    @abstractmethod
+    def as_datetime(self) -> Datetime:
         """
         Returns a timezone naive ``datetime`` value of this value concept. If the value has
         another type, raises an exception.
@@ -248,53 +363,50 @@ class Value(Concept, ABC):
         """
         pass
 
-
-class _ValueType:
-
-    def __init__(self, is_writable: bool, is_keyable: bool, native_object):
-        self._is_writable = is_writable
-        self._is_keyable = is_keyable
-        self._native_object = native_object
-
-    @property
-    def native_object(self):
-        return self._native_object
-
-    def is_writable(self) -> bool:
-        return self._is_writable
-
-    def is_keyable(self) -> bool:
-        return self._is_keyable
-
-    def __repr__(self):
-        return f"_ValueType(is_writable={self._is_writable}, is_keyable={self._is_keyable}, {self._native_object})"
-
-
-class ValueType(Enum):
-    """ TypeQL value types for attributes and value concepts. """
-    OBJECT = _ValueType(False, False, Object)
-    BOOLEAN = _ValueType(True, False, Boolean)
-    LONG = _ValueType(True, True, Long)
-    DOUBLE = _ValueType(True, False, Double)
-    STRING = _ValueType(True, True, String)
-    DATETIME = _ValueType(True, True, DateTime)
-
-    @property
-    def native_object(self):
-        return self.value.native_object
-
-    def __str__(self):
-        return self.name.lower()
-
-    def __repr__(self):
-        return str(self)
-
-    @staticmethod
-    def of(value_type: Union[Object, Boolean, Long, Double, String, DateTime]) -> ValueType:
+    @abstractmethod
+    def as_datetime_tz(self) -> Datetime:
         """
-        :meta private:
+        Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.as_datetime_tz()
         """
-        for type_ in ValueType:
-            if type_.native_object == value_type:
-                return type_
-        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
+        pass
+
+    @abstractmethod
+    def as_duration(self) -> Duration:
+        """
+        Returns a timezone naive ``duration`` value of this value concept. If the value has
+        another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.as_duration()
+        """
+        pass
+
+    @abstractmethod
+    def as_struct(self) -> STRUCT:
+        """
+        Returns a ``struct`` value of this value concept represented as a map from field names to values.
+        If the value has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.as_struct()
+        """
+        pass

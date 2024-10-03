@@ -15,19 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from collections.abc import Mapping as ABCMapping
-from typing import Iterable, Mapping, Union
-
-from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
-from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.concept_manager import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.thing.attribute import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.thing.entity import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.thing.relation import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.thing.thing import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.type.annotation import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.attribute_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.entity_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.relation_type import *  # noqa # pylint: disable=unused-import
@@ -35,21 +29,16 @@ from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused
 from typedb.api.concept.type.thing_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.driver import *
-from typedb.api.connection.credential import *
+# from typedb.api.connection.credential import *
 from typedb.api.connection.database import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.session import *  # noqa # pylint: disable=unused-import
+from typedb.api.connection.driver import *
+# from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
-from typedb.api.logic.explanation import *  # noqa # pylint: disable=unused-import
-from typedb.api.logic.logic_manager import *  # noqa # pylint: disable=unused-import
-from typedb.api.logic.rule import *  # noqa # pylint: disable=unused-import
-from typedb.api.query.query_manager import *  # noqa # pylint: disable=unused-import
-from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
+# from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
 from typedb.common.label import *  # noqa # pylint: disable=unused-import
-from typedb.common.transitivity import *  # noqa # pylint: disable=unused-import
 from typedb.connection.driver import _Driver
+
 
 # Repackaging these symbols allows them to be imported from "typedb.driver"
 
@@ -58,7 +47,7 @@ class TypeDB:
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod
-    def core_driver(address: str) -> TypeDBDriver:
+    def core_driver(address: str) -> Driver:
         """
         Creates a connection to TypeDB.
 
@@ -67,18 +56,18 @@ class TypeDB:
         """
         return _Driver([address])
 
-    @staticmethod
-    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
-        """
-        Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
-
-        :param addresses:
-        :param credential:
-        :return:
-        """
-        if isinstance(addresses, str):
-            return _Driver([addresses], credential)
-        elif isinstance(addresses, ABCMapping):
-            return _Driver(dict(addresses), credential)
-        else:
-            return _Driver(list(addresses), credential)
+    # @staticmethod
+    # def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential) -> Driver:
+    #     """
+    #     Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+    #
+    #     :param addresses:
+    #     :param credential:
+    #     :return:
+    #     """
+    #     if isinstance(addresses, str):
+    #         return _Driver([addresses], credential)
+    #     elif isinstance(addresses, ABCMapping):
+    #         return _Driver(dict(addresses), credential)
+    #     else:
+    #         return _Driver(list(addresses), credential)

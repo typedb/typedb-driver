@@ -23,18 +23,35 @@ import javax.annotation.CheckReturnValue;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+/**
+ * Represents an iterator over <code>ConceptRow</code>s returned as a server answer.
+ */
 public interface ConceptRowIterator extends QueryAnswer, Iterator<ConceptRow> {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default boolean isConceptRows() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default ConceptRowIterator asConceptRows() {
         return this;
     }
 
+    /**
+     * Creates a stream over <code>ConceptRow</code>s based on this iterator.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * answer.asConceptRows().stream();
+     * </pre>
+     */
     @CheckReturnValue
     Stream<ConceptRow> stream();
 }

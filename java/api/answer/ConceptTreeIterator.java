@@ -23,12 +23,21 @@ import javax.annotation.CheckReturnValue;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+/**
+ * Represents an iterator over <code>ConceptTree</code>s returned as a server answer.
+ */
 public interface ConceptTreeIterator extends QueryAnswer, Iterator<ConceptTree> {
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    default boolean isConceptTreesStream() {
+    default boolean isConceptTrees() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default ConceptTreeIterator asConceptTreesStream() {

@@ -21,12 +21,21 @@ package com.typedb.driver.api.answer;
 
 import javax.annotation.CheckReturnValue;
 
+/**
+ * Represents a simple Ok message as a server answer. Doesn't contain concepts.
+ */
 public interface OkQueryAnswer extends QueryAnswer {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default boolean isOk() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default OkQueryAnswer asOk() {

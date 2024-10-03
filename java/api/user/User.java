@@ -23,7 +23,7 @@ package com.typedb.driver.api.user;
 
 
 /**
- *  TypeDB user information
+ * TypeDB user information
  */
 //public interface User {
 //    /**

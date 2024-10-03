@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import Callable
 
 import parse
 from behave import register_type
@@ -74,28 +75,25 @@ def parse_datetime(text: str) -> datetime:
 register_type(DateTime=parse_datetime)
 
 
-class RootLabel(Enum):
+class Kind(Enum):
     ENTITY = 0,
     ATTRIBUTE = 1,
-    RELATION = 2,
-    THING = 3
+    RELATION = 2
 
 
-@parse.with_pattern(r"entity|attribute|relation|thing")
-def parse_root_label(text: str) -> RootLabel:
+@parse.with_pattern(r"entity|attribute|relation")
+def parse_root_label(text: str) -> Kind:
     if text == "entity":
-        return RootLabel.ENTITY
+        return Kind.ENTITY
     elif text == "attribute":
-        return RootLabel.ATTRIBUTE
+        return Kind.ATTRIBUTE
     elif text == "relation":
-        return RootLabel.RELATION
-    elif text == "thing":
-        return RootLabel.THING
+        return Kind.RELATION
     else:
-        raise ValueError("Unrecognised root label: " + text)
+        raise ValueError("Unrecognised kind: " + text)
 
 
-register_type(RootLabel=parse_root_label)
+register_type(Kind=parse_root_label)
 
 
 @parse.with_pattern(r"[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
@@ -114,17 +112,6 @@ def parse_label(text: str):
 register_type(Label=parse_label)
 
 
-@parse.with_pattern(r"(\s*([\w\-_]+,\s*)*[\w\-_]*\s*)")
-def parse_annotations(text: str) -> set[Annotation]:
-    try:
-        return {{"key": Annotation.key(), "unique": Annotation.unique()}[anno.strip()] for anno in text.split(",")}
-    except KeyError:
-        raise TypeDBDriverException(UNRECOGNISED_ANNOTATION)
-
-
-register_type(Annotations=parse_annotations)
-
-
 @parse.with_pattern(r"\$([a-zA-Z0-9]+)")
 def parse_var(text: str):
     return text
@@ -133,24 +120,26 @@ def parse_var(text: str):
 register_type(Var=parse_var)
 
 
-@parse.with_pattern(r"long|double|string|boolean|datetime")
-def parse_value_type(value: str) -> ValueType:
-    mapping = {
-        "long": ValueType.LONG,
-        "double": ValueType.DOUBLE,
-        "string": ValueType.STRING,
-        "boolean": ValueType.BOOLEAN,
-        "datetime": ValueType.DATETIME
-    }
-    return mapping[value]
+# @parse.with_pattern(r"long|double|string|boolean|datetime")
+# def parse_value_type(value: str) -> ValueType:
+#     mapping = {
+#         "long": ValueType.LONG,
+#         "double": ValueType.DOUBLE,
+#         "string": ValueType.STRING,
+#         "boolean": ValueType.BOOLEAN,
+#         "datetime": ValueType.DATETIME
+#     }
+#     return mapping[value]
+#
+#
+# register_type(ValueType=parse_value_type)
 
 
-register_type(ValueType=parse_value_type)
-
-
-@parse.with_pattern("read|write")
+@parse.with_pattern("read|write|schema")
 def parse_transaction_type(value: str) -> TransactionType:
-    return TransactionType.READ if value == "read" else TransactionType.WRITE
+    return TransactionType.READ if value == "read" \
+        else TransactionType.WRITE if value == "write" \
+        else TransactionType.SCHEMA
 
 
 register_type(TransactionType=parse_transaction_type)
@@ -185,3 +174,28 @@ def parse_table(table: Table) -> list[list[tuple[str, str]]]:
         ]
     """
     return [[(table.headings[idx], row[idx]) for idx in range(len(row))] for row in table.rows]
+
+
+class MayError:
+
+    def __init__(self, may_error: bool):
+        self.may_error = may_error
+
+    def check(self, func: Callable):
+        if self.may_error:
+            assert_that(func, raises(TypeDBDriverException))
+        else:
+            func()
+
+
+@parse.with_pattern("; fails|; parsing fails|")
+def parse_may_error(value: str) -> MayError:
+    if value == "":
+        return MayError(False)
+    elif value in ("; fails", "; parsing fails"):
+        return MayError(True)
+    else:
+        raise ValueError("Unrecognised MayError: " + value)
+
+
+register_type(MayError=parse_may_error)

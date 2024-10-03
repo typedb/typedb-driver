@@ -22,7 +22,6 @@ from typing import Any, Generic, TypeVar
 
 from typedb.common.exception import TypeDBDriverException
 
-
 T = TypeVar("T")
 
 

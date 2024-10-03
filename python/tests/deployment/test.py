@@ -20,67 +20,40 @@ from unittest import TestCase
 
 from typedb.driver import *
 
-SCHEMA = SessionType.SCHEMA
-DATA = SessionType.DATA
+TYPEDB = "typedb"
 READ = TransactionType.READ
 WRITE = TransactionType.WRITE
+SCHEMA = TransactionType.SCHEMA
 
 
-class TestDriverPython(TestCase):
+class TestDeployedPythonDriver(TestCase):
     """
     Very basic tests to ensure no error occur when performing simple operations with the typedb-driver distribution
     """
 
     @classmethod
     def setUpClass(cls):
-        super(TestDriverPython, cls).setUpClass()
+        super(TestDeployedPythonDriver, cls).setUpClass()
         global driver
         driver = TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS)
 
     @classmethod
     def tearDownClass(cls):
-        super(TestDriverPython, cls).tearDownClass()
+        super(TestDeployedPythonDriver, cls).tearDownClass()
         global driver
         driver.close()
+        print("Driver is tested successfully!")
 
     def setUp(self):
-        if not driver.databases.contains("typedb"):
-            driver.databases.create("typedb")
+        if not driver.databases.contains(TYPEDB):
+            driver.databases.create(TYPEDB)
 
-    def test_database(self):
-        if driver.databases.contains("typedb"):
-            driver.databases.get("typedb").delete()
-        driver.databases.create("typedb")
-        self.assertTrue(driver.databases.contains("typedb"))
-
-    def test_session(self):
-        session = driver.session("typedb", SCHEMA)
-        session.close()
-
-    def test_transaction(self):
-        with driver.session("typedb", SCHEMA) as session:
-            with session.transaction(WRITE) as tx:
-                pass
-
-    def test_define_and_undef_relation_type(self):
-        with driver.session("typedb", SCHEMA) as session:
-            with session.transaction(WRITE) as tx:
-                tx.query.define("define lionfight sub relation, relates victor, relates loser;")
-                lionfight_type = tx.concepts.get_relation_type("lionfight").resolve()
-                print("define: " + lionfight_type.get_label().name)
-                tx.query.undefine("undefine lionfight sub relation;")
-                tx.commit()
-
-    def test_insert_some_entities(self):
-        with driver.session("typedb", SCHEMA) as session:
-            with session.transaction(WRITE) as tx:
-                tx.query.define("define lion sub entity;")
-                tx.commit()
-        with driver.session("typedb", DATA) as session:
-            with session.transaction(WRITE) as tx:
-                for answer in tx.query.insert("insert $a isa lion; $b isa lion; $c isa lion;"):
-                    print("insert: " + str(answer))
-                    tx.commit()
+    def test_query(self):
+        transaction = driver.transaction(TYPEDB, SCHEMA)
+        answer = transaction.query("define entity person;").resolve()
+        self.assertIsNotNone(answer)
+        self.assertTrue(answer.is_ok())
+        transaction.close()
 
 
 if __name__ == "__main__":

@@ -17,9 +17,8 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Mapping, Union, TYPE_CHECKING
+from abc import ABC
+from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, INVALID_CONCEPT_CASTING
 

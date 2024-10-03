@@ -15,17 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import os
 import unittest
 from unittest import TestCase
 
 from hamcrest import *
-
 from typedb.driver import *
 
 TYPEDB = "typedb"
-DATA = SessionType.DATA
-WRITE = TransactionType.WRITE
 
 
 class TestDebug(TestCase):
@@ -42,4 +38,3 @@ class TestDebug(TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-

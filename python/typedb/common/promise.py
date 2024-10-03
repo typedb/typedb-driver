@@ -17,9 +17,8 @@
 
 from typing import Callable, Generic, TypeVar
 
-from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
-
 from typedb.common.exception import TypeDBDriverException
+from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
 
 T = TypeVar('T')
 U = TypeVar('U')

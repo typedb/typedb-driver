@@ -86,12 +86,12 @@ class DriverErrorMessage(ErrorMessage):
 
 
 DRIVER_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
-SESSION_CLOSED = DriverErrorMessage(2, "The session has been closed and no further operation is allowed.")
-TRANSACTION_CLOSED = DriverErrorMessage(3, "The transaction has been closed and no further operation is allowed.")
-DATABASE_DELETED = DriverErrorMessage(4, "The database '%s' has been deleted and no further operation is allowed.")
-MISSING_DB_NAME = DriverErrorMessage(5, "Database name cannot be empty.")
-POSITIVE_VALUE_REQUIRED = DriverErrorMessage(6, "Value should be positive, was: '%d'.")
-CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(7, "TLS disabled but the Root CA path provided.")
+TRANSACTION_CLOSED = DriverErrorMessage(2, "The transaction has been closed and no further operation is allowed.")
+DATABASE_DELETED = DriverErrorMessage(3, "The database '%s' has been deleted and no further operation is allowed.")
+MISSING_DB_NAME = DriverErrorMessage(4, "Database name cannot be empty.")
+POSITIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value should be positive, was: '%d'.")
+CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(6, "TLS disabled but the Root CA path provided.")
+UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
 
 
 class ConceptErrorMessage(ErrorMessage):
@@ -105,17 +105,8 @@ class ConceptErrorMessage(ErrorMessage):
 
 
 INVALID_CONCEPT_CASTING = ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.")
-MISSING_IID = ConceptErrorMessage(2, "IID cannot be null or empty.")
-MISSING_LABEL = ConceptErrorMessage(3, "Label cannot be null or empty.")
-MISSING_VARIABLE = ConceptErrorMessage(4, "Variable name cannot be null or empty.")
-MISSING_VALUE = ConceptErrorMessage(5, "Value cannot be null or empty.")
-NONEXISTENT_EXPLAINABLE_CONCEPT = ConceptErrorMessage(6, "The concept identified by '%s' is not explainable.")
-NONEXISTENT_EXPLAINABLE_OWNERSHIP = ConceptErrorMessage(7, "The ownership by owner '%s' of attribute '%s' "
-                                                        "is not explainable.")
-GET_HAS_WITH_MULTIPLE_FILTERS = ConceptErrorMessage(8, "Only one filter can be applied at a time to get_has. "
-                                                    "The possible filters are: [attribute_type, attribute_types, "
-                                                    "annotations].")
-UNRECOGNISED_ANNOTATION = ConceptErrorMessage(9, "The annotation '%s' is not recognised.")
+INVALID_QUERY_ANSWER_CASTING = ConceptErrorMessage(2, "Invalid query answer conversion from '%s' to '%s'.")
+MISSING_VARIABLE = ConceptErrorMessage(3, "Variable name cannot be null or empty.")
 
 
 class QueryErrorMessage(ErrorMessage):

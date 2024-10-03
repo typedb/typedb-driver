@@ -62,7 +62,7 @@ public class Label {
      * </pre>
      *
      * @param scope Label scope
-     * @param name Label name
+     * @param name  Label name
      */
     public static Label of(String scope, String name) {
         return new Label(scope, name);

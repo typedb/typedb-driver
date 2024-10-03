@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'typedb-driver'
-copyright = '2023, Vaticle'
-author = 'Vaticle'
+copyright = '2024, Vaticle'
+author = 'TypeDB'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

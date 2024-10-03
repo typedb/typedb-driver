@@ -25,27 +25,6 @@ py_library(
     deps = [],
 )
 
-typedb_behaviour_py_test(
-    name = "test",
-    feats = ["@vaticle_typedb_behaviour//connection:session.feature"],
-    steps = [
-        ":steps",
-        "//python/tests/behaviour/connection:steps",
-        "//python/tests/behaviour/connection/database:steps",
-        "//python/tests/behaviour/connection/transaction:steps",
-        "//python/tests/behaviour/query:steps",
-    ],
-    deps = [
-        "//python:driver_python",
-        "//python/tests/behaviour/config:parameters",
-        "//python/tests/behaviour:context",
-        "//python/tests/behaviour/util:util",
-        "//python/tests/behaviour/background",
-    ],
-    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "small",
-)
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

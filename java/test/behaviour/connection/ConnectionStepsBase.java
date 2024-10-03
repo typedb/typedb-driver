@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour.connection;
 
 //import com.typedb.core.tool.runner.TypeDBSingleton;
+
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
@@ -43,7 +44,7 @@ public abstract class ConnectionStepsBase {
     public static Driver driver;
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
-//    public static Options transactionOptions;
+    //    public static Options transactionOptions;
     static boolean isBeforeAllRan = false;
 
 //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(

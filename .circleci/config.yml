@@ -64,9 +64,9 @@ commands:
         type: string
     steps:
       - run: |
-          amazon-linux-extras install python3.8 java-openjdk11 -y
+          amazon-linux-extras install python3.9 java-openjdk11 -y
           yum install -y git tar gcc gcc-c++ file lsof which procps
-          ln -s /usr/bin/python3.8 /usr/bin/python3
+          ln -s /usr/bin/python3.9 /usr/bin/python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -90,7 +90,7 @@ commands:
         type: string
     steps:
       - run: |
-          brew install python@3.8
+          brew install python@3.9
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -115,7 +115,6 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
@@ -126,11 +125,11 @@ commands:
       - install-pip-requirements
       - run: |
           tool/test/start-core-server.sh
-          python3.8 -m pip install wheel 
-          python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          python3.9 -m pip install wheel 
+          python3.9 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 5
           pushd python/tests/deployment/
-            python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+            python3.9 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
@@ -139,15 +138,15 @@ commands:
     steps:
       - install-brew-rosetta
       - run: |
-          /usr/local/bin/brew install python@3.8
+          /usr/local/bin/brew install python@3.9
           tool/test/start-core-server.sh
-          /usr/local/bin/python3.8 -m pip install wheel 
-          /usr/local/bin/python3.8 -m pip install pip==21.3.1
-          /usr/local/bin/python3.8 -m pip install -r python/requirements_dev.txt
-          /usr/local/bin/python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          /usr/local/bin/python3.9 -m pip install wheel 
+          /usr/local/bin/python3.9 -m pip install pip==21.3.1
+          /usr/local/bin/python3.9 -m pip install -r python/requirements_dev.txt
+          /usr/local/bin/python3.9 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 5
           pushd python/tests/deployment/
-            /usr/local/bin/python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+            /usr/local/bin/python3.9 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
@@ -158,7 +157,6 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip38 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
@@ -500,7 +498,7 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
 
-#      - deploy-pip-snapshot-unix
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -522,7 +520,7 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
 
-#      - deploy-pip-snapshot-unix
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -544,7 +542,7 @@ jobs:
       - install-bazel-brew:
           bazel-arch: arm64
 
-#      - deploy-pip-snapshot-unix
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -568,7 +566,7 @@ jobs:
       - install-bazel-brew:
           bazel-arch: amd64
 
-#      - deploy-pip-snapshot-unix
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -591,7 +589,7 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
 
-#      - run: .circleci\windows\python\deploy_snapshot.bat
+      - run: .circleci\windows\python\deploy_snapshot.bat
 
       - run: .circleci\windows\java\deploy_snapshot.bat
 
@@ -627,7 +625,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-#      - test-pip-snapshot-unix
+      - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
 #      - install-dotnet-linux
@@ -640,7 +638,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-#      - test-pip-snapshot-unix
+      - test-pip-snapshot-unix
       - install-maven-linux
       - test-maven-snapshot-unix
 #      - install-dotnet-linux
@@ -652,7 +650,7 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-#      - test-pip-snapshot-unix
+      - test-pip-snapshot-unix
       - install-maven-mac
       - test-maven-snapshot-unix
 #      - install-dotnet-mac
@@ -665,7 +663,7 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-#      - test-pip-snapshot-mac-rosetta
+      - test-pip-snapshot-mac-rosetta
       - install-maven-mac-rosetta
       - test-maven-snapshot-mac-rosetta
 #      - install-dotnet-mac-rosetta
@@ -677,7 +675,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-#      - run: .circleci\windows\python\test_deploy_snapshot.bat
+      - run: .circleci\windows\python\test_deploy_snapshot.bat
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 #      - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
@@ -700,7 +698,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-#      - deploy-pip-release-unix
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
 #      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
@@ -714,7 +712,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-#      - deploy-pip-release-unix
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
 #      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
@@ -728,7 +726,7 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-#      - deploy-pip-release-unix
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
 #      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
@@ -741,7 +739,7 @@ jobs:
       - macos/install-rosetta
       - install-bazel-brew:
           bazel-arch: amd64
-#      - deploy-pip-release-unix
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
 #      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
@@ -753,7 +751,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-#      - run: .circleci\windows\python\deploy_release.bat
+      - run: .circleci\windows\python\deploy_release.bat
       - run: .circleci\windows\java\deploy_release.bat
 #      - run: .circleci\windows\clib\deploy_release.bat
 #      - run: .circleci\windows\cpp\deploy_release.bat
@@ -976,7 +974,7 @@ workflows:
             - deploy-release-windows-x86_64
             - deploy-release-any
 #            - deploy-release-dotnet-any
-#
+
 #      - sync-dependencies:
 #          filters:
 #            branches:

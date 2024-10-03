@@ -15,14 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import os
+import time
 from time import sleep
 
 from behave import *
-
 from tests.behaviour.context import Context
-
-import os
-import time
 
 
 @step("set time-zone is: {time_zone_label}")

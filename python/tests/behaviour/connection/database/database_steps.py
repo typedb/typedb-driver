@@ -20,11 +20,10 @@ from functools import partial
 
 from behave import *
 from hamcrest import *
-from typedb.driver import *
-
 from tests.behaviour.config.parameters import parse_list
 from tests.behaviour.context import Context
 from tests.behaviour.util.util import assert_collections_equal
+from typedb.driver import *
 
 
 def create_databases(context: Context, names: list[str]):

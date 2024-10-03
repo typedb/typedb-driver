@@ -17,18 +17,12 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
-from typedb.native_driver_wrapper import database_get_name, database_schema, database_delete, database_rule_schema, \
-    database_type_schema, ReplicaInfo, replica_info_get_server, replica_info_is_primary, replica_info_is_preferred, \
-    replica_info_get_term, database_get_replicas_info, database_get_primary_replica_info, \
-    database_get_preferred_replica_info, replica_info_iterator_next, Database as NativeDatabase, \
-    TypeDBDriverExceptionNative
-
-from typedb.api.connection.database import Database, Replica
+from typedb.api.connection.database import Database
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
-from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.native_driver_wrapper import database_get_name, database_schema, database_delete, database_type_schema, \
+    Database as NativeDatabase, \
+    TypeDBDriverExceptionNative
 
 
 class _Database(Database, NativeWrapper[NativeDatabase]):
@@ -55,12 +49,6 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def rule_schema(self) -> str:
-        try:
-            return database_rule_schema(self.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
-
     def type_schema(self) -> str:
         try:
             return database_type_schema(self.native_object)
@@ -74,22 +62,22 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def replicas(self) -> set[Replica]:
-        try:
-            repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
-            return set(_Database.Replica(replica_info) for replica_info in repl_iter)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
-
-    def primary_replica(self) -> Optional[Replica]:
-        if res := database_get_primary_replica_info(self.native_object):
-            return _Database.Replica(res)
-        return None
-
-    def preferred_replica(self) -> Optional[Replica]:
-        if res := database_get_preferred_replica_info(self.native_object):
-            return _Database.Replica(res)
-        return None
+    # def replicas(self) -> set[Replica]:
+    #     try:
+    #         repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
+    #         return set(_Database.Replica(replica_info) for replica_info in repl_iter)
+    #     except TypeDBDriverExceptionNative as e:
+    #         raise TypeDBDriverException.of(e)
+    #
+    # def primary_replica(self) -> Optional[Replica]:
+    #     if res := database_get_primary_replica_info(self.native_object):
+    #         return _Database.Replica(res)
+    #     return None
+    #
+    # def preferred_replica(self) -> Optional[Replica]:
+    #     if res := database_get_preferred_replica_info(self.native_object):
+    #         return _Database.Replica(res)
+    #     return None
 
     def __str__(self):
         return self.name
@@ -97,22 +85,22 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
     def __repr__(self):
         return f"Database('{str(self)}')"
 
-    class Replica(Replica):
-
-        def __init__(self, replica_info: ReplicaInfo):
-            self._info = replica_info
-
-        def database(self) -> Database:
-            pass
-
-        def server(self) -> str:
-            return replica_info_get_server(self._info)
-
-        def is_primary(self) -> bool:
-            return replica_info_is_primary(self._info)
-
-        def is_preferred(self) -> bool:
-            return replica_info_is_preferred(self._info)
-
-        def term(self) -> int:
-            return replica_info_get_term(self._info)
+    # class Replica(Replica):
+    #
+    #     def __init__(self, replica_info: ReplicaInfo):
+    #         self._info = replica_info
+    #
+    #     def database(self) -> Database:
+    #         pass
+    #
+    #     def server(self) -> str:
+    #         return replica_info_get_server(self._info)
+    #
+    #     def is_primary(self) -> bool:
+    #         return replica_info_is_primary(self._info)
+    #
+    #     def is_preferred(self) -> bool:
+    #         return replica_info_is_preferred(self._info)
+    #
+    #     def term(self) -> int:
+    #         return replica_info_get_term(self._info)

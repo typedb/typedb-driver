@@ -57,7 +57,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
 
     private static com.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type/*, Options options*/) {
         try {
-            return transaction_new(((DriverImpl)driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
+            return transaction_new(((DriverImpl) driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

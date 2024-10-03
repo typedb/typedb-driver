@@ -51,19 +51,19 @@ public class Util {
     }
 
     public static boolean JSONListMatches(List<JSON> lhs, List<JSON> rhs) {
-            if (lhs.size() != rhs.size()) return false;
-            Set<Integer> rhsMatches = new HashSet<>();
-            for (JSON lhsItem: lhs) {
-                for (int i = 0; i < rhs.size(); i++) {
-                    if (rhsMatches.contains(i)) continue;
-                    JSON rhsItem = rhs.get(i);
-                    if (JSONMatches(lhsItem, rhsItem)) {
-                        rhsMatches.add(i);
-                        break;
-                    }
+        if (lhs.size() != rhs.size()) return false;
+        Set<Integer> rhsMatches = new HashSet<>();
+        for (JSON lhsItem : lhs) {
+            for (int i = 0; i < rhs.size(); i++) {
+                if (rhsMatches.contains(i)) continue;
+                JSON rhsItem = rhs.get(i);
+                if (JSONMatches(lhsItem, rhsItem)) {
+                    rhsMatches.add(i);
+                    break;
                 }
             }
-            return rhsMatches.size() == rhs.size();
+        }
+        return rhsMatches.size() == rhs.size();
     }
 
     public static boolean JSONMatches(JSON lhs, JSON rhs) {

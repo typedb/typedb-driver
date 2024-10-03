@@ -19,11 +19,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_driver_wrapper import entity_get_type
-
 from typedb.api.concept.thing.entity import Entity
 from typedb.concept.concept_factory import wrap_entity_type
 from typedb.concept.thing.thing import _Thing
+from typedb.native_driver_wrapper import entity_get_type, entity_get_iid
 
 if TYPE_CHECKING:
     from typedb.concept.type.entity_type import _EntityType
@@ -33,3 +32,16 @@ class _Entity(Entity, _Thing):
 
     def get_type(self) -> _EntityType:
         return wrap_entity_type(entity_get_type(self.native_object))
+
+    def get_iid(self) -> str:
+        return entity_get_iid(self.native_object)
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self.get_iid() == other.get_iid()
+
+    def __hash__(self):
+        return hash(self.get_iid())

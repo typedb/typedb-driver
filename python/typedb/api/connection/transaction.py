@@ -19,13 +19,12 @@ from __future__ import annotations
 
 import enum
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from typedb.api.concept.concept_manager import ConceptManager
-    from typedb.api.logic.logic_manager import LogicManager
-    from typedb.api.connection.options import TypeDBOptions
-    from typedb.api.query.query_manager import QueryManager
+
+# from typing import TYPE_CHECKING
+#
+# if TYPE_CHECKING:
+# from typedb.api.connection.options import Options
 
 
 class TransactionType(enum.Enum):
@@ -36,10 +35,11 @@ class TransactionType(enum.Enum):
     --------
     ::
 
-       session.transaction(TransactionType.READ)
+       driver.transaction(database, TransactionType.READ)
     """
     READ = 0
     WRITE = 1
+    SCHEMA = 2
 
     def is_read(self) -> bool:
         return self is TransactionType.READ
@@ -47,8 +47,11 @@ class TransactionType(enum.Enum):
     def is_write(self) -> bool:
         return self is TransactionType.WRITE
 
+    def is_schema(self) -> bool:
+        return self is TransactionType.SCHEMA
 
-class TypeDBTransaction(ABC):
+
+class Transaction(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:
@@ -67,41 +70,33 @@ class TypeDBTransaction(ABC):
 
     @property
     @abstractmethod
-    def transaction_type(self) -> TransactionType:
+    def type(self) -> TransactionType:
         """
-        The transaction's type (READ or WRITE)
-        """
-        pass
-
-    @property
-    @abstractmethod
-    def options(self) -> TypeDBOptions:
-        """
-        The options for the transaction
+        The transaction's type (READ, WRITE, or SCHEMA)
         """
         pass
 
-    @property
-    @abstractmethod
-    def concepts(self) -> ConceptManager:
-        """
-        The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
-        """
-        pass
+    # @property
+    # @abstractmethod
+    # def options(self) -> Options:
+    #     """
+    #     The options for the transaction
+    #     """
+    #     pass
 
-    @property
     @abstractmethod
-    def logic(self) -> LogicManager:
+    def query(self, query: str) -> Promise[QueryAnswer]:
         """
-        The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
-        """
-        pass
+        Execute a TypeQL query in this transaction.
 
-    @property
-    @abstractmethod
-    def query(self) -> QueryManager:
-        """
-        The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+        :param query: The query to execute.
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.query("define entity person;")
         """
         pass
 

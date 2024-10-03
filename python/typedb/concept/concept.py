@@ -19,11 +19,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from typedb.native_driver_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
-
 from typedb.api.concept.concept import Concept
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.native_driver_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
 
 
 class _Concept(Concept, NativeWrapper[NativeConcept], ABC):

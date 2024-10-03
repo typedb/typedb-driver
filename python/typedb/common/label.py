@@ -27,6 +27,7 @@ class Label:
     It consists of an optional ``scope``, and a ``name``, represented ``scope:name``.
     The scope is used only used to distinguish between role-types of the same name declared in different relation types.
     """
+
     def __init__(self, scope: Optional[str], name: str):
         self._scope = scope
         self._name = name
@@ -87,6 +88,6 @@ class Label:
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) != type(other):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return self.scope == other.scope and self.name == other.name

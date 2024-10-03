@@ -21,10 +21,9 @@ from typing import Callable
 
 from behave import *
 from hamcrest import *
-from typedb.driver import *
-
 from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
 from tests.behaviour.context import Context
+from typedb.driver import *
 
 
 def for_each_session_open_transaction_of_type(context: Context, transaction_types: list[TransactionType]):
@@ -70,16 +69,17 @@ def step_impl(context: Context, transaction_type):
 # TODO: transaction(s) in other implementations, simplify
 @step("for each session, open transactions of type; throws exception")
 def step_impl(context: Context):
-    open_transactions_of_type_throws_exception(context, list(map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
+    open_transactions_of_type_throws_exception(context, list(
+        map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
 
 
-def for_each_session_transactions_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
+def for_each_session_transactions_are(context: Context, assertion: Callable[[Transaction], None]):
     for session in context.sessions:
         for transaction in context.sessions_to_transactions[session]:
             assertion(transaction)
 
 
-def assert_transaction_null(transaction: TypeDBTransaction, is_null: bool):
+def assert_transaction_null(transaction: Transaction, is_null: bool):
     assert_that(transaction is None, is_(is_null))
 
 
@@ -91,7 +91,7 @@ def step_impl(context: Context, is_null):
     for_each_session_transactions_are(context, lambda tx: assert_transaction_null(tx, is_null))
 
 
-def assert_transaction_open(transaction: TypeDBTransaction, is_open: bool):
+def assert_transaction_open(transaction: Transaction, is_open: bool):
     assert_that(transaction.is_open(), is_(is_open))
 
 
@@ -108,9 +108,11 @@ def step_impl(context: Context, is_open):
 def step_impl(context: Context):
     context.tx().commit()
 
+
 @step("session transaction closes")
 def step_impl(context: Context):
     context.tx().close()
+
 
 @step("session transaction commits; throws exception")
 @step("transaction commits; throws exception")
@@ -161,7 +163,7 @@ def for_each_session_transaction_has_type(context: Context, transaction_types: l
         assert_that(transactions, has_length(len(transaction_types)))
         transactions_iterator = iter(transactions)
         for transaction_type in transaction_types:
-            assert_that(next(transactions_iterator).transaction_type, is_(transaction_type))
+            assert_that(next(transactions_iterator).type, is_(transaction_type))
 
 
 # NOTE: behave ignores trailing colons in feature files
@@ -193,10 +195,11 @@ def step_impl(context: Context):
         for session in context.sessions:
             context.sessions_to_transactions_parallel[session] = []
             for type_ in types:
-                context.sessions_to_transactions_parallel[session].append(executor.submit(partial(session.transaction, type_)))
+                context.sessions_to_transactions_parallel[session].append(
+                    executor.submit(partial(session.transaction, type_)))
 
 
-def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[TypeDBTransaction], None]):
+def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[Transaction], None]):
     for session in context.sessions:
         for future_transaction in context.sessions_to_transactions_parallel[session]:
             assertion(future_transaction.result())
@@ -222,7 +225,7 @@ def step_impl(context: Context):
         assert_that(future_transactions, has_length(len(types)))
         future_transactions_iter = iter(future_transactions)
         for type_ in types:
-            assert_that(next(future_transactions_iter).result().transaction_type, is_(type_))
+            assert_that(next(future_transactions_iter).result().type, is_(type_))
 
 
 ############################################

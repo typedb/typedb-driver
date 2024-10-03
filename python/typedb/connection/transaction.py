@@ -19,62 +19,55 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_commit, \
+from typedb.api.answer.query_answer import QueryAnswer
+from typedb.api.connection.transaction import Transaction
+from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, MISSING_QUERY, TypeDBException
+from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.promise import Promise
+from typedb.concept.answer.query_answer_factory import wrap_query_answer
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
+    transaction_commit, \
     transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
+    query_answer_promise_resolve, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
-from typedb.api.connection.options import TypeDBOptions
-from typedb.api.connection.transaction import TypeDBTransaction
-from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
-from typedb.common.native_wrapper import NativeWrapper
-from typedb.concept.concept_manager import _ConceptManager
-from typedb.logic.logic_manager import _LogicManager
-from typedb.query.query_manager import _QueryManager
-
 if TYPE_CHECKING:
-    from typedb.connection.session import _Session
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
 
-class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
+class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
-    def __init__(self, session: _Session, transaction_type: TransactionType, options: TypeDBOptions = None):
-        if not options:
-            options = TypeDBOptions()
-        self._transaction_type = transaction_type
-        self._options = options
+    def __init__(self, driver: Driver, database_name: str,
+                 transaction_type: TransactionType):  # , options: Options = None
+        # if not options:
+        #     options = Options()
+        self._type = transaction_type
+        # self._options = options
         try:
-            super().__init__(transaction_new(session.native_object, transaction_type.value, options.native_object))
+            super().__init__(
+                transaction_new(driver.native_object, database_name, transaction_type.value))  # , options.native_object
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
-        self._concept_manager = _ConceptManager(self._native_object)
-        self._query_manager = _QueryManager(self._native_object)
-        self._logic_manager = _LogicManager(self._native_object)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(TRANSACTION_CLOSED)
 
     @property
-    def transaction_type(self) -> TransactionType:
-        return self._transaction_type
+    def type(self) -> TransactionType:
+        return self._type
 
-    @property
-    def options(self) -> TypeDBOptions:
-        return self._options
+    # @property
+    # def options(self) -> Options:
+    #     return self._options
 
-    @property
-    def concepts(self) -> _ConceptManager:
-        return self._concept_manager
+    def query(self, query: str) -> Promise[QueryAnswer]:
+        if not query or query.isspace():
+            raise TypeDBDriverException(MISSING_QUERY)
 
-    @property
-    def logic(self) -> _LogicManager:
-        return self._logic_manager
-
-    @property
-    def query(self) -> _QueryManager:
-        return self._query_manager
+        promise = transaction_query(self.native_object, query)
+        return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
         if not self._native_object.thisown:

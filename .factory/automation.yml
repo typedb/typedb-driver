@@ -33,7 +33,7 @@ build:
         bazel run @vaticle_dependencies//factory/analysis:dependency-analysis
 
   correctness:
-    build-tmp:
+    build:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       machine: 16-core-64-gb
       command: |
@@ -41,34 +41,24 @@ build:
         sudo apt-get update
         sudo apt install python3-pip -y
         python3 -m pip install -U pip
+        python3 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        # TODO: Temporarily build only the 3.0-reimplemented drivers:
+        # bazel build //...
         bazel build //rust/...
         bazel build //java/...
+        bazel build //python/...
+        bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
+        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
+        # TODO: Return these three steps when npm is reimplemented for 3.0
+        # cd nodejs
+        # npm install
+        # npm run lint
 
-#    build:
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      machine: 16-core-64-gb
-#      command: |
-#        export PATH="$HOME/.local/bin:$PATH"
-#        sudo apt-get update
-#        sudo apt install python3-pip -y
-#        python3 -m pip install -U pip
-#        python3 -m pip install -r python/requirements_dev.txt
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel build //...
-#        bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
-#        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-#        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
-#        cd nodejs
-#        npm install
-#        npm run lint
-#
 #    build-dependency:
 #      image: vaticle-ubuntu-22.04
 #      command: |
@@ -202,14 +192,14 @@ build:
     test-java-integration:
       image: vaticle-ubuntu-22.04
       dependencies:
-        - build-tmp # TODO: change back to "build"
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh &&
-          bazel test //java/test/integration/... --test_output=errors &&
+          .factory/test-core.sh //java/test/integration/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -243,7 +233,33 @@ build:
 #        .factory/test-cloud.sh //java/test/behaviour/concept/... --test_output=errors
 #        .factory/test-cloud.sh //java/test/behaviour/driver/query/... --test_output=errors
 #        .factory/test-cloud.sh //java/test/behaviour/query/language/... --test_output=errors --jobs=1
-#
+
+    test-python-integration:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //python/tests/integration/... --test_output=errors --jobs=1 &&
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
+
+#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+#          bazel test //python/tests/integration:test_cloud_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          # TODO #635: currently broken test
+#          # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          export CLOUD_FAILED= || export CLOUD_FAILED=1
+#        tool/test/stop-cloud-servers.sh
+#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+
 #    test-python-behaviour-core:
 #      image: vaticle-ubuntu-22.04
 #      dependencies:
@@ -290,33 +306,6 @@ build:
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS
-#
-#    test-python-integration:
-#      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
-#      type: foreground
-#      command: |
-#        export PATH="$HOME/.local/bin:$PATH"
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#
-#        tool/test/start-core-server.sh &&
-#          bazel test //python/tests/integration:test_stream --test_output=streamed --jobs=1 &&
-#          bazel test //python/tests/integration:test_core_connection --test_output=streamed --jobs=1 &&
-#          export CORE_FAILED= || export CORE_FAILED=1
-#        tool/test/stop-core-server.sh
-#        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
-#
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //python/tests/integration:test_cloud_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          # TODO #635: currently broken test
-#          # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
-#        tool/test/stop-cloud-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 #
 #    test-nodejs-integration:
 #      image: vaticle-ubuntu-22.04

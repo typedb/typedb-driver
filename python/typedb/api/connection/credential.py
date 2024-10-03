@@ -17,13 +17,12 @@
 
 from typing import Optional
 
-from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
-
 from typedb.common.exception import TypeDBDriverException, CLOUD_CREDENTIAL_INCONSISTENT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
 
 
-class TypeDBCredential(NativeWrapper[NativeCredential]):
+class Credential(NativeWrapper[NativeCredential]):
     """
     User credentials and TLS encryption settings for connecting to TypeDB Cloud. Arguments:
     1) username: The name of the user to connect as. 2) password: The password for the user.
@@ -35,10 +34,10 @@ class TypeDBCredential(NativeWrapper[NativeCredential]):
     ::
 
         # Creates a credential using the specified username and password.
-        credential = TypeDBCredential(username, password)
+        credential = Credential(username, password)
 
         # Creates a credential as above, but with TLS and the specified CA to authenticate server certificates.
-        credential = TypeDBCredential(username, password, tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+        credential = Credential(username, password, tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
     """
 
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,

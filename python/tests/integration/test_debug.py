@@ -21,96 +21,20 @@ from unittest import TestCase
 from typedb.driver import *
 
 TYPEDB = "typedb"
-SCHEMA = SessionType.SCHEMA
-DATA = SessionType.DATA
-WRITE = TransactionType.WRITE
 READ = TransactionType.READ
+WRITE = TransactionType.WRITE
+SCHEMA = TransactionType.SCHEMA
 
 
 class TestDebug(TestCase):
 
     def setUp(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
-            if driver.databases.contains(TYPEDB):
-                driver.databases.get(TYPEDB).delete()
-            driver.databases.create(TYPEDB)
+            if TYPEDB not in [db.name for db in driver.databases.all()]:
+                driver.databases.create(TYPEDB)
 
-    # TODO: Write anything you want in this test for local debugging. A TypeDB server should be running in the background
     def test_debug(self):
         pass
-
-    # TODO: This test should be migrated, ideally to BDD if possible
-    def test_explanations(self):
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
-            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
-                schema = """
-                define
-                person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;
-                name sub attribute, value string;
-                friendship sub relation, relates friend;
-                marriage sub relation, relates husband, relates wife;
-                rule marriage-is-friendship: when {
-                    $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage;
-                } then {
-                    (friend: $x, friend: $y) isa friendship;
-                };
-                rule everyone-is-friends: when {
-                    $x isa person; $y isa person; not { $x is $y; };
-                } then {
-                    (friend: $x, friend: $y) isa friendship;
-                };
-                """
-                tx.query.define(schema)
-                tx.commit()
-
-            with driver.session(TYPEDB, DATA) as session, session.transaction(WRITE) as tx:
-                data = """
-                insert
-                $x isa person, has name "Zack";
-                $y isa person, has name "Yasmin";
-                (husband: $x, wife: $y) isa marriage;
-                """
-                tx.query.insert(data)
-                tx.commit()
-
-            opts = TypeDBOptions(infer=True, explain=True)
-            with driver.session(TYPEDB, DATA) as session, session.transaction(READ, opts) as tx:
-                answers = list(tx.query.match("match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"))
-                assert len(answers[0].explainables().relations()) == 1
-                assert len(answers[1].explainables().relations()) == 1
-                explanations = list(tx.query.explain(next(iter(answers[0].explainables().relations().values()))))
-                assert len(explanations) == 3
-                explanations2 = list(tx.query.explain(next(iter(answers[1].explainables().relations().values()))))
-                assert len(explanations2) == 3
-                print([str(e) for e in explanations])
-
-    def test_value_type(self):
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
-            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
-                schema = """
-                define
-                person sub entity, owns name, owns age, plays friendship:friend, plays marriage:husband, plays marriage:wife;
-                name sub attribute, value string;
-                age sub attribute, value long;
-                friendship sub relation, relates friend;
-                marriage sub relation, relates husband, relates wife;
-                rule marriage-is-friendship: when {
-                    $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage;
-                } then {
-                    (friend: $x, friend: $y) isa friendship;
-                };
-                rule everyone-is-friends: when {
-                    $x isa person; $y isa person; not { $x is $y; };
-                } then {
-                    (friend: $x, friend: $y) isa friendship;
-                };
-                """
-                tx.query.define(schema)
-                tx.commit()
-            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
-                person = tx.concepts.get_entity_type("person").resolve()
-                assert(len(list(person.get_owns(tx, value_type=ValueType.STRING))) == 1)
-                assert(len(list(person.get_owns(tx, value_type=ValueType.LONG))) == 1)
 
 
 if __name__ == "__main__":

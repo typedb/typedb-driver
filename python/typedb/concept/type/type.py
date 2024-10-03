@@ -17,33 +17,16 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Optional
+from abc import ABC
 
 from typedb.api.concept.type.type import Type
-from typedb.common.transitivity import Transitivity
 from typedb.concept.concept import _Concept
-
-if TYPE_CHECKING:
-    from typedb.common.promise import Promise
-    from typedb.connection.transaction import _Transaction
 
 
 class _Type(Type, _Concept, ABC):
+
     def as_type(self) -> Type:
         return self
-
-    @abstractmethod
-    def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_Type]]:
-        pass
-
-    @abstractmethod
-    def get_supertypes(self, transaction: _Transaction) -> Iterator[_Type]:
-        pass
-
-    @abstractmethod
-    def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[_Type]:
-        pass
 
     def __str__(self):
         return type(self).__name__ + "[label: %s]" % self.get_label()
@@ -51,7 +34,7 @@ class _Type(Type, _Concept, ABC):
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) is not type(other):
+        if other is None or not isinstance(other, self.__class__):
             return False
         return self.get_label() == other.get_label()
 

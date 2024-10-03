@@ -16,11 +16,11 @@
 # under the License.
 
 from __future__ import annotations
+
 import behave.runner
 from behave.model import Table
+from tests.behaviour.config.parameters import Kind
 from typedb.driver import *
-
-from tests.behaviour.config.parameters import RootLabel
 
 
 class Config:
@@ -29,6 +29,7 @@ class Config:
 
     This class should not be instantiated. The initialisation of the actual Config object occurs in environment.py.
     """
+
     def __init__(self):
         self.userdata = {}
 
@@ -39,27 +40,23 @@ class Context(behave.runner.Context):
 
     This class should not be instantiated. The initialisation of the actual Context object occurs in environment.py.
     """
+
     def __init__(self):
         self.table: Optional[Table] = None
         self.THREAD_POOL_SIZE = 0
-        self.driver: Optional[TypeDBDriver] = None
-        self.sessions: list[TypeDBSession] = []
-        self.sessions_to_transactions: dict[TypeDBSession, list[TypeDBTransaction]] = {}
-        self.sessions_parallel: list[TypeDBSession] = []
-        self.sessions_parallel_to_transactions_parallel: dict[TypeDBSession, list[TypeDBTransaction]] = {}
-        self.session_options: Optional[TypeDBOptions] = None
-        self.transaction_options: Optional[TypeDBOptions] = None
+        self.driver: Optional[Driver] = None
+        self.transactions: list[Transaction] = []
+        self.transactions_parallel: list[Transaction] = []
+        # self.transaction_options: Optional[Options] = None
         self.things: dict[str, Thing] = {}
-        self.answers: Optional[list[ConceptMap]] = None
+        self.answers: Optional[list[ConceptRow]] = None
         self.fetch_answers: Optional[list[dict]] = None
-        self.answer_groups: Optional[list[ConceptMapGroup]] = None
         self.value_answer: Optional[Value] = None
-        self.value_answer_groups: Optional[list[ValueGroup]] = None
         self.config = Config()
         self.option_setters = {}
 
-    def tx(self) -> TypeDBTransaction:
-        return self.sessions_to_transactions[self.sessions[0]][0]
+    def tx(self) -> Transaction:
+        return self.transactions[0]
 
     def put(self, var: str, thing: Thing) -> None:
         pass
@@ -67,7 +64,7 @@ class Context(behave.runner.Context):
     def get(self, var: str) -> Thing:
         pass
 
-    def get_thing_type(self, root_label: RootLabel, type_label: str) -> ThingType:
+    def get_thing_type(self, root_label: Kind, type_label: str) -> ThingType:
         pass
 
     def clear_answers(self) -> None:

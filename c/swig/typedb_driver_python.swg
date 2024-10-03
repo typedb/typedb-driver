@@ -37,9 +37,18 @@
 %typemap(freearg) Type ** { free($1); }
 %enddef
 
-%array(Annotation)
 %array(Concept)
-%array(Thing)
+
+
+/* Disown resource when sending it to the native side */
+%define %disown(Function, Resource)
+%feature("pythonprepend") Function {
+    Resource.thisown = 0
+}
+%enddef
+
+%disown(query_answer_into_rows, query_answer)
+
 
 /* char** needs special handling */
 %typemap(in) char ** (int size = 0) {
@@ -75,6 +84,7 @@
     free((char *) $1);
 }
 
+
 /* Introduce TypeDBDriverExceptionNative and use it to wrap all native exceptions */
 %{
 static PyObject* PyExc_TypeDBDriverError;
@@ -99,14 +109,3 @@ static PyObject* PyExc_TypeDBDriverError;
 
     native_driver_python.init_logging()
 %}
-
-/* ValueType* needs special handling */
-%typemap(in) enum ValueType * {
-    if ($input != Py_None) {
-        long value = PyInt_AsLong($input);
-        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
-        *$1 = (enum ValueType) value;
-    }
-}
-
-%typemap(freearg) enum ValueType * { free($1); }

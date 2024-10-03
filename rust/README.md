@@ -13,7 +13,7 @@ To learn about the methods available for executing queries and retrieving their 
 ```bash
 cargo add typedb-driver
 ```
-2. Make sure the [TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
+2. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
 3. See `rust/tests/integration` for examples of usage.
 
 ## Build from Source

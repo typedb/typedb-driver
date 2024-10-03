@@ -17,24 +17,19 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterator, Mapping, Optional, TYPE_CHECKING, Union
-
-from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value, attribute_get_owners, \
-    concept_iterator_next, TypeDBDriverExceptionNative
+from datetime import date
+from decimal import Decimal
+from typing import Mapping, Union
 
 from typedb.api.concept.thing.attribute import Attribute
-from typedb.api.concept.value.value import ValueType
-from typedb.common.exception import TypeDBDriverException
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.concept.concept_factory import wrap_attribute_type, wrap_thing, wrap_value
+from typedb.api.concept.value.value import Value
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
+from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
 from typedb.concept.thing.thing import _Thing
 from typedb.concept.type.attribute_type import _AttributeType
 from typedb.concept.value.value import _Value
-
-if TYPE_CHECKING:
-    from datetime import datetime
-    from typedb.concept.type.thing_type import _ThingType
-    from typedb.connection.transaction import _Transaction
+from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value
 
 
 class _Attribute(Attribute, _Thing):
@@ -45,10 +40,10 @@ class _Attribute(Attribute, _Thing):
     def get_type(self) -> _AttributeType:
         return wrap_attribute_type(attribute_get_type(self.native_object))
 
-    def get_value(self) -> Union[bool, int, float, str, datetime]:
-        return wrap_value(attribute_get_value(self.native_object)).get()
+    def get_value(self) -> Value.VALUE:
+        return self._value().get()
 
-    def get_value_type(self) -> ValueType:
+    def get_value_type(self) -> str:
         return self._value().get_value_type()
 
     def is_boolean(self) -> bool:
@@ -60,11 +55,26 @@ class _Attribute(Attribute, _Thing):
     def is_double(self) -> bool:
         return self._value().is_double()
 
+    def is_decimal(self) -> bool:
+        return self._value().is_decimal()
+
     def is_string(self) -> bool:
         return self._value().is_string()
 
+    def is_date(self) -> bool:
+        return self._value().is_date()
+
     def is_datetime(self) -> bool:
         return self._value().is_datetime()
+
+    def is_datetime_tz(self) -> bool:
+        return self._value().is_datetime_tz()
+
+    def is_duration(self) -> bool:
+        return self._value().is_duration()
+
+    def is_struct(self) -> bool:
+        return self._value().is_struct()
 
     def as_boolean(self) -> bool:
         return self._value().as_boolean()
@@ -75,20 +85,36 @@ class _Attribute(Attribute, _Thing):
     def as_double(self) -> float:
         return self._value().as_double()
 
+    def as_decimal(self) -> Decimal:
+        return self._value().as_decimal()
+
     def as_string(self) -> str:
         return self._value().as_string()
 
-    def as_datetime(self) -> datetime:
+    def as_date(self) -> date:
+        return self._value().as_date()
+
+    def as_datetime(self) -> Datetime:
         return self._value().as_datetime()
+
+    def as_datetime_tz(self) -> Datetime:
+        return self._value().as_datetime_tz()
+
+    def as_duration(self) -> Duration:
+        return self._value().as_duration()
+
+    def as_struct(self) -> Value.STRUCT:
+        return self._value().as_struct()
 
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
 
-    def get_owners(self, transaction: _Transaction, owner_type: Optional[_ThingType] = None) -> Iterator[Any]:
-        try:
-            return map(wrap_thing,
-                       IteratorWrapper(attribute_get_owners(transaction.native_object, self.native_object,
-                                                            owner_type.native_object if owner_type else None),
-                                       concept_iterator_next))
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self.get_type().get_label() == other.get_type().get_label() and self.get_value() == other.get_value()
+
+    def __hash__(self):
+        return hash((self.get_type().get_label(), self.get_value()))

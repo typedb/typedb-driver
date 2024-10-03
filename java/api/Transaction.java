@@ -38,7 +38,7 @@ public interface Transaction extends AutoCloseable {
     boolean isOpen();
 
     /**
-     * The transaction’s type (READ/WRITE/SCHEMA)
+     * The transaction’s type (READ, WRITE, or SCHEMA)
      *
      * <h3>Examples</h3>
      * <pre>

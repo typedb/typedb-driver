@@ -34,7 +34,7 @@ use crate::{
 };
 
 /// A <code>DatetimeInNanos</code> used to represent datetime as a pair of seconds part and
-/// a number of nanosecnds since the last seconds boundary.
+/// a number of nanoseconds since the last seconds boundary.
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct DatetimeInNanos {

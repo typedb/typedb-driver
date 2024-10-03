@@ -51,8 +51,8 @@ public interface Driver extends AutoCloseable {
      * driver.transaction(database, sessionType);
      * </pre>
      *
-     * @param database The name of the database with which the session connects
-     * @param type The type of session to be created (DATA or SCHEMA)
+     * @param database The name of the database with which the transaction connects
+     * @param type     The type of transaction to be created (READ, WRITE, or SCHEMA)
      */
     @CheckReturnValue
     Transaction transaction(String database, Transaction.Type type);

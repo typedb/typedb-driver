@@ -24,6 +24,13 @@ import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.concept.type.AttributeTypeImpl;
 import com.typedb.driver.concept.value.ValueImpl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Optional;
+
 import static com.typedb.driver.jni.typedb_driver.attribute_get_type;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_value;
 
@@ -40,6 +47,111 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     @Override
     public Value getValue() {
         return new ValueImpl(attribute_get_value(nativeObject));
+    }
+
+    @Override
+    public boolean isBoolean() {
+        return getValue().isBoolean();
+    }
+
+    @Override
+    public boolean isLong() {
+        return getValue().isLong();
+    }
+
+    @Override
+    public boolean isDouble() {
+        return getValue().isDouble();
+    }
+
+    @Override
+    public boolean isDecimal() {
+        return getValue().isDecimal();
+    }
+
+    @Override
+    public boolean isString() {
+        return getValue().isString();
+    }
+
+    @Override
+    public boolean isDate() {
+        return getValue().isDate();
+    }
+
+    @Override
+    public boolean isDatetime() {
+        return getValue().isDatetime();
+    }
+
+    @Override
+    public boolean isDatetimeTZ() {
+        return getValue().isDatetimeTZ();
+    }
+
+    @Override
+    public boolean isDuration() {
+        return getValue().isDuration();
+    }
+
+    @Override
+    public boolean isStruct() {
+        return getValue().isStruct();
+    }
+
+    @Override
+    public Object asUntyped() {
+        return getValue().asUntyped();
+    }
+
+    @Override
+    public boolean asBoolean() {
+        return getValue().asBoolean();
+    }
+
+    @Override
+    public long asLong() {
+        return getValue().asLong();
+    }
+
+    @Override
+    public double asDouble() {
+        return getValue().asDouble();
+    }
+
+    @Override
+    public BigDecimal asDecimal() {
+        return getValue().asDecimal();
+    }
+
+    @Override
+    public String asString() {
+        return getValue().asString();
+    }
+
+    @Override
+    public LocalDate asDate() {
+        return getValue().asDate();
+    }
+
+    @Override
+    public LocalDateTime asDatetime() {
+        return getValue().asDatetime();
+    }
+
+    @Override
+    public ZonedDateTime asDatetimeTZ() {
+        return getValue().asDatetimeTZ();
+    }
+
+    @Override
+    public com.typedb.driver.common.Duration asDuration() {
+        return getValue().asDuration();
+    }
+
+    @Override
+    public Map<String, Optional<Value>> asStruct() {
+        return getValue().asStruct();
     }
 
     @Override
