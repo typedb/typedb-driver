@@ -18,34 +18,45 @@
 from behave import *
 from tests.behaviour.context import Context
 from typedb.common.exception import TypeDBDriverException
+from tests.behaviour.config.parameters import parse_int, parse_bool, parse_may_error
 
 
 @step(u'typedb has configuration')
-def step_impl(context):
+def step_impl(context: Context):
     # TODO: implement configuring the TypeDB runner when a python typedb-runner is available
     pass
 
 
 @step(u'typedb starts')
-def step_impl(context):
+def step_impl(context: Context):
     # TODO: start TypeDB via a python typedb-runner once one is available
     pass
 
 
 @step(u'connection opens with default authentication')
-def step_impl(context):
+def step_impl(context: Context):
     context.setup_context_driver_fn()
-    for database in context.driver.databases.all():
-        database.delete()
+
+
+@step(u'connection opens with a wrong host{may_error}')
+def step_impl(context: Context, may_error: str):
+    may_error = parse_may_error(may_error)
+    may_error.check(lambda: context.setup_context_driver_fn(host="surely-not-localhost"))
+
+
+@step(u'connection opens with a wrong port{may_error}')
+def step_impl(context: Context, may_error: str):
+    may_error = parse_may_error(may_error)
+    may_error.check(lambda: context.setup_context_driver_fn(port=0))
 
 
 @step(u'connection opens with authentication: {username:Words}, {password:Words}')
-def step_impl(context, username: str, password: str):
+def step_impl(context: Context, username: str, password: str):
     context.setup_context_driver_fn(username, password)
 
 
 @step(u'connection opens with authentication: {username:Words}, {password:Words}; throws exception')
-def step_impl(context, username: str, password: str):
+def step_impl(context: Context, username: str, password: str):
     try:
         context.setup_context_driver_fn(username, password)
         assert False
@@ -54,21 +65,24 @@ def step_impl(context, username: str, password: str):
 
 
 @step(u'connection closes')
-def step_impl(context):
+def step_impl(context: Context):
     context.driver.close()
 
 
 @step(u'typedb stops')
-def step_impl(context):
+def step_impl(context: Context):
     # TODO: stop TypeDB via a python typedb-runner once one is available
     pass
 
 
-@step("connection has been opened")
-def step_impl(context: Context):
-    assert context.driver and context.driver.is_open()
+@step("connection is open: {is_open}")
+def step_impl(context: Context, is_open: str):
+    is_open = parse_bool(is_open)
+    real_is_open = hasattr(context, 'driver') and context.driver and context.driver.is_open()
+    assert is_open == real_is_open
 
 
-@step("connection does not have any database")
-def step_impl(context: Context):
-    assert len(context.driver.databases.all()) == 0
+@step("connection has {count} databases")
+def step_impl(context: Context, count: str):
+    count = parse_int(count)
+    assert len(context.driver.databases.all()) == count
