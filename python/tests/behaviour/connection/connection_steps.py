@@ -82,6 +82,7 @@ def step_impl(context: Context, is_open: str):
     assert is_open == real_is_open
 
 
+@step("connection has {count} database")
 @step("connection has {count} databases")
 def step_impl(context: Context, count: str):
     count = parse_int(count)

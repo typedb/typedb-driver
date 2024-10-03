@@ -20,7 +20,7 @@ from functools import partial
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import parse_list
+from tests.behaviour.config.parameters import *
 from tests.behaviour.context import Context
 from tests.behaviour.util.util import assert_collections_equal
 from typedb.driver import *
@@ -57,9 +57,12 @@ def delete_databases(context: Context, names: list[str]):
         context.driver.databases.get(name).delete()
 
 
-@step("connection delete database: {name}")
-def step_impl(context: Context, name: str):
-    delete_databases(context, [name])
+@step("connection delete database: {name:Words}{may_error:MayError}")
+def step_impl(context: Context, name, may_error):
+    print("PARSED:")
+    print(name)
+    print(may_error)
+    may_error.check(lambda: delete_databases(context, [name]))
 
 
 @step("connection delete databases")

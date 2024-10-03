@@ -188,6 +188,9 @@ class MayError:
         else:
             func()
 
+    def __repr__(self):
+        return f"MayError({self.may_error})"
+
 
 @parse.with_pattern("; fails|; parsing fails|")
 def parse_may_error(value: str) -> MayError:
