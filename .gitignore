@@ -73,6 +73,9 @@ typedb-test/test-biomed/data/*
 # Benchmark Files #
 typedb-test/test-integration/benchmarks/
 
+# Test Runner Files #
+typedb-all/*
+
 # VIM swap files #
 *.swp
 *.swo
