@@ -76,7 +76,6 @@ commands:
           make altinstall
           
           #ln -s /usr/bin/python3.9 /usr/bin/python3
-          which findme
           which python3.9
           which python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
