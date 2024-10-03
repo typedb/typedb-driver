@@ -73,7 +73,7 @@ commands:
           tar -xvf Python-3.9.6.tgz
           cd Python-3.9.6
           ./configure --enable-optimizations
-          sudo make altinstall
+          make altinstall
           
           ln -s /usr/bin/python3.9 /usr/bin/python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
