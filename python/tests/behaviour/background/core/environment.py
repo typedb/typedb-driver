@@ -26,6 +26,10 @@ def before_all(context: Context):
     environment_base.before_all(context)
     context.setup_context_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
         setup_context_driver(context, host, port, user, password)
+    context.setup_context_driver_fn()
+    for database in context.driver.databases.all():
+        database.delete()
+    context.driver.close()
 
 
 def before_scenario(context: Context, scenario):
