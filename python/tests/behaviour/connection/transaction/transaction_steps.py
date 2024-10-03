@@ -21,7 +21,7 @@ from typing import Callable
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
+from tests.behaviour.config.parameters import MayError, TransactionType, parse_list, parse_transaction_type
 from tests.behaviour.context import Context
 from typedb.driver import *
 from typedb.api.connection.transaction import TransactionType
@@ -34,9 +34,8 @@ def open_transactions_of_type(context: Context, database_name: str, transaction_
         transactions.append(transaction)
 
 
-@step("connection open {transaction_type} transaction for database: {database_name}")
-def step_impl(context: Context, transaction_type: str, database_name: str):
-    transaction_type = parse_transaction_type(transaction_type)
+@step("connection open {transaction_type:TransactionType} transaction for database: {database_name}")
+def step_impl(context: Context, transaction_type: TransactionType, database_name: str):
     open_transactions_of_type(context, [transaction_type])
 
 

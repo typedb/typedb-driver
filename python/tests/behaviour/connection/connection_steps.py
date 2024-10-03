@@ -18,7 +18,7 @@
 from behave import *
 from tests.behaviour.context import Context
 from typedb.common.exception import TypeDBDriverException
-from tests.behaviour.config.parameters import parse_int, parse_bool, parse_may_error
+from tests.behaviour.config.parameters import MayError
 
 
 @step(u'typedb has configuration')
@@ -38,15 +38,13 @@ def step_impl(context: Context):
     context.setup_context_driver_fn()
 
 
-@step(u'connection opens with a wrong host{may_error}')
-def step_impl(context: Context, may_error: str):
-    may_error = parse_may_error(may_error)
+@step(u'connection opens with a wrong host{may_error:MayError}')
+def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(host="surely-not-localhost"))
 
 
-@step(u'connection opens with a wrong port{may_error}')
-def step_impl(context: Context, may_error: str):
-    may_error = parse_may_error(may_error)
+@step(u'connection opens with a wrong port{may_error:MayError}')
+def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(port=0))
 
 
@@ -75,15 +73,13 @@ def step_impl(context: Context):
     pass
 
 
-@step("connection is open: {is_open}")
-def step_impl(context: Context, is_open: str):
-    is_open = parse_bool(is_open)
+@step("connection is open: {is_open:Bool}")
+def step_impl(context: Context, is_open: bool):
     real_is_open = hasattr(context, 'driver') and context.driver and context.driver.is_open()
     assert is_open == real_is_open
 
 
-@step("connection has {count} database")
-@step("connection has {count} databases")
-def step_impl(context: Context, count: str):
-    count = parse_int(count)
+@step("connection has {count:Int} database")
+@step("connection has {count:Int} databases")
+def step_impl(context: Context, count: int):
     assert len(context.driver.databases.all()) == count

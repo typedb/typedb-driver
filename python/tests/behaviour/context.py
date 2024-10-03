@@ -42,9 +42,6 @@ class Context(behave.runner.Context):
     """
 
     def __init__(self):
-        print("INIT!")
-        import sys
-        sys.stdout.flush()
         self.table: Optional[Table] = None
         self.THREAD_POOL_SIZE = 0
         self.driver: Optional[Driver] = None

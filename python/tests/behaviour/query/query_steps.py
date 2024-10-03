@@ -19,12 +19,11 @@ from behave import *
 
 from tests.behaviour.context import Context
 from typedb.driver import *
-from tests.behaviour.config.parameters import parse_may_error
+from tests.behaviour.config.parameters import MayError
 
 
-@step("typeql define{may_error}")
-def step_impl(context: Context, may_error: str):
-    may_error = parse_may_error(may_error)
+@step("typeql define{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.tx().query(query=context.text).resolve())
 
 # @step("typeql insert")
