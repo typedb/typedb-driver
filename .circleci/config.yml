@@ -65,9 +65,9 @@ commands:
     steps:
       - run: |
           amazon-linux-extras install java-openjdk11 -y
+          yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel gcc-c++ file lsof which procps tar git -y
           
           # python3.9:
-          yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel
           cd /tmp
           wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
           tar -xvf Python-3.9.6.tgz
@@ -75,7 +75,6 @@ commands:
           ./configure --enable-optimizations
           sudo make altinstall
           
-          yum install -y git tar gcc gcc-c++ file lsof which procps
           ln -s /usr/bin/python3.9 /usr/bin/python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
