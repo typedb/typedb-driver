@@ -46,6 +46,9 @@ class Datetime:
                  is_tz_aware_timestamp: bool = False):
         if not (0 <= subsec_nanos < NANOS_IN_SECOND):
             raise ValueError("subsec_nanos must be between 0 and 999,999,999")
+        if not isinstance(timestamp_seconds, int) and \
+                not (isinstance(timestamp_seconds, float) and timestamp_seconds.is_integer()):
+            raise ValueError("timestamp_seconds must be integer")
 
         self._tz_name = tz_name
         if self._tz_name is None:
@@ -59,9 +62,10 @@ class Datetime:
         self._nanos = subsec_nanos
 
     @property
-    def datetime_of_seconds(self) -> datetime:
-        """Return the original datetime.datetime part, containing data up to seconds."""
-        return self._datetime_of_seconds
+    def datetime_without_nanos(self) -> datetime:
+        """Return the standard library's datetime, containing data up to microseconds."""
+        return datetime(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute,
+                        second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo)
 
     @property
     def tz_name(self) -> Optional[str]:
@@ -193,6 +197,6 @@ class Datetime:
             return True
         if other is None or not isinstance(other, self.__class__):
             return False
-        return (self.datetime_of_seconds == other.datetime_of_seconds
-                and self.nanos == other.nanos
-                and self.tz_name == other.tz_name)
+        return (self._datetime_of_seconds == other._datetime_of_seconds
+                and self._nanos == other._nanos
+                and self._tz_name == other._tz_name)
