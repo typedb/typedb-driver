@@ -65,7 +65,7 @@ commands:
     steps:
       - run: |
           amazon-linux-extras install java-openjdk11 -y
-          yum install wget gcc openssl-devel bzip2-devel libffi-devel zlib-devel gcc-c++ file lsof which procps tar git -y
+          yum install wget make gcc gcc-c++ openssl-devel bzip2-devel libffi-devel zlib-devel file lsof which procps tar git -y
           
           # python3.9:
           cd /tmp
