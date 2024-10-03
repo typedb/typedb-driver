@@ -9,7 +9,7 @@ Options could be specified either as constructor arguments or using properties a
 .Examples
 [source,python]
 ----
-transaction_options = TypeDBOptions(infer=True, session_idle_timeout_millis=20000)
+transaction_options = TypeDBOptions(session_idle_timeout_millis=20000)
 transaction_options.explain = True
 ----
 

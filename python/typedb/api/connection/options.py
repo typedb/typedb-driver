@@ -47,7 +47,7 @@
 #
 #     ::
 #
-#       transaction_options = Options(infer=True, session_idle_timeout_millis=20000)
+#       transaction_options = Options(session_idle_timeout_millis=20000)
 #       transaction_options.explain = True
 #     """
 #

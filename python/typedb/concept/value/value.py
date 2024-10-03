@@ -153,8 +153,5 @@ class _Value(Value, _Concept):
             return False
         return self.get() == other.get()
 
-    def __repr__(self):
-        return f"{self.get_value_type()}({self.get()})"
-
     def __hash__(self):
         return hash(self.get())

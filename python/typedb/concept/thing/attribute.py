@@ -109,9 +109,6 @@ class _Attribute(Attribute, _Thing):
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
 
-    def __repr__(self):
-        return "%s[%s:%s]" % (type(self).__name__, self.get_type().get_label(), self.get_value())
-
     def __eq__(self, other):
         if other is self:
             return True

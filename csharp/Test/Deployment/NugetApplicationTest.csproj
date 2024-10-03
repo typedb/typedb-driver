@@ -29,7 +29,7 @@ under the License.
     </Description>
     <Authors>TypeDB</Authors>
     <Company>TypeDB</Company>
-    <Copyright>Copyright © 2024 TypeDB</Copyright>
+    <Copyright>Copyright © 2024 Vaticle</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://typedb.com</PackageProjectUrl>
