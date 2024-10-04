@@ -42,7 +42,7 @@ executors:
 
   mac-arm64:
     macos:
-      xcode: "13.4.1"
+      xcode: "14.3.1"
     resource_class: macos.m1.medium.gen1
     working_directory: ~/typedb-driver
 
