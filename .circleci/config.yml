@@ -74,7 +74,8 @@ commands:
           cd Python-3.9.6
           ./configure --enable-optimizations --enable-shared
           make altinstall
-          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+          sudo echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
+          sudo ldconfig
           ln -s /usr/local/bin/python3.9 /usr/bin/python3
           
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
