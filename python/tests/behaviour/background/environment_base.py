@@ -28,10 +28,13 @@ def before_all(context: Context):
 def before_scenario(context: Context):
     # setup context state
     context.transactions = {}
-    context.tx = lambda: next(iter(context.transactions), None)
     context.transactions_parallel = []
+    context.answer = None # QueryAnswer
+    context.unwrapped_answer = None # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
+    context.collected_answer = None # [ConceptRow] / ... ?
     context.things = {}
     # setup context functions
+    context.tx = lambda: next(iter(context.transactions), None)
     context.get = lambda var: context.things[var]
     context.put = lambda var, thing: _put_impl(context, var, thing)
     context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)

@@ -16,10 +16,10 @@
 # under the License.
 
 from behave import *
-
+from hamcrest import *
+from tests.behaviour.config.parameters import MayError
 from tests.behaviour.context import Context
 from typedb.driver import *
-from tests.behaviour.config.parameters import MayError
 
 
 @step("typeql write query{may_error:MayError}")
@@ -27,6 +27,165 @@ from tests.behaviour.config.parameters import MayError
 @step("typeql schema query{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.tx().query(query=context.text).resolve())
+
+
+@step("get answers of typeql write query")
+@step("get answers of typeql read query")
+@step("get answers of typeql schema query")
+def step_impl(context: Context):
+    context.answer = context.tx().query(query=context.text).resolve()
+
+
+@step("answer type {is_or_not:IsOrNot} {answer_type}")
+def step_impl(context: Context, is_or_not: bool, answer_type: str):
+    if answer_type == "ok":
+        assert_that(context.answer.is_ok(), is_(is_or_not))
+    elif answer_type == "concept rows":
+        assert_that(context.answer.is_concept_rows(), is_(is_or_not))
+    elif answer_type == "concept trees":
+        assert_that(context.answer.is_concept_trees(), is_(is_or_not))
+
+
+def unwrap_answer_ok(context: Context):
+    context.unwrapped_answer = context.answer.as_ok()
+
+
+def unwrap_answer_rows(context: Context):
+    context.unwrapped_answer = context.answer.as_concept_rows()
+
+
+def unwrap_answer_trees(context: Context):
+    context.unwrapped_answer = context.answer.as_concept_trees()
+
+
+@step("result is a successful ok")
+def step_impl(context: Context):
+    unwrap_answer_ok()
+
+
+def unwrap_answer_if_needed(context: Context):
+    if not context.answer:
+        raise ValueError("Cannot unwrap test answer as answer is absent")
+
+    if context.unwrapped_answer is None:
+        if context.answer.is_ok():
+            unwrap_answer_ok(context)
+        if context.answer.is_concept_rows():
+            unwrap_answer_rows(context)
+        elif context.answer.is_concept_trees():
+            unwrap_answer_trees(context)
+        else:
+            raise ValueError(
+                "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
+
+
+def collect_answer_if_needed(context: Context):
+    unwrap_answer_if_needed(context)
+
+    if context.collected_answer is None:
+        if context.unwrapped_answer.is_concept_rows():
+            context.collected_answer = list(context.unwrapped_answer)
+        else:
+            raise NotImplemented("Cannot collect answer")
+
+
+def assert_answer_size(answer, size: int):
+    assert_that(len(answer), is_(size))
+
+
+@step("answer size: {size:Int}")
+def step_impl(context: Context, size: int):
+    collect_answer_if_needed(context)
+    assert_answer_size(context.collected_answer, size)
+
+
+@step("answer query type {is_or_not:IsOrNot} {query_type}")
+def step_impl(context: Context, is_or_not: bool, query_type: str):
+    unwrap_answer_if_needed(context)
+    assert_that(context.unwrapped_answer.query_type(), is_(query_type))
+
+
+def get_row_get_variable(context: Context, row_index: int, var: str) -> Concept:
+    collect_answer_if_needed(context)
+    return context.collected_answer[row_index].get(var)
+
+
+def get_row_get_entity_type(context: Context, row_index: int, var: str) -> EntityType:
+    return get_row_get_variable(context, row_index, var).as_entity_type()
+
+
+def get_row_get_relation_type(context: Context, row_index: int, var: str) -> RelationType:
+    return get_row_get_variable(context, row_index, var).as_relation_type()
+
+
+def get_row_get_attribute_type(context: Context, row_index: int, var: str) -> AttributeType:
+    return get_row_get_variable(context, row_index, var).as_attribute_type()
+
+
+def get_row_get_role_type(context: Context, row_index: int, var: str) -> RoleType:
+    return get_row_get_variable(context, row_index, var).as_role_type()
+
+
+def get_row_get_entity(context: Context, row_index: int, var: str) -> Entity:
+    return get_row_get_variable(context, row_index, var).as_entity()
+
+
+def get_row_get_relation(context: Context, row_index: int, var: str) -> Relation:
+    return get_row_get_variable(context, row_index, var).as_relation()
+
+
+def get_row_get_attribute(context: Context, row_index: int, var: str) -> Attribute:
+    return get_row_get_variable(context, row_index, var).as_attribute()
+
+
+def get_row_get_value(context: Context, row_index: int, var: str) -> Value:
+    return get_row_get_variable(context, row_index, var).as_value()
+
+
+def get_row_get_variable_by_index_of_variable(context: Context, row_index: int, var: str) -> Concept:
+    collect_answer_if_needed(context)
+    row = context.collected_answer[row_index]
+    header = list(row.column_names())
+    return row.get_index(header.index(var))
+
+
+def get_row_get_entity_type_by_index_of_variable(context: Context, row_index: int, var: str) -> EntityType:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_entity_type()
+
+
+def get_row_get_relation_type_by_index_of_variable(context: Context, row_index: int, var: str) -> RelationType:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_relation_type()
+
+
+def get_row_get_attribute_type_by_index_of_variable(context: Context, row_index: int, var: str) -> AttributeType:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_attribute_type()
+
+
+def get_row_get_role_type_by_index_of_variable(context: Context, row_index: int, var: str) -> RoleType:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_role_type()
+
+
+def get_row_get_entity_by_index_of_variable(context: Context, row_index: int, var: str) -> Entity:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_entity()
+
+
+def get_row_get_relation_by_index_of_variable(context: Context, row_index: int, var: str) -> Relation:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_relation()
+
+
+def get_row_get_attribute_by_index_of_variable(context: Context, row_index: int, var: str) -> Attribute:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_attribute()
+
+
+def get_row_get_value_by_index_of_variable(context: Context, row_index: int, var: str) -> Value:
+    return get_row_get_variable_by_index_of_variable(context, row_index, var).as_value()
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is type: {is_type:Bool}")
+def step_impl(context: Context, row_index: int, var: str, is_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_type(), is_(is_type))
+
 
 
 # @step("get answers of typeql insert")
@@ -282,49 +441,6 @@ def step_impl(context: Context, may_error: MayError):
 #             self.matches(), [str(x) for x in self.concept_match_results])
 #
 #
-# def match_answer_concepts(context: Context, answer_identifier: list[tuple[str, str]],
-#                           answer: ConceptRow) -> AnswerMatchResult:
-#     results = []
-#     for var, concept_identifier in answer_identifier:
-#         matcher = parse_concept_identifier(concept_identifier)
-#         result = matcher.match(context, answer.get(var))
-#         results.append(result)
-#     return AnswerMatchResult(results)
-#
-#
-# @step("uniquely identify answer concepts")
-# def step_impl(context: Context):
-#     answer_identifiers = parse_table(context.table)
-#     assert_that(context.answers, has_length(len(answer_identifiers)),
-#                 "The number of answers [%d] should match the number of answer identifiers [%d]." % (
-#                     len(context.answers), len(answer_identifiers)))
-#
-#     result_set = [(ai, [], []) for ai in answer_identifiers]
-#     for answer_identifier, matched_answers, match_attempts in result_set:
-#         for answer in context.answers:
-#             result = match_answer_concepts(context, answer_identifier, answer)
-#             match_attempts.append(result)
-#             if result.matches():
-#                 matched_answers.append(answer)
-#         assert_that(matched_answers, has_length(1),
-#                     "Each answer identifier should match precisely 1 answer, but [%d] answers matched the identifier [%s].\nThe match results were: %s" % (
-#                         len(matched_answers), answer_identifier, [str(x) for x in match_attempts]))
-#
-#     for answer in context.answers:
-#         matches = 0
-#         for answer_identifier, matched_answers, match_attempts in result_set:
-#             if answer in matched_answers:
-#                 matches += 1
-#                 break
-#         if matches != 1:
-#             match_attempts = []
-#             for answer_identifier in answer_identifiers:
-#                 match_attempts.append(match_answer_concepts(context, answer_identifier, answer))
-#             assert_that(matches, is_(1),
-#                         "Each answer should match precisely 1 answer identifier, but [%d] answer identifiers matched the answer [%s].\nThe match results were: %s" % (
-#                             matches, answer, [str(x) for x in match_attempts]))
-#
-#
 # @step("order of answer concepts is")
 # def step_impl(context: Context):
 #     answer_identifiers = parse_table(context.table)
@@ -448,54 +564,3 @@ def step_impl(context: Context, may_error: MayError):
 # def step_impl(context: Context):
 #     assert_that(len(context.value_answer_groups) == 1, reason="This step only work with 1 group aggregate answer")
 #     assert_that(context.value_answer_groups[0].value() is None)
-#
-#
-# def variable_from_template_placeholder(placeholder: str):
-#     if placeholder.endswith(".iid"):
-#         return placeholder.replace(".iid", "").replace("answer.", "")
-#     else:
-#         raise ValueError("Cannot replace template not based on IID.")
-#
-#
-# def apply_query_template(template: str, answer: ConceptRow):
-#     query = ""
-#     matches = re.finditer(r"<(.+?)>", template)
-#     i = 0
-#     for match in matches:
-#         required_variable = variable_from_template_placeholder(match.group(1))
-#         query += template[i:match.span()[0]]
-#         if required_variable in answer.column_names():
-#             concept = answer.get(required_variable)
-#             if not concept.is_thing():
-#                 raise TypeError("Cannot apply IID templating to Types")
-#             query += concept.as_thing().get_iid()
-#         else:
-#             raise ValueError("No IID available for template placeholder: [%s]" % match.group())
-#         i = match.span()[1]
-#     query += template[i:]
-#     return query
-#
-#
-# # TODO: This step seems needlessly complex for what it's actually used for
-# @step("each answer satisfies")
-# def step_impl(context: Context):
-#     for answer in context.answers:
-#         query = apply_query_template(template=context.text, answer=answer)
-#         assert_that(list(context.tx().query.get(query)), has_length(1))
-#
-#
-# @step("get answers of templated typeql get")
-# def step_impl(context: Context):
-#     if len(context.answers) > 1:
-#         raise ValueError("Can only retrieve answers of templated typeql get given 1 previous answer")
-#     answer = context.answers[0]
-#     query = apply_query_template(template=context.text, answer=answer)
-#     context.clear_answers()
-#     context.answers = [answer for answer in context.tx().query.get(query=query)]
-#
-#
-# @step("templated typeql get; throws exception")
-# def step_impl(context: Context):
-#     for answer in context.answers:
-#         query = apply_query_template(template=context.text, answer=answer)
-#         assert_that(calling(list).with_args(context.tx().query.get(query)), raises(TypeDBDriverException))

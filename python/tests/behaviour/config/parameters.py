@@ -127,7 +127,7 @@ def parse_label(text: str):
 register_type(Label=parse_label)
 
 
-@parse.with_pattern(r"\$([a-zA-Z0-9]+)")
+@parse.with_pattern(r"([a-zA-Z0-9]+)")
 def parse_var(text: str):
     return text
 
@@ -143,6 +143,16 @@ def parse_transaction_type(value: str) -> TransactionType:
 
 
 register_type(TransactionType=parse_transaction_type)
+
+
+# @parse.with_pattern("read|write|schema")
+# def parse_query_type(value: str) -> QueryType:
+#     return QueryType.READ if value == "read" \
+#         else QueryType.WRITE if value == "write" \
+#         else QueryType.SCHEMA
+#
+#
+# register_type(QueryType=parse_query_type)
 
 
 def parse_list(table: Table) -> list[str]:
@@ -202,3 +212,11 @@ def parse_may_error(value: str) -> MayError:
 
 
 register_type(MayError=parse_may_error)
+
+
+@parse.with_pattern("is|is not")
+def parse_is_or_not(value: str) -> bool:
+    return True if value == "is" else False
+
+
+register_type(IsOrNot=parse_is_or_not)

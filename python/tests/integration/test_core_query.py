@@ -54,11 +54,11 @@ class TestQuery(TestCase):
                 answer = tx.query("match entity $x;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
 
-                rows = [row for row in answer.as_concept_rows()]
+                rows = list(answer.as_concept_rows())
                 assert_that(len(rows), is_(1))
 
                 row = rows[0]
-                header = [name for name in row.column_names()]
+                header = list(row.column_names())
                 assert_that(len(header), is_(1))
 
                 column_name = header[0]
