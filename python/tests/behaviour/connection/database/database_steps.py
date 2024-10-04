@@ -126,3 +126,17 @@ def step_impl(context: Context, name: str):
 @step("connection does not have databases")
 def step_impl(context: Context):
     does_not_have_databases(context, names=parse_list(context.table))
+
+
+@step("connection get database({name}) has schema")
+def step_impl(context: Context, name: str):
+    expected_schema = context.text
+    real_schema = context.driver.databases.get(name).schema()
+    assert_that(real_schema, is_(expected_schema))
+
+
+@step("connection get database({name}) has type schema")
+def step_impl(context: Context, name: str):
+    expected_schema = context.text
+    real_schema = context.driver.databases.get(name).type_schema()
+    assert_that(real_schema, is_(expected_schema))
