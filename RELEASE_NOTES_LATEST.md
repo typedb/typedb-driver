@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-4
+cargo add typedb-driver@3.0.0-alpha-5
 ```
 
 
@@ -29,32 +29,44 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-4</version>
+        <version>3.0.0-alpha-5</version>
     </dependency>
 </dependencies>
 ```
 
-## New Features
-- **Introduce 3.0 Java driver**
-  We introduce the updated Java driver for the upcoming 3.0 release, featuring all the Rust driver's features in another language.
-  Learn more about TypeDB 3.0 incoming features here: https://typedb.com/blog/typedb-3-roadmap
+### Python driver
 
+PyPI package: https://pypi.org/project/typedb-driver
+Documentation: https://typedb.com/docs/drivers/python/overview
+
+Available through https://pypi.org
+
+```
+pip install typedb-driver==3.0.0-alpha-5
+```
+
+## New Features
+- **Introduce TypeDB 3.0 Python driver**
+  We introduce the updated Python driver for the upcoming 3.0 release. To align with the updated Rust driver, we removed `Concept API` (so you could simplify your querying workflow with a single `tx.query()` entry point), squeezed sessions and transactions to standalone transactions, and remodeled messaging with the server.
+  
+  As it's an alpha release, some of the features are temporarily disabled both on the server and the driver's side:
+  * Options;
+  * User management;
+  * Cloud connection with replicas information.
+  
+  Moreover, we no longer support Python 3.8 as [its support comes to an end](https://devguide.python.org/versions/) and we want to offer the full support of our newly introduced timezones with the standard library equally for all the versions of the language.
 
 ## Bugs Fixed
-- **Rust driver refinements**
-  We fix major issues:
-
-  1. correctly passing the driver version string into the driver via the build system, instead of hard-coding it into the sources. This use a Cargo environment variable, which will always be available in released versions and is provided from the crate's Cargo.toml. During development, we just set the version to `0.0.0` because we don't particularly care about it!
-  2. correctly request more answers from the query stream once a BatchContinue flag has been read by the user, as they consume the query answer stream. Previously, we immediately request more answers from the server as soon as we see the StreamContinue signal, in the network layer, which meant the whole stream was actually not lazy at all!
-
-- **Fix decimal, datetime, datetime-tz value types processing**
-  
+- **Fix native object ownership checks in python driver**
+  Multiple rarely used features of the python driver used to be broken because of the native object misuse. 
 
 ## Code Refactors
-- **Rename Java package com.vaticle.typedb to com.typedb and remove typeql dependencies.**
-  We rename the Java driver's package from `com.vaticle.typedb` to `com.typedb`.
-  We remove excessive dependencies on `typeql`.
 
 
-## Other Improvements
-    
+## Other Improvements 
+- **Bumped API version in antora config**
+
+- **Rename Maven groupId from "com.vaticle" to "com.typedb" to match the package path**
+
+- **Fix CircleCI jobs for Maven installation and Python builds**
+  
