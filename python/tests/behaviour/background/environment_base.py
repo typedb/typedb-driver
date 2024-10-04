@@ -31,7 +31,6 @@ def before_scenario(context: Context):
     context.transactions_parallel = []
     context.things = {}
     # setup context functions
-    context.tx = lambda: context.transactions[0]
     context.get = lambda var: context.things[var]
     context.put = lambda var, thing: _put_impl(context, var, thing)
     context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)
@@ -47,11 +46,11 @@ def _put_impl(context: Context, variable: str, thing: Thing):
 
 def _get_thing_type_impl(context: Context, root_label: Kind, type_label: str):
     if root_label == Kind.ENTITY:
-        return context.tx().getQueryType.get_entity_type(type_label).resolve()
+        return context.tx.getQueryType.get_entity_type(type_label).resolve()
     elif root_label == Kind.ATTRIBUTE:
-        return context.tx().getQueryType.get_attribute_type(type_label).resolve()
+        return context.tx.getQueryType.get_attribute_type(type_label).resolve()
     elif root_label == Kind.RELATION:
-        return context.tx().getQueryType.get_relation_type(type_label).resolve()
+        return context.tx.getQueryType.get_relation_type(type_label).resolve()
     else:
         raise ValueError("Unrecognised value")
 

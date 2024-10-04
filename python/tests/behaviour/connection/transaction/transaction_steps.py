@@ -17,7 +17,7 @@
 
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
-from typing import Callable
+from typing import Callable, Optional
 
 from behave import *
 from hamcrest import *
@@ -30,7 +30,7 @@ from typedb.api.connection.transaction import TransactionType
 def open_transactions_of_type(context: Context, database_name: str, transaction_types: list[TransactionType]):
     transactions = []
     for transaction_type in transaction_types:
-        transaction = context.driver.transaction(database_name, transaction_type, context.transaction_options)
+        transaction = context.driver.transaction(database_name, transaction_type) # , context.transaction_options
         transactions.append(transaction)
 
 
@@ -50,13 +50,14 @@ def for_each_session_transactions_are(context: Context, assertion: Callable[[Tra
         assertion(transaction)
 
 
-def assert_transaction_open(transaction: Transaction, is_open: bool):
-    assert_that(transaction.is_open(), is_(is_open))
+def assert_transaction_open(transaction: Optional[Transaction], is_open: bool):
+    assert_that(transaction is not None and transaction.is_open(), is_(is_open))
 
 
 @step("transaction is open: {is_open:Bool}")
 def step_impl(context: Context, is_open: bool):
-    assert_transaction_open(context.tx(), is_open)
+    tx = context.tx if hasattr(context, 'tx') else None
+    assert_transaction_open(tx, is_open)
 
 
 @step("transactions are open: {are_open:Bool}")
@@ -66,17 +67,17 @@ def step_impl(context: Context, are_open: bool):
 
 @step("transaction commits{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().commit())
+    may_error.check(lambda: context.tx.commit())
 
 
 @step("transaction closes{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().close())
+    may_error.check(lambda: context.tx.close())
 
 
 @step("transaction rollbacks{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().rollback())
+    may_error.check(lambda: context.tx.rollback())
 
 
 def for_each_session_transaction_has_type(context: Context, transaction_types: list):

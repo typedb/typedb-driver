@@ -54,8 +54,9 @@ class Context(behave.runner.Context):
         self.config = Config()
         self.option_setters = {}
 
-    def tx(self) -> Transaction:
-        return self.transactions[0]
+    @property
+    def tx(self) -> Optional[Transaction]:
+        return next(iter(self.transactions), None)
 
     def put(self, var: str, thing: Thing) -> None:
         pass

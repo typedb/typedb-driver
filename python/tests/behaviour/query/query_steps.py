@@ -24,106 +24,106 @@ from tests.behaviour.config.parameters import MayError
 
 @step("typeql define{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().query(query=context.text).resolve())
+    may_error.check(lambda: context.tx.query(query=context.text).resolve())
 
 # @step("typeql insert")
 # def step_impl(context: Context):
-#     list(context.tx().query.insert(query=context.text))
+#     list(context.tx.query.insert(query=context.text))
 #
 #
 # @step("typeql insert; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(next).with_args(context.tx().query.insert(query=context.text)), raises(TypeDBDriverException))
+#     assert_that(calling(next).with_args(context.tx.query.insert(query=context.text)), raises(TypeDBDriverException))
 #
 #
 # @step("typeql insert; throws exception containing \"{pattern}\"")
 # def step_impl(context: Context, pattern: str):
-#     assert_that(calling(next).with_args(context.tx().query.insert(query=context.text)),
+#     assert_that(calling(next).with_args(context.tx.query.insert(query=context.text)),
 #                 raises(TypeDBDriverException, re.escape(pattern)))
 #
 #
 # @step("typeql delete")
 # def step_impl(context: Context):
-#     context.tx().query.delete(query=context.text)
+#     context.tx.query.delete(query=context.text)
 #
 #
 # @step("typeql delete; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(lambda query: context.tx().query.delete(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
+#     assert_that(calling(lambda query: context.tx.query.delete(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 #
 #
 # @step("typeql delete; throws exception containing \"{pattern}\"")
 # def step_impl(context: Context, pattern: str):
-#     assert_that(calling(lambda query: context.tx().query.delete(query).resolve()).with_args(query=context.text),
+#     assert_that(calling(lambda query: context.tx.query.delete(query).resolve()).with_args(query=context.text),
 #                 raises(TypeDBDriverException, re.escape(pattern)))
 #
 #
 # @step("typeql update")
 # def step_impl(context: Context):
-#     context.tx().query.update(query=context.text)
+#     context.tx.query.update(query=context.text)
 #
 #
 # @step("typeql update; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(next).with_args(context.tx().query.update(query=context.text)), raises(TypeDBDriverException))
+#     assert_that(calling(next).with_args(context.tx.query.update(query=context.text)), raises(TypeDBDriverException))
 #
 #
 # @step("typeql update; throws exception containing \"{pattern}\"")
 # def step_impl(context: Context, pattern: str):
-#     assert_that(calling(next).with_args(context.tx().query.update(query=context.text)),
+#     assert_that(calling(next).with_args(context.tx.query.update(query=context.text)),
 #                 raises(TypeDBDriverException, re.escape(pattern)))
 #
 #
 # @step("get answers of typeql insert")
 # def step_impl(context: Context):
 #     context.clear_answers()
-#     context.answers = [answer for answer in context.tx().query.insert(query=context.text)]
+#     context.answers = [answer for answer in context.tx.query.insert(query=context.text)]
 #
 #
 # @step("get answers of typeql get")
 # def step_impl(context: Context):
 #     context.clear_answers()
-#     context.answers = [answer for answer in context.tx().query.get(query=context.text)]
+#     context.answers = [answer for answer in context.tx.query.get(query=context.text)]
 #
 #
 # @step("typeql get; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(next).with_args(context.tx().query.get(query=context.text)), raises(TypeDBDriverException))
+#     assert_that(calling(next).with_args(context.tx.query.get(query=context.text)), raises(TypeDBDriverException))
 #
 #
 # @step("typeql get; throws exception containing \"{pattern}\"")
 # def step_impl(context: Context, pattern: str):
-#     assert_that(calling(next).with_args(context.tx().query.get(query=context.text)),
+#     assert_that(calling(next).with_args(context.tx.query.get(query=context.text)),
 #                 raises(TypeDBDriverException, re.escape(pattern)))
 #
 #
 # @step("get answer of typeql get aggregate")
 # def step_impl(context: Context):
 #     context.clear_answers()
-#     context.value_answer = context.tx().query.get_aggregate(query=context.text).resolve()
+#     context.value_answer = context.tx.query.get_aggregate(query=context.text).resolve()
 #
 #
 # @step("typeql get aggregate; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(lambda query: context.tx().query.get_aggregate(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
+#     assert_that(calling(lambda query: context.tx.query.get_aggregate(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 #
 #
 # @step("get answers of typeql get group")
 # def step_impl(context: Context):
 #     context.clear_answers()
-#     context.answer_groups = [group for group in context.tx().query.get_group(query=context.text)]
+#     context.answer_groups = [group for group in context.tx.query.get_group(query=context.text)]
 #
 #
 # @step("typeql get group; throws exception")
 # def step_impl(context: Context):
-#     assert_that(calling(next).with_args(context.tx().query.get_group(query=context.text)),
+#     assert_that(calling(next).with_args(context.tx.query.get_group(query=context.text)),
 #                 raises(TypeDBDriverException))
 #
 #
 # @step("get answers of typeql get group aggregate")
 # def step_impl(context: Context):
 #     context.clear_answers()
-#     context.value_answer_groups = [group for group in context.tx().query.get_group_aggregate(query=context.text)]
+#     context.value_answer_groups = [group for group in context.tx.query.get_group_aggregate(query=context.text)]
 #
 #
 # @step("answer size is: {expected_size:Int}")
@@ -133,11 +133,11 @@ def step_impl(context: Context, may_error: MayError):
 #
 # @step("get answers of typeql fetch")
 # def get_answers_typeql_fetch(context: Context):
-#     context.fetch_answers = list(context.tx().query.fetch(query=context.text))
+#     context.fetch_answers = list(context.tx.query.fetch(query=context.text))
 #
 # @step("typeql fetch; throws exception")
 # def typeql_fetch_throws(context: Context):
-#     assert_that(calling(next).with_args(context.tx().query.fetch(query=context.text)),
+#     assert_that(calling(next).with_args(context.tx.query.fetch(query=context.text)),
 #                 raises(TypeDBDriverException))
 #
 # @step("fetch answers are")
@@ -149,12 +149,12 @@ def step_impl(context: Context, may_error: MayError):
 #
 # @step("rules contain: {rule_label}")
 # def step_impl(context: Context, rule_label: str):
-#     return rule_label in [rule.label for rule in context.tx().logic.get_rules()]
+#     return rule_label in [rule.label for rule in context.tx.logic.get_rules()]
 #
 #
 # @step("rules do not contain: {rule_label}")
 # def step_impl(context: Context, rule_label: str):
-#     return not (rule_label in [rule.label for rule in context.tx().logic.get_rules()])
+#     return not (rule_label in [rule.label for rule in context.tx.logic.get_rules()])
 #
 #
 # class ConceptMatchResult:
@@ -247,7 +247,7 @@ def step_impl(context: Context, may_error: MayError):
 #             return ConceptMatchResult.of_error(self.type_and_value,
 #                                                "%s was matched by Key, but it is not a Thing." % concept)
 #
-#         keys = [key for key in concept.as_thing().get_has(context.tx(), annotations={Annotation.key()})]
+#         keys = [key for key in concept.as_thing().get_has(context.tx, annotations={Annotation.key()})]
 #
 #         for key in keys:
 #             if key.get_type().get_label().name == self.type_label:
@@ -526,7 +526,7 @@ def step_impl(context: Context, may_error: MayError):
 # def step_impl(context: Context):
 #     for answer in context.answers:
 #         query = apply_query_template(template=context.text, answer=answer)
-#         assert_that(list(context.tx().query.get(query)), has_length(1))
+#         assert_that(list(context.tx.query.get(query)), has_length(1))
 #
 #
 # @step("get answers of templated typeql get")
@@ -536,11 +536,11 @@ def step_impl(context: Context, may_error: MayError):
 #     answer = context.answers[0]
 #     query = apply_query_template(template=context.text, answer=answer)
 #     context.clear_answers()
-#     context.answers = [answer for answer in context.tx().query.get(query=query)]
+#     context.answers = [answer for answer in context.tx.query.get(query=query)]
 #
 #
 # @step("templated typeql get; throws exception")
 # def step_impl(context: Context):
 #     for answer in context.answers:
 #         query = apply_query_template(template=context.text, answer=answer)
-#         assert_that(calling(list).with_args(context.tx().query.get(query)), raises(TypeDBDriverException))
+#         assert_that(calling(list).with_args(context.tx.query.get(query)), raises(TypeDBDriverException))
