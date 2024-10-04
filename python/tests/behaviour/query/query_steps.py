@@ -187,6 +187,140 @@ def step_impl(context: Context, row_index: int, var: str, is_type: bool):
     assert_that(get_row_get_variable(context, row_index, var).is_type(), is_(is_type))
 
 
+@step("answer get row({row_index:Int}) get variable({var:Var}) is thing type: {is_thing_type:Bool}")
+def step_impl(context: Context, row_index: int, var: str, is_thing_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_thing_type(), is_(is_thing_type))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is thing: {is_thing:Bool}")
+def step_impl_is_thing(context: Context, row_index: int, var: str, is_thing: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_thing(), is_(is_thing))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is value: {is_value:Bool}")
+def step_impl_is_value(context: Context, row_index: int, var: str, is_value: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_value(), is_(is_value))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is entity type: {is_entity_type:Bool}")
+def step_impl_is_entity_type(context: Context, row_index: int, var: str, is_entity_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_entity_type(), is_(is_entity_type))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is relation type: {is_relation_type:Bool}")
+def step_impl_is_relation_type(context: Context, row_index: int, var: str, is_relation_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_relation_type(), is_(is_relation_type))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is attribute type: {is_attribute_type:Bool}")
+def step_impl_is_attribute_type(context: Context, row_index: int, var: str, is_attribute_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_attribute_type(), is_(is_attribute_type))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is role type: {is_role_type:Bool}")
+def step_impl_is_role_type(context: Context, row_index: int, var: str, is_role_type: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_role_type(), is_(is_role_type))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is entity: {is_entity:Bool}")
+def step_impl_is_entity(context: Context, row_index: int, var: str, is_entity: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_entity(), is_(is_entity))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is relation: {is_relation:Bool}")
+def step_impl_is_relation(context: Context, row_index: int, var: str, is_relation: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_relation(), is_(is_relation))
+
+
+@step("answer get row({row_index:Int}) get variable({var:Var}) is attribute: {is_attribute:Bool}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, is_attribute: bool):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_variable(context, row_index, var).is_attribute(), is_(is_attribute))
+
+
+@step("answer get row({row_index:Int}) get entity type({var:Var}) get label: {label:Label}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, label: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_entity_type(context, row_index, var).label, is_(label))
+
+
+@step("answer get row({row_index:Int}) get entity type({var:Var}) get name: {name:Words}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, name: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_entity_type(context, row_index, var).label.name, is_(name))
+
+
+@step("answer get row({row_index:Int}) get entity type({var:Var}) get scope is none")
+def step_impl_is_attribute(context: Context, row_index: int, var: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_entity_type(context, row_index, var).label.scope, is_(None))
+
+
+@step("answer get row({row_index:Int}) get relation type({var:Var}) get label: {label:Label}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, label: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_relation_type(context, row_index, var).label, is_(label))
+
+
+@step("answer get row({row_index:Int}) get relation type({var:Var}) get name: {name:Words}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, name: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_relation_type(context, row_index, var).label.name, is_(name))
+
+
+@step("answer get row({row_index:Int}) get relation type({var:Var}) get scope is none")
+def step_impl_is_attribute(context: Context, row_index: int, var: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_relation_type(context, row_index, var).label.scope, is_(None))
+
+
+@step("answer get row({row_index:Int}) get attribute type({var:Var}) get label: {label:Label}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, label: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_attribute_type(context, row_index, var).label, is_(label))
+
+
+@step("answer get row({row_index:Int}) get attribute type({var:Var}) get name: {name:Words}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, name: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_attribute_type(context, row_index, var).label.name, is_(name))
+
+
+@step("answer get row({row_index:Int}) get attribute type({var:Var}) get scope is none")
+def step_impl_is_attribute(context: Context, row_index: int, var: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_attribute_type(context, row_index, var).label.scope, is_(None))
+
+
+@step("answer get row({row_index:Int}) get role type({var:Var}) get label: {label:Label}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, label: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_role_type(context, row_index, var).label, is_(label))
+
+
+@step("answer get row({row_index:Int}) get role type({var:Var}) get name: {name:Words}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, name: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_role_type(context, row_index, var).label.name, is_(name))
+
+
+@step("answer get row({row_index:Int}) get role type({var:Var}) get scope: {scope:Words}")
+def step_impl_is_attribute(context: Context, row_index: int, var: str, scope: str):
+    collect_answer_if_needed(context)
+    assert_that(get_row_get_role_type(context, row_index, var).label.scope, is_(scope))
+
+
+
+
 
 # @step("get answers of typeql insert")
 # def step_impl(context: Context):
