@@ -28,10 +28,10 @@ from typedb.api.connection.transaction import TransactionType
 
 
 def open_transactions_of_type(context: Context, database_name: str, transaction_types: list[TransactionType]):
-    transactions = []
+    context.transactions = []
     for transaction_type in transaction_types:
         transaction = context.driver.transaction(database_name, transaction_type) # , context.transaction_options
-        transactions.append(transaction)
+        context.transactions.append(transaction)
 
 
 @step("connection open {transaction_type:TransactionType} transaction for database: {database_name:Words}{may_error:MayError}")
@@ -56,8 +56,7 @@ def assert_transaction_open(transaction: Optional[Transaction], is_open: bool):
 
 @step("transaction is open: {is_open:Bool}")
 def step_impl(context: Context, is_open: bool):
-    tx = context.tx if hasattr(context, 'tx') else None
-    assert_transaction_open(tx, is_open)
+    assert_transaction_open(context.tx(), is_open)
 
 
 @step("transactions are open: {are_open:Bool}")
@@ -67,17 +66,17 @@ def step_impl(context: Context, are_open: bool):
 
 @step("transaction commits{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx.commit())
+    may_error.check(lambda: context.tx().commit())
 
 
 @step("transaction closes{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx.close())
+    may_error.check(lambda: context.tx().close())
 
 
 @step("transaction rollbacks{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx.rollback())
+    may_error.check(lambda: context.tx().rollback())
 
 
 def for_each_session_transaction_has_type(context: Context, transaction_types: list):
@@ -95,7 +94,6 @@ def step_impl(context: Context):
 
 @step("transaction has type: {transaction_type:TransactionType}")
 def step_impl(context: Context, transaction_type: TransactionType):
-    transaction_type = parse_transaction_type(transaction_type)
     for_each_session_transaction_has_type(context, [transaction_type])
 
 
@@ -136,3 +134,8 @@ def step_impl(context: Context, option: str, value: int):
     if option not in context.option_setters:
         raise Exception("Unrecognised option: " + option)
     context.option_setters[option](context.transaction_options, value)
+
+
+@step("schedule database creation on transaction close: {database_name:Words}")
+def step_impl(context: Context, database_name: str):
+    context.tx().on_close(lambda: context.driver.databases.create(database_name))

@@ -58,10 +58,7 @@ def delete_databases(context: Context, names: list[str]):
 
 
 @step("connection delete database: {name:Words}{may_error:MayError}")
-def step_impl(context: Context, name, may_error):
-    print("PARSED:")
-    print(name)
-    print(may_error)
+def step_impl(context: Context, name: str, may_error: MayError):
     may_error.check(lambda: delete_databases(context, [name]))
 
 

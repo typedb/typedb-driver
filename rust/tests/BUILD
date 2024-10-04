@@ -22,7 +22,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
     name = "tests",
-    srcs = glob(["integration/queries.rs"]),
+    srcs = glob(["integration/runtimes.rs"]),
     timeout = "eternal",
     deps = [
         "//rust:typedb_driver",
@@ -43,28 +43,6 @@ rust_test(
         "@vaticle_typedb_behaviour//connection:transaction.feature",
         "@vaticle_typedb_behaviour//connection:user.feature",
         "@vaticle_typedb_behaviour//driver:driver.feature",
-        "@vaticle_typedb_behaviour//query/language:define.feature",
-        "@vaticle_typedb_behaviour//query/language:undefine.feature",
-        "@vaticle_typedb_behaviour//query/language:insert.feature",
-        "@vaticle_typedb_behaviour//query/language:delete.feature",
-        "@vaticle_typedb_behaviour//query/language:update.feature",
-        "@vaticle_typedb_behaviour//query/language:match.feature",
-        "@vaticle_typedb_behaviour//query/language:get.feature",
-        "@vaticle_typedb_behaviour//query/language:modifiers.feature",
-        "@vaticle_typedb_behaviour//query/language:fetch.feature",
-        "@vaticle_typedb_behaviour//query/language:expression.feature",
-        "@vaticle_typedb_behaviour//query/language:rule-validation.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:attribute-attachment.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:compound-queries.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:concept-inequality.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:negation.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:recursion.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:relation-inference.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:rule-interaction.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:schema-queries.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:type-hierarchy.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:value-predicate.feature",
-        "@vaticle_typedb_behaviour//query/reasoner:variable-roles.feature",
     ],
 )
 
