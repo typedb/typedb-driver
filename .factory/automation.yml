@@ -37,23 +37,23 @@ build:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       machine: 16-core-64-gb
       command: |
-        #export PATH="$HOME/.local/bin:$PATH"
-        #sudo apt-get update
-        #sudo apt install python3-pip -y
-        #python3 -m pip install -U pip
-        #python3 -m pip install -r python/requirements_dev.txt
-        #export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        #export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        #bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        #bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        export PATH="$HOME/.local/bin:$PATH"
+        sudo apt-get update
+        sudo apt install python3-pip -y
+        python3 -m pip install -U pip
+        python3 -m pip install -r python/requirements_dev.txt
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
-        # bazel build //rust/...
-        # bazel build //java/...
-        # bazel build //python/...
-        # bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
-        # bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        # bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
+        bazel build //rust/...
+        bazel build //java/...
+        bazel build //python/...
+        bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
+        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
         # TODO: Return these three steps when npm is reimplemented for 3.0
         # cd nodejs
         # npm install
