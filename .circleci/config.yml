@@ -74,6 +74,7 @@ commands:
           cd Python-3.9.6
           ./configure --enable-optimizations --enable-shared
           make altinstall
+          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           ln -s /usr/local/bin/python3.9 /usr/bin/python3
           
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
@@ -134,7 +135,6 @@ commands:
       - install-pip-requirements
       - run: |
           tool/test/start-core-server.sh
-          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
           python3.9 -m pip install wheel 
           python3.9 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 5
