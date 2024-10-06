@@ -34,12 +34,12 @@ under the License.
       Check all the available platform-dependent runtime libraries here: https://www.nuget.org/packages?q=TypeDB.Driver.Pinvoke.
     </description>
     <projectUrl>https://typedb.com</projectUrl>
-    <repository type="GitHub" url="https://github.com/vaticle/typedb-driver" />
+    <repository type="GitHub" url="https://github.com/typedb/typedb-driver" />
     <license type="expression">Apache-2.0</license>
     <iconUrl>https://typedb.com/favicon.ico</iconUrl>
     <tags>Database TypeDB TypeQL Runtime</tags>
     <releaseNotes>
-      See the latest changes, included in this release, at https://github.com/vaticle/typedb-driver/releases.
+      See the latest changes, included in this release, at https://github.com/typedb/typedb-driver/releases.
     </releaseNotes>
     <readme>docs/README.md</readme>
   </metadata>

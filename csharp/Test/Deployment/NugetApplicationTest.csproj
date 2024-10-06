@@ -35,7 +35,7 @@ under the License.
     <PackageProjectUrl>https://typedb.com</PackageProjectUrl>
     <PackageTags>Database TypeDB TypeQL Test</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/vaticle/typedb-driver</RepositoryUrl>
+    <RepositoryUrl>https://github.com/typedb/typedb-driver</RepositoryUrl>
     <Version>1.0.0</Version>
     <PackageReleaseNotes>No</PackageReleaseNotes>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
