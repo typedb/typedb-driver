@@ -20,7 +20,6 @@
 package com.typedb.driver.api.concept.type;
 
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.common.Label;
 
 import javax.annotation.CheckReturnValue;
 
@@ -34,7 +33,7 @@ public interface Type extends Concept {
      * </pre>
      */
     @CheckReturnValue
-    Label getLabel();
+    String getLabel();
 
     /**
      * {@inheritDoc}

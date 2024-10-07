@@ -41,7 +41,6 @@ dir_mapping = {
     "EntityType.adoc": "schema",
     "ThingType.adoc": "schema",
     "Type.adoc": "schema",
-    "Label.adoc": "schema",
     "Transaction.adoc": "transaction",
     "Transaction.Type.adoc": "transaction",
     "QueryManager.adoc": "transaction",

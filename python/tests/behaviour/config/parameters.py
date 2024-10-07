@@ -31,7 +31,6 @@ from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
-from typedb.common.label import Label
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
@@ -145,7 +144,7 @@ def parse_concept_kind(text: str) -> ConceptKind:
     elif text == "value":
         return ConceptKind.VALUE
     else:
-        raise ValueError("Unrecognised kind: " + text)
+        raise ValueError("Unrecognised ConceptKind: " + text)
 
 
 register_type(ConceptKind=parse_concept_kind)
@@ -179,20 +178,12 @@ def parse_predefined_value_type_opt(text: str) -> Optional[PredefinedValueType]:
         return PredefinedValueType.DATE
     elif text == "datetime":
         return PredefinedValueType.DATETIME
-    elif text == "datetime_tz":
+    elif text == "datetime-tz":
         return PredefinedValueType.DATETIME_TZ
     elif text == "duration":
         return PredefinedValueType.DURATION
     else:
-        raise ValueError("Unrecognised kind: " + text)
-
-
-@parse.with_pattern(r"[a-zA-Z0-9-_]+(:[a-zA-Z0-9-_]+)?")
-def parse_label(text: str):
-    return Label.of(*text.split(":"))
-
-
-register_type(Label=parse_label)
+        raise ValueError("Unrecognised PredefinedValueType: " + text)
 
 
 @parse.with_pattern(r"([a-zA-Z0-9]+)")
@@ -295,4 +286,4 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
     return value == " by index of variable"
 
 
-register_type(ByIndexOfVariableOrNot=parse_by_index_of_variable_or_not)
+register_type(ByIndexOfVarOrNot=parse_by_index_of_variable_or_not)

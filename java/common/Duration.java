@@ -87,7 +87,7 @@ public class Duration {
     }
 
     /**
-     * Checks if this Label is equal to another object.
+     * Checks if this Duration is equal to another object.
      *
      * <h3>Examples</h3>
      * <pre>

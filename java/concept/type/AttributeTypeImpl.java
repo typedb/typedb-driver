@@ -20,7 +20,6 @@
 package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.AttributeType;
-import com.typedb.driver.common.Label;
 
 import static com.typedb.driver.jni.typedb_driver.attribute_type_get_label;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_get_value_type;
@@ -42,8 +41,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public Label getLabel() {
-        return Label.of(attribute_type_get_label(nativeObject));
+    public String getLabel() {
+        return attribute_type_get_label(nativeObject);
     }
 
     @Override

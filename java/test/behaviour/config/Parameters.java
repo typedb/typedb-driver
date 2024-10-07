@@ -20,7 +20,6 @@
 package com.typedb.driver.test.behaviour.config;
 
 import com.typedb.driver.api.Transaction;
-import com.typedb.driver.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -56,33 +55,13 @@ public class Parameters {
     }
 
     @ParameterType("entity|attribute|relation|thing")
-    public Kind root_label(String type) {
+    public Kind kind(String type) {
         return Kind.of(type);
     }
 
     @ParameterType("[a-zA-Z0-9-_]+")
     public String type_label(String typeLabel) {
         return typeLabel;
-    }
-
-    @ParameterType("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
-    public Label scoped_label(String roleLabel) {
-        String[] labels = roleLabel.split(":");
-        return Label.of(labels[0], labels[1]);
-    }
-
-    @DataTableType
-    public List<Label> scoped_labels(List<String> values) {
-        Iterator<String> valuesIter = values.iterator();
-        String next;
-        List<Label> scopedLabels = new ArrayList<>();
-        while (valuesIter.hasNext() && (next = valuesIter.next()).matches("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")) {
-            String[] labels = next.split(":");
-            scopedLabels.add(Label.of(labels[0], labels[1]));
-        }
-
-        if (valuesIter.hasNext()) fail("Values do not match Scoped Labels regular expression");
-        return scopedLabels;
     }
 
     @ParameterType("\\$([a-zA-Z0-9]+)")
