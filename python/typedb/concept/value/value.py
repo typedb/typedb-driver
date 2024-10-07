@@ -40,7 +40,7 @@ from typedb.native_driver_wrapper import (value_get_value_type, value_is_boolean
 class _Value(Value, _Concept):
     DECIMAL_SCALE = 19
 
-    def get_value_type(self) -> str:
+    def get_type(self) -> str:
         return value_get_value_type(self.native_object)
 
     def get(self) -> Value.VALUE:

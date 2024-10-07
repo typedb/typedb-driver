@@ -42,7 +42,7 @@ class AttributeType(ThingType, ABC):
     @abstractmethod
     def get_value_type(self) -> str:
         """
-        Retrieves the ``str`` describing the value type of this ``AttributeType``.
+        Retrieves the ``str`` describing the value type of this ``AttributeType`` concept.
 
         :return:
 

@@ -24,8 +24,9 @@ from enum import Enum
 from datetime import date, datetime
 from hamcrest import *
 import parse
-from typing import Callable
+from typing import Callable, Optional
 
+from typedb.api.answer.query_type import QueryType
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
 from typedb.driver import *
@@ -98,25 +99,88 @@ def parse_duration(text: str) -> Duration:
 register_type(Duration=parse_duration)
 
 
-class Kind(Enum):
-    ENTITY = 0,
-    ATTRIBUTE = 1,
-    RELATION = 2
+class ConceptKind(Enum):
+    CONCEPT = 0,
+    TYPE = 1,
+    THING_TYPE = 2,
+    THING = 3,
+    ENTITY_TYPE = 4,
+    RELATION_TYPE = 5,
+    ATTRIBUTE_TYPE = 6,
+    ROLE_TYPE = 7,
+    ENTITY = 8,
+    RELATION = 9,
+    ATTRIBUTE = 10,
+    VALUE = 11,
 
 
-@parse.with_pattern(r"entity|attribute|relation")
-def parse_kind(text: str) -> Kind:
-    if text == "entity":
-        return Kind.ENTITY
-    elif text == "attribute":
-        return Kind.ATTRIBUTE
+@parse.with_pattern(r"concept|variable|type|thing type|thing|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
+def parse_concept_kind(text: str) -> ConceptKind:
+    if text == "concept" or text == "variable":
+        return ConceptKind.CONCEPT
+    elif text == "type":
+        return ConceptKind.TYPE
+    elif text == "thing type":
+        return ConceptKind.THING_TYPE
+    elif text == "thing":
+        return ConceptKind.THING
+    elif text == "entity type":
+        return ConceptKind.ENTITY_TYPE
+    elif text == "relation type":
+        return ConceptKind.RELATION_TYPE
+    elif text == "attribute type":
+        return ConceptKind.ATTRIBUTE_TYPE
+    elif text == "role type":
+        return ConceptKind.ROLE_TYPE
+    elif text == "entity":
+        return ConceptKind.ENTITY
     elif text == "relation":
-        return Kind.RELATION
+        return ConceptKind.RELATION
+    elif text == "attribute":
+        return ConceptKind.ATTRIBUTE
+    elif text == "value":
+        return ConceptKind.VALUE
     else:
         raise ValueError("Unrecognised kind: " + text)
 
 
-register_type(Kind=parse_kind)
+register_type(ConceptKind=parse_concept_kind)
+
+
+class PredefinedValueType(Enum):
+    BOOLEAN = 0,
+    LONG = 1,
+    DOUBLE = 2,
+    DECIMAL = 3,
+    STRING = 4,
+    DATE = 5,
+    DATETIME = 6,
+    DATETIME_TZ = 7,
+    DURATION = 8,
+
+
+@parse.with_pattern(r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration")
+def parse_predefined_value_type_opt(text: str) -> Optional[PredefinedValueType]:
+    if text == "boolean":
+        return PredefinedValueType.BOOLEAN
+    elif text == "long":
+        return PredefinedValueType.LONG
+    elif text == "double":
+        return PredefinedValueType.DOUBLE
+    elif text == "decimal":
+        return PredefinedValueType.DECIMAL
+    elif text == "string":
+        return PredefinedValueType.STRING
+    elif text == "date":
+        return PredefinedValueType.DATE
+    elif text == "datetime":
+        return PredefinedValueType.DATETIME
+    elif text == "datetime_tz":
+        return PredefinedValueType.DATETIME_TZ
+    elif text == "duration":
+        return PredefinedValueType.DURATION
+    else:
+        raise ValueError("Unrecognised kind: " + text)
 
 
 @parse.with_pattern(r"[a-zA-Z0-9-_]+:([a-zA-Z0-9-_]+)?")
@@ -145,14 +209,14 @@ def parse_transaction_type(value: str) -> TransactionType:
 register_type(TransactionType=parse_transaction_type)
 
 
-# @parse.with_pattern("read|write|schema")
-# def parse_query_type(value: str) -> QueryType:
-#     return QueryType.READ if value == "read" \
-#         else QueryType.WRITE if value == "write" \
-#         else QueryType.SCHEMA
-#
-#
-# register_type(QueryType=parse_query_type)
+@parse.with_pattern("read|write|schema")
+def parse_query_type(value: str) -> QueryType:
+    return QueryType.READ if value == "read" \
+        else QueryType.WRITE if value == "write" \
+        else QueryType.SCHEMA
+
+
+register_type(QueryType=parse_query_type)
 
 
 def parse_list(table: Table) -> list[str]:

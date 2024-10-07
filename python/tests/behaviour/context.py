@@ -18,9 +18,6 @@
 from __future__ import annotations
 
 import behave.runner
-from behave.model import Table
-from tests.behaviour.config.parameters import Kind
-from typing import Optional
 from typedb.driver import *
 
 

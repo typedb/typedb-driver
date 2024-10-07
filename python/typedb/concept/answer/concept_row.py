@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import Iterator, TYPE_CHECKING
 
+from typedb.api.answer.query_type import QueryType
 from typedb.api.answer.concept_row import ConceptRow
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
     NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
@@ -27,8 +28,8 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
 from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
                                           concept_row_get_index, concept_row_to_string, concept_row_equals,
-                                          concept_row_get_column_names,
-                                          ConceptRow as NativeConceptRow)
+                                          concept_row_get_column_names, concept_row_get_query_type,
+                                          concept_row_get_concepts, ConceptRow as NativeConceptRow)
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept

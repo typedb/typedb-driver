@@ -34,7 +34,7 @@ class Value(Concept, ABC):
     @abstractmethod
     def get_value_type(self) -> str:
         """
-        Retrieves the ``ValueType`` of this value concept.
+        Retrieves the ``str`` describing the value type of this ``Value`` concept.
 
         :return:
 

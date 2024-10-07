@@ -16,7 +16,6 @@
 # under the License.
 
 from behave.model_core import Status
-from tests.behaviour.config.parameters import Kind
 from tests.behaviour.context import Context
 from typedb.driver import *
 
@@ -37,26 +36,10 @@ def before_scenario(context: Context):
     context.tx = lambda: next(iter(context.transactions), None)
     context.get = lambda var: context.things[var]
     context.put = lambda var, thing: _put_impl(context, var, thing)
-    context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.option_setters = {
         # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
     }
-
-
-def _put_impl(context: Context, variable: str, thing: Thing):
-    context.things[variable] = thing
-
-
-def _get_thing_type_impl(context: Context, root_label: Kind, type_label: str):
-    if root_label == Kind.ENTITY:
-        return context.tx().getQueryType.get_entity_type(type_label).resolve()
-    elif root_label == Kind.ATTRIBUTE:
-        return context.tx().getQueryType.get_attribute_type(type_label).resolve()
-    elif root_label == Kind.RELATION:
-        return context.tx().getQueryType.get_relation_type(type_label).resolve()
-    else:
-        raise ValueError("Unrecognised value")
 
 
 def _clear_answers_impl(context: Context):
