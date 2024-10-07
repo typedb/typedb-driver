@@ -22,7 +22,7 @@ from typedb.common.exception import TypeDBDriverException
 from typedb.common.label import Label
 from typedb.concept.type.type import _Type
 from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative
+    TypeDBDriverExceptionNative, role_type_get_label
 )
 
 

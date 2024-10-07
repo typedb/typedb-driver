@@ -22,13 +22,17 @@ from behave import register_type
 from behave.model import Table
 from enum import Enum
 from datetime import date, datetime
+from decimal import Decimal
 from hamcrest import *
 import parse
 from typing import Callable, Optional
 
 from typedb.api.answer.query_type import QueryType
+from typedb.api.connection.transaction import TransactionType
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
+from typedb.common.label import Label
+from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
 
@@ -183,7 +187,7 @@ def parse_predefined_value_type_opt(text: str) -> Optional[PredefinedValueType]:
         raise ValueError("Unrecognised kind: " + text)
 
 
-@parse.with_pattern(r"[a-zA-Z0-9-_]+:([a-zA-Z0-9-_]+)?")
+@parse.with_pattern(r"[a-zA-Z0-9-_]+(:[a-zA-Z0-9-_]+)?")
 def parse_label(text: str):
     return Label.of(*text.split(":"))
 
@@ -280,7 +284,15 @@ register_type(MayError=parse_may_error)
 
 @parse.with_pattern("is|is not")
 def parse_is_or_not(value: str) -> bool:
-    return True if value == "is" else False
+    return value == "is"
 
 
 register_type(IsOrNot=parse_is_or_not)
+
+
+@parse.with_pattern("| by index of variable")
+def parse_by_index_of_variable_or_not(value: str) -> bool:
+    return value == " by index of variable"
+
+
+register_type(ByIndexOfVariableOrNot=parse_by_index_of_variable_or_not)

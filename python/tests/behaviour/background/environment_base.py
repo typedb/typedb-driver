@@ -44,9 +44,8 @@ def before_scenario(context: Context):
 
 def _clear_answers_impl(context: Context):
     context.answers = None
-    context.fetch_answers = None
-    context.value_answer = None
-    context.value_answer_groups = None
+    context.unwrapped_answer = None
+    context.collected_answer = None
 
 
 def after_scenario(context: Context, scenario):
