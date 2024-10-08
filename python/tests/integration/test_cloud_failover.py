@@ -90,7 +90,7 @@
 #             with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
 #                 person = tx.getQueryType.get_entity_type("person").resolve()
 #                 print("Retrieved entity type with label '%s' from primary replica." % person.get_label())
-#                 assert person.get_label().name == "person"
+#                 assert person.get_label() == "person"
 #             iteration = 0
 #             while iteration < 10:
 #                 iteration += 1
@@ -106,7 +106,7 @@
 #                 with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
 #                     person = tx.getQueryType.get_entity_type("person").resolve()
 #                     print("Retrieved entity type with label '%s' from new primary replica." % person.get_label())
-#                     assert person.get_label().name == "person"
+#                     assert person.get_label() == "person"
 #                 idx = str(primary_replica.address())[10]
 #                 self.server_start(idx)
 #                 lsof = None

@@ -56,7 +56,7 @@ class Duration:
         return self._nanos
 
     @classmethod
-    def from_string(cls, duration_str: str) -> Duration:
+    def fromstring(cls, duration_str: str) -> Duration:
         """
         Parses a Duration object from a string in ISO 8601 format.
 
@@ -69,8 +69,8 @@ class Duration:
 
         ::
 
-            Duration.from_string("P1Y10M7DT15H44M5.00394892S")
-            Duration.from_string("P55W")
+            Duration.fromstring("P1Y10M7DT15H44M5.00394892S")
+            Duration.fromstring("P55W")
         """
 
         match = cls.DATETIME_REGEX.fullmatch(duration_str)

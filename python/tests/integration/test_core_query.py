@@ -71,11 +71,9 @@ class TestQuery(TestCase):
                 assert_that(concept_by_name.is_attribute_type(), is_(False))
                 assert_that(concept_by_name.is_type(), is_(True))
                 assert_that(concept_by_name.is_thing(), is_(False))
-                assert_that(concept_by_name.as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(concept_by_name.as_entity_type().get_label().name, is_("person"))
-                assert_that(concept_by_name.as_entity_type().get_label().scope, is_(None))
-                assert_that(concept_by_name.as_entity_type().get_label().scoped_name(), is_not("not person"))
-                assert_that(concept_by_name.as_entity_type().get_label().scoped_name(), is_not("age"))
+                assert_that(concept_by_name.as_entity_type().get_label(), is_("person"))
+                assert_that(concept_by_name.as_entity_type().get_label(), is_not("not person"))
+                assert_that(concept_by_name.as_entity_type().get_label(), is_not("age"))
 
             with driver.transaction(database.name, READ) as tx:
                 answer = tx.query("match attribute $a;").resolve()
@@ -104,10 +102,8 @@ class TestQuery(TestCase):
                 assert_that(concept_by_name.as_attribute_type().is_decimal(), is_(False))
                 assert_that(concept_by_name.as_attribute_type().is_double(), is_(False))
                 assert_that(concept_by_name.as_attribute_type().is_long(), is_(True))
-                assert_that(concept_by_name.as_attribute_type().get_label().scoped_name(), is_("age"))
-                assert_that(concept_by_name.as_attribute_type().get_label().name, is_("age"))
-                assert_that(concept_by_name.as_attribute_type().get_label().scope, is_(None))
-                assert_that(concept_by_name.as_attribute_type().get_label().scoped_name(), is_not("person"))
+                assert_that(concept_by_name.as_attribute_type().get_label(), is_("age"))
+                assert_that(concept_by_name.as_attribute_type().get_label(), is_not("person"))
 
             with driver.transaction(database.name, WRITE) as tx:
                 answer = tx.query("insert $z isa person, has age 10; $x isa person, has age 20;").resolve()
@@ -128,10 +124,8 @@ class TestQuery(TestCase):
                 assert_that(x.is_attribute(), is_(False))
                 assert_that(x.is_type(), is_(False))
                 assert_that(x.is_thing(), is_(True))
-                assert_that(x.as_entity().get_type().as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(x.as_entity().get_type().as_entity_type().get_label().name, is_("person"))
-                assert_that(x.as_entity().get_type().as_entity_type().get_label().scope, is_(None))
-                assert_that(x.as_entity().get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label(), is_("person"))
+                assert_that(x.as_entity().get_type().as_entity_type().get_label(), is_not("not person"))
 
                 z = row.get("z")
                 assert_that(z.is_entity(), is_(True))
@@ -140,10 +134,8 @@ class TestQuery(TestCase):
                 assert_that(z.is_type(), is_(False))
                 assert_that(z.is_thing(), is_(True))
                 z_entity = z.as_entity()
-                assert_that(z_entity.get_type().as_entity_type().get_label().scoped_name(), is_("person"))
-                assert_that(z_entity.get_type().as_entity_type().get_label().name, is_("person"))
-                assert_that(z_entity.get_type().as_entity_type().get_label().scope, is_(None))
-                assert_that(z_entity.get_type().as_entity_type().get_label().scoped_name(), is_not("not person"))
+                assert_that(z_entity.get_type().as_entity_type().get_label(), is_("person"))
+                assert_that(z_entity.get_type().as_entity_type().get_label(), is_not("not person"))
 
                 tx.commit()
 
@@ -161,10 +153,8 @@ class TestQuery(TestCase):
                     assert_that(x.is_type(), is_(False))
                     assert_that(x.is_thing(), is_(True))
                     x_type = x.as_entity().get_type().as_entity_type()
-                    assert_that(x_type.get_label().scoped_name(), is_("person"))
-                    assert_that(x_type.get_label().name, is_("person"))
-                    assert_that(x_type.get_label().scope, is_(None))
-                    assert_that(x_type.get_label().scoped_name(), is_not("not person"))
+                    assert_that(x_type.get_label(), is_("person"))
+                    assert_that(x_type.get_label(), is_not("not person"))
                     count += 1
                 assert_that(count, is_(2))
 
@@ -214,7 +204,7 @@ class TestQuery(TestCase):
                     assert_that(a.is_attribute_type(), is_(True))
                     a_type = a.as_attribute_type()
                     assert_that(a_type.get_value_type(),
-                                is_(equal_to(attribute_value_types[a_type.get_label().scoped_name()])))
+                                is_(equal_to(attribute_value_types[a_type.get_label()])))
                     count += 1
                 assert_that(count, is_(len(attribute_value_types)))
 
@@ -242,8 +232,8 @@ class TestQuery(TestCase):
                 checked = 0
                 for row in rows:
                     attribute = row.get("a").as_attribute()
-                    attribute_name = attribute.get_type().get_label().scoped_name()
-                    assert_that(attribute.get_value_type(), is_(attribute_value_types[attribute_name]))
+                    attribute_name = attribute.get_type().get_label()
+                    assert_that(attribute.get_type().get_value_type(), is_(attribute_value_types[attribute_name]))
                     value = attribute.get_value()
                     expected = attribute_values[attribute_name]
 
@@ -267,14 +257,14 @@ class TestQuery(TestCase):
                         assert_that(value, is_(datetime.strptime(expected, date_format).date()))
                         checked += 1
                     elif attribute.is_datetime():
-                        assert_that(value, is_(Datetime.from_string(expected)))
+                        assert_that(value, is_(Datetime.utcfromstring(expected)))
                         checked += 1
                     elif attribute.is_datetime_tz():
                         expected_dt, expected_tz = expected.split(" ")
-                        assert_that(value, is_(Datetime.from_string(expected_dt, expected_tz)))
+                        assert_that(value, is_(Datetime.utcfromstring(expected_dt, expected_tz)))
                         checked += 1
                     elif attribute.is_duration():
-                        assert_that(value, is_(Duration.from_string(expected)))
+                        assert_that(value, is_(Duration.fromstring(expected)))
                         checked += 1
                     # TODO: Add structs!
 

@@ -43,9 +43,6 @@ class _Attribute(Attribute, _Thing):
     def get_value(self) -> Value.VALUE:
         return self._value().get()
 
-    def get_value_type(self) -> str:
-        return self._value().get_value_type()
-
     def is_boolean(self) -> bool:
         return self._value().is_boolean()
 
@@ -107,7 +104,7 @@ class _Attribute(Attribute, _Thing):
         return self._value().as_struct()
 
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
-        return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
+        return {"type": self.get_type().get_label()} | self._value().to_json()
 
     def __eq__(self, other):
         if other is self:

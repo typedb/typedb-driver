@@ -21,23 +21,24 @@ from __future__ import annotations
 from behave import register_type
 from behave.model import Table
 from enum import Enum
-from datetime import date, datetime
-from decimal import Decimal
 from hamcrest import *
 import parse
 from typing import Callable, Optional
 
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
-from typedb.common.datetime import Datetime
-from typedb.common.duration import Duration
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
 
 @parse.with_pattern(r"true|false")
 def parse_bool(value: str) -> bool:
-    return value == "true"
+    if value == "true":
+        return True
+    elif value == "false":
+        return False
+    else:
+        raise ValueError(f"Unrecognised bool: {value}")
 
 
 register_type(Bool=parse_bool)
@@ -50,56 +51,12 @@ def parse_int(text: str) -> int:
 register_type(Int=parse_int)
 
 
-def parse_float(text: str) -> float:
-    return float(text)
-
-
-register_type(Float=parse_float)
-
-
-def parse_decimal(text: str) -> Decimal:
-    return Decimal(text)
-
-
-register_type(Decimal=parse_decimal)
-
-
 @parse.with_pattern("[\w_-]+")
 def parse_words(text):
     return text
 
 
 register_type(Words=parse_words)
-
-
-def parse_date(text: str) -> date:
-    datetime.strptime(text, "%Y-%m-%d").date()
-    return Datetime.from_string(text)
-
-
-register_type(Date=parse_date)
-
-
-def parse_datetime(text: str) -> Datetime:
-    return Datetime.from_string(text)
-
-
-register_type(Datetime=parse_datetime)
-
-
-def parse_datetime_tz(text: str) -> Datetime:
-    expected_dt, expected_tz = text.split(" ")
-    return Datetime.from_string(expected_dt, expected_tz)
-
-
-register_type(DatetimeTZ=parse_datetime_tz)
-
-
-def parse_duration(text: str) -> Duration:
-    return Duration.from_string(text)
-
-
-register_type(Duration=parse_duration)
 
 
 class ConceptKind(Enum):
@@ -144,13 +101,13 @@ def parse_concept_kind(text: str) -> ConceptKind:
     elif text == "value":
         return ConceptKind.VALUE
     else:
-        raise ValueError("Unrecognised ConceptKind: " + text)
+        raise ValueError(f"Unrecognised ConceptKind: {text}")
 
 
 register_type(ConceptKind=parse_concept_kind)
 
 
-class PredefinedValueType(Enum):
+class ValueType(Enum):
     BOOLEAN = 0,
     LONG = 1,
     DOUBLE = 2,
@@ -160,30 +117,43 @@ class PredefinedValueType(Enum):
     DATETIME = 6,
     DATETIME_TZ = 7,
     DURATION = 8,
+    STRUCT = 9,
 
 
-@parse.with_pattern(r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration")
-def parse_predefined_value_type_opt(text: str) -> Optional[PredefinedValueType]:
+@parse.with_pattern(r"boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")
+def parse_value_type(text: str) -> ValueType:
+    value_type_opt = try_parse_value_type(text)
+    if value_type_opt is None:
+        raise ValueError(f"Unrecognised ValueType: {text}")
+    return value_type_opt
+
+
+def try_parse_value_type(text: str) -> Optional[ValueType]:
     if text == "boolean":
-        return PredefinedValueType.BOOLEAN
+        return ValueType.BOOLEAN
     elif text == "long":
-        return PredefinedValueType.LONG
+        return ValueType.LONG
     elif text == "double":
-        return PredefinedValueType.DOUBLE
+        return ValueType.DOUBLE
     elif text == "decimal":
-        return PredefinedValueType.DECIMAL
+        return ValueType.DECIMAL
     elif text == "string":
-        return PredefinedValueType.STRING
+        return ValueType.STRING
     elif text == "date":
-        return PredefinedValueType.DATE
+        return ValueType.DATE
     elif text == "datetime":
-        return PredefinedValueType.DATETIME
+        return ValueType.DATETIME
     elif text == "datetime-tz":
-        return PredefinedValueType.DATETIME_TZ
+        return ValueType.DATETIME_TZ
     elif text == "duration":
-        return PredefinedValueType.DURATION
+        return ValueType.DURATION
+    elif text == "struct":
+        return ValueType.STRUCT
     else:
-        raise ValueError("Unrecognised PredefinedValueType: " + text)
+        return None
+
+
+register_type(ValueType=parse_value_type)
 
 
 @parse.with_pattern(r"([a-zA-Z0-9]+)")
@@ -267,7 +237,7 @@ def parse_may_error(value: str) -> MayError:
     elif value in ("; fails", "; parsing fails"):
         return MayError(True)
     else:
-        raise ValueError("Unrecognised MayError: " + value)
+        raise ValueError(f"Unrecognised MayError: {value}")
 
 
 register_type(MayError=parse_may_error)
@@ -275,10 +245,22 @@ register_type(MayError=parse_may_error)
 
 @parse.with_pattern("is|is not")
 def parse_is_or_not(value: str) -> bool:
-    return value == "is"
+    if value == "is not":
+        return False
+    elif value == "is":
+        return True
+    else:
+        raise ValueError(f"Unrecognised IsOrNot: {value}")
 
 
 register_type(IsOrNot=parse_is_or_not)
+
+
+def is_or_not_reason(is_or_not: bool, real, expected) -> str:
+    intro_str = "Expected that real value"
+    is_or_not_str = "is" if is_or_not else "is not"
+    spaces_num = len(intro_str)
+    return f"\nExpected that real value <{real}>\n{is_or_not_str: >{spaces_num}} <{expected}>"
 
 
 @parse.with_pattern("| by index of variable")

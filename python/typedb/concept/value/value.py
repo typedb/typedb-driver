@@ -118,12 +118,12 @@ class _Value(Value, _Concept):
 
     def as_datetime(self) -> Datetime:
         native_datetime = value_get_datetime(self.native_object)
-        return Datetime(native_datetime.seconds, native_datetime.subsec_nanos)
+        return Datetime.utcfromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos)
 
     def as_datetime_tz(self) -> Datetime:
         native_datetime_tz = value_get_datetime_tz(self.native_object)
         native_datetime = native_datetime_tz.datetime_in_nanos
-        return Datetime(native_datetime.seconds, native_datetime.subsec_nanos, native_datetime_tz.zone_id)
+        return Datetime.fromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos, native_datetime_tz.zone_id)
 
     def as_duration(self) -> Duration:
         native_duration = value_get_duration(self.native_object)

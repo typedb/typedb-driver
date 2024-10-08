@@ -33,7 +33,7 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",
         "//python/tests/behaviour/query:steps",
-        "//python/tests/behaviour/util:util_steps",
+        "//python/tests/behaviour/util:steps",
     ],
     deps = [
         "//python:driver_python",
