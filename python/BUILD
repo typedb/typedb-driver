@@ -22,6 +22,7 @@ load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 load("//python:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:python/rules.bzl",  "sphinx_to_adoc")
+load("//tool/docs:examples/rules.bzl",  "test_to_example")
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -59,6 +60,13 @@ sphinx_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
+)
+
+test_to_example(
+    name = "example_core",
+    input = "//python/tests/integration/core:test_core_example.py",
+    output = "python/README.tmp",
+    removed_lines = ["assert_that", "todo"],
 )
 
 checkstyle_test(

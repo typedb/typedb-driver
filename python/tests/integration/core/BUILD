@@ -19,6 +19,11 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
+exports_files(
+    ["test_core_example.py"],
+    visibility = ["//python:__subpackages__"],
+)
+
 py_test(
     name = "test_core_example",
     srcs = ["test_core_example.py"],

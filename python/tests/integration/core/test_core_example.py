@@ -17,10 +17,12 @@
 
 import unittest
 from unittest import TestCase
-
 from hamcrest import *
+
+# EXAMPLE START MARKER
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
+# EXAMPLE END MARKER
 
 
 class TestDebug(TestCase):
@@ -29,6 +31,9 @@ class TestDebug(TestCase):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
+
+
+# EXAMPLE START MARKER
 
     def test_example(self):
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
@@ -184,9 +189,9 @@ class TestDebug(TestCase):
                 print(f"Total persons found: {count}")
 
                 # TODO: We can add a fetch example here!
-
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
 
+# EXAMPLE END MARKER
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
