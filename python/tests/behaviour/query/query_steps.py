@@ -115,13 +115,13 @@ def assert_answer_size(answer, size: int):
     assert_that(len(answer), is_(size))
 
 
-@step("answer size: {size:Int}")
+@step("answer size is: {size:Int}")
 def step_impl(context: Context, size: int):
     collect_answer_if_needed(context)
     assert_answer_size(context.collected_answer, size)
 
 
-@step("answer query type {is_or_not:IsOrNot} {query_type:QueryType}")
+@step("answer query type {is_or_not:IsOrNot}: {query_type:QueryType}")
 def step_impl(context: Context, is_or_not: bool, query_type: QueryType):
     collect_answer_if_needed(context)
     answer_query_type = context.collected_answer[0].query_type

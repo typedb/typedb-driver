@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# TODO: When cloud is implemented, rewrite this test in BDDs for all the drivers. Remove this file.
+
 # import os
 # import subprocess
 # import unittest

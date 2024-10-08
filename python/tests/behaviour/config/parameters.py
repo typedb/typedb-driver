@@ -17,14 +17,13 @@
 
 from __future__ import annotations
 
-
-from behave import register_type
-from behave.model import Table
 from enum import Enum
-from hamcrest import *
-import parse
 from typing import Callable, Optional
 
+import parse
+from behave import register_type
+from behave.model import Table
+from hamcrest import *
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
 from typedb.common.exception import TypeDBDriverException
@@ -74,7 +73,8 @@ class ConceptKind(Enum):
     VALUE = 11,
 
 
-@parse.with_pattern(r"concept|variable|type|thing type|thing|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
+@parse.with_pattern(
+    r"concept|variable|type|thing type|thing|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
 def parse_concept_kind(text: str) -> ConceptKind:
     if text == "concept" or text == "variable":
         return ConceptKind.CONCEPT

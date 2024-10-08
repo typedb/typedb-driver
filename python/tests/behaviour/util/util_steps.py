@@ -25,7 +25,6 @@ from tests.behaviour.context import Context
 
 @step("set time-zone: {time_zone_name}")
 def step_impl(context: Context, time_zone_name: str):
-    print("ALWLWLWL")
     os.environ["TZ"] = time_zone_name
     time.tzset()
 

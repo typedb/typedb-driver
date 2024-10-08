@@ -17,7 +17,7 @@
 
 from typedb.driver import *
 
-# IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
+# IGNORE_TAGS = ["ignore", "ignore-typedb", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 #
 #
 # def before_all(context: Context):
@@ -39,7 +39,6 @@ from typedb.driver import *
 #     credential = Credential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
 #     context.driver = TypeDB.cloud_driver(addresses=["localhost:" + context.config.userdata["port"]],
 #                                               credential=credential)
-#     context.session_options = Options()
 #     context.transaction_options = Options()
 #
 #

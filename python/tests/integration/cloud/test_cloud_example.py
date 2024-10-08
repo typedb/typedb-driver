@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# TODO: Rewrite this as a full cloud driver's usage example for README similar to core.
+
 # import os
 # import unittest
 # from unittest import TestCase
@@ -54,7 +56,7 @@
 #         with TypeDB.cloud_driver(address_translation, CREDENTIAL) as driver:
 #             if TYPEDB not in [db.name for db in driver.databases.all()]:
 #                 driver.databases.create(TYPEDB)
-#             with driver.session(TYPEDB, DATA) as session, session.transaction(WRITE) as tx:
+#             with driver.transaction(TYPEDB, WRITE) as tx:
 #                 root = tx.getQueryType.get_root_entity_type()
 #                 assert_that(len(list(root.get_subtypes(tx))), equal_to(1))
 #

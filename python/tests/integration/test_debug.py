@@ -34,6 +34,7 @@ class TestDebug(TestCase):
                 driver.databases.create(TYPEDB)
 
     def test_debug(self):
+        # Use this test for isolated debugging.
         pass
 
 

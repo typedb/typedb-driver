@@ -26,6 +26,8 @@ WRITE = TransactionType.WRITE
 SCHEMA = TransactionType.SCHEMA
 
 
+# TODO: Understand if we need this test. If yes, rewrite it in BDDs for all the drivers.
+
 class TestStream(TestCase):
 
     def setUp(self):
@@ -49,7 +51,7 @@ class TestStream(TestCase):
             # This is expected and should be handled correctly (ie: ignored) by the driver.
             # tx_options = Options(prefetch=True, prefetch_size=50) # TODO: Return when Options are back
             for i in range(50):
-                with driver.transaction(TYPEDB, READ) as tx: # driver.transaction(TYPEDB, READ, tx_options) as tx:
+                with driver.transaction(TYPEDB, READ) as tx:  # driver.transaction(TYPEDB, READ, tx_options) as tx:
                     person_type = list(tx.query("match $p sub person;").resolve().as_concept_rows())[0].get("p")
                     # TODO: Rewrite
                     # _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))

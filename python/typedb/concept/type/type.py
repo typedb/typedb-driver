@@ -28,9 +28,6 @@ class _Type(Type, _Concept, ABC):
     def as_type(self) -> Type:
         return self
 
-    def __str__(self):
-        return type(self).__name__ + "[label: %s]" % self.get_label()
-
     def __eq__(self, other):
         if other is self:
             return True

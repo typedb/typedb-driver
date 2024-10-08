@@ -16,21 +16,37 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
 py_test(
-    name = "test_debug",
-    srcs = ["test_debug.py"],
+    name = "test_core_example",
+    srcs = ["test_core_example.py"],
     deps = [
         "//python:driver_python",
+        requirement("PyHamcrest"),
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
 )
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
+py_test(
+    name = "test_core_values",
+    srcs = ["test_core_values.py"],
+    deps = [
+        "//python:driver_python",
+        requirement("PyHamcrest"),
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    python_version = "PY3"
+)
+
+py_test(
+    name = "test_core_stream",
+    srcs = ["test_core_stream.py"],
+    deps = [
+        "//python:driver_python",
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    python_version = "PY3"
 )

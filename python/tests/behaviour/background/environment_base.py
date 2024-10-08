@@ -28,9 +28,9 @@ def before_scenario(context: Context):
     # setup context state
     context.transactions = {}
     context.transactions_parallel = []
-    context.answer = None # QueryAnswer
-    context.unwrapped_answer = None # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
-    context.collected_answer = None # [ConceptRow] / ... ?
+    context.answer = None  # QueryAnswer
+    context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
+    context.collected_answer = None  # [ConceptRow] / ... ?
     context.things = {}
     # setup context functions
     context.tx = lambda: next(iter(context.transactions), None)
@@ -55,5 +55,5 @@ def after_scenario(context: Context, scenario):
         context.driver.close()
 
 
-def after_all(context: Context):
+def after_all(_: Context):
     pass

@@ -16,9 +16,8 @@
 # under the License.
 
 from behave import *
-from tests.behaviour.context import Context
-from typedb.common.exception import TypeDBDriverException
 from tests.behaviour.config.parameters import MayError
+from tests.behaviour.context import Context
 
 
 @step(u'typedb has configuration')
@@ -48,18 +47,9 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(port=0))
 
 
-@step(u'connection opens with authentication: {username:Words}, {password:Words}')
-def step_impl(context: Context, username: str, password: str):
-    context.setup_context_driver_fn(username, password)
-
-
-@step(u'connection opens with authentication: {username:Words}, {password:Words}; throws exception')
-def step_impl(context: Context, username: str, password: str):
-    try:
-        context.setup_context_driver_fn(username, password)
-        assert False
-    except TypeDBDriverException:
-        pass
+@step(u'connection opens with authentication: {username:Words}, {password:Words}{may_error:MayError}')
+def step_impl(context: Context, username: str, password: str, may_error: MayError):
+    may_error.check(lambda: context.setup_context_driver_fn(username, password))
 
 
 @step(u'connection closes')

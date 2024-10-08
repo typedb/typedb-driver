@@ -17,6 +17,7 @@
 
 from typedb.driver import *
 
+# TODO: ; throws exception -> {may_error:MayError} + may_error.check(lambda: ...)
 #
 #
 # def _get_driver(context: Context):

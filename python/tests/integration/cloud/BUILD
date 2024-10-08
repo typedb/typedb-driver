@@ -15,15 +15,32 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
+load(":cloud_test_rule.bzl", "typedb_cloud_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_test")
 
-py_library(
-    name = "steps",
-    srcs = ["session_steps.py"],
-    deps = [],
-)
+#typedb_cloud_py_test(
+#    name = "test_cloud_failover",
+#    srcs = ["test_cloud_failover.py"],
+#    deps = [
+#        "//python:driver_python",
+#    ],
+#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+#    size = "medium",
+#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cloud-artifact",
+#)
+
+#py_test(
+#    name = "test_cloud_connection",
+#    srcs = ["test_cloud_connection.py"],
+#    deps = [
+#        "//python:driver_python",
+#        requirement("PyHamcrest"),
+#    ],
+#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+#    python_version = "PY3"
+#)
 
 checkstyle_test(
     name = "checkstyle",

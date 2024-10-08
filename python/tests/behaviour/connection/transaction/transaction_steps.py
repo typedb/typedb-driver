@@ -21,31 +21,32 @@ from typing import Callable, Optional
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import MayError, TransactionType, parse_list, parse_transaction_type
+from tests.behaviour.config.parameters import MayError, parse_list, parse_transaction_type
 from tests.behaviour.context import Context
-from typedb.driver import *
 from typedb.api.connection.transaction import TransactionType
+from typedb.driver import *
 
 
 def open_transactions_of_type(context: Context, database_name: str, transaction_types: list[TransactionType]):
     context.transactions = []
     for transaction_type in transaction_types:
-        transaction = context.driver.transaction(database_name, transaction_type) # , context.transaction_options
+        transaction = context.driver.transaction(database_name, transaction_type)  # , context.transaction_options
         context.transactions.append(transaction)
 
 
-@step("connection open {transaction_type:TransactionType} transaction for database: {database_name:Words}{may_error:MayError}")
+@step(
+    "connection open {transaction_type:TransactionType} transaction for database: {database_name:Words}{may_error:MayError}")
 def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
     may_error.check(lambda: open_transactions_of_type(context, database_name, [transaction_type]))
 
 
-@step("connection open transactions for database: {database_name}, of type:")
+@step("connection open transactions for database: {database_name}, of type")
 def step_impl(context: Context, database_name: str):
     transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
     open_transactions_of_type(context, database_name, transaction_types)
 
 
-def for_each_session_transactions_are(context: Context, assertion: Callable[[Transaction], None]):
+def for_each_transaction_is(context: Context, assertion: Callable[[Transaction], None]):
     for transaction in context.transactions:
         assertion(transaction)
 
@@ -61,7 +62,7 @@ def step_impl(context: Context, is_open: bool):
 
 @step("transactions are open: {are_open:Bool}")
 def step_impl(context: Context, are_open: bool):
-    for_each_session_transactions_are(context, lambda tx: assert_transaction_open(tx, are_open))
+    for_each_transaction_is(context, lambda tx: assert_transaction_open(tx, are_open))
 
 
 @step("transaction commits{may_error:MayError}")
@@ -79,7 +80,7 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.tx().rollback())
 
 
-def for_each_session_transaction_has_type(context: Context, transaction_types: list):
+def for_each_transaction_has_type(context: Context, transaction_types: list):
     assert_that(context.transactions, has_length(len(transaction_types)))
     transactions_iterator = iter(context.transactions)
     for transaction_type in transaction_types:
@@ -89,12 +90,12 @@ def for_each_session_transaction_has_type(context: Context, transaction_types: l
 @step("transactions have type")
 def step_impl(context: Context):
     transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
-    for_each_session_transaction_has_type(context, transaction_types)
+    for_each_transaction_has_type(context, transaction_types)
 
 
 @step("transaction has type: {transaction_type:TransactionType}")
 def step_impl(context: Context, transaction_type: TransactionType):
-    for_each_session_transaction_has_type(context, [transaction_type])
+    for_each_transaction_has_type(context, [transaction_type])
 
 
 @step("connection open transactions in parallel for database: {name:Words}, of type")
@@ -121,12 +122,11 @@ def step_impl(context: Context, are_open: bool):
 @step("transactions in parallel have type")
 def step_impl(context: Context):
     types = list(map(parse_transaction_type, parse_list(context.table)))
-    for session in context.sessions:
-        future_transactions = context.sessions_to_transactions_parallel[session]
-        assert_that(future_transactions, has_length(len(types)))
-        future_transactions_iter = iter(future_transactions)
-        for type_ in types:
-            assert_that(next(future_transactions_iter).result().type, is_(type_))
+    future_transactions = context.transactions_parallel
+    assert_that(future_transactions, has_length(len(types)))
+    future_transactions_iter = iter(future_transactions)
+    for type_ in types:
+        assert_that(next(future_transactions_iter).result().type, is_(type_))
 
 
 @step("set transaction option {option} to: {value:Int}")
