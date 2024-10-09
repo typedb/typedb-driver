@@ -17,7 +17,7 @@
 
 from typedb.driver import *
 
-# IGNORE_TAGS = ["ignore", "ignore-typedb", "ignore-typedb-driver", "ignore-typedb-driver-python"]
+# IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 #
 #
 # def before_all(context: Context):

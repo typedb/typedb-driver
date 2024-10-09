@@ -72,6 +72,9 @@ test_to_example(
     },
 )
 
+# Temporary manual usage:
+# 1. Run: bazel run //python:example_core; bazel run //python:readme_example_core
+# 2. Enjoy your updated README.md!
 update_markdown_example(
     name = "readme_example_core",
     # TODO: Use ":example_core" as a rule with a single output instead

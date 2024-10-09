@@ -73,7 +73,7 @@ class MarkdownCodeUpdater : Callable<Unit> {
 
         val beforeCodeBlock = outputLines.subList(0, startIndex + 1)
         val afterCodeBlock = outputLines.subList(endIndex, outputLines.size)
-        val newCodeBlock = listOf("```$language") + inputLines + "```"
+        val newCodeBlock = listOf("\n```$language") + inputLines + "```\n"
 
         val updatedContent = beforeCodeBlock + newCodeBlock + afterCodeBlock
         Files.write(outputFile.toPath(), updatedContent)
