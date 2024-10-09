@@ -18,12 +18,17 @@
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 
-def test_to_example(name, input, output, removed_lines):
+def test_to_example(name, input, output, removed_lines, changed_words):
     args = [
         "$(location %s)" % input,
         "--output",
         "%s" % output,
-    ] + ["--remove=%s" % line for line in removed_lines]
+    ] + [
+        "--remove-lines=%s" % line for line in removed_lines
+    ] + [
+        "--change-words=%s=%s" % (from_word, changed_words[from_word]) for from_word in changed_words
+    ]
+
     kt_jvm_binary(
         name = name,
         srcs = [
@@ -35,5 +40,29 @@ def test_to_example(name, input, output, removed_lines):
             "@maven//:info_picocli_picocli",
         ],
         data = [input],
+        visibility = ["//visibility:public"],
+    )
+
+def update_markdown_example(name, input, output, start_marker, end_marker, language_tag):
+    args = [
+        "$(location %s)" % input,
+        "--output",
+        "$(location %s)" % output,
+        "--start-marker=%s" % start_marker,
+        "--end-marker=%s" % end_marker,
+        "--language=%s" % language_tag,
+    ]
+
+    kt_jvm_binary(
+        name = name,
+        srcs = [
+            "//tool/docs:examples/MarkdownCodeUpdater.kt",
+        ],
+        main_class = "com.typedb.driver.tool.docs.examples.MarkdownCodeUpdaterKt",
+        args = args,
+        deps = [
+            "@maven//:info_picocli_picocli",
+        ],
+        data = [input, output],
         visibility = ["//visibility:public"],
     )

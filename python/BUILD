@@ -22,7 +22,7 @@ load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 load("//python:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:python/rules.bzl",  "sphinx_to_adoc")
-load("//tool/docs:examples/rules.bzl",  "test_to_example")
+load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -67,6 +67,18 @@ test_to_example(
     input = "//python/tests/integration/core:test_core_example.py",
     output = "python/README.tmp",
     removed_lines = ["assert_that", "todo"],
+    changed_words = {
+        "test_example(self)": "typedb_example()",
+    },
+)
+
+update_markdown_example(
+    name = "readme_example_core",
+    input = ":README.tmp",
+    output = ":README.md",
+    start_marker = "CORE_EXAMPLE_START_MARKER",
+    end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "py",
 )
 
 checkstyle_test(

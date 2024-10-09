@@ -20,7 +20,6 @@ from unittest import TestCase
 from hamcrest import *
 
 # EXAMPLE START MARKER
-from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 # EXAMPLE END MARKER
 

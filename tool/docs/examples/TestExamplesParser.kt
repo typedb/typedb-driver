@@ -23,7 +23,6 @@ import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -40,10 +39,21 @@ class TestExamplesParser : Callable<Unit> {
     private lateinit var outputFileName: String
 
     /**
-     * --remove=string: remove lines where this string is encountered
+     * --remove-lines=string: remove lines where this string is encountered
      */
-    @CommandLine.Option(names = ["--remove", "-r"], required = false)
+    @CommandLine.Option(names = ["--remove-lines", "-rl"], required = false)
     private lateinit var removedLines: HashSet<String>
+
+    /**
+     * --change-words=string=string: change encountered words to the specified word
+     */
+    @CommandLine.Option(names = ["--change-words", "-cw"], required = false)
+    private lateinit var changedWords: HashMap<String, String>
+
+    companion object {
+        const val INDENT_CHAR = ' '
+        const val TAB_CHAR = '\t'
+    }
 
     override fun call() {
         val outputFile = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputFileName) }
@@ -56,30 +66,30 @@ class TestExamplesParser : Callable<Unit> {
         val inputFile = File(inputTestFileName)
         val outputLines = mutableListOf<String>()
         var insideExampleBlock = false
-        val currentBlockLines = mutableListOf<String>()
-        var minIndentation = Int.MAX_VALUE
+        var currentIndentation = Int.MAX_VALUE
+        var blockNumber = 0
 
         inputFile.forEachLine { line ->
             when {
                 line.contains("EXAMPLE START MARKER") -> {
                     insideExampleBlock = true
-                    currentBlockLines.clear()
-                    minIndentation = Int.MAX_VALUE
+                    blockNumber++
+                    currentIndentation = Int.MAX_VALUE
                 }
+
                 line.contains("EXAMPLE END MARKER") -> {
                     insideExampleBlock = false
-                    val adjustedBlock = adjustIndentation(currentBlockLines, minIndentation)
-                    outputLines.addAll(adjustedBlock)
                 }
+
                 insideExampleBlock -> {
-                    if (removedLines.none { line.contains(it) }) {
-                        if (line.isNotBlank()) {
-                            val indentation = line.takeWhile { it == ' ' }.length
-                            if (indentation < minIndentation) {
-                                minIndentation = indentation
-                            }
+                    if (lineAllowed(line)) {
+                        val processedLine = applyWordChanges(line)
+                        if (currentIndentation == Int.MAX_VALUE && processedLine.isNotBlank()) {
+                            currentIndentation = detectIndentation(processedLine)
                         }
-                        currentBlockLines.add(line)
+                        outputLines.add(adjustIndentation(processedLine, currentIndentation, blockNumber))
+                    } else {
+                        println("Removing line: $line")
                     }
                 }
             }
@@ -88,13 +98,40 @@ class TestExamplesParser : Callable<Unit> {
         Files.write(outputFile, outputLines)
     }
 
-    private fun adjustIndentation(blockLines: List<String>, minIndentation: Int): List<String> {
-        return blockLines.map { line ->
-            if (line.isNotBlank() && minIndentation != Int.MAX_VALUE) {
-                line.drop(minIndentation)
-            } else {
-                line
+    private fun lineAllowed(line: String): Boolean {
+        return removedLines.none { line.lowercase().contains(it.lowercase()) }
+    }
+
+    private fun applyWordChanges(line: String): String {
+        var modifiedLine = line
+        for ((wordToChange, replacementWord) in changedWords) {
+            modifiedLine = modifiedLine.replace(wordToChange, replacementWord)
+        }
+
+        if (modifiedLine != line) {
+            println("Changed line: $line")
+            println("     To line: $modifiedLine")
+        }
+
+        return modifiedLine
+    }
+
+    private fun detectIndentation(line: String): Int {
+        val indentation = line.takeWhile { it == INDENT_CHAR || it == TAB_CHAR }
+        if (indentation.contains(TAB_CHAR)) {
+            throw IllegalArgumentException("Tab character found in indentation. Use spaces instead and try again:\n$line")
+        }
+        return indentation.length
+    }
+
+    private fun adjustIndentation(line: String, indentation: Int, blockNumber: Int): String {
+        return if (line.isNotBlank() && indentation != Int.MAX_VALUE) {
+            if (line.take(indentation).any { it != INDENT_CHAR }) {
+                throw IllegalArgumentException("Indentation is not consistent in the block number $blockNumber. Expected to remove $indentation space characters from line:\n$line")
             }
+            line.drop(indentation)
+        } else {
+            line
         }
     }
 }
