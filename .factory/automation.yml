@@ -74,7 +74,7 @@ build:
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         # TODO: Temporarily update only 3.0 drivers
-#        DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
+        # DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
         DOCS_DIRS="docs/modules/ROOT/partials/python"
         find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
