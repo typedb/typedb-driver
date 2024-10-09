@@ -66,19 +66,21 @@ build:
 #        dependencies/maven/update.sh
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
 #        bazel run @vaticle_dependencies//tool/unuseddeps:unused-deps -- list
-#
-#    build-docs:
-#      image: vaticle-ubuntu-22.04
-#      command: |
-#        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
-#          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        DOCS_DIRS="docs/modules/ROOT/partials/java docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/python docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
-#        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
-#        tool/docs/update.sh
-#        git add $DOCS_DIRS
-#        git diff --exit-code HEAD $DOCS_DIRS
-#
+
+    build-docs:
+      image: vaticle-ubuntu-22.04
+      command: |
+        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
+          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        # TODO: Temporarily update only 3.0 drivers
+#        DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
+        DOCS_DIRS="docs/modules/ROOT/partials/python"
+        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
+        tool/docs/update.sh
+        git add $DOCS_DIRS
+        git diff --exit-code HEAD $DOCS_DIRS
+
 #    test-rust-unit-integration:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:

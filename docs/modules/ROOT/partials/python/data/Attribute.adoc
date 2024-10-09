@@ -39,7 +39,7 @@ attribute.as_attribute()
 as_boolean() -> bool
 ----
 
-Returns a ``boolean`` value of the attribute. If the value has another type, raises an exception.
+Returns a ``boolean`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -52,25 +52,88 @@ Returns a ``boolean`` value of the attribute. If the value has another type, rai
 attribute.as_boolean()
 ----
 
-[#_Attribute_as_datetime_]
-==== as_datetime
+[#_Attribute_as_date_]
+==== as_date
 
 [source,python]
 ----
-as_datetime() -> datetime
+as_date() -> date
 ----
 
-Returns a ``datetime`` value of the attribute. If the value has another type, raises an exception.
+Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`datetime`
+`date`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute.as_boolean()
+attribute.as_date()
+----
+
+[#_Attribute_as_datetime_]
+==== as_datetime
+
+[source,python]
+----
+as_datetime() -> Datetime
+----
+
+Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_datetime()
+----
+
+[#_Attribute_as_datetime_tz_]
+==== as_datetime_tz
+
+[source,python]
+----
+as_datetime_tz() -> Datetime
+----
+
+Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_datetime_tz()
+----
+
+[#_Attribute_as_decimal_]
+==== as_decimal
+
+[source,python]
+----
+as_decimal() -> Decimal
+----
+
+Returns a ``decimal`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Decimal`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_decimal()
 ----
 
 [#_Attribute_as_double_]
@@ -81,7 +144,7 @@ attribute.as_boolean()
 as_double() -> float
 ----
 
-Returns a ``double`` value of the attribute. If the value has another type, raises an exception.
+Returns a ``double`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -91,7 +154,28 @@ Returns a ``double`` value of the attribute. If the value has another type, rais
 .Code examples
 [source,python]
 ----
-attribute.as_boolean()
+attribute.as_double()
+----
+
+[#_Attribute_as_duration_]
+==== as_duration
+
+[source,python]
+----
+as_duration() -> Duration
+----
+
+Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Duration`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_duration()
 ----
 
 [#_Attribute_as_long_]
@@ -102,7 +186,7 @@ attribute.as_boolean()
 as_long() -> int
 ----
 
-Returns a ``long`` value of the attribute. If the value has another type, raises an exception.
+Returns a ``long`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -123,7 +207,7 @@ attribute.as_long()
 as_string() -> str
 ----
 
-Returns a ``string`` value of the attribute. If the value has another type, raises an exception.
+Returns a ``string`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -133,39 +217,28 @@ Returns a ``string`` value of the attribute. If the value has another type, rais
 .Code examples
 [source,python]
 ----
-attribute.as_boolean()
+attribute.as_string()
 ----
 
-[#_Attribute_get_owners_transaction_TypeDBTransaction_owner_type_ThingType_None]
-==== get_owners
+[#_Attribute_as_struct_]
+==== as_struct
 
 [source,python]
 ----
-get_owners(transaction: TypeDBTransaction, owner_type: ThingType | None = None) -> Iterator[Thing]
+as_struct() -> Dict[str, Value | None]
 ----
 
-Retrieves the instances that own this ``Attribute``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `owner_type` a| If specified, filter results for only owners of the given type a| `ThingType \| None` a| `None`
-|===
+Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names to values. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`Iterator[Thing]`
+`Dict[str, Value | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute.get_owners(transaction)
-attribute.get_owners(transaction, owner_type)
+attribute.as_struct()
 ----
 
 [#_Attribute_get_type_]
@@ -194,41 +267,20 @@ attribute.get_type()
 
 [source,python]
 ----
-get_value() -> bool | int | float | str | datetime
+get_value() -> VALUE
 ----
 
 Retrieves the value which the ``Attribute`` instance holds.
 
 [caption=""]
 .Returns
-`bool | int | float | str | datetime`
+`VALUE`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
 attribute.get_value()
-----
-
-[#_Attribute_get_value_type_]
-==== get_value_type
-
-[source,python]
-----
-get_value_type() -> ValueType
-----
-
-Retrieves the type of the value which the ``Attribute`` instance holds.
-
-[caption=""]
-.Returns
-`ValueType`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.get_value_type()
 ----
 
 [#_Attribute_is_attribute_]
@@ -260,7 +312,7 @@ attribute.is_attribute()
 is_boolean() -> bool
 ----
 
-Returns ``True`` if the attribute value is of type ``boolean``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute holds a value of type ``boolean``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -273,6 +325,27 @@ Returns ``True`` if the attribute value is of type ``boolean``. Otherwise, retur
 attribute.is_boolean()
 ----
 
+[#_Attribute_is_date_]
+==== is_date
+
+[source,python]
+----
+is_date() -> bool
+----
+
+Returns ``True`` if this attribute holds a value of type ``date``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_date()
+----
+
 [#_Attribute_is_datetime_]
 ==== is_datetime
 
@@ -281,7 +354,7 @@ attribute.is_boolean()
 is_datetime() -> bool
 ----
 
-Returns ``True`` if the attribute value is of type ``datetime``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute holds a value of type ``datetime``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -294,6 +367,48 @@ Returns ``True`` if the attribute value is of type ``datetime``. Otherwise, retu
 attribute.is_datetime()
 ----
 
+[#_Attribute_is_datetime_tz_]
+==== is_datetime_tz
+
+[source,python]
+----
+is_datetime_tz() -> bool
+----
+
+Returns ``True`` if this attribute holds a value of type ``datetime_tz``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_datetime_tz()
+----
+
+[#_Attribute_is_decimal_]
+==== is_decimal
+
+[source,python]
+----
+is_decimal() -> bool
+----
+
+Returns ``True`` if this attribute holds a value of type ``decimal``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_decimal()
+----
+
 [#_Attribute_is_double_]
 ==== is_double
 
@@ -302,7 +417,7 @@ attribute.is_datetime()
 is_double() -> bool
 ----
 
-Returns ``True`` if the attribute value is of type ``double``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute holds a value of type ``double``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -315,6 +430,27 @@ Returns ``True`` if the attribute value is of type ``double``. Otherwise, return
 attribute.is_double()
 ----
 
+[#_Attribute_is_duration_]
+==== is_duration
+
+[source,python]
+----
+is_duration() -> bool
+----
+
+Returns ``True`` if this attribute holds a value of type ``duration``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_duration()
+----
+
 [#_Attribute_is_long_]
 ==== is_long
 
@@ -323,7 +459,7 @@ attribute.is_double()
 is_long() -> bool
 ----
 
-Returns ``True`` if the attribute value is of type ``long``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute holds a value of type ``long``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -344,7 +480,7 @@ attribute.is_long()
 is_string() -> bool
 ----
 
-Returns ``True`` if the attribute value is of type ``string``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute holds a value of type ``string``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -355,6 +491,27 @@ Returns ``True`` if the attribute value is of type ``string``. Otherwise, return
 [source,python]
 ----
 attribute.is_string()
+----
+
+[#_Attribute_is_struct_]
+==== is_struct
+
+[source,python]
+----
+is_struct() -> bool
+----
+
+Returns ``True`` if this attribute holds a value of type ``struct``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_struct()
 ----
 
 // end::methods[]

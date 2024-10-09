@@ -31,6 +31,27 @@ Casts the concept to ``Entity``.
 entity.as_entity()
 ----
 
+[#_Entity_get_iid_]
+==== get_iid
+
+[source,python]
+----
+get_iid() -> str
+----
+
+Retrieves the unique id of the ``Entity``.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+entity.get_iid()
+----
+
 [#_Entity_get_type_]
 ==== get_type
 

@@ -1,0 +1,54 @@
+[#_ConceptRowIterator]
+=== ConceptRowIterator
+
+*Supertypes:*
+
+* `QueryAnswer`
+
+Represents an iterator over ``ConceptRow``s returned as a server answer.
+
+// tag::methods[]
+[#_ConceptRowIterator_as_concept_rows_]
+==== as_concept_rows
+
+[source,python]
+----
+as_concept_rows() -> ConceptRowIterator
+----
+
+Casts the query answer to ``ConceptRowIterator``.
+
+[caption=""]
+.Returns
+`ConceptRowIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_rows()
+----
+
+[#_ConceptRowIterator_is_concept_rows_]
+==== is_concept_rows
+
+[source,python]
+----
+is_concept_rows() -> bool
+----
+
+Checks if the query answer is a ``ConceptRowIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_rows()
+----
+
+// end::methods[]
+

@@ -1,13 +1,13 @@
-[#_SessionType]
-=== SessionType
+[#_QueryType]
+=== QueryType
 
-This class is used to specify the type of the session.
+Used to specify the type of the executed query.
 
 [caption=""]
 .Examples
 [source,python]
 ----
-driver.session(database, SessionType.SCHEMA)
+concept_row.query_type
 ----
 
 [caption=""]
@@ -17,18 +17,19 @@ driver.session(database, SessionType.SCHEMA)
 [options="header"]
 |===
 |Name |Value
-a| `DATA` a| `0`
-a| `SCHEMA` a| `1`
+a| `READ` a| `0`
+a| `SCHEMA` a| `2`
+a| `WRITE` a| `1`
 |===
 // end::enum_constants[]
 
 // tag::methods[]
-[#_SessionType_is_data_]
-==== is_data
+[#_QueryType_is_read_]
+==== is_read
 
 [source,python]
 ----
-is_data() -> bool
+is_read() -> bool
 ----
 
 
@@ -37,12 +38,26 @@ is_data() -> bool
 .Returns
 `bool`
 
-[#_SessionType_is_schema_]
+[#_QueryType_is_schema_]
 ==== is_schema
 
 [source,python]
 ----
 is_schema() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_QueryType_is_write_]
+==== is_write
+
+[source,python]
+----
+is_write() -> bool
 ----
 
 

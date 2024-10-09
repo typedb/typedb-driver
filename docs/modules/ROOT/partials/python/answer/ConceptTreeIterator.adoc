@@ -1,0 +1,54 @@
+[#_ConceptTreeIterator]
+=== ConceptTreeIterator
+
+*Supertypes:*
+
+* `QueryAnswer`
+
+Represents an iterator over ``ConceptRow``s returned as a server answer.
+
+// tag::methods[]
+[#_ConceptTreeIterator_as_concept_trees_]
+==== as_concept_trees
+
+[source,python]
+----
+as_concept_trees() -> ConceptTreeIterator
+----
+
+Casts the query answer to ``ConceptTreeIterator``.
+
+[caption=""]
+.Returns
+`ConceptTreeIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_trees()
+----
+
+[#_ConceptTreeIterator_is_concept_trees_]
+==== is_concept_trees
+
+[source,python]
+----
+is_concept_trees() -> bool
+----
+
+Checks if the query answer is a ``ConceptTreeIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_trees()
+----
+
+// end::methods[]
+
