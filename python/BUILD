@@ -74,6 +74,7 @@ test_to_example(
 
 update_markdown_example(
     name = "readme_example_core",
+    # TODO: Use ":example_core" as a rule with a single output instead
     input = ":README.tmp",
     output = ":README.md",
     start_marker = "CORE_EXAMPLE_START_MARKER",

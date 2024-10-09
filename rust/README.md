@@ -1,12 +1,12 @@
 # TypeDB Rust Driver
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Clients Overview](https://typedb.com/docs/drivers/overview).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
 
 The TypeDB Driver for Rust provides a fully async API that supports multiple async runtimes or a synchronous interface gated by the `sync` feature.
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/drivers/rust/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using Rust, refer to the [API Reference](https://typedb.com/docs/drivers/rust/api-reference).
 
 ## Quickstart
 1. Import `typedb-driver` through Cargo:
