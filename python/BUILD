@@ -101,6 +101,7 @@ checkstyle_test(
         "conf.py",
         "index.rst",
         "docs/**/*.adoc",
+        "core_example_latest",
     ]),
     license_type = "apache-header",
     size = "small",
