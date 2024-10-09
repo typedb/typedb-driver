@@ -31,7 +31,7 @@
 # CREDENTIAL = Credential("admin", "password", tls_enabled=True, tls_root_ca_path=os.environ["ROOT_CA"])
 #
 #
-# class TestDebug(TestCase):
+# class TestExample(TestCase):
 #
 #     def test_core_driver_while_running_cloud(self):
 #         assert_that(calling(lambda: TypeDB.core_driver("localhost:11729")), raises(TypeDBDriverException))

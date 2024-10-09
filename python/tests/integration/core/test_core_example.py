@@ -24,7 +24,7 @@ from typedb.driver import *
 # EXAMPLE END MARKER
 
 
-class TestDebug(TestCase):
+class TestExample(TestCase):
 
     def setUp(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:

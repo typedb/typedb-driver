@@ -154,7 +154,11 @@ class Datetime:
 
     @property
     def total_seconds(self) -> float:
-        """Return the total number of seconds including the nanoseconds part as a float."""
+        """
+        Return the total number of seconds including the nanoseconds part as a float.
+
+        :raises ValueError: If timestamp is before the start of the epoch.
+        """
         return self._datetime_of_seconds.timestamp() + self._nanos / NANOS_IN_SECOND
 
     @property
