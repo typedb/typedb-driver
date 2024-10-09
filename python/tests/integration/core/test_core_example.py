@@ -17,10 +17,12 @@
 
 import unittest
 from unittest import TestCase
-from hamcrest import *
 
+from hamcrest import *
 # EXAMPLE START MARKER
 from typedb.driver import *
+
+
 # EXAMPLE END MARKER
 
 
@@ -31,8 +33,7 @@ class TestExample(TestCase):
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
 
-
-# EXAMPLE START MARKER
+    # EXAMPLE START MARKER
 
     def test_example(self):
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
@@ -189,6 +190,7 @@ class TestExample(TestCase):
 
                 # TODO: We can add a fetch example here!
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
+
 
 # EXAMPLE END MARKER
 

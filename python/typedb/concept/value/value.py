@@ -23,7 +23,7 @@ from decimal import Decimal
 from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
-from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, INVALID_VALUE_CASTING
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.concept import _Concept
 from typedb.concept.concept_factory import wrap_concept
@@ -98,38 +98,58 @@ class _Value(Value, _Concept):
         return value_is_struct(self.native_object)
 
     def as_boolean(self) -> bool:
+        if not self.is_boolean():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "boolean")
         return value_get_boolean(self.native_object)
 
     def as_long(self) -> int:
+        if not self.is_long():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "long")
         return value_get_long(self.native_object)
 
     def as_double(self) -> float:
+        if not self.is_double():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "double")
         return value_get_double(self.native_object)
 
     def as_decimal(self) -> Decimal:
+        if not self.is_decimal():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "decimal")
         native_decimal = value_get_decimal(self.native_object)
         return Decimal(native_decimal.integer) + Decimal(native_decimal.fractional) / Decimal(10 ** self.DECIMAL_SCALE)
 
     def as_string(self) -> str:
+        if not self.is_string():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "string")
         return value_get_string(self.native_object)
 
     def as_date(self) -> date:
+        if not self.is_date():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "date")
         return date.fromtimestamp(value_get_date_as_seconds(self.native_object))
 
     def as_datetime(self) -> Datetime:
+        if not self.is_datetime():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "datetime")
         native_datetime = value_get_datetime(self.native_object)
         return Datetime.utcfromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos)
 
     def as_datetime_tz(self) -> Datetime:
+        if not self.is_datetime_tz():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "datetime-tz")
         native_datetime_tz = value_get_datetime_tz(self.native_object)
         native_datetime = native_datetime_tz.datetime_in_nanos
         return Datetime.fromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos, native_datetime_tz.zone_id)
 
     def as_duration(self) -> Duration:
+        if not self.is_duration():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "duration")
         native_duration = value_get_duration(self.native_object)
         return Duration(months=native_duration.months, days=native_duration.days, nanos=native_duration.nanos)
 
     def as_struct(self) -> Value.STRUCT:
+        if not self.is_struct():
+            raise TypeDBDriverException(INVALID_VALUE_CASTING, "struct")
         result = {}
         for field_and_value in IteratorWrapper(value_get_struct(self.native_object),
                                                string_and_opt_value_iterator_next):

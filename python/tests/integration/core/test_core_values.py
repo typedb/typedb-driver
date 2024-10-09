@@ -15,14 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import os
+import time
 import unittest
 from datetime import datetime, date
 from decimal import Decimal
 from unittest import TestCase
-from hamcrest import *
-import os
-import time
 
+from hamcrest import *
 from typedb.driver import *
 
 TYPEDB = "typedb"

@@ -31,10 +31,14 @@ driver = TypeDB.core_driver(address=TypeDB.DEFAULT_ADDRESS)
 ```
 
 ## Examples
+
 ### TypeDB Core
+
 <!-- CORE_EXAMPLE_START_MARKER -->
+
 ```py
 from typedb.driver import *
+
 
 def typedb_example():
     # Open a driver connection. The connection will be automatically closed on the "with" block exit
@@ -155,4 +159,5 @@ def typedb_example():
 
     print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
 ```
+
 <!-- CORE_EXAMPLE_END_MARKER -->

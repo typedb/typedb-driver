@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+import re
 from enum import Enum
 from typing import Callable, Optional
 
@@ -156,7 +157,7 @@ def try_parse_value_type(text: str) -> Optional[ValueType]:
 register_type(ValueType=parse_value_type)
 
 
-@parse.with_pattern(r"([a-zA-Z0-9]+)")
+@parse.with_pattern(r"([a-zA-Z0-9]*)")
 def parse_var(text: str):
     return text
 
@@ -217,12 +218,13 @@ def parse_table(table: Table) -> list[list[tuple[str, str]]]:
 
 class MayError:
 
-    def __init__(self, may_error: bool):
+    def __init__(self, may_error: bool, message: str = ""):
         self.may_error = may_error
+        self.message = message
 
     def check(self, func: Callable):
         if self.may_error:
-            assert_that(func, raises(TypeDBDriverException))
+            assert_that(func, raises(TypeDBDriverException, self.message))
         else:
             func()
 
@@ -230,14 +232,18 @@ class MayError:
         return f"MayError({self.may_error})"
 
 
-@parse.with_pattern("; fails|; parsing fails|")
+@parse.with_pattern("|; fails|; parsing fails|; fails with a message containing: \"(?P<message>.*)\"")
 def parse_may_error(value: str) -> MayError:
     if value == "":
         return MayError(False)
     elif value in ("; fails", "; parsing fails"):
         return MayError(True)
     else:
-        raise ValueError(f"Unrecognised MayError: {value}")
+        match = re.match(r'; fails with a message containing: "(?P<message>.*)"', value)
+        if match:
+            return MayError(True, match.group("message"))
+        else:
+            raise ValueError(f"Unrecognised MayError: {value}")
 
 
 register_type(MayError=parse_may_error)

@@ -80,9 +80,19 @@ def unwrap_answer_trees(context: Context):
     context.unwrapped_answer = context.answer.as_concept_trees()
 
 
-@step("result is a successful ok")
-def step_impl(context: Context):
-    unwrap_answer_ok(context)
+@step("answer unwraps as ok{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: unwrap_answer_ok(context))
+
+
+@step("answer unwraps as concept rows{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: unwrap_answer_rows(context))
+
+
+@step("answer unwraps as concept trees{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: unwrap_answer_trees(context))
 
 
 def unwrap_answer_if_needed(context: Context):
@@ -214,6 +224,18 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
         return get_row_get_value(context, row_index, var, is_by_var_index)
     else:
         raise ValueError(f"Not all ConceptKind variants are covered! Found {kind}")
+
+
+@step("answer get row({row_index:Int}) get variable{is_by_var_index:ByIndexOfVarOrNot}({var:Var}){may_error:MayError}")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, may_error: MayError):
+    may_error.check(lambda: get_row_get_concept(context, row_index, var, is_by_var_index))
+
+
+@step(
+    "answer get row({row_index:Int}) get variable{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {kind:ConceptKind}{may_error:MayError}")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, kind: ConceptKind,
+              may_error: MayError):
+    may_error.check(lambda: get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind))
 
 
 @step(
@@ -543,6 +565,14 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
     expected_value = parse_expected_value(value, try_parse_value_type(attribute.get_type().get_value_type()))
     assert_that(attribute_value == expected_value, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=attribute_value, expected=expected_value))
+
+
+@step(
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {value_type:ValueType}{may_error:MayError}")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType,
+              may_error: MayError):
+    attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
+    may_error.check(lambda: get_as_value_type(attribute, value_type))
 
 
 @step(
