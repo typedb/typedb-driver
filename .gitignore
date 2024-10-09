@@ -100,6 +100,3 @@ Cargo.toml
 
 # Temporary paket files for C# #
 paket-files/
-
-# Temporary README files #
-README.tmp
