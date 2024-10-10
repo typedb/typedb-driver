@@ -17,18 +17,28 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-#rustfmt_test(
-#    name = "rustfmt_test",
-#    targets = ["tests"],
-#    size = "small",
-#)
+rust_test(
+    name = "test_driver",
+    srcs = ["driver.rs"],
+    deps = [
+        "//rust/tests/behaviour/steps:steps",
+
+        "@crates//:tokio",
+        "@crates//:serial_test",
+    ],
+    data = ["@vaticle_typedb_behaviour//driver:driver.feature"],
+    crate_features = ["bazel"],
+)
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "**/*"]),
+    include = glob(["*"]),
+    exclude = glob([
+        "Cargo.*",
+    ]),
     license_type = "apache-header",
     size = "small",
 )

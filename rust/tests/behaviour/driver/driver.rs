@@ -17,11 +17,8 @@
  * under the License.
  */
 
+use steps::Context;
 use serial_test::serial;
-
-use crate::behaviour::Context;
-
-pub(crate) mod steps;
 
 #[tokio::test]
 #[serial]
@@ -29,5 +26,11 @@ async fn test() {
     // Bazel specific path: when running the test in bazel, the external data from
     // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
-    assert!(Context::test("../vaticle_typedb_behaviour/connection/database.feature").await);
+    #[cfg(feature = "bazel")]
+    let path = "../vaticle_typedb_behaviour/connection/driver.feature";
+
+    #[cfg(not(feature = "bazel"))]
+    let path = "bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/driver.feature";
+
+    assert!(Context::test(path).await);
 }

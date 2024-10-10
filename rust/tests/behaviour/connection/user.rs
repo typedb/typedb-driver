@@ -17,16 +17,14 @@
  * under the License.
  */
 
-use serial_test::serial;
+// use steps::Context;
+// use serial_test::serial;
 
-use crate::behaviour::Context;
-
-// TODO: Maybe reuse feature with debugs from typedb server!
-#[tokio::test]
-#[serial]
-async fn test() {
-    // Bazel specific path: when running the test in bazel, the external data from
-    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
-    // the working directory.
-    assert!(Context::test("../vaticle_typedb_behaviour/driver/driver.feature").await);
-}
+// #[tokio::test]
+// #[serial]
+// async fn test() {
+//     // Bazel specific path: when running the test in bazel, the external data from
+//     // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+//     // the working directory.
+//     assert!(Context::test("../vaticle_typedb_behaviour/connection/user.feature").await);
+// }

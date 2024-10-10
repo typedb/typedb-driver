@@ -17,21 +17,20 @@
  * under the License.
  */
 
-use std::env;
+use steps::Context;
+use serial_test::serial;
 
-use cucumber::{given, then, when};
-use tokio::time::{sleep, Duration};
+#[tokio::test]
+#[serial]
+async fn test() {
+    // Bazel specific path: when running the test in bazel, the external data from
+    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+    // the working directory.
+    #[cfg(feature = "bazel")]
+    let path = "../vaticle_typedb_behaviour/connection/database.feature";
 
-use crate::{behaviour::Context, generic_step_impl};
+    #[cfg(not(feature = "bazel"))]
+    let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/database.feature";
 
-generic_step_impl! {
-    #[step(expr = "set time-zone: {word}")]
-    async fn set_time_zone(_context: &mut Context, timezone: String) {
-        env::set_var("TZ", timezone);
-    }
-
-    #[step(expr = "wait {word} seconds")]
-    async fn wait_seconds(_context: &mut Context, seconds: String) {
-        sleep(Duration::from_secs(seconds.parse().unwrap())).await
-    }
+    assert!(Context::test(path).await);
 }

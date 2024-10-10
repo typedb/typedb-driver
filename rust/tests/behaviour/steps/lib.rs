@@ -1,21 +1,11 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
+#![deny(unused_must_use)]
+#![deny(elided_lifetimes_in_paths)]
 
 use std::{
     collections::{HashMap, HashSet},
@@ -39,10 +29,11 @@ use typedb_driver::{
 use self::transaction_tracker::TransactionTracker;
 
 mod connection;
-mod driver;
-mod parameter;
+mod query;
 mod transaction_tracker;
+mod parameter;
 mod util;
+
 
 #[derive(Debug, Default)]
 struct SingletonParser {
@@ -89,9 +80,8 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 #[derive(Debug, World)]
 pub struct Context {
     pub tls_root_ca: PathBuf,
-    pub session_options: Options,
     pub transaction_options: Options,
-    pub driver: TypeDBDriver,
+    pub driver: Option<TypeDBDriver>,
     pub transaction_trackers: Vec<TransactionTracker>,
     pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
@@ -107,14 +97,14 @@ impl Context {
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
     const STEP_REATTEMPT_LIMIT: u32 = 20;
 
-    async fn test(glob: &'static str) -> bool {
+    pub async fn test<I: AsRef<Path>>(glob: I) -> bool {
         let default_panic = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
             default_panic(info);
             std::process::exit(1);
         }));
 
-        !Self::cucumber::<&str>()
+        !Self::cucumber::<I>()
             .repeat_failed()
             .fail_on_skipped()
             .max_concurrent_scenarios(Some(1))
@@ -136,38 +126,34 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
-        self.session_options = Options::new();
         self.transaction_options = Options::new();
-        self.set_connection(TypeDBDriver::new_cloud(
-            &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
-        )?);
         self.cleanup_databases().await;
-        self.cleanup_users().await;
+        // self.cleanup_users().await;
+        self.set_connection(None);
         Ok(())
     }
 
     pub async fn all_databases(&self) -> HashSet<String> {
-        self.driver.databases().all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
+        self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
     }
 
     pub async fn cleanup_databases(&mut self) {
-        try_join_all(self.driver.databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
+        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
     }
 
     pub async fn cleanup_users(&mut self) {
         try_join_all(
-            self.driver
+            self.driver.as_ref().unwrap()
                 .users()
                 .all()
                 .await
                 .unwrap()
                 .into_iter()
                 .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.users().delete(user.username)),
+                .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
         )
-        .await
-        .ok();
+            .await
+            .ok();
     }
 
     pub fn transaction(&self) -> &Transaction {
@@ -178,7 +164,7 @@ impl Context {
         self.transaction_trackers.get_mut(0).unwrap().take_transaction()
     }
 
-    pub fn set_connection(&mut self, new_connection: TypeDBDriver) {
+    pub fn set_connection(&mut self, new_connection: Option<TypeDBDriver>) {
         self.driver = new_connection;
         self.transaction_trackers.clear();
         self.answer.clear();
@@ -187,23 +173,33 @@ impl Context {
     }
 }
 
+#[cfg(not(feature = "cloud"))]
+impl Default for Context {
+    fn default() -> Self {
+        let transaction_options = Options::new();
+        Self {
+            tls_root_ca: PathBuf::new(), // unused for core
+            transaction_options,
+            driver: None,
+            transaction_trackers: Vec::new(),
+            answer: Vec::new(),
+            fetch_answer: None,
+            value_answer: None,
+        }
+    }
+}
+
+#[cfg(feature = "cloud")]
 impl Default for Context {
     fn default() -> Self {
         let tls_root_ca = PathBuf::from(
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
         );
-        let session_options = Options::new();
         let transaction_options = Options::new();
-        let typedb_driver = TypeDBDriver::new_cloud(
-            &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
-        )
-        .unwrap();
         Self {
             tls_root_ca,
-            session_options,
             transaction_options,
-            driver: typedb_driver,
+            driver: None,
             transaction_trackers: Vec::new(),
             answer: Vec::new(),
             fetch_answer: None,
@@ -213,15 +209,19 @@ impl Default for Context {
 }
 
 #[macro_export]
-macro_rules! generic_step_impl {
-    {$($(#[step($pattern:expr)])+ $vis:vis $async:ident fn $fn_name:ident $args:tt $(-> $res:ty)? $body:block)+} => {
-        $($(
-        #[given($pattern)]
-        #[when($pattern)]
-        #[then($pattern)]
-        )*
+macro_rules! generic_step {
+    {$(#[step($pattern:expr)])+ $vis:vis $async:ident fn $fn_name:ident $args:tt $(-> $res:ty)? $body:block} => {
+        #[allow(unused)]
         $vis $async fn $fn_name $args $(-> $res)? $body
-        )*
+
+        const _: () = {
+            $(
+            #[::cucumber::given($pattern)]
+            #[::cucumber::when($pattern)]
+            #[::cucumber::then($pattern)]
+            )+
+            $vis $async fn step $args $(-> $res)? $body
+        };
     };
 }
 

@@ -17,24 +17,36 @@
  * under the License.
  */
 
-use std::{
-    borrow::Cow,
-    collections::{HashMap, HashSet},
-};
+use std::env;
+
+use cucumber::{given, then, when};
+use tokio::time::{sleep, Duration};
+
+use crate::{Context, generic_step, assert_with_timeout};
+use macro_rules_attribute::apply;
 
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use cucumber::gherkin::Step;
-use futures::{stream::StreamExt, TryFutureExt, TryStreamExt};
-use tokio::time::sleep;
 use typedb_driver::{
     answer::{ConceptRow, JSON},
     concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
     DatabaseManager, Error, Result as TypeDBResult,
 };
 
-use crate::{assert_with_timeout, behaviour::Context};
+use std::{
+    borrow::Cow,
+    collections::{HashMap, HashSet},
+    iter, mem,
+    path::{Path, PathBuf},
+};
 
-mod steps;
+use cucumber::{gherkin::{Feature, Step}, StatsWriter, World};
+use futures::{
+    future::{try_join_all, Either},
+    stream::{self, StreamExt},
+};
+use itertools::Itertools;
+
+use crate::transaction_tracker::TransactionTracker;
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
@@ -258,10 +270,6 @@ fn get_iid(concept: &Concept) -> String {
     iid.to_string()
 }
 
-pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
-    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
-}
-
 #[macro_export]
 macro_rules! assert_with_timeout {
     ($expr:expr, $message:expr $(, $arg:expr)* $(,)?) => {{
@@ -275,4 +283,20 @@ macro_rules! assert_with_timeout {
             panic!($message $(, $arg)*);
         }
     }};
+}
+
+pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
+    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
+}
+
+#[apply(generic_step)]
+#[step(expr = "set time-zone: {word}")]
+async fn set_time_zone(_context: &mut Context, timezone: String) {
+    env::set_var("TZ", timezone);
+}
+
+#[apply(generic_step)]
+#[step(expr = "wait {word} seconds")]
+async fn wait_seconds(_context: &mut Context, seconds: String) {
+    sleep(Duration::from_secs(seconds.parse().unwrap())).await
 }

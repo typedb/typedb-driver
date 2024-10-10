@@ -17,13 +17,28 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-#rustfmt_test(
-#    name = "rustfmt_test",
-#    targets = ["tests"],
-#    size = "small",
+#rust_test(
+#    name = "tests",
+#    srcs = glob(["**/*.rs"]),
+#    timeout = "eternal",
+#    deps = [
+#        "//rust:typedb_driver",
+#        "@crates//:async-std",
+#        "@crates//:chrono",
+#        "@crates//:cucumber",
+#        "@crates//:futures",
+#        "@crates//:itertools",
+#        "@crates//:regex",
+#        "@crates//:serde_json",
+#        "@crates//:serial_test",
+#        "@crates//:smol",
+#        "@crates//:tokio",
+#        "@crates//:uuid",
+#        "@crates//:macro_rules_attribute",
+#    ],
 #)
 
 checkstyle_test(
