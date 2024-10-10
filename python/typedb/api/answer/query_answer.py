@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from abc import ABC
 
+from typedb.common.exception import TypeDBDriverException, INVALID_QUERY_ANSWER_CASTING
+
 
 class QueryAnswer(ABC):
     """

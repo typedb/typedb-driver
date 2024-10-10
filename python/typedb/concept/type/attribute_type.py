@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from typedb.api.concept.type.attribute_type import AttributeType
-from typedb.common.label import Label
+from typedb.common.exception import TypeDBDriverException
 from typedb.concept.type.thing_type import _ThingType
 from typedb.native_driver_wrapper import (
     TypeDBDriverExceptionNative, attribute_type_get_value_type, attribute_type_get_label, attribute_type_is_untyped,
@@ -30,9 +30,9 @@ from typedb.native_driver_wrapper import (
 
 class _AttributeType(AttributeType, _ThingType):
 
-    def get_label(self) -> Label:
+    def get_label(self) -> str:
         try:
-            return Label.of(attribute_type_get_label(self.native_object))
+            return attribute_type_get_label(self.native_object)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 

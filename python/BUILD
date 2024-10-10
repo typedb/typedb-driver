@@ -22,6 +22,7 @@ load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 load("//python:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:python/rules.bzl",  "sphinx_to_adoc")
+load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -61,6 +62,31 @@ sphinx_to_adoc(
     docs_dirs = dir_mapping,
 )
 
+test_to_example(
+    name = "example_core",
+    input = "//python/tests/integration/core:test_core_example.py",
+    output = "python/core_example",
+    removed_lines = ["assert_that", "todo"],
+    changed_words = {
+        "test_example(self)": "typedb_example()",
+    },
+    header_comment_sign = "#",
+)
+
+# Temporary manual usage:
+# 1. Run: bazel run //python:example_core; bazel run //python:readme_example_core
+# 2. Enjoy your updated README.md!
+update_markdown_example(
+    name = "readme_example_core",
+    # TODO: Use ":example_core" as a rule with a single output instead
+    input = ":core_example",
+    output = ":README.md",
+    start_marker = "CORE_EXAMPLE_START_MARKER",
+    end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "py",
+    removed_header = "#",
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob([
@@ -77,6 +103,7 @@ checkstyle_test(
         "conf.py",
         "index.rst",
         "docs/**/*.adoc",
+        "core_example",
     ]),
     license_type = "apache-header",
     size = "small",

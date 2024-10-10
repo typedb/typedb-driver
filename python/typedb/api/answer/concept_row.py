@@ -21,6 +21,7 @@ from abc import ABC, abstractmethod
 from typing import Iterator, TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from typedb.api.answer.query_type import QueryType
     from typedb.api.concept.concept import Concept
 
 
@@ -58,7 +59,7 @@ class ConceptRow(ABC):
         --------
         ::
 
-          concept_row.query_type()
+          concept_row.query_type
         """
         pass
 

@@ -16,7 +16,6 @@
 # under the License.
 
 from behave.model_core import Status
-from tests.behaviour.config.parameters import Kind
 from tests.behaviour.context import Context
 from typedb.driver import *
 
@@ -29,38 +28,24 @@ def before_scenario(context: Context):
     # setup context state
     context.transactions = {}
     context.transactions_parallel = []
+    context.answer = None  # QueryAnswer
+    context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
+    context.collected_answer = None  # [ConceptRow] / ... ?
     context.things = {}
     # setup context functions
-    context.tx = lambda: context.transactions[0]
+    context.tx = lambda: next(iter(context.transactions), None)
     context.get = lambda var: context.things[var]
     context.put = lambda var, thing: _put_impl(context, var, thing)
-    context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.option_setters = {
         # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
     }
 
 
-def _put_impl(context: Context, variable: str, thing: Thing):
-    context.things[variable] = thing
-
-
-def _get_thing_type_impl(context: Context, root_label: Kind, type_label: str):
-    if root_label == Kind.ENTITY:
-        return context.tx().getQueryType.get_entity_type(type_label).resolve()
-    elif root_label == Kind.ATTRIBUTE:
-        return context.tx().getQueryType.get_attribute_type(type_label).resolve()
-    elif root_label == Kind.RELATION:
-        return context.tx().getQueryType.get_relation_type(type_label).resolve()
-    else:
-        raise ValueError("Unrecognised value")
-
-
 def _clear_answers_impl(context: Context):
     context.answers = None
-    context.fetch_answers = None
-    context.value_answer = None
-    context.value_answer_groups = None
+    context.unwrapped_answer = None
+    context.collected_answer = None
 
 
 def after_scenario(context: Context, scenario):
@@ -70,5 +55,5 @@ def after_scenario(context: Context, scenario):
         context.driver.close()
 
 
-def after_all(context: Context):
+def after_all(_: Context):
     pass

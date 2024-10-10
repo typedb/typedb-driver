@@ -39,7 +39,6 @@ from typedb.driver import *
 #     credential = Credential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
 #     context.driver = TypeDB.cloud_driver(addresses=["localhost:" + context.config.userdata["port"]],
 #                                               credential=credential)
-#     context.session_options = Options()
 #     context.transaction_options = Options()
 #
 #

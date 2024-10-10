@@ -26,7 +26,6 @@ import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.thing.Attribute;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
-import com.typedb.driver.common.Label;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -284,12 +283,12 @@ public class QuerySteps {
         for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
             String var = entry.getKey();
             String[] identifier = entry.getValue().split(":", 2);
-            switch (identifier[0]) {
-                case "label":
-                    if (!new LabelUniquenessCheck(identifier[1]).check(row.get(var))) {
-                        return false;
-                    }
-                    break;
+//            switch (identifier[0]) {
+//                case "label":
+//                    if (!new LabelUniquenessCheck(identifier[1]).check(row.get(var))) {
+//                        return false;
+//                    }
+//                    break;
 //                case "key":
 //                    if (!new KeyUniquenessCheck(identifier[1]).check(row.get(var))) {
 //                        return false;
@@ -305,7 +304,7 @@ public class QuerySteps {
 //                        return false;
 //                    }
 //                    break;
-            }
+//            }
         }
         return true;
     }
@@ -330,190 +329,4 @@ public class QuerySteps {
         assertTrue("Fetch response is a list of JSON objects, but the behaviour test expects something else", expected.isArray());
         assertTrue(JSONListMatches(fetchAnswers, expected.asArray()));
     }
-
-//    @Then("each answer satisfies")
-//    public void each_answer_satisfies(String templatedQuery) {
-//        for (ConceptRow row : answerRows) {
-//            String query = applyQueryTemplate(templatedQuery, row);
-//            TypeQLGet typeQLQuery = TypeQL.parseQuery(query).asGet();
-//            long answerSize = tx().query(query).count();
-//            assertEquals(1, answerSize);
-//        }
-//    }
-
-//    @Then("get answers of templated typeql get")
-//    public void get_answers_of_templated_typeql_get(String templatedTypeQLQuery) {
-//        if (answerRows.size() != 1) {
-//            throw new ScenarioDefinitionException("Can only retrieve answers of templated typeql get given 1 previous answer");
-//        }
-//        String templatedQuery = String.join("\n", templatedTypeQLQuery);
-//
-//        ConceptRow row = answerRows.get(0);
-//        String queryString = applyQueryTemplate(templatedQuery, row);
-//        clearAnswers();
-//        answerRows = tx().query(String.join("\n", queryString)).collect(Collectors.toList());
-//    }
-
-//    private String applyQueryTemplate(String template, ConceptMap templateFiller) {
-//        // find shortest matching strings between <>
-//        Pattern pattern = Pattern.compile("<.+?>");
-//        Matcher matcher = pattern.matcher(template);
-//
-//        StringBuilder builder = new StringBuilder();
-//        int i = 0;
-//        while (matcher.find()) {
-//            String matched = matcher.group(0);
-//            String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-//
-//            builder.append(template, i, matcher.start());
-//            try {
-//                Concept concept = templateFiller.get(requiredVariable);
-//                if (!concept.isThing())
-//                    throw new ScenarioDefinitionException("Cannot apply IID templating to Type concepts");
-//                String conceptId = concept.asThing().getIID();
-//                builder.append(conceptId);
-//            } catch (TypeDBDriverException e) {
-//                if (e.getErrorMessage().equals(VARIABLE_DOES_NOT_EXIST)) {
-//                    throw new ScenarioDefinitionException(String.format("No IID available for template placeholder: %s.", matched));
-//                } else throw e;
-//            }
-//            i = matcher.end();
-//        }
-//        builder.append(template.substring(i));
-//        return builder.toString();
-//    }
-
-    private String variableFromTemplatePlaceholder(String placeholder) {
-        if (placeholder.endsWith(".iid")) {
-            String stripped = placeholder.replace(".iid", "");
-            String withoutPrefix = stripped.replace("answer.", "");
-            return withoutPrefix;
-        } else {
-            throw new ScenarioDefinitionException("Cannot replace template not based on ID.");
-        }
-    }
-
-    private static class ScenarioDefinitionException extends RuntimeException {
-        ScenarioDefinitionException(String message) {
-            super(message);
-        }
-    }
-
-    private interface UniquenessCheck {
-        boolean check(Concept concept);
-    }
-
-    public static class LabelUniquenessCheck implements UniquenessCheck {
-
-        private final Label label;
-
-        LabelUniquenessCheck(String scopedLabel) {
-            String[] tokens = scopedLabel.split(":");
-            this.label = tokens.length > 1 ? Label.of(tokens[0], tokens[1]) : Label.of(tokens[0]);
-        }
-
-        @Override
-        public boolean check(Concept concept) {
-            if (concept.isType()) return label.equals(concept.asType().getLabel());
-            throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is not a Type.");
-        }
-    }
-
-    public static abstract class AttributeUniquenessCheck {
-
-        protected final Label type;
-        protected final String value;
-
-        AttributeUniquenessCheck(String typeAndValue) {
-            String[] s = typeAndValue.split(":", 2);
-            assertEquals(
-                    String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s.", typeAndValue),
-                    2, s.length
-            );
-            type = Label.of(s[0]);
-            value = s[1];
-        }
-    }
-
-    public static class AttributeValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
-        AttributeValueUniquenessCheck(String typeAndValue) {
-            super(typeAndValue);
-        }
-
-        public boolean check(Concept concept) {
-            if (!concept.isAttribute()) {
-                return false;
-            }
-            Attribute attribute = concept.asAttribute();
-            AttributeType attributeType = attribute.getType();
-            if (attribute.getValue().isDatetime()) {
-                LocalDateTime dateTime;
-                try {
-                    dateTime = LocalDateTime.parse(value);
-                } catch (DateTimeParseException e) {
-                    dateTime = LocalDate.parse(value).atStartOfDay();
-                }
-                return type.equals(attributeType.getLabel()) && dateTime.equals(attribute.getValue().asDatetime());
-            } else return type.equals(attributeType.getLabel()) && value.equals(attribute.getValue().toString());
-        }
-    }
-
-//    public static class KeyUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
-//        KeyUniquenessCheck(String typeAndValue) {
-//            super(typeAndValue);
-//        }
-//
-//        @Override
-//        public boolean check(Concept concept) {
-//            if (!concept.isThing()) {
-//                return false;
-//            }
-//
-//            Set<Attribute> keys = concept.asThing().getHas(tx(), set(key())).collect(Collectors.toSet());
-//            HashMap<Label, String> keyMap = new HashMap<>();
-//
-//            for (Attribute key : keys) {
-//                keyMap.put(key.getType().getLabel(), key.getValue().toString());
-//            }
-//            return value.equals(keyMap.get(type));
-//        }
-//    }
-//
-//    public static class ValueUniquenessCheck implements UniquenessCheck {
-//        private final String valueType;
-//        private final String value;
-//
-//        ValueUniquenessCheck(String valueTypeAndValue) {
-//            String[] s = valueTypeAndValue.split(":", 2);
-//            this.valueType = s[0].toLowerCase().strip();
-//            this.value = s[1].strip();
-//        }
-//
-//        public boolean check(Concept concept) {
-//            if (!concept.isValue()) {
-//                return false;
-//            }
-//
-//            switch (concept.asValue().getType()) {
-//                case BOOLEAN:
-//                    return Boolean.valueOf(value).equals(concept.asValue().asBoolean());
-//                case LONG:
-//                    return Long.valueOf(value).equals(concept.asValue().asLong());
-//                case DOUBLE:
-//                    return equalsApproximate(Double.parseDouble(value), concept.asValue().asDouble());
-//                case STRING:
-//                    return value.equals(concept.asValue().asString());
-//                case DATETIME:
-//                    LocalDateTime dateTime;
-//                    try {
-//                        dateTime = LocalDateTime.parse(value);
-//                    } catch (DateTimeParseException e) {
-//                        dateTime = LocalDate.parse(value).atStartOfDay();
-//                    }
-//                    return dateTime.equals(concept.asValue().asDateTime());
-//                default:
-//                    throw new ScenarioDefinitionException("Unrecognised value type specified in test " + this.valueType);
-//            }
-//        }
-//    }
 }

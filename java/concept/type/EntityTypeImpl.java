@@ -20,7 +20,6 @@
 package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.EntityType;
-import com.typedb.driver.common.Label;
 
 import static com.typedb.driver.jni.typedb_driver.entity_type_get_label;
 
@@ -30,7 +29,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public Label getLabel() {
-        return Label.of(entity_type_get_label(nativeObject));
+    public String getLabel() {
+        return entity_type_get_label(nativeObject);
     }
 }

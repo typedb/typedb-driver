@@ -66,19 +66,21 @@ build:
 #        dependencies/maven/update.sh
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
 #        bazel run @vaticle_dependencies//tool/unuseddeps:unused-deps -- list
-#
-#    build-docs:
-#      image: vaticle-ubuntu-22.04
-#      command: |
-#        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
-#          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        DOCS_DIRS="docs/modules/ROOT/partials/java docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/python docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
-#        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
-#        tool/docs/update.sh
-#        git add $DOCS_DIRS
-#        git diff --exit-code HEAD $DOCS_DIRS
-#
+
+    build-docs:
+      image: vaticle-ubuntu-22.04
+      command: |
+        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
+          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        # TODO: Temporarily update only 3.0 drivers
+        # DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
+        DOCS_DIRS="docs/modules/ROOT/partials/python"
+        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
+        tool/docs/update.sh
+        git add $DOCS_DIRS
+        git diff --exit-code HEAD $DOCS_DIRS
+
 #    test-rust-unit-integration:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
@@ -247,7 +249,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-core-server.sh &&
-          .factory/test-core.sh //python/tests/integration/... --test_output=errors --jobs=1 &&
+          bazel test //python/tests/integration/core/... --test_output=streamed --jobs=1 &&
           export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
@@ -260,29 +262,24 @@ build:
 #        tool/test/stop-cloud-servers.sh
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
-#    test-python-behaviour-core:
-#      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
-#      type: foreground
-#      command: |
-#        export PATH="$HOME/.local/bin:$PATH"
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#
-#        tool/test/start-core-server.sh &&
-#          .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors &&
-#          .factory/test-core.sh //python/tests/behaviour/query/language/... --test_output=errors --jobs=1 &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-core-server.sh
-#        exit $TEST_SUCCESS
-#
+    test-python-behaviour-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
 #    test-python-behaviour-cloud:
 #      image: vaticle-ubuntu-22.04
 #      dependencies:
@@ -296,13 +293,8 @@ build:
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh && # use source to receive export vars
-#          .factory/test-cloud.sh //python/tests/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-#          .factory/test-cloud.sh //python/tests/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cloud.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cloud.sh //python/tests/behaviour/driver/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS

@@ -19,7 +19,7 @@
 
 import {Given, Then} from "@cucumber/cucumber";
 
-Given('set time-zone is: {Timezone}', async (timezone: string) => {
+Given('set time-zone: {Timezone}', async (timezone: string) => {
     process.env.TZ = timezone;
 });
 

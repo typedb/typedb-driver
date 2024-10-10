@@ -18,18 +18,14 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
 
 from typedb.api.concept.concept import Concept
-
-if TYPE_CHECKING:
-    from typedb.common.label import Label
 
 
 class Type(Concept, ABC):
 
     @abstractmethod
-    def get_label(self) -> Label:
+    def get_label(self) -> str:
         """
         Retrieves the unique label of the type.
 

@@ -17,242 +17,117 @@
 
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
-from typing import Callable
+from typing import Callable, Optional
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
+from tests.behaviour.config.parameters import MayError, parse_list, parse_transaction_type
 from tests.behaviour.context import Context
+from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
 
 
-def for_each_session_open_transaction_of_type(context: Context, transaction_types: list[TransactionType]):
-    for session in context.sessions:
-        transactions = []
-        for transaction_type in transaction_types:
-            transaction = session.transaction(transaction_type, context.transaction_options)
-            transactions.append(transaction)
-        context.sessions_to_transactions[session] = transactions
+def open_transactions_of_type(context: Context, database_name: str, transaction_types: list[TransactionType]):
+    context.transactions = []
+    for transaction_type in transaction_types:
+        transaction = context.driver.transaction(database_name, transaction_type)  # , context.transaction_options
+        context.transactions.append(transaction)
 
 
-# TODO: this is implemented as open(s) in some drivers - get rid of that, simplify them
-@step("session opens transaction of type: {transaction_type}")
-@step("for each session, open transaction of type: {transaction_type}")
-def step_impl(context: Context, transaction_type: str):
-    transaction_type = parse_transaction_type(transaction_type)
-    for_each_session_open_transaction_of_type(context, [transaction_type])
+@step(
+    "connection open {transaction_type:TransactionType} transaction for database: {database_name:Words}{may_error:MayError}")
+def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
+    may_error.check(lambda: open_transactions_of_type(context, database_name, [transaction_type]))
 
 
-@step("for each session, open transaction of type")
-@step("for each session, open transactions of type")
+@step("connection open transactions for database: {database_name}, of type")
+def step_impl(context: Context, database_name: str):
+    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
+    open_transactions_of_type(context, database_name, transaction_types)
+
+
+def for_each_transaction_is(context: Context, assertion: Callable[[Transaction], None]):
+    for transaction in context.transactions:
+        assertion(transaction)
+
+
+def assert_transaction_open(transaction: Optional[Transaction], is_open: bool):
+    assert_that(transaction is not None and transaction.is_open(), is_(is_open))
+
+
+@step("transaction is open: {is_open:Bool}")
+def step_impl(context: Context, is_open: bool):
+    assert_transaction_open(context.tx(), is_open)
+
+
+@step("transactions are open: {are_open:Bool}")
+def step_impl(context: Context, are_open: bool):
+    for_each_transaction_is(context, lambda tx: assert_transaction_open(tx, are_open))
+
+
+@step("transaction commits{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: context.tx().commit())
+
+
+@step("transaction closes{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: context.tx().close())
+
+
+@step("transaction rollbacks{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: context.tx().rollback())
+
+
+def for_each_transaction_has_type(context: Context, transaction_types: list):
+    assert_that(context.transactions, has_length(len(transaction_types)))
+    transactions_iterator = iter(context.transactions)
+    for transaction_type in transaction_types:
+        assert_that(next(transactions_iterator).type, is_(transaction_type))
+
+
+@step("transactions have type")
 def step_impl(context: Context):
     transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
-    for_each_session_open_transaction_of_type(context, transaction_types)
+    for_each_transaction_has_type(context, transaction_types)
 
 
-def open_transactions_of_type_throws_exception(context: Context, transaction_types: list[TransactionType]):
-    for session in context.sessions:
-        for transaction_type in transaction_types:
-            try:
-                session.transaction(transaction_type)
-                assert False
-            except TypeDBDriverException:
-                pass
+@step("transaction has type: {transaction_type:TransactionType}")
+def step_impl(context: Context, transaction_type: TransactionType):
+    for_each_transaction_has_type(context, [transaction_type])
 
 
-@step("session open transaction of type; throws exception: {transaction_type}")
-def step_impl(context: Context, transaction_type):
-    transaction_type = parse_transaction_type(transaction_type)
-    open_transactions_of_type_throws_exception(context, [transaction_type])
-
-
-# TODO: transaction(s) in other implementations, simplify
-@step("for each session, open transactions of type; throws exception")
-def step_impl(context: Context):
-    open_transactions_of_type_throws_exception(context, list(
-        map(lambda raw_type: parse_transaction_type(raw_type), parse_list(context.table))))
-
-
-def for_each_session_transactions_are(context: Context, assertion: Callable[[Transaction], None]):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            assertion(transaction)
-
-
-def assert_transaction_null(transaction: Transaction, is_null: bool):
-    assert_that(transaction is None, is_(is_null))
-
-
-@step("session transaction is null: {is_null}")
-@step("for each session, transaction is null: {is_null}")
-@step("for each session, transactions are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_transactions_are(context, lambda tx: assert_transaction_null(tx, is_null))
-
-
-def assert_transaction_open(transaction: Transaction, is_open: bool):
-    assert_that(transaction.is_open(), is_(is_open))
-
-
-@step("session transaction is open: {is_open}")
-@step("for each session, transaction is open: {is_open}")
-@step("for each session, transactions are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_transactions_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-@step("session transaction commits")
-@step("transaction commits")
-def step_impl(context: Context):
-    context.tx().commit()
-
-
-@step("session transaction closes")
-def step_impl(context: Context):
-    context.tx().close()
-
-
-@step("session transaction commits; throws exception")
-@step("transaction commits; throws exception")
-def step_impl(context: Context):
-    try:
-        context.tx().commit()
-        assert False
-    except TypeDBDriverException:
-        pass
-
-
-@step("transaction commits; throws exception containing \"{exception}\"")
-def step_impl(context: Context, exception: str):
-    assert_that(calling(context.tx().commit), raises(TypeDBDriverException, exception))
-
-
-@step("for each session, transaction commits")
-@step("for each session, transactions commit")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            transaction.commit()
-
-
-@step("for each session, transaction commits; throws exception")
-@step("for each session, transactions commit; throws exception")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            try:
-                transaction.commit()
-                assert False
-            except TypeDBDriverException:
-                pass
-
-
-# TODO: close(s) in other implementations - simplify
-@step("for each session, transaction closes")
-def step_impl(context: Context):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            transaction.close()
-
-
-def for_each_session_transaction_has_type(context: Context, transaction_types: list):
-    for session in context.sessions:
-        transactions = context.sessions_to_transactions[session]
-        assert_that(transactions, has_length(len(transaction_types)))
-        transactions_iterator = iter(transactions)
-        for transaction_type in transaction_types:
-            assert_that(next(transactions_iterator).type, is_(transaction_type))
-
-
-# NOTE: behave ignores trailing colons in feature files
-@step("for each session, transaction has type")
-@step("for each session, transactions have type")
-def step_impl(context: Context):
-    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
-    for_each_session_transaction_has_type(context, transaction_types)
-
-
-# TODO: this is overcomplicated in some drivers (has/have, transaction(s))
-@step("for each session, transaction has type: {transaction_type}")
-@step("session transaction has type: {transaction_type}")
-def step_impl(context: Context, transaction_type):
-    transaction_type = parse_transaction_type(transaction_type)
-    for_each_session_transaction_has_type(context, [transaction_type])
-
-
-##############################################
-# sequential sessions, parallel transactions #
-##############################################
-
-# TODO: transaction(s) in other implementations - simplify
-@step("for each session, open transactions in parallel of type")
-def step_impl(context: Context):
+@step("connection open transactions in parallel for database: {name:Words}, of type")
+def step_impl(context: Context, name: str):
     types = list(map(parse_transaction_type, parse_list(context.table)))
     assert_that(len(types), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
-        for session in context.sessions:
-            context.sessions_to_transactions_parallel[session] = []
-            for type_ in types:
-                context.sessions_to_transactions_parallel[session].append(
-                    executor.submit(partial(session.transaction, type_)))
+        context.transactions_parallel = []
+        for type_ in types:
+            context.transactions_parallel.append(
+                executor.submit(partial(context.driver.transaction, name, type_)))
 
 
-def for_each_session_transactions_in_parallel_are(context: Context, assertion: Callable[[Transaction], None]):
-    for session in context.sessions:
-        for future_transaction in context.sessions_to_transactions_parallel[session]:
-            assertion(future_transaction.result())
+def transactions_in_parallel_are(context: Context, assertion: Callable[[Transaction], None]):
+    for future_transaction in context.transactions_parallel:
+        assertion(future_transaction.result())
 
 
-@step("for each session, transactions in parallel are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
+@step("transactions in parallel are open: {are_open:Bool}")
+def step_impl(context: Context, are_open: bool):
+    transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, are_open))
 
 
-@step("for each session, transactions in parallel are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-@step("for each session, transactions in parallel have type")
+@step("transactions in parallel have type")
 def step_impl(context: Context):
     types = list(map(parse_transaction_type, parse_list(context.table)))
-    for session in context.sessions:
-        future_transactions = context.sessions_to_transactions_parallel[session]
-        assert_that(future_transactions, has_length(len(types)))
-        future_transactions_iter = iter(future_transactions)
-        for type_ in types:
-            assert_that(next(future_transactions_iter).result().type, is_(type_))
+    future_transactions = context.transactions_parallel
+    assert_that(future_transactions, has_length(len(types)))
+    future_transactions_iter = iter(future_transactions)
+    for type_ in types:
+        assert_that(next(future_transactions_iter).result().type, is_(type_))
 
-
-############################################
-# parallel sessions, parallel transactions #
-############################################
-
-def for_each_session_in_parallel_transactions_in_parallel_are(context: Context, assertion):
-    for future_session in context.sessions_parallel:
-        for future_transaction in context.sessions_parallel_to_transactions_parallel[future_session]:
-            assertion(future_transaction)
-
-
-@step("for each session in parallel, transactions in parallel are null: {is_null}")
-def step_impl(context: Context, is_null):
-    is_null = parse_bool(is_null)
-    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_null(tx, is_null))
-
-
-@step("for each session in parallel, transactions in parallel are open: {is_open}")
-def step_impl(context: Context, is_open):
-    is_open = parse_bool(is_open)
-    for_each_session_in_parallel_transactions_in_parallel_are(context, lambda tx: assert_transaction_open(tx, is_open))
-
-
-######################################
-# transaction configuration          #
-######################################
 
 @step("set transaction option {option} to: {value:Int}")
 def step_impl(context: Context, option: str, value: int):
@@ -261,16 +136,6 @@ def step_impl(context: Context, option: str, value: int):
     context.option_setters[option](context.transaction_options, value)
 
 
-######################################
-# transaction behaviour with queries #
-######################################
-
-@step("for each transaction, define query; throws exception containing \"{exception}\"")
-def step_impl(context: Context, exception: str):
-    for session in context.sessions:
-        for transaction in context.sessions_to_transactions[session]:
-            try:
-                transaction.query.define(context.text)
-                assert False
-            except TypeDBDriverException as e:
-                assert_that(exception, is_in(str(e)))
+@step("schedule database creation on transaction close: {database_name:Words}")
+def step_impl(context: Context, database_name: str):
+    context.tx().on_close(lambda: context.driver.databases.create(database_name))

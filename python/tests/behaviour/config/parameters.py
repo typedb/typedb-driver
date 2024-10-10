@@ -17,19 +17,28 @@
 
 from __future__ import annotations
 
+import re
 from enum import Enum
-from typing import Callable
+from typing import Callable, Optional
 
 import parse
 from behave import register_type
 from behave.model import Table
-# TODO: We aren't consistently using typed parameters in step implementations - we should be.
+from hamcrest import *
+from typedb.api.answer.query_type import QueryType
+from typedb.api.connection.transaction import TransactionType
+from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
 
 @parse.with_pattern(r"true|false")
 def parse_bool(value: str) -> bool:
-    return value == "true"
+    if value == "true":
+        return True
+    elif value == "false":
+        return False
+    else:
+        raise ValueError(f"Unrecognised bool: {value}")
 
 
 register_type(Bool=parse_bool)
@@ -42,13 +51,6 @@ def parse_int(text: str) -> int:
 register_type(Int=parse_int)
 
 
-def parse_float(text: str) -> float:
-    return float(text)
-
-
-register_type(Float=parse_float)
-
-
 @parse.with_pattern("[\w_-]+")
 def parse_words(text):
     return text
@@ -57,82 +59,110 @@ def parse_words(text):
 register_type(Words=parse_words)
 
 
-@parse.with_pattern(r"\d\d\d\d-\d\d-\d\d(?: \d\d:\d\d:\d\d)?")
-def parse_datetime_pattern(text: str) -> datetime:
-    return parse_datetime(text)
+class ConceptKind(Enum):
+    CONCEPT = 0,
+    TYPE = 1,
+    THING_TYPE = 2,
+    THING = 3,
+    ENTITY_TYPE = 4,
+    RELATION_TYPE = 5,
+    ATTRIBUTE_TYPE = 6,
+    ROLE_TYPE = 7,
+    ENTITY = 8,
+    RELATION = 9,
+    ATTRIBUTE = 10,
+    VALUE = 11,
 
 
-def parse_datetime(text: str) -> datetime:
-    try:
-        return datetime.strptime(text, "%Y-%m-%dT%H:%M:%S")
-    except ValueError:
-        try:
-            return datetime.strptime(text, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            return datetime.strptime(text, "%Y-%m-%d")
-
-
-register_type(DateTime=parse_datetime)
-
-
-class Kind(Enum):
-    ENTITY = 0,
-    ATTRIBUTE = 1,
-    RELATION = 2
-
-
-@parse.with_pattern(r"entity|attribute|relation")
-def parse_root_label(text: str) -> Kind:
-    if text == "entity":
-        return Kind.ENTITY
-    elif text == "attribute":
-        return Kind.ATTRIBUTE
+@parse.with_pattern(
+    r"concept|variable|type|thing type|thing|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
+def parse_concept_kind(text: str) -> ConceptKind:
+    if text == "concept" or text == "variable":
+        return ConceptKind.CONCEPT
+    elif text == "type":
+        return ConceptKind.TYPE
+    elif text == "thing type":
+        return ConceptKind.THING_TYPE
+    elif text == "thing":
+        return ConceptKind.THING
+    elif text == "entity type":
+        return ConceptKind.ENTITY_TYPE
+    elif text == "relation type":
+        return ConceptKind.RELATION_TYPE
+    elif text == "attribute type":
+        return ConceptKind.ATTRIBUTE_TYPE
+    elif text == "role type":
+        return ConceptKind.ROLE_TYPE
+    elif text == "entity":
+        return ConceptKind.ENTITY
     elif text == "relation":
-        return Kind.RELATION
+        return ConceptKind.RELATION
+    elif text == "attribute":
+        return ConceptKind.ATTRIBUTE
+    elif text == "value":
+        return ConceptKind.VALUE
     else:
-        raise ValueError("Unrecognised kind: " + text)
+        raise ValueError(f"Unrecognised ConceptKind: {text}")
 
 
-register_type(Kind=parse_root_label)
+register_type(ConceptKind=parse_concept_kind)
 
 
-@parse.with_pattern(r"[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
-def parse_scoped_label(text: str) -> Label:
-    return parse_label(text)
+class ValueType(Enum):
+    BOOLEAN = 0,
+    LONG = 1,
+    DOUBLE = 2,
+    DECIMAL = 3,
+    STRING = 4,
+    DATE = 5,
+    DATETIME = 6,
+    DATETIME_TZ = 7,
+    DURATION = 8,
+    STRUCT = 9,
 
 
-register_type(ScopedLabel=parse_scoped_label)
+@parse.with_pattern(r"boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")
+def parse_value_type(text: str) -> ValueType:
+    value_type_opt = try_parse_value_type(text)
+    if value_type_opt is None:
+        raise ValueError(f"Unrecognised ValueType: {text}")
+    return value_type_opt
 
 
-@parse.with_pattern(r"[a-zA-Z0-9:]+")
-def parse_label(text: str):
-    return Label.of(*text.split(":"))
+def try_parse_value_type(text: str) -> Optional[ValueType]:
+    if text == "boolean":
+        return ValueType.BOOLEAN
+    elif text == "long":
+        return ValueType.LONG
+    elif text == "double":
+        return ValueType.DOUBLE
+    elif text == "decimal":
+        return ValueType.DECIMAL
+    elif text == "string":
+        return ValueType.STRING
+    elif text == "date":
+        return ValueType.DATE
+    elif text == "datetime":
+        return ValueType.DATETIME
+    elif text == "datetime-tz":
+        return ValueType.DATETIME_TZ
+    elif text == "duration":
+        return ValueType.DURATION
+    elif text == "struct":
+        return ValueType.STRUCT
+    else:
+        return None
 
 
-register_type(Label=parse_label)
+register_type(ValueType=parse_value_type)
 
 
-@parse.with_pattern(r"\$([a-zA-Z0-9]+)")
+@parse.with_pattern(r"([a-zA-Z0-9]*)")
 def parse_var(text: str):
     return text
 
 
 register_type(Var=parse_var)
-
-
-# @parse.with_pattern(r"long|double|string|boolean|datetime")
-# def parse_value_type(value: str) -> ValueType:
-#     mapping = {
-#         "long": ValueType.LONG,
-#         "double": ValueType.DOUBLE,
-#         "string": ValueType.STRING,
-#         "boolean": ValueType.BOOLEAN,
-#         "datetime": ValueType.DATETIME
-#     }
-#     return mapping[value]
-#
-#
-# register_type(ValueType=parse_value_type)
 
 
 @parse.with_pattern("read|write|schema")
@@ -143,6 +173,16 @@ def parse_transaction_type(value: str) -> TransactionType:
 
 
 register_type(TransactionType=parse_transaction_type)
+
+
+@parse.with_pattern("read|write|schema")
+def parse_query_type(value: str) -> QueryType:
+    return QueryType.READ if value == "read" \
+        else QueryType.WRITE if value == "write" \
+        else QueryType.SCHEMA
+
+
+register_type(QueryType=parse_query_type)
 
 
 def parse_list(table: Table) -> list[str]:
@@ -178,24 +218,60 @@ def parse_table(table: Table) -> list[list[tuple[str, str]]]:
 
 class MayError:
 
-    def __init__(self, may_error: bool):
+    def __init__(self, may_error: bool, message: str = ""):
         self.may_error = may_error
+        self.message = message
 
     def check(self, func: Callable):
         if self.may_error:
-            assert_that(func, raises(TypeDBDriverException))
+            assert_that(func, raises(TypeDBDriverException, self.message))
         else:
             func()
 
+    def __repr__(self):
+        return f"MayError({self.may_error})"
 
-@parse.with_pattern("; fails|; parsing fails|")
+
+@parse.with_pattern("|; fails|; parsing fails|; fails with a message containing: \"(?P<message>.*)\"")
 def parse_may_error(value: str) -> MayError:
     if value == "":
         return MayError(False)
     elif value in ("; fails", "; parsing fails"):
         return MayError(True)
     else:
-        raise ValueError("Unrecognised MayError: " + value)
+        match = re.match(r'; fails with a message containing: "(?P<message>.*)"', value)
+        if match:
+            return MayError(True, match.group("message"))
+        else:
+            raise ValueError(f"Unrecognised MayError: {value}")
 
 
 register_type(MayError=parse_may_error)
+
+
+@parse.with_pattern("is|is not")
+def parse_is_or_not(value: str) -> bool:
+    if value == "is not":
+        return False
+    elif value == "is":
+        return True
+    else:
+        raise ValueError(f"Unrecognised IsOrNot: {value}")
+
+
+register_type(IsOrNot=parse_is_or_not)
+
+
+def is_or_not_reason(is_or_not: bool, real, expected) -> str:
+    intro_str = "Expected that real value"
+    is_or_not_str = "is" if is_or_not else "is not"
+    spaces_num = len(intro_str)
+    return f"\nExpected that real value <{real}>\n{is_or_not_str: >{spaces_num}} <{expected}>"
+
+
+@parse.with_pattern("| by index of variable")
+def parse_by_index_of_variable_or_not(value: str) -> bool:
+    return value == " by index of variable"
+
+
+register_type(ByIndexOfVarOrNot=parse_by_index_of_variable_or_not)

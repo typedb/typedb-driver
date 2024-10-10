@@ -17,7 +17,7 @@ As usual, Add the include paths to your compile step & the library to your link 
 A [sample `CMakeLists`](https://github.com/typedb/typedb-driver/blob/master/cpp/test/assembly/CMakeLists.txt) is available on the TypeDB Driver repository.
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using the C++ driver, refer to the [API Reference](https://typedb.com/docs/drivers/cpp/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using C++, refer to the [API Reference](https://typedb.com/docs/drivers/cpp/api-reference).
 
 ## Driver Architecture
 The C++ driver is a thin wrapper around the TypeDB rust driver, introducing classes for a more intuitive interface. Each C++ object holds a unique pointer to the corresponding native rust object and is the unique owner of that rust object. To ensure this, we enforce move-semantics on the C++ objects. The rust object is freed when the C++ object owning it is destructed.
@@ -50,7 +50,7 @@ Any error encountered will throw a `TypeDB::DriverException`. Note that methods 
    The archive will be produced under `bazel-bin/cpp/typedb-driver-cpp-<os>-<arch>.<ext>` and will contain the `include` and `lib` folders as in the distribution.
 
 
-## Examples
+## Example usage
 ```cpp
 // All files are included from typedb_driver.hpp
 #include <typedb_driver.hpp>

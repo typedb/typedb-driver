@@ -32,8 +32,8 @@ namespace TypeDB.Driver.Test.Behaviour
             Thread.Sleep(seconds * 1000);
         }
 
-        [Given(@"set time-zone is: {}")]
-        [When(@"set time-zone is: {}")]
+        [Given(@"set time-zone: {}")]
+        [When(@"set time-zone: {}")]
         public void SetTimeZoneIs(string timeZoneId)
         {
             // no-op: C# doesn't support time zone changes. // TODO #636: consider implementation

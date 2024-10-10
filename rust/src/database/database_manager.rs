@@ -149,12 +149,8 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
-        let databases = self.databases_cache.read().unwrap();
-        if databases.contains_key(name) {
-            return Ok(databases.get(name).unwrap().clone());
-        } else {
-            self.get(name).await
-        }
+        let cached_database = self.databases_cache.read().unwrap().get(name).cloned();
+        Ok(cached_database.unwrap_or(self.get(name).await?))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

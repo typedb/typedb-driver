@@ -35,179 +35,19 @@ Casts the concept to ``AttributeType``.
 attribute.as_attribute_type()
 ----
 
-[#_AttributeType_get_transaction_TypeDBTransaction_value_Value_bool_int_float_str_datetime]
-==== get
-
-[source,python]
-----
-get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Promise[Attribute | None]
-----
-
-Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
-|===
-
-[caption=""]
-.Returns
-`Promise[Attribute | None]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute = attribute_type.get(transaction, value).resolve()
-----
-
-[#_AttributeType_get_instances_transaction_TypeDBTransaction_transitivity_Transitivity]
-==== get_instances
-
-[source,python]
-----
-get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Attribute]
-----
-
-Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
-|===
-
-[caption=""]
-.Returns
-`Iterator[Attribute]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.get_instances(transaction)
-attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
-----
-
-[#_AttributeType_get_owners_transaction_TypeDBTransaction_annotations_set_Annotation_None_transitivity_Transitivity]
-==== get_owners
-
-[source,python]
-----
-get_owners(transaction: TypeDBTransaction, annotations: set[Annotation] | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
-----
-
-Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optionally, filtered by ``Annotation``s.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `set[Annotation] \| None` a| `None`
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` a| `Transitivity.TRANSITIVE`
-|===
-
-[caption=""]
-.Returns
-`Iterator[ThingType]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.get_owners(transaction)
-attribute_type.get_owners(transaction, annotations=Annotation.unique(), transitivity=Transitivity.EXPLICIT)
-----
-
-[#_AttributeType_get_regex_transaction_TypeDBTransaction]
-==== get_regex
-
-[source,python]
-----
-get_regex(transaction: TypeDBTransaction) -> Promise[str]
-----
-
-Retrieves the regular expression that is defined for this ``AttributeType``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-|===
-
-[caption=""]
-.Returns
-`Promise[str]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.get_regex(transaction).resolve()
-----
-
-[#_AttributeType_get_subtypes_with_value_type_transaction_TypeDBTransaction_value_type_ValueType_transitivity_Transitivity]
-==== get_subtypes_with_value_type
-
-[source,python]
-----
-get_subtypes_with_value_type(transaction: TypeDBTransaction, value_type: ValueType, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[AttributeType]
-----
-
-Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType` a| 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
-|===
-
-[caption=""]
-.Returns
-`Iterator[AttributeType]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.get_subtypes_with_value_type(transaction, value_type)
-attribute_type.get_subtypes_with_value_type(transaction, value_type,
-                                            Transitivity.EXPLICIT)
-----
-
 [#_AttributeType_get_value_type_]
 ==== get_value_type
 
 [source,python]
 ----
-get_value_type() -> ValueType
+get_value_type() -> str
 ----
 
-Retrieves the ``ValueType`` of this ``AttributeType``.
+Retrieves the ``str`` describing the value type of this ``AttributeType`` concept.
 
 [caption=""]
 .Returns
-`ValueType`
+`str`
 
 [caption=""]
 .Code examples
@@ -245,7 +85,7 @@ attribute.is_attribute_type()
 is_boolean() -> bool
 ----
 
-Returns ``True`` if the value for attributes of this type is of type ``boolean``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute type is of type ``boolean``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -258,6 +98,27 @@ Returns ``True`` if the value for attributes of this type is of type ``boolean``
 attribute_type.is_boolean()
 ----
 
+[#_AttributeType_is_date_]
+==== is_date
+
+[source,python]
+----
+is_date() -> bool
+----
+
+Returns ``True`` if this attribute type is of type ``date``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_date()
+----
+
 [#_AttributeType_is_datetime_]
 ==== is_datetime
 
@@ -266,7 +127,7 @@ attribute_type.is_boolean()
 is_datetime() -> bool
 ----
 
-Returns ``True`` if the value for attributes of this type is of type ``datetime``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute type is of type ``datetime``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -279,6 +140,48 @@ Returns ``True`` if the value for attributes of this type is of type ``datetime`
 attribute_type.is_datetime()
 ----
 
+[#_AttributeType_is_datetime_tz_]
+==== is_datetime_tz
+
+[source,python]
+----
+is_datetime_tz() -> bool
+----
+
+Returns ``True`` if this attribute type is of type ``datetime_tz``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_datetime_tz()
+----
+
+[#_AttributeType_is_decimal_]
+==== is_decimal
+
+[source,python]
+----
+is_decimal() -> bool
+----
+
+Returns ``True`` if this attribute type is of type ``decimal``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_decimal()
+----
+
 [#_AttributeType_is_double_]
 ==== is_double
 
@@ -287,7 +190,7 @@ attribute_type.is_datetime()
 is_double() -> bool
 ----
 
-Returns ``True`` if the value for attributes of this type is of type ``double``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute type is of type ``double``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -300,6 +203,27 @@ Returns ``True`` if the value for attributes of this type is of type ``double``.
 attribute_type.is_double()
 ----
 
+[#_AttributeType_is_duration_]
+==== is_duration
+
+[source,python]
+----
+is_duration() -> bool
+----
+
+Returns ``True`` if this attribute type is of type ``duration``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_duration()
+----
+
 [#_AttributeType_is_long_]
 ==== is_long
 
@@ -308,7 +232,7 @@ attribute_type.is_double()
 is_long() -> bool
 ----
 
-Returns ``True`` if the value for attributes of this type is of type ``long``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute type is of type ``long``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -329,7 +253,7 @@ attribute_type.is_long()
 is_string() -> bool
 ----
 
-Returns ``True`` if the value for attributes of this type is of type ``string``. Otherwise, returns ``False``.
+Returns ``True`` if this attribute type is of type ``string``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -342,129 +266,46 @@ Returns ``True`` if the value for attributes of this type is of type ``string``.
 attribute_type.is_string()
 ----
 
-[#_AttributeType_put_transaction_TypeDBTransaction_value_Value_bool_int_float_str_datetime]
-==== put
+[#_AttributeType_is_struct_]
+==== is_struct
 
 [source,python]
 ----
-put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Promise[Attribute]
+is_struct() -> bool
 ----
 
-Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| New ``Attribute``’s value (datetime values are treated as timezone naive, with tzinfo being ignored) a| `Value \| bool \| int \| float \| str \| datetime` a| 
-|===
+Returns ``True`` if this attribute type is of type ``struct``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
-`Promise[Attribute]`
+`bool`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute = attribute_type.put(transaction, value).resolve()
+attribute_type.is_struct()
 ----
 
-[#_AttributeType_set_regex_transaction_TypeDBTransaction_regex_str]
-==== set_regex
+[#_AttributeType_is_untyped_]
+==== is_untyped
 
 [source,python]
 ----
-set_regex(transaction: TypeDBTransaction, regex: str) -> Promise[None]
+is_untyped() -> bool
 ----
 
-Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
-
-Can only be applied for ``AttributeType``s with a ``string`` value type.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `regex` a| Regular expression a| `str` a| 
-|===
+Returns ``True`` if this attribute type does not have a value type. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
-`Promise[None]`
+`bool`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute_type.set_regex(transaction, regex).resolve()
-----
-
-[#_AttributeType_set_supertype_transaction_TypeDBTransaction_super_attribute_type_AttributeType]
-==== set_supertype
-
-[source,python]
-----
-set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> Promise[None]
-----
-
-Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` a| 
-|===
-
-[caption=""]
-.Returns
-`Promise[None]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.set_supertype(transaction, super_attribute_type).resolve()
-----
-
-[#_AttributeType_unset_regex_transaction_TypeDBTransaction]
-==== unset_regex
-
-[source,python]
-----
-unset_regex(transaction: TypeDBTransaction) -> Promise[None]
-----
-
-Removes the regular expression that is defined for this ``AttributeType``.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-|===
-
-[caption=""]
-.Returns
-`Promise[None]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute_type.unset_regex(transaction).resolve()
+attribute_type.is_untyped()
 ----
 
 // end::methods[]

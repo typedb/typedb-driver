@@ -30,7 +30,7 @@ cucumber_bdd::StepCollection<Context> commonSteps = {
     BDD_STEP("wait (\\d+) seconds", {
         std::this_thread::sleep_for(std::chrono::seconds(atoi(matches[1].str().c_str())));
     }),
-    BDD_NOOP("set time-zone is: (.*)"), // TODO #636: consider implementation (looks like it can be changed only for POSIX).
+    BDD_NOOP("set time-zone: (.*)"), // TODO #636: consider implementation (looks like it can be changed only for POSIX).
     BDD_NOOP("typedb has configuration"),
 };
 

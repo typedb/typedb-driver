@@ -20,7 +20,7 @@ from functools import partial
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import parse_list
+from tests.behaviour.config.parameters import MayError, parse_list
 from tests.behaviour.context import Context
 from tests.behaviour.util.util import assert_collections_equal
 from typedb.driver import *
@@ -31,12 +31,16 @@ def create_databases(context: Context, names: list[str]):
         context.driver.databases.create(name)
 
 
-@step("connection create database: {database_name}")
-def step_impl(context: Context, database_name: str):
-    create_databases(context, [database_name])
+@step("connection create database with empty name{may_error:MayError}")
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: create_databases(context, [""]))
 
 
-# TODO: connection create database(s) in other implementations, simplify
+@step("connection create database: {name:Words}")
+def step_impl(context: Context, name: str):
+    create_databases(context, [name])
+
+
 @step("connection create databases")
 def step_impl(context: Context):
     names = parse_list(context.table)
@@ -57,33 +61,14 @@ def delete_databases(context: Context, names: list[str]):
         context.driver.databases.get(name).delete()
 
 
-@step("connection delete database: {name}")
-def step_impl(context: Context, name: str):
-    delete_databases(context, [name])
+@step("connection delete database: {name:Words}{may_error:MayError}")
+def step_impl(context: Context, name: str, may_error: MayError):
+    may_error.check(lambda: delete_databases(context, [name]))
 
 
 @step("connection delete databases")
 def step_impl(context: Context):
     delete_databases(context, names=parse_list(context.table))
-
-
-def delete_databases_throws_exception(context: Context, names: list[str]):
-    for name in names:
-        try:
-            context.driver.databases.get(name).delete()
-            assert False
-        except TypeDBDriverException:
-            pass
-
-
-@step("connection delete database; throws exception: {name}")
-def step_impl(context: Context, name: str):
-    delete_databases_throws_exception(context, [name])
-
-
-@step("connection delete databases; throws exception")
-def step_impl(context: Context):
-    delete_databases_throws_exception(context, names=parse_list(context.table))
 
 
 @step("connection delete databases in parallel")
@@ -99,7 +84,7 @@ def has_databases(context: Context, names: list[str]):
     assert_collections_equal([db.name for db in context.driver.databases.all()], names)
 
 
-@step("connection has database: {name}")
+@step("connection has database: {name:Words}")
 def step_impl(context: Context, name: str):
     has_databases(context, [name])
 
@@ -115,7 +100,7 @@ def does_not_have_databases(context: Context, names: list[str]):
         assert_that(name, not_(is_in(databases)))
 
 
-@step("connection does not have database: {name}")
+@step("connection does not have database: {name:Words}")
 def step_impl(context: Context, name: str):
     does_not_have_databases(context, [name])
 
@@ -123,3 +108,17 @@ def step_impl(context: Context, name: str):
 @step("connection does not have databases")
 def step_impl(context: Context):
     does_not_have_databases(context, names=parse_list(context.table))
+
+
+@step("connection get database({name:Words}) has schema")
+def step_impl(context: Context, name: str):
+    expected_schema = context.text
+    real_schema = context.driver.databases.get(name).schema()
+    assert_that(real_schema, is_(expected_schema))
+
+
+@step("connection get database({name:Words}) has type schema")
+def step_impl(context: Context, name: str):
+    expected_schema = context.text
+    real_schema = context.driver.databases.get(name).type_schema()
+    assert_that(real_schema, is_(expected_schema))

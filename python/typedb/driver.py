@@ -36,7 +36,6 @@ from typedb.api.connection.driver import *
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
 # from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
-from typedb.common.label import *  # noqa # pylint: disable=unused-import
 from typedb.connection.driver import _Driver
 
 

@@ -23,8 +23,7 @@
 #     options_get_trace_inference, options_has_trace_inference, options_set_trace_inference, options_get_explain, \
 #     options_has_explain, options_set_explain, options_has_parallel, options_get_parallel, options_set_parallel, \
 #     options_get_prefetch, options_has_prefetch, options_set_prefetch, options_has_prefetch_size, \
-#     options_get_prefetch_size, options_set_prefetch_size, options_get_session_idle_timeout_millis, \
-#     options_has_session_idle_timeout_millis, options_set_session_idle_timeout_millis, \
+#     options_get_prefetch_size, options_set_prefetch_size, \
 #     options_has_transaction_timeout_millis, options_get_transaction_timeout_millis, \
 #     options_set_transaction_timeout_millis, options_get_schema_lock_acquire_timeout_millis, \
 #     options_has_schema_lock_acquire_timeout_millis, options_set_schema_lock_acquire_timeout_millis, \
@@ -36,8 +35,7 @@
 #
 # class Options(NativeWrapper[NativeOptions]):
 #     """
-#     TypeDB session and transaction options. ``Options`` object
-#     can be used to override the default server behaviour.
+#     TypeDB transaction options. ``Options`` object can be used to override the default server behaviour.
 #
 #     Options could be specified either as constructor arguments or using
 #     properties assignment.
@@ -47,7 +45,7 @@
 #
 #     ::
 #
-#       transaction_options = Options(session_idle_timeout_millis=20000)
+#       transaction_options = Options(transaction_timeout_millis=20000)
 #       transaction_options.explain = True
 #     """
 #
@@ -58,7 +56,6 @@
 #                  parallel: Optional[bool] = None,
 #                  prefetch: Optional[bool] = None,
 #                  prefetch_size: Optional[int] = None,
-#                  session_idle_timeout_millis: Optional[int] = None,
 #                  transaction_timeout_millis: Optional[int] = None,
 #                  schema_lock_acquire_timeout_millis: Optional[int] = None,
 #                  read_any_replica: Optional[bool] = None,
@@ -76,8 +73,6 @@
 #             self.prefetch = prefetch
 #         if prefetch_size is not None:
 #             self.prefetch_size = prefetch_size
-#         if session_idle_timeout_millis is not None:
-#             self.session_idle_timeout_millis = session_idle_timeout_millis
 #         if transaction_timeout_millis is not None:
 #             self.transaction_timeout_millis = transaction_timeout_millis
 #         if schema_lock_acquire_timeout_millis is not None:
@@ -163,21 +158,6 @@
 #         options_set_prefetch_size(self.native_object, prefetch_size)
 #
 #     @property
-#     def session_idle_timeout_millis(self) -> Optional[int]:
-#         """
-#         If set, specifies a timeout that allows the server to close sessions if the driver
-#         terminates or becomes unresponsive.
-#         """
-#         return options_get_session_idle_timeout_millis(self.native_object) \
-#             if options_has_session_idle_timeout_millis(self.native_object) else None
-#
-#     @session_idle_timeout_millis.setter
-#     def session_idle_timeout_millis(self, session_idle_timeout_millis: int):
-#         if session_idle_timeout_millis < 1:
-#             raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, session_idle_timeout_millis)
-#         options_set_session_idle_timeout_millis(self.native_object, session_idle_timeout_millis)
-#
-#     @property
 #     def transaction_timeout_millis(self) -> Optional[int]:
 #         """
 #         If set, specifies a timeout for killing transactions automatically, preventing
@@ -195,7 +175,7 @@
 #     @property
 #     def schema_lock_acquire_timeout_millis(self) -> Optional[int]:
 #         """
-#         If set, specifies how long the driver should wait if opening a session or transaction
+#         If set, specifies how long the driver should wait if opening a transaction
 #         is blocked by a schema write lock.
 #         """
 #         return options_get_schema_lock_acquire_timeout_millis(self.native_object) \

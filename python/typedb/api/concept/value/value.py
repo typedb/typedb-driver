@@ -32,9 +32,9 @@ class Value(Concept, ABC):
     VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
 
     @abstractmethod
-    def get_value_type(self) -> str:
+    def get_type(self) -> str:
         """
-        Retrieves the ``ValueType`` of this value concept.
+        Retrieves the ``str`` describing the value type of this ``Value`` concept.
 
         :return:
 
@@ -42,7 +42,7 @@ class Value(Concept, ABC):
         --------
         ::
 
-            value.get_value_type()
+            value.get_type()
         """
         pass
 

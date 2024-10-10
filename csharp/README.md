@@ -20,7 +20,7 @@ If you aim to build a platform-independent package, reference all the needed run
 See [Examples](#examples) and [API Reference](#api-reference) to set up your first application with the TypeDB driver.
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using the C# driver, refer to the [API Reference](https://typedb.com/docs/drivers/csharp/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using C#, refer to the [API Reference](https://typedb.com/docs/drivers/csharp/api-reference).
 
 ## Driver Architecture
 The C# driver is a thin wrapper around the TypeDB Rust driver, introducing classes for a more intuitive interface. Mostly each C# object holds a reference to the corresponding native Rust object, using an FFI ([SWIG for C#](https://www.swig.org/Doc4.2/SWIGDocumentation.html#CSharp)) for the native object wrappers generation and resource management.
@@ -39,8 +39,10 @@ Any error encountered will throw a `TypeDBDriverException`. Note that methods wh
    All the needed C# libraries will be produced at: `bazel-bin/csharp/`, with the main one being: `bazel-bin/csharp/driver-csharp/{target_framework}/TypeDB.Driver.dll`. 
 3. Examples of building and using Bazel-based C# applications with the produced dependencies can be found in `csharp/Test/Integration/Examples`.
 
-## Examples
+## Example usage
+
 ### TypeDB Core
+
 Connect to TypeDB using `Drivers.CoreDriver` and perform basic read/write operations:
 ```cs
 using TypeDB.Driver;

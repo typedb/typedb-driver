@@ -26,7 +26,7 @@ typedb_behaviour_java_test(
     ],
     test_class = "com.typedb.driver.test.behaviour.driver.query.QueryTest",
     data = [
-        "@vaticle_typedb_behaviour//driver:query.feature",
+        "@vaticle_typedb_behaviour//driver:driver.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",

@@ -27,7 +27,7 @@ py_library(
 )
 
 py_library(
-    name = "util_steps",
+    name = "steps",
     srcs = ["util_steps.py"],
     deps = [],
 )

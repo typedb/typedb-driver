@@ -20,7 +20,6 @@
 package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.RoleType;
-import com.typedb.driver.common.Label;
 
 import static com.typedb.driver.jni.typedb_driver.role_type_get_label;
 
@@ -30,7 +29,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public Label getLabel() {
-        return Label.of(role_type_get_label(nativeObject));
+    public String getLabel() {
+        return role_type_get_label(nativeObject);
     }
 }

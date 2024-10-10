@@ -31,7 +31,6 @@ typedb_behaviour_py_test(
     steps = [
         ":steps",
         "//python/tests/behaviour/connection:steps",
-        "//python/tests/behaviour/connection/session:steps",
         "//python/tests/behaviour/connection/transaction:steps",
         "//python/tests/behaviour/query:steps",
     ],

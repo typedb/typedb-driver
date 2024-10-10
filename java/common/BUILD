@@ -38,7 +38,7 @@ java_library(
 
 filegroup(
     name = "docs_source_files",
-    srcs = ["Label.java", "Promise.java", "exception/TypeDBDriverException.java"],
+    srcs = ["Duration.java", "Promise.java", "exception/TypeDBDriverException.java"],
     visibility = ["//java:__pkg__"],
 )
 

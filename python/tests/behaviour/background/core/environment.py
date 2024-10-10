@@ -24,7 +24,12 @@ IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 def before_all(context: Context):
     environment_base.before_all(context)
-    context.setup_context_driver_fn = lambda user=None, password=None: setup_context_driver(context, user, password)
+    context.setup_context_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
+        setup_context_driver(context, host, port, user, password)
+    context.setup_context_driver_fn()
+    for database in context.driver.databases.all():
+        database.delete()
+    context.driver.close()
 
 
 def before_scenario(context: Context, scenario):
@@ -35,11 +40,13 @@ def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context)
 
 
-def setup_context_driver(context, username=None, password=None):
+def setup_context_driver(context, host="localhost", port=None, username=None, password=None):
     if username is not None or password is not None:
         raise Exception("Core driver does not support authentication")
-    context.driver = TypeDB.core_driver(address="localhost:%d" % int(context.config.userdata["port"]))
-    # context.transaction_options = Options()
+    if port is None:
+        port = int(context.config.userdata["port"])
+    context.driver = TypeDB.core_driver(address=f"{host}:{port}")
+    # context.transaction_options = Options(infer=True)
 
 
 def after_scenario(context: Context, scenario):

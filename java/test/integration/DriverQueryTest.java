@@ -113,11 +113,9 @@ public class DriverQueryTest {
             assertFalse(conceptByName.isAttributeType());
             assertTrue(conceptByName.isType());
             assertFalse(conceptByName.isThing());
-            assertEquals(conceptByName.asEntityType().getLabel().scopedName(), "person");
-            assertEquals(conceptByName.asEntityType().getLabel().name(), "person");
-            assertEquals(conceptByName.asEntityType().getLabel().scope(), Optional.empty());
-            assertNotEquals(conceptByName.asEntityType().getLabel().scopedName(), "not person");
-            assertNotEquals(conceptByName.asEntityType().getLabel().scopedName(), "age");
+            assertEquals(conceptByName.asEntityType().getLabel(), "person");
+            assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
+            assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
         }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
@@ -147,10 +145,8 @@ public class DriverQueryTest {
             assertFalse(conceptByName.asAttributeType().isDecimal());
             assertFalse(conceptByName.asAttributeType().isDouble());
             assertTrue(conceptByName.asAttributeType().isLong());
-            assertEquals(conceptByName.asAttributeType().getLabel().scopedName(), "age");
-            assertEquals(conceptByName.asAttributeType().getLabel().name(), "age");
-            assertEquals(conceptByName.asAttributeType().getLabel().scope(), Optional.empty());
-            assertNotEquals(conceptByName.asAttributeType().getLabel().scopedName(), "person");
+            assertEquals(conceptByName.asAttributeType().getLabel(), "age");
+            assertNotEquals(conceptByName.asAttributeType().getLabel(), "person");
         }, Transaction.Type.READ);
 
         localhostTypeDBTX(tx -> {
@@ -172,10 +168,8 @@ public class DriverQueryTest {
             assertFalse(x.isAttribute());
             assertFalse(x.isType());
             assertTrue(x.isThing());
-            assertEquals(x.asEntity().getType().asEntityType().getLabel().scopedName(), "person");
-            assertEquals(x.asEntity().getType().asEntityType().getLabel().name(), "person");
-            assertEquals(x.asEntity().getType().asEntityType().getLabel().scope(), Optional.empty());
-            assertNotEquals(x.asEntity().getType().asEntityType().getLabel().scopedName(), "not person");
+            assertEquals(x.asEntity().getType().asEntityType().getLabel(), "person");
+            assertNotEquals(x.asEntity().getType().asEntityType().getLabel(), "not person");
 
             Concept z = row.get("z");
             assertTrue(z.isEntity());
@@ -184,10 +178,8 @@ public class DriverQueryTest {
             assertFalse(z.isType());
             assertTrue(z.isThing());
             Entity zEntity = z.asEntity();
-            assertEquals(zEntity.getType().asEntityType().getLabel().scopedName(), "person");
-            assertEquals(zEntity.getType().asEntityType().getLabel().name(), "person");
-            assertEquals(zEntity.getType().asEntityType().getLabel().scope(), Optional.empty());
-            assertNotEquals(zEntity.getType().asEntityType().getLabel().scopedName(), "not person");
+            assertEquals(zEntity.getType().asEntityType().getLabel(), "person");
+            assertNotEquals(zEntity.getType().asEntityType().getLabel(), "not person");
 
             tx.commit();
         }, Transaction.Type.WRITE);
@@ -206,10 +198,8 @@ public class DriverQueryTest {
                 assertFalse(x.isType());
                 assertTrue(x.isThing());
                 EntityType xType = x.asEntity().getType().asEntityType();
-                assertEquals(xType.getLabel().scopedName(), "person");
-                assertEquals(xType.getLabel().name(), "person");
-                assertEquals(xType.getLabel().scope(), Optional.empty());
-                assertNotEquals(xType.getLabel().scopedName(), "not person");
+                assertEquals(xType.getLabel(), "person");
+                assertNotEquals(xType.getLabel(), "not person");
                 count.incrementAndGet();
             });
             assertEquals(count.get(), 2);
@@ -269,7 +259,7 @@ public class DriverQueryTest {
                 Concept a = row.get("a");
                 assertTrue(a.isAttributeType());
                 AttributeType type = a.asAttributeType();
-                assertEquals(type.getValueType(), attributeValueTypes.get(type.getLabel().scopedName()));
+                assertEquals(type.getValueType(), attributeValueTypes.get(type.getLabel()));
                 count.incrementAndGet();
             });
             assertEquals(count.get(), attributeValueTypes.size());
@@ -299,7 +289,7 @@ public class DriverQueryTest {
                 AtomicInteger checked = new AtomicInteger(0);
                 rows.forEach(row -> {
                     Attribute attribute = row.get("a").asAttribute();
-                    String attributeName = attribute.getType().getLabel().scopedName();
+                    String attributeName = attribute.getType().getLabel();
                     Value value = attribute.getValue();
                     assertEquals(value.getType(), attributeValueTypes.get(attributeName));
                     if (value.isLong()) {
