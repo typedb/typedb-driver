@@ -20,26 +20,26 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
-#typedb_cloud_py_test(
-#    name = "test_cloud_failover",
-#    srcs = ["test_cloud_failover.py"],
-#    deps = [
-#        "//python:driver_python",
-#    ],
-#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-#    size = "medium",
-#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cloud-artifact",
-#)
-
 #py_test(
-#    name = "test_cloud_connection",
-#    srcs = ["test_cloud_connection.py"],
+#    name = "test_example",
+#    srcs = ["test_example.py"],
 #    deps = [
 #        "//python:driver_python",
 #        requirement("PyHamcrest"),
 #    ],
 #    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
 #    python_version = "PY3"
+#)
+
+#typedb_cloud_py_test(
+#    name = "test_failover",
+#    srcs = ["test_failover.py"],
+#    deps = [
+#        "//python:driver_python",
+#    ],
+#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+#    size = "medium",
+#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cloud-artifact",
 #)
 
 checkstyle_test(

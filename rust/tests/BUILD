@@ -22,7 +22,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
     name = "tests",
-    srcs = glob(["integration/runtimes.rs"]),
+    srcs = glob(["**/*.rs"]),
     timeout = "eternal",
     deps = [
         "//rust:typedb_driver",
@@ -41,7 +41,7 @@ rust_test(
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
         "@vaticle_typedb_behaviour//connection:transaction.feature",
-        "@vaticle_typedb_behaviour//connection:user.feature",
+#        "@vaticle_typedb_behaviour//connection:user.feature",
         "@vaticle_typedb_behaviour//driver:driver.feature",
     ],
 )

@@ -81,33 +81,49 @@ build:
         git add $DOCS_DIRS
         git diff --exit-code HEAD $DOCS_DIRS
 
-#    test-rust-unit-integration:
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
-#        tool/test/start-core-server.sh &&
-#          bazel test //rust/tests --test_output=streamed --test_arg=-- \
-#            --test_arg=integration::queries::core &&
-#          export CORE_FAILED= || export CORE_FAILED=1
-#        tool/test/stop-core-server.sh
-#        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
-#
+    test-rust-unit-integration:
+      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        
+        bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
+        
+        tool/test/start-core-server.sh &&
+          bazel test //rust/tests --test_output=streamed --test_arg=-- --test_arg=integration::core &&
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
+
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=integration::queries::cloud \
-#            --test_arg=integration::runtimes \
-#            --test_arg=integration::network &&
+#            --test_arg=integration::cloud &&
 #          export CLOUD_FAILED= || export CLOUD_FAILED=1
 #        tool/test/stop-cloud-servers.sh
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
-#
-#    test-rust-behaviour-minimal:
+
+    test-rust-behaviour-core:
+      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        
+        tool/test/start-core-server.sh &&
+          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+            --test_arg=behaviour &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+#    test-rust-behaviour-cloud:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
 #        - build
@@ -116,66 +132,14 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour::concept &&
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour::connection &&
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour::driver &&
+#            --test_arg=behaviour &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS
-#
-#    test-rust-behaviour-query-read:
-#      machine: 8-core-32-gb
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      filter:
-#        owner: typedb
-#        branch: [master, development]
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour::query::language::match_ \
-#            --test_arg=behaviour::query::language::get \
-#            --test_arg=behaviour::query::language::fetch \
-#            --test_arg=behaviour::query::language::modifiers \
-#            --test_arg=behaviour::query::language::expression &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
-#
-#    test-rust-behaviour-query-write:
-#      machine: 8-core-32-gb
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      filter:
-#        owner: typedb
-#        branch: [master, development]
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour::query::language::define \
-#            --test_arg=behaviour::query::language::undefine \
-#            --test_arg=behaviour::query::language::insert \
-#            --test_arg=behaviour::query::language::delete \
-#            --test_arg=behaviour::query::language::update \
-#            --test_arg=behaviour::query::language::rule_validation &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
-#
+
 #    test-c-integration:
 #      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
@@ -200,6 +164,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //java/test/integration/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -255,9 +220,7 @@ build:
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //python/tests/integration:test_cloud_connection --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          # TODO #635: currently broken test
-#          # bazel test //python/tests/integration:test_cloud_failover --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          bazel test //python/tests/integration/cloud/... --test_output=streamed --jobs=1 &&
 #          export CLOUD_FAILED= || export CLOUD_FAILED=1
 #        tool/test/stop-cloud-servers.sh
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
@@ -293,8 +256,7 @@ build:
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh && # use source to receive export vars
-#          .factory/test-cloud.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //python/tests/behaviour/driver/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cloud.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS
@@ -515,9 +477,8 @@ build:
 #        - build-dependency
 #        - build-docs
 #        - test-rust-unit-integration
-#        - test-rust-behaviour-minimal
-#        - test-rust-behaviour-query-read
-#        - test-rust-behaviour-query-write
+#        - test-rust-behaviour-core
+#        - test-rust-behaviour-cloud
 #        - test-c-integration
 #        - test-java-integration
 #        - test-java-behaviour-core

@@ -24,6 +24,7 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//rust:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
+load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -108,6 +109,31 @@ rustdoc_to_adoc(
     data = [":docs_html_async", ":docs_html_sync"],
     docs_dirs = dir_mapping,
     modes = {":docs_html_async": "async", ":docs_html_sync": "sync"},
+)
+
+test_to_example(
+    name = "example_core",
+    input = "//rust/tests:integration/core/example.rs",
+    output = "rust/core_example",
+    removed_lines = ["assert!", "todo"],
+    changed_words = {
+        "example()": "typedb_example()",
+    },
+    header_comment_sign = "//",
+)
+
+# Temporary manual usage:
+# 1. Run: bazel run //rust:example_core; bazel run //rust:readme_example_core
+# 2. Enjoy your updated README.md!
+update_markdown_example(
+    name = "readme_example_core",
+    # TODO: Use ":example_core" as a rule with a single output instead
+    input = ":core_example",
+    output = ":README.md",
+    start_marker = "CORE_EXAMPLE_START_MARKER",
+    end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "rust",
+    removed_header = "//",
 )
 
 checkstyle_test(

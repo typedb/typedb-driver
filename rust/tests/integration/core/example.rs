@@ -19,11 +19,15 @@
 
 use futures::StreamExt;
 use serial_test::serial;
+// EXAMPLE START MARKER
 use typedb_driver::{answer::QueryAnswer, TransactionType, TypeDBDriver};
+
+// EXAMPLE END MARKER
 
 #[test]
 #[serial]
-fn basic_async_std() {
+// EXAMPLE START MARKER
+fn example() {
     async_std::task::block_on(async {
         // Connection has been replaced with Driver:
         let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
@@ -115,67 +119,4 @@ fn basic_async_std() {
     })
     // .unwrap();
 }
-
-//
-// #[test]
-// #[serial]
-// fn basic_async_std() {
-//     async_std::task::block_on(async {
-//         let typedb_driver = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(typedb_driver);
-//         assert!(databases.contains(common::TEST_DATABASE).await?);
-//
-//         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
-//         let transaction = session.transaction(Write).await?;
-//         let answer_stream = transaction.query().get("match $x sub thing; get;")?;
-//         let results: Vec<_> = answer_stream.collect().await;
-//         transaction.commit().await?;
-//         assert_eq!(results.len(), 5);
-//         assert!(results.into_iter().all(|res| res.is_ok()));
-//         Ok::<(), typedb_driver::Error>(())
-//     })
-//     .unwrap();
-// }
-//
-// #[test]
-// #[serial]
-// fn basic_smol() {
-//     smol::block_on(async {
-//         let typedb_driver = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(typedb_driver);
-//         assert!(databases.contains(common::TEST_DATABASE).await?);
-//
-//         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
-//         let transaction = session.transaction(Write).await?;
-//         let answer_stream = transaction.query().get("match $x sub thing; get;")?;
-//         let results: Vec<_> = answer_stream.collect().await;
-//         transaction.commit().await?;
-//         assert_eq!(results.len(), 5);
-//         assert!(results.into_iter().all(|res| res.is_ok()));
-//         Ok::<(), typedb_driver::Error>(())
-//     })
-//     .unwrap();
-// }
-//
-// #[test]
-// #[serial]
-// fn basic_futures() {
-//     futures::executor::block_on(async {
-//         let typedb_driver = common::new_cloud_connection()?;
-//         common::create_test_database_with_schema(typedb_driver.clone(), "define person sub entity;").await?;
-//         let databases = DatabaseManager::new(typedb_driver);
-//         assert!(databases.contains(common::TEST_DATABASE).await?);
-//
-//         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
-//         let transaction = session.transaction(Write).await?;
-//         let answer_stream = transaction.query().get("match $x sub thing; get;")?;
-//         let results: Vec<_> = answer_stream.collect().await;
-//         transaction.commit().await?;
-//         assert_eq!(results.len(), 5);
-//         assert!(results.into_iter().all(|res| res.is_ok()));
-//         Ok::<(), typedb_driver::Error>(())
-//     })
-//     .unwrap();
-// }
+// EXAMPLE END MARKER
