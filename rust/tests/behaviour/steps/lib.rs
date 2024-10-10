@@ -12,6 +12,8 @@ use std::{
     iter, mem,
     path::{Path, PathBuf},
 };
+use std::collections::VecDeque;
+use std::env::VarError;
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
@@ -26,12 +28,9 @@ use typedb_driver::{
     Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager,
 };
 
-use self::transaction_tracker::TransactionTracker;
-
 mod connection;
 mod query;
-mod transaction_tracker;
-mod parameter;
+mod params;
 mod util;
 
 
@@ -82,7 +81,7 @@ pub struct Context {
     pub tls_root_ca: PathBuf,
     pub transaction_options: Options,
     pub driver: Option<TypeDBDriver>,
-    pub transaction_trackers: Vec<TransactionTracker>,
+    pub transactions: VecDeque<Transaction>,
     pub answer: Vec<ConceptRow>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
@@ -127,9 +126,10 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.transaction_options = Options::new();
+        self.cleanup_transactions().await;
         self.cleanup_databases().await;
         // self.cleanup_users().await;
-        self.set_connection(None);
+        self.set_driver(None);
         Ok(())
     }
 
@@ -139,6 +139,10 @@ impl Context {
 
     pub async fn cleanup_databases(&mut self) {
         try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
+    }
+
+    pub async fn cleanup_transactions(&mut self) {
+        self.transactions.clear();
     }
 
     pub async fn cleanup_users(&mut self) {
@@ -157,50 +161,38 @@ impl Context {
     }
 
     pub fn transaction(&self) -> &Transaction {
-        self.transaction_trackers.get(0).unwrap().transaction()
+        self.transactions.get(0).unwrap()
+    }
+
+    pub fn push_transaction(&mut self, transaction: TypeDBResult<Transaction>) -> TypeDBResult {
+        self.transactions.push_back(transaction?);
+        Ok(())
     }
 
     pub fn take_transaction(&mut self) -> Transaction {
-        self.transaction_trackers.get_mut(0).unwrap().take_transaction()
+        self.transactions.pop_front().unwrap()
     }
 
-    pub fn set_connection(&mut self, new_connection: Option<TypeDBDriver>) {
-        self.driver = new_connection;
-        self.transaction_trackers.clear();
+    pub fn set_driver(&mut self, new_driver: Option<TypeDBDriver>) {
+        self.driver = new_driver;
         self.answer.clear();
         self.fetch_answer = None;
         self.value_answer = None;
     }
 }
 
-#[cfg(not(feature = "cloud"))]
 impl Default for Context {
     fn default() -> Self {
         let transaction_options = Options::new();
-        Self {
-            tls_root_ca: PathBuf::new(), // unused for core
-            transaction_options,
-            driver: None,
-            transaction_trackers: Vec::new(),
-            answer: Vec::new(),
-            fetch_answer: None,
-            value_answer: None,
-        }
-    }
-}
-
-#[cfg(feature = "cloud")]
-impl Default for Context {
-    fn default() -> Self {
-        let tls_root_ca = PathBuf::from(
-            std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
-        );
-        let transaction_options = Options::new();
+        let tls_root_ca = match std::env::var("ROOT_CA") {
+            Ok(root_ca) => PathBuf::from(root_ca),
+            Err(_) => PathBuf::new(),
+        };
         Self {
             tls_root_ca,
             transaction_options,
             driver: None,
-            transaction_trackers: Vec::new(),
+            transactions: VecDeque::new(),
             answer: Vec::new(),
             fetch_answer: None,
             value_answer: None,

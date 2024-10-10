@@ -26,5 +26,11 @@
 //     // Bazel specific path: when running the test in bazel, the external data from
 //     // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
 //     // the working directory.
-//     assert!(Context::test("../vaticle_typedb_behaviour/connection/user.feature").await);
+//     #[cfg(feature = "bazel")]
+//     let path = "../vaticle_typedb_behaviour/connection/user.feature";
+//
+//     #[cfg(not(feature = "bazel"))]
+//     let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/user.feature";
+//
+//     assert!(Context::test(path).await);
 // }

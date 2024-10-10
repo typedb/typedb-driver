@@ -28,13 +28,7 @@ use tokio::time::sleep;
 use typedb_driver::Database;
 use macro_rules_attribute::apply;
 
-use crate::{
-    assert_with_timeout,
-        util,
-        util::{create_database_with_timeout, iter_table},
-        Context,
-    generic_step,
-};
+use crate::{assert_with_timeout, util, util::{create_database_with_timeout, iter_table}, Context, generic_step, params};
 
 #[apply(generic_step)]
 #[step(expr = "connection create database: {word}")]
@@ -45,7 +39,7 @@ pub async fn connection_create_database(context: &mut Context, name: String) {
 #[apply(generic_step)]
 #[step(expr = "connection create database(s):")]
 async fn connection_create_databases(context: &mut Context, step: &Step) {
-    for name in util::iter_table(step) {
+    for name in iter_table(step) {
         connection_create_database(context, name.into()).await;
     }
 }
@@ -53,20 +47,20 @@ async fn connection_create_databases(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = "connection create databases in parallel:")]
 async fn connection_create_databases_in_parallel(context: &mut Context, step: &Step) {
-    join_all(util::iter_table(step).map(|name| create_database_with_timeout(context.driver.as_ref().unwrap().databases(), name.to_string())))
+    join_all(iter_table(step).map(|name| create_database_with_timeout(context.driver.as_ref().unwrap().databases(), name.to_string())))
         .await;
 }
 
 #[apply(generic_step)]
-#[step(expr = "connection delete database: {word}")]
-pub async fn connection_delete_database(context: &mut Context, name: String) {
-    context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await.unwrap();
+#[step(expr = "connection delete database: {word}{may_error}")]
+pub async fn connection_delete_database(context: &mut Context, name: String, may_error: params::MayError) {
+    may_error.check(context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await);
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection delete database(s):")]
 async fn connection_delete_databases(context: &mut Context, step: &Step) {
-    for name in util::iter_table(step) {
+    for name in iter_table(step) {
         context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await.unwrap();
     }
 }
@@ -74,23 +68,9 @@ async fn connection_delete_databases(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = "connection delete databases in parallel:")]
 async fn connection_delete_databases_in_parallel(context: &mut Context, step: &Step) {
-    try_join_all(util::iter_table(step).map(|name| context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete)))
+    try_join_all(iter_table(step).map(|name| context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete)))
         .await
         .unwrap();
-}
-
-#[apply(generic_step)]
-#[step(expr = "connection delete database; throws exception: {word}")]
-async fn connection_delete_database_throws_exception(context: &mut Context, name: String) {
-    assert!(context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await.is_err());
-}
-
-#[apply(generic_step)]
-#[step(expr = "connection delete database(s); throws exception")]
-async fn connection_delete_databases_throws_exception(context: &mut Context, step: &Step) {
-    for name in util::iter_table(step) {
-        assert!(context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await.is_err());
-    }
 }
 
 #[apply(generic_step)]
@@ -105,7 +85,7 @@ async fn connection_has_database(context: &mut Context, name: String) {
 #[apply(generic_step)]
 #[step(expr = "connection has database(s):")]
 async fn connection_has_databases(context: &mut Context, step: &Step) {
-    let names: HashSet<String> = util::iter_table(step).map(|name| name.to_owned()).collect();
+    let names: HashSet<String> = iter_table(step).map(|name| name.to_owned()).collect();
     assert_with_timeout!(
         context.all_databases().await == names,
         "Connection doesn't contain at least one of the databases.",

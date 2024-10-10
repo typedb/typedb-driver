@@ -46,8 +46,6 @@ use futures::{
 };
 use itertools::Itertools;
 
-use crate::transaction_tracker::TransactionTracker;
-
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
 }

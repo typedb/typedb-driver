@@ -23,7 +23,7 @@ use chrono::NaiveDateTime;
 use cucumber::Parameter;
 use typedb_driver::{
     concept::{Annotation, Value, ValueType},
-    TransactionType,
+    TransactionType as TypeDBTransactionType,
 };
 
 #[derive(Debug, Parameter)]
@@ -114,7 +114,7 @@ impl FromStr for ValueParam {
 }
 
 #[derive(Clone, Debug, Parameter)]
-#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration")]
+#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration|struct")] // TODO: Probably any string value instead of struct
 pub struct ValueTypeParam {
     pub value_type: ValueType,
 }
@@ -127,8 +127,13 @@ impl FromStr for ValueTypeParam {
             "boolean" => Self { value_type: ValueType::Boolean },
             "long" => Self { value_type: ValueType::Long },
             "double" => Self { value_type: ValueType::Double },
+            "decimal" => Self { value_type: ValueType::Decimal },
             "string" => Self { value_type: ValueType::String },
+            "date" => Self { value_type: ValueType::Date },
             "datetime" => Self { value_type: ValueType::Datetime },
+            "datetime-tz" => Self { value_type: ValueType::DatetimeTZ },
+            "duration" => Self { value_type: ValueType::Duration },
+            "struct" => Self { value_type: ValueType::Struct("idk todo".to_string()) }, // TODO: Decide what to do
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }
@@ -137,7 +142,7 @@ impl FromStr for ValueTypeParam {
 #[derive(Clone, Debug, Parameter)]
 #[param(
     name = "optional_value_type",
-    regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime_tz|duration)\)|()"
+    regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct)\)|()"
 )]
 pub struct OptionalAsValueTypeParam {
     pub value_type: Option<ValueType>,
@@ -152,30 +157,19 @@ impl FromStr for OptionalAsValueTypeParam {
 }
 
 #[derive(Clone, Copy, Debug, Parameter)]
-#[param(name = "optional_explicit", regex = r" explicit|")]
-pub struct OptionalExplicitParam {}
-
-impl FromStr for OptionalExplicitParam {
-    type Err = Infallible;
-
-    fn from_str(text: &str) -> Result<Self, Self::Err> {
-        todo!()
-    }
+#[param(name = "transaction_type", regex = r"read|write|schema")]
+pub struct TransactionType {
+    pub transaction_type: TypeDBTransactionType,
 }
 
-#[derive(Clone, Copy, Debug, Parameter)]
-#[param(name = "transaction_type", regex = r"write|read")]
-pub struct TransactionTypeParam {
-    pub transaction_type: TransactionType,
-}
-
-impl FromStr for TransactionTypeParam {
+impl FromStr for TransactionType {
     type Err = Infallible;
 
     fn from_str(type_: &str) -> Result<Self, Self::Err> {
         Ok(match type_ {
-            "write" => Self { transaction_type: TransactionType::Write },
-            "read" => Self { transaction_type: TransactionType::Read },
+            "write" => Self { transaction_type: TypeDBTransactionType::Write },
+            "read" => Self { transaction_type: TypeDBTransactionType::Read },
+            "schema" => Self { transaction_type: TypeDBTransactionType::Schema },
             _ => unreachable!("`{type_}` is not a valid transaction type"),
         })
     }
@@ -195,102 +189,84 @@ impl FromStr for VarParam {
     }
 }
 
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "label", regex = r"[\w_-]+")]
-pub struct LabelParam {
-    pub name: String,
+#[derive(Debug, Parameter)]
+#[param(name = "boolean", regex = "(true|false)")]
+pub(crate) enum Boolean {
+    False,
+    True,
 }
 
-impl FromStr for LabelParam {
-    type Err = Infallible;
-
-    fn from_str(name: &str) -> Result<Self, Self::Err> {
-        Ok(Self { name: name.to_owned() })
-    }
-}
-
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "optional_override_label", regex = r" as ([\w-]+)|()")]
-pub struct OptionalOverrideLabelParam {
-    pub name: Option<String>,
-}
-
-impl FromStr for OptionalOverrideLabelParam {
-    type Err = Infallible;
-
-    fn from_str(name: &str) -> Result<Self, Self::Err> {
-        if name.is_empty() {
-            Ok(Self { name: None })
-        } else {
-            Ok(Self { name: Some(name.to_owned()) })
+macro_rules! check_boolean {
+    ($boolean:ident, $expr:expr) => {
+        match $boolean {
+            $crate::params::Boolean::True => assert!($expr),
+            $crate::params::Boolean::False => assert!(!$expr),
         }
-    }
+    };
 }
+pub(crate) use check_boolean;
 
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "scoped_label", regex = r"\S+:\S+")]
-pub struct ScopedLabelParam {
-    pub label: String,
-}
-
-impl FromStr for ScopedLabelParam {
-    type Err = Infallible;
-
-    fn from_str(label: &str) -> Result<Self, Self::Err> {
-        todo!()
-    }
-}
-
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "optional_override_scoped_label", regex = r" as (\S+:\S+)|()")]
-pub struct OptionalOverrideScopedLabelParam {
-    pub label: Option<String>,
-}
-
-impl FromStr for OptionalOverrideScopedLabelParam {
-    type Err = Infallible;
-
-    fn from_str(label: &str) -> Result<Self, Self::Err> {
-        todo!()
-    }
-}
-
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "annotations", regex = r", with annotations: ([\w-]+(?:, (?:[\w-]+))*)|()")]
-pub struct OptionalAnnotationsParam {
-    pub annotations: Vec<Annotation>,
-}
-
-impl FromStr for OptionalAnnotationsParam {
-    type Err = Infallible;
-
-    fn from_str(annotations: &str) -> Result<Self, Self::Err> {
-        Ok(Self {
-            annotations: annotations
-                .trim()
-                .split(',')
-                .map(str::trim)
-                .filter(|s| !s.is_empty())
-                .map(|annotation| match annotation {
-                    "key" => Annotation::Key,
-                    "unique" => Annotation::Unique,
-                    _ => unreachable!("Unrecognized annotation: {annotation:?}"),
-                })
-                .collect(),
+impl FromStr for Boolean {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "true" => Self::True,
+            "false" => Self::False,
+            invalid => return Err(format!("Invalid `Boolean`: {invalid}")),
         })
     }
 }
 
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "optional_role", regex = r" for role\(\s*(\S+)\s*\)|()")]
-pub struct OptionalRoleParam {
-    pub role: Option<String>,
+#[derive(Debug, Clone, Parameter)]
+#[param(name = "may_error", regex = "(|; fails|; parsing fails|; fails with a message containing: \".*\")")]
+pub(crate) enum MayError {
+    False,
+    True(Option<String>),
 }
 
-impl FromStr for OptionalRoleParam {
-    type Err = Infallible;
+impl MayError {
+    pub fn check<T: fmt::Debug, E: fmt::Debug + ToString>(&self, res: Result<T, E>) -> Option<E> {
+        match self {
+            MayError::False => {
+                res.unwrap();
+                None
+            }
+            MayError::True(None) => Some(res.unwrap_err()),
+            MayError::True(Some(expected_message)) => {
+                let actual_error = res.unwrap_err();
+                let actual_message = actual_error.to_string();
 
-    fn from_str(role: &str) -> Result<Self, Self::Err> {
-        Ok(Self { role: role.is_empty().not().then(|| role.to_owned()) })
+                if actual_message.contains(expected_message) {
+                    Some(actual_error)
+                } else {
+                    panic!(
+                        "Expected error message containing: '{}', but got error message: '{}'",
+                        expected_message, actual_message
+                    );
+                }
+            }
+        }
+    }
+
+    pub fn expects_error(&self) -> bool {
+        match self {
+            MayError::True(_) => true,
+            MayError::False => false,
+        }
+    }
+}
+
+impl FromStr for MayError {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.is_empty() {
+            Ok(MayError::False)
+        } else if s == "; fails" || s == "; parsing fails" {
+            Ok(MayError::True(None))
+        } else if let Some(message) = s.strip_prefix("; fails with a message containing: \"").and_then(|suffix| suffix.strip_suffix("\"")) {
+            Ok(MayError::True(Some(message.to_string())))
+        } else {
+            Err(format!("Invalid `MayError`: {}", s))
+        }
     }
 }

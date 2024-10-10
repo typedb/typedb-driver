@@ -17,6 +17,7 @@
  * under the License.
  */
 
+use std::fmt;
 pub use self::{concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
 use crate::{
     answer::concept_tree::{ConceptTree, ConceptTreesHeader},
@@ -32,7 +33,7 @@ mod value_group;
 pub enum QueryAnswer {
     Ok(),
     ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>),
-    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, crate::Result<ConceptTree>>),
+    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<ConceptTree>>),
 }
 
 impl QueryAnswer {
@@ -53,6 +54,16 @@ impl QueryAnswer {
             stream
         } else {
             panic!("Query answer is not a rows stream.")
+        }
+    }
+}
+
+impl fmt::Debug for QueryAnswer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            QueryAnswer::Ok() => write!(f, "QueryAnswer::Ok"),
+            QueryAnswer::ConceptRowsStream(_) => write!(f, "QueryAnswer::ConceptRowsStream(<stream>)"),
+            QueryAnswer::ConceptTreesStream(header, _) => write!(f, "QueryAnswer::ConceptTreesStream(header: {:?}, <stream>)", header),
         }
     }
 }

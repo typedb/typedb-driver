@@ -24,17 +24,19 @@ use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use macro_rules_attribute::apply;
 use crate::{
     assert_err,
-    parameter::LabelParam, util, Context,
+    util, Context,
     generic_step,
+    params,
 };
 
-// #[apply(generic_step)]
-// #[step(expr = "typeql define")]
-// pub async fn typeql_define(context: &mut Context, step: &Step) -> TypeDBResult {
-//     let parsed = parse_query(step.docstring().unwrap())?;
-//     context.transaction().query().define(&parsed.to_string()).await
-// }
-//
+#[apply(generic_step)]
+#[step(expr = "typeql schema query{may_error}")]
+#[step(expr = "typeql write query{may_error}")]
+#[step(expr = "typeql read query{may_error}")]
+pub async fn typeql_query(context: &mut Context, may_error: params::MayError, step: &Step) {
+    may_error.check(context.transaction().query(step.docstring().unwrap()).await);
+}
+
 // #[apply(generic_step)]
 // #[step(expr = "typeql define; throws exception")]
 // async fn typeql_define_throws(context: &mut Context, step: &Step) {
