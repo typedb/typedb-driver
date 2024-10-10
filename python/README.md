@@ -30,7 +30,7 @@ from typedb.driver import *
 driver = TypeDB.core_driver(address=TypeDB.DEFAULT_ADDRESS)
 ```
 
-## Examples
+## Example usage
 
 ### TypeDB Core
 

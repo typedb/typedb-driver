@@ -39,8 +39,10 @@ Any error encountered will throw a `TypeDBDriverException`. Note that methods wh
    All the needed C# libraries will be produced at: `bazel-bin/csharp/`, with the main one being: `bazel-bin/csharp/driver-csharp/{target_framework}/TypeDB.Driver.dll`. 
 3. Examples of building and using Bazel-based C# applications with the produced dependencies can be found in `csharp/Test/Integration/Examples`.
 
-## Examples
+## Example usage
+
 ### TypeDB Core
+
 Connect to TypeDB using `Drivers.CoreDriver` and perform basic read/write operations:
 ```cs
 using TypeDB.Driver;

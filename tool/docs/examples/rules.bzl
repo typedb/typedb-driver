@@ -18,16 +18,18 @@
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 
-def test_to_example(name, input, output, removed_lines, changed_words):
+def test_to_example(name, input, output, removed_lines, changed_words, header_comment_sign=None):
     args = [
         "$(location %s)" % input,
-        "--output",
-        "%s" % output,
+        "--output=%s" % output,
     ] + [
         "--remove-lines=%s" % line for line in removed_lines
     ] + [
         "--change-words=%s=%s" % (from_word, changed_words[from_word]) for from_word in changed_words
     ]
+
+    if header_comment_sign:
+        args.append("--header-comment-sign=%s" % header_comment_sign)
 
     kt_jvm_binary(
         name = name,
@@ -43,7 +45,7 @@ def test_to_example(name, input, output, removed_lines, changed_words):
         visibility = ["//visibility:public"],
     )
 
-def update_markdown_example(name, input, output, start_marker, end_marker, language_tag):
+def update_markdown_example(name, input, output, start_marker, end_marker, language_tag, removed_header=None):
     args = [
         "$(location %s)" % input,
         "--output",
@@ -52,6 +54,9 @@ def update_markdown_example(name, input, output, start_marker, end_marker, langu
         "--end-marker=%s" % end_marker,
         "--language=%s" % language_tag,
     ]
+
+    if removed_header:
+        args.append("--removed-header=%s" % removed_header)
 
     kt_jvm_binary(
         name = name,

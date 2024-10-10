@@ -50,7 +50,7 @@ Any error encountered will throw a `TypeDB::DriverException`. Note that methods 
    The archive will be produced under `bazel-bin/cpp/typedb-driver-cpp-<os>-<arch>.<ext>` and will contain the `include` and `lib` folders as in the distribution.
 
 
-## Examples
+## Example usage
 ```cpp
 // All files are included from typedb_driver.hpp
 #include <typedb_driver.hpp>

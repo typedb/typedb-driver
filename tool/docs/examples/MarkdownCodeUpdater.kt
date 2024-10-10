@@ -38,14 +38,35 @@ class MarkdownCodeUpdater : Callable<Unit> {
     @CommandLine.Option(names = ["--output", "-o"], required = true, description = ["Output markdown file"])
     private lateinit var outputMarkdownFileName: String
 
-    @CommandLine.Option(names = ["--start-marker", "-sm"], required = true, description = ["Marker indicating where to start replacing the code block in the output markdown file. Expected file's format: <!-- start-marker -->"])
+    @CommandLine.Option(
+        names = ["--start-marker", "-sm"],
+        required = true,
+        description = ["Marker indicating where to start replacing the code block in the output markdown file. Expected file's format: <!-- start-marker -->"]
+    )
     private lateinit var startMarker: String
 
-    @CommandLine.Option(names = ["--end-marker", "-em"], required = true, description = ["Marker indicating where to end replacing the code block in the output markdown file. Expected file's format: <!-- end-marker -->"])
+    @CommandLine.Option(
+        names = ["--end-marker", "-em"],
+        required = true,
+        description = ["Marker indicating where to end replacing the code block in the output markdown file. Expected file's format: <!-- end-marker -->"]
+    )
     private lateinit var endMarker: String
 
-    @CommandLine.Option(names = ["--language", "-l"], required = false, defaultValue = "", description = ["Markdown language tag"])
+    @CommandLine.Option(
+        names = ["--language", "-l"],
+        required = false,
+        defaultValue = "",
+        description = ["Markdown language tag"]
+    )
     private lateinit var language: String
+
+    @CommandLine.Option(
+        names = ["--removed-header", "-rh"],
+        required = false,
+        defaultValue = "",
+        description = ["Optional header starting substring to be removed from the input file before insertion. Can be used to pass a specific header string or a commented line format to remove multiple lines"]
+    )
+    private lateinit var removedHeader: String
 
     companion object {
         const val MARKDOWN_COMMENT_START = "<!-- "
@@ -57,7 +78,9 @@ class MarkdownCodeUpdater : Callable<Unit> {
         if (!inputFile.exists()) {
             throw IllegalArgumentException("Input file does not exist.")
         }
-        val inputLines = inputFile.readLines().toList().dropLastWhile { it.isBlank() }
+        val inputLines = inputFile.readLines().toList()
+            .dropWhile { removedHeader.isNotBlank() && it.startsWith(removedHeader) }
+            .dropLastWhile { it.isBlank() }
 
         val outputFile = File(outputMarkdownFileName)
         val outputLines = outputFile.readLines()
