@@ -23,6 +23,7 @@ config:
     typedb-protocol: [build, release]
 
 build:
+  TODO REMOVE BEFORE MERGE / BREAK AUTOMATION NOT TO RUN IN CI
   quality:
     filter:
       owner: typedb
@@ -94,14 +95,13 @@ build:
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         
         tool/test/start-core-server.sh &&
-          bazel test //rust/tests --test_output=streamed --test_arg=-- --test_arg=integration::core &&
+          bazel test //rust/tests/integration/core/... --test_output=streamed &&
           export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=integration::cloud &&
+#          bazel test //rust/tests/integration/cloud/... --test_output=streamed &&
 #          export CLOUD_FAILED= || export CLOUD_FAILED=1
 #        tool/test/stop-cloud-servers.sh
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
@@ -117,8 +117,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-core-server.sh &&
-          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-            --test_arg=behaviour &&
+          factory/test-core.sh //rust/tests/behaviour/... --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -134,8 +133,7 @@ build:
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-#            --test_arg=behaviour &&
+#          .factory/test-cloud.sh //rust/tests/behaviour/... --test_output=streamed --test_env=ROOT_CA=$ROOT_CA &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS

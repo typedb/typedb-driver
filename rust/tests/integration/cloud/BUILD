@@ -17,54 +17,30 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
+#load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-rust_behaviour_test(
-    name = "test_database",
-    srcs = ["database.rs"],
-    deps = [
-        "//rust/tests/behaviour/steps:steps",
-
-        "@crates//:tokio",
-        "@crates//:serial_test",
-    ],
-    data = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    crate_features = ["bazel"],
-)
-
-rust_behaviour_test(
-    name = "test_transaction",
-    srcs = ["transaction.rs"],
-    deps = [
-        "//rust/tests/behaviour/steps:steps",
-
-        "@crates//:tokio",
-        "@crates//:serial_test",
-    ],
-    data = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
-    crate_features = ["bazel"],
-)
-
-#rust_behaviour_test(
-#    name = "test_user",
-#    srcs = ["user.rs"],
+#rust_test(
+#    name = "test_example_cloud",
+#    srcs = glob(["example.rs"]),
 #    deps = [
-#        "//rust/tests/behaviour/steps:steps",
-#
-#        "@crates//:tokio",
+#        "//rust:typedb_driver",
+#        "@crates//:async-std",
+#        "@crates//:chrono",
+#        "@crates//:futures",
+#        "@crates//:itertools",
+#        "@crates//:regex",
+#        "@crates//:serde_json",
 #        "@crates//:serial_test",
+#        "@crates//:smol",
+#        "@crates//:tokio",
+#        "@crates//:uuid",
 #    ],
-#    data = ["@vaticle_typedb_behaviour//connection:user.feature"],
-#    crate_features = ["bazel"],
 #)
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob([
-        "Cargo.*",
-    ]),
     license_type = "apache-header",
     size = "small",
 )

@@ -15,13 +15,25 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//visibility:public"])
-
+load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
-)
+def rust_behaviour_test(name, srcs, deps, data, crate_features=[], **kwargs):
+    rust_test(
+        name = name + "_core",
+        srcs = srcs,
+        deps = deps,
+        data = data,
+        crate_features = crate_features,
+        **kwargs,
+    )
+
+    rust_test(
+        name = name + "_cloud",
+        srcs = srcs,
+        deps = deps,
+        data = data,
+        # TODO: Looks like this idea does not currently work. Fix when cloud is introduced!
+        crate_features = crate_features + ["cloud"],
+        **kwargs,
+    )

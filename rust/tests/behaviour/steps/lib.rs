@@ -160,6 +160,10 @@ impl Context {
             .ok();
     }
 
+    pub fn transaction_opt(&self) -> Option<&Transaction> {
+        self.transactions.get(0)
+    }
+
     pub fn transaction(&self) -> &Transaction {
         self.transactions.get(0).unwrap()
     }

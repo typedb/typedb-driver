@@ -70,9 +70,9 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.tx().commit())
 
 
-@step("transaction closes{may_error:MayError}")
-def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().close())
+@step("transaction closes")
+def step_impl(context: Context):
+    context.tx().close()
 
 
 @step("transaction rollbacks{may_error:MayError}")

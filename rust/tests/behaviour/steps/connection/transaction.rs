@@ -85,15 +85,34 @@ async fn connection_open_transactions_for_database(context: &mut Context, name: 
 // }
 
 #[apply(generic_step)]
+#[step(expr = "transaction is open: {boolean}")]
+pub async fn transaction_is_open(context: &mut Context, is_open: params::Boolean) {
+    let transaction = context.transaction_opt();
+    check_boolean!(is_open, transaction.is_some() && transaction.unwrap().is_open());
+}
+
+#[apply(generic_step)]
+#[step(expr = "transaction has type: {transaction_type}")]
+pub async fn transaction_has_type(context: &mut Context, type_: params::TransactionType) {
+    assert_eq!(context.transaction().type_(), type_.transaction_type);
+}
+
+#[apply(generic_step)]
 #[step(expr = "transaction commits{may_error}")]
 pub async fn transaction_commits(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.take_transaction().commit().await);
 }
 
 #[apply(generic_step)]
-#[step(expr = "transaction is open: {boolean}")]
-pub async fn transaction_is_open(context: &mut Context, is_open: params::Boolean) {
-    check_boolean!(is_open, context.transaction().is_open());
+#[step(expr = "transaction closes")]
+pub async fn transaction_closes(context: &mut Context) {
+    context.take_transaction().force_close();
+}
+
+#[apply(generic_step)]
+#[step(expr = "transaction rollbacks{may_error}")]
+pub async fn transaction_rollbacks(context: &mut Context, may_error: params::MayError) {
+    may_error.check(context.transaction().rollback().await);
 }
 
 // #[apply(generic_step)]
