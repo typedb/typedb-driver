@@ -17,75 +17,54 @@
  * under the License.
  */
 
+use std::collections::VecDeque;
 use std::time::Duration;
 
 use cucumber::{gherkin::Step, given, then, when};
-use typedb_driver::TransactionType;
+use futures::future::join_all;
+use futures::FutureExt;
+use typedb_driver::{Transaction, TransactionType, TypeDBDriver, Result as TypeDBResult};
 
 use crate::{util::iter_table, Context, generic_step, params};
 use macro_rules_attribute::apply;
 use crate::params::check_boolean;
 
+async fn open_transaction_for_database(driver: &Option<TypeDBDriver>, database_name: impl AsRef<str>, transaction_type: TransactionType) -> TypeDBResult<Transaction> {
+    driver.as_ref().unwrap().transaction(database_name, transaction_type).await
+}
 
 #[apply(generic_step)]
 #[step(expr = "connection open {transaction_type} transaction for database: {word}{may_error}")]
-pub async fn connection_open_transaction_for_database(context: &mut Context, type_: params::TransactionType, name: String, may_error: params::MayError) {
-    may_error.check(context.push_transaction(context.driver.as_ref().unwrap().transaction(name, type_.transaction_type).await));
+pub async fn connection_open_transaction_for_database(context: &mut Context, type_: params::TransactionType, database_name: String, may_error: params::MayError) {
+    may_error.check(context.push_transaction(open_transaction_for_database(&context.driver, &database_name, type_.transaction_type).await));
 }
 
 #[apply(generic_step)]
-#[step(expr = "connection open transactions for database: {word}, of type:")]
-async fn connection_open_transactions_for_database(context: &mut Context, name: String, step: &Step) {
+#[step(expr = "connection open transaction(s) for database: {word}, of type:")]
+async fn connection_open_transactions_for_database(context: &mut Context, database_name: String, step: &Step) {
     for type_ in iter_table(step) {
         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-        context.push_transaction(context.driver.as_ref().unwrap().transaction(name.clone(), transaction_type).await).unwrap();
+        context.push_transaction(open_transaction_for_database(&context.driver, &database_name, transaction_type).await).unwrap();
     }
 }
 
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}")]
-// async fn for_each_session_open_transactions_of_type_throws_exception(
-//     context: &mut Context,
-//     type_: params::TransactionType,
-// ) {
-//     for transaction_tracker in &mut context.transactions {
-//         assert!(transaction_tracker.open_transaction(type_.transaction_type, context.transaction_options).await.is_err());
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) open transaction(s) of type; throws exception")]
-// async fn for_each_session_open_transactions_of_type_throws_exception_table(context: &mut Context, step: &Step) {
-//     for type_ in iter_table(step) {
-//         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-//         for transaction_tracker in &mut context.transactions {
-//             assert!(transaction_tracker.open_transaction(transaction_type, context.transaction_options).await.is_err());
-//         }
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) is/are null: {word}")]
-// #[step(expr = "for each session, transactions in parallel are null: {word}")]
-// #[step(expr = "for each session in parallel, transactions in parallel are null: {word}")]
-// async fn for_each_session_transactions_are_null(_context: &mut Context, is_null: bool) {
-//     assert!(!is_null); // Rust transactions are not nullable
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) is/are open: {word}")]
-// #[step(expr = "for each session, transactions in parallel are open: {word}")]
-// #[step(expr = "for each session in parallel, transactions in parallel are open: {word}")]
-// async fn for_each_session_transactions_are_open(context: &mut Context, is_open: bool) {
-//     for transaction_tracker in &context.transactions {
-//         for transaction in transaction_tracker.transactions() {
-//             assert_eq!(transaction.is_open(), is_open);
-//         }
-//     }
-// }
+#[apply(generic_step)]
+#[step(expr = "connection open transaction(s) in parallel for database: {word}, of type:")]
+pub async fn connection_open_transactions_in_parallel(context: &mut Context, database_name: String, step: &Step) {
+    let transactions: VecDeque<Transaction> = join_all(
+        iter_table(step)
+            .map(|type_| {
+                let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
+                open_transaction_for_database(&context.driver, &database_name, transaction_type)
+            }),
+    )
+        .await.into_iter().map(|result| result.unwrap()).collect();
+    context.set_transactions(transactions).await;
+}
 
 #[apply(generic_step)]
 #[step(expr = "transaction is open: {boolean}")]
+#[step(expr = "transactions( in parallel) are open: {boolean}")]
 pub async fn transaction_is_open(context: &mut Context, is_open: params::Boolean) {
     let transaction = context.transaction_opt();
     check_boolean!(is_open, transaction.is_some() && transaction.unwrap().is_open());
@@ -95,6 +74,16 @@ pub async fn transaction_is_open(context: &mut Context, is_open: params::Boolean
 #[step(expr = "transaction has type: {transaction_type}")]
 pub async fn transaction_has_type(context: &mut Context, type_: params::TransactionType) {
     assert_eq!(context.transaction().type_(), type_.transaction_type);
+}
+
+#[apply(generic_step)]
+#[step(expr = "transactions( in parallel) have type:")]
+pub async fn transactions_have_type(context: &mut Context, step: &Step) {
+    let mut current_transaction = context.transactions.iter();
+    for type_ in iter_table(step) {
+        let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
+        assert_eq!(current_transaction.next().unwrap().type_(), transaction_type);
+    }
 }
 
 #[apply(generic_step)]
@@ -114,89 +103,3 @@ pub async fn transaction_closes(context: &mut Context) {
 pub async fn transaction_rollbacks(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.transaction().rollback().await);
 }
-
-// #[apply(generic_step)]
-// #[step(expr = "transaction commits; throws exception containing {string}")]
-// async fn transaction_commits_throws_exception(context: &mut Context, exception: String) {
-//     let res = context.take_transaction().commit().await;
-//     assert!(res.is_err());
-//     assert!(res.unwrap_err().to_string().contains(&exception));
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) commit(s)")]
-// async fn for_each_session_transactions_commit(context: &mut Context) {
-//     for transaction_tracker in &mut context.transactions {
-//         for transaction in transaction_tracker.transactions_mut().drain(..) {
-//             transaction.commit().await.unwrap();
-//         }
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) commit(s); throws exception")]
-// async fn for_each_session_transactions_commits_throws_exception(context: &mut Context) {
-//     for transaction_tracker in &mut context.transactions {
-//         for transaction in transaction_tracker.transactions_mut().drain(..) {
-//             assert!(transaction.commit().await.is_err());
-//         }
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction close(s)")]
-// async fn for_each_session_transaction_closes(context: &mut Context) {
-//     for transaction_tracker in &mut context.transactions {
-//         transaction_tracker.transactions_mut().clear();
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) has/have type: {transaction_type}")]
-// async fn for_each_session_transactions_have_type(context: &mut Context, type_: params::TransactionType) {
-//     let transaction_type = type_.transaction_type;
-//     for transaction_tracker in &context.transactions {
-//         assert_eq!(transaction_tracker.transactions().len(), 1);
-//         assert_eq!(transaction_type, transaction_tracker.transaction().type_());
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "(for each )session(,) transaction(s) has/have type:")]
-// #[step(expr = "for each session, transactions in parallel have type:")]
-// async fn for_each_session_transactions_have_types(context: &mut Context, step: &Step) {
-//     let types: Vec<TransactionType> =
-//         iter_table(step).map(|s| s.parse::<params::TransactionType>().unwrap().transaction_type).collect();
-//     for transaction_tracker in &context.transactions {
-//         assert_eq!(types.len(), transaction_tracker.transactions().len());
-//         for (type_, transaction) in types.iter().zip(transaction_tracker.transactions()) {
-//             assert_eq!(*type_, transaction.type_());
-//         }
-//     }
-// }
-//
-// // ===========================================//
-// // sequential sessions, parallel transactions //
-// // ===========================================//
-//
-// #[apply(generic_step)]
-// #[step(expr = "for each session, open transaction(s) in parallel of type:")]
-// async fn for_each_session_open_transactions_in_parallel_of_type(context: &mut Context, step: &Step) {
-//     for type_ in iter_table(step) {
-//         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-//         for transaction_tracker in &mut context.transactions {
-//             // FIXME parallel
-//             transaction_tracker.open_transaction(transaction_type, context.transaction_options).await.unwrap();
-//         }
-//     }
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "set transaction option {word} to: {word}")]
-// async fn set_transaction_option_to(context: &mut Context, option: String, value: String) {
-//     if option == "transaction-timeout-millis" {
-//         context.transaction_options.transaction_timeout = Some(Duration::from_millis(value.parse().unwrap()))
-//     } else {
-//         todo!("Transaction Option not recognised: {}", option);
-//     }
-// }

@@ -153,7 +153,9 @@ impl Context {
     }
 
     pub async fn cleanup_transactions(&mut self) {
-        self.transactions.clear();
+        while let Some(transaction) = self.try_take_transaction() {
+            transaction.force_close();
+        }
     }
 
     pub async fn cleanup_users(&mut self) {
@@ -183,13 +185,22 @@ impl Context {
         self.transactions.get(0).unwrap()
     }
 
+    pub fn take_transaction(&mut self) -> Transaction {
+        self.transactions.pop_front().unwrap()
+    }
+
+    pub fn try_take_transaction(&mut self) -> Option<Transaction> {
+        self.transactions.pop_front()
+    }
+
     pub fn push_transaction(&mut self, transaction: TypeDBResult<Transaction>) -> TypeDBResult {
         self.transactions.push_back(transaction?);
         Ok(())
     }
 
-    pub fn take_transaction(&mut self) -> Transaction {
-        self.transactions.pop_front().unwrap()
+    pub async fn set_transactions(&mut self, transactions: VecDeque<Transaction>) {
+        self.cleanup_transactions().await;
+        self.transactions = transactions;
     }
 
     pub fn set_driver(&mut self, new_driver: Option<TypeDBDriver>) {
