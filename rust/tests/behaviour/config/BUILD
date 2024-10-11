@@ -17,13 +17,37 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+load("@rules_rust//rust:defs.bzl", "rust_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//rust/tests/behaviour:defs.bzl", "crate_features_common")
 
-rust_behaviour_test(
-    name = "test_driver",
-    srcs = ["driver.rs"],
-    data = ["@vaticle_typedb_behaviour//driver:driver.feature"],
+string_flag(
+    name = "mode",
+    build_setting_default = "core",
+)
+
+config_setting(
+    name = "core",
+    flag_values = {
+        ":mode": "core",
+    },
+)
+
+config_setting(
+    name = "cloud",
+    flag_values = {
+        ":mode": "cloud",
+    },
+)
+
+rust_library(
+    name = "config",
+    srcs = [":lib.rs"],
+    crate_features = select({
+        ":core": crate_features_common,
+        ":cloud": crate_features_common + ["cloud"],
+    }),
 )
 
 checkstyle_test(

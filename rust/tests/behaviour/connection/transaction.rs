@@ -17,7 +17,7 @@
  * under the License.
  */
 
-
+use config::is_cloud;
 use steps::Context;
 use serial_test::serial;
 
@@ -33,5 +33,5 @@ async fn test() {
     #[cfg(not(feature = "bazel"))]
         let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/transaction.feature";
 
-    assert!(Context::test(path).await);
+    assert!(Context::test(path, is_cloud()).await);
 }

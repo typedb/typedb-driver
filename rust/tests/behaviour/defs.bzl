@@ -15,23 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//visibility:public"])
-
-load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-rust_behaviour_test(
-    name = "test_driver",
-    srcs = ["driver.rs"],
-    data = ["@vaticle_typedb_behaviour//driver:driver.feature"],
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    exclude = glob([
-        "Cargo.*",
-    ]),
-    license_type = "apache-header",
-    size = "small",
-)
+crate_features_common = ["bazel"]

@@ -17,21 +17,14 @@
  * under the License.
  */
 
-use config::is_cloud;
-use steps::Context;
-use serial_test::serial;
+pub fn is_cloud() -> bool {
+    #[cfg(feature = "cloud")]
+    {
+        true
+    }
 
-#[tokio::test]
-#[serial]
-async fn test() {
-    // Bazel specific path: when running the test in bazel, the external data from
-    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
-    // the working directory.
-    #[cfg(feature = "bazel")]
-    let path = "../vaticle_typedb_behaviour/connection/database.feature";
-
-    #[cfg(not(feature = "bazel"))]
-    let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/database.feature";
-
-    assert!(Context::test(path, is_cloud()).await);
+    #[cfg(not(feature = "cloud"))]
+    {
+        false
+    }
 }

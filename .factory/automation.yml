@@ -117,7 +117,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-core-server.sh &&
-          factory/test-core.sh //rust/tests/behaviour/... --test_output=streamed &&
+          bazel test //rust/tests/behaviour/... --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -133,7 +133,8 @@ build:
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          .factory/test-cloud.sh //rust/tests/behaviour/... --test_output=streamed --test_env=ROOT_CA=$ROOT_CA &&
+#          bazel test //rust/tests/behaviour/... --//rust/tests/behaviour/config:mode=cloud \
+#            --test_output=streamed --test_env=ROOT_CA=$ROOT_CA &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
 #        exit $TEST_SUCCESS

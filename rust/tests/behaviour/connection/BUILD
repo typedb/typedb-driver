@@ -23,40 +23,19 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 rust_behaviour_test(
     name = "test_database",
     srcs = ["database.rs"],
-    deps = [
-        "//rust/tests/behaviour/steps:steps",
-
-        "@crates//:tokio",
-        "@crates//:serial_test",
-    ],
     data = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    crate_features = ["bazel"],
 )
 
 rust_behaviour_test(
     name = "test_transaction",
     srcs = ["transaction.rs"],
-    deps = [
-        "//rust/tests/behaviour/steps:steps",
-
-        "@crates//:tokio",
-        "@crates//:serial_test",
-    ],
     data = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
-    crate_features = ["bazel"],
 )
 
 #rust_behaviour_test(
 #    name = "test_user",
 #    srcs = ["user.rs"],
-#    deps = [
-#        "//rust/tests/behaviour/steps:steps",
-#
-#        "@crates//:tokio",
-#        "@crates//:serial_test",
-#    ],
 #    data = ["@vaticle_typedb_behaviour//connection:user.feature"],
-#    crate_features = ["bazel"],
 #)
 
 checkstyle_test(

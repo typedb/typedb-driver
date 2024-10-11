@@ -17,23 +17,22 @@
 
 load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load(":defs.bzl", "crate_features_common")
 
-def rust_behaviour_test(name, srcs, deps, data, crate_features=[], **kwargs):
-    rust_test(
-        name = name + "_core",
-        srcs = srcs,
-        deps = deps,
-        data = data,
-        crate_features = crate_features,
-        **kwargs,
-    )
+behaviour_test_deps = [
+    "//rust/tests/behaviour/steps",
+    "//rust/tests/behaviour/config",
 
+    "@crates//:tokio",
+    "@crates//:serial_test",
+];
+
+def rust_behaviour_test(name, srcs, data, deps=[], crate_features=[], **kwargs):
     rust_test(
-        name = name + "_cloud",
+        name = name,
         srcs = srcs,
-        deps = deps,
         data = data,
-        # TODO: Looks like this idea does not currently work. Fix when cloud is introduced!
-        crate_features = crate_features + ["cloud"],
+        deps = behaviour_test_deps + [] + deps,
+        crate_features = crate_features_common + crate_features,
         **kwargs,
     )

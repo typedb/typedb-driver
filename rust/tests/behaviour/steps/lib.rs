@@ -78,6 +78,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 
 #[derive(Debug, World)]
 pub struct Context {
+    pub is_cloud: bool,
     pub tls_root_ca: PathBuf,
     pub transaction_options: Options,
     pub driver: Option<TypeDBDriver>,
@@ -96,7 +97,7 @@ impl Context {
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
     const STEP_REATTEMPT_LIMIT: u32 = 20;
 
-    pub async fn test<I: AsRef<Path>>(glob: I) -> bool {
+    pub async fn test<I: AsRef<Path>>(glob: I, is_cloud: bool) -> bool {
         let default_panic = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
             default_panic(info);
@@ -109,6 +110,13 @@ impl Context {
             .max_concurrent_scenarios(Some(1))
             .with_parser(SingletonParser::default())
             .with_default_cli()
+            .before(move |_, _, _, context| {
+                context.is_cloud = is_cloud;
+                // cucumber removes the default hook before each scenario and restores it after!
+                std::panic::set_hook(Box::new(move |info| println!("{}", info)));
+                Box::pin(async move {})
+
+            })
             .after(|_, _, _, _, context| {
                 Box::pin(async {
                     context.unwrap().after_scenario().await.unwrap();
@@ -138,6 +146,9 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
+        if self.driver.is_none() {
+            return;
+        }
         try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
     }
 
@@ -146,6 +157,10 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
+        if self.driver.is_none() {
+            return;
+        }
+
         try_join_all(
             self.driver.as_ref().unwrap()
                 .users()
@@ -193,6 +208,7 @@ impl Default for Context {
             Err(_) => PathBuf::new(),
         };
         Self {
+            is_cloud: false,
             tls_root_ca,
             transaction_options,
             driver: None,

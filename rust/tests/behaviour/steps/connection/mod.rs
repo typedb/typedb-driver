@@ -30,22 +30,19 @@ mod database;
 mod transaction;
 mod user;
 
-
-#[cfg(not(feature = "cloud"))]
-async fn create_driver(_login: Option<String>, _password: Option<String>) -> TypeDBDriver {
-    TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap()
-}
-
-#[cfg(feature = "cloud")]
-async fn create_driver(login: Option<String>, password: Option<String>) -> TypeDBDriver {
-    TypeDBDriver::new_cloud(
-        &["localhost:11729", "localhost:21729", "localhost:31729"],
-        Credential::with_tls(
-            &login.unwrap(),
-            &password.unwrap(),
-            Some(&context.tls_root_ca),
+async fn create_driver(context: &Context, login: Option<String>, password: Option<String>) -> TypeDBDriver {
+    if context.is_cloud {
+        TypeDBDriver::new_cloud(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(
+                &login.expect("Login is required for cloud connection"),
+                &password.expect("Password is required for cloud connection"),
+                Some(&context.tls_root_ca),
+            ).unwrap()
         ).unwrap()
-    )
+    } else {
+        TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap()
+    }
 }
 
 #[apply(generic_step)]
@@ -56,13 +53,13 @@ async fn typedb_starts(_: &mut Context) {}
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
 async fn connection_opens_with_default_authentication(context: &mut Context) {
-    context.set_driver(Some(create_driver(None, None).await));
+    context.set_driver(Some(create_driver(context, None, None).await));
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection opens with authentication: {word}, {word}")]
 async fn connection_opens_with_authentication(context: &mut Context, login: String, password: String) {
-    context.set_driver(Some(create_driver(Some(login), Some(password)).await))
+    context.set_driver(Some(create_driver(context, Some(login), Some(password)).await))
 }
 
 #[apply(generic_step)]
