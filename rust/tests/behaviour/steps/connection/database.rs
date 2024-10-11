@@ -25,33 +25,39 @@ use futures::{
     stream, StreamExt, TryFutureExt,
 };
 use tokio::time::sleep;
-use typedb_driver::{Database, DatabaseManager};
+use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TypeDBDriver};
 use macro_rules_attribute::apply;
 
 use crate::{assert_with_timeout, util::iter_table, Context, generic_step, params};
 
-async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
-    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
+async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
+    may_error.check(driver.databases().create(name).await);
 }
 
 #[apply(generic_step)]
-#[step(expr = "connection create database: {word}")]
-pub async fn connection_create_database(context: &mut Context, name: String) {
-    create_database_with_timeout(context.driver.as_ref().unwrap().databases(), name).await;
+#[step(expr = "connection create database: {word}{may_error}")]
+pub async fn connection_create_database(context: &mut Context, name: String, may_error: params::MayError) {
+    create_database(context.driver.as_ref().unwrap(), name, may_error).await;
+}
+
+#[apply(generic_step)]
+#[step(expr = "connection create database with empty name{may_error}")]
+pub async fn connection_create_database_with_an_empty_name(context: &mut Context, may_error: params::MayError) {
+    connection_create_database(context, "".to_string(), may_error).await;
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection create database(s):")]
 async fn connection_create_databases(context: &mut Context, step: &Step) {
     for name in iter_table(step) {
-        connection_create_database(context, name.into()).await;
+        connection_create_database(context, name.into(), params::MayError::False).await;
     }
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection create databases in parallel:")]
 async fn connection_create_databases_in_parallel(context: &mut Context, step: &Step) {
-    join_all(iter_table(step).map(|name| create_database_with_timeout(context.driver.as_ref().unwrap().databases(), name.to_string())))
+    join_all(iter_table(step).map(|name| create_database(context.driver.as_ref().unwrap(), name.to_string(), params::MayError::False)))
         .await;
 }
 

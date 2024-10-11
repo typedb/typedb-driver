@@ -30,7 +30,8 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, string_view},
 };
-use crate::{iterator::iterator_arc_next, memory::arc_into_raw};
+use crate::{iterator::iterator_arc_next, memory::unwrap_arc};
+use crate::error::try_unwrap_arc;
 
 /// An <code>Iterator</code> over databases present on the TypeDB server
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
@@ -71,5 +72,5 @@ pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_c
 /// Retrieve the database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
-    borrow_mut(driver).databases().get(string_view(name)).map(|db| arc_into_raw(db)).unwrap_or_else(|_| null())
+    try_unwrap_arc(borrow_mut(driver).databases().get(string_view(name)))
 }

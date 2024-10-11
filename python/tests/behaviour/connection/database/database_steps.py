@@ -31,14 +31,14 @@ def create_databases(context: Context, names: list[str]):
         context.driver.databases.create(name)
 
 
+@step("connection create database: {name:Words}{may_error:MayError}")
+def step_impl(context: Context, name: str, may_error: MayError):
+    may_error.check(lambda: create_databases(context, [name]))
+
+
 @step("connection create database with empty name{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: create_databases(context, [""]))
-
-
-@step("connection create database: {name:Words}")
-def step_impl(context: Context, name: str):
-    create_databases(context, [name])
 
 
 @step("connection create databases")

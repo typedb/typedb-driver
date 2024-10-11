@@ -116,7 +116,8 @@ async fn connection_has_count_databases(context: &mut Context, count: usize) {
 }
 
 #[apply(generic_step)]
-#[step("connection closes")]
-async fn driver_closes(context: &mut Context) {
-    assert!(context.driver.as_ref().unwrap().force_close().is_ok());
+#[step(expr = r"connection closes{may_error}")]
+async fn driver_closes(context: &mut Context, may_error: params::MayError) {
+    // TODO: It fails if call on a closed connection
+    may_error.check(context.driver.as_ref().unwrap().force_close());
 }
