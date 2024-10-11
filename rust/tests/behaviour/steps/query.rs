@@ -19,9 +19,10 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
+use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult, Transaction};
 
 use macro_rules_attribute::apply;
+use typedb_driver::answer::QueryAnswer;
 use crate::{
     assert_err,
     util, Context,
@@ -29,13 +30,39 @@ use crate::{
     params,
 };
 
+async fn run_query(transaction: &Transaction, query: impl AsRef<str>) -> TypeDBResult<QueryAnswer> {
+    transaction.query(query).await
+}
+
 #[apply(generic_step)]
 #[step(expr = "typeql schema query{may_error}")]
 #[step(expr = "typeql write query{may_error}")]
 #[step(expr = "typeql read query{may_error}")]
 pub async fn typeql_query(context: &mut Context, may_error: params::MayError, step: &Step) {
-    may_error.check(context.transaction().query(step.docstring().unwrap()).await);
+    context.cleanup_answers().await;
+    may_error.check(run_query(context.transaction(), step.docstring().unwrap()).await);
 }
+
+#[apply(generic_step)]
+#[step(expr = "get answers of typeql schema query")]
+#[step(expr = "get answers of typeql write query")]
+#[step(expr = "get answers of typeql read query")]
+pub async fn get_answers_of_typeql_query(context: &mut Context, step: &Step) {
+    context.cleanup_answers().await;
+    context.set_answer(run_query(context.transaction(), step.docstring().unwrap()).await).unwrap();
+}
+
+#[apply(generic_step)]
+#[step(expr = "answer type {is_or_not}: {query_answer_type}")]
+pub async fn answer_type_is(context: &mut Context, is_or_not: params::IsOrNot, query_answer_type: params::QueryAnswerType) {
+    match query_answer_type {
+        params::QueryAnswerType::Ok => assert!(context.answer.as_ref().unwrap().is_ok()),
+        params::QueryAnswerType::ConceptRows => assert!(context.answer.as_ref().unwrap().is_rows_stream()),
+        params::QueryAnswerType::ConceptTrees => assert!(context.answer.as_ref().unwrap().is_json_stream()),
+    }
+}
+
+
 
 // #[apply(generic_step)]
 // #[step(expr = "typeql define; throws exception")]

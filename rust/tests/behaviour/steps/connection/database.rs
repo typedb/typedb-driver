@@ -25,10 +25,14 @@ use futures::{
     stream, StreamExt, TryFutureExt,
 };
 use tokio::time::sleep;
-use typedb_driver::Database;
+use typedb_driver::{Database, DatabaseManager};
 use macro_rules_attribute::apply;
 
-use crate::{assert_with_timeout, util, util::{create_database_with_timeout, iter_table}, Context, generic_step, params};
+use crate::{assert_with_timeout, util::iter_table, Context, generic_step, params};
+
+async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
+    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
+}
 
 #[apply(generic_step)]
 #[step(expr = "connection create database: {word}")]

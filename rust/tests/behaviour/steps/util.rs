@@ -283,10 +283,6 @@ macro_rules! assert_with_timeout {
     }};
 }
 
-pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
-    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
-}
-
 #[apply(generic_step)]
 #[step(expr = "set time-zone: {word}")]
 async fn set_time_zone(_context: &mut Context, timezone: String) {

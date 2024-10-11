@@ -270,3 +270,54 @@ impl FromStr for MayError {
         }
     }
 }
+
+#[derive(Debug, Parameter)]
+#[param(name = "is_or_not", regex = "(is|is not)")]
+pub(crate) enum IsOrNot {
+    Is,
+    IsNot,
+}
+
+impl IsOrNot {
+    pub fn check(&self, real_is: bool) {
+        match self {
+            Self::Is => {
+                debug_assert!(real_is)
+            }
+            Self::IsNot => {
+                debug_assert!(!real_is)
+            }
+        };
+    }
+}
+
+impl FromStr for IsOrNot {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "is" => Self::Is,
+            "is not" => Self::IsNot,
+            invalid => return Err(format!("Invalid `IsOrNot`: {invalid}")),
+        })
+    }
+}
+
+#[derive(Debug, Parameter)]
+#[param(name = "query_answer_type", regex = "(ok|concept rows|concept trees)")]
+pub(crate) enum QueryAnswerType {
+    Ok,
+    ConceptRows,
+    ConceptTrees,
+}
+
+impl FromStr for QueryAnswerType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "ok" => Self::Ok,
+            "concept rows" => Self::ConceptRows,
+            "concept trees" => Self::ConceptTrees,
+            invalid => return Err(format!("Invalid `QueryAnswerType`: {invalid}")),
+        })
+    }
+}

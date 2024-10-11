@@ -27,6 +27,7 @@ use typedb_driver::{
     concept::Value,
     Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager,
 };
+use typedb_driver::answer::QueryAnswer;
 
 mod connection;
 mod query;
@@ -83,14 +84,15 @@ pub struct Context {
     pub transaction_options: Options,
     pub driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
-    pub answer: Vec<ConceptRow>,
+    // pub answer: Vec<ConceptRow>,
+    pub answer: Option<QueryAnswer>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
 }
 
 impl Context {
-    const GROUP_COLUMN_NAME: &'static str = "owner";
-    const VALUE_COLUMN_NAME: &'static str = "value";
+    const DEFAULT_CORE_ADDRESS: &'static str = "127.0.0.1:1729";
+    const DEFAULT_CLOUD_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
     const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
@@ -137,7 +139,8 @@ impl Context {
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
         // self.cleanup_users().await;
-        self.set_driver(None);
+        self.cleanup_answers().await;
+        self.reset_driver();
         Ok(())
     }
 
@@ -146,9 +149,10 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        if self.driver.is_none() {
-            return;
+        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
+            self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap();
         }
+
         try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
     }
 
@@ -159,7 +163,7 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
-        if self.driver.is_none() {
+        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
             return;
         }
 
@@ -175,6 +179,12 @@ impl Context {
         )
             .await
             .ok();
+    }
+
+    pub async fn cleanup_answers(&mut self) {
+        self.answer = None;
+        self.fetch_answer = None;
+        self.value_answer = None;
     }
 
     pub fn transaction_opt(&self) -> Option<&Transaction> {
@@ -203,11 +213,44 @@ impl Context {
         self.transactions = transactions;
     }
 
-    pub fn set_driver(&mut self, new_driver: Option<TypeDBDriver>) {
-        self.driver = new_driver;
-        self.answer.clear();
-        self.fetch_answer = None;
-        self.value_answer = None;
+    pub fn set_answer(&mut self, answer: TypeDBResult<QueryAnswer>) -> TypeDBResult {
+        self.answer = Some(answer?);
+        Ok(())
+    }
+
+    async fn create_default_driver(&mut self, username: Option<&str>, password: Option<&str>) -> TypeDBResult {
+        match self.is_cloud {
+            false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
+            true => self.create_cloud_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
+        }
+    }
+
+    async fn create_core_driver(&mut self, address: &str, _username: Option<&str>, _password: Option<&str>) -> TypeDBResult {
+        assert!(!self.is_cloud);
+        let driver = TypeDBDriver::new_core(address).await?;
+        self.driver = Some(driver);
+        Ok(())
+    }
+
+    async fn create_cloud_driver(&mut self, addresses: &[&str], username: Option<&str>, password: Option<&str>) -> TypeDBResult {
+        assert!(self.is_cloud);
+        let driver = TypeDBDriver::new_cloud(
+            addresses,
+            Credential::with_tls(
+                username.expect("Username is required for cloud connection"),
+                password.expect("Password is required for cloud connection"),
+                Some(&self.tls_root_ca),
+            ).unwrap()
+        )?;
+        self.driver = Some(driver);
+        Ok(())
+    }
+
+    pub fn reset_driver(&mut self) {
+        if let Some(driver) = self.driver.as_ref() {
+            driver.force_close().unwrap()
+        }
+        self.driver = None
     }
 }
 
@@ -224,7 +267,8 @@ impl Default for Context {
             transaction_options,
             driver: None,
             transactions: VecDeque::new(),
-            answer: Vec::new(),
+            // answer: Vec::new(),
+            answer: None,
             fetch_answer: None,
             value_answer: None,
         }

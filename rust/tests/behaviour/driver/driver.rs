@@ -28,10 +28,10 @@ async fn test() {
     // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
     #[cfg(feature = "bazel")]
-    let path = "../vaticle_typedb_behaviour/connection/driver.feature";
+    let path = "../vaticle_typedb_behaviour/driver/driver.feature";
 
     #[cfg(not(feature = "bazel"))]
-    let path = "bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/driver.feature";
+    let path = "bazel-typedb-driver/external/vaticle_typedb_behaviour/driver/driver.feature";
 
-    assert!(Context::test(path, is_cloud).await);
+    assert!(Context::test(path, is_cloud()).await);
 }
