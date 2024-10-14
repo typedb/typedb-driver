@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timezone, tzinfo
+from datetime import date, datetime, timezone, tzinfo, timedelta
 from typing import Optional
 from zoneinfo import ZoneInfo
 
@@ -33,7 +33,7 @@ class Datetime:
     """
 
     def __init__(self, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str] = None,
-                 tz_adjust_timestamp: bool = False):
+                 offset_seconds: Optional[int] = None, tz_adjust_timestamp: bool = False):
         if not (0 <= subsec_nanos < NANOS_IN_SECOND):
             raise ValueError("subsec_nanos must be between 0 and 999,999,999")
         if not isinstance(timestamp_seconds, int) and \
@@ -41,18 +41,30 @@ class Datetime:
             raise ValueError("timestamp_seconds must be integer")
 
         self._tz_name = tz_name
-        if self._tz_name is None:  # UTC by default
-            self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds)
-        else:
+        self._offset_seconds = offset_seconds
+
+        if self._offset_seconds is not None and self._tz_name is not None:
+            raise ValueError("Either 'tz_name' or 'offset_seconds' should be used to set time zone info. Please, provide a single parameter.")
+
+        timezone_info = None
+        if self._offset_seconds is not None:
+            timezone_info = timezone(timedelta(seconds=self._offset_seconds))
+        elif self._tz_name is not None:
+            timezone_info = ZoneInfo(self._tz_name)
+
+        if timezone_info is not None:
             if tz_adjust_timestamp:
-                self._datetime_of_seconds = datetime.fromtimestamp(timestamp_seconds, ZoneInfo(self._tz_name))
+                self._datetime_of_seconds = datetime.fromtimestamp(timestamp_seconds, tz=timezone_info)
             else:
-                self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds).replace(
-                    tzinfo=ZoneInfo(self._tz_name))
+                self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds).replace(tzinfo=timezone_info)
+        else:  # UTC by default
+            self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds)
+
         self._nanos = subsec_nanos
 
     @classmethod
-    def utcfromtimestamp(cls, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str] = None):
+    def utcfromtimestamp(cls, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str] = None,
+                         offset_seconds: Optional[int] = None):
         """
         Creates a new ``Datetime`` based on a timestamp in the given timezone (``tz_name``) or UTC by default.
         If ``tz_name`` is passed, the timestamp is not adjusted, saving the data as is.
@@ -61,31 +73,39 @@ class Datetime:
         :param timestamp_seconds: Amount of full seconds since the epoch in UTC.
         :param subsec_nanos: A number of nanoseconds since the last seconds boundary. Should be between 0 and 999,999,999.
         :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA.
-        :raises ValueError: If subsec_nanos is not within the valid range.
+        :param offset_seconds: Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00).
+        :raises ValueError: If subsec_nanos is not within the valid range
+                or both ``tz_name`` and ``offset_seconds`` are provided.
         :raises ZoneInfoNotFoundError: If the tz_name is invalid.
         """
         return cls(timestamp_seconds=timestamp_seconds, subsec_nanos=subsec_nanos, tz_name=tz_name,
-                   tz_adjust_timestamp=False)
+                   offset_seconds=offset_seconds, tz_adjust_timestamp=False)
 
     @classmethod
-    def fromtimestamp(cls, timestamp_seconds: int, subsec_nanos: int, tz_name: str):
+    def fromtimestamp(cls, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str],
+                      offset_seconds: Optional[int]):
         """
-        Creates a new ``Datetime`` based on a timestamp with a specified ``tz_name``. The timestamp is adjusted
-        to the given timezone similarly to ``datetime.fromtimestamp``.
+        Creates a new ``Datetime`` based on a timestamp with a specified ``tz_name`` or ``offset_seconds``.
+        The timestamp is adjusted to the given timezone similarly to ``datetime.fromtimestamp``.
         To save timestamp and tz without automatic adjustment, see ``Datetime.utcfromtimestamp``.
 
 
         :param timestamp_seconds: Amount of full seconds since the epoch in the specified timezone (``tz_name``).
         :param subsec_nanos: A number of nanoseconds since the last seconds boundary. Should be between 0 and 999,999,999.
         :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA.
-        :raises ValueError: If subsec_nanos is not within the valid range.
+        :param offset_seconds: Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00).
+        :raises ValueError: If subsec_nanos is not within the valid range
+                or both ``tz_name`` and ``offset_seconds`` are provided
+                or neither ``tz_name`` nor ``offset_seconds`` is provided.
         :raises ZoneInfoNotFoundError: If the tz_name is invalid.
         """
+        if tz_name is None and offset_seconds is None:
+            raise ValueError("Either 'tz_name' or 'offset_seconds' should be provided. Consider using 'utcfromtimestamp' for naive datetime.")
         return cls(timestamp_seconds=timestamp_seconds, subsec_nanos=subsec_nanos, tz_name=tz_name,
-                   tz_adjust_timestamp=True)
+                   offset_seconds=offset_seconds, tz_adjust_timestamp=True)
 
     @classmethod
-    def utcfromstring(cls, datetime_str: str, tz_name: Optional[str] = None,
+    def utcfromstring(cls, datetime_str: str, tz_name: Optional[str] = None, offset_seconds: Optional[int] = None,
                       datetime_fmt: str = "%Y-%m-%dT%H:%M:%S") -> Datetime:
         """
         Parses a Datetime object from a string with an optional nanoseconds part based on a timestamp in the given
@@ -96,8 +116,10 @@ class Datetime:
         :param datetime_str: The timezone-aware datetime string to parse. Should either be "{datetime_fmt}" or
                              "{datetime_fmt}.{nanos}". All digits of {nanos} after the 9th one are truncated!
         :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA.
+        :param offset_seconds: Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00).
         :param datetime_fmt: The format of the datetime string without the fractional (.%f) part. Default
                              is "%Y-%m-%dT%H:%M:%S".
+        :raises ValueError: If both ``tz_name`` and ``offset_seconds`` are provided.
         :return: A Datetime object.
 
         Examples
@@ -112,20 +134,26 @@ class Datetime:
             Datetime.utcfromstring("21/09/24 18:34", "Europe/London", "%d/%m/%y %H:%M")
         """
         seconds, nanos = seconds_and_nanos_from_string(datetime_str, datetime_fmt)
-        return cls.utcfromtimestamp(timestamp_seconds=seconds, subsec_nanos=nanos, tz_name=tz_name)
+        return cls.utcfromtimestamp(timestamp_seconds=seconds, subsec_nanos=nanos, tz_name=tz_name,
+                                    offset_seconds=offset_seconds)
 
     @classmethod
-    def fromstring(cls, datetime_str: str, tz_name: str, datetime_fmt: str = "%Y-%m-%dT%H:%M:%S") -> Datetime:
+    def fromstring(cls, datetime_str: str, tz_name: Optional[str], offset_seconds: Optional[int],
+                   datetime_fmt: str = "%Y-%m-%dT%H:%M:%S") -> Datetime:
         """
-        Parses a Datetime object from a string with an optional nanoseconds part with a specified ``tz_name``.
+        Parses a Datetime object from a string with an optional nanoseconds part with a specified ``tz_name`` or
+        ``offset_seconds``.
         The timestamp is adjusted to the given timezone similarly to ``datetime.fromtimestamp``.
         To save timestamp and tz without automatic adjustment, see ``Datetime.utcfromstring``.
 
         :param datetime_str: The timezone-aware datetime string to parse. Should either be "{datetime_fmt}" or
                              "{datetime_fmt}.{nanos}". All digits of {nanos} after the 9th one are truncated!
         :param tz_name: A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA.
+        :param offset_seconds: Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00).
         :param datetime_fmt: The format of the datetime string without the fractional (.%f) part. Default
                              is "%Y-%m-%dT%H:%M:%S".
+        :raises ValueError: If both ``tz_name`` and ``offset_seconds`` are provided
+                or neither ``tz_name`` nor ``offset_seconds`` is provided.
         :return: A Datetime object.
 
         Examples
@@ -138,8 +166,11 @@ class Datetime:
             Datetime.fromstring("2024-09-21", "Asia/Calcutta", datetime_fmt="%Y-%m-%d")
             Datetime.fromstring("21/09/24 18:34", "Africa/Cairo", "%d/%m/%y %H:%M")
         """
+        if tz_name is None and offset_seconds is None:
+            raise ValueError("Either 'tz_name' or 'offset_seconds' should be provided. Consider using 'utcfromtimestamp' for naive datetime.")
         seconds, nanos = seconds_and_nanos_from_string(datetime_str, datetime_fmt)
-        return cls.fromtimestamp(timestamp_seconds=seconds, subsec_nanos=nanos, tz_name=tz_name)
+        return cls.fromtimestamp(timestamp_seconds=seconds, subsec_nanos=nanos, tz_name=tz_name,
+                                 offset_seconds=offset_seconds)
 
     @property
     def datetime_without_nanos(self) -> datetime:
@@ -149,8 +180,16 @@ class Datetime:
 
     @property
     def tz_name(self) -> Optional[str]:
-        """Return the timezone name."""
+        """Return the timezone IANA name. None if fixed offset is used for the initialisation instead."""
         return self._tz_name
+
+    @property
+    def offset_seconds(self) -> Optional[str]:
+        """
+        Return the timezone offset (local minus UTC) in seconds.
+        None if an IANA name is used for the initialisation instead.
+        """
+        return self._offset_seconds
 
     @property
     def total_seconds(self) -> float:

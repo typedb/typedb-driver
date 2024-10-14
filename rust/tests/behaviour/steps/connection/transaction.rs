@@ -17,26 +17,34 @@
  * under the License.
  */
 
-use std::collections::VecDeque;
-use std::time::Duration;
+use std::{collections::VecDeque, time::Duration};
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::future::join_all;
-use futures::FutureExt;
-use typedb_driver::{Transaction, TransactionType, TypeDBDriver, Result as TypeDBResult};
-
-use crate::{util::iter_table, Context, generic_step, params};
+use futures::{future::join_all, FutureExt};
 use macro_rules_attribute::apply;
-use crate::params::check_boolean;
+use typedb_driver::{Result as TypeDBResult, Transaction, TransactionType, TypeDBDriver};
 
-async fn open_transaction_for_database(driver: &Option<TypeDBDriver>, database_name: impl AsRef<str>, transaction_type: TransactionType) -> TypeDBResult<Transaction> {
+use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
+
+async fn open_transaction_for_database(
+    driver: &Option<TypeDBDriver>,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> TypeDBResult<Transaction> {
     driver.as_ref().unwrap().transaction(database_name, transaction_type).await
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection open {transaction_type} transaction for database: {word}{may_error}")]
-pub async fn connection_open_transaction_for_database(context: &mut Context, type_: params::TransactionType, database_name: String, may_error: params::MayError) {
-    may_error.check(context.push_transaction(open_transaction_for_database(&context.driver, &database_name, type_.transaction_type).await));
+pub async fn connection_open_transaction_for_database(
+    context: &mut Context,
+    type_: params::TransactionType,
+    database_name: String,
+    may_error: params::MayError,
+) {
+    may_error.check(context.push_transaction(
+        open_transaction_for_database(&context.driver, &database_name, type_.transaction_type).await,
+    ));
 }
 
 #[apply(generic_step)]
@@ -44,21 +52,23 @@ pub async fn connection_open_transaction_for_database(context: &mut Context, typ
 async fn connection_open_transactions_for_database(context: &mut Context, database_name: String, step: &Step) {
     for type_ in iter_table(step) {
         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-        context.push_transaction(open_transaction_for_database(&context.driver, &database_name, transaction_type).await).unwrap();
+        context
+            .push_transaction(open_transaction_for_database(&context.driver, &database_name, transaction_type).await)
+            .unwrap();
     }
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection open transaction(s) in parallel for database: {word}, of type:")]
 pub async fn connection_open_transactions_in_parallel(context: &mut Context, database_name: String, step: &Step) {
-    let transactions: VecDeque<Transaction> = join_all(
-        iter_table(step)
-            .map(|type_| {
-                let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-                open_transaction_for_database(&context.driver, &database_name, transaction_type)
-            }),
-    )
-        .await.into_iter().map(|result| result.unwrap()).collect();
+    let transactions: VecDeque<Transaction> = join_all(iter_table(step).map(|type_| {
+        let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
+        open_transaction_for_database(&context.driver, &database_name, transaction_type)
+    }))
+    .await
+    .into_iter()
+    .map(|result| result.unwrap())
+    .collect();
     context.set_transactions(transactions).await;
 }
 

@@ -30,8 +30,7 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, string_view},
 };
-use crate::{iterator::iterator_arc_next, memory::unwrap_arc};
-use crate::error::try_unwrap_arc;
+use crate::{error::try_unwrap_arc, iterator::iterator_arc_next, memory::unwrap_arc};
 
 /// An <code>Iterator</code> over databases present on the TypeDB server
 pub struct DatabaseIterator(CIterator<Arc<Database>>);

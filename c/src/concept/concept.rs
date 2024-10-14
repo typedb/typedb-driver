@@ -19,11 +19,11 @@
 
 use std::ffi::c_char;
 
-use chrono::{DateTime, NaiveTime, TimeZone};
+use chrono::{DateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
-        value::{Decimal, Duration},
+        value::{Decimal, Duration, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value, ValueType,
     },
 };
@@ -43,7 +43,7 @@ pub struct DatetimeInNanos {
 }
 
 impl DatetimeInNanos {
-    pub fn new<TZ: TimeZone>(datetime: &DateTime<TZ>) -> Self {
+    pub fn new<TZ: ChronoTimeZone>(datetime: &DateTime<TZ>) -> Self {
         Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
     }
 
@@ -56,36 +56,50 @@ impl DatetimeInNanos {
     }
 }
 
-/// A <code>DatetimeAndZoneId</code> used to represent IANA time zoned datetime in FFI.
+/// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
+/// Time zone can be represented either as an IANA <code>Tz</code> or as a <code>FixedOffset</code>.
+/// Either the zone_name or offset is set (non-empty <code>zone_name</code> or
+/// non-null <code>local_minus_utc_offset</code>).
 #[repr(C)]
-pub struct DatetimeAndZoneId {
+pub struct DatetimeAndTimeZone {
     datetime_in_nanos: DatetimeInNanos,
-    zone_id: *mut c_char,
+    zone_name: *mut c_char,
+    local_minus_utc_offset: *mut i32,
 }
 
-impl DatetimeAndZoneId {
-    pub fn new(datetime_in_nanos: DatetimeInNanos, zone_id: String) -> Self {
-        Self { datetime_in_nanos, zone_id: release_string(zone_id) }
+impl DatetimeAndTimeZone {
+    pub fn new(datetime_tz: &DateTime<TimeZone>) -> Self {
+        let (zone_name, offset) = {
+            match datetime_tz.timezone() {
+                TimeZone::IANA(tz) => (tz.name().to_owned(), None),
+                TimeZone::Fixed(offset) => ("".to_owned(), Some(offset.local_minus_utc())),
+            }
+        };
+        Self {
+            datetime_in_nanos: DatetimeInNanos::new(datetime_tz),
+            zone_name: release_string(zone_name),
+            local_minus_utc_offset: release_optional(offset),
+        }
     }
 
     pub fn get_datetime_in_nanos(self) -> DatetimeInNanos {
         self.datetime_in_nanos
     }
 
-    pub fn get_zone_id(self) -> *mut c_char {
-        self.zone_id
+    pub fn get_zone_name(self) -> *mut c_char {
+        self.zone_name
     }
 }
 
-impl Drop for DatetimeAndZoneId {
+impl Drop for DatetimeAndTimeZone {
     fn drop(&mut self) {
-        string_free(self.zone_id);
+        string_free(self.zone_name);
     }
 }
 
-/// Frees the native rust <code>DateTimeAndZoneId</code> object
+/// Frees the native rust <code>DatetimeAndTimeZone</code> object
 #[no_mangle]
-pub extern "C" fn datetime_and_zone_id_drop(datetime_tz: *mut DatetimeAndZoneId) {
+pub extern "C" fn datetime_and_time_zone_drop(datetime_tz: *mut DatetimeAndTimeZone) {
     free(datetime_tz);
 }
 
@@ -359,10 +373,9 @@ pub extern "C" fn value_get_datetime(value: *const Concept) -> DatetimeInNanos {
 /// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and an IANA TZ name.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndZoneId {
-    // TODO: support offset format...
+pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndTimeZone {
     if let Value::DatetimeTZ(datetime_tz) = borrow_as_value(value) {
-        DatetimeAndZoneId::new(DatetimeInNanos::new(datetime_tz), datetime_tz.timezone().name().clone().to_owned())
+        DatetimeAndTimeZone::new(datetime_tz)
     } else {
         unreachable!("Attempting to unwrap a non-datetime-tz {:?} as datetime-tz", borrow_as_value(value))
     }

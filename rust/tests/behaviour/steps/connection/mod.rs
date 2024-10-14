@@ -18,13 +18,11 @@
  */
 
 use cucumber::{given, then, when};
+use macro_rules_attribute::apply;
 use tokio::time::sleep;
 use typedb_driver::{Credential, TypeDBDriver};
 
-use crate::{assert_with_timeout, Context, generic_step, params};
-
-use macro_rules_attribute::apply;
-use crate::params::check_boolean;
+use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
 mod database;
 mod transaction;
@@ -33,7 +31,6 @@ mod user;
 #[apply(generic_step)]
 #[step("typedb starts")]
 async fn typedb_starts(_: &mut Context) {}
-
 
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
@@ -64,20 +61,20 @@ fn change_port(address: &str, new_port: &str) -> String {
 async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: params::MayError) {
     may_error.check(match context.is_cloud {
         false => {
-            context.create_core_driver(
-                &change_host(Context::DEFAULT_CORE_ADDRESS, "surely-not-localhost"),
-                Some(Context::ADMIN_USERNAME),
-                Some(Context::ADMIN_PASSWORD)
-            ).await
-        },
+            context
+                .create_core_driver(
+                    &change_host(Context::DEFAULT_CORE_ADDRESS, "surely-not-localhost"),
+                    Some(Context::ADMIN_USERNAME),
+                    Some(Context::ADMIN_PASSWORD),
+                )
+                .await
+        }
         true => {
             let updated_address = change_host(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
-            context.create_cloud_driver(
-                &[&updated_address],
-                Some(Context::ADMIN_USERNAME),
-                Some(Context::ADMIN_PASSWORD)
-            ).await
-        },
+            context
+                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
+                .await
+        }
     });
 }
 
@@ -86,20 +83,20 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
 async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: params::MayError) {
     may_error.check(match context.is_cloud {
         false => {
-            context.create_core_driver(
-                &change_port(Context::DEFAULT_CORE_ADDRESS, "0"),
-                Some(Context::ADMIN_USERNAME),
-                Some(Context::ADMIN_PASSWORD)
-            ).await
-        },
+            context
+                .create_core_driver(
+                    &change_port(Context::DEFAULT_CORE_ADDRESS, "0"),
+                    Some(Context::ADMIN_USERNAME),
+                    Some(Context::ADMIN_PASSWORD),
+                )
+                .await
+        }
         true => {
             let updated_address = change_port(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "0");
-            context.create_cloud_driver(
-                &[&updated_address],
-                Some(Context::ADMIN_USERNAME),
-                Some(Context::ADMIN_PASSWORD)
-            ).await
-        },
+            context
+                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
+                .await
+        }
     });
 }
 

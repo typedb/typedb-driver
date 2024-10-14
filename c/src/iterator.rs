@@ -20,12 +20,12 @@
 use std::sync::Arc;
 
 use typedb_driver::{BoxStream, Result};
-use crate::error::try_unwrap_arc_optional;
 
 use super::{
     error::try_release_optional,
     memory::{borrow_mut, release_optional},
 };
+use crate::error::try_unwrap_arc_optional;
 
 pub struct CIterator<T: 'static>(pub(super) BoxStream<'static, T>);
 

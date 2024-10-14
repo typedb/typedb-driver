@@ -18,6 +18,7 @@
  */
 
 use std::fmt;
+
 pub use self::{concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
 use crate::{
     answer::concept_tree::{ConceptTree, ConceptTreesHeader},
@@ -63,7 +64,9 @@ impl fmt::Debug for QueryAnswer {
         match self {
             QueryAnswer::Ok() => write!(f, "QueryAnswer::Ok"),
             QueryAnswer::ConceptRowsStream(_) => write!(f, "QueryAnswer::ConceptRowsStream(<stream>)"),
-            QueryAnswer::ConceptTreesStream(header, _) => write!(f, "QueryAnswer::ConceptTreesStream(header: {:?}, <stream>)", header),
+            QueryAnswer::ConceptTreesStream(header, _) => {
+                write!(f, "QueryAnswer::ConceptTreesStream(header: {:?}, <stream>)", header)
+            }
         }
     }
 }

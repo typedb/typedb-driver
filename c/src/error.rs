@@ -17,15 +17,18 @@
  * under the License.
  */
 
-use std::{cell::RefCell, ffi::c_char, ptr::null_mut};
-use std::ptr::null;
-use std::sync::Arc;
+use std::{
+    cell::RefCell,
+    ffi::c_char,
+    ptr::{null, null_mut},
+    sync::Arc,
+};
 
 use env_logger::Env;
 use log::{trace, warn};
 use typedb_driver::{Error, Result};
 
-use super::memory::{unwrap_arc, free, release_optional, release_string};
+use super::memory::{free, release_optional, release_string, unwrap_arc};
 
 thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);

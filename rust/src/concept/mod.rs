@@ -28,7 +28,7 @@ pub use self::{
     value::{Value, ValueType},
 };
 use crate::{
-    concept::value::{Decimal, Duration},
+    concept::value::{Decimal, Duration, TimeZone},
     IID,
 };
 
@@ -51,6 +51,7 @@ pub enum Concept {
     Value(Value),
 }
 
+#[derive(Clone, PartialEq)]
 pub enum ConceptCategory {
     EntityType,
     RelationType,
@@ -105,7 +106,7 @@ impl Concept {
     /// If this is an Instance, return the label of the type of this instance.
     /// If this is a Value, return the label of the value type of the value.
     /// If this is a Type, return the label of the type.
-    fn get_label(&self) -> &str {
+    pub fn get_label(&self) -> &str {
         match self {
             Self::EntityType(entity_type) => entity_type.label(),
             Self::RelationType(relation_type) => relation_type.label(),
@@ -123,7 +124,7 @@ impl Concept {
     /// If this is a Value, return the label of the value.
     /// If this is an Attribute Type, it returns the label of the value type that the schema permits for the attribute type, if one is defined.
     /// Otherwise, return empty.
-    fn get_value_label(&self) -> Option<&str> {
+    pub fn get_value_label(&self) -> Option<&str> {
         match self {
             Self::AttributeType(attribute_type) => attribute_type.value_type().map(|value_type| value_type.name()),
             Self::Attribute(attribute) => Some(attribute.value.get_type_name()),
@@ -218,7 +219,7 @@ impl Concept {
     /// If this is a timezoned-datetime valued Attribute Instance, return the timezoned-datetime value of this instance.
     /// If this a timezoned-datetime valued Value, return the timezoned-datetime value.
     /// Otherwise, return empty.
-    pub fn get_datetime_tz(&self) -> Option<DateTime<Tz>> {
+    pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
         self.get_value().map(|value| value.get_datetime_tz()).flatten()
     }
 
@@ -312,49 +313,54 @@ impl Concept {
         matches!(self.get_category(), ConceptCategory::Value)
     }
 
-    /// Check if this concept holds a boolean, either in an Attribute or as a Value
+    /// Check if this concept holds a boolean as an AttributeType, an Attribute, or a Value
     pub fn is_boolean(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Boolean))
     }
 
-    /// Check if this concept holds a long, either in an Attribute or as a Value
+    /// Check if this concept holds a long as an AttributeType, an Attribute, or a Value
     pub fn is_long(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Long))
     }
 
-    /// Check if this concept holds a fixed-decimal, either in an Attribute or as a Value
+    /// Check if this concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
     pub fn is_decimal(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Decimal))
     }
 
-    /// Check if this concept holds a double, either in an Attribute or as a Value
+    /// Check if this concept holds a double as an AttributeType, an Attribute, or a Value
     pub fn is_double(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Double))
     }
 
-    /// Check if this concept holds a string, either in an Attribute or as a Value
+    /// Check if this concept holds a string as an AttributeType, an Attribute, or a Value
     pub fn is_string(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::String))
     }
 
-    /// Check if this concept holds a date, either in an Attribute or as a Value
+    /// Check if this concept holds a date as an AttributeType, an Attribute, or a Value
     pub fn is_date(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Date))
     }
 
-    /// Check if this concept holds a datetime, either in an Attribute or as a Value
+    /// Check if this concept holds a datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Datetime))
     }
 
-    /// Check if this concept holds a timezoned-datetime, either in an Attribute or as a Value
+    /// Check if this concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime_tz(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::DatetimeTZ))
     }
 
-    /// Check if this concept holds a duration, either in an Attribute or as a Value
+    /// Check if this concept holds a duration as an AttributeType, an Attribute, or a Value
     pub fn is_duration(&self) -> bool {
         matches!(self.get_value_type(), Some(ValueType::Duration))
+    }
+
+    /// Check if this concept holds a struct as an AttributeType, an Attribute, or a Value
+    pub fn is_struct(&self) -> bool {
+        matches!(self.get_value_type(), Some(ValueType::Struct(_)))
     }
 }
 

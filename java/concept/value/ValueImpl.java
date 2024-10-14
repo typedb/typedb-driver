@@ -193,8 +193,14 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public ZonedDateTime asDatetimeTZ() {
         if (!isDatetimeTZ()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime-tz");
-        com.typedb.driver.jni.DatetimeAndZoneId nativeDatetime = value_get_datetime_tz(nativeObject);
-        return instantFromNativeDatetime(nativeDatetime.getDatetime_in_nanos()).atZone(ZoneId.of(nativeDatetime.getZone_id()));
+        com.typedb.driver.jni.DatetimeAndTimeZone nativeDatetime = value_get_datetime_tz(nativeObject);
+        Instant naiveDatetime = instantFromNativeDatetime(nativeDatetime.getDatetime_in_nanos());
+        if (nativeDatetime.getLocal_minus_utc_offset() != null) {
+            return instant.atZone(ZoneOffset.ofTotalSeconds(nativeDatetime.getLocal_minus_utc_offset()));
+        } else {
+            assert nativeDatetime.getZone_name() != null;
+            return naiveDatetime.atZone(ZoneId.of(nativeDatetime.getZone_name()));
+        }
     }
 
     @Override

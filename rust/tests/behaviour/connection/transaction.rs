@@ -18,8 +18,8 @@
  */
 
 use config::is_cloud;
-use steps::Context;
 use serial_test::serial;
+use steps::Context;
 
 #[tokio::test]
 #[serial]
@@ -28,10 +28,10 @@ async fn test() {
     // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
     #[cfg(feature = "bazel")]
-        let path = "../vaticle_typedb_behaviour/connection/transaction.feature";
+    let path = "../vaticle_typedb_behaviour/connection/transaction.feature";
 
     #[cfg(not(feature = "bazel"))]
-        let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/transaction.feature";
+    let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/transaction.feature";
 
     assert!(Context::test(path, is_cloud()).await);
 }

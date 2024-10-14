@@ -26,7 +26,7 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, release_optional, release_string, take_ownership},
 };
-use crate::memory::{wrap_into_arc, release_arc};
+use crate::memory::{release_arc, wrap_into_arc};
 
 /// Frees the native rust <code>Database</code> object
 #[no_mangle]

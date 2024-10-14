@@ -19,12 +19,12 @@
 
 use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 
-use chrono::NaiveDateTime;
+use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use typedb_driver::{
-    concept::{Annotation, Value, ValueType},
-    TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
+    concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
+    TransactionType as TypeDBTransactionType,
 };
 
 #[derive(Debug, Parameter)]
@@ -73,51 +73,135 @@ where
     }
 }
 
-#[derive(Clone, Debug, Parameter)]
-#[param(name = "value", regex = r".+")]
-pub struct ValueParam(String);
+#[derive(Debug, Default, Parameter, Clone)]
+#[param(name = "value", regex = ".*?")]
+pub(crate) struct Value {
+    raw_value: String,
+}
 
-impl ValueParam {
-    pub fn into_value(self, value_type: ValueType) -> Value {
+impl Value {
+    const DATETIME_FORMATS: [&'static str; 8] = [
+        "%Y-%m-%dT%H:%M:%S%.9f",
+        "%Y-%m-%d %H:%M:%S%.9f",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%dT%H",
+        "%Y-%m-%d %H",
+    ];
+    const DATE_FORMAT: &'static str = "%Y-%m-%d";
+
+    const FRACTIONAL_ZEROES: usize = 18;
+
+    pub fn into_typedb(self, value_type: TypeDBValueType) -> TypeDBValue {
         match value_type {
-            ValueType::Boolean => Value::Boolean(self.0.parse().unwrap()),
-            ValueType::Double => Value::Double(self.0.parse().unwrap()),
-            ValueType::Long => Value::Long(self.0.parse().unwrap()),
-            ValueType::String => Value::String(self.0),
-            ValueType::Datetime => {
-                Value::Datetime(NaiveDateTime::parse_from_str(&self.0, "%Y-%m-%d %H:%M:%S").unwrap())
+            TypeDBValueType::Boolean => TypeDBValue::Boolean(self.raw_value.parse().unwrap()),
+            TypeDBValueType::Long => TypeDBValue::Long(self.raw_value.parse().unwrap()),
+            TypeDBValueType::Double => TypeDBValue::Double(self.raw_value.parse().unwrap()),
+            TypeDBValueType::Decimal => {
+                let (integer, fractional) = if let Some(split) = self.raw_value.split_once(".") {
+                    split
+                } else {
+                    (self.raw_value.as_str(), "0")
+                };
+
+                let integer_parsed: i64 = integer.trim().parse().unwrap();
+                let integer_parsed_abs = integer_parsed.abs();
+                let fractional_parsed = Self::parse_decimal_fraction_part(fractional);
+
+                TypeDBValue::Decimal(match integer.starts_with('-') {
+                    false => Decimal::new(integer_parsed_abs, fractional_parsed),
+                    true => -Decimal::new(integer_parsed_abs, fractional_parsed),
+                })
             }
-            ValueType::Decimal => {
-                todo!()
+            TypeDBValueType::Date => {
+                TypeDBValue::Date(NaiveDate::parse_from_str(&self.raw_value, Self::DATE_FORMAT).unwrap())
             }
-            ValueType::Date => {
-                todo!()
+            TypeDBValueType::Datetime => {
+                let (datetime, remainder) = Self::parse_date_time_and_remainder(self.raw_value.as_str());
+                assert!(
+                    remainder.is_empty(),
+                    "Unexpected remainder when parsing {:?} with result of {:?}",
+                    self.raw_value,
+                    datetime
+                );
+                TypeDBValue::Datetime(datetime)
             }
-            ValueType::DatetimeTZ => {
-                todo!()
+            TypeDBValueType::DatetimeTZ => {
+                let (datetime, timezone) = Self::parse_date_time_and_remainder(self.raw_value.as_str());
+
+                if timezone.is_empty() {
+                    TypeDBValue::DatetimeTZ(datetime.and_local_timezone(TimeZone::default()).unwrap())
+                } else if timezone.starts_with('+') || timezone.starts_with('-') {
+                    let hours: i32 = timezone[1..3].parse().unwrap();
+                    let minutes: i32 = timezone[3..].parse().unwrap();
+                    let total_minutes = hours * 60 + minutes;
+                    let fixed_offset = if &timezone[0..1] == "+" {
+                        FixedOffset::east_opt(total_minutes * 60)
+                    } else {
+                        FixedOffset::west_opt(total_minutes * 60)
+                    };
+                    TypeDBValue::DatetimeTZ(
+                        datetime.and_local_timezone(TimeZone::Fixed(fixed_offset.unwrap())).unwrap(),
+                    )
+                } else {
+                    TypeDBValue::DatetimeTZ(
+                        datetime.and_local_timezone(TimeZone::IANA(timezone.parse().unwrap())).unwrap(),
+                    )
+                }
             }
-            ValueType::Duration => {
-                todo!()
-            }
-            ValueType::Struct(_) => {
-                todo!()
+            TypeDBValueType::Duration => TypeDBValue::Duration(self.raw_value.parse().unwrap()),
+            TypeDBValueType::String => TypeDBValue::String(Self::remove_string_quotes(&self.raw_value).to_string()),
+            TypeDBValueType::Struct(_) => {
+                // Compare string representations
+                TypeDBValue::String(Self::remove_string_quotes(&self.raw_value).to_string())
             }
         }
     }
+
+    fn remove_string_quotes(string: &str) -> &str {
+        if string.starts_with('"') && string.ends_with('"') {
+            &string[1..&string.len() - 1]
+        } else {
+            string
+        }
+    }
+
+    fn parse_decimal_fraction_part(value: &str) -> u64 {
+        assert!(Self::FRACTIONAL_ZEROES >= value.len());
+        10_u64.pow((Self::FRACTIONAL_ZEROES - value.len() + 1) as u32) * value.trim().parse::<u64>().unwrap()
+    }
+
+    fn parse_date_time_and_remainder(value: &str) -> (NaiveDateTime, &str) {
+        for format in Self::DATETIME_FORMATS {
+            if let Ok((datetime, remainder)) = NaiveDateTime::parse_and_remainder(value, format) {
+                return (datetime, remainder.trim());
+            }
+        }
+        if let Ok((date, remainder)) = NaiveDate::parse_and_remainder(value, Self::DATE_FORMAT) {
+            return (date.and_time(NaiveTime::default()), remainder.trim());
+        }
+        panic!(
+            "Cannot parse DateTime: none of the formats {:?} or {:?} fits for {:?}",
+            Self::DATETIME_FORMATS,
+            Self::DATE_FORMAT,
+            value
+        )
+    }
 }
 
-impl FromStr for ValueParam {
+impl FromStr for Value {
     type Err = Infallible;
-
-    fn from_str(value: &str) -> Result<Self, Self::Err> {
-        Ok(Self(value.to_owned()))
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self { raw_value: s.to_owned() })
     }
 }
 
 #[derive(Clone, Debug, Parameter)]
 #[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration|struct")] // TODO: Probably any string value instead of struct
 pub struct ValueTypeParam {
-    pub value_type: ValueType,
+    pub value_type: TypeDBValueType,
 }
 
 impl FromStr for ValueTypeParam {
@@ -125,35 +209,18 @@ impl FromStr for ValueTypeParam {
 
     fn from_str(type_: &str) -> Result<Self, Self::Err> {
         Ok(match type_ {
-            "boolean" => Self { value_type: ValueType::Boolean },
-            "long" => Self { value_type: ValueType::Long },
-            "double" => Self { value_type: ValueType::Double },
-            "decimal" => Self { value_type: ValueType::Decimal },
-            "string" => Self { value_type: ValueType::String },
-            "date" => Self { value_type: ValueType::Date },
-            "datetime" => Self { value_type: ValueType::Datetime },
-            "datetime-tz" => Self { value_type: ValueType::DatetimeTZ },
-            "duration" => Self { value_type: ValueType::Duration },
-            "struct" => Self { value_type: ValueType::Struct("idk todo".to_string()) }, // TODO: Decide what to do
+            "boolean" => Self { value_type: TypeDBValueType::Boolean },
+            "long" => Self { value_type: TypeDBValueType::Long },
+            "double" => Self { value_type: TypeDBValueType::Double },
+            "decimal" => Self { value_type: TypeDBValueType::Decimal },
+            "string" => Self { value_type: TypeDBValueType::String },
+            "date" => Self { value_type: TypeDBValueType::Date },
+            "datetime" => Self { value_type: TypeDBValueType::Datetime },
+            "datetime-tz" => Self { value_type: TypeDBValueType::DatetimeTZ },
+            "duration" => Self { value_type: TypeDBValueType::Duration },
+            "struct" => Self { value_type: TypeDBValueType::Struct("idk todo".to_string()) }, // TODO: Decide what to do
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
-    }
-}
-
-#[derive(Clone, Debug, Parameter)]
-#[param(
-    name = "optional_value_type",
-    regex = r" as\((boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct)\)|()"
-)]
-pub struct OptionalAsValueTypeParam {
-    pub value_type: Option<ValueType>,
-}
-
-impl FromStr for OptionalAsValueTypeParam {
-    type Err = Infallible;
-
-    fn from_str(type_: &str) -> Result<Self, Self::Err> {
-        Ok(Self { value_type: type_.is_empty().not().then(|| type_.parse::<ValueTypeParam>().unwrap().value_type) })
     }
 }
 
@@ -196,7 +263,7 @@ impl FromStr for QueryType {
 }
 
 #[derive(Clone, Debug, Default, Parameter)]
-#[param(name = "var", regex = r"(\$[\w_-]+)")]
+#[param(name = "var", regex = r".*")]
 pub struct Var {
     pub name: String,
 }
@@ -225,6 +292,10 @@ macro_rules! check_boolean {
     };
 }
 pub(crate) use check_boolean;
+use typedb_driver::concept::{
+    value::{Decimal, TimeZone},
+    Concept, ConceptCategory,
+};
 
 impl FromStr for Boolean {
     type Err = String;
@@ -283,7 +354,9 @@ impl FromStr for MayError {
             Ok(MayError::False)
         } else if s == "; fails" || s == "; parsing fails" {
             Ok(MayError::True(None))
-        } else if let Some(message) = s.strip_prefix("; fails with a message containing: \"").and_then(|suffix| suffix.strip_suffix("\"")) {
+        } else if let Some(message) =
+            s.strip_prefix("; fails with a message containing: \"").and_then(|suffix| suffix.strip_suffix("\""))
+        {
             Ok(MayError::True(Some(message.to_string())))
         } else {
             Err(format!("Invalid `MayError`: {}", s))
@@ -334,6 +407,42 @@ impl FromStr for IsOrNot {
 }
 
 #[derive(Debug, Parameter)]
+#[param(name = "exists_or_doesnt", regex = "(exists|does not exist)")]
+pub(crate) enum ExistsOrDoesnt {
+    Exists,
+    DoesNotExist,
+}
+
+impl ExistsOrDoesnt {
+    pub fn check<T: fmt::Debug>(&self, scrutinee: &Option<T>, message: &str) {
+        match (self, scrutinee) {
+            (Self::Exists, Some(_)) | (Self::DoesNotExist, None) => (),
+            (Self::Exists, None) => panic!("{message} does not exist"),
+            (Self::DoesNotExist, Some(value)) => panic!("{message} exists: {value:?}"),
+        }
+    }
+
+    pub fn check_result<T: fmt::Debug, E>(&self, scrutinee: &Result<T, E>, message: &str) {
+        let option = match scrutinee {
+            Ok(result) => Some(result),
+            Err(_) => None,
+        };
+        self.check(&option, message)
+    }
+}
+
+impl FromStr for ExistsOrDoesnt {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "exists" => Self::Exists,
+            "does not exist" => Self::DoesNotExist,
+            invalid => return Err(format!("Invalid `ExistsOrDoesnt`: {invalid}")),
+        })
+    }
+}
+
+#[derive(Debug, Parameter)]
 #[param(name = "is_by_var_index", regex = "(| by index of variable)")]
 pub(crate) enum IsByVarIndex {
     Is,
@@ -377,6 +486,90 @@ impl fmt::Display for QueryAnswerType {
             QueryAnswerType::Ok => write!(f, "Ok"),
             QueryAnswerType::ConceptRows => write!(f, "ConceptRows"),
             QueryAnswerType::ConceptTrees => write!(f, "ConceptTrees"),
+        }
+    }
+}
+
+#[derive(Debug, Parameter)]
+#[param(
+    name = "concept_kind",
+    regex = "(concept|variable|type|instance|entity type|relation type|attribute type|role type|entity|relation|attribute|value)"
+)]
+pub(crate) enum ConceptKind {
+    Concept,
+    Type,
+    Instance,
+    EntityType,
+    RelationType,
+    AttributeType,
+    RoleType,
+    Entity,
+    Relation,
+    Attribute,
+    Value,
+}
+
+impl ConceptKind {
+    pub(crate) fn matches_concept(&self, concept: &Concept) -> bool {
+        match self {
+            ConceptKind::Concept => true,
+            ConceptKind::Type => match concept {
+                Concept::EntityType(_)
+                | Concept::RelationType(_)
+                | Concept::AttributeType(_)
+                | Concept::RoleType(_) => true,
+                _ => false,
+            },
+            ConceptKind::Instance => match concept {
+                Concept::Entity(_) | Concept::Relation(_) | Concept::Attribute(_) => true,
+                _ => false,
+            },
+            ConceptKind::EntityType => matches!(concept, Concept::EntityType(_)),
+            ConceptKind::RelationType => matches!(concept, Concept::RelationType(_)),
+            ConceptKind::AttributeType => matches!(concept, Concept::AttributeType(_)),
+            ConceptKind::RoleType => matches!(concept, Concept::RoleType(_)),
+            ConceptKind::Entity => matches!(concept, Concept::Entity(_)),
+            ConceptKind::Relation => matches!(concept, Concept::Relation(_)),
+            ConceptKind::Attribute => matches!(concept, Concept::Attribute(_)),
+            ConceptKind::Value => matches!(concept, Concept::Value(_)),
+        }
+    }
+}
+
+impl FromStr for ConceptKind {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "concept" | "variable" => Self::Concept,
+            "type" => Self::Type,
+            "instance" => Self::Instance,
+            "entity type" => Self::EntityType,
+            "relation type" => Self::RelationType,
+            "attribute type" => Self::AttributeType,
+            "role type" => Self::RoleType,
+            "entity" => Self::Entity,
+            "relation" => Self::Relation,
+            "attribute" => Self::Attribute,
+            "value" => Self::Value,
+            invalid => return Err(format!("Invalid `ConceptKind`: {invalid}")),
+        })
+    }
+}
+
+impl fmt::Display for ConceptKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Concept => write!(f, "Concept"),
+            Self::Type => write!(f, "Type"),
+            Self::Instance => write!(f, "Instance"),
+            Self::EntityType => write!(f, "EntityType"),
+            Self::RelationType => write!(f, "RelationType"),
+            Self::AttributeType => write!(f, "AttributeType"),
+            Self::RoleType => write!(f, "RoleType"),
+            Self::Entity => write!(f, "Entity"),
+            Self::Relation => write!(f, "Relation"),
+            Self::Attribute => write!(f, "Attribute"),
+            Self::Value => write!(f, "Value"),
         }
     }
 }

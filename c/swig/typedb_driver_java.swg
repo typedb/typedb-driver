@@ -216,8 +216,9 @@
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
-%nojavaexception DatetimeAndZoneId::datetime_in_nanos;
-%nojavaexception DatetimeAndZoneId::zone_id;
+%nojavaexception DatetimeAndTimeZone::datetime_in_nanos;
+%nojavaexception DatetimeAndTimeZone::zone_name;
+%nojavaexception DatetimeAndTimeZone::local_minus_utc_offset;
 
 %nojavaexception DatetimeInNanos::seconds;
 %nojavaexception DatetimeInNanos::subsec_nanos;
@@ -244,7 +245,7 @@
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
 %nojavaexception ~DatabaseManager;
-%nojavaexception ~DatetimeAndZoneId;
+%nojavaexception ~DatetimeAndTimeZone;
 %nojavaexception ~DatetimeInNanos;
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;

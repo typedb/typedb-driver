@@ -24,11 +24,11 @@ use futures::{
     future::{join_all, try_join_all},
     stream, StreamExt, TryFutureExt,
 };
+use macro_rules_attribute::apply;
 use tokio::time::sleep;
 use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TypeDBDriver};
-use macro_rules_attribute::apply;
 
-use crate::{assert_with_timeout, util::iter_table, Context, generic_step, params};
+use crate::{assert_with_timeout, generic_step, params, util::iter_table, Context};
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
     may_error.check(driver.databases().create(name).await);
@@ -57,8 +57,11 @@ async fn connection_create_databases(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = "connection create databases in parallel:")]
 async fn connection_create_databases_in_parallel(context: &mut Context, step: &Step) {
-    join_all(iter_table(step).map(|name| create_database(context.driver.as_ref().unwrap(), name.to_string(), params::MayError::False)))
-        .await;
+    join_all(
+        iter_table(step)
+            .map(|name| create_database(context.driver.as_ref().unwrap(), name.to_string(), params::MayError::False)),
+    )
+    .await;
 }
 
 #[apply(generic_step)]
@@ -78,9 +81,11 @@ async fn connection_delete_databases(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = "connection delete databases in parallel:")]
 async fn connection_delete_databases_in_parallel(context: &mut Context, step: &Step) {
-    try_join_all(iter_table(step).map(|name| context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete)))
-        .await
-        .unwrap();
+    try_join_all(
+        iter_table(step).map(|name| context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete)),
+    )
+    .await
+    .unwrap();
 }
 
 #[apply(generic_step)]
@@ -115,11 +120,7 @@ async fn connection_does_not_have_database(context: &mut Context, name: String) 
 #[step(expr = "connection does not have database(s):")]
 async fn connection_does_not_have_databases(context: &mut Context, step: &Step) {
     assert_with_timeout!(
-        stream::iter(iter_table(step))
-            .all(|name| async {
-                !context.all_databases().await.contains(name)
-            })
-            .await,
+        stream::iter(iter_table(step)).all(|name| async { !context.all_databases().await.contains(name) }).await,
         "Connection contains at least one of the databases.",
     )
 }

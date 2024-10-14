@@ -7,10 +7,13 @@
 #![deny(unused_must_use)]
 #![deny(elided_lifetimes_in_paths)]
 
-use std::{collections::{HashMap, HashSet}, fmt, iter, mem, path::{Path, PathBuf}};
-use std::collections::VecDeque;
-use std::env::VarError;
-use std::error::Error;
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    env::VarError,
+    error::Error,
+    fmt, iter, mem,
+    path::{Path, PathBuf},
+};
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
@@ -20,17 +23,15 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptRow, JSON},
+    answer::{ConceptRow, QueryAnswer, JSON},
     concept::Value,
     Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager,
 };
-use typedb_driver::answer::QueryAnswer;
 
 mod connection;
-mod query;
 mod params;
+mod query;
 mod util;
-
 
 #[derive(Debug, Default)]
 struct SingletonParser {
@@ -114,7 +115,6 @@ impl Context {
                 // cucumber removes the default hook before each scenario and restores it after!
                 std::panic::set_hook(Box::new(move |info| println!("{}", info)));
                 Box::pin(async move {})
-
             })
             .after(|_, _, _, _, context| {
                 Box::pin(async {
@@ -142,7 +142,16 @@ impl Context {
     }
 
     pub async fn all_databases(&self) -> HashSet<String> {
-        self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
+        self.driver
+            .as_ref()
+            .unwrap()
+            .databases()
+            .all()
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|db| db.name().to_owned())
+            .collect::<HashSet<_>>()
     }
 
     pub async fn cleanup_databases(&mut self) {
@@ -150,7 +159,9 @@ impl Context {
             self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap();
         }
 
-        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete())).await.unwrap();
+        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
+            .await
+            .unwrap();
     }
 
     pub async fn cleanup_transactions(&mut self) {
@@ -165,7 +176,9 @@ impl Context {
         }
 
         try_join_all(
-            self.driver.as_ref().unwrap()
+            self.driver
+                .as_ref()
+                .unwrap()
                 .users()
                 .all()
                 .await
@@ -174,8 +187,8 @@ impl Context {
                 .filter(|user| user.username != Context::ADMIN_USERNAME)
                 .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
         )
-            .await
-            .ok();
+        .await
+        .ok();
     }
 
     pub async fn cleanup_answers(&mut self) {
@@ -223,7 +236,8 @@ impl Context {
     }
 
     pub async fn unwrap_answer_into_rows(&mut self) {
-        self.collected_rows = Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+        self.collected_rows =
+            Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>().await);
     }
 
     pub async fn try_get_collected_rows(&mut self) -> Option<&Vec<ConceptRow>> {
@@ -247,14 +261,24 @@ impl Context {
         }
     }
 
-    async fn create_core_driver(&mut self, address: &str, _username: Option<&str>, _password: Option<&str>) -> TypeDBResult {
+    async fn create_core_driver(
+        &mut self,
+        address: &str,
+        _username: Option<&str>,
+        _password: Option<&str>,
+    ) -> TypeDBResult {
         assert!(!self.is_cloud);
         let driver = TypeDBDriver::new_core(address).await?;
         self.driver = Some(driver);
         Ok(())
     }
 
-    async fn create_cloud_driver(&mut self, addresses: &[&str], username: Option<&str>, password: Option<&str>) -> TypeDBResult {
+    async fn create_cloud_driver(
+        &mut self,
+        addresses: &[&str],
+        username: Option<&str>,
+        password: Option<&str>,
+    ) -> TypeDBResult {
         assert!(self.is_cloud);
         let driver = TypeDBDriver::new_cloud(
             addresses,
@@ -262,7 +286,8 @@ impl Context {
                 username.expect("Username is required for cloud connection"),
                 password.expect("Password is required for cloud connection"),
                 Some(&self.tls_root_ca),
-            ).unwrap()
+            )
+            .unwrap(),
         )?;
         self.driver = Some(driver);
         Ok(())
