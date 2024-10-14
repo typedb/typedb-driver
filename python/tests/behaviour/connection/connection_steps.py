@@ -47,7 +47,7 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(port=0))
 
 
-@step(u'connection opens with authentication: {username:Words}, {password:Words}{may_error:MayError}')
+@step(u'connection opens with authentication: {username:NonSemicolon}, {password:NonSemicolon}{may_error:MayError}')
 def step_impl(context: Context, username: str, password: str, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(username, password))
 

@@ -7,13 +7,10 @@
 #![deny(unused_must_use)]
 #![deny(elided_lifetimes_in_paths)]
 
-use std::{
-    collections::{HashMap, HashSet},
-    iter, mem,
-    path::{Path, PathBuf},
-};
+use std::{collections::{HashMap, HashSet}, fmt, iter, mem, path::{Path, PathBuf}};
 use std::collections::VecDeque;
 use std::env::VarError;
+use std::error::Error;
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
@@ -84,8 +81,8 @@ pub struct Context {
     pub transaction_options: Options,
     pub driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
-    // pub answer: Vec<ConceptRow>,
     pub answer: Option<QueryAnswer>,
+    pub collected_rows: Option<Vec<ConceptRow>>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
 }
@@ -183,6 +180,7 @@ impl Context {
 
     pub async fn cleanup_answers(&mut self) {
         self.answer = None;
+        self.collected_rows = None;
         self.fetch_answer = None;
         self.value_answer = None;
     }
@@ -216,6 +214,30 @@ impl Context {
     pub fn set_answer(&mut self, answer: TypeDBResult<QueryAnswer>) -> TypeDBResult {
         self.answer = Some(answer?);
         Ok(())
+    }
+
+    pub async fn unwrap_answer_into_rows_if_needed(&mut self) {
+        if self.collected_rows.is_none() {
+            self.unwrap_answer_into_rows().await
+        }
+    }
+
+    pub async fn unwrap_answer_into_rows(&mut self) {
+        self.collected_rows = Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+    }
+
+    pub async fn try_get_collected_rows(&mut self) -> Option<&Vec<ConceptRow>> {
+        self.unwrap_answer_into_rows_if_needed().await;
+        self.collected_rows.as_ref()
+    }
+
+    pub async fn get_collected_rows(&mut self) -> &Vec<ConceptRow> {
+        self.try_get_collected_rows().await.unwrap()
+    }
+
+    pub async fn get_collected_answer_row_index(&mut self, index: usize) -> &ConceptRow {
+        self.unwrap_answer_into_rows_if_needed().await;
+        self.collected_rows.as_ref().unwrap().get(index).unwrap()
     }
 
     async fn create_default_driver(&mut self, username: Option<&str>, password: Option<&str>) -> TypeDBResult {
@@ -267,10 +289,37 @@ impl Default for Context {
             transaction_options,
             driver: None,
             transactions: VecDeque::new(),
-            // answer: Vec::new(),
             answer: None,
+            collected_rows: None,
             fetch_answer: None,
             value_answer: None,
+        }
+    }
+}
+
+// Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
+// These "fake" errors allow us to emulate error messages for generalised driver BDDs,
+// at least verifying that the same error is produced by the same actions.
+#[derive(Debug, Clone)]
+pub enum BehaviourTestOptionalError {
+    VariableDoesNotExist(String),
+    InvalidConceptConversion,
+}
+
+impl fmt::Display for BehaviourTestOptionalError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::VariableDoesNotExist(var) => write!(f, "The variable '{}' does not exist.", var),
+            Self::InvalidConceptConversion => write!(f, "Invalid concept conversion."),
+        }
+    }
+}
+
+impl Error for BehaviourTestOptionalError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::VariableDoesNotExist(_) => None,
+            Self::InvalidConceptConversion => None,
         }
     }
 }

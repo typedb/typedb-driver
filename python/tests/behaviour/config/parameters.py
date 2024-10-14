@@ -59,6 +59,14 @@ def parse_words(text):
 register_type(Words=parse_words)
 
 
+@parse.with_pattern("[^;]+")
+def parse_non_semicolon(text):
+    return text
+
+
+register_type(NonSemicolon=parse_non_semicolon)
+
+
 class ConceptKind(Enum):
     CONCEPT = 0,
     TYPE = 1,
@@ -274,4 +282,4 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
     return value == " by index of variable"
 
 
-register_type(ByIndexOfVarOrNot=parse_by_index_of_variable_or_not)
+register_type(IsByVarIndex=parse_by_index_of_variable_or_not)

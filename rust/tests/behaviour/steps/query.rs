@@ -17,21 +17,36 @@
  * under the License.
  */
 
+use std::ops::Index;
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult, Transaction};
-
+use itertools::Itertools;
 use macro_rules_attribute::apply;
+
+use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult, Transaction};
 use typedb_driver::answer::QueryAnswer;
-use crate::{
-    assert_err,
-    util, Context,
-    generic_step,
-    params,
-};
+use typedb_driver::concept::Concept;
+
+use crate::{assert_err, BehaviourTestOptionalError, Context, generic_step, params, util};
+use crate::params::IsOrNot;
 
 async fn run_query(transaction: &Transaction, query: impl AsRef<str>) -> TypeDBResult<QueryAnswer> {
     transaction.query(query).await
+}
+
+async fn get_answer_rows_var(context: &mut Context, index: usize, is_by_var_index: params::IsByVarIndex, var: params::Var) -> Result<&Concept, BehaviourTestOptionalError> {
+    let concept_row = context.get_collected_answer_row_index(index).await;
+    match is_by_var_index {
+        params::IsByVarIndex::Is => {
+            let collected_column_names: Vec<String> = concept_row.get_column_names().into_iter().cloned().collect();
+            let position = collected_column_names.iter().find_position(|name| name == &&var.name).map(|(pos, _)| pos);
+            match position {
+                None => None,
+                Some(position) => concept_row.get_index(position)
+            }
+        },
+        params::IsByVarIndex::IsNot => concept_row.get(&var.name),
+    }.ok_or(BehaviourTestOptionalError::VariableDoesNotExist(var.name))
 }
 
 #[apply(generic_step)]
@@ -56,12 +71,45 @@ pub async fn get_answers_of_typeql_query(context: &mut Context, step: &Step) {
 #[step(expr = "answer type {is_or_not}: {query_answer_type}")]
 pub async fn answer_type_is(context: &mut Context, is_or_not: params::IsOrNot, query_answer_type: params::QueryAnswerType) {
     match query_answer_type {
-        params::QueryAnswerType::Ok => assert!(context.answer.as_ref().unwrap().is_ok()),
-        params::QueryAnswerType::ConceptRows => assert!(context.answer.as_ref().unwrap().is_rows_stream()),
-        params::QueryAnswerType::ConceptTrees => assert!(context.answer.as_ref().unwrap().is_json_stream()),
+        params::QueryAnswerType::Ok => is_or_not.check(context.answer.as_ref().unwrap().is_ok()),
+        params::QueryAnswerType::ConceptRows => is_or_not.check(context.answer.as_ref().unwrap().is_rows_stream()),
+        params::QueryAnswerType::ConceptTrees => is_or_not.check(context.answer.as_ref().unwrap().is_json_stream()),
     }
 }
 
+#[apply(generic_step)]
+#[step(expr = "answer unwraps as {query_answer_type}{may_error}")]
+pub async fn answer_unwraps_as(context: &mut Context, query_answer_type: params::QueryAnswerType, may_error: params::MayError) {
+    match context.answer.as_ref().unwrap() {
+        QueryAnswer::Ok() => { assert!(matches!(query_answer_type, params::QueryAnswerType::Ok), "Expected {query_answer_type}") }
+        QueryAnswer::ConceptRowsStream(_) => { assert!(matches!(query_answer_type, params::QueryAnswerType::ConceptRows), "Expected {query_answer_type}") }
+        QueryAnswer::ConceptTreesStream(_, _) => { assert!(matches!(query_answer_type, params::QueryAnswerType::ConceptTrees), "Expected {query_answer_type}") }
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer size is: {int}")]
+pub async fn answer_size_is(context: &mut Context, size: usize) {
+    let actual_size = match context.try_get_collected_rows().await {
+        // When trees are implemented: match context.try_get_collected_trees() -> ...
+        None => panic!("No collected answer to check its size"),
+        Some(rows) => rows.len(),
+    };
+    assert_eq!(actual_size, size, "Expected {size} answers, got {actual_size}");
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer query type {is_or_not}: {query_type}")]
+pub async fn answer_query_type_is(context: &mut Context, is_or_not: params::IsOrNot, query_type: params::QueryType) {
+    let real_query_type = context.get_collected_rows().await.get(0).unwrap().get_query_type();
+    is_or_not.compare(real_query_type, query_type.query_type);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get variable{is_by_var_index}\({var}\){may_error}")]
+pub async fn answer_get_row_get_variable(context: &mut Context, index: usize, is_by_var_index: params::IsByVarIndex, var: params::Var, may_error: params::MayError) {
+    may_error.check(get_answer_rows_var(context, index, is_by_var_index, var).await);
+}
 
 
 // #[apply(generic_step)]
@@ -160,16 +208,6 @@ pub async fn answer_type_is(context: &mut Context, is_or_not: params::IsOrNot, q
 //     Ok(())
 // }
 //
-// #[apply(generic_step)]
-// #[step(expr = "answer size is: {int}")]
-// pub async fn answer_size(context: &mut Context, expected_answers: usize) {
-//     let actual_answers = context.answer.len();
-//     assert_eq!(
-//         actual_answers, expected_answers,
-//         "The number of identifier entries (rows) should match the number of answers, \
-//         but found {expected_answers} identifier entries and {actual_answers} answers."
-//     );
-// }
 //
 // #[apply(generic_step)]
 // #[step(expr = "uniquely identify answer concepts")]

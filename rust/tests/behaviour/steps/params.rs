@@ -24,6 +24,7 @@ use cucumber::Parameter;
 use typedb_driver::{
     concept::{Annotation, Value, ValueType},
     TransactionType as TypeDBTransactionType,
+    answer::QueryType as TypeDBQueryType,
 };
 
 #[derive(Debug, Parameter)]
@@ -157,7 +158,7 @@ impl FromStr for OptionalAsValueTypeParam {
 }
 
 #[derive(Clone, Copy, Debug, Parameter)]
-#[param(name = "transaction_type", regex = r"read|write|schema")]
+#[param(name = "transaction_type", regex = r"write|read|schema")]
 pub struct TransactionType {
     pub transaction_type: TypeDBTransactionType,
 }
@@ -175,13 +176,32 @@ impl FromStr for TransactionType {
     }
 }
 
+#[derive(Clone, Copy, Debug, Parameter)]
+#[param(name = "query_type", regex = r"write|read|schema")]
+pub struct QueryType {
+    pub query_type: TypeDBQueryType,
+}
+
+impl FromStr for QueryType {
+    type Err = Infallible;
+
+    fn from_str(type_: &str) -> Result<Self, Self::Err> {
+        Ok(match type_ {
+            "write" => Self { query_type: TypeDBQueryType::WriteQuery },
+            "read" => Self { query_type: TypeDBQueryType::ReadQuery },
+            "schema" => Self { query_type: TypeDBQueryType::SchemaQuery },
+            _ => unreachable!("`{type_}` is not a valid query type"),
+        })
+    }
+}
+
 #[derive(Clone, Debug, Default, Parameter)]
 #[param(name = "var", regex = r"(\$[\w_-]+)")]
-pub struct VarParam {
+pub struct Var {
     pub name: String,
 }
 
-impl FromStr for VarParam {
+impl FromStr for Var {
     type Err = Infallible;
 
     fn from_str(name: &str) -> Result<Self, Self::Err> {
@@ -282,10 +302,21 @@ impl IsOrNot {
     pub fn check(&self, real_is: bool) {
         match self {
             Self::Is => {
-                debug_assert!(real_is)
+                assert!(real_is)
             }
             Self::IsNot => {
-                debug_assert!(!real_is)
+                assert!(!real_is)
+            }
+        };
+    }
+
+    pub fn compare<T: PartialEq + fmt::Debug>(&self, left: T, right: T) {
+        match self {
+            Self::Is => {
+                assert_eq!(left, right, "Expected '{left:?}' is '{right:?}'")
+            }
+            Self::IsNot => {
+                assert_ne!(left, right, "Expected '{left:?}' is not '{right:?}'")
             }
         };
     }
@@ -298,6 +329,24 @@ impl FromStr for IsOrNot {
             "is" => Self::Is,
             "is not" => Self::IsNot,
             invalid => return Err(format!("Invalid `IsOrNot`: {invalid}")),
+        })
+    }
+}
+
+#[derive(Debug, Parameter)]
+#[param(name = "is_by_var_index", regex = "(| by index of variable)")]
+pub(crate) enum IsByVarIndex {
+    Is,
+    IsNot,
+}
+
+impl FromStr for IsByVarIndex {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            " by index of variable" => Self::Is,
+            "" => Self::IsNot,
+            invalid => return Err(format!("Invalid `IsByVarIndex`: {invalid}")),
         })
     }
 }
@@ -319,5 +368,15 @@ impl FromStr for QueryAnswerType {
             "concept trees" => Self::ConceptTrees,
             invalid => return Err(format!("Invalid `QueryAnswerType`: {invalid}")),
         })
+    }
+}
+
+impl fmt::Display for QueryAnswerType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            QueryAnswerType::Ok => write!(f, "Ok"),
+            QueryAnswerType::ConceptRows => write!(f, "ConceptRows"),
+            QueryAnswerType::ConceptTrees => write!(f, "ConceptTrees"),
+        }
     }
 }

@@ -31,12 +31,12 @@ from typedb.driver import *
 #     _get_driver(context).user()
 #
 #
-# @step("users contains: {username:Words}")
+# @step("users contains: {username:NonSemicolon}")
 # def step_impl(context: Context, username: str):
 #     assert_that([u.username() for u in _get_driver(context).users.all()], has_item(username))
 #
 #
-# @step("users contains: {username:Words}; throws exception")
+# @step("users contains: {username:NonSemicolon}; throws exception")
 # def step_impl(context: Context, username: str):
 #     try:
 #         assert_that([u.username() for u in _get_driver(context).users.all()], has_item(username))
@@ -51,13 +51,13 @@ from typedb.driver import *
 #     assert_that([u.username() for u in _get_driver(context).users.all()], not_(has_item(username)))
 #
 #
-# @step("users create: {username:Words}, {password:Words}")
+# @step("users create: {username:NonSemicolon}, {password:NonSemicolon}")
 # def step_impl(context: Context, username: str, password: str):
 #     _get_driver(context).users.create(username, password)
 #
 #
 #
-# @step("users create: {username:Words}, {password:Words}; throws exception")
+# @step("users create: {username:NonSemicolon}, {password:NonSemicolon}; throws exception")
 # def step_impl(context: Context, username: str, password: str):
 #     try :
 #         _get_driver(context).users.create(username, password)
@@ -80,12 +80,12 @@ from typedb.driver import *
 #         pass
 #
 #
-# @step("users get user: {username:Words}")
+# @step("users get user: {username:NonSemicolon}")
 # def step_impl(context: Context, username: str):
 #     _get_driver(context).users.get(username)
 #
 #
-# @step("users get user: {username:Words}; throws exception")
+# @step("users get user: {username:NonSemicolon}; throws exception")
 # def step_impl(context: Context, username: str):
 #     try :
 #         _get_driver(context).users.get(username)
@@ -94,13 +94,13 @@ from typedb.driver import *
 #         pass
 #
 #
-# @step("users delete: {username:Words}")
+# @step("users delete: {username:NonSemicolon}")
 # def step_impl(context: Context, username: str):
 #     _get_driver(context).users.delete(username)
 #
 #
 #
-# @step("users delete: {username:Words}; throws exception")
+# @step("users delete: {username:NonSemicolon}; throws exception")
 # def step_impl(context: Context, username: str):
 #     try:
 #         _get_driver(context).users.delete(username)
@@ -109,12 +109,12 @@ from typedb.driver import *
 #         pass
 #
 #
-# @step("users password set: {username:Words}, {password:Words}")
+# @step("users password set: {username:NonSemicolon}, {password:NonSemicolon}")
 # def step_impl(context: Context, username: str, password: str):
 #     _get_driver(context).users.password_set(username, password)
 #
 #
-# @step("users password set: {username:Words}, {password:Words}; throws exception")
+# @step("users password set: {username:NonSemicolon}, {password:NonSemicolon}; throws exception")
 # def step_impl(context: Context, username: str, password: str):
 #     try:
 #         _get_driver(context).users.password_set(username, password)

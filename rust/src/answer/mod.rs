@@ -68,6 +68,13 @@ impl fmt::Debug for QueryAnswer {
     }
 }
 
+/// This enum is used to specify the type of the query resulted in this answer.
+///
+/// # Examples
+///
+/// ```rust
+/// concept_row.get_query_type()
+/// ```
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
 pub enum QueryType {
