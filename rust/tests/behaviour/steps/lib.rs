@@ -11,7 +11,9 @@ use std::{
     collections::{HashMap, HashSet, VecDeque},
     env::VarError,
     error::Error,
-    fmt, iter, mem,
+    fmt,
+    fmt::Formatter,
+    iter, mem,
     path::{Path, PathBuf},
 };
 
@@ -25,7 +27,8 @@ use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptRow, QueryAnswer, JSON},
     concept::Value,
-    Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver, UserManager,
+    BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
+    UserManager,
 };
 
 mod connection;
@@ -75,7 +78,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
     }
 }
 
-#[derive(Debug, World)]
+#[derive(World)]
 pub struct Context {
     pub is_cloud: bool,
     pub tls_root_ca: PathBuf,
@@ -84,8 +87,31 @@ pub struct Context {
     pub transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
     pub collected_rows: Option<Vec<ConceptRow>>,
+    pub concurrent_answers: Vec<QueryAnswer>,
+    pub concurrent_rows_streams: Option<Vec<BoxStream<'static, TypeDBResult<ConceptRow>>>>,
     pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
+}
+
+impl fmt::Debug for Context {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Context")
+            .field("is_cloud", &self.is_cloud)
+            .field("tls_root_ca", &self.tls_root_ca)
+            .field("transaction_options", &self.transaction_options)
+            .field("driver", &self.driver)
+            .field("transactions", &self.transactions)
+            .field("answer", &self.answer)
+            .field("collected_rows", &self.collected_rows)
+            .field("concurrent_answers", &self.concurrent_answers)
+            .field(
+                "concurrent_rows_streams",
+                &self.concurrent_rows_streams.as_ref().map(|streams| format!("{} streams", streams.len())),
+            )
+            .field("fetch_answer", &self.fetch_answer)
+            .field("value_answer", &self.value_answer)
+            .finish()
+    }
 }
 
 impl Context {
@@ -137,6 +163,7 @@ impl Context {
         self.cleanup_databases().await;
         // self.cleanup_users().await;
         self.cleanup_answers().await;
+        self.cleanup_concurrent_answers().await;
         self.reset_driver();
         Ok(())
     }
@@ -198,6 +225,11 @@ impl Context {
         self.value_answer = None;
     }
 
+    pub async fn cleanup_concurrent_answers(&mut self) {
+        self.concurrent_answers = Vec::new();
+        self.concurrent_rows_streams = None;
+    }
+
     pub fn transaction_opt(&self) -> Option<&Transaction> {
         self.transactions.get(0)
     }
@@ -229,15 +261,30 @@ impl Context {
         Ok(())
     }
 
+    pub fn set_concurrent_answers(&mut self, answers: Vec<QueryAnswer>) {
+        self.concurrent_answers = answers;
+    }
+
     pub async fn unwrap_answer_into_rows_if_needed(&mut self) {
         if self.collected_rows.is_none() {
             self.unwrap_answer_into_rows().await
         }
     }
 
+    pub async fn unwrap_concurrent_answers_into_rows_streams_if_neeed(&mut self) {
+        if self.concurrent_rows_streams.is_none() {
+            self.unwrap_concurrent_answers_into_rows_streams().await
+        }
+    }
+
     pub async fn unwrap_answer_into_rows(&mut self) {
         self.collected_rows =
             Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+    }
+
+    pub async fn unwrap_concurrent_answers_into_rows_streams(&mut self) {
+        self.concurrent_rows_streams =
+            Some(self.concurrent_answers.drain(..).map(|answer| answer.into_rows()).collect());
     }
 
     pub async fn try_get_collected_rows(&mut self) -> Option<&Vec<ConceptRow>> {
@@ -252,6 +299,17 @@ impl Context {
     pub async fn get_collected_answer_row_index(&mut self, index: usize) -> &ConceptRow {
         self.unwrap_answer_into_rows_if_needed().await;
         self.collected_rows.as_ref().unwrap().get(index).unwrap()
+    }
+
+    pub async fn try_get_concurrent_rows_streams(
+        &mut self,
+    ) -> Option<&mut Vec<BoxStream<'static, TypeDBResult<ConceptRow>>>> {
+        self.unwrap_concurrent_answers_into_rows_streams_if_neeed().await;
+        self.concurrent_rows_streams.as_mut()
+    }
+
+    pub async fn get_concurrent_rows_streams(&mut self) -> &mut Vec<BoxStream<'static, TypeDBResult<ConceptRow>>> {
+        self.try_get_concurrent_rows_streams().await.unwrap()
     }
 
     async fn create_default_driver(&mut self, username: Option<&str>, password: Option<&str>) -> TypeDBResult {
@@ -316,6 +374,8 @@ impl Default for Context {
             transactions: VecDeque::new(),
             answer: None,
             collected_rows: None,
+            concurrent_answers: Vec::new(),
+            concurrent_rows_streams: None,
             fetch_answer: None,
             value_answer: None,
         }

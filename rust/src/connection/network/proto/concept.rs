@@ -19,7 +19,7 @@
 
 use std::{collections::HashMap, str::FromStr};
 
-use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime};
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone};
 use chrono_tz::Tz;
 use futures::TryFutureExt;
 use itertools::Itertools;
@@ -45,8 +45,8 @@ use crate::{
     error::{
         ConnectionError,
         ConnectionError::{
-            ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotBuilt,
-            ValueTimeZoneNameNotRecognised, ValueTimeZoneOffsetNotBuilt, ValueTimeZoneOffsetNotRecognised,
+            ListsNotImplemented, MissingResponseField, ValueStructNotImplemented, ValueTimeZoneNameNotRecognised,
+            ValueTimeZoneOffsetNotRecognised,
         },
     },
     Error, Result,
@@ -269,12 +269,11 @@ impl TryFromProto<ValueProto> for Value {
                     .timezone
                     .ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.timezone" }))?;
 
-                Ok(Self::DatetimeTZ(match timezone {
+                let time_zone = match timezone {
                     TimezoneProto::Named(name) => {
                         let tz = Tz::from_str(&name)
                             .map_err(|_| Error::from(ValueTimeZoneNameNotRecognised { time_zone: name.to_owned() }))?;
-                        naive_datetime.and_local_timezone(TimeZone::IANA(tz)).unwrap()
-                        //.map_err(|_| Error::from(ValueTimeZoneNameNotBuilt { naive_datetime, time_zone: name.to_owned() }))?; // TODO
+                        TimeZone::IANA(tz)
                     }
                     TimezoneProto::Offset(offset_seconds) => {
                         let fixed_offset = if offset_seconds >= 0 {
@@ -283,10 +282,10 @@ impl TryFromProto<ValueProto> for Value {
                             FixedOffset::west_opt(-offset_seconds)
                         }
                         .ok_or(Error::from(ValueTimeZoneOffsetNotRecognised { offset: offset_seconds }))?;
-                        naive_datetime.and_local_timezone(TimeZone::Fixed(fixed_offset)).unwrap()
-                        //.map_err(|_| Error::from(ValueTimeZoneOffsetNotBuilt { naive_datetime, offset: offset_seconds }))?;
+                        TimeZone::Fixed(fixed_offset)
                     }
-                }))
+                };
+                Ok(Self::DatetimeTZ(time_zone.from_utc_datetime(&naive_datetime)))
             }
             Some(ValueProtoInner::Duration(duration)) => {
                 Ok(Self::Duration(crate::concept::value::Duration::new(duration.months, duration.days, duration.nanos)))

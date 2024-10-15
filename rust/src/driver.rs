@@ -299,7 +299,7 @@ impl TypeDBDriver {
         Ok(Transaction::new(transaction_stream))
     }
 
-    /// Closes this connection.
+    /// Closes this connection if it is open.
     ///
     /// # Examples
     ///
@@ -307,6 +307,10 @@ impl TypeDBDriver {
     /// connection.force_close()
     /// ```
     pub fn force_close(&self) -> Result {
+        if !self.is_open() {
+            return Ok(());
+        }
+
         let result =
             self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
         self.background_runtime.force_close().and(result)

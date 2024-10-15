@@ -169,16 +169,12 @@ error_messages! { ConnectionError
         24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
         25: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
-    ValueTimeZoneNameNotBuilt { naive_datetime: NaiveDateTime, time_zone: String } =
-        26: "Could not built value based on the provided datetime '{naive_datetime}' and time zone '{time_zone}'.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
-        27: "Time zone provided by the server has numerical offset '{offset}', which is recognised as a valid value for offset in seconds.",
-    ValueTimeZoneOffsetNotBuilt { naive_datetime: NaiveDateTime, offset: i32 } =
-        28: "Could not built value based on the provided datetime '{naive_datetime}' and numeric offset '{offset}'.",
+        26: "Time zone provided by the server has numerical offset '{offset}', which is recognised as a valid value for offset in seconds.",
     ValueStructNotImplemented =
-        29: "Struct valued responses are not yet supported by the driver.",
+        27: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        30: "Lists are not yet supported by the driver."
+        28: "Lists are not yet supported by the driver."
 }
 
 error_messages! { InternalError

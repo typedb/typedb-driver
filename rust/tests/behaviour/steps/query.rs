@@ -17,10 +17,10 @@
  * under the License.
  */
 
-use std::ops::Index;
+use std::{collections::VecDeque, ops::Index};
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::TryStreamExt;
+use futures::{future::join_all, StreamExt, TryStreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
@@ -30,10 +30,14 @@ use typedb_driver::{
 };
 
 use crate::{
-    assert_err, generic_step, params, params::check_boolean, util, util::iter_table, BehaviourTestOptionalError,
-    BehaviourTestOptionalError::VariableDoesNotExist, Context,
+    assert_err, generic_step, params,
+    params::check_boolean,
+    util,
+    util::iter_table,
+    BehaviourTestOptionalError,
+    BehaviourTestOptionalError::{InvalidValueCasting, VariableDoesNotExist},
+    Context,
 };
-use crate::BehaviourTestOptionalError::InvalidValueCasting;
 
 async fn run_query(transaction: &Transaction, query: impl AsRef<str>) -> TypeDBResult<QueryAnswer> {
     transaction.query(query).await
@@ -184,6 +188,23 @@ pub async fn get_answers_of_typeql_query(context: &mut Context, step: &Step) {
 }
 
 #[apply(generic_step)]
+#[step(expr = r"concurrently get answers of typeql schema query {int} times")]
+#[step(expr = r"concurrently get answers of typeql write query {int} times")]
+#[step(expr = r"concurrently get answers of typeql read query {int} times")]
+pub async fn concurrently_get_answers_of_typeql_query_times(context: &mut Context, count: usize, step: &Step) {
+    context.cleanup_concurrent_answers().await;
+
+    let queries = vec![step.docstring().unwrap(); count];
+    let answers: Vec<QueryAnswer> = join_all(queries.into_iter().map(|query| run_query(context.transaction(), query)))
+        .await
+        .into_iter()
+        .map(|result| result.unwrap())
+        .collect();
+
+    context.set_concurrent_answers(answers);
+}
+
+#[apply(generic_step)]
 #[step(expr = "answer type {is_or_not}: {query_answer_type}")]
 pub async fn answer_type_is(
     context: &mut Context,
@@ -239,6 +260,37 @@ pub async fn answer_size_is(context: &mut Context, size: usize) {
         Some(rows) => rows.len(),
     };
     assert_eq!(actual_size, size, "Expected {size} answers, got {actual_size}");
+}
+
+#[apply(generic_step)]
+#[step(expr = "concurrently process {int} row(s) from answers{may_error}")]
+pub async fn concurrently_process_rows_from_answers(context: &mut Context, count: usize, may_error: params::MayError) {
+    let expects_error = may_error.expects_error();
+    let streams = context.get_concurrent_rows_streams().await;
+
+    let mut jobs = Vec::new();
+
+    for stream in streams.iter_mut() {
+        let job = async {
+            let mut failed = false;
+            let mut rows = Vec::new();
+
+            for _ in 0..count {
+                if let Some(row) = stream.next().await {
+                    rows.push(row);
+                } else {
+                    failed = true;
+                    break;
+                }
+            }
+
+            assert_eq!(expects_error, failed, "Expected to fail? {expects_error}, but did it? {failed}");
+        };
+
+        jobs.push(job);
+    }
+
+    join_all(jobs).await;
 }
 
 #[apply(generic_step)]
