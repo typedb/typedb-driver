@@ -28,7 +28,7 @@ pub use self::{
     value::{Value, ValueType},
 };
 use crate::{
-    concept::value::{Decimal, Duration, TimeZone},
+    concept::value::{Decimal, Duration, Struct, TimeZone},
     IID,
 };
 
@@ -229,6 +229,14 @@ impl Concept {
     /// Otherwise, return empty.
     pub fn get_duration(&self) -> Option<Duration> {
         self.get_value().map(|value| value.get_duration()).flatten()
+    }
+
+    /// Get the struct value of this concept, if it exists.
+    /// If this is a struct-valued Attribute Instance, return the struct value of this instance.
+    /// If this a struct-valued Value, return the struct value.
+    /// Otherwise, return empty.
+    pub fn get_struct(&self) -> Option<&Struct> {
+        self.get_value().map(|value| value.get_struct()).flatten()
     }
 
     /// Get the category of this concept

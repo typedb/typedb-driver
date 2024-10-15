@@ -92,7 +92,7 @@ impl Value {
     ];
     const DATE_FORMAT: &'static str = "%Y-%m-%d";
 
-    const FRACTIONAL_ZEROES: usize = 18;
+    const FRACTIONAL_ZEROES: usize = 19;
 
     pub fn into_typedb(self, value_type: TypeDBValueType) -> TypeDBValue {
         match value_type {
@@ -152,25 +152,26 @@ impl Value {
                 }
             }
             TypeDBValueType::Duration => TypeDBValue::Duration(self.raw_value.parse().unwrap()),
-            TypeDBValueType::String => TypeDBValue::String(Self::remove_string_quotes(&self.raw_value).to_string()),
+            TypeDBValueType::String => TypeDBValue::String(Self::remove_string_quotes_and_unescape(&self.raw_value)),
             TypeDBValueType::Struct(_) => {
                 // Compare string representations
-                TypeDBValue::String(Self::remove_string_quotes(&self.raw_value).to_string())
+                TypeDBValue::String(Self::remove_string_quotes_and_unescape(&self.raw_value))
             }
         }
     }
 
-    fn remove_string_quotes(string: &str) -> &str {
-        if string.starts_with('"') && string.ends_with('"') {
-            &string[1..&string.len() - 1]
+    fn remove_string_quotes_and_unescape(string: &str) -> String {
+        let unescaped = string.replace("\\\"", "\"");
+        if unescaped.starts_with('"') && unescaped.ends_with('"') {
+            unescaped[1..&unescaped.len() - 1].to_owned()
         } else {
-            string
+            unescaped
         }
     }
 
     fn parse_decimal_fraction_part(value: &str) -> u64 {
         assert!(Self::FRACTIONAL_ZEROES >= value.len());
-        10_u64.pow((Self::FRACTIONAL_ZEROES - value.len() + 1) as u32) * value.trim().parse::<u64>().unwrap()
+        10_u64.pow((Self::FRACTIONAL_ZEROES - value.len()) as u32) * value.trim().parse::<u64>().unwrap()
     }
 
     fn parse_date_time_and_remainder(value: &str) -> (NaiveDateTime, &str) {
@@ -199,12 +200,12 @@ impl FromStr for Value {
 }
 
 #[derive(Clone, Debug, Parameter)]
-#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime_tz|duration|struct")] // TODO: Probably any string value instead of struct
-pub struct ValueTypeParam {
+#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")]
+pub struct ValueType {
     pub value_type: TypeDBValueType,
 }
 
-impl FromStr for ValueTypeParam {
+impl FromStr for ValueType {
     type Err = Infallible;
 
     fn from_str(type_: &str) -> Result<Self, Self::Err> {
@@ -218,7 +219,7 @@ impl FromStr for ValueTypeParam {
             "datetime" => Self { value_type: TypeDBValueType::Datetime },
             "datetime-tz" => Self { value_type: TypeDBValueType::DatetimeTZ },
             "duration" => Self { value_type: TypeDBValueType::Duration },
-            "struct" => Self { value_type: TypeDBValueType::Struct("idk todo".to_string()) }, // TODO: Decide what to do
+            "struct" => Self { value_type: TypeDBValueType::Struct("unknown".to_string()) },
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }
