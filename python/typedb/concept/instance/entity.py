@@ -17,56 +17,31 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.concept import Concept
+from typedb.api.concept.instance.entity import Entity
+from typedb.concept.concept_factory import wrap_entity_type
+from typedb.concept.instance.instance import _Instance
+from typedb.native_driver_wrapper import entity_get_type, entity_get_iid
 
 if TYPE_CHECKING:
-    from typedb.api.concept.type.thing_type import ThingType
+    from typedb.concept.type.entity_type import _EntityType
 
 
-class Thing(Concept, ABC):
+class _Entity(Entity, _Instance):
 
-    @abstractmethod
-    def get_type(self) -> ThingType:
-        """
-        Retrieves the type which this ``Thing`` belongs to.
+    def get_type(self) -> _EntityType:
+        return wrap_entity_type(entity_get_type(self.native_object))
 
-        :return:
+    def get_iid(self) -> str:
+        return entity_get_iid(self.native_object)
 
-        Examples
-        --------
-        ::
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self.get_iid() == other.get_iid()
 
-            thing.get_type()
-        """
-        pass
-
-    def is_thing(self) -> bool:
-        """
-        Checks if the concept is a ``Thing``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            thing.is_thing()
-        """
-        return True
-
-    def as_thing(self) -> Thing:
-        """
-        Casts the concept to ``Thing``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            thing.as_thing()
-        """
-        return self
+    def __hash__(self):
+        return hash(self.get_iid())

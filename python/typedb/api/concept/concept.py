@@ -23,15 +23,14 @@ from typing import TYPE_CHECKING
 from typedb.common.exception import TypeDBDriverException, INVALID_CONCEPT_CASTING
 
 if TYPE_CHECKING:
-    from typedb.api.concept.thing.attribute import Attribute
-    from typedb.api.concept.thing.entity import Entity
-    from typedb.api.concept.thing.relation import Relation
-    from typedb.api.concept.thing.thing import Thing
+    from typedb.api.concept.instance.attribute import Attribute
+    from typedb.api.concept.instance.entity import Entity
+    from typedb.api.concept.instance.relation import Relation
+    from typedb.api.concept.instance.instance import Instance
     from typedb.api.concept.type.attribute_type import AttributeType
     from typedb.api.concept.type.entity_type import EntityType
     from typedb.api.concept.type.relation_type import RelationType
     from typedb.api.concept.type.role_type import RoleType
-    from typedb.api.concept.type.thing_type import ThingType
     from typedb.api.concept.type.type import Type
     from typedb.api.concept.value.value import Value
 
@@ -49,20 +48,6 @@ class Concept(ABC):
         ::
 
             concept.is_type()
-        """
-        return False
-
-    def is_thing_type(self) -> bool:
-        """
-        Checks if the concept is a ``ThingType``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            concept.is_thing_type()
         """
         return False
 
@@ -122,9 +107,9 @@ class Concept(ABC):
         """
         return False
 
-    def is_thing(self) -> bool:
+    def is_instance(self) -> bool:
         """
-        Checks if the concept is a ``Thing``.
+        Checks if the concept is a ``Instance``.
 
         :return:
 
@@ -132,7 +117,7 @@ class Concept(ABC):
         --------
         ::
 
-            concept.is_thing()
+            concept.is_instance()
         """
         return False
 
@@ -206,20 +191,6 @@ class Concept(ABC):
         """
         raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
 
-    def as_thing_type(self) -> ThingType:
-        """
-        Casts the concept to ``ThingType``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            concept.as_thing_type()
-        """
-        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
-
     def as_entity_type(self) -> EntityType:
         """
         Casts the concept to ``EntityType``.
@@ -276,9 +247,9 @@ class Concept(ABC):
         """
         raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
 
-    def as_thing(self) -> Thing:
+    def as_instance(self) -> Instance:
         """
-        Casts the concept to ``Thing``.
+        Casts the concept to ``Instance``.
 
         :return:
 
@@ -286,9 +257,9 @@ class Concept(ABC):
         --------
         ::
 
-            concept.as_thing()
+            concept.as_instance()
         """
-        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Instance"))
 
     def as_entity(self) -> Entity:
         """

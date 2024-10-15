@@ -17,27 +17,12 @@
 
 from __future__ import annotations
 
-from abc import ABC
-from typing import TYPE_CHECKING
-
-from typedb.api.concept.type.type import Type
-
-if TYPE_CHECKING:
-    pass
+from typedb.api.concept.instance.instance import Instance
+from typedb.concept.concept import _Concept
+from typedb.native_driver_wrapper import Concept as NativeConcept
 
 
-class ThingType(Type, ABC):
+class _Instance(Instance, _Concept):
 
-    def is_thing_type(self) -> bool:
-        """
-        Checks if the concept is a ``ThingType``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-             thing_type.is_thing_type()
-        """
-        return True
+    def __init__(self, concept: NativeConcept):
+        super().__init__(concept)

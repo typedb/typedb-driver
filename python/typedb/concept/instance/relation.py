@@ -19,22 +19,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.thing.entity import Entity
-from typedb.concept.concept_factory import wrap_entity_type
-from typedb.concept.thing.thing import _Thing
-from typedb.native_driver_wrapper import entity_get_type, entity_get_iid
+from typedb.api.concept.instance.relation import Relation
+from typedb.concept.concept_factory import wrap_relation_type
+from typedb.concept.instance.instance import _Instance
+from typedb.native_driver_wrapper import relation_get_type, relation_get_iid
 
 if TYPE_CHECKING:
-    from typedb.concept.type.entity_type import _EntityType
+    from typedb.concept.type.relation_type import _RelationType
 
 
-class _Entity(Entity, _Thing):
+class _Relation(Relation, _Instance):
 
-    def get_type(self) -> _EntityType:
-        return wrap_entity_type(entity_get_type(self.native_object))
+    def get_type(self) -> _RelationType:
+        return wrap_relation_type(relation_get_type(self.native_object))
 
     def get_iid(self) -> str:
-        return entity_get_iid(self.native_object)
+        return relation_get_iid(self.native_object)
 
     def __eq__(self, other):
         if other is self:

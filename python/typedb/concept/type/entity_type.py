@@ -19,11 +19,11 @@ from __future__ import annotations
 
 from typedb.api.concept.type.entity_type import EntityType
 from typedb.common.exception import TypeDBDriverException
-from typedb.concept.type.thing_type import _ThingType
+from typedb.concept.type.type import _Type
 from typedb.native_driver_wrapper import entity_type_get_label, TypeDBDriverExceptionNative
 
 
-class _EntityType(EntityType, _ThingType):
+class _EntityType(EntityType, _Type):
 
     def get_label(self) -> str:
         try:

@@ -31,11 +31,10 @@ def before_scenario(context: Context):
     context.answer = None  # QueryAnswer
     context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
     context.collected_answer = None  # [ConceptRow] / ... ?
-    context.things = {}
+    context.instances = {}
     # setup context functions
     context.tx = lambda: next(iter(context.transactions), None)
-    context.get = lambda var: context.things[var]
-    context.put = lambda var, thing: _put_impl(context, var, thing)
+    context.get = lambda var: context.instances[var]
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.option_setters = {
         # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),

@@ -26,15 +26,14 @@ from tests.behaviour.config.parameters import ConceptKind, MayError, ValueType, 
 from tests.behaviour.context import Context
 from typedb.api.answer.query_type import QueryType
 from typedb.api.concept.concept import Concept
-from typedb.api.concept.thing.attribute import Attribute
-from typedb.api.concept.thing.entity import Entity
-from typedb.api.concept.thing.relation import Relation
-from typedb.api.concept.thing.thing import Thing
+from typedb.api.concept.instance.attribute import Attribute
+from typedb.api.concept.instance.entity import Entity
+from typedb.api.concept.instance.relation import Relation
+from typedb.api.concept.instance.instance import Instance
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.api.concept.type.entity_type import EntityType
 from typedb.api.concept.type.relation_type import RelationType
 from typedb.api.concept.type.role_type import RoleType
-from typedb.api.concept.type.thing_type import ThingType
 from typedb.api.concept.type.type import Type
 from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
@@ -157,12 +156,8 @@ def get_row_get_type(context: Context, row_index: int, var: str, is_by_var_index
     return get_row_get_concept(context, row_index, var, is_by_var_index).as_type()
 
 
-def get_row_get_thing_type(context: Context, row_index: int, var: str, is_by_var_index: bool) -> ThingType:
-    return get_row_get_concept(context, row_index, var, is_by_var_index).as_thing_type()
-
-
-def get_row_get_thing(context: Context, row_index: int, var: str, is_by_var_index: bool) -> Thing:
-    return get_row_get_concept(context, row_index, var, is_by_var_index).as_thing()
+def get_row_get_instance(context: Context, row_index: int, var: str, is_by_var_index: bool) -> Instance:
+    return get_row_get_concept(context, row_index, var, is_by_var_index).as_instance()
 
 
 def get_row_get_entity_type(context: Context, row_index: int, var: str, is_by_var_index: bool) -> EntityType:
@@ -202,10 +197,8 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
         return get_row_get_concept(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.TYPE:
         return get_row_get_type(context, row_index, var, is_by_var_index)
-    elif kind == ConceptKind.THING_TYPE:
-        return get_row_get_thing_type(context, row_index, var, is_by_var_index)
-    elif kind == ConceptKind.THING:
-        return get_row_get_thing(context, row_index, var, is_by_var_index)
+    elif kind == ConceptKind.INSTANCE:
+        return get_row_get_instance(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.ENTITY_TYPE:
         return get_row_get_entity_type(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.RELATION_TYPE:
@@ -245,16 +238,9 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is thing type: {is_thing_type:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
-              is_thing_type: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_thing_type(), is_(is_thing_type))
-
-
-@step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is thing: {is_thing:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_thing: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_thing(), is_(is_thing))
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is instance: {is_instance:Bool}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_instance: bool):
+    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_instance(), is_(is_instance))
 
 
 @step(
@@ -316,17 +302,9 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is thing type: {is_thing_type:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
-              is_thing_type: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_thing_type(),
-                is_(is_thing_type))
-
-
-@step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is thing: {is_thing:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_thing: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_thing(), is_(is_thing))
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is instance: {is_instance:Bool}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_instance: bool):
+    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_instance(), is_(is_instance))
 
 
 @step(

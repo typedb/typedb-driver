@@ -19,10 +19,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from typedb.api.concept.type.thing_type import ThingType
+from typedb.api.concept.type.type import Type
 
 
-class AttributeType(ThingType, ABC):
+class AttributeType(Type, ABC):
     """
     Attribute types represent properties that other types can own.
 

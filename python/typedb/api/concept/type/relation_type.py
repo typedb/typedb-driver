@@ -20,13 +20,13 @@ from __future__ import annotations
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.type.thing_type import ThingType
+from typedb.api.concept.type.type import Type
 
 if TYPE_CHECKING:
     pass
 
 
-class RelationType(ThingType, ABC):
+class RelationType(Type, ABC):
     """
     Relation types (or subtypes of the relation root type) represent relationships
     between types. Relation types have roles.

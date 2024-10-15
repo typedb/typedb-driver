@@ -20,7 +20,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.thing.thing import Thing
+from typedb.api.concept.instance.instance import Instance
 from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.attribute_type import AttributeType
 
 
-class Attribute(Thing, ABC):
+class Attribute(Instance, ABC):
     """
     Attribute is an instance of the attribute type and has a value.
     This value is fixed and unique for every given instance of the

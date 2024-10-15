@@ -17,31 +17,56 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.thing.relation import Relation
-from typedb.concept.concept_factory import wrap_relation_type
-from typedb.concept.thing.thing import _Thing
-from typedb.native_driver_wrapper import relation_get_type, relation_get_iid
+from typedb.api.concept.concept import Concept
 
 if TYPE_CHECKING:
-    from typedb.concept.type.relation_type import _RelationType
+    from typedb.api.concept.type.type import Type
 
 
-class _Relation(Relation, _Thing):
+class Instance(Concept, ABC):
 
-    def get_type(self) -> _RelationType:
-        return wrap_relation_type(relation_get_type(self.native_object))
+    @abstractmethod
+    def get_type(self) -> Type:
+        """
+        Retrieves the type which this ``Instance`` belongs to.
 
-    def get_iid(self) -> str:
-        return relation_get_iid(self.native_object)
+        :return:
 
-    def __eq__(self, other):
-        if other is self:
-            return True
-        if other is None or not isinstance(other, self.__class__):
-            return False
-        return self.get_iid() == other.get_iid()
+        Examples
+        --------
+        ::
 
-    def __hash__(self):
-        return hash(self.get_iid())
+            instance.get_type()
+        """
+        pass
+
+    def is_instance(self) -> bool:
+        """
+        Checks if the concept is a ``Instance``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            instance.is_instance()
+        """
+        return True
+
+    def as_instance(self) -> Instance:
+        """
+        Casts the concept to ``Instance``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            instance.as_instance()
+        """
+        return self

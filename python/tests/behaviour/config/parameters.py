@@ -70,29 +70,26 @@ register_type(NonSemicolon=parse_non_semicolon)
 class ConceptKind(Enum):
     CONCEPT = 0,
     TYPE = 1,
-    THING_TYPE = 2,
-    THING = 3,
-    ENTITY_TYPE = 4,
-    RELATION_TYPE = 5,
-    ATTRIBUTE_TYPE = 6,
-    ROLE_TYPE = 7,
-    ENTITY = 8,
-    RELATION = 9,
-    ATTRIBUTE = 10,
-    VALUE = 11,
+    INSTANCE = 2,
+    ENTITY_TYPE = 3,
+    RELATION_TYPE = 4,
+    ATTRIBUTE_TYPE = 5,
+    ROLE_TYPE = 6,
+    ENTITY = 7,
+    RELATION = 8,
+    ATTRIBUTE = 9,
+    VALUE = 10,
 
 
 @parse.with_pattern(
-    r"concept|variable|type|thing type|thing|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
+    r"concept|variable|type|instance|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
 def parse_concept_kind(text: str) -> ConceptKind:
     if text == "concept" or text == "variable":
         return ConceptKind.CONCEPT
     elif text == "type":
         return ConceptKind.TYPE
-    elif text == "thing type":
-        return ConceptKind.THING_TYPE
-    elif text == "thing":
-        return ConceptKind.THING
+    elif text == "instance":
+        return ConceptKind.INSTANCE
     elif text == "entity type":
         return ConceptKind.ENTITY_TYPE
     elif text == "relation type":

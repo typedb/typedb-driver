@@ -180,7 +180,7 @@ class TestExample(TestCase):
                     assert_that(x.is_entity_type(), is_(False))
                     assert_that(x.is_attribute(), is_(False))
                     assert_that(x.is_type(), is_(False))
-                    assert_that(x.is_thing(), is_(True))
+                    assert_that(x.is_instance(), is_(True))
                     x_type = x.as_entity().get_type().as_entity_type()
                     assert_that(x_type.get_label(), is_("person"))
                     assert_that(x_type.get_label(), is_not("not person"))

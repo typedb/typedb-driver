@@ -29,10 +29,10 @@ if TYPE_CHECKING:
 
 
 def wrap_concept(native_concept: NativeConcept) -> _Concept:
-    if concept_thing_type := _try_thing_type(native_concept):
-        return concept_thing_type
-    elif concept_thing := _try_thing(native_concept):
-        return concept_thing
+    if concept_type := _try_type(native_concept):
+        return concept_type
+    elif concept_instance := _try_instance(native_concept):
+        return concept_instance
     elif concept_is_value(native_concept):
         from typedb.concept.value.value import _Value
         return _Value(native_concept)
@@ -43,16 +43,9 @@ def wrap_concept(native_concept: NativeConcept) -> _Concept:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
 
-def wrap_thing_type(native_concept: NativeConcept) -> _ThingType:
-    if concept_thing_type := _try_thing_type(native_concept):
-        return concept_thing_type
-    else:
-        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
-
-
-def wrap_thing(native_concept: NativeConcept) -> _Thing:
-    if concept_thing := _try_thing(native_concept):
-        return concept_thing
+def wrap_instance(native_concept: NativeConcept) -> _Instance:
+    if concept_instance := _try_instance(native_concept):
+        return concept_instance
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
@@ -81,17 +74,9 @@ def wrap_relation_type(native_concept: NativeConcept) -> _RelationType:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
 
-def wrap_role_type(native_concept: NativeConcept) -> _RoleType:
-    if concept_is_role_type(native_concept):
-        from typedb.concept.type.role_type import _RoleType
-        return _RoleType(native_concept)
-    else:
-        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
-
-
 def wrap_entity(native_concept: NativeConcept) -> _Entity:
     if concept_is_entity(native_concept):
-        from typedb.concept.thing.entity import _Entity
+        from typedb.concept.instance.entity import _Entity
         return _Entity(native_concept)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
@@ -99,7 +84,7 @@ def wrap_entity(native_concept: NativeConcept) -> _Entity:
 
 def wrap_attribute(native_concept: NativeConcept) -> _Attribute:
     if concept_is_attribute(native_concept):
-        from typedb.concept.thing.attribute import _Attribute
+        from typedb.concept.instance.attribute import _Attribute
         return _Attribute(native_concept)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
@@ -107,7 +92,7 @@ def wrap_attribute(native_concept: NativeConcept) -> _Attribute:
 
 def wrap_relation(native_concept: NativeConcept) -> _Relation:
     if concept_is_relation(native_concept):
-        from typedb.concept.thing.relation import _Relation
+        from typedb.concept.instance.relation import _Relation
         return _Relation(native_concept)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
@@ -121,7 +106,7 @@ def wrap_value(native_concept: NativeConcept) -> _Value:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
 
-def _try_thing_type(native_concept: NativeConcept) -> Optional[_ThingType]:
+def _try_type(native_concept: NativeConcept) -> Optional[_Type]:
     if concept_is_entity_type(native_concept):
         from typedb.concept.type.entity_type import _EntityType
         return _EntityType(native_concept)
@@ -131,19 +116,22 @@ def _try_thing_type(native_concept: NativeConcept) -> Optional[_ThingType]:
     elif concept_is_relation_type(native_concept):
         from typedb.concept.type.relation_type import _RelationType
         return _RelationType(native_concept)
+    elif concept_is_role_type(native_concept):
+        from typedb.concept.type.role_type import _RoleType
+        return _RoleType(native_concept)
     else:
         return None
 
 
-def _try_thing(native_concept: NativeConcept) -> Optional[_Thing]:
+def _try_instance(native_concept: NativeConcept) -> Optional[_Instance]:
     if concept_is_entity(native_concept):
-        from typedb.concept.thing.entity import _Entity
+        from typedb.concept.instance.entity import _Entity
         return _Entity(native_concept)
     elif concept_is_attribute(native_concept):
-        from typedb.concept.thing.attribute import _Attribute
+        from typedb.concept.instance.attribute import _Attribute
         return _Attribute(native_concept)
     elif concept_is_relation(native_concept):
-        from typedb.concept.thing.relation import _Relation
+        from typedb.concept.instance.relation import _Relation
         return _Relation(native_concept)
     else:
         return None

@@ -20,13 +20,13 @@ from __future__ import annotations
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.type.thing_type import ThingType
+from typedb.api.concept.type.type import Type
 
 if TYPE_CHECKING:
     pass
 
 
-class EntityType(ThingType, ABC):
+class EntityType(Type, ABC):
     """
     Entity types represent the classification of independent objects
     in the data model of the business domain.

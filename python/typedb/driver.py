@@ -18,15 +18,14 @@
 from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.thing.attribute import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.thing.entity import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.thing.relation import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.thing.thing import *  # noqa # pylint: disable=unused-import
+from typedb.api.concept.instance.attribute import *  # noqa # pylint: disable=unused-import
+from typedb.api.concept.instance.entity import *  # noqa # pylint: disable=unused-import
+from typedb.api.concept.instance.relation import *  # noqa # pylint: disable=unused-import
+from typedb.api.concept.instance.instance import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.attribute_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.entity_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.relation_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused-import
-from typedb.api.concept.type.thing_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
 # from typedb.api.connection.credential import *

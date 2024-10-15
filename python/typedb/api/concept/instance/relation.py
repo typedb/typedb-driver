@@ -20,13 +20,13 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from typedb.api.concept.thing.thing import Thing
+from typedb.api.concept.instance.instance import Instance
 
 if TYPE_CHECKING:
     from typedb.api.concept.type.relation_type import RelationType
 
 
-class Relation(Thing, ABC):
+class Relation(Instance, ABC):
     """
     Relation is an instance of a relation type and can be uniquely addressed
     by a combination of its type, owned attributes and role players.

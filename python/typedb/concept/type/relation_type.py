@@ -19,11 +19,11 @@ from __future__ import annotations
 
 from typedb.api.concept.type.relation_type import RelationType
 from typedb.common.exception import TypeDBDriverException
-from typedb.concept.type.thing_type import _ThingType
+from typedb.concept.type.type import _Type
 from typedb.native_driver_wrapper import relation_type_get_label, TypeDBDriverExceptionNative
 
 
-class _RelationType(RelationType, _ThingType):
+class _RelationType(RelationType, _Type):
 
     def get_label(self) -> str:
         try:
