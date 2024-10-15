@@ -50,6 +50,7 @@ class TestValues(TestCase):
             "birth-date": "date",
             "birth-time": "datetime",
             "current-time": "datetime-tz",
+            "current-time-off": "datetime-tz",
             "expiration": "duration"
         }
 
@@ -62,6 +63,7 @@ class TestValues(TestCase):
             "birth-date": "2024-09-20",
             "birth-time": "1999-02-26T12:15:05",
             "current-time": "2024-09-20T16:40:05 Europe/Belfast",
+            "current-time-off": "2024-09-20T16:40:05+0545",
             "expiration": "P1Y10M7DT15H44M5.00394892S"
         }
 
@@ -141,8 +143,21 @@ class TestValues(TestCase):
                         assert_that(value, is_(Datetime.utcfromstring(expected)))
                         checked += 1
                     elif attribute.is_datetime_tz():
-                        expected_dt, expected_tz = expected.split(" ")
-                        assert_that(value, is_(Datetime.utcfromstring(expected_dt, expected_tz)))
+                        if "-off" in attribute_name:
+                            try:
+                                sign = "+"
+                                expected_dt, expected_offset = expected.split(sign)
+                            except ValueError:
+                                sign = "-"
+                                expected_dt, expected_offset = expected.split(sign)
+
+                            expected_offset = Datetime.offset_seconds_fromstring(sign + expected_offset)
+                            assert_that(
+                                value,
+                                is_(Datetime.utcfromstring(expected_dt, offset_seconds=expected_offset)))
+                        else:
+                            expected_dt, expected_tz = expected.split(" ")
+                            assert_that(value, is_(Datetime.utcfromstring(expected_dt, tz_name=expected_tz)))
                         checked += 1
                     elif attribute.is_duration():
                         assert_that(value, is_(Duration.fromstring(expected)))
@@ -159,15 +174,15 @@ class TestValues(TestCase):
         # utcfromstring examples do not fail
         Datetime.utcfromstring("2024-09-21T18:34:22")
         Datetime.utcfromstring("2024-09-21T18:34:22.009257123")
-        Datetime.utcfromstring("2024-09-21T18:34:22.009257123", "Europe/London")
+        Datetime.utcfromstring("2024-09-21T18:34:22.009257123", tz_name="Europe/London")
         Datetime.utcfromstring("2024-09-21", datetime_fmt="%Y-%m-%d")
-        Datetime.utcfromstring("21/09/24 18:34", "Europe/London", "%d/%m/%y %H:%M")
+        Datetime.utcfromstring("21/09/24 18:34", tz_name="Europe/London", datetime_fmt="%d/%m/%y %H:%M")
 
         # fromstring examples do not fail
-        Datetime.fromstring("2024-09-21T18:34:22", "America/New_York")
-        Datetime.fromstring("2024-09-21T18:34:22.009257123", "Europe/London")
-        Datetime.fromstring("2024-09-21", "Asia/Calcutta", datetime_fmt="%Y-%m-%d")
-        Datetime.fromstring("21/09/24 18:34", "Africa/Cairo", "%d/%m/%y %H:%M")
+        Datetime.fromstring("2024-09-21T18:34:22", tz_name="America/New_York")
+        Datetime.fromstring("2024-09-21T18:34:22.009257123", tz_name="Europe/London")
+        Datetime.fromstring("2024-09-21", tz_name="Asia/Calcutta", datetime_fmt="%Y-%m-%d")
+        Datetime.fromstring("21/09/24 18:34", tz_name="Africa/Cairo", datetime_fmt="%d/%m/%y %H:%M")
 
         with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver):
             database = driver.databases.get(TYPEDB)
@@ -336,7 +351,7 @@ class TestValues(TestCase):
 
                 assert_that(Datetime.utcfromstring("2024-10-09T13:07:38.123456789"), is_not(typedb_datetime))
                 assert_that(Datetime.utcfromstring("2024-10-09T13:07:38.123456789", "Asia/Colombo"),
-                            is_not(typedb_datetime))
+                            is_(typedb_datetime))
                 assert_that(Datetime.utcfromtimestamp(timestamp_seconds=1728459458, subsec_nanos=123456789),
                             is_not(typedb_datetime))
                 assert_that(Datetime.utcfromtimestamp(timestamp_seconds=1728479258, subsec_nanos=123456789),

@@ -219,6 +219,7 @@
 %nojavaexception DatetimeAndTimeZone::datetime_in_nanos;
 %nojavaexception DatetimeAndTimeZone::zone_name;
 %nojavaexception DatetimeAndTimeZone::local_minus_utc_offset;
+%nojavaexception DatetimeAndTimeZone::is_fixed_offset;
 
 %nojavaexception DatetimeInNanos::seconds;
 %nojavaexception DatetimeInNanos::subsec_nanos;

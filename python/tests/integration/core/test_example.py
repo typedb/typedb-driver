@@ -22,6 +22,7 @@ from hamcrest import *
 # EXAMPLE START MARKER
 from typedb.driver import *
 
+
 # EXAMPLE END MARKER
 
 

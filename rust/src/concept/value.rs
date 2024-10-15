@@ -426,11 +426,11 @@ pub struct Duration {
 }
 
 impl Duration {
-    pub const NANOS_PER_SEC: u64 = 1_000_000_000;
-    pub const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
-    pub const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
-    pub const DAYS_PER_WEEK: u32 = 7;
-    pub const MONTHS_PER_YEAR: u32 = 12;
+    const NANOS_PER_SEC: u64 = 1_000_000_000;
+    const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
+    const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
+    const DAYS_PER_WEEK: u32 = 7;
+    const MONTHS_PER_YEAR: u32 = 12;
 
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }

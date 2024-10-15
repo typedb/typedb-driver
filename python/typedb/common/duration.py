@@ -19,12 +19,7 @@ from __future__ import annotations
 
 import re
 
-from typedb.common.datetime import NANOS_IN_SECOND
-
-DAYS_IN_WEEK = 7
-MONTHS_IN_YEAR = 12
-SECONDS_IN_MINUTE = 60
-MINUTES_IN_HOUR = 60
+from typedb.common.datetime import NANOS_IN_SECOND, DAYS_IN_WEEK, MONTHS_IN_YEAR, SECONDS_IN_MINUTE, MINUTES_IN_HOUR
 
 
 class Duration:

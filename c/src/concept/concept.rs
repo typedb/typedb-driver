@@ -58,27 +58,28 @@ impl DatetimeInNanos {
 
 /// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
 /// Time zone can be represented either as an IANA <code>Tz</code> or as a <code>FixedOffset</code>.
-/// Either the zone_name or offset is set (non-empty <code>zone_name</code> or
-/// non-null <code>local_minus_utc_offset</code>).
+/// Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 #[repr(C)]
 pub struct DatetimeAndTimeZone {
     datetime_in_nanos: DatetimeInNanos,
     zone_name: *mut c_char,
-    local_minus_utc_offset: *mut i32,
+    local_minus_utc_offset: i32,
+    is_fixed_offset: bool,
 }
 
 impl DatetimeAndTimeZone {
     pub fn new(datetime_tz: &DateTime<TimeZone>) -> Self {
-        let (zone_name, offset) = {
+        let (zone_name, offset, is_fixed_offset) = {
             match datetime_tz.timezone() {
-                TimeZone::IANA(tz) => (tz.name().to_owned(), None),
-                TimeZone::Fixed(offset) => ("".to_owned(), Some(offset.local_minus_utc())),
+                TimeZone::IANA(tz) => (tz.name().to_owned(), 0, false),
+                TimeZone::Fixed(offset) => ("".to_owned(), offset.local_minus_utc(), true),
             }
         };
         Self {
             datetime_in_nanos: DatetimeInNanos::new(datetime_tz),
             zone_name: release_string(zone_name),
-            local_minus_utc_offset: release_optional(offset),
+            local_minus_utc_offset: offset,
+            is_fixed_offset,
         }
     }
 
@@ -88,6 +89,14 @@ impl DatetimeAndTimeZone {
 
     pub fn get_zone_name(self) -> *mut c_char {
         self.zone_name
+    }
+
+    pub fn get_local_minus_utc_offset(self) -> i32 {
+        self.local_minus_utc_offset
+    }
+
+    pub fn get_is_fixed_offset(self) -> bool {
+        self.is_fixed_offset
     }
 }
 

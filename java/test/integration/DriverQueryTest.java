@@ -42,7 +42,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -233,7 +236,7 @@ public class DriverQueryTest {
                 "balance", "1234567890.0001234567890",
                 "birth-date", "2024-09-20",
                 "birth-time", "1999-02-26T12:15:05",
-                "current-time", "2024-09-20T16:40:05 Europe/Belfast",
+                "current-time", "2024-09-20T16:40:05 Europe/London",
                 "expiration", "P1Y10M7DT15H44M5.00394892S"
         );
 
@@ -316,7 +319,12 @@ public class DriverQueryTest {
                         checked.incrementAndGet();
                     } else if (value.isDatetimeTZ()) {
                         String[] expectedValue = attributeValues.get(attributeName).split(" ");
-                        assertEquals(LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1])), value.asDatetimeTZ());
+                        // TODO: Rewrite later (for now, use the following lines for offsets):
+//                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+//                        ZonedDateTime expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
+                        ZonedDateTime expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
+                        System.out.println(value.asDatetimeTZ());
+                        assertEquals(expected, value.asDatetimeTZ());
                         checked.incrementAndGet();
                     } else if (value.isDuration()) {
                         String[] expectedValue = attributeValues.get(attributeName).split("T");
