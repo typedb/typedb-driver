@@ -23,7 +23,6 @@ import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -80,28 +79,32 @@ class TestExamplesParser : Callable<Unit> {
         val inputFile = File(inputTestFileName)
         val outputLines = mutableListOf<String>()
         var insideExampleBlock = false
-        var currentIndentation = Int.MAX_VALUE
+        var blockLines = mutableListOf<String>()
         var blockNumber = 0
+        var startMarkerIndentation = 0
+        var previousBlockIndentation = 0
 
         inputFile.forEachLine { line ->
             when {
                 line.contains("EXAMPLE START MARKER") -> {
                     insideExampleBlock = true
                     blockNumber++
-                    currentIndentation = Int.MAX_VALUE
+                    blockLines.clear()
+                    startMarkerIndentation = detectIndentation(line)
                 }
 
                 line.contains("EXAMPLE END MARKER") -> {
+                    if (insideExampleBlock) {
+                        previousBlockIndentation =
+                            minOf(previousBlockIndentation, minOf(startMarkerIndentation, detectIndentation(line)))
+                        processBlockLines(blockNumber, blockLines, previousBlockIndentation, outputLines)
+                    }
                     insideExampleBlock = false
                 }
 
                 insideExampleBlock -> {
                     if (lineAllowed(line)) {
-                        val processedLine = applyWordChanges(line)
-                        if (currentIndentation == Int.MAX_VALUE && processedLine.isNotBlank()) {
-                            currentIndentation = detectIndentation(processedLine)
-                        }
-                        outputLines.add(adjustIndentation(processedLine, currentIndentation, blockNumber))
+                        blockLines.add(line)
                     } else {
                         println("Removing line: $line")
                     }
@@ -129,6 +132,17 @@ class TestExamplesParser : Callable<Unit> {
         }
 
         return modifiedLine
+    }
+
+    private fun processBlockLines(
+        blockNumber: Int,
+        blockLines: MutableList<String>,
+        indentation: Int,
+        outputLines: MutableList<String>
+    ) {
+        blockLines.forEach { line ->
+            outputLines.add(applyWordChanges(adjustIndentation(line, indentation, blockNumber)))
+        }
     }
 
     private fun detectIndentation(line: String): Int {

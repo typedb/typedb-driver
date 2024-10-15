@@ -115,7 +115,7 @@ test_to_example(
     name = "example_core",
     input = "//rust/tests/integration/core:example.rs",
     output = "rust/core_example",
-    removed_lines = ["assert!", "todo"],
+    removed_lines = ["assert", "todo"],
     changed_words = {
         "example()": "typedb_example()",
     },

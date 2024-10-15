@@ -17,17 +17,21 @@
  * under the License.
  */
 
-use serial_test::serial;
 // EXAMPLE START MARKER
 use futures::{StreamExt, TryStreamExt};
-use typedb_driver::{answer::QueryAnswer, Error, TransactionType, TypeDBDriver};
-use typedb_driver::answer::ConceptRow;
-use typedb_driver::concept::{Concept, ValueType};
+// EXAMPLE END MARKER
+use serial_test::serial;
+// EXAMPLE START MARKER
+use typedb_driver::{
+    answer::{ConceptRow, QueryAnswer},
+    concept::{Concept, ValueType},
+    Error, TransactionType, TypeDBDriver,
+};
 
 // EXAMPLE END MARKER
 
 async fn cleanup() {
-    let driver = TypeDBDriver::new_core("localhost:1729").await.unwrap();
+    let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
         driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
     }
@@ -38,12 +42,12 @@ async fn cleanup() {
 // EXAMPLE START MARKER
 fn example() {
     async_std::task::block_on(async {
-// EXAMPLE END MARKER
+        // EXAMPLE END MARKER
         cleanup().await;
-// EXAMPLE START MARKER
+        // EXAMPLE START MARKER
         // Open a driver connection
-        let driver = TypeDBDriver::new_core("localhost:1729").await.unwrap();
-        
+        let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+
         // Create a database
         driver.databases().create("typedb").await.unwrap();
         let database = driver.databases().get("typedb").await.unwrap();
@@ -61,10 +65,12 @@ fn example() {
                 // Handle errors
                 Err(error) => match error {
                     Error::Connection(connection) => println!("Could not connect: {connection}"),
-                    Error::Server(server) => println!("Received a detailed server error regarding the executed query: {server}"),
+                    Error::Server(server) => {
+                        println!("Received a detailed server error regarding the executed query: {server}")
+                    }
                     Error::Internal(_) => panic!("Unexpected internal error"),
                     _ => println!("Received an unexpected external error: {error}"),
-                }
+                },
             }
         }
 
@@ -78,7 +84,7 @@ fn example() {
         }
         assert!(answer.is_ok());
 
-        // Commit automatically closes the transaction
+        // Commit automatically closes the transaction (don't forget to await the result!)
         transaction.commit().await.unwrap();
 
         // Open a read transaction to safely read anything without database modifications
@@ -107,7 +113,12 @@ fn example() {
 
         // Check if it's an entity type
         if concept_by_name.is_entity_type() {
-            println!("Getting concepts by variable names and indexes is equally correct. Both represent the defined entity type: '{}' (in case of a doubt: '{}')", concept_by_name.get_label(), concept_by_index.get_label());
+            print!("Getting concepts by variable names and indexes is equally correct. ");
+            println!(
+                "Both represent the defined entity type: '{}' (in case of a doubt: '{}')",
+                concept_by_name.get_label(),
+                concept_by_index.get_label()
+            );
         }
         assert!(concept_by_name.is_entity_type());
         assert!(concept_by_name.is_type());
@@ -130,7 +141,11 @@ fn example() {
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
-                println!("Defined attribute type's label: '{}', value type: '{}'", concept_by_name.get_label(), concept_by_name.get_value_type().unwrap());
+                println!(
+                    "Defined attribute type's label: '{}', value type: '{}'",
+                    concept_by_name.get_label(),
+                    concept_by_name.get_value_type().unwrap()
+                );
             }
 
             println!("It is also possible to just print the concept itself: '{}'", concept_by_name);
@@ -177,7 +192,7 @@ fn example() {
         }
 
         // Do not forget to commit if the changes should be persisted
-        transaction.commit();
+        transaction.commit().await.unwrap();
 
         // Open a read transaction to verify that the inserted data is saved
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
@@ -204,19 +219,19 @@ fn example() {
                     count += 1;
                     println!("Found a person {} of type {}", x, x_type);
                 }
-                _ => unreachable!("Guaranteed to be an entity"),
+                _ => unreachable!("An entity is expected"),
             }
         }
         assert_eq!(count, 2);
         println!("Total persons found: {}", count);
 
         // TODO: We can add a fetch example here!
-// EXAMPLE END MARKER
+        // EXAMPLE END MARKER
     });
 
     async_std::task::block_on(async {
         cleanup().await;
-// EXAMPLE START MARKER
+        // EXAMPLE START MARKER
         println!("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     })
 }

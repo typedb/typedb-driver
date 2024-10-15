@@ -76,11 +76,11 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         # TODO: Temporarily update only 3.0 drivers
         # DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
-        DOCS_DIRS="docs/modules/ROOT/partials/python"
-        find $DOCS_DIRS -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
+        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/python")
+        find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
-        git add $DOCS_DIRS
-        git diff --exit-code HEAD $DOCS_DIRS
+        git add "${DOCS_DIRS[@]}"
+        git diff --exit-code HEAD "${DOCS_DIRS[@]}"
 
     test-rust-unit-integration:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -95,7 +95,7 @@ build:
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         
         tool/test/start-core-server.sh &&
-          bazel test //rust/tests/integration/core/... --test_output=streamed &&
+          bazel test //rust/tests/integration/core/... --test_output=streamed --test_arg=--nocapture &&
           export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi

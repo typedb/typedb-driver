@@ -18,6 +18,7 @@
  */
 
 use std::fmt::{Debug, Display, Formatter};
+
 use super::{Concept, ValueType};
 
 /// Annotations are used to specify extra schema constraints.

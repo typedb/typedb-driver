@@ -52,6 +52,8 @@ impl TypeDBDriver {
         Some(version) => version,
     };
 
+    pub const DEFAULT_ADDRESS: &'static str = "localhost:1729";
+
     /// Creates a new TypeDB Server connection.
     ///
     /// # Arguments
