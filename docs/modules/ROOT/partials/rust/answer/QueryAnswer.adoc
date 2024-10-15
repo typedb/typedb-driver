@@ -1,0 +1,16 @@
+[#_enum_QueryAnswer]
+=== QueryAnswer
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>)`
+a| `ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<ConceptTree>>)`
+a| `Ok()`
+|===
+// end::enum_constants[]
+

@@ -18,7 +18,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn delete(self) -> Result
+pub async fn delete(self: Arc<Self>) -> Result
 ----
 
 --
@@ -28,7 +28,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn delete(self) -> Result
+pub fn delete(self: Arc<Self>) -> Result
 ----
 
 --
@@ -156,66 +156,6 @@ Vec<ReplicaInfo>
 ----
 database.replicas_info()
 ----
-
-[#_struct_Database_rule_schema_]
-==== rule_schema
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn rule_schema(&self) -> Result<String>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn rule_schema(&self) -> Result<String>
-----
-
---
-====
-
-Returns the rules in the schema as a valid TypeQL define query string.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<String>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-database.rule_schema().await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-database.rule_schema();
-----
-
---
-====
 
 [#_struct_Database_schema_]
 ==== schema

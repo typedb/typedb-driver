@@ -16,22 +16,26 @@ a| `CloudReplicaNotPrimary`
 a| `CloudSSLCertificateNotValidated`
 a| `CloudTokenCredentialInvalid`
 a| `ConnectionFailed`
-a| `ConnectionIsClosed`
 a| `DatabaseDoesNotExist`
 a| `InvalidResponseField`
+a| `ListsNotImplemented`
 a| `MissingPort`
 a| `MissingResponseField`
+a| `QueryStreamNoResponse`
 a| `RPCMethodUnavailable`
 a| `ServerConnectionFailed`
 a| `ServerConnectionFailedStatusError`
 a| `ServerConnectionFailedWithError`
-a| `SessionCloseFailed`
-a| `SessionIsClosed`
+a| `ServerConnectionIsClosed`
 a| `TransactionIsClosed`
 a| `TransactionIsClosedWithErrors`
+a| `UnexpectedQueryType`
 a| `UnexpectedResponse`
 a| `UnknownRequestId`
 a| `UserManagementCloudOnly`
+a| `ValueStructNotImplemented`
+a| `ValueTimeZoneNameNotRecognised`
+a| `ValueTimeZoneOffsetNotRecognised`
 |===
 // end::enum_constants[]
 

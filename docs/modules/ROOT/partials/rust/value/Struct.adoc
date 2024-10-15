@@ -1,0 +1,11 @@
+[#_struct_Struct]
+=== Struct
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+* `PartialEq`
+* `StructuralPartialEq`
+

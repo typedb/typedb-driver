@@ -1,14 +1,10 @@
-[#_struct_ScopedLabel]
-=== ScopedLabel
+[#_struct_ConceptRowHeader]
+=== ConceptRowHeader
 
 *Implements traits:*
 
-* `Clone`
 * `Debug`
-* `Display`
-* `Eq`
-* `PartialEq<ScopedLabel>`
-* `StructuralEq`
+* `PartialEq`
 * `StructuralPartialEq`
 
 [caption=""]
@@ -18,8 +14,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `name` a| `String` a| 
-a| `scope` a| `String` a| 
+a| `column_names` a| `Vec<String>` a| 
+a| `query_type` a| `QueryType` a| 
 |===
 // end::properties[]
 

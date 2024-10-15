@@ -19,14 +19,7 @@
 
 use std::fmt::{Debug, Display, Formatter};
 
-use super::{Concept, ValueType};
-
-/// Annotations are used to specify extra schema constraints.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum Annotation {
-    Key,
-    Unique,
-}
+use super::ValueType;
 
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.

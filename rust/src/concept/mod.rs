@@ -24,7 +24,7 @@ use chrono_tz::Tz;
 
 pub use self::{
     thing::{Attribute, Entity, Relation},
-    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType},
+    type_::{AttributeType, EntityType, RelationType, RoleType},
     value::{Value, ValueType},
 };
 use crate::{
