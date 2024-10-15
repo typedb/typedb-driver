@@ -17,106 +17,207 @@
  * under the License.
  */
 
-use futures::StreamExt;
 use serial_test::serial;
 // EXAMPLE START MARKER
-use typedb_driver::{answer::QueryAnswer, TransactionType, TypeDBDriver};
+use futures::{StreamExt, TryStreamExt};
+use typedb_driver::{answer::QueryAnswer, Error, TransactionType, TypeDBDriver};
+use typedb_driver::answer::ConceptRow;
+use typedb_driver::concept::{Concept, ValueType};
 
 // EXAMPLE END MARKER
+
+async fn cleanup() {
+    let driver = TypeDBDriver::new_core("localhost:1729").await.unwrap();
+    if driver.databases().contains("typedb").await.unwrap() {
+        driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
+    }
+}
 
 #[test]
 #[serial]
 // EXAMPLE START MARKER
 fn example() {
     async_std::task::block_on(async {
-        // Connection has been replaced with Driver:
-        let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
+// EXAMPLE END MARKER
+        cleanup().await;
+// EXAMPLE START MARKER
+        // Open a driver connection
+        let driver = TypeDBDriver::new_core("localhost:1729").await.unwrap();
+        
+        // Create a database
+        driver.databases().create("typedb").await.unwrap();
+        let database = driver.databases().get("typedb").await.unwrap();
+        assert_eq!(database.name(), "typedb");
 
-        if driver.databases().contains("db-name").await.unwrap() {
-            let db = driver.databases().get("db-name").await.unwrap();
-            db.delete().await.unwrap();
+        // Dropped transactions are closed
+        {
+            // Open transactions of 3 types
+            let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+
+            // Execute any TypeDB query using TypeQL. Wrong queries are rejected with an explicit error
+            let result = transaction.query("define entity i-cannot-be-defined-in-read-transactions;").await;
+            match result {
+                Ok(_) => println!("This line will not be printed"),
+                // Handle errors
+                Err(error) => match error {
+                    Error::Connection(connection) => println!("Could not connect: {connection}"),
+                    Error::Server(server) => println!("Received a detailed server error regarding the executed query: {server}"),
+                    Error::Internal(_) => panic!("Unexpected internal error"),
+                    _ => println!("Received an unexpected external error: {error}"),
+                }
+            }
         }
 
-        driver.databases().create("db-name").await.unwrap();
+        // Open a schema transaction to make schema changes
+        let transaction = driver.transaction(database.name(), TransactionType::Schema).await.unwrap();
+        let answer = transaction.query("define entity person, owns age; attribute age, value long;").await.unwrap();
 
-        // Sessions have been removed. Now there are Read, Write, and Schema transactions only
-        let transaction = driver.transaction("db-name", TransactionType::Schema).await.unwrap();
+        // Work with the driver's enums in a classic way or using helper methods
+        if answer.is_ok() && matches!(answer, QueryAnswer::Ok()) {
+            println!("OK results do not give any extra interesting information, but they mean that the query is successfully executed!");
+        }
+        assert!(answer.is_ok());
 
-        // All queries just use a simple .query() API
-        let result = transaction.query("define entity person, owns age; attribute age, value long;").await;
-        let answer = result.unwrap(); // result could contain an error returned by the server
-                                      // Define queries return OK answers
-        assert!(matches!(answer, QueryAnswer::Ok()));
-
+        // Commit automatically closes the transaction
         transaction.commit().await.unwrap();
 
-        let transaction = driver.transaction("db-name", TransactionType::Write).await.unwrap();
+        // Open a read transaction to safely read anything without database modifications
+        let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+        let answer = transaction.query("match entity $x;").await.unwrap();
+        assert!(answer.is_rows_stream());
 
-        let result = transaction.query("insert $x isa person, has age 10;").await;
-        let answer = result.unwrap(); // result could contain an error returned by the server
-        assert!(matches!(answer, QueryAnswer::ConceptRowsStream(_)));
+        // Collect concept rows that represent the answer as a table
+        let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
+        assert_eq!(rows.len(), 1);
+        let row = rows.get(0).unwrap();
 
+        // Retrieve column names to get concepts by index if the variable names are lost
+        let column_names = row.get_column_names();
+        assert_eq!(column_names.len(), 1);
+
+        let column_name = column_names.get(0).unwrap();
+        assert_eq!(column_name.as_str(), "x");
+
+        // Get concept by the variable name (column name)
+        let concept_by_name = row.get(column_name).unwrap();
+
+        // Get concept by the header's index
+        let concept_by_index = row.get_index(0).unwrap();
+        assert_eq!(concept_by_name, concept_by_index);
+
+        // Check if it's an entity type
+        if concept_by_name.is_entity_type() {
+            println!("Getting concepts by variable names and indexes is equally correct. Both represent the defined entity type: '{}' (in case of a doubt: '{}')", concept_by_name.get_label(), concept_by_index.get_label());
+        }
+        assert!(concept_by_name.is_entity_type());
+        assert!(concept_by_name.is_type());
+        assert_eq!(concept_by_name.get_label(), "person");
+        assert_ne!(concept_by_name.get_label(), "not person");
+        assert_ne!(concept_by_name.get_label(), "age");
+
+        // Continue querying in the same transaction if needed
+        let answer = transaction.query("match attribute $a;").await.unwrap();
+        assert!(answer.is_rows_stream());
+
+        // Concept rows can be used as a stream of results
         let mut rows_stream = answer.into_rows();
         while let Some(Ok(row)) = rows_stream.next().await {
-            println!("{:?}", &row);
-            println!("{:?}", row.get("x"));
+            let mut column_names_iter = row.get_column_names().into_iter();
+            let column_name = column_names_iter.next().unwrap();
+            assert_eq!(column_names_iter.next(), None);
+
+            let concept_by_name = row.get(column_name).unwrap();
+
+            // Check if it's an attribute type to safely retrieve its value type
+            if concept_by_name.is_attribute_type() {
+                println!("Defined attribute type's label: '{}', value type: '{}'", concept_by_name.get_label(), concept_by_name.get_value_type().unwrap());
+            }
+
+            println!("It is also possible to just print the concept itself: '{}'", concept_by_name);
+            assert!(concept_by_name.is_attribute_type());
+            assert!(concept_by_name.is_type());
+            assert!(concept_by_name.is_long());
+            assert_eq!(concept_by_name.get_value_type(), Some(ValueType::Long));
+            assert_eq!(concept_by_name.get_label(), "age");
+            assert_ne!(concept_by_name.get_label(), "person");
+            assert_ne!(concept_by_name.get_label(), "person:age");
         }
 
-        //
-        //
-        // let driver = common::new_core_driver().await.unwrap();
-        // driver.databases().create("testing-db").await.unwrap();
-        //
-        // let db = driver.databases().get("testing-db").await.unwrap();
-        // db.delete().await.unwrap();
-        // common::create_test_database_with_schema(&driver, r#"
-        //     define
-        //         entity person,
-        //             owns age,
-        //             owns name @card(0..);
-        //         attribute age,
-        //             value long;
-        //         attribute name, value string;
-        //         attribute bday, value datetime;
-        // "#).await.unwrap();
-        //
-        // assert!(driver.databases().contains(common::TEST_DATABASE).await.unwrap());
-        //
-        // let transaction = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
-        // let rows: Vec<ConceptRow> = transaction.query("match entity $x;").await.unwrap().into_rows().try_collect().await.unwrap();
-        // assert_eq!(rows.len(), 1);
-        //
-        // let transaction_2 = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
-        // let rows_2: Vec<ConceptRow> = transaction_2.query("match entity $x;").await.unwrap().into_rows().try_collect().await.unwrap();
-        // assert_eq!(rows_2.len(), 1);
-        //
-        // let transaction_3 = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
-        // let rows_3: Vec<ConceptRow> = transaction_3.query("match entity $x;").await.unwrap().into_rows().try_collect().await.unwrap();
-        // assert_eq!(rows_2.len(), 1);
-        //
-        // let transaction = driver.transaction(common::TEST_DATABASE, Write).await.unwrap();
-        // let answers = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
-        // assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
-        // let rows: Vec<_> = answers.into_rows().collect().await;
-        // assert_eq!(rows.len(), 1);
-        // transaction.commit().await.unwrap();
-        //
-        // let transaction = driver.transaction(common::TEST_DATABASE, Read).await.unwrap();
-        // let answers = transaction.query("match $x isa person, has age $a;").await.unwrap();
-        // assert!(matches!(&answers, QueryAnswer::ConceptRowsStream(_)));
-        // let mut iter = answers.into_rows();
-        //
-        // let mut rows_count = 0;
-        // while let Some(row) = iter.next().await {
-        //     println!("{}", row.unwrap());
-        //     rows_count += 1;
-        // }
-        // assert_eq!(rows_count, 2);
-        //
-        // let answers = transaction.query("match $x isa person, has age 10;").await.unwrap();
-        // let rows: Vec<ConceptRow> = answers.into_rows().try_collect().await.unwrap();
-        // dbg!(rows);
+        // Open a write transaction to insert data
+        let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
+        let answer = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
+        assert!(answer.is_rows_stream());
+
+        // Insert queries also return concept rows
+        let mut rows = Vec::new();
+        let mut rows_stream = answer.into_rows();
+        while let Some(Ok(row)) = rows_stream.next().await {
+            rows.push(row);
+        }
+        assert_eq!(rows.len(), 1);
+        let row = rows.get(0).unwrap();
+
+        for column_name in row.get_column_names() {
+            let inserted_concept = row.get(column_name).unwrap();
+            println!("Successfully inserted ${}: {}", column_name, inserted_concept);
+            if inserted_concept.is_entity() {
+                println!("This time, it's an entity, not a type!");
+            }
+        }
+
+        // It is possible to ask for the column names again
+        let column_names = row.get_column_names();
+        assert_eq!(column_names.len(), 2);
+        assert!(column_names.contains(&"x".to_owned()));
+        assert!(column_names.contains(&"z".to_owned()));
+
+        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap();
+        if let Some(iid) = x.get_iid() {
+            println!("Each entity receives a unique IID. It can be retrieved directly: {}", iid);
+        }
+
+        // Do not forget to commit if the changes should be persisted
+        transaction.commit();
+
+        // Open a read transaction to verify that the inserted data is saved
+        let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+        let var = "x";
+        let answer = transaction.query(format!("match ${} isa person;", var)).await.unwrap();
+        assert!(answer.is_rows_stream());
+
+        // Match queries always return concept rows
+        let mut count = 0;
+        let mut stream = answer.into_rows().map(|result| result.unwrap());
+        while let Some(row) = stream.next().await {
+            let x = row.get(var).unwrap();
+            assert!(x.is_entity());
+            assert!(!x.is_entity_type());
+            assert!(!x.is_attribute());
+            assert!(!x.is_type());
+            assert!(x.is_instance());
+            assert_eq!(x.get_label(), "person");
+            match x {
+                Concept::Entity(x_entity) => {
+                    let x_type = x_entity.type_().unwrap();
+                    assert_eq!(x_type.label(), "person");
+                    assert_ne!(x_type.label(), "not person");
+                    count += 1;
+                    println!("Found a person {} of type {}", x, x_type);
+                }
+                _ => unreachable!("Guaranteed to be an entity"),
+            }
+        }
+        assert_eq!(count, 2);
+        println!("Total persons found: {}", count);
+
+        // TODO: We can add a fetch example here!
+// EXAMPLE END MARKER
+    });
+
+    async_std::task::block_on(async {
+        cleanup().await;
+// EXAMPLE START MARKER
+        println!("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     })
-    // .unwrap();
 }
 // EXAMPLE END MARKER

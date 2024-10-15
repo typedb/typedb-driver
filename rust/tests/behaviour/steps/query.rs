@@ -277,7 +277,7 @@ pub async fn concurrently_process_rows_from_answers(context: &mut Context, count
 
             for _ in 0..count {
                 if let Some(row) = stream.next().await {
-                    rows.push(row);
+                    rows.push(row.unwrap());
                 } else {
                     failed = true;
                     break;

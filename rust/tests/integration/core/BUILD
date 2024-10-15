@@ -21,7 +21,7 @@ load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
-    name = "test_example_core",
+    name = "test_example",
     srcs = glob(["example.rs"]),
     deps = [
         "//rust:typedb_driver",

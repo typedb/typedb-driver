@@ -17,7 +17,17 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_rust//rust:defs.bzl", "rustfmt_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+rustfmt_test(
+    name = "rustfmt_test",
+    targets = [
+        "//rust/tests/integration/core:test_example",
+#        "//rust/tests/integration/cloud:test_example",
+    ],
+    size = "small",
+)
 
 checkstyle_test(
     name = "checkstyle",

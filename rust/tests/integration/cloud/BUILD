@@ -21,7 +21,7 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 #rust_test(
-#    name = "test_example_cloud",
+#    name = "test_example",
 #    srcs = glob(["example.rs"]),
 #    deps = [
 #        "//rust:typedb_driver",

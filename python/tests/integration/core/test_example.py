@@ -44,9 +44,10 @@ class TestExample(TestCase):
 
             # Use "try" blocks to catch driver exceptions
             try:
+                # Open transactions of 3 types
                 tx = driver.transaction(database.name, TransactionType.READ)
 
-                # Execute any TypeDB query using TypeQL.
+                # Execute any TypeDB query using TypeQL. Wrong queries are rejected with an explicit exception
                 result_promise = tx.query("define entity i-cannot-be-defined-in-read-transactions;")
 
                 print("The result is still promised, so it needs resolving even in case of errors!")
