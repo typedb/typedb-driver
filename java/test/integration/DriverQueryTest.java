@@ -215,29 +215,31 @@ public class DriverQueryTest {
         db.delete();
         typedbDriver.databases().create(DB_NAME);
 
-        Map<String, String> attributeValueTypes = Map.of(
-                "root", "none",
-                "age", "long",
-                "name", "string",
-                "is-new", "boolean",
-                "success", "double",
-                "balance", "decimal",
-                "birth-date", "date",
-                "birth-time", "datetime",
-                "current-time", "datetime-tz",
-                "expiration", "duration"
+        Map<String, String> attributeValueTypes = Map.ofEntries(
+                Map.entry("root", "none"),
+                Map.entry("age", "long"),
+                Map.entry("name", "string"),
+                Map.entry("is-new", "boolean"),
+                Map.entry("success", "double"),
+                Map.entry("balance", "decimal"),
+                Map.entry("birth-date", "date"),
+                Map.entry("birth-time", "datetime"),
+                Map.entry("current-time", "datetime-tz"),
+                Map.entry("current-time-off", "datetime-tz"),
+                Map.entry("expiration", "duration")
         );
 
-        Map<String, String> attributeValues = Map.of(
-                "age", "25",
-                "name", "\"John\"",
-                "is-new", "true",
-                "success", "66.6",
-                "balance", "1234567890.0001234567890",
-                "birth-date", "2024-09-20",
-                "birth-time", "1999-02-26T12:15:05",
-                "current-time", "2024-09-20T16:40:05 Europe/London",
-                "expiration", "P1Y10M7DT15H44M5.00394892S"
+        Map<String, String> attributeValues = Map.ofEntries(
+                Map.entry("age", "25"),
+                Map.entry("name", "\"John\""),
+                Map.entry("is-new", "true"),
+                Map.entry("success", "66.6"),
+                Map.entry("balance", "1234567890.0001234567890"),
+                Map.entry("birth-date", "2024-09-20"),
+                Map.entry("birth-time", "1999-02-26T12:15:05"),
+                Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
+                Map.entry("current-time-off", "2024-09-20T16:40:05.028129323+0545"),
+                Map.entry("expiration", "P1Y10M7DT15H44M5.00394892S")
         );
 
         localhostTypeDBTX(tx -> {
@@ -318,12 +320,14 @@ public class DriverQueryTest {
                         assertEquals(LocalDateTime.parse(attributeValues.get(attributeName)), value.asDatetime());
                         checked.incrementAndGet();
                     } else if (value.isDatetimeTZ()) {
-                        String[] expectedValue = attributeValues.get(attributeName).split(" ");
-                        // TODO: Rewrite later (for now, use the following lines for offsets):
-//                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-//                        ZonedDateTime expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
-                        ZonedDateTime expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
-                        System.out.println(value.asDatetimeTZ());
+                        ZonedDateTime expected;
+                        if (attributeName.contains("-off")) {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+                            expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
+                        } else {
+                            String[] expectedValue = attributeValues.get(attributeName).split(" ");
+                            expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
+                        }
                         assertEquals(expected, value.asDatetimeTZ());
                         checked.incrementAndGet();
                     } else if (value.isDuration()) {
