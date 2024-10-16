@@ -17,10 +17,10 @@
 # under the License.
 
 # TODO: Temporarily update only 3.0 drivers
-#bazel run //java:docs_adoc
-#bazel run //nodejs:docs_adoc
-bazel run //python:docs_adoc
 bazel run //rust:docs_adoc
-#bazel run //cpp:docs_adoc
+#bazel run //java:docs_adoc
+bazel run //python:docs_adoc
+#bazel run //nodejs:docs_adoc
 #bazel run //c:docs_adoc
+#bazel run //cpp:docs_adoc
 #bazel run //csharp:docs_adoc

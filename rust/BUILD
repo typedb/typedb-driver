@@ -148,6 +148,7 @@ checkstyle_test(
         "**/Cargo.toml",
         "**/Cargo.lock",
         "docs/**/*.adoc",
+        "core_example",
     ]),
     license_type = "apache-header",
 )

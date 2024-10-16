@@ -43,7 +43,7 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
 /// Deletes this database.
 #[no_mangle]
 pub extern "C" fn database_delete(database: *const Database) {
-    unwrap_void(wrap_into_arc(database).delete()); // TODO: Do we need to do anything else with the memory?
+    unwrap_void(wrap_into_arc(database).delete());
 }
 
 /// A full schema text as a valid TypeQL define query string.
