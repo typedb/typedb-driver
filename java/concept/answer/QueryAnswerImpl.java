@@ -24,8 +24,8 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_rows_stream;
-import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_trees_stream;
+import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_row_stream;
+import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_document_stream;
 import static com.typedb.driver.jni.typedb_driver.query_answer_is_ok;
 
 public abstract class QueryAnswerImpl extends NativeObject<com.typedb.driver.jni.QueryAnswer> implements QueryAnswer {
@@ -35,8 +35,8 @@ public abstract class QueryAnswerImpl extends NativeObject<com.typedb.driver.jni
 
     public static QueryAnswerImpl of(com.typedb.driver.jni.QueryAnswer concept) {
         if (query_answer_is_ok(concept)) return new OkQueryAnswerImpl(concept);
-        else if (query_answer_is_concept_rows_stream(concept)) return new ConceptRowIteratorImpl(concept);
-        else if (query_answer_is_concept_trees_stream(concept)) return new ConceptTreeIteratorImpl(concept);
+        else if (query_answer_is_concept_row_stream(concept)) return new ConceptRowIteratorImpl(concept);
+        else if (query_answer_is_concept_document_stream(concept)) return new ConceptTreeIteratorImpl(concept);
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 }

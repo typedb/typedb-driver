@@ -32,6 +32,7 @@ use super::{
     memory::{borrow, free, release, release_optional, release_string, string_view},
 };
 use crate::{common::StringIterator, concept::ConceptRowIterator, error::try_release, memory::take_ownership};
+use crate::concept::ConceptDocumentIterator;
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
@@ -57,23 +58,28 @@ pub extern "C" fn query_answer_is_ok(query_answer: *const QueryAnswer) -> bool {
     borrow(query_answer).is_ok()
 }
 
-/// Checks if the query answer is a <code>ConceptRowsStream</code>.
+/// Checks if the query answer is a <code>ConceptRowStream</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_is_concept_rows_stream(query_answer: *const QueryAnswer) -> bool {
-    borrow(query_answer).is_rows_stream()
+pub extern "C" fn query_answer_is_concept_row_stream(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_row_stream()
 }
 
-/// Checks if the query answer is a <code>ConceptTreesStream</code>.
+/// Checks if the query answer is a <code>ConceptDocumentStream</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_is_concept_trees_stream(query_answer: *const QueryAnswer) -> bool {
-    // TODO: Rename?
-    borrow(query_answer).is_json_stream()
+pub extern "C" fn query_answer_is_concept_document_stream(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_document_stream()
 }
 
-/// Produces an <code>Iterator</code> over all <code>ConceptRow</code> in this <code>QueryAnswer</code>.
+/// Produces an <code>Iterator</code> over all <code>ConceptRow</code>s in this <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut ConceptRowIterator {
     release(ConceptRowIterator(CIterator(take_ownership(query_answer).into_rows())))
+}
+
+/// Produces an <code>Iterator</code> over all <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut ConceptDocumentIterator { // TODO: Return iterator over JSONs
+    release(ConceptDocumentIterator(CIterator(take_ownership(query_answer).into_documents())))
 }
 
 /// Frees the native rust <code>QueryAnswer</code> object.

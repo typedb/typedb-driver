@@ -105,21 +105,23 @@ impl TransactionStream {
 
             match header {
                 QueryResponse::Ok() => Ok(QueryAnswer::Ok()),
-                QueryResponse::ConceptTreesHeader(trees_header) => {
-                    let answers = box_stream(stream.flat_map(|result| match result {
-                        Ok(QueryResponse::StreamConceptTrees(trees)) => stream_iter(trees.into_iter().map(Ok)),
+                QueryResponse::ConceptDocumentsHeader(documents_header) => {
+                    let header = Arc::new(documents_header);
+                    let answers = box_stream(stream.flat_map(move |result| match result {
+                        Ok(QueryResponse::StreamConceptDocuments(trees)) => {
+                            stream_iter(trees.into_iter().map(Ok))
+                        }
                         Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
                         Ok(other) => {
                             stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
                         }
                         Err(err) => stream_once(Err(err)),
                     }));
-                    Ok(QueryAnswer::ConceptTreesStream(trees_header, answers))
+                    Ok(QueryAnswer::ConceptDocumentStream(documents_header, answers))
                 },
                 QueryResponse::ConceptRowsHeader(rows_header) => {
                     let header = Arc::new(rows_header);
                     let answers = box_stream(stream.flat_map(move |result| {
-                        let header = header.clone();
                         match result {
                             Ok(QueryResponse::StreamConceptRows(rows)) => {
                                 stream_iter(rows.into_iter().map({
@@ -135,7 +137,7 @@ impl TransactionStream {
                             Err(err) => stream_once(Err(err)),
                         }
                      }));
-                     Ok(QueryAnswer::ConceptRowsStream(answers))
+                     Ok(QueryAnswer::ConceptRowStream(answers))
                 },
                 QueryResponse::Error(error) => Err(error.into()),
                 other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into())

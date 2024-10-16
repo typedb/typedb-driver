@@ -553,7 +553,7 @@ impl fmt::Debug for Duration {
 
 #[derive(Clone, PartialEq)]
 pub struct Struct {
-    fields: HashMap<String, Option<Value>>,
+    pub(crate) fields: HashMap<String, Option<Value>>,
 }
 
 impl Struct {

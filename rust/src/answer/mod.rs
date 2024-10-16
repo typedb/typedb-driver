@@ -19,42 +19,85 @@
 
 use std::fmt;
 
-pub use self::{concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
+pub use self::{concept_row::ConceptRow, concept_document::ConceptDocument, json::JSON, value_group::ValueGroup};
 use crate::{
-    answer::concept_tree::{ConceptTree, ConceptTreesHeader},
-    concept::EntityType,
     BoxStream, Result,
 };
 
 pub mod concept_row;
-pub(crate) mod concept_tree;
+pub mod concept_document;
 mod json;
 mod value_group;
 
 pub enum QueryAnswer {
     Ok(),
-    ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>),
-    ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<ConceptTree>>),
+    ConceptRowStream(BoxStream<'static, Result<ConceptRow>>),
+    ConceptDocumentStream(BoxStream<'static, Result<ConceptDocument>>),
 }
 
 impl QueryAnswer {
+    /// Check if the <code>QueryAnswer</code> is an <code>Ok</code> response.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.is_ok()
+    /// ```
     pub fn is_ok(&self) -> bool {
         matches!(self, Self::Ok())
     }
 
-    pub fn is_rows_stream(&self) -> bool {
-        matches!(self, Self::ConceptRowsStream(_))
+    /// Check if the <code>QueryAnswer</code> is a <code>ConceptRowStream</code>.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.is_row_stream()
+    /// ```
+    pub fn is_row_stream(&self) -> bool {
+        matches!(self, Self::ConceptRowStream(_))
     }
 
-    pub fn is_json_stream(&self) -> bool {
-        matches!(self, Self::ConceptTreesStream(_, _))
+    /// Check if the <code>QueryAnswer</code> is a <code>ConceptDocumentStream</code>.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.is_document_stream()
+    /// ```
+    pub fn is_document_stream(&self) -> bool {
+        matches!(self, Self::ConceptDocumentStream(_))
     }
 
+    /// Unwraps the <code>QueryAnswer</code> into a <code>ConceptRowStream</code>.
+    /// Panics if it is not a <code>ConceptRowStream</code>.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.into_rows()
+    /// ```
     pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>> {
-        if let Self::ConceptRowsStream(stream) = self {
+        if let Self::ConceptRowStream(stream) = self {
             stream
         } else {
             panic!("Query answer is not a rows stream.")
+        }
+    }
+
+    /// Unwraps the <code>QueryAnswer</code> into a <code>ConceptDocumentStream</code>.
+    /// Panics if it is not a <code>ConceptDocumentStream</code>.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.into_documents()
+    /// ```
+    pub fn into_documents(self) -> BoxStream<'static, Result<ConceptDocument>> {
+        if let Self::ConceptDocumentStream(stream) = self {
+            stream
+        } else {
+            panic!("Query answer is not a documents stream.")
         }
     }
 }

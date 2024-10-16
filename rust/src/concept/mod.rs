@@ -398,3 +398,36 @@ impl Debug for Concept {
         }
     }
 }
+
+/// Kind represents the base of a defined type to describe its capabilities.
+/// For example, "define entity person;" defines a type "person" of a kind "entity".
+#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+pub enum Kind {
+    Entity,
+    Attribute,
+    Relation,
+    Role,
+}
+
+impl Kind {
+    pub const fn name(&self) -> &'static str {
+        match self {
+            Kind::Entity => "entity",
+            Kind::Attribute => "attribute",
+            Kind::Relation => "relation",
+            Kind::Role => "relation:role",
+        }
+    }
+}
+
+impl Debug for Kind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Kind[{}]", self.name())
+    }
+}
+
+impl Display for Kind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}

@@ -25,7 +25,7 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::{concept_row::ConceptRowHeader, concept_tree, concept_tree::ConceptTreesHeader},
+    answer::{concept_row::ConceptRowHeader, concept_document, concept_document::ConceptDocumentHeader},
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
@@ -144,9 +144,9 @@ pub(super) enum QueryRequest {
 pub(super) enum QueryResponse {
     Ok(),
     ConceptRowsHeader(ConceptRowHeader),
-    ConceptTreesHeader(ConceptTreesHeader),
+    ConceptDocumentsHeader(ConceptDocumentHeader),
     StreamConceptRows(Vec<Vec<Option<Concept>>>),
-    StreamConceptTrees(Vec<concept_tree::ConceptTree>),
+    StreamConceptDocuments(Vec<concept_document::ConceptDocument>),
     Error(ServerError),
     // Define,
     // Undefine,

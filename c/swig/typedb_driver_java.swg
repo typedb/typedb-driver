@@ -206,8 +206,8 @@
 
 %nojavaexception query_answer_get_rows;
 %nojavaexception query_answer_is_ok;
-%nojavaexception query_answer_is_concept_rows_stream;
-%nojavaexception query_answer_is_concept_trees_stream;
+%nojavaexception query_answer_is_concept_row_stream;
+%nojavaexception query_answer_is_concept_document_stream;
 
 %nojavaexception value_group_to_string;
 %nojavaexception value_group_equals;
