@@ -23,7 +23,6 @@ config:
     typedb-protocol: [build, release]
 
 build:
-  TODO REMOVE BEFORE MERGE / BREAK AUTOMATION NOT TO RUN IN CI
   quality:
     filter:
       owner: typedb
