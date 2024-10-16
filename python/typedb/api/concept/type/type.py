@@ -24,21 +24,6 @@ from typedb.api.concept.concept import Concept
 
 class Type(Concept, ABC):
 
-    @abstractmethod
-    def get_label(self) -> str:
-        """
-        Retrieves the unique label of the type.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            type_.get_label()
-        """
-        pass
-
     def is_type(self) -> bool:
         """
         Checks if the concept is a ``Type``.

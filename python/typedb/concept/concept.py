@@ -22,7 +22,7 @@ from abc import ABC, abstractmethod
 from typedb.api.concept.concept import Concept
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
+from typedb.native_driver_wrapper import concept_to_string, concept_equals, TypeDBDriverExceptionNative, concept_get_label, Concept as NativeConcept
 
 
 class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
@@ -31,6 +31,12 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
         if not concept:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(concept)
+
+    def get_label(self) -> str:
+        try:
+            return concept_get_label(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

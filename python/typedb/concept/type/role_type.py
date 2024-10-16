@@ -18,17 +18,8 @@
 from __future__ import annotations
 
 from typedb.api.concept.type.role_type import RoleType
-from typedb.common.exception import TypeDBDriverException
 from typedb.concept.type.type import _Type
-from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, role_type_get_label
-)
 
 
 class _RoleType(_Type, RoleType):
-
-    def get_label(self) -> str:
-        try:
-            return role_type_get_label(self.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    pass

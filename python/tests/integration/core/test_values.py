@@ -144,14 +144,12 @@ class TestValues(TestCase):
                         checked += 1
                     elif attribute.is_datetime_tz():
                         if "-off" in attribute_name:
-                            try:
-                                sign = "+"
-                                expected_dt, expected_offset = expected.split(sign)
-                            except ValueError:
-                                sign = "-"
-                                expected_dt, expected_offset = expected.split(sign)
-
-                            expected_offset = Datetime.offset_seconds_fromstring(sign + expected_offset)
+                            offset_start = expected.rfind("+")
+                            if offset_start == -1:
+                                offset_start = expected.rfind("-")
+                            if offset_start == -1:
+                                raise ValueError("No IANA or Offset values for datetime-tz")
+                            expected_dt, expected_offset = expected[:offset_start], Datetime.offset_seconds_fromstring(expected[offset_start:])
                             assert_that(
                                 value,
                                 is_(Datetime.utcfromstring(expected_dt, offset_seconds=expected_offset)))

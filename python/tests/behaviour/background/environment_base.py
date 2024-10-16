@@ -31,11 +31,12 @@ def before_scenario(context: Context):
     context.answer = None  # QueryAnswer
     context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
     context.collected_answer = None  # [ConceptRow] / ... ?
-    context.instances = {}
+    context.concurrent_answers = None
+    context.unwrapped_concurrent_answers = None
     # setup context functions
     context.tx = lambda: next(iter(context.transactions), None)
-    context.get = lambda var: context.instances[var]
     context.clear_answers = lambda: _clear_answers_impl(context)
+    context.clear_concurrent_answers = lambda: _clear_concurrent_answers_impl(context)
     context.option_setters = {
         # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
     }
@@ -46,6 +47,10 @@ def _clear_answers_impl(context: Context):
     context.unwrapped_answer = None
     context.collected_answer = None
 
+
+def _clear_concurrent_answers_impl(context: Context):
+    context.concurrent_answers = None
+    context.unwrapped_concurrent_answers = None
 
 def after_scenario(context: Context, scenario):
     if scenario.status == Status.skipped:

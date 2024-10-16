@@ -117,7 +117,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-core-server.sh &&
-          bazel test //rust/tests/behaviour/... --test_output=streamed &&
+          bazel test //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS

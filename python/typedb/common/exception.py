@@ -120,6 +120,7 @@ class QueryErrorMessage(ErrorMessage):
 
 
 VARIABLE_DOES_NOT_EXIST = QueryErrorMessage(1, "The variable '%s' does not exist.")
+# TODO: Move this validation to server and remove the error message from all the drivers
 MISSING_QUERY = QueryErrorMessage(2, "Query cannot be null or empty.")
 
 

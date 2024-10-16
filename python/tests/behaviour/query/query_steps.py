@@ -15,8 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from decimal import Decimal
+from functools import partial
 from typing import Optional
 
 from behave import *
@@ -28,8 +30,8 @@ from typedb.api.answer.query_type import QueryType
 from typedb.api.concept.concept import Concept
 from typedb.api.concept.instance.attribute import Attribute
 from typedb.api.concept.instance.entity import Entity
-from typedb.api.concept.instance.relation import Relation
 from typedb.api.concept.instance.instance import Instance
+from typedb.api.concept.instance.relation import Relation
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.api.concept.type.entity_type import EntityType
 from typedb.api.concept.type.relation_type import RelationType
@@ -55,6 +57,19 @@ def step_impl(context: Context, may_error: MayError):
 def step_impl(context: Context):
     context.clear_answers()
     context.answer = context.tx().query(query=context.text).resolve()
+
+
+@step("concurrently get answers of typeql write query {count:Int} times")
+@step("concurrently get answers of typeql read query {count:Int} times")
+@step("concurrently get answers of typeql schema query {count:Int} times")
+def step_impl(context: Context, count: int):
+    assert_that(count, is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
+    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
+        context.clear_concurrent_answers()
+        context.concurrent_answers = []
+        for i in range(count):
+            context.concurrent_answers.append(
+                executor.submit(partial(lambda: context.tx().query(query=context.text).resolve())))
 
 
 @step("answer type {is_or_not:IsOrNot}: {answer_type}")
@@ -101,13 +116,32 @@ def unwrap_answer_if_needed(context: Context):
     if context.unwrapped_answer is None:
         if context.answer.is_ok():
             unwrap_answer_ok(context)
-        if context.answer.is_concept_rows():
+        elif context.answer.is_concept_rows():
             unwrap_answer_rows(context)
         elif context.answer.is_concept_trees():
             unwrap_answer_trees(context)
         else:
             raise ValueError(
                 "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
+
+
+def unwrap_concurrent_answers_if_needed(context: Context):
+    if context.unwrapped_concurrent_answers is None:
+        if not context.concurrent_answers:
+            raise ValueError("Cannot unwrap test concurrent answers as concurrent answers are absent")
+
+        context.unwrapped_concurrent_answers = []
+        for answer_future in context.concurrent_answers:
+            answer = answer_future.result()
+            if answer.is_ok():
+                context.unwrapped_concurrent_answers.append(answer.as_ok())
+            elif answer.is_concept_rows():
+                context.unwrapped_concurrent_answers.append(answer.as_concept_rows())
+            elif answer.is_concept_trees():
+                context.unwrapped_concurrent_answers.append(answer.as_concept_trees())
+            else:
+                raise ValueError(
+                    "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
 
 
 def collect_answer_if_needed(context: Context):
@@ -136,6 +170,24 @@ def step_impl(context: Context, is_or_not: bool, query_type: QueryType):
     answer_query_type = context.collected_answer[0].query_type
     assert_that(answer_query_type == query_type, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=answer_query_type, expected=query_type))
+
+
+@step("concurrently process {count:Int} row from answers{may_error:MayError}")
+@step("concurrently process {count:Int} rows from answers{may_error:MayError}")
+def step_impl(context: Context, count: int, may_error: MayError):
+    answers_num = len(context.concurrent_answers)
+    assert_that(answers_num, is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
+
+    unwrap_concurrent_answers_if_needed(context)
+
+    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
+        futures = [
+            executor.submit(lambda it=answer: [next(it) for _ in range(count)])
+            for answer in context.unwrapped_concurrent_answers
+        ]
+
+        for future in futures:
+            may_error.check(future.result, exception=StopIteration)
 
 
 @step("answer column names are")
@@ -304,7 +356,8 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 @step(
     "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is instance: {is_instance:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_instance: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_instance(), is_(is_instance))
+    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_instance(),
+                is_(is_instance))
 
 
 @step(
@@ -499,9 +552,17 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
     elif value_type == ValueType.DATETIME:
         return Datetime.utcfromstring(value)
     elif value_type == ValueType.DATETIME_TZ:
-        # TODO: Offset is not supported
-        value_dt, value_tz = value.split(" ")
-        return Datetime.utcfromstring(value_dt, value_tz)
+        if " " in value:  # IANA timezone name
+            value_dt, value_tz = value.split(" ")
+            return Datetime.utcfromstring(value_dt, value_tz)
+        else:  # offset
+            offset_start = value.rfind("+")
+            if offset_start == -1:
+                offset_start = value.rfind("-")
+            if offset_start == -1:
+                raise ValueError("No IANA or Offset values for datetime-tz")
+            value_dt, value_offset = value[:offset_start], Datetime.offset_seconds_fromstring(value[offset_start:])
+            return Datetime.utcfromstring(value_dt, offset_seconds=value_offset)
     elif value_type == ValueType.DURATION:
         return Duration.fromstring(value)
     elif value_type == ValueType.STRUCT:

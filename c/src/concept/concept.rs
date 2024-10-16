@@ -232,70 +232,70 @@ pub extern "C" fn attribute_type_is_struct(attribute_type: *const Concept) -> bo
     matches!(borrow_as_attribute_type(attribute_type).value_type, Some(ValueType::Struct(_)))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>boolean</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>boolean</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_boolean(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Boolean(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>long</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>long</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_long(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Long(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>double</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>double</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_double(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Double(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>decimal</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>decimal</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_decimal(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Decimal(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>string</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>string</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_string(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::String(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>date</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>date</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_date(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Date(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>datetime</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>datetime</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_datetime(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Datetime(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>datetime-tz</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>datetime-tz</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_datetime_tz(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::DatetimeTZ(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>duration</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>duration</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_duration(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Duration(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>struct</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>struct</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_struct(value: *const Concept) -> bool {
@@ -432,55 +432,61 @@ pub extern "C" fn concept_drop(concept: *mut Concept) {
     free(concept);
 }
 
-/// Checks if the concept is an ``Entity``.
+/// Checks if the concept is an <code>Entity</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_entity(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Entity(_))
 }
 
-/// Checks if the concept is a ``Relation``.
+/// Checks if the concept is a <code>Relation</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_relation(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Relation(_))
 }
 
-/// Checks if the concept is an ``Attribute``.
+/// Checks if the concept is an <code>Attribute</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_attribute(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Attribute(_))
 }
 
-/// Checks if the concept is a ``Value``.
+/// Checks if the concept is a <code>Value</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Value(_))
 }
 
-/// Checks if the concept is an ``EntityType``.
+/// Checks if the concept is an <code>EntityType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_entity_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::EntityType(_))
 }
 
-/// Checks if the concept is a ``RelationType``.
+/// Checks if the concept is a <code>RelationType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_relation_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::RelationType(_))
 }
 
-/// Checks if the concept is an ``AttributeType``.
+/// Checks if the concept is an <code>AttributeType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_attribute_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::AttributeType(_))
 }
 
-/// Checks if the concept is a ``RoleType``.
+/// Checks if the concept is a <code>RoleType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_role_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::RoleType(_))
 }
 
-/// A string representation of this <code>Concept</code> object
+/// Gets the 'label' of this <code>Concept</code> object.
+#[no_mangle]
+pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
+    release_string(borrow(concept).get_label().clone().to_owned())
+}
+
+/// A string representation of this <code>Concept</code> object.
 #[no_mangle]
 pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))

@@ -227,9 +227,9 @@ class MayError:
         self.may_error = may_error
         self.message = message
 
-    def check(self, func: Callable):
+    def check(self, func: Callable, exception=TypeDBDriverException):
         if self.may_error:
-            assert_that(func, raises(TypeDBDriverException, self.message))
+            assert_that(func, raises(exception, self.message))
         else:
             func()
 

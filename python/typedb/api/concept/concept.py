@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, INVALID_CONCEPT_CASTING
@@ -316,3 +316,21 @@ class Concept(ABC):
             concept.as_value()
         """
         raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
+
+    @abstractmethod
+    def get_label(self) -> str:
+        """
+        Get the label of the concept.
+        If this is an ``Instance``, return the label of the type of this instance.
+        If this is a ``Value``, return the label of the value type of the value.
+        If this is a ``Type``, return the label of the type.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.get_label()
+        """
+        pass

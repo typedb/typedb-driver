@@ -18,15 +18,8 @@
 from __future__ import annotations
 
 from typedb.api.concept.type.relation_type import RelationType
-from typedb.common.exception import TypeDBDriverException
 from typedb.concept.type.type import _Type
-from typedb.native_driver_wrapper import relation_type_get_label, TypeDBDriverExceptionNative
 
 
 class _RelationType(RelationType, _Type):
-
-    def get_label(self) -> str:
-        try:
-            return relation_type_get_label(self.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    pass
