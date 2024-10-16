@@ -25,22 +25,24 @@ use futures::TryFutureExt;
 use itertools::Itertools;
 use typedb_protocol::{
     concept,
-    concept_document,
+    concept_document::{self, node::leaf::Leaf as LeafProto},
     row_entry::Entry,
+    value,
     value::{datetime_tz::Timezone as TimezoneProto, Value as ValueProtoInner},
     value_type::ValueType as ValueTypeProto,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
-    ConceptRow as ConceptRowProto, Entity as EntityProto, EntityType as EntityTypeProto,
-    ConceptDocument as ConceptDocumentProto, Relation as RelationProto, RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto, Value as ValueProto,
+    ConceptDocument as ConceptDocumentProto, ConceptRow as ConceptRowProto, Entity as EntityProto,
+    EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto,
+    RoleType as RoleTypeProto, Value as ValueProto, ValueType as ValueTypeStructProto,
 };
 
 use super::{FromProto, TryFromProto};
 use crate::{
-    answer::concept_document::Node,
+    answer::concept_document::{Leaf, Node},
     concept::{
         value::{Decimal, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value, ValueType,
+        Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType,
+        Value, ValueType,
     },
     error::{
         ConnectionError,
@@ -107,7 +109,7 @@ impl TryFromProto<concept_document::Node> for Node {
             Some(concept_document::node::Node::Map(map)) => Ok(Self::Map(HashMap::try_from_proto(map)?)),
             Some(concept_document::node::Node::List(list)) => Ok(Self::List(Vec::try_from_proto(list)?)),
             Some(concept_document::node::Node::Leaf(leaf)) => {
-                let result: Result<Option<Concept>> = Option::try_from_proto(leaf);
+                let result: Result<Option<Leaf>> = Option::try_from_proto(leaf);
                 Ok(Self::Leaf(result?))
             }
             None => Err(MissingResponseField { field: "node" }.into()),
@@ -115,23 +117,20 @@ impl TryFromProto<concept_document::Node> for Node {
     }
 }
 
-impl TryFromProto<ConceptDocumentProto> for HashMap<String, Node> {
+impl TryFromProto<ConceptDocumentProto> for Option<Node> {
     fn try_from_proto(proto: ConceptDocumentProto) -> Result<Self> {
         let ConceptDocumentProto { root: root_proto } = proto;
-        let concept_document::node::Map { map } = root_proto
-            .ok_or(MissingResponseField { field: "root" })?;
-        map.into_iter()
-            .map(|(var, node_proto)| Node::try_from_proto(node_proto).map(|node| (var, node)))
-            .try_collect()
+        match root_proto {
+            None => Ok(None),
+            Some(node_proto) => Node::try_from_proto(node_proto).map(Some),
+        }
     }
 }
 
 impl TryFromProto<concept_document::node::Map> for HashMap<String, Node> {
     fn try_from_proto(proto: concept_document::node::Map) -> Result<Self> {
-        let concept_document::node::Map { map } = proto; // TODO: remove code duplication in the method above
-        map.into_iter()
-            .map(|(var, node_proto)| Node::try_from_proto(node_proto).map(|node| (var, node)))
-            .try_collect()
+        let concept_document::node::Map { map } = proto;
+        map.into_iter().map(|(var, node_proto)| Node::try_from_proto(node_proto).map(|node| (var, node))).try_collect()
     }
 }
 
@@ -142,30 +141,32 @@ impl TryFromProto<concept_document::node::List> for Vec<Node> {
     }
 }
 
-impl TryFromProto<concept_document::node::Leaf> for Option<Concept> {
+impl TryFromProto<concept_document::node::Leaf> for Option<Leaf> {
     fn try_from_proto(proto: concept_document::node::Leaf) -> Result<Self> {
         match proto.leaf {
-            Some(concept_document::node::leaf::Leaf::Empty(_)) => Ok(None),
-            Some(concept_document::node::leaf::Leaf::EntityType(entity_type_proto)) => {
-                Ok(Some(Concept::EntityType(EntityType::from_proto(entity_type_proto))))
+            Some(LeafProto::Empty(_)) => Ok(None),
+            Some(LeafProto::EntityType(entity_type_proto)) => {
+                Ok(Some(Leaf::Concept(Concept::EntityType(EntityType::from_proto(entity_type_proto)))))
             }
-            Some(concept_document::node::leaf::Leaf::RelationType(relation_type_proto)) => {
-                Ok(Some(Concept::RelationType(RelationType::from_proto(relation_type_proto))))
+            Some(LeafProto::RelationType(relation_type_proto)) => {
+                Ok(Some(Leaf::Concept(Concept::RelationType(RelationType::from_proto(relation_type_proto)))))
             }
-            Some(concept_document::node::leaf::Leaf::AttributeType(attribute_type_proto)) => {
-                Ok(Some(Concept::AttributeType(AttributeType::from_proto(attribute_type_proto))))
+            Some(LeafProto::AttributeType(attribute_type_proto)) => {
+                Ok(Some(Leaf::Concept(Concept::AttributeType(AttributeType::from_proto(attribute_type_proto)))))
             }
-            Some(concept_document::node::leaf::Leaf::RoleType(role_type_proto)) => {
-                Ok(Some(Concept::RoleType(RoleType::from_proto(role_type_proto))))
+            Some(LeafProto::RoleType(role_type_proto)) => {
+                Ok(Some(Leaf::Concept(Concept::RoleType(RoleType::from_proto(role_type_proto)))))
             }
-            Some(concept_document::node::leaf::Leaf::ValueType(_)) => {}
-            Some(concept_document::node::leaf::Leaf::Attribute(attribute_proto)) => {
-                Attribute::try_from_proto(attribute_proto).map(|attr| Some(Concept::Attribute(attr)))
+            Some(LeafProto::ValueType(value_type_proto)) => {
+                ValueType::try_from_proto(value_type_proto).map(|value_type| Some(Leaf::ValueType(value_type)))
             }
-            Some(concept_document::node::leaf::Leaf::Value(value_proto)) => {
-                Value::try_from_proto(value_proto).map(|value| Some(Concept::Value(value)))
+            Some(LeafProto::Attribute(attribute_proto)) => {
+                Attribute::try_from_proto(attribute_proto).map(|attr| Some(Leaf::Concept(Concept::Attribute(attr))))
             }
-            Some(concept_document::node::leaf::Leaf::Kind(_)) => {}
+            Some(LeafProto::Value(value_proto)) => {
+                Value::try_from_proto(value_proto).map(|value| Some(Leaf::Concept(Concept::Value(value))))
+            }
+            Some(LeafProto::Kind(kind_proto)) => Kind::try_from_proto(kind_proto).map(|kind| Some(Leaf::Kind(kind))),
             None => Ok(None),
         }
     }
@@ -196,6 +197,13 @@ impl FromProto<AttributeTypeProto> for AttributeType {
     }
 }
 
+impl FromProto<RoleTypeProto> for RoleType {
+    fn from_proto(proto: RoleTypeProto) -> Self {
+        let RoleTypeProto { label } = proto;
+        Self { label }
+    }
+}
+
 impl FromProto<ValueTypeProto> for ValueType {
     fn from_proto(proto: ValueTypeProto) -> Self {
         match proto {
@@ -213,10 +221,10 @@ impl FromProto<ValueTypeProto> for ValueType {
     }
 }
 
-impl FromProto<RoleTypeProto> for RoleType {
-    fn from_proto(proto: RoleTypeProto) -> Self {
-        let RoleTypeProto { label } = proto;
-        Self { label }
+impl TryFromProto<ValueTypeStructProto> for ValueType {
+    fn try_from_proto(proto: ValueTypeStructProto) -> Result<Self> {
+        let ValueTypeStructProto { value_type: value_type_proto } = proto;
+        Ok(ValueType::from_proto(value_type_proto.ok_or(MissingResponseField { field: "value_type" })?))
     }
 }
 
@@ -300,6 +308,18 @@ impl TryFromProto<ValueProto> for Value {
                 // TODO: not implemented yet
             }
             None => Err(MissingResponseField { field: "Value.value" }.into()),
+        }
+    }
+}
+
+impl TryFromProto<i32> for Kind {
+    fn try_from_proto(kind: i32) -> Result<Self> {
+        match kind {
+            0 => Ok(Self::Entity),
+            1 => Ok(Self::Relation),
+            2 => Ok(Self::Attribute),
+            3 => Ok(Self::Role),
+            _ => Err(ConnectionError::UnexpectedKind { kind }.into()),
         }
     }
 }

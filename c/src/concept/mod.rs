@@ -21,7 +21,7 @@ use std::ptr::addr_of_mut;
 
 use itertools::Itertools;
 use typedb_driver::{
-    answer::{ConceptRow, ConceptDocument, QueryAnswer, ValueGroup},
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, ValueGroup},
     concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
     BoxPromise, Promise, Result,
 };

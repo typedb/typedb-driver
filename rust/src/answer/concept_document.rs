@@ -17,12 +17,12 @@
  * under the License.
  */
 
-use std::{borrow::Cow, collections::HashMap};
-use std::sync::Arc;
+use std::{borrow::Cow, collections::HashMap, sync::Arc};
 
-use super::{JSON, QueryType};
-use crate::concept::{Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType};
-use crate::concept::value::Struct;
+use super::{QueryType, JSON};
+use crate::concept::{
+    value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptDocumentHeader {
@@ -34,16 +34,19 @@ pub struct ConceptDocumentHeader {
 #[derive(Clone, Debug, PartialEq)]
 pub struct ConceptDocument {
     header: Arc<ConceptDocumentHeader>,
-    pub root: HashMap<String, Node>,
+    pub root: Option<Node>,
 }
 
 impl ConceptDocument {
-    pub fn new(header: Arc<ConceptDocumentHeader>, root: HashMap<String, Node>) -> Self {
+    pub fn new(header: Arc<ConceptDocumentHeader>, root: Option<Node>) -> Self {
         Self { header, root }
     }
 
     pub(crate) fn into_json(self) -> JSON {
-        JSON::Object(self.root.into_iter().map(|(var, node)| (Cow::Owned(var), node.into_json())).collect())
+        match self.root {
+            None => JSON::Null,
+            Some(root_node) => root_node.into_json(),
+        }
     }
 
     /// Retrieve the executed query's type (shared by all elements in this stream).
@@ -90,9 +93,7 @@ impl Leaf {
     fn into_json(self) -> JSON {
         match self {
             Self::Empty => JSON::Null,
-            Self::Concept(Concept::EntityType(EntityType { label, .. })) => {
-                json_type(Kind::Entity, Cow::Owned(label))
-            }
+            Self::Concept(Concept::EntityType(EntityType { label, .. })) => json_type(Kind::Entity, Cow::Owned(label)),
             Self::Concept(Concept::RelationType(RelationType { label, .. })) => {
                 json_type(Kind::Relation, Cow::Owned(label))
             }
@@ -103,7 +104,11 @@ impl Leaf {
                 json_type(Kind::Role, Cow::Owned(label.to_string()))
             }
             Self::Concept(Concept::Attribute(Attribute { value, type_, .. })) => JSON::Object(
-                [(TYPE, json_attribute_type(Cow::Owned(type_.unwrap().label()), Some(value.get_type()))), (VALUE, json_value(value))].into(),
+                [
+                    (TYPE, json_attribute_type(Cow::Owned(type_.unwrap().label), Some(value.get_type()))),
+                    (VALUE, json_value(value)),
+                ]
+                .into(),
             ),
             Self::Concept(Concept::Value(value)) => {
                 JSON::Object([(VALUE_TYPE, json_value_type(Some(value.get_type()))), (VALUE, json_value(value))].into())
@@ -111,6 +116,8 @@ impl Leaf {
             Self::Concept(concept @ (Concept::Entity(_) | Concept::Relation(_))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {:?}", concept)
             }
+            Self::ValueType(value_type) => json_value_type(Some(value_type)),
+            Self::Kind(kind) => json_kind(kind),
         }
     }
 }
@@ -123,7 +130,7 @@ const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
 const VALUE: Cow<'static, str> = Cow::Borrowed("value");
 
 fn json_type(kind: Kind, label: Cow<'static, str>) -> JSON {
-    JSON::Object([(KIND, JSON::String(Cow::Borrowed(kind.name()))), (LABEL, JSON::String(label))].into())
+    JSON::Object([(KIND, json_kind(kind)), (LABEL, JSON::String(label))].into())
 }
 
 fn json_attribute_type(label: Cow<'static, str>, value_type: Option<ValueType>) -> JSON {
@@ -160,7 +167,7 @@ fn json_value_type(value_type: Option<ValueType>) -> JSON {
         Some(ValueType::Datetime) => DATETIME,
         Some(ValueType::DatetimeTZ) => DATETIME_TZ,
         Some(ValueType::Duration) => DURATION,
-        Some(ValueType::Struct(name)) => Cow::Borrowed(name.as_str()),
+        Some(ValueType::Struct(name)) => Cow::Owned(name),
     })
 }
 
@@ -175,7 +182,9 @@ fn json_value(value: Value) -> JSON {
         Value::Datetime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string())),
         Value::DatetimeTZ(datetime_tz) => JSON::String(Cow::Owned(datetime_tz.to_string())), // TODO: Maybe something else
         Value::Duration(duration) => JSON::String(Cow::Owned(duration.to_string())),
-        Value::Struct(struct_, struct_name) => JSON::Object(HashMap::from([(Cow::Owned(struct_name), json_struct(struct_))])),
+        Value::Struct(struct_, struct_name) => {
+            JSON::Object(HashMap::from([(Cow::Owned(struct_name), json_struct(struct_))]))
+        }
     }
 }
 
@@ -191,4 +200,8 @@ fn json_struct(struct_: Struct) -> JSON {
     }
 
     JSON::Object(json_object)
+}
+
+fn json_kind(kind: Kind) -> JSON {
+    JSON::String(Cow::Borrowed(kind.name()))
 }

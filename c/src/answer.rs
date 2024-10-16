@@ -31,8 +31,12 @@ use super::{
     iterator::CIterator,
     memory::{borrow, free, release, release_optional, release_string, string_view},
 };
-use crate::{common::StringIterator, concept::ConceptRowIterator, error::try_release, memory::take_ownership};
-use crate::concept::ConceptDocumentIterator;
+use crate::{
+    common::StringIterator,
+    concept::{ConceptDocumentIterator, ConceptRowIterator},
+    error::try_release,
+    memory::take_ownership,
+};
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
@@ -78,7 +82,8 @@ pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut
 
 /// Produces an <code>Iterator</code> over all <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut ConceptDocumentIterator { // TODO: Return iterator over JSONs
+pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut ConceptDocumentIterator {
+    // TODO: Return iterator over JSONs
     release(ConceptDocumentIterator(CIterator(take_ownership(query_answer).into_documents())))
 }
 

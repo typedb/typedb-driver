@@ -24,8 +24,8 @@ use crate::{
     BoxStream, Result,
 };
 
-pub mod concept_row;
 pub mod concept_document;
+pub mod concept_row;
 mod json;
 mod value_group;
 
