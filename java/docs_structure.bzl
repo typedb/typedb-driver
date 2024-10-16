@@ -49,7 +49,7 @@ dir_mapping = {
     "Relation.adoc": "data",
     "Entity.adoc": "data",
     "Attribute.adoc": "data",
+    "Instance.adoc": "data",
     "Value.adoc": "data",
-    "Thing.adoc": "data",
     "TypeDBDriverException.adoc": "errors",
 }

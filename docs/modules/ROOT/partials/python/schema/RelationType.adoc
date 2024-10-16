@@ -3,7 +3,7 @@
 
 *Supertypes:*
 
-* `ThingType`
+* `Type`
 
 Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles.
 

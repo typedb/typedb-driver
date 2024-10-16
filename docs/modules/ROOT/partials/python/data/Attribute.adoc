@@ -3,7 +3,7 @@
 
 *Supertypes:*
 
-* `Thing`
+* `Instance`
 
 Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
 

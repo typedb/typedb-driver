@@ -3,7 +3,7 @@
 
 *Supertypes:*
 
-* `Thing`
+* `Instance`
 
 Instance of data of an entity type, representing a standalone object that exists in the data model independently.
 
