@@ -21,15 +21,8 @@ package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.RelationType;
 
-import static com.typedb.driver.jni.typedb_driver.relation_type_get_label;
-
-public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
+public class RelationTypeImpl extends TypeImpl implements RelationType {
     public RelationTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
-    }
-
-    @Override
-    public String getLabel() {
-        return relation_type_get_label(nativeObject);
     }
 }

@@ -25,8 +25,8 @@ import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.thing.Attribute;
-import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.api.concept.instance.Attribute;
+import com.typedb.driver.api.concept.instance.Entity;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.concept.value.Value;
@@ -115,7 +115,7 @@ public class DriverQueryTest {
             assertFalse(conceptByName.isEntity());
             assertFalse(conceptByName.isAttributeType());
             assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isThing());
+            assertFalse(conceptByName.isInstance());
             assertEquals(conceptByName.asEntityType().getLabel(), "person");
             assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
             assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
@@ -141,7 +141,7 @@ public class DriverQueryTest {
             assertFalse(conceptByName.isAttribute());
             assertFalse(conceptByName.isEntityType());
             assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isThing());
+            assertFalse(conceptByName.isInstance());
             assertFalse(conceptByName.asAttributeType().isBoolean());
             assertFalse(conceptByName.asAttributeType().isStruct());
             assertFalse(conceptByName.asAttributeType().isString());
@@ -170,7 +170,7 @@ public class DriverQueryTest {
             assertFalse(x.isEntityType());
             assertFalse(x.isAttribute());
             assertFalse(x.isType());
-            assertTrue(x.isThing());
+            assertTrue(x.isInstance());
             assertEquals(x.asEntity().getType().asEntityType().getLabel(), "person");
             assertNotEquals(x.asEntity().getType().asEntityType().getLabel(), "not person");
 
@@ -179,7 +179,7 @@ public class DriverQueryTest {
             assertFalse(z.isEntityType());
             assertFalse(z.isAttribute());
             assertFalse(z.isType());
-            assertTrue(z.isThing());
+            assertTrue(z.isInstance());
             Entity zEntity = z.asEntity();
             assertEquals(zEntity.getType().asEntityType().getLabel(), "person");
             assertNotEquals(zEntity.getType().asEntityType().getLabel(), "not person");
@@ -199,7 +199,7 @@ public class DriverQueryTest {
                 assertFalse(x.isEntityType());
                 assertFalse(x.isAttribute());
                 assertFalse(x.isType());
-                assertTrue(x.isThing());
+                assertTrue(x.isInstance());
                 EntityType xType = x.asEntity().getType().asEntityType();
                 assertEquals(xType.getLabel(), "person");
                 assertNotEquals(xType.getLabel(), "not person");

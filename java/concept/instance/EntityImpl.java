@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.thing;
+package com.typedb.driver.concept.instance;
 
-import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.api.concept.instance.Entity;
 import com.typedb.driver.concept.type.EntityTypeImpl;
 
 import static com.typedb.driver.jni.typedb_driver.entity_get_iid;
 import static com.typedb.driver.jni.typedb_driver.entity_get_type;
 
-public class EntityImpl extends ThingImpl implements Entity {
+public class EntityImpl extends InstanceImpl implements Entity {
     public EntityImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }

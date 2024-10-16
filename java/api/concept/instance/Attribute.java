@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.typedb.driver.api.concept.thing;
+package com.typedb.driver.api.concept.instance;
 
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
@@ -35,7 +35,7 @@ import java.util.Optional;
  * This value is fixed and unique for every given instance of the attribute type.</p>
  * <p>Attributes can be uniquely addressed by their type and value.</p>
  */
-public interface Attribute extends Thing {
+public interface Attribute extends Instance {
     /**
      * Retrieves the type which this <code>Attribute</code> belongs to.
      *

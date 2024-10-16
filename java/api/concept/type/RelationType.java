@@ -26,7 +26,7 @@ import javax.annotation.CheckReturnValue;
  * Other types can play roles in relations if it’s mentioned in their definition.
  * A relation type must specify at least one role.
  */
-public interface RelationType extends ThingType {
+public interface RelationType extends Type {
     /**
      * {@inheritDoc}
      */

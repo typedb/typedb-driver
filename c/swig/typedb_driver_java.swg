@@ -149,6 +149,7 @@
 %nojavaexception concept_as_entity_type;
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
+%nojavaexception concept_get_label;
 %nojavaexception concept_to_string;
 %nojavaexception concept_equals;
 

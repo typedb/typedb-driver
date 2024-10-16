@@ -21,7 +21,6 @@ package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.AttributeType;
 
-import static com.typedb.driver.jni.typedb_driver.attribute_type_get_label;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_get_value_type;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_is_boolean;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_is_date;
@@ -35,14 +34,9 @@ import static com.typedb.driver.jni.typedb_driver.attribute_type_is_string;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_is_struct;
 import static com.typedb.driver.jni.typedb_driver.attribute_type_is_untyped;
 
-public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
+public class AttributeTypeImpl extends TypeImpl implements AttributeType {
     public AttributeTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
-    }
-
-    @Override
-    public String getLabel() {
-        return attribute_type_get_label(nativeObject);
     }
 
     @Override

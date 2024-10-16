@@ -21,15 +21,8 @@ package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.RoleType;
 
-import static com.typedb.driver.jni.typedb_driver.role_type_get_label;
-
 public class RoleTypeImpl extends TypeImpl implements RoleType {
     public RoleTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
-    }
-
-    @Override
-    public String getLabel() {
-        return role_type_get_label(nativeObject);
     }
 }

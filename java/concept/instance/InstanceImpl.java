@@ -17,25 +17,37 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.type;
+package com.typedb.driver.concept.instance;
 
-import com.typedb.driver.api.concept.type.ThingType;
+import com.typedb.driver.api.concept.instance.Instance;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.concept.type.TypeImpl;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
-import static com.typedb.driver.jni.typedb_driver.concept_is_entity_type;
-import static com.typedb.driver.jni.typedb_driver.concept_is_relation_type;
+import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
+import static com.typedb.driver.jni.typedb_driver.concept_is_entity;
+import static com.typedb.driver.jni.typedb_driver.concept_is_relation;
 
-public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
-    ThingTypeImpl(com.typedb.driver.jni.Concept concept) {
+public abstract class InstanceImpl extends ConceptImpl implements Instance {
+    protected int hash = 0;
+
+    InstanceImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
-    public static ThingTypeImpl of(com.typedb.driver.jni.Concept concept) {
-        if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
-        else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
-        else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
+    public static InstanceImpl of(com.typedb.driver.jni.Concept concept) {
+        if (concept_is_entity(concept)) return new EntityImpl(concept);
+        else if (concept_is_relation(concept)) return new RelationImpl(concept);
+        else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+    }
+
+    @Override
+    public abstract TypeImpl getType();
+
+    @Override
+    public InstanceImpl asInstance() {
+        return this;
     }
 }

@@ -17,50 +17,50 @@
  * under the License.
  */
 
-package com.typedb.driver.api.concept.thing;
+package com.typedb.driver.api.concept.instance;
 
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.type.ThingType;
+import com.typedb.driver.api.concept.type.Type;
 
 import javax.annotation.CheckReturnValue;
 
-public interface Thing extends Concept {
+public interface Instance extends Concept {
     /**
-     * Retrieves the type which this <code>Thing</code> belongs to.
+     * Retrieves the type which this <code>Instance</code> belongs to.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.getType();
+     * instance.getType();
      * </pre>
      */
     @CheckReturnValue
-    ThingType getType();
+    Type getType();
 
     /**
-     * Checks if the concept is a <code>Thing</code>.
+     * Checks if the concept is a <code>Instance</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.isThing();
+     * instance.isInstance();
      * </pre>
      */
     @Override
     @CheckReturnValue
-    default boolean isThing() {
+    default boolean isInstance() {
         return true;
     }
 
     /**
-     * Casts the concept to <code>Thing</code>.
+     * Casts the concept to <code>Instance</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.asThing();
+     * instance.asInstance();
      * </pre>
      */
     @Override
     @CheckReturnValue
-    default Thing asThing() {
+    default Instance asInstance() {
         return this;
     }
 }

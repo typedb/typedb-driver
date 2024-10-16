@@ -24,7 +24,7 @@ import javax.annotation.CheckReturnValue;
 /**
  * Entity types represent the classification of independent objects in the data model of the business domain.
  */
-public interface EntityType extends ThingType {
+public interface EntityType extends Type {
     /**
      * {@inheritDoc}
      */

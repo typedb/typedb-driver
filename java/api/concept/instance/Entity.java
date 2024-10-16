@@ -17,63 +17,64 @@
  * under the License.
  */
 
-package com.typedb.driver.api.concept.thing;
+package com.typedb.driver.api.concept.instance;
 
-import com.typedb.driver.api.concept.type.RelationType;
+import com.typedb.driver.api.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
 /**
- * Relation is an instance of a relation type and can be uniquely addressed
- * by a combination of its type, owned attributes and role players.
+ * Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+ * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
+ * played in relation instances.
  */
-public interface Relation extends Thing {
+public interface Entity extends Instance {
     /**
-     * Checks if the concept is a <code>Relation</code>.
+     * Checks if the concept is an <code>Entity</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.isRelation();
+     * entity.isEntity();
      * </pre>
      */
     @Override
     @CheckReturnValue
-    default boolean isRelation() {
+    default boolean isEntity() {
         return true;
     }
 
     /**
-     * Casts the concept to <code>Relation</code>.
+     * Casts the concept to <code>Entity</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.asRelation();
+     * entity.asEntity();
      * </pre>
      */
     @Override
     @CheckReturnValue
-    default Relation asRelation() {
+    default Entity asEntity() {
         return this;
     }
 
     /**
-     * Retrieves the type which this <code>Relation</code> belongs to.
+     * Retrieves the type which this <code>Entity</code> belongs to.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.getType();
+     * entity.getType();
      * </pre>
      */
     @Override
     @CheckReturnValue
-    RelationType getType();
+    EntityType getType();
 
     /**
-     * Retrieves the unique id of the <code>Relation</code>.
+     * Retrieves the unique id of the <code>Entity</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.getIID();
+     * entity.getIID();
      * </pre>
      */
     @CheckReturnValue

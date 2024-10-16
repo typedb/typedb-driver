@@ -22,9 +22,9 @@ package com.typedb.driver.concept;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-import com.typedb.driver.concept.thing.AttributeImpl;
-import com.typedb.driver.concept.thing.EntityImpl;
-import com.typedb.driver.concept.thing.RelationImpl;
+import com.typedb.driver.concept.instance.AttributeImpl;
+import com.typedb.driver.concept.instance.EntityImpl;
+import com.typedb.driver.concept.instance.RelationImpl;
 import com.typedb.driver.concept.type.AttributeTypeImpl;
 import com.typedb.driver.concept.type.EntityTypeImpl;
 import com.typedb.driver.concept.type.RelationTypeImpl;
@@ -42,6 +42,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_is_relation_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_role_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_value;
 import static com.typedb.driver.jni.typedb_driver.concept_to_string;
+import static com.typedb.driver.jni.typedb_driver.concept_get_label;
 
 public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Concept> implements Concept {
     protected ConceptImpl(com.typedb.driver.jni.Concept concept) {
@@ -58,6 +59,11 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
         else if (concept_is_value(concept)) return new ValueImpl(concept);
         else if (concept_is_role_type(concept)) return new RoleTypeImpl(concept);
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+    }
+
+    @Override
+    public String getLabel() {
+        return concept_get_label(nativeObject);
     }
 
     @Override

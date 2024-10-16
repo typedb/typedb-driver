@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.thing;
+package com.typedb.driver.concept.instance;
 
-import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.concept.type.AttributeTypeImpl;
 import com.typedb.driver.concept.value.ValueImpl;
@@ -34,7 +34,7 @@ import java.util.Optional;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_type;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_value;
 
-public class AttributeImpl extends ThingImpl implements Attribute {
+public class AttributeImpl extends InstanceImpl implements Attribute {
     public AttributeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
     }

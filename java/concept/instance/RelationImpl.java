@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.thing;
+package com.typedb.driver.concept.instance;
 
-import com.typedb.driver.api.concept.thing.Relation;
+import com.typedb.driver.api.concept.instance.Relation;
 import com.typedb.driver.concept.type.RelationTypeImpl;
 
 import static com.typedb.driver.jni.typedb_driver.relation_get_iid;
 import static com.typedb.driver.jni.typedb_driver.relation_get_type;
 
-public class RelationImpl extends ThingImpl implements Relation {
+public class RelationImpl extends InstanceImpl implements Relation {
 
     public RelationImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
