@@ -20,7 +20,7 @@ from __future__ import annotations
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.concept.type.type import _Type
 from typedb.native_driver_wrapper import (
-    TypeDBDriverExceptionNative, attribute_type_get_value_type, attribute_type_is_untyped,
+    attribute_type_get_value_type, attribute_type_is_untyped,
     attribute_type_is_boolean, attribute_type_is_long, attribute_type_is_double, attribute_type_is_decimal,
     attribute_type_is_string, attribute_type_is_date, attribute_type_is_datetime, attribute_type_is_datetime_tz,
     attribute_type_is_duration, attribute_type_is_struct,

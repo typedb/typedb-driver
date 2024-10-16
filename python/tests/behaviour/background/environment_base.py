@@ -52,6 +52,7 @@ def _clear_concurrent_answers_impl(context: Context):
     context.concurrent_answers = None
     context.unwrapped_concurrent_answers = None
 
+
 def after_scenario(context: Context, scenario):
     if scenario.status == Status.skipped:
         return
