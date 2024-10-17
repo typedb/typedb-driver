@@ -49,7 +49,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -57,8 +56,8 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 public class DriverQueryTest {
@@ -189,11 +188,11 @@ public class DriverQueryTest {
 
         localhostTypeDBTX(tx -> {
             String var = "x";
-            QueryAnswer answer = tx.query(String.format("match $%s isa person;", var)).resolve();
-            assertTrue(answer.isConceptRows());
+            QueryAnswer matchAnswer = tx.query(String.format("match $%s isa person;", var)).resolve();
+            assertTrue(matchAnswer.isConceptRows());
 
-            AtomicInteger count = new AtomicInteger(0);
-            answer.asConceptRows().stream().forEach(row -> {
+            AtomicInteger matchCount = new AtomicInteger(0);
+            matchAnswer.asConceptRows().stream().forEach(row -> {
                 Concept x = row.get(var);
                 assertTrue(x.isEntity());
                 assertFalse(x.isEntityType());
@@ -203,9 +202,28 @@ public class DriverQueryTest {
                 EntityType xType = x.asEntity().getType().asEntityType();
                 assertEquals(xType.getLabel(), "person");
                 assertNotEquals(xType.getLabel(), "not person");
-                count.incrementAndGet();
+                matchCount.incrementAndGet();
             });
-            assertEquals(count.get(), 2);
+            assertEquals(matchCount.get(), 2);
+
+            QueryAnswer fetchAnswer = tx.query("match" +
+                    "    $x isa! person, has $a;" +
+                    "    $a isa! $t;" +
+                    "fetch {" +
+                    "    \"single attribute type\": $t," +
+                    "    \"single attribute\": $a," +
+                    "    \"all attributes\": { $x.* }," +
+                    "};").resolve();
+            assertTrue(fetchAnswer.isConceptDocuments());
+
+            System.out.println("Fetch results for manual testing:");
+            AtomicInteger fetchCount = new AtomicInteger(0);
+            fetchAnswer.asConceptDocuments().stream().forEach(document -> {
+                assertNotNull(document);
+                System.out.println(document);
+                fetchCount.incrementAndGet();
+            });
+            assertEquals(fetchCount.get(), 2);
         }, Transaction.Type.READ);
     }
 
@@ -342,283 +360,9 @@ public class DriverQueryTest {
         }, Transaction.Type.READ);
     }
 
-//    @Test
-//    public void applicationTest() {
-//        LOG.info("driverJavaE2E() - starting driver-java E2E...");
-//
-//        localhostTypeDBTX(tx -> {
-//            TypeQLDefine defineQuery = TypeQL.define(type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
-//                    type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearing", "child-bearer"),
-//                    type("parentship").sub("relation").relates("parent").relates("child"),
-//                    type("name").sub("attribute").value(TypeQLArg.ValueType.STRING),
-//                    type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner")
-//                            .plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child"));
-//            TypeQLDefine ruleQuery = TypeQL.define(rule("infer-parentship-from-mating-and-child-bearing").when(
-//                            and(rel("male-partner", cVar("male")).rel("female-partner", cVar("female")).isa("mating"),
-//                                    cVar("childbearing").rel("child-bearer", cVar()).rel("offspring", cVar("offspring")).isa("child-bearing")))
-//                    .then(rel("parent", cVar("male")).rel("parent", cVar("female")).rel("child", cVar("offspring")).isa("parentship")));
-//            LOG.info("driverJavaE2E() - define a schema...");
-//            LOG.info("driverJavaE2E() - '" + defineQuery + "'");
-//            tx.query().define(defineQuery).resolve();
-//            tx.query().define(ruleQuery).resolve();
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, Transaction.Type.SCHEMA);
-//
-//        localhostTypeDBTX(tx -> {
-//            String[] names = lionNames();
-//            TypeQLInsert insertLionQuery = TypeQL.insert(cVar().isa("lion").has("name", names[0]), cVar().isa("lion").has("name", names[1]), cVar().isa("lion").has("name", names[2]));
-//            LOG.info("driverJavaE2E() - insert some data...");
-//            LOG.info("driverJavaE2E() - '" + insertLionQuery + "'");
-//            tx.query().insert(insertLionQuery);
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        LOG.info("driverJavaE2E() - driver-java E2E test done.");
-//    }
-//
-//    @Test
-//    public void parallelQueriesInTransactionTest() {
-//        localhostTypeDBTX(tx -> {
-//            TypeQLDefine defineQuery = TypeQL.define(
-//                    type("symbol").sub("attribute").value(TypeQLArg.ValueType.STRING),
-//                    type("name").sub("attribute").value(TypeQLArg.ValueType.STRING),
-//                    type("status").sub("attribute").value(TypeQLArg.ValueType.STRING),
-//                    type("latest").sub("attribute").value(TypeQLArg.ValueType.BOOLEAN),
-//
-//                    type("commit").sub("entity")
-//                            .owns("symbol")
-//                            .plays("pipeline-automation", "trigger"),
-//                    type("pipeline").sub("entity")
-//                            .owns("name")
-//                            .owns("latest")
-//                            .plays("pipeline-workflow", "pipeline")
-//                            .plays("pipeline-automation", "pipeline"),
-//                    type("workflow").sub("entity")
-//                            .owns("name")
-//                            .owns("status")
-//                            .owns("latest")
-//                            .plays("pipeline-workflow", "workflow"),
-//
-//                    type("pipeline-workflow").sub("relation")
-//                            .relates("pipeline").relates("workflow"),
-//                    type("pipeline-automation").sub("relation")
-//                            .relates("pipeline").relates("trigger")
-//            );
-//
-//            LOG.info("driverJavaE2E() - define a schema...");
-//            LOG.info("driverJavaE2E() - '" + defineQuery + "'");
-//            tx.query().define(defineQuery).resolve();
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, Transaction.Type.SCHEMA);
-//
-//
-//        localhostTypeDBTX(tx -> {
-//            String[] commits = commitSHAs();
-//            TypeQLInsert insertCommitQuery = TypeQL.insert(cVar().isa("commit").has("symbol", commits[0]),
-//                    cVar().isa("commit").has("symbol", commits[1]), cVar().isa("commit").has("symbol", commits[3]),
-//                    cVar().isa("commit").has("symbol", commits[4]), cVar().isa("commit").has("symbol", commits[5]),
-//                    cVar().isa("commit").has("symbol", commits[6]), cVar().isa("commit").has("symbol", commits[7]),
-//                    cVar().isa("commit").has("symbol", commits[8]), cVar().isa("commit").has("symbol", commits[9]));
-//
-//            LOG.info("driverJavaE2E() - insert commit data...");
-//            LOG.info("driverJavaE2E() - '" + insertCommitQuery + "'");
-//            tx.query().insert(insertCommitQuery);
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        localhostTypeDBTX(tx -> {
-//            TypeQLInsert insertWorkflowQuery = TypeQL.insert(cVar().isa("workflow")
-//                            .has("name", "workflow-A")
-//                            .has("status", "running")
-//                            .has("latest", true), cVar().isa("workflow")
-//                            .has("name", "workflow-B")
-//                            .has("status", "finished")
-//                            .has("latest", false)
-//            );
-//
-//            LOG.info("driverJavaE2E() - insert workflow data...");
-//            LOG.info("driverJavaE2E() - '" + insertWorkflowQuery + "'");
-//            tx.query().insert(insertWorkflowQuery);
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        localhostTypeDBTX(tx -> {
-//            TypeQLInsert insertPipelineQuery = TypeQL.insert(cVar().isa("pipeline")
-//                            .has("name", "pipeline-A")
-//                            .has("latest", true), cVar().isa("pipeline")
-//                            .has("name", "pipeline-B")
-//                            .has("latest", false)
-//            );
-//
-//            LOG.info("driverJavaE2E() - insert pipeline data...");
-//            LOG.info("driverJavaE2E() - '" + insertPipelineQuery + "'");
-//            tx.query().insert(insertPipelineQuery);
-//            tx.commit();
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        localhostTypeDBTX(tx -> {
-//            String[] commitShas = commitSHAs();
-//            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
-//
-//            for (int i = 0; i < commitShas.length / 2; i++) {
-//                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-A"))
-//                        .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
-//                        );
-//                LOG.info("driverJavaE2E() - '" + insertPipelineAutomationQuery + "'");
-//                List<ConceptRow> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
-//            }
-//
-//
-//            for (int i = commitShas.length / 2; i < commitShas.length; i++) {
-//                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-B"))
-//                        .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
-//                        );
-//                LOG.info("driverJavaE2E() - '" + insertPipelineAutomationQuery + "'");
-//                List<ConceptRow> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
-//            }
-//
-//            tx.commit();
-//
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
-//
-//            TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(cVar("pipelineA").isa("pipeline").has("name", "pipeline-A"),
-//                            cVar("workflowA").isa("workflow").has("name", "workflow-A"), cVar("pipelineB").isa("pipeline").has("name", "pipeline-B"),
-//                            cVar("workflowB").isa("workflow").has("name", "workflow-B"))
-//                    .insert(rel("pipeline", cVar("pipelineA")).rel("workflow", cVar("workflowA")).isa("pipeline-workflow"),
-//                            rel("pipeline", cVar("pipelineB")).rel("workflow", cVar("workflowB")).isa("pipeline-workflow"));
-//            LOG.info("driverJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
-//            List<ConceptRow> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
-//
-//            tx.commit();
-//
-//            LOG.info("driverJavaE2E() - done.");
-//        }, WRITE);
-//
-//        String[] queries = {
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@4bdc38acb87f9fd2fbdb7cbcf2bcc93837382cab\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@b5ecd4707ce425d7d2d4d0b0d53420cb46e8ce52\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@b16788637949c6b4c2a3a4bacc8da101bf838b38\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@8e996fdf8d802d270385ac3bc7cbf5fa77ac0583\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@1ff6651afa7abf43b5bdd3b1903e489d279e3dc6\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@6d3ceda79eb3e3dc86d266095b613a53fb083d30\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;",
-//                "match\n" +
-//                        "$commit isa commit, has symbol \"VladGan/console@23da5b400e32805c29f41671ff3f92ef48eafcf8\";\n" +
-//                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
-//                        "$pipeline has name $pipeline-name, has latest true;\n" +
-//                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
-//                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
-//                        "get $pipeline-name, $workflow-name, $workflow-status;"
-//        };
-//
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
-//
-//            Stream.of(queries).parallel().forEach(x -> {
-//                TypeQLGet q = TypeQL.parseQuery(x).asGet();
-//                List<ConceptRow> res = tx.query().get(q).collect(toList());
-//            });
-//
-//            LOG.info("driverJavaE2E() - done.");
-//        }, READ);
-//    }
-
-    @Test
-    public void testStreaming() {
-        localhostTypeDBTX(tx -> {
-            for (int i = 0; i < 51; i++) {
-                tx.query(String.format("define entity person, owns name%d; attribute name%d, value string;", i, i)).resolve();
-            }
-            tx.commit();
-        }, Transaction.Type.SCHEMA);
-        localhostTypeDBTX(tx -> {
-            for (int i = 0; i < 50; i++) {
-                Optional<ConceptRow> conceptRows = tx.query("match entity $et; $e isa $et; limit 1;").resolve().asConceptRows().stream().findFirst();
-            }
-        }, Transaction.Type.READ/*, new Options().prefetch(true).prefetchSize(50)*/);
-    }
-
-    @Test
-    public void testMissingPortInURL() {
-        try {
-            String addressWithoutPort = ADDRESS.substring(0, ADDRESS.lastIndexOf(':'));
-            TypeDB.coreDriver(addressWithoutPort);
-            fail();
-        } catch (RuntimeException e) {
-            assert e.toString().toLowerCase().contains("missing port");
-        }
-    }
-
-    private String[] lionNames() {
-        return new String[]{"male-partner", "female-partner", "young-lion"};
-    }
-
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {
-        String database = DB_NAME;
-        try (Transaction transaction = typedbDriver.transaction(database, type/*, options*/)) {
+        try (Transaction transaction = typedbDriver.transaction(DB_NAME, type/*, options*/)) {
             fn.accept(transaction);
         }
-    }
-
-    private String[] commitSHAs() {
-        return new String[]{
-                // queried commits
-                "VladGan/console@4bdc38acb87f9fd2fbdb7cbcf2bcc93837382cab",
-                "VladGan/console@b5ecd4707ce425d7d2d4d0b0d53420cb46e8ce52",
-                "VladGan/console@b16788637949c6b4c2a3a4bacc8da101bf838b38",
-                "VladGan/console@8e996fdf8d802d270385ac3bc7cbf5fa77ac0583",
-                "VladGan/console@1ff6651afa7abf43b5bdd3b1903e489d279e3dc6",
-                "VladGan/console@6d3ceda79eb3e3dc86d266095b613a53fb083d30",
-                "VladGan/console@23da5b400e32805c29f41671ff3f92ef48eafcf8",
-                // not queried commits
-                "VladGan/console@0000000000000000000000000000000000000000",
-                "VladGan/console@1111111111111111111111111111111111111111",
-                "VladGan/console@2222222222222222222222222222222222222222",
-        };
     }
 }

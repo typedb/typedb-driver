@@ -61,11 +61,11 @@ public interface QueryAnswer {
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isConceptTrees();
+     * concept.isConceptDocuments();
      * </pre>
      */
     @CheckReturnValue
-    default boolean isConceptTrees() {
+    default boolean isConceptDocuments() {
         return false;
     }
 
@@ -98,10 +98,10 @@ public interface QueryAnswer {
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.asConceptTreesStream();
+     * concept.asConceptDocuments();
      * </pre>
      */
-    default ConceptDocumentIterator asConceptTreesStream() {
+    default ConceptDocumentIterator asConceptDocuments() {
         throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptDocumentIterator.class));
     }
 }

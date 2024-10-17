@@ -24,14 +24,14 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * Represents an iterator over <code>ConceptDocument</code>s returned as a server answer.
+ * Represents an iterator over concept documents (represented as <code>JSON</code>s) returned as a server answer.
  */
-public interface ConceptDocumentIterator extends QueryAnswer, Iterator<ConceptDocument> {
+public interface ConceptDocumentIterator extends QueryAnswer, Iterator<JSON> {
     /**
      * {@inheritDoc}
      */
     @Override
-    default boolean isConceptTrees() {
+    default boolean isConceptDocuments() {
         return true;
     }
 
@@ -40,10 +40,10 @@ public interface ConceptDocumentIterator extends QueryAnswer, Iterator<ConceptDo
      */
     @Override
     @CheckReturnValue
-    default ConceptDocumentIterator asConceptTreesStream() {
+    default ConceptDocumentIterator asConceptDocuments() {
         return this;
     }
 
     @CheckReturnValue
-    Stream<ConceptDocument> stream();
+    Stream<JSON> stream();
 }

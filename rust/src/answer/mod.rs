@@ -18,10 +18,11 @@
  */
 
 use std::fmt;
-pub use self::{concept_row::ConceptRow, concept_document::ConceptDocument, json::JSON, value_group::ValueGroup};
-use crate::{
-    BoxStream, Result,
-};
+
+use futures::{stream, StreamExt};
+
+pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
+use crate::{box_stream, BoxStream, Result};
 
 pub mod concept_document;
 pub mod concept_row;

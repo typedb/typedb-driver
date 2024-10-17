@@ -18,7 +18,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 |===
 |Name |Type |Description
 a| `iid` a| `IID` a| The unique id of this Attribute (internal use only)
-a| `type_` a| `Option<AttributeType>` a| The type which this Attribute belongs to The label of the attribute type this instance belongs to
+a| `type_` a| `Option<AttributeType>` a| The type which this Attribute belongs to
 a| `value` a| `Value` a| The (dataful) value of this attribute
 |===
 // end::properties[]

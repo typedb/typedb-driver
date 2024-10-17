@@ -19,9 +19,9 @@
 
 package com.typedb.driver.api.concept;
 
-import com.typedb.driver.api.concept.instance.Instance;
 import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.instance.Entity;
+import com.typedb.driver.api.concept.instance.Instance;
 import com.typedb.driver.api.concept.instance.Relation;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;

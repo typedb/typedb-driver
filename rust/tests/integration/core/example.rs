@@ -237,7 +237,6 @@ async fn cleanup() {
 // }
 // // EXAMPLE END MARKER
 
-
 // TODO: Temporary test for fetch
 #[test]
 #[serial]
@@ -289,7 +288,6 @@ fn fetch_base() {
         let answer = result.unwrap();
         assert!(matches!(answer, QueryAnswer::ConceptRowStream(_)));
         transaction.commit().await.unwrap();
-
 
         let fetch_query = r#"
         match
@@ -348,7 +346,6 @@ fn fetch_base() {
     })
 }
 
-
 #[test]
 #[serial]
 fn fetch_attribute() {
@@ -379,13 +376,13 @@ fn fetch_attribute() {
           attribute expiration value duration;
         
           entity person 
-            owns age @card(0..), 
-            owns name @card(0..), 
-            owns is-new @card(0..), 
-            owns success @card(0..), 
-            owns balance @card(0..), 
-            owns birth-date @card(0..), 
-            owns birth-time @card(0..), 
+            owns age @card(0..),
+            owns name @card(0..),
+            owns is-new @card(0..),
+            owns success @card(0..),
+            owns balance @card(0..),
+            owns birth-date @card(0..),
+            owns birth-time @card(0..),
             owns current-time @card(0..),
             owns current-time-off @card(0..),
             owns expiration @card(0..);
@@ -426,15 +423,14 @@ fn fetch_attribute() {
         assert!(matches!(answer, QueryAnswer::ConceptRowStream(_)));
         transaction.commit().await.unwrap();
 
-
         let fetch_query = r#"
         match
             $x isa person, has $a;
             $a isa! $t;
         fetch {
             # "single type": $t,
-            # "single attr": $a,
-            "all attributes": { $x.* },
+            "single attr": $a,
+            # "all attributes": { $x.* },
         };"#;
 
         let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
@@ -445,11 +441,9 @@ fn fetch_attribute() {
         let mut documents_stream = answer.into_documents();
         println!("Printing documents:");
         while let Some(Ok(document)) = documents_stream.next().await {
-            println!("DOC: {:?}", &document);
-            println!("JSON: {}", document.into_json());
+            // println!("DOC: {:?}", &document);
+            println!("{}", document.into_json());
         }
-
-
 
         let fetch_query = r#"
         match
@@ -469,8 +463,6 @@ fn fetch_attribute() {
             println!("DOC: {:?}", &document);
             println!("JSON: {}", document.into_json());
         }
-
-
 
         let fetch_query = r#"
         match

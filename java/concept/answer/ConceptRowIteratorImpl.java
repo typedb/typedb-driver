@@ -22,7 +22,6 @@ package com.typedb.driver.concept.answer;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
 import com.typedb.driver.common.NativeIterator;
-import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -43,20 +42,12 @@ public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRo
 
     @Override
     public boolean hasNext() {
-        try {
-            return nativeIterator.hasNext();
-        } catch (com.typedb.driver.jni.Error.Unchecked e) {
-            throw new TypeDBDriverException(e);
-        }
+        return nativeIterator.hasNext();
     }
 
     @Override
     public ConceptRow next() {
-        try {
-            return new ConceptRowImpl(nativeIterator.next());
-        } catch (com.typedb.driver.jni.Error.Unchecked e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new ConceptRowImpl(nativeIterator.next());
     }
 
     @Override

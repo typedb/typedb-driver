@@ -444,7 +444,7 @@
         }
     }
 
-    public ConceptRowIterator intoDocuments() {
+    public StringIterator intoDocuments() {
         swigCMemOwn = false;
         try {
             return typedb_driver.query_answer_into_documents(this);

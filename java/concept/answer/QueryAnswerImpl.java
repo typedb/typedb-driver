@@ -24,8 +24,8 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_row_stream;
 import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_document_stream;
+import static com.typedb.driver.jni.typedb_driver.query_answer_is_concept_row_stream;
 import static com.typedb.driver.jni.typedb_driver.query_answer_is_ok;
 
 public abstract class QueryAnswerImpl extends NativeObject<com.typedb.driver.jni.QueryAnswer> implements QueryAnswer {

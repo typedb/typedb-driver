@@ -41,8 +41,8 @@ use crate::{
     answer::concept_document::{Leaf, Node},
     concept::{
         value::{Decimal, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType,
-        Value, ValueType,
+        Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
+        ValueType,
     },
     error::{
         ConnectionError,

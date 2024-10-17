@@ -18,13 +18,14 @@
  */
 
 use std::{borrow::Cow, collections::HashMap, sync::Arc};
+
 use chrono::DateTime;
 
 use super::{QueryType, JSON};
 use crate::concept::{
-    value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
+    value::{Struct, TimeZone},
+    Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
 };
-use crate::concept::value::TimeZone;
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptDocumentHeader {
@@ -167,12 +168,12 @@ fn json_value(value: Value) -> JSON {
         Value::Boolean(bool) => JSON::Boolean(bool),
         Value::Long(long) => JSON::Number(long as f64),
         Value::Double(double) => JSON::Number(double),
-        Value::Decimal(decimal) => JSON::String(Cow::Owned(decimal.to_string())),
         Value::String(string) => JSON::String(Cow::Owned(string)),
-        Value::Date(date) => JSON::String(Cow::Owned(date.format("%Y-%m-%d").to_string())),
-        Value::Datetime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.9f").to_string())),
-        Value::DatetimeTZ(datetime_tz) => JSON::String(Cow::Owned(datetime_tz.format("%FT%T%.9f%:z").to_string())),
-        Value::Duration(duration) => JSON::String(Cow::Owned(duration.to_string())),
+
+        Value::Decimal(_) | Value::Date(_) | Value::Datetime(_) | Value::DatetimeTZ(_) | Value::Duration(_) => {
+            JSON::String(Cow::Owned(value.to_string()))
+        }
+
         Value::Struct(struct_, struct_name) => {
             JSON::Object(HashMap::from([(Cow::Owned(struct_name), json_struct(struct_))]))
         }

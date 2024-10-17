@@ -183,7 +183,7 @@ Option<&IID>
 pub fn get_label(&self) -> &str
 ----
 
-Get the label of the concept. If this is an Instance, return the label of the type of this instance. If this is a Value, return the label of the value type of the value. If this is a Type, return the label of the type.
+Get the label of the concept. If this is an Instance, return the label of the type of this instance (“unknown” if type fetching is disabled). If this is a Value, return the label of the value type of the value. If this is a Type, return the label of the type.
 
 [caption=""]
 .Returns
@@ -650,6 +650,23 @@ Check if this concept represents a Value returned by the database
 [source,rust]
 ----
 bool
+----
+
+[#_enum_Concept_try_get_label_]
+==== try_get_label
+
+[source,rust]
+----
+pub fn try_get_label(&self) -> Option<&str>
+----
+
+Get the optional label of the concept. If this is an Instance, return the label of the type of this instance (None if type fetching is disabled). If this is a Value, return the label of the value type of the value. If this is a Type, return the label of the type.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
 ----
 
 // end::methods[]

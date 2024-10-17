@@ -214,7 +214,9 @@ pub async fn answer_type_is(
     match query_answer_type {
         params::QueryAnswerType::Ok => is_or_not.check(context.answer.as_ref().unwrap().is_ok()),
         params::QueryAnswerType::ConceptRows => is_or_not.check(context.answer.as_ref().unwrap().is_row_stream()),
-        params::QueryAnswerType::ConceptDocuments => is_or_not.check(context.answer.as_ref().unwrap().is_document_stream()),
+        params::QueryAnswerType::ConceptDocuments => {
+            is_or_not.check(context.answer.as_ref().unwrap().is_document_stream())
+        }
     }
 }
 

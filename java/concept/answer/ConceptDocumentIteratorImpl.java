@@ -19,43 +19,32 @@
 
 package com.typedb.driver.concept.answer;
 
-import com.typedb.driver.api.answer.ConceptDocument;
 import com.typedb.driver.api.answer.ConceptDocumentIterator;
-import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.api.answer.JSON;
+import com.typedb.driver.common.NativeIterator;
 
 import java.util.stream.Stream;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
-
 public class ConceptDocumentIteratorImpl extends QueryAnswerImpl implements ConceptDocumentIterator {
+    NativeIterator<String> nativeIterator;
+
     public ConceptDocumentIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
-        throw new TypeDBDriverException(UNIMPLEMENTED);
+        nativeIterator = new NativeIterator<>(nativeObject.intoDocuments());
     }
 
     @Override
     public boolean hasNext() {
-        throw new TypeDBDriverException(UNIMPLEMENTED);
-//        try {
-//            return nativeIterator.hasNext();
-//        } catch (com.typedb.driver.jni.Error.Unchecked e) {
-//            throw new TypeDBDriverException(e);
-//        }
+        return nativeIterator.hasNext();
     }
 
     @Override
-    public ConceptDocument next() {
-        throw new TypeDBDriverException(UNIMPLEMENTED);
-//        try {
-//            return new ConceptRowImpl(nativeIterator.next());
-//        } catch (com.typedb.driver.jni.Error.Unchecked e) {
-//            throw new TypeDBDriverException(e);
-//        }
+    public JSON next() {
+        return JSON.parse(nativeIterator.next());
     }
 
     @Override
-    public Stream<ConceptDocument> stream() {
-        throw new TypeDBDriverException(UNIMPLEMENTED);
-//        return nativeIterator.stream().map(ConceptRowImpl::new);
+    public Stream<JSON> stream() {
+        return nativeIterator.stream().map(JSON::parse);
     }
 }

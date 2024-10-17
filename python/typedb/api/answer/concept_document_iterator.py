@@ -15,10 +15,42 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from __future__ import annotations
+
 from abc import ABC
 
+from typedb.api.answer.query_answer import QueryAnswer
 
-class ConceptTree(ABC):
+
+class ConceptDocumentIterator(QueryAnswer, ABC):
     """
-    Contains a tree of concepts.
+    Represents an iterator over ``ConceptRow``s returned as a server answer.
     """
+
+    def is_concept_documents(self) -> bool:
+        """
+        Checks if the query answer is a ``ConceptDocumentIterator``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.is_concept_documents()
+        """
+        return True
+
+    def as_concept_documents(self) -> ConceptDocumentIterator:
+        """
+        Casts the query answer to ``ConceptDocumentIterator``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.as_concept_documents()
+        """
+        return self

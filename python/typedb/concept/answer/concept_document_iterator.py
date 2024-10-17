@@ -17,26 +17,27 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import json
+from typing import TYPE_CHECKING, Iterator, Optional
 
-from typedb.api.answer.concept_tree_iterator import ConceptTreeIterator
-from typedb.common.exception import TypeDBDriverException, UNIMPLEMENTED
+from typedb.api.answer.concept_document_iterator import ConceptDocumentIterator
+from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.answer.query_answer import _QueryAnswer
+from typedb.native_driver_wrapper import query_answer_into_documents, string_iterator_next
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
 
 
-class _ConceptTreeIterator(_QueryAnswer, ConceptTreeIterator):
+class _ConceptDocumentIterator(_QueryAnswer, ConceptDocumentIterator):
 
     def __init__(self, query_answer: NativeQueryAnswer):
         super().__init__(query_answer)
-        raise TypeDBDriverException(UNIMPLEMENTED)
+        self.iterator = map(json.loads,
+                            IteratorWrapper(query_answer_into_documents(self.native_object), string_iterator_next))
 
-    def __iter__(self):
-        # return iter(self.iterator)
-        raise TypeDBDriverException(UNIMPLEMENTED)
+    def __iter__(self) -> Iterator[Optional[dict]]:
+        return iter(self.iterator)
 
-    def __next__(self):
-        # return next(self.iterator)
-        raise TypeDBDriverException(UNIMPLEMENTED)
+    def __next__(self) -> Optional[dict]:
+        return next(self.iterator)

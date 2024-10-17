@@ -18,17 +18,17 @@
  */
 
 use std::{
+    borrow::Cow,
     collections::HashMap,
     fmt,
     ops::{Add, Neg, Sub},
     str::FromStr,
 };
-use std::borrow::Cow;
 
 use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
-use crate::Error;
+use crate::{answer::JSON, Error};
 
 /// Represents the type of primitive value is held by a Value or Attribute.
 #[derive(Clone, PartialEq, Eq)]
@@ -227,7 +227,21 @@ impl Value {
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
+        match self {
+            Self::Boolean(bool) => write!(f, "{}", bool),
+            Self::Long(long) => write!(f, "{}", long),
+            Self::Double(double) => write!(f, "{}", double),
+            Self::String(string) => write!(f, "\"{}\"", string),
+            Self::Decimal(decimal) => write!(f, "{}", decimal),
+            Self::Date(date) => write!(f, "{}", date.format("%Y-%m-%d")),
+            Self::Datetime(datetime) => write!(f, "{}", datetime.format("%FT%T%.9f")),
+            Self::DatetimeTZ(datetime_tz) => match datetime_tz.timezone() {
+                TimeZone::IANA(tz) => write!(f, "{} {}", datetime_tz.format("%FT%T%.9f"), tz.name()),
+                TimeZone::Fixed(_) => write!(f, "{}", datetime_tz.format("%FT%T%.9f%:z")),
+            },
+            Self::Duration(duration) => write!(f, "{}", duration),
+            Self::Struct(value, name) => write!(f, "{} {}", name, value),
+        }
     }
 }
 
@@ -459,6 +473,10 @@ impl Duration {
     pub fn nanos(&self) -> u64 {
         self.nanos
     }
+
+    fn is_empty(&self) -> bool {
+        self.months == 0 && self.days == 0 && self.nanos == 0
+    }
 }
 
 impl TryFrom<Duration> for chrono::Duration {
@@ -551,9 +569,53 @@ impl FromStr for Duration {
     }
 }
 
+/// ISO-8601 compliant representation of a duration
 impl fmt::Display for Duration {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
+        if self.is_empty() {
+            f.write_str("PT0S")?;
+            return Ok(());
+        }
+
+        write!(f, "P")?;
+
+        if self.months > 0 || self.days > 0 {
+            let years = self.months / Self::MONTHS_PER_YEAR;
+            let months = self.months % Self::MONTHS_PER_YEAR;
+            let days = self.days;
+            if years > 0 {
+                write!(f, "{years}Y")?;
+            }
+            if months > 0 {
+                write!(f, "{months}M")?;
+            }
+            if days > 0 {
+                write!(f, "{days}D")?;
+            }
+        }
+
+        if self.nanos > 0 {
+            write!(f, "T")?;
+
+            let hours = self.nanos / Self::NANOS_PER_HOUR;
+            let minutes = (self.nanos % Self::NANOS_PER_HOUR) / Self::NANOS_PER_MINUTE;
+            let seconds = (self.nanos % Self::NANOS_PER_MINUTE) / Self::NANOS_PER_SEC;
+            let nanos = self.nanos % Self::NANOS_PER_SEC;
+
+            if hours > 0 {
+                write!(f, "{hours}H")?;
+            }
+            if minutes > 0 {
+                write!(f, "{minutes}M")?;
+            }
+            if seconds > 0 && nanos == 0 {
+                write!(f, "{seconds}S")?;
+            } else if nanos > 0 {
+                write!(f, "{seconds}.{nanos:09}S")?;
+            }
+        }
+
+        Ok(())
     }
 }
 

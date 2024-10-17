@@ -20,8 +20,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
+from typedb.concept.answer.concept_document_iterator import _ConceptDocumentIterator
 from typedb.concept.answer.concept_row_iterator import _ConceptRowIterator
-from typedb.concept.answer.concept_tree_iterator import _ConceptTreeIterator
 from typedb.concept.answer.ok_query_answer import _OkQueryAnswer
 from typedb.concept.answer.query_answer import _QueryAnswer
 from typedb.native_driver_wrapper import \
@@ -37,6 +37,6 @@ def wrap_query_answer(native_query_answer: NativeQueryAnswer) -> _QueryAnswer:
     elif query_answer_is_concept_row_stream(native_query_answer):
         return _ConceptRowIterator(native_query_answer)
     elif query_answer_is_concept_document_stream(native_query_answer):
-        return _ConceptTreeIterator(native_query_answer)
+        return _ConceptDocumentIterator(native_query_answer)
     else:
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)

@@ -37,6 +37,7 @@ driver = TypeDB.core_driver(address=TypeDB.DEFAULT_ADDRESS)
 from typedb.driver import *
 
 
+
     def typedb_example():
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
@@ -63,7 +64,13 @@ from typedb.driver import *
             # Open a schema transaction to make schema changes
             # Use "with" blocks to forget about "close" operations (similarly to connections)
             with driver.transaction(database.name, TransactionType.SCHEMA) as tx:
-                answer = tx.query("define entity person, owns age; attribute age, value long;").resolve()
+                define_query = """
+                define 
+                  entity person, owns name, owns age; 
+                  attribute name, value string;
+                  attribute age, value long;
+                """
+                answer = tx.query(define_query).resolve()
                 if answer.is_ok():
                     print(f"OK results do not give any extra interesting information, but they mean that the query "
                           f"is successfully executed!")
@@ -101,25 +108,27 @@ from typedb.driver import *
 
                 # Concept rows can be used as any other iterator
                 rows = [row for row in answer.as_concept_rows()]
-                row = rows[0]
 
-                # Same for column names
-                column_names_iter = row.column_names()
-                column_name = next(column_names_iter)
+                for row in rows:
+                    # Same for column names
+                    column_names_iter = row.column_names()
+                    column_name = next(column_names_iter)
 
-                concept_by_name = row.get(column_name)
+                    concept_by_name = row.get(column_name)
 
-                # Check if it's an attribute type before the conversion
-                if concept_by_name.is_attribute_type():
-                    attribute_type = concept_by_name.as_attribute_type()
-                    print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
-                          f"value type: '{attribute_type.get_value_type()}'")
+                    # Check if it's an attribute type before the conversion
+                    if concept_by_name.is_attribute_type():
+                        attribute_type = concept_by_name.as_attribute_type()
+                        print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
+                              f"value type: '{attribute_type.get_value_type()}'")
 
-                print(f"It is also possible to just print the concept itself: '{concept_by_name}'")
+
+                    print(f"It is also possible to just print the concept itself: '{concept_by_name}'")
 
             # Open a write transaction to insert data
             with driver.transaction(database.name, TransactionType.WRITE) as tx:
-                answer = tx.query("insert $z isa person, has age 10; $x isa person, has age 20;").resolve()
+                insert_query = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";"
+                answer = tx.query(insert_query).resolve()
 
                 # Insert queries also return concept rows
                 rows = list(answer.as_concept_rows())
@@ -143,10 +152,10 @@ from typedb.driver import *
 
             # Open a read transaction to verify that the inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
+                # A match query can be used for concept row outputs
                 var = "x"
                 answer = tx.query(f"match ${var} isa person;").resolve()
 
-                # Match queries always return concept rows
                 count = 0
                 for row in answer.as_concept_rows():
                     x = row.get(var)
@@ -154,6 +163,25 @@ from typedb.driver import *
                     count += 1
                     print(f"Found a person {x} of type {x_type}")
                 print(f"Total persons found: {count}")
+
+                # A fetch query can be used for concept document outputs with flexible structure
+                fetch_query = """
+                match
+                    $x isa! person, has $a;
+                    $a isa! $t; 
+                fetch {
+                    "single attribute type": $t,
+                    "single attribute": $a,
+                    "all attributes": { $x.* },
+                };
+                """
+                answer = tx.query(fetch_query).resolve()
+
+                count = 0
+                for document in answer.as_concept_documents():
+                    count += 1
+                    print(f"Fetched a document: {document}")
+                print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
 ```

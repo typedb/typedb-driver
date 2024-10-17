@@ -17,8 +17,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator
 
+from typedb.api.answer.concept_row import ConceptRow
 from typedb.api.answer.concept_row_iterator import ConceptRowIterator
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.answer.concept_row import _ConceptRow
@@ -36,8 +37,8 @@ class _ConceptRowIterator(_QueryAnswer, ConceptRowIterator):
         self.iterator = map(_ConceptRow,
                             IteratorWrapper(query_answer_into_rows(self.native_object), concept_row_iterator_next))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[ConceptRow]:
         return iter(self.iterator)
 
-    def __next__(self):
+    def __next__(self) -> ConceptRow:
         return next(self.iterator)

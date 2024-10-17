@@ -79,7 +79,7 @@ def step_impl(context: Context, is_or_not: bool, answer_type: str):
     elif answer_type == "concept rows":
         assert_that(context.answer.is_concept_rows(), is_(is_or_not), "Expected is_concept_rows()")
     elif answer_type == "concept trees":
-        assert_that(context.answer.is_concept_trees(), is_(is_or_not), "Expected is_concept_trees()")
+        assert_that(context.answer.is_concept_documents(), is_(is_or_not), "Expected is_concept_documents()")
 
 
 def unwrap_answer_ok(context: Context):
@@ -91,7 +91,7 @@ def unwrap_answer_rows(context: Context):
 
 
 def unwrap_answer_trees(context: Context):
-    context.unwrapped_answer = context.answer.as_concept_trees()
+    context.unwrapped_answer = context.answer.as_concept_documents()
 
 
 @step("answer unwraps as ok{may_error:MayError}")
@@ -118,11 +118,11 @@ def unwrap_answer_if_needed(context: Context):
             unwrap_answer_ok(context)
         elif context.answer.is_concept_rows():
             unwrap_answer_rows(context)
-        elif context.answer.is_concept_trees():
+        elif context.answer.is_concept_documents():
             unwrap_answer_trees(context)
         else:
             raise ValueError(
-                "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
+                "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptDocuments, but appeared to be something else")
 
 
 def unwrap_concurrent_answers_if_needed(context: Context):
@@ -137,11 +137,11 @@ def unwrap_concurrent_answers_if_needed(context: Context):
                 context.unwrapped_concurrent_answers.append(answer.as_ok())
             elif answer.is_concept_rows():
                 context.unwrapped_concurrent_answers.append(answer.as_concept_rows())
-            elif answer.is_concept_trees():
-                context.unwrapped_concurrent_answers.append(answer.as_concept_trees())
+            elif answer.is_concept_documents():
+                context.unwrapped_concurrent_answers.append(answer.as_concept_documents())
             else:
                 raise ValueError(
-                    "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
+                    "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptDocuments, but appeared to be something else")
 
 
 def collect_answer_if_needed(context: Context):
