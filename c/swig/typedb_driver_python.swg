@@ -48,6 +48,7 @@
 %enddef
 
 %disown(query_answer_into_rows, query_answer)
+%disown(query_answer_into_documents, query_answer)
 
 
 /* char** needs special handling */

@@ -443,6 +443,15 @@
             throw new Error.Unchecked(e);
         }
     }
+
+    public ConceptRowIterator intoDocuments() {
+        swigCMemOwn = false;
+        try {
+            return typedb_driver.query_answer_into_documents(this);
+        } catch (Error e) {
+            throw new Error.Unchecked(e);
+        }
+    }
 %}
 
 %typemap(javadestruct, methodname="delete", methodmodifiers="public synchronized") QueryAnswer %{{

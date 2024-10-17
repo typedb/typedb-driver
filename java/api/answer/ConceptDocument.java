@@ -20,7 +20,7 @@
 package com.typedb.driver.api.answer;
 
 /**
- * Contains a tree of concepts.
+ * Contains a document of concepts.
  */
-public interface ConceptTree {
+public interface ConceptDocument { // TODO: Remove for JSON?
 }

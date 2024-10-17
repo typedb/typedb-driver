@@ -19,16 +19,16 @@
 
 package com.typedb.driver.concept.answer;
 
-import com.typedb.driver.api.answer.ConceptTree;
-import com.typedb.driver.api.answer.ConceptTreeIterator;
+import com.typedb.driver.api.answer.ConceptDocument;
+import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.stream.Stream;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.UNIMPLEMENTED;
 
-public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptTreeIterator {
-    public ConceptTreeIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
+public class ConceptDocumentIteratorImpl extends QueryAnswerImpl implements ConceptDocumentIterator {
+    public ConceptDocumentIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
         throw new TypeDBDriverException(UNIMPLEMENTED);
     }
@@ -44,7 +44,7 @@ public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptT
     }
 
     @Override
-    public ConceptTree next() {
+    public ConceptDocument next() {
         throw new TypeDBDriverException(UNIMPLEMENTED);
 //        try {
 //            return new ConceptRowImpl(nativeIterator.next());
@@ -54,7 +54,7 @@ public class ConceptTreeIteratorImpl extends QueryAnswerImpl implements ConceptT
     }
 
     @Override
-    public Stream<ConceptTree> stream() {
+    public Stream<ConceptDocument> stream() {
         throw new TypeDBDriverException(UNIMPLEMENTED);
 //        return nativeIterator.stream().map(ConceptRowImpl::new);
     }

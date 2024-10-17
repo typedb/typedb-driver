@@ -15,4 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# class _ConceptTree(ConceptTree, NativeWrapper[NativeConceptTree]):
+# class _ConceptTree(ConceptDocument, NativeWrapper[NativeConceptTree]):

@@ -57,7 +57,7 @@ class QueryAnswer(ABC):
 
     def is_concept_trees(self) -> bool:
         """
-        Checks if the query answer is a ``ConceptTreeIterator``.
+        Checks if the query answer is a ``ConceptDocumentIterator``.
 
         :return:
 
@@ -99,7 +99,7 @@ class QueryAnswer(ABC):
 
     def as_concept_trees(self) -> ConceptTreeIterator:
         """
-        Casts the query answer to ``ConceptTreeIterator``.
+        Casts the query answer to ``ConceptDocumentIterator``.
 
         :return:
 
@@ -109,4 +109,4 @@ class QueryAnswer(ABC):
 
           query_answer.as_concept_trees()
         """
-        raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptTreeIterator"))
+        raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptDocumentIterator"))

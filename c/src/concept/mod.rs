@@ -61,23 +61,6 @@ pub extern "C" fn concept_row_iterator_drop(it: *mut ConceptRowIterator) {
     free(it);
 }
 
-// TODO: Should be iterator over JSONs!
-/// Iterator over the <code>ConceptDocument</code>s returned by an API method or query.
-pub struct ConceptDocumentIterator(pub CIterator<Result<ConceptDocument>>);
-
-/// Forwards the <code>ConceptDocumentIterator</code> and returns the next <code>ConceptDocument</code> if it exists,
-/// or null if there are no more elements.
-#[no_mangle]
-pub extern "C" fn concept_document_iterator_next(it: *mut ConceptDocumentIterator) -> *mut ConceptDocument {
-    unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
-}
-
-/// Frees the native rust <code>ConceptDocumentIterator</code> object
-#[no_mangle]
-pub extern "C" fn concept_document_iterator_drop(it: *mut ConceptDocumentIterator) {
-    free(it);
-}
-
 /// Iterator over the <code>Concepts</code>s returned by an API method or query.
 pub struct ConceptIterator(pub CIterator<Result<Concept>>);
 

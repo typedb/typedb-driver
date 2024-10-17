@@ -80,11 +80,10 @@ pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut
     release(ConceptRowIterator(CIterator(take_ownership(query_answer).into_rows())))
 }
 
-/// Produces an <code>Iterator</code> over all <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
+/// Produces an <code>Iterator</code> over all JSON <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut ConceptDocumentIterator {
-    // TODO: Return iterator over JSONs
-    release(ConceptDocumentIterator(CIterator(take_ownership(query_answer).into_documents())))
+pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut StringIterator {
+    release(StringIterator(CIterator(take_ownership(query_answer).into_documents())))
 }
 
 /// Frees the native rust <code>QueryAnswer</code> object.

@@ -36,7 +36,7 @@ public abstract class QueryAnswerImpl extends NativeObject<com.typedb.driver.jni
     public static QueryAnswerImpl of(com.typedb.driver.jni.QueryAnswer concept) {
         if (query_answer_is_ok(concept)) return new OkQueryAnswerImpl(concept);
         else if (query_answer_is_concept_row_stream(concept)) return new ConceptRowIteratorImpl(concept);
-        else if (query_answer_is_concept_document_stream(concept)) return new ConceptTreeIteratorImpl(concept);
+        else if (query_answer_is_concept_document_stream(concept)) return new ConceptDocumentIteratorImpl(concept);
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 }

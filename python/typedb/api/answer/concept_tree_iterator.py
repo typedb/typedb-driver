@@ -29,7 +29,7 @@ class ConceptTreeIterator(QueryAnswer, ABC):
 
     def is_concept_trees(self) -> bool:
         """
-        Checks if the query answer is a ``ConceptTreeIterator``.
+        Checks if the query answer is a ``ConceptDocumentIterator``.
 
         :return:
 
@@ -43,7 +43,7 @@ class ConceptTreeIterator(QueryAnswer, ABC):
 
     def as_concept_trees(self) -> ConceptTreeIterator:
         """
-        Casts the query answer to ``ConceptTreeIterator``.
+        Casts the query answer to ``ConceptDocumentIterator``.
 
         :return:
 

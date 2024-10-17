@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * Represents an iterator over <code>ConceptTree</code>s returned as a server answer.
+ * Represents an iterator over <code>ConceptDocument</code>s returned as a server answer.
  */
-public interface ConceptTreeIterator extends QueryAnswer, Iterator<ConceptTree> {
+public interface ConceptDocumentIterator extends QueryAnswer, Iterator<ConceptDocument> {
     /**
      * {@inheritDoc}
      */
@@ -40,10 +40,10 @@ public interface ConceptTreeIterator extends QueryAnswer, Iterator<ConceptTree> 
      */
     @Override
     @CheckReturnValue
-    default ConceptTreeIterator asConceptTreesStream() {
+    default ConceptDocumentIterator asConceptTreesStream() {
         return this;
     }
 
     @CheckReturnValue
-    Stream<ConceptTree> stream();
+    Stream<ConceptDocument> stream();
 }

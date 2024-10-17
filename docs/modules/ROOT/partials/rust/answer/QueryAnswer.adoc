@@ -8,7 +8,7 @@
 [options="header"]
 |===
 |Variant
-a| `ConceptRowsStream(BoxStream<'static, Result<ConceptRow>>)`
+a| `ConceptRowStream(BoxStream<'static, Result<ConceptRow>>)`
 a| `ConceptTreesStream(ConceptTreesHeader, BoxStream<'static, Result<ConceptTree>>)`
 a| `Ok()`
 |===

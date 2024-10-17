@@ -213,8 +213,8 @@ pub async fn answer_type_is(
 ) {
     match query_answer_type {
         params::QueryAnswerType::Ok => is_or_not.check(context.answer.as_ref().unwrap().is_ok()),
-        params::QueryAnswerType::ConceptRows => is_or_not.check(context.answer.as_ref().unwrap().is_rows_stream()),
-        params::QueryAnswerType::ConceptTrees => is_or_not.check(context.answer.as_ref().unwrap().is_json_stream()),
+        params::QueryAnswerType::ConceptRows => is_or_not.check(context.answer.as_ref().unwrap().is_row_stream()),
+        params::QueryAnswerType::ConceptDocuments => is_or_not.check(context.answer.as_ref().unwrap().is_document_stream()),
     }
 }
 
@@ -234,17 +234,17 @@ pub async fn answer_unwraps_as(
                 "Expected {expect} {query_answer_type}"
             )
         }
-        QueryAnswer::ConceptRowsStream(_) => {
+        QueryAnswer::ConceptRowStream(_) => {
             assert_eq!(
                 expect,
                 matches!(query_answer_type, params::QueryAnswerType::ConceptRows),
                 "Expected {expect} {query_answer_type}"
             )
         }
-        QueryAnswer::ConceptTreesStream(_, _) => {
+        QueryAnswer::ConceptDocumentStream(_) => {
             assert_eq!(
                 expect,
-                matches!(query_answer_type, params::QueryAnswerType::ConceptTrees),
+                matches!(query_answer_type, params::QueryAnswerType::ConceptDocuments),
                 "Expected {expect} {query_answer_type}"
             )
         }

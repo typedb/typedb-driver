@@ -31,7 +31,7 @@ pub struct ConceptDocumentHeader {
 
 /// A single document of concepts representing substitutions for variables in the query.
 /// Contains a Header (query type), and the document of concepts.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ConceptDocument {
     header: Arc<ConceptDocumentHeader>,
     pub root: Option<Node>,

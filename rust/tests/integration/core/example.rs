@@ -90,7 +90,7 @@ fn example() {
         // Open a read transaction to safely read anything without database modifications
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
         let answer = transaction.query("match entity $x;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Collect concept rows that represent the answer as a table
         let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
@@ -128,7 +128,7 @@ fn example() {
 
         // Continue querying in the same transaction if needed
         let answer = transaction.query("match attribute $a;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Concept rows can be used as a stream of results
         let mut rows_stream = answer.into_rows();
@@ -161,7 +161,7 @@ fn example() {
         // Open a write transaction to insert data
         let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
         let answer = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Insert queries also return concept rows
         let mut rows = Vec::new();
@@ -198,7 +198,7 @@ fn example() {
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
         let var = "x";
         let answer = transaction.query(format!("match ${} isa person;", var)).await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Match queries always return concept rows
         let mut count = 0;
@@ -236,3 +236,106 @@ fn example() {
     })
 }
 // EXAMPLE END MARKER
+
+
+// TODO: Temporary test for fetch
+#[test]
+#[serial]
+fn fetch() {
+    async_std::task::block_on(async {
+        let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
+
+        if driver.databases().contains("db-name").await.unwrap() {
+            let db = driver.databases().get("db-name").await.unwrap();
+            db.delete().await.unwrap();
+        }
+
+        driver.databases().create("db-name").await.unwrap();
+
+        let define_query = r#"
+        define
+          attribute name value string;
+          attribute age value long;
+          relation friendship relates friend;
+          entity person owns name @card(0..), owns age, plays friendship:friend;
+        "#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Schema).await.unwrap();
+
+        let result = transaction.query(define_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::Ok()));
+
+        transaction.commit().await.unwrap();
+
+        let insert_query = r#"
+        insert
+          $x isa person, has age 10, has name "Alice", has name "Alicia", has name "Jones";
+          $y isa person, has age 11, has name "Bob";
+          $z isa person, has age 12, has name "Charlie";
+          $p isa person, has age 13, has name "Dixie";
+          $q isa person, has age 14, has name "Ellie";
+          (friend: $x, friend: $y) isa friendship;
+          (friend: $y, friend: $z) isa friendship;
+          (friend: $z, friend: $p) isa friendship;
+          (friend: $p, friend: $q) isa friendship;
+        "#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Write).await.unwrap();
+
+        let result = transaction.query(insert_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptRowStream(_)));
+
+
+        let fetch_query = r#"
+        match
+            $x isa person, has $a;
+            $a isa! $t; $t label age;
+            $a == 10;
+        fetch {
+            "single type": $t,
+            "single attr": $a,
+            "single-card attributes": $x.age,
+        #    "single value expression": $a + 1,
+        #    "single answer block": (
+        #        match
+        #        $x has name $name;
+        #        return first $name;
+        #    ),
+        #    "reduce answer block": (
+        #        match
+        #        $x has name $name;
+        #        return count($name);
+        #    ),
+        #    "list positional return block": [
+        #        match
+        #        $x has name $n,
+        #            has age $a;
+        #        return { $n, $a };
+        #    ],
+            "list pipeline": [
+                match
+                $x has name $n,
+                    has age $a;
+                fetch {
+                    "name": $n
+                };
+            ],
+            "list higher-card attributes": [ $x.name ],
+        #    "list attributes": $x.name[],
+            "all attributes": { $x.* }
+        };"#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
+
+        let result = transaction.query(fetch_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptDocumentStream(_)));
+        let mut documents_stream = answer.into_documents();
+        println!("Printing documents:");
+        while let Some(Ok(document)) = documents_stream.next().await {
+            println!("DOC: {:?}", &document);
+        }
+    })
+}
