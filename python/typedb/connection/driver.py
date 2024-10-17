@@ -93,5 +93,4 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
             return False
 
     def close(self) -> None:
-        if self.is_open():
-            driver_force_close(self._native_driver)
+        driver_force_close(self._native_driver)

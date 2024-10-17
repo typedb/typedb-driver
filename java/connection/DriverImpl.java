@@ -108,7 +108,6 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     @Override
     public void close() {
-        if (!isOpen()) return;
         try {
             driver_force_close(nativeObject);
         } catch (com.typedb.driver.jni.Error error) {

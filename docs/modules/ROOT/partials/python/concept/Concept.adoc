@@ -86,6 +86,27 @@ Casts the concept to ``EntityType``.
 concept.as_entity_type()
 ----
 
+[#_Concept_as_instance_]
+==== as_instance
+
+[source,python]
+----
+as_instance() -> Instance
+----
+
+Casts the concept to ``Instance``.
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.as_instance()
+----
+
 [#_Concept_as_relation_]
 ==== as_relation
 
@@ -149,48 +170,6 @@ Casts the concept to ``RoleType``.
 concept.as_role_type()
 ----
 
-[#_Concept_as_thing_]
-==== as_thing
-
-[source,python]
-----
-as_thing() -> Thing
-----
-
-Casts the concept to ``Thing``.
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept.as_thing()
-----
-
-[#_Concept_as_thing_type_]
-==== as_thing_type
-
-[source,python]
-----
-as_thing_type() -> ThingType
-----
-
-Casts the concept to ``ThingType``.
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept.as_thing_type()
-----
-
 [#_Concept_as_type_]
 ==== as_type
 
@@ -231,6 +210,27 @@ Casts the concept to ``Value``.
 [source,python]
 ----
 concept.as_value()
+----
+
+[#_Concept_get_label_]
+==== get_label
+
+[source,python]
+----
+get_label() -> str
+----
+
+Get the label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.get_label()
 ----
 
 [#_Concept_is_attribute_]
@@ -317,6 +317,27 @@ Checks if the concept is an ``EntityType``.
 concept.is_entity_type()
 ----
 
+[#_Concept_is_instance_]
+==== is_instance
+
+[source,python]
+----
+is_instance() -> bool
+----
+
+Checks if the concept is a ``Instance``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_instance()
+----
+
 [#_Concept_is_relation_]
 ==== is_relation
 
@@ -378,48 +399,6 @@ Checks if the concept is a ``RoleType``.
 [source,python]
 ----
 concept.is_role_type()
-----
-
-[#_Concept_is_thing_]
-==== is_thing
-
-[source,python]
-----
-is_thing() -> bool
-----
-
-Checks if the concept is a ``Thing``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept.is_thing()
-----
-
-[#_Concept_is_thing_type_]
-==== is_thing_type
-
-[source,python]
-----
-is_thing_type() -> bool
-----
-
-Checks if the concept is a ``ThingType``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept.is_thing_type()
 ----
 
 [#_Concept_is_type_]

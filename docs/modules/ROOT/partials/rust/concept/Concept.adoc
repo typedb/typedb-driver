@@ -1,7 +1,7 @@
 [#_enum_Concept]
 === Concept
 
-The fundamental TypeQL object. A Concept is either a Type, Thing, or Value. To use subtype specific methods, the Concept must be of the expected subtype.
+The fundamental TypeQL object.
 
 [caption=""]
 .Enum variants
@@ -17,8 +17,640 @@ a| `EntityType(EntityType)`
 a| `Relation(Relation)`
 a| `RelationType(RelationType)`
 a| `RoleType(RoleType)`
-a| `RootThingType(RootThingType)`
 a| `Value(Value)`
 |===
 // end::enum_constants[]
+
+// tag::methods[]
+[#_enum_Concept_get_boolean_]
+==== get_boolean
+
+[source,rust]
+----
+pub fn get_boolean(&self) -> Option<bool>
+----
+
+Get the boolean value of this concept, if it exists. If this is a boolean-valued Attribute Instance, return the boolean value of this instance. If this a boolean-valued Value, return the boolean value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<bool>
+----
+
+[#_enum_Concept_get_category_]
+==== get_category
+
+[source,rust]
+----
+pub fn get_category(&self) -> ConceptCategory
+----
+
+Get the category of this concept
+
+[caption=""]
+.Returns
+[source,rust]
+----
+ConceptCategory
+----
+
+[#_enum_Concept_get_date_]
+==== get_date
+
+[source,rust]
+----
+pub fn get_date(&self) -> Option<NaiveDate>
+----
+
+Get the date value of this concept, if it exists. If this is a date-valued Attribute Instance, return the date value of this instance. If this a date-valued Value, return the date value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<NaiveDate>
+----
+
+[#_enum_Concept_get_datetime_]
+==== get_datetime
+
+[source,rust]
+----
+pub fn get_datetime(&self) -> Option<NaiveDateTime>
+----
+
+Get the datetime value of this concept, if it exists. If this is a datetime-valued Attribute Instance, return the datetime value of this instance. If this a datetime-valued Value, return the datetime value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<NaiveDateTime>
+----
+
+[#_enum_Concept_get_datetime_tz_]
+==== get_datetime_tz
+
+[source,rust]
+----
+pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>>
+----
+
+Get the timezoned-datetime value of this concept, if it exists. If this is a timezoned-datetime valued Attribute Instance, return the timezoned-datetime value of this instance. If this a timezoned-datetime valued Value, return the timezoned-datetime value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<DateTime<TimeZone>>
+----
+
+[#_enum_Concept_get_decimal_]
+==== get_decimal
+
+[source,rust]
+----
+pub fn get_decimal(&self) -> Option<Decimal>
+----
+
+Get the fixed-decimal value of this concept, if it exists. If this is a fixed-decimal valued Attribute Instance, return the fixed-decimal value of this instance. If this a fixed-decimal valued Value, return the fixed-decimal value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<Decimal>
+----
+
+[#_enum_Concept_get_double_]
+==== get_double
+
+[source,rust]
+----
+pub fn get_double(&self) -> Option<f64>
+----
+
+Get the double value of this concept, if it exists. If this is a double-valued Attribute Instance, return the double value of this instance. If this a double-valued Value, return the double value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<f64>
+----
+
+[#_enum_Concept_get_duration_]
+==== get_duration
+
+[source,rust]
+----
+pub fn get_duration(&self) -> Option<Duration>
+----
+
+Get the duration value of this concept, if it exists. If this is a duration-valued Attribute Instance, return the duration value of this instance. If this a duration-valued Value, return the duration value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<Duration>
+----
+
+[#_enum_Concept_get_iid_]
+==== get_iid
+
+[source,rust]
+----
+pub fn get_iid(&self) -> Option<&IID>
+----
+
+Get the IID of this concept, if it exists. If this is an Entity or Relation Instance, return the IID of the instance. Otherwise, return empty
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&IID>
+----
+
+[#_enum_Concept_get_label_]
+==== get_label
+
+[source,rust]
+----
+pub fn get_label(&self) -> &str
+----
+
+Get the label of the concept. If this is an Instance, return the label of the type of this instance. If this is a Value, return the label of the value type of the value. If this is a Type, return the label of the type.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_enum_Concept_get_long_]
+==== get_long
+
+[source,rust]
+----
+pub fn get_long(&self) -> Option<i64>
+----
+
+Get the long value of this concept, if it exists. If this is a long-valued Attribute Instance, return the long value of this instance. If this a long-valued Value, return the long value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<i64>
+----
+
+[#_enum_Concept_get_string_]
+==== get_string
+
+[source,rust]
+----
+pub fn get_string(&self) -> Option<&str>
+----
+
+Get the string value of this concept, if it exists. If this is a string-valued Attribute Instance, return the string value of this instance. If this a string-valued Value, return the string value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
+----
+
+[#_enum_Concept_get_struct_]
+==== get_struct
+
+[source,rust]
+----
+pub fn get_struct(&self) -> Option<&Struct>
+----
+
+Get the struct value of this concept, if it exists. If this is a struct-valued Attribute Instance, return the struct value of this instance. If this a struct-valued Value, return the struct value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Struct>
+----
+
+[#_enum_Concept_get_value_]
+==== get_value
+
+[source,rust]
+----
+pub fn get_value(&self) -> Option<&Value>
+----
+
+Get the value of this concept, if it exists. If this is an Attribute Instance, return the value of this instance. If this a Value, return the value. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Value>
+----
+
+[#_enum_Concept_get_value_label_]
+==== get_value_label
+
+[source,rust]
+----
+pub fn get_value_label(&self) -> Option<&str>
+----
+
+Get the label of the value type of the concept, if it exists. If this is an Attribute Instance, return the label of the value of this instance. If this is a Value, return the label of the value. If this is an Attribute Type, it returns the label of the value type that the schema permits for the attribute type, if one is defined. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
+----
+
+[#_enum_Concept_get_value_type_]
+==== get_value_type
+
+[source,rust]
+----
+pub fn get_value_type(&self) -> Option<ValueType>
+----
+
+Get the value type enum of the concept, if it exists If this is an Attribute Instance, return the value type of the value of this instance. If this is a Value, return the value type of the value. If this is an Attribute Type, it returns value type that the schema permits for the attribute type, if one is defined. Otherwise, return empty.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<ValueType>
+----
+
+[#_enum_Concept_is_attribute_]
+==== is_attribute
+
+[source,rust]
+----
+pub fn is_attribute(&self) -> bool
+----
+
+Check if this concept represents an Attribute instance from the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_attribute_type_]
+==== is_attribute_type
+
+[source,rust]
+----
+pub fn is_attribute_type(&self) -> bool
+----
+
+Check if this concept represents an Attribute Type from the schema of the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_boolean_]
+==== is_boolean
+
+[source,rust]
+----
+pub fn is_boolean(&self) -> bool
+----
+
+Check if this concept holds a boolean as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_date_]
+==== is_date
+
+[source,rust]
+----
+pub fn is_date(&self) -> bool
+----
+
+Check if this concept holds a date as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_datetime_]
+==== is_datetime
+
+[source,rust]
+----
+pub fn is_datetime(&self) -> bool
+----
+
+Check if this concept holds a datetime as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_datetime_tz_]
+==== is_datetime_tz
+
+[source,rust]
+----
+pub fn is_datetime_tz(&self) -> bool
+----
+
+Check if this concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_decimal_]
+==== is_decimal
+
+[source,rust]
+----
+pub fn is_decimal(&self) -> bool
+----
+
+Check if this concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_double_]
+==== is_double
+
+[source,rust]
+----
+pub fn is_double(&self) -> bool
+----
+
+Check if this concept holds a double as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_duration_]
+==== is_duration
+
+[source,rust]
+----
+pub fn is_duration(&self) -> bool
+----
+
+Check if this concept holds a duration as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_entity_]
+==== is_entity
+
+[source,rust]
+----
+pub fn is_entity(&self) -> bool
+----
+
+Check if this concept represents an Entity instance from the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_entity_type_]
+==== is_entity_type
+
+[source,rust]
+----
+pub fn is_entity_type(&self) -> bool
+----
+
+Check if this concept represents an Entity Type from the schema of the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_instance_]
+==== is_instance
+
+[source,rust]
+----
+pub fn is_instance(&self) -> bool
+----
+
+Check if this concept represents a stored database instance from the database. These are exactly: Entity, Relation, and Attribute
+
+Equivalent to:
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept.is_entity() || concept.is_relation() ||  concept.is_attribute()
+----
+
+[#_enum_Concept_is_long_]
+==== is_long
+
+[source,rust]
+----
+pub fn is_long(&self) -> bool
+----
+
+Check if this concept holds a long as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_relation_]
+==== is_relation
+
+[source,rust]
+----
+pub fn is_relation(&self) -> bool
+----
+
+Check if this concept represents an Relation instance from the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_relation_type_]
+==== is_relation_type
+
+[source,rust]
+----
+pub fn is_relation_type(&self) -> bool
+----
+
+Check if this concept represents a Relation Type from the schema of the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_role_type_]
+==== is_role_type
+
+[source,rust]
+----
+pub fn is_role_type(&self) -> bool
+----
+
+Check if this concept represents a Role Type from the schema of the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_string_]
+==== is_string
+
+[source,rust]
+----
+pub fn is_string(&self) -> bool
+----
+
+Check if this concept holds a string as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_struct_]
+==== is_struct
+
+[source,rust]
+----
+pub fn is_struct(&self) -> bool
+----
+
+Check if this concept holds a struct as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_enum_Concept_is_type_]
+==== is_type
+
+[source,rust]
+----
+pub fn is_type(&self) -> bool
+----
+
+Check if this concept represents a Type from the schema of the database. These are exactly: Entity Types, Relation Types, Role Types, and Attribute Types
+
+Equivalent to:
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept.is_entity_type() || concept.is_relation_type() || concept.is_role_type() || concept.is_attribute_type()
+----
+
+[#_enum_Concept_is_value_]
+==== is_value
+
+[source,rust]
+----
+pub fn is_value(&self) -> bool
+----
+
+Check if this concept represents a Value returned by the database
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+// end::methods[]
 

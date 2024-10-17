@@ -77,8 +77,10 @@ class RustDocParser : Callable<Unit> {
             }
             parseDirectory(inputDirectoryNames[0], feature).forEach { (className, parsedClass) ->
                 val fileName = className.replace(" ", "_") + ".adoc"
-                val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                val fileDir = docsDir.resolve(
+                    dirs[fileName]
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
+                )
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -91,8 +93,10 @@ class RustDocParser : Callable<Unit> {
             val parsedDirs = inputDirectoryNames.map { parseDirectory(it, modes[it]!!) }
             parsedDirs[0].forEach { (className, classFirst) ->
                 val fileName = className.replace(" ", "_") + ".adoc"
-                val fileDir = baseDocsDir.resolve(dirs[fileName]
-                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                val fileDir = baseDocsDir.resolve(
+                    dirs[fileName]
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
+                )
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -107,7 +111,7 @@ class RustDocParser : Callable<Unit> {
     private fun parseDirectory(inputDirectoryName: String, mode: String): HashMap<String, Class> {
         val parsedClasses: HashMap<String, Class> = hashMapOf()
         File(inputDirectoryName).walkTopDown().filter {
-            it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
+            it.isFile() && listOf("struct.", "trait.", "enum.").any { keyword -> it.toString().contains(keyword) }
         }.forEach {
             val html = it.readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
@@ -132,11 +136,12 @@ class RustDocParser : Callable<Unit> {
 
     private fun parseClass(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
-        val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
+        val classDescr =
+            document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
 
         val fields = document.select(".structfield").map {
             parseField(it, classAnchor)
-        }
+        }.filterNotNull()
 
         val methods =
             document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
@@ -163,8 +168,9 @@ class RustDocParser : Callable<Unit> {
 
     private fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
-        val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
-        val examples = document.select(".top-doc .docblock .example-wrap").map{ it.text() }
+        val classDescr =
+            document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
+        val examples = document.select(".top-doc .docblock .example-wrap").map { it.text() }
 
         val methods =
             document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)")
@@ -233,7 +239,8 @@ class RustDocParser : Callable<Unit> {
                 type = allArgs[argName]?.trim(),
             )
         }
-        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
+        val methodAnchor =
+            replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
 
         return Method(
             name = methodName,
@@ -247,8 +254,8 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    private fun parseField(element: Element, classAnchor: String): Variable {
-        val nameAndType = element.selectFirst("code")!!.text().split(": ")
+    private fun parseField(element: Element, classAnchor: String): Variable? {
+        val nameAndType = element.selectFirst("code")?.text()?.split(": ") ?: return null
         val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
         return Variable(
             name = nameAndType[0],

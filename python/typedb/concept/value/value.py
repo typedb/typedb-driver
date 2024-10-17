@@ -139,7 +139,12 @@ class _Value(Value, _Concept):
             raise TypeDBDriverException(INVALID_VALUE_CASTING, "datetime-tz")
         native_datetime_tz = value_get_datetime_tz(self.native_object)
         native_datetime = native_datetime_tz.datetime_in_nanos
-        return Datetime.fromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos, native_datetime_tz.zone_id)
+        if native_datetime_tz.is_fixed_offset:
+            return Datetime.fromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos,
+                                          offset_seconds=native_datetime_tz.local_minus_utc_offset)
+        else:
+            return Datetime.fromtimestamp(native_datetime.seconds, native_datetime.subsec_nanos,
+                                          tz_name=native_datetime_tz.zone_name)
 
     def as_duration(self) -> Duration:
         if not self.is_duration():

@@ -1,7 +1,7 @@
 # TypeDB Java Driver
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using Java, refer to the [API Reference](https://typedb.com/docs/drivers/java/api-reference).

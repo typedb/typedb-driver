@@ -50,23 +50,6 @@ transaction.commit()
 --
 ====
 
-[#_struct_Transaction_concept_]
-==== concept
-
-[source,rust]
-----
-pub fn concept(&self) -> ConceptManager<'_>
-----
-
-The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-ConceptManager<'_>
-----
-
 [#_struct_Transaction_force_close_]
 ==== force_close
 
@@ -115,23 +98,6 @@ bool
 transaction.close()
 ----
 
-[#_struct_Transaction_logic_]
-==== logic
-
-[source,rust]
-----
-pub fn logic(&self) -> LogicManager<'_>
-----
-
-Retrieves the ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-LogicManager<'_>
-----
-
 [#_struct_Transaction_on_close_function]
 ==== on_close
 
@@ -139,7 +105,7 @@ LogicManager<'_>
 ----
 pub fn on_close(
     &self,
-    callback: impl FnOnce(ConnectionError) + Send + Sync + 'static
+    callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
 )
 ----
 
@@ -173,16 +139,57 @@ transaction.on_close(function)
 
 [source,rust]
 ----
-pub fn query(&self) -> QueryManager<'_>
+pub fn query(
+    &self,
+    query: impl AsRef<str>,
+) -> impl Promise<'static, Result<QueryAnswer>>
 ----
 
-Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+Performs a TypeQL query with default options. See <<#_struct_Transaction_method_query_with_options,`Transaction::query_with_options`>>
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-QueryManager<'_>
+impl Promise<'static, Result<QueryAnswer>>
+----
+
+[#_struct_Transaction_query_with_options_query_impl_AsRef_str_options_Options]
+==== query_with_options
+
+[source,rust]
+----
+pub fn query_with_options(
+    &self,
+    query: impl AsRef<str>,
+    options: Options,
+) -> impl Promise<'static, Result<QueryAnswer>>
+----
+
+Performs a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL query to be executed a| `impl AsRef<str>`
+a| `options` a| Query options a| `Options`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Promise<'static, Result<QueryAnswer>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.query_with_options(query, options)
 ----
 
 [#_struct_Transaction_rollback_]

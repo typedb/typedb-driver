@@ -20,13 +20,13 @@ load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 
 exports_files(
-    ["test_core_example.py"],
+    ["test_example.py"],
     visibility = ["//python:__subpackages__"],
 )
 
 py_test(
-    name = "test_core_example",
-    srcs = ["test_core_example.py"],
+    name = "test_example",
+    srcs = ["test_example.py"],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),
@@ -36,8 +36,8 @@ py_test(
 )
 
 py_test(
-    name = "test_core_values",
-    srcs = ["test_core_values.py"],
+    name = "test_values",
+    srcs = ["test_values.py"],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),

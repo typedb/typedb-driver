@@ -19,11 +19,11 @@
 
 use std::ffi::c_char;
 
-use chrono::{DateTime, NaiveTime, TimeZone};
+use chrono::{DateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
-        value::{Decimal, Duration},
+        value::{Decimal, Duration, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value, ValueType,
     },
 };
@@ -43,7 +43,7 @@ pub struct DatetimeInNanos {
 }
 
 impl DatetimeInNanos {
-    pub fn new<TZ: TimeZone>(datetime: &DateTime<TZ>) -> Self {
+    pub fn new<TZ: ChronoTimeZone>(datetime: &DateTime<TZ>) -> Self {
         Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
     }
 
@@ -56,36 +56,59 @@ impl DatetimeInNanos {
     }
 }
 
-/// A <code>DatetimeAndZoneId</code> used to represent IANA time zoned datetime in FFI.
+/// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
+/// Time zone can be represented either as an IANA <code>Tz</code> or as a <code>FixedOffset</code>.
+/// Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 #[repr(C)]
-pub struct DatetimeAndZoneId {
+pub struct DatetimeAndTimeZone {
     datetime_in_nanos: DatetimeInNanos,
-    zone_id: *mut c_char,
+    zone_name: *mut c_char,
+    local_minus_utc_offset: i32,
+    is_fixed_offset: bool,
 }
 
-impl DatetimeAndZoneId {
-    pub fn new(datetime_in_nanos: DatetimeInNanos, zone_id: String) -> Self {
-        Self { datetime_in_nanos, zone_id: release_string(zone_id) }
+impl DatetimeAndTimeZone {
+    pub fn new(datetime_tz: &DateTime<TimeZone>) -> Self {
+        let (zone_name, offset, is_fixed_offset) = {
+            match datetime_tz.timezone() {
+                TimeZone::IANA(tz) => (tz.name().to_owned(), 0, false),
+                TimeZone::Fixed(offset) => ("".to_owned(), offset.local_minus_utc(), true),
+            }
+        };
+        Self {
+            datetime_in_nanos: DatetimeInNanos::new(datetime_tz),
+            zone_name: release_string(zone_name),
+            local_minus_utc_offset: offset,
+            is_fixed_offset,
+        }
     }
 
     pub fn get_datetime_in_nanos(self) -> DatetimeInNanos {
         self.datetime_in_nanos
     }
 
-    pub fn get_zone_id(self) -> *mut c_char {
-        self.zone_id
+    pub fn get_zone_name(self) -> *mut c_char {
+        self.zone_name
+    }
+
+    pub fn get_local_minus_utc_offset(self) -> i32 {
+        self.local_minus_utc_offset
+    }
+
+    pub fn get_is_fixed_offset(self) -> bool {
+        self.is_fixed_offset
     }
 }
 
-impl Drop for DatetimeAndZoneId {
+impl Drop for DatetimeAndTimeZone {
     fn drop(&mut self) {
-        string_free(self.zone_id);
+        string_free(self.zone_name);
     }
 }
 
-/// Frees the native rust <code>DateTimeAndZoneId</code> object
+/// Frees the native rust <code>DatetimeAndTimeZone</code> object
 #[no_mangle]
-pub extern "C" fn datetime_and_zone_id_drop(datetime_tz: *mut DatetimeAndZoneId) {
+pub extern "C" fn datetime_and_time_zone_drop(datetime_tz: *mut DatetimeAndTimeZone) {
     free(datetime_tz);
 }
 
@@ -209,70 +232,70 @@ pub extern "C" fn attribute_type_is_struct(attribute_type: *const Concept) -> bo
     matches!(borrow_as_attribute_type(attribute_type).value_type, Some(ValueType::Struct(_)))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>boolean</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>boolean</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_boolean(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Boolean(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>long</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>long</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_long(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Long(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>double</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>double</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_double(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Double(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>decimal</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>decimal</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_decimal(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Decimal(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>string</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>string</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_string(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::String(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>date</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>date</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_date(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Date(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>datetime</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>datetime</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_datetime(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Datetime(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>datetime-tz</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>datetime-tz</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_datetime_tz(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::DatetimeTZ(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>duration</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>duration</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_duration(value: *const Concept) -> bool {
     matches!(borrow_as_value(value), Value::Duration(_))
 }
 
-/// Returns <code>true</code> if the value which this ``Value`` concept holds is of type <code>struct</code>.
+/// Returns <code>true</code> if the value which this <code>Value</code> concept holds is of type <code>struct</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn value_is_struct(value: *const Concept) -> bool {
@@ -359,10 +382,9 @@ pub extern "C" fn value_get_datetime(value: *const Concept) -> DatetimeInNanos {
 /// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and an IANA TZ name.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndZoneId {
-    // TODO: support offset format...
+pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndTimeZone {
     if let Value::DatetimeTZ(datetime_tz) = borrow_as_value(value) {
-        DatetimeAndZoneId::new(DatetimeInNanos::new(datetime_tz), datetime_tz.timezone().name().clone().to_owned())
+        DatetimeAndTimeZone::new(datetime_tz)
     } else {
         unreachable!("Attempting to unwrap a non-datetime-tz {:?} as datetime-tz", borrow_as_value(value))
     }
@@ -410,55 +432,61 @@ pub extern "C" fn concept_drop(concept: *mut Concept) {
     free(concept);
 }
 
-/// Checks if the concept is an ``Entity``.
+/// Checks if the concept is an <code>Entity</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_entity(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Entity(_))
 }
 
-/// Checks if the concept is a ``Relation``.
+/// Checks if the concept is a <code>Relation</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_relation(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Relation(_))
 }
 
-/// Checks if the concept is an ``Attribute``.
+/// Checks if the concept is an <code>Attribute</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_attribute(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Attribute(_))
 }
 
-/// Checks if the concept is a ``Value``.
+/// Checks if the concept is a <code>Value</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::Value(_))
 }
 
-/// Checks if the concept is an ``EntityType``.
+/// Checks if the concept is an <code>EntityType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_entity_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::EntityType(_))
 }
 
-/// Checks if the concept is a ``RelationType``.
+/// Checks if the concept is a <code>RelationType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_relation_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::RelationType(_))
 }
 
-/// Checks if the concept is an ``AttributeType``.
+/// Checks if the concept is an <code>AttributeType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_attribute_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::AttributeType(_))
 }
 
-/// Checks if the concept is a ``RoleType``.
+/// Checks if the concept is a <code>RoleType</code>.
 #[no_mangle]
 pub extern "C" fn concept_is_role_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::RoleType(_))
 }
 
-/// A string representation of this <code>Concept</code> object
+/// Gets the 'label' of this <code>Concept</code> object.
+#[no_mangle]
+pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
+    release_string(borrow(concept).get_label().clone().to_owned())
+}
+
+/// A string representation of this <code>Concept</code> object.
 #[no_mangle]
 pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))

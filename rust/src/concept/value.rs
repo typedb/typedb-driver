@@ -17,9 +17,14 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt};
+use std::{
+    collections::HashMap,
+    fmt,
+    ops::{Add, Neg, Sub},
+    str::FromStr,
+};
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime};
+use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
 use crate::Error;
@@ -77,7 +82,7 @@ pub enum Value {
     String(String),
     Date(NaiveDate),
     Datetime(NaiveDateTime),
-    DatetimeTZ(DateTime<Tz>),
+    DatetimeTZ(DateTime<TimeZone>),
     Duration(Duration),
     Struct(Struct, String),
 }
@@ -183,7 +188,7 @@ impl Value {
         }
     }
 
-    pub fn get_datetime_tz(&self) -> Option<DateTime<Tz>> {
+    pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
         if let Value::DatetimeTZ(datetime_tz) = self {
             Some(*datetime_tz)
         } else {
@@ -235,7 +240,7 @@ impl fmt::Debug for Value {
 /// A fixed-point decimal number.
 /// Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Decimal {
     integer: i64,
     fractional: u64,
@@ -261,6 +266,48 @@ impl Decimal {
     /// This means, the smallest decimal representable is 10^-19, and up to 19 decimal places are supported.
     pub fn fractional_part(&self) -> u64 {
         self.fractional
+    }
+}
+
+impl Neg for Decimal {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self::default() - self
+    }
+}
+
+impl Add for Decimal {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        let (fractional, carry) = match lhs.fractional.overflowing_add(rhs.fractional) {
+            (frac, false) if frac < Self::FRACTIONAL_PART_DENOMINATOR => (frac, 0),
+            (frac, true) if frac < Self::FRACTIONAL_PART_DENOMINATOR => {
+                (frac + 0u64.wrapping_sub(Self::FRACTIONAL_PART_DENOMINATOR), 1)
+            }
+            (frac, false) => (frac - Self::FRACTIONAL_PART_DENOMINATOR, 1),
+            (_, true) => unreachable!(),
+        };
+        let integer = lhs.integer + rhs.integer + carry;
+
+        Self::new(integer, fractional)
+    }
+}
+
+impl Sub for Decimal {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        let (fractional, carry) = match lhs.fractional.overflowing_sub(rhs.fractional) {
+            (frac, false) => (frac, 0),
+            (frac, true) => (frac.wrapping_add(Self::FRACTIONAL_PART_DENOMINATOR), 1),
+        };
+        let integer = lhs.integer - rhs.integer - carry;
+
+        Self::new(integer, fractional)
     }
 }
 
@@ -290,6 +337,83 @@ impl fmt::Debug for Decimal {
     }
 }
 
+/// Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.
+#[derive(Copy, Clone, Debug)]
+pub enum Offset {
+    IANA(<Tz as chrono::TimeZone>::Offset),
+    Fixed(FixedOffset),
+}
+
+impl chrono::Offset for Offset {
+    fn fix(&self) -> FixedOffset {
+        match self {
+            Self::IANA(inner) => inner.fix(),
+            Self::Fixed(inner) => inner.fix(),
+        }
+    }
+}
+
+impl fmt::Display for Offset {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::IANA(inner) => fmt::Display::fmt(inner, f),
+            Self::Fixed(inner) => fmt::Display::fmt(inner, f),
+        }
+    }
+}
+
+/// TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.
+#[derive(Copy, Clone, Debug)]
+pub enum TimeZone {
+    IANA(Tz),
+    Fixed(FixedOffset),
+}
+
+impl Default for TimeZone {
+    fn default() -> Self {
+        Self::IANA(Tz::default())
+    }
+}
+
+impl chrono::TimeZone for TimeZone {
+    type Offset = Offset;
+
+    fn from_offset(offset: &Self::Offset) -> Self {
+        match offset {
+            Offset::IANA(offset) => Self::IANA(Tz::from_offset(offset)),
+            Offset::Fixed(offset) => Self::Fixed(FixedOffset::from_offset(offset)),
+        }
+    }
+
+    fn offset_from_local_date(&self, local: &NaiveDate) -> MappedLocalTime<Self::Offset> {
+        match self {
+            Self::IANA(inner) => inner.offset_from_local_date(local).map(Offset::IANA),
+            Self::Fixed(inner) => inner.offset_from_local_date(local).map(Offset::Fixed),
+        }
+    }
+
+    fn offset_from_local_datetime(&self, local: &NaiveDateTime) -> MappedLocalTime<Self::Offset> {
+        match self {
+            Self::IANA(inner) => inner.offset_from_local_datetime(local).map(Offset::IANA),
+            Self::Fixed(inner) => inner.offset_from_local_datetime(local).map(Offset::Fixed),
+        }
+    }
+
+    fn offset_from_utc_date(&self, utc: &NaiveDate) -> Self::Offset {
+        match self {
+            TimeZone::IANA(inner) => Offset::IANA(inner.offset_from_utc_date(utc)),
+            TimeZone::Fixed(inner) => Offset::Fixed(inner.offset_from_utc_date(utc)),
+        }
+    }
+
+    fn offset_from_utc_datetime(&self, utc: &NaiveDateTime) -> Self::Offset {
+        match self {
+            TimeZone::IANA(inner) => Offset::IANA(inner.offset_from_utc_datetime(utc)),
+            TimeZone::Fixed(inner) => Offset::Fixed(inner.offset_from_utc_datetime(utc)),
+        }
+    }
+}
+
 /// A relative duration, which contains months, days, and nanoseconds.
 /// Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component
 /// When used as an absolute duration, convertible to chrono::Duration
@@ -302,6 +426,12 @@ pub struct Duration {
 }
 
 impl Duration {
+    const NANOS_PER_SEC: u64 = 1_000_000_000;
+    const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
+    const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
+    const DAYS_PER_WEEK: u32 = 7;
+    const MONTHS_PER_YEAR: u32 = 12;
+
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }
     }
@@ -335,6 +465,77 @@ impl TryFrom<Duration> for chrono::Duration {
                 }
             }
         }
+    }
+}
+
+// TODO: Duration parsing is basically a copy of TypeDB server's code, can be made a dependency.
+#[derive(Debug)]
+pub struct DurationParseError;
+
+struct Segment {
+    number: u64,
+    symbol: u8,
+    number_len: usize,
+}
+
+fn read_u32(str: &str) -> Result<(Segment, &str), DurationParseError> {
+    let mut i = 0;
+    while i + 1 < str.len() && str.as_bytes()[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i == 0 {
+        return Err(DurationParseError);
+    }
+    let value = str[..i].parse().map_err(|_| DurationParseError)?;
+    Ok((Segment { number: value, symbol: str.as_bytes()[i], number_len: i }, &str[i + 1..]))
+}
+
+impl FromStr for Duration {
+    type Err = DurationParseError;
+
+    fn from_str(mut str: &str) -> Result<Self, Self::Err> {
+        let mut months = 0;
+        let mut days = 0;
+        let mut nanos = 0;
+
+        if str.as_bytes()[0] != b'P' {
+            return Err(DurationParseError);
+        }
+        str = &str[1..];
+
+        let mut parsing_time = false;
+        let mut previous_symbol = None;
+        while !str.is_empty() {
+            if str.as_bytes()[0] == b'T' {
+                parsing_time = true;
+                str = &str[1..];
+            }
+
+            let (Segment { number, symbol, number_len }, tail) = read_u32(str)?;
+            str = tail;
+
+            if previous_symbol == Some(b'.') && symbol != b'S' {
+                return Err(DurationParseError);
+            }
+
+            match symbol {
+                b'Y' => months += number as u32 * Self::MONTHS_PER_YEAR,
+                b'M' if !parsing_time => months += number as u32,
+
+                b'W' => days += number as u32 * Self::DAYS_PER_WEEK,
+                b'D' => days += number as u32,
+
+                b'H' => nanos += number * Self::NANOS_PER_HOUR,
+                b'M' if parsing_time => nanos += number * Self::NANOS_PER_MINUTE,
+                b'.' => nanos += number * Self::NANOS_PER_SEC,
+                b'S' if previous_symbol != Some(b'.') => nanos += number * Self::NANOS_PER_SEC,
+                b'S' if previous_symbol == Some(b'.') => nanos += number * 10u64.pow(9 - number_len as u32),
+                _ => return Err(DurationParseError),
+            }
+            previous_symbol = Some(symbol);
+        }
+
+        Ok(Self { months, days, nanos })
     }
 }
 

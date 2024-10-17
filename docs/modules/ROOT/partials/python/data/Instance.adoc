@@ -1,0 +1,73 @@
+[#_Instance]
+=== Instance
+
+*Supertypes:*
+
+* `Concept`
+
+// tag::methods[]
+[#_Instance_as_instance_]
+==== as_instance
+
+[source,python]
+----
+as_instance() -> Instance
+----
+
+Casts the concept to ``Instance``.
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+instance.as_instance()
+----
+
+[#_Instance_get_type_]
+==== get_type
+
+[source,python]
+----
+get_type() -> Type
+----
+
+Retrieves the type which this ``Instance`` belongs to.
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+instance.get_type()
+----
+
+[#_Instance_is_instance_]
+==== is_instance
+
+[source,python]
+----
+is_instance() -> bool
+----
+
+Checks if the concept is a ``Instance``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+instance.is_instance()
+----
+
+// end::methods[]
+

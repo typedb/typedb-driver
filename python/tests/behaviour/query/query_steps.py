@@ -15,8 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from decimal import Decimal
+from functools import partial
 from typing import Optional
 
 from behave import *
@@ -26,15 +28,14 @@ from tests.behaviour.config.parameters import ConceptKind, MayError, ValueType, 
 from tests.behaviour.context import Context
 from typedb.api.answer.query_type import QueryType
 from typedb.api.concept.concept import Concept
-from typedb.api.concept.thing.attribute import Attribute
-from typedb.api.concept.thing.entity import Entity
-from typedb.api.concept.thing.relation import Relation
-from typedb.api.concept.thing.thing import Thing
+from typedb.api.concept.instance.attribute import Attribute
+from typedb.api.concept.instance.entity import Entity
+from typedb.api.concept.instance.instance import Instance
+from typedb.api.concept.instance.relation import Relation
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.api.concept.type.entity_type import EntityType
 from typedb.api.concept.type.relation_type import RelationType
 from typedb.api.concept.type.role_type import RoleType
-from typedb.api.concept.type.thing_type import ThingType
 from typedb.api.concept.type.type import Type
 from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
@@ -56,6 +57,19 @@ def step_impl(context: Context, may_error: MayError):
 def step_impl(context: Context):
     context.clear_answers()
     context.answer = context.tx().query(query=context.text).resolve()
+
+
+@step("concurrently get answers of typeql write query {count:Int} times")
+@step("concurrently get answers of typeql read query {count:Int} times")
+@step("concurrently get answers of typeql schema query {count:Int} times")
+def step_impl(context: Context, count: int):
+    assert_that(count, is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
+    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
+        context.clear_concurrent_answers()
+        context.concurrent_answers = []
+        for i in range(count):
+            context.concurrent_answers.append(
+                executor.submit(partial(lambda: context.tx().query(query=context.text).resolve())))
 
 
 @step("answer type {is_or_not:IsOrNot}: {answer_type}")
@@ -102,13 +116,32 @@ def unwrap_answer_if_needed(context: Context):
     if context.unwrapped_answer is None:
         if context.answer.is_ok():
             unwrap_answer_ok(context)
-        if context.answer.is_concept_rows():
+        elif context.answer.is_concept_rows():
             unwrap_answer_rows(context)
         elif context.answer.is_concept_trees():
             unwrap_answer_trees(context)
         else:
             raise ValueError(
                 "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
+
+
+def unwrap_concurrent_answers_if_needed(context: Context):
+    if context.unwrapped_concurrent_answers is None:
+        if not context.concurrent_answers:
+            raise ValueError("Cannot unwrap test concurrent answers as concurrent answers are absent")
+
+        context.unwrapped_concurrent_answers = []
+        for answer_future in context.concurrent_answers:
+            answer = answer_future.result()
+            if answer.is_ok():
+                context.unwrapped_concurrent_answers.append(answer.as_ok())
+            elif answer.is_concept_rows():
+                context.unwrapped_concurrent_answers.append(answer.as_concept_rows())
+            elif answer.is_concept_trees():
+                context.unwrapped_concurrent_answers.append(answer.as_concept_trees())
+            else:
+                raise ValueError(
+                    "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptTrees, but appeared to be something else")
 
 
 def collect_answer_if_needed(context: Context):
@@ -139,6 +172,24 @@ def step_impl(context: Context, is_or_not: bool, query_type: QueryType):
                 is_or_not_reason(is_or_not, real=answer_query_type, expected=query_type))
 
 
+@step("concurrently process {count:Int} row from answers{may_error:MayError}")
+@step("concurrently process {count:Int} rows from answers{may_error:MayError}")
+def step_impl(context: Context, count: int, may_error: MayError):
+    answers_num = len(context.concurrent_answers)
+    assert_that(answers_num, is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
+
+    unwrap_concurrent_answers_if_needed(context)
+
+    with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
+        futures = [
+            executor.submit(lambda it=answer: [next(it) for _ in range(count)])
+            for answer in context.unwrapped_concurrent_answers
+        ]
+
+        for future in futures:
+            may_error.check(future.result, exception=StopIteration)
+
+
 @step("answer column names are")
 def step_impl(context: Context):
     collect_answer_if_needed(context)
@@ -157,12 +208,8 @@ def get_row_get_type(context: Context, row_index: int, var: str, is_by_var_index
     return get_row_get_concept(context, row_index, var, is_by_var_index).as_type()
 
 
-def get_row_get_thing_type(context: Context, row_index: int, var: str, is_by_var_index: bool) -> ThingType:
-    return get_row_get_concept(context, row_index, var, is_by_var_index).as_thing_type()
-
-
-def get_row_get_thing(context: Context, row_index: int, var: str, is_by_var_index: bool) -> Thing:
-    return get_row_get_concept(context, row_index, var, is_by_var_index).as_thing()
+def get_row_get_instance(context: Context, row_index: int, var: str, is_by_var_index: bool) -> Instance:
+    return get_row_get_concept(context, row_index, var, is_by_var_index).as_instance()
 
 
 def get_row_get_entity_type(context: Context, row_index: int, var: str, is_by_var_index: bool) -> EntityType:
@@ -202,10 +249,8 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
         return get_row_get_concept(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.TYPE:
         return get_row_get_type(context, row_index, var, is_by_var_index)
-    elif kind == ConceptKind.THING_TYPE:
-        return get_row_get_thing_type(context, row_index, var, is_by_var_index)
-    elif kind == ConceptKind.THING:
-        return get_row_get_thing(context, row_index, var, is_by_var_index)
+    elif kind == ConceptKind.INSTANCE:
+        return get_row_get_instance(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.ENTITY_TYPE:
         return get_row_get_entity_type(context, row_index, var, is_by_var_index)
     elif kind == ConceptKind.RELATION_TYPE:
@@ -226,59 +271,52 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
         raise ValueError(f"Not all ConceptKind variants are covered! Found {kind}")
 
 
-@step("answer get row({row_index:Int}) get variable{is_by_var_index:ByIndexOfVarOrNot}({var:Var}){may_error:MayError}")
+@step("answer get row({row_index:Int}) get variable{is_by_var_index:IsByVarIndex}({var:Var}){may_error:MayError}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, may_error: MayError):
     may_error.check(lambda: get_row_get_concept(context, row_index, var, is_by_var_index))
 
 
 @step(
-    "answer get row({row_index:Int}) get variable{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {kind:ConceptKind}{may_error:MayError}")
+    "answer get row({row_index:Int}) get variable{is_by_var_index:IsByVarIndex}({var:Var}) as {kind:ConceptKind}{may_error:MayError}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, kind: ConceptKind,
               may_error: MayError):
     may_error.check(lambda: get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is type: {is_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is type: {is_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_type(), is_(is_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is thing type: {is_thing_type:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
-              is_thing_type: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_thing_type(), is_(is_thing_type))
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is instance: {is_instance:Bool}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_instance: bool):
+    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_instance(), is_(is_instance))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is thing: {is_thing:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_thing: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_thing(), is_(is_thing))
-
-
-@step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is value: {is_value:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is value: {is_value:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_value: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_value(), is_(is_value))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is entity type: {is_entity_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is entity type: {is_entity_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_entity_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_entity_type(), is_(is_entity_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is relation type: {is_relation_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is relation type: {is_relation_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_relation_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_relation_type(), is_(is_relation_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is attribute type: {is_attribute_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is attribute type: {is_attribute_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_attribute_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_attribute_type(),
@@ -286,57 +324,50 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is role type: {is_role_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is role type: {is_role_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_role_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_role_type(), is_(is_role_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is entity: {is_entity:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is entity: {is_entity:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_entity: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_entity(), is_(is_entity))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is relation: {is_relation:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is relation: {is_relation:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_relation: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_relation(), is_(is_relation))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is attribute: {is_attribute:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is attribute: {is_attribute:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_attribute: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).is_attribute(), is_(is_attribute))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is type: {is_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is type: {is_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_type(), is_(is_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is thing type: {is_thing_type:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
-              is_thing_type: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_thing_type(),
-                is_(is_thing_type))
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is instance: {is_instance:Bool}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_instance: bool):
+    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_instance(),
+                is_(is_instance))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is thing: {is_thing:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_thing: bool):
-    assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_thing(), is_(is_thing))
-
-
-@step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is value: {is_value:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is value: {is_value:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_value: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_value(), is_(is_value))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is entity type: {is_entity_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is entity type: {is_entity_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_entity_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_entity_type(),
@@ -344,7 +375,7 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is relation type: {is_relation_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is relation type: {is_relation_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_relation_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_relation_type(),
@@ -352,7 +383,7 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is attribute type: {is_attribute_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is attribute type: {is_attribute_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_attribute_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_attribute_type(),
@@ -360,48 +391,48 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is role type: {is_role_type:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is role type: {is_role_type:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_role_type: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_role_type(),
                 is_(is_role_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is entity: {is_entity:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is entity: {is_entity:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_entity: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_entity(), is_(is_entity))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is relation: {is_relation:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is relation: {is_relation:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_relation: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_relation(),
                 is_(is_relation))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type is attribute: {is_attribute:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type is attribute: {is_attribute:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_attribute: bool):
     assert_that(get_row_get_concept(context, row_index, var, is_by_var_index).get_type().is_attribute(),
                 is_(is_attribute))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get label: {label}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get label: {label}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, label: str):
     concept_label = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_label()
     assert_that(concept_label, is_(label))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type get label: {label}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type get label: {label}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, label: str):
     concept_label = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_type().get_label()
     assert_that(concept_label, is_(label))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get value type: {value_type:Words}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get value type: {value_type:Words}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, value_type: str):
     concept_value_type = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_value_type()
     # can be "none" (not a value type), that's why we don't convert it to ValueType
@@ -409,7 +440,7 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get type get value type: {value_type:Words}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) get type get value type: {value_type:Words}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: str):
     type_value_type = get_row_get_attribute(context, row_index, var, is_by_var_index).get_type().get_value_type()
     # can be "none" (not a value type), that's why we don't convert it to ValueType
@@ -417,63 +448,63 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is untyped: {is_untyped:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is untyped: {is_untyped:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_untyped: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_untyped()
     assert_that(result, is_(is_untyped))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is boolean: {is_boolean:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is boolean: {is_boolean:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_boolean: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_boolean()
     assert_that(result, is_(is_boolean))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is long: {is_long:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is long: {is_long:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_long: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_long()
     assert_that(result, is_(is_long))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is double: {is_double:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is double: {is_double:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_double: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_double()
     assert_that(result, is_(is_double))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is decimal: {is_decimal:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is decimal: {is_decimal:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_decimal: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_decimal()
     assert_that(result, is_(is_decimal))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is string: {is_string:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is string: {is_string:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_string: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_string()
     assert_that(result, is_(is_string))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is date: {is_date:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is date: {is_date:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_date: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_date()
     assert_that(result, is_(is_date))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is datetime: {is_datetime:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is datetime: {is_datetime:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_datetime: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_datetime()
     assert_that(result, is_(is_datetime))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is datetime-tz: {is_datetime_tz:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is datetime-tz: {is_datetime_tz:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
               is_datetime_tz: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_datetime_tz()
@@ -481,21 +512,21 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is duration: {is_duration:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is duration: {is_duration:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_duration: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_duration()
     assert_that(result, is_(is_duration))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) is struct: {is_struct:Bool}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is struct: {is_struct:Bool}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_struct: bool):
     result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_struct()
     assert_that(result, is_(is_struct))
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get iid exists")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get iid exists")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str):
     concept_iid = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_iid()
     assert_that(concept_iid, is_not(None))
@@ -521,9 +552,17 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
     elif value_type == ValueType.DATETIME:
         return Datetime.utcfromstring(value)
     elif value_type == ValueType.DATETIME_TZ:
-        # TODO: Offset is not supported
-        value_dt, value_tz = value.split(" ")
-        return Datetime.utcfromstring(value_dt, value_tz)
+        if " " in value:  # IANA timezone name
+            value_dt, value_tz = value.split(" ")
+            return Datetime.utcfromstring(value_dt, value_tz)
+        else:  # offset
+            offset_start = value.rfind("+")
+            if offset_start == -1:
+                offset_start = value.rfind("-")
+            if offset_start == -1:
+                raise ValueError("No IANA or Offset values for datetime-tz")
+            value_dt, value_offset = value[:offset_start], Datetime.offset_seconds_fromstring(value[offset_start:])
+            return Datetime.utcfromstring(value_dt, offset_seconds=value_offset)
     elif value_type == ValueType.DURATION:
         return Duration.fromstring(value)
     elif value_type == ValueType.STRUCT:
@@ -558,7 +597,7 @@ def get_as_value_type(concept, value_type: ValueType) -> Value.VALUE:
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get value {is_or_not:IsOrNot}: {value}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) get value {is_or_not:IsOrNot}: {value}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, is_or_not: bool, value: str):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
     attribute_value = attribute.get_value()
@@ -568,7 +607,7 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {value_type:ValueType}{may_error:MayError}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type:ValueType}{may_error:MayError}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType,
               may_error: MayError):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
@@ -576,7 +615,7 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType, is_or_not: bool,
               value: str):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
@@ -587,7 +626,7 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get value{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) get {is_or_not:IsOrNot}: {value}")
+    "answer get row({row_index:Int}) get value{is_by_var_index:IsByVarIndex}({var:Var}) get {is_or_not:IsOrNot}: {value}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, is_or_not: bool, value: str):
     real_value = get_row_get_value(context, row_index, var, is_by_var_index)
     expected_value = parse_expected_value(value, try_parse_value_type(real_value.get_type()))
@@ -597,7 +636,7 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get value{is_by_var_index:ByIndexOfVarOrNot}({var:Var}) as {value_type} {is_or_not:IsOrNot}: {value}")
+    "answer get row({row_index:Int}) get value{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type} {is_or_not:IsOrNot}: {value}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: str, is_or_not: bool,
               value: str):
     real_value = get_row_get_value(context, row_index, var, is_by_var_index)

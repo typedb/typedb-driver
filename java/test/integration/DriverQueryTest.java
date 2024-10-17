@@ -25,8 +25,8 @@ import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.thing.Attribute;
-import com.typedb.driver.api.concept.thing.Entity;
+import com.typedb.driver.api.concept.instance.Attribute;
+import com.typedb.driver.api.concept.instance.Entity;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.concept.value.Value;
@@ -42,7 +42,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -112,7 +115,7 @@ public class DriverQueryTest {
             assertFalse(conceptByName.isEntity());
             assertFalse(conceptByName.isAttributeType());
             assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isThing());
+            assertFalse(conceptByName.isInstance());
             assertEquals(conceptByName.asEntityType().getLabel(), "person");
             assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
             assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
@@ -138,7 +141,7 @@ public class DriverQueryTest {
             assertFalse(conceptByName.isAttribute());
             assertFalse(conceptByName.isEntityType());
             assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isThing());
+            assertFalse(conceptByName.isInstance());
             assertFalse(conceptByName.asAttributeType().isBoolean());
             assertFalse(conceptByName.asAttributeType().isStruct());
             assertFalse(conceptByName.asAttributeType().isString());
@@ -167,7 +170,7 @@ public class DriverQueryTest {
             assertFalse(x.isEntityType());
             assertFalse(x.isAttribute());
             assertFalse(x.isType());
-            assertTrue(x.isThing());
+            assertTrue(x.isInstance());
             assertEquals(x.asEntity().getType().asEntityType().getLabel(), "person");
             assertNotEquals(x.asEntity().getType().asEntityType().getLabel(), "not person");
 
@@ -176,7 +179,7 @@ public class DriverQueryTest {
             assertFalse(z.isEntityType());
             assertFalse(z.isAttribute());
             assertFalse(z.isType());
-            assertTrue(z.isThing());
+            assertTrue(z.isInstance());
             Entity zEntity = z.asEntity();
             assertEquals(zEntity.getType().asEntityType().getLabel(), "person");
             assertNotEquals(zEntity.getType().asEntityType().getLabel(), "not person");
@@ -196,7 +199,7 @@ public class DriverQueryTest {
                 assertFalse(x.isEntityType());
                 assertFalse(x.isAttribute());
                 assertFalse(x.isType());
-                assertTrue(x.isThing());
+                assertTrue(x.isInstance());
                 EntityType xType = x.asEntity().getType().asEntityType();
                 assertEquals(xType.getLabel(), "person");
                 assertNotEquals(xType.getLabel(), "not person");
@@ -212,29 +215,31 @@ public class DriverQueryTest {
         db.delete();
         typedbDriver.databases().create(DB_NAME);
 
-        Map<String, String> attributeValueTypes = Map.of(
-                "root", "none",
-                "age", "long",
-                "name", "string",
-                "is-new", "boolean",
-                "success", "double",
-                "balance", "decimal",
-                "birth-date", "date",
-                "birth-time", "datetime",
-                "current-time", "datetime-tz",
-                "expiration", "duration"
+        Map<String, String> attributeValueTypes = Map.ofEntries(
+                Map.entry("root", "none"),
+                Map.entry("age", "long"),
+                Map.entry("name", "string"),
+                Map.entry("is-new", "boolean"),
+                Map.entry("success", "double"),
+                Map.entry("balance", "decimal"),
+                Map.entry("birth-date", "date"),
+                Map.entry("birth-time", "datetime"),
+                Map.entry("current-time", "datetime-tz"),
+                Map.entry("current-time-off", "datetime-tz"),
+                Map.entry("expiration", "duration")
         );
 
-        Map<String, String> attributeValues = Map.of(
-                "age", "25",
-                "name", "\"John\"",
-                "is-new", "true",
-                "success", "66.6",
-                "balance", "1234567890.0001234567890",
-                "birth-date", "2024-09-20",
-                "birth-time", "1999-02-26T12:15:05",
-                "current-time", "2024-09-20T16:40:05 Europe/Belfast",
-                "expiration", "P1Y10M7DT15H44M5.00394892S"
+        Map<String, String> attributeValues = Map.ofEntries(
+                Map.entry("age", "25"),
+                Map.entry("name", "\"John\""),
+                Map.entry("is-new", "true"),
+                Map.entry("success", "66.6"),
+                Map.entry("balance", "1234567890.0001234567890"),
+                Map.entry("birth-date", "2024-09-20"),
+                Map.entry("birth-time", "1999-02-26T12:15:05"),
+                Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
+                Map.entry("current-time-off", "2024-09-20T16:40:05.028129323+0545"),
+                Map.entry("expiration", "P1Y10M7DT15H44M5.00394892S")
         );
 
         localhostTypeDBTX(tx -> {
@@ -315,8 +320,15 @@ public class DriverQueryTest {
                         assertEquals(LocalDateTime.parse(attributeValues.get(attributeName)), value.asDatetime());
                         checked.incrementAndGet();
                     } else if (value.isDatetimeTZ()) {
-                        String[] expectedValue = attributeValues.get(attributeName).split(" ");
-                        assertEquals(LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1])), value.asDatetimeTZ());
+                        ZonedDateTime expected;
+                        if (attributeName.contains("-off")) {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+                            expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
+                        } else {
+                            String[] expectedValue = attributeValues.get(attributeName).split(" ");
+                            expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
+                        }
+                        assertEquals(expected, value.asDatetimeTZ());
                         checked.incrementAndGet();
                     } else if (value.isDuration()) {
                         String[] expectedValue = attributeValues.get(attributeName).split("T");

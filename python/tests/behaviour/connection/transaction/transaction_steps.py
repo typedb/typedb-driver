@@ -35,7 +35,7 @@ def open_transactions_of_type(context: Context, database_name: str, transaction_
 
 
 @step(
-    "connection open {transaction_type:TransactionType} transaction for database: {database_name:Words}{may_error:MayError}")
+    "connection open {transaction_type:TransactionType} transaction for database: {database_name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
     may_error.check(lambda: open_transactions_of_type(context, database_name, [transaction_type]))
 
@@ -70,9 +70,9 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.tx().commit())
 
 
-@step("transaction closes{may_error:MayError}")
-def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.tx().close())
+@step("transaction closes")
+def step_impl(context: Context):
+    context.tx().close()
 
 
 @step("transaction rollbacks{may_error:MayError}")
@@ -98,7 +98,7 @@ def step_impl(context: Context, transaction_type: TransactionType):
     for_each_transaction_has_type(context, [transaction_type])
 
 
-@step("connection open transactions in parallel for database: {name:Words}, of type")
+@step("connection open transactions in parallel for database: {name}, of type")
 def step_impl(context: Context, name: str):
     types = list(map(parse_transaction_type, parse_list(context.table)))
     assert_that(len(types), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))

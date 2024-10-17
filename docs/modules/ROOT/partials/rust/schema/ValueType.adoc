@@ -11,11 +11,15 @@ Represents the type of primitive value is held by a Value or Attribute.
 |===
 |Variant
 a| `Boolean`
-a| `DateTime`
+a| `Date`
+a| `Datetime`
+a| `DatetimeTZ`
+a| `Decimal`
 a| `Double`
+a| `Duration`
 a| `Long`
-a| `Object`
 a| `String`
+a| `Struct(String)`
 |===
 // end::enum_constants[]
 

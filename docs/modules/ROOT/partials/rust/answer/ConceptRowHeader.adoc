@@ -1,0 +1,21 @@
+[#_struct_ConceptRowHeader]
+=== ConceptRowHeader
+
+*Implements traits:*
+
+* `Debug`
+* `PartialEq`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `column_names` a| `Vec<String>` a| 
+a| `query_type` a| `QueryType` a| 
+|===
+// end::properties[]
+

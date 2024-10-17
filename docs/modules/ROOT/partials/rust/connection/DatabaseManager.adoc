@@ -3,7 +3,6 @@
 
 *Implements traits:*
 
-* `Clone`
 * `Debug`
 
 Provides access to all database management methods.
@@ -19,7 +18,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn all(&self) -> Result<Vec<Database>>
+pub async fn all(&self) -> Result<Vec<Arc<Database>>>
 ----
 
 --
@@ -29,7 +28,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn all(&self) -> Result<Vec<Database>>
+pub fn all(&self) -> Result<Vec<Arc<Database>>>
 ----
 
 --
@@ -41,7 +40,7 @@ Retrieves all databases present on the TypeDB server
 .Returns
 [source,rust]
 ----
-Result<Vec<Database>>
+Result<Vec<Arc<Database>>>
 ----
 
 [caption=""]
@@ -207,7 +206,7 @@ driver.databases().create(name);
 --
 ====
 
-[#_struct_DatabaseManager_get_name_impl_Into_String_]
+[#_struct_DatabaseManager_get_name_impl_AsRef_str_]
 ==== get
 
 [tabs]
@@ -217,7 +216,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn get(&self, name: impl Into<String>) -> Result<Database>
+pub async fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>>
 ----
 
 --
@@ -227,7 +226,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn get(&self, name: impl Into<String>) -> Result<Database>
+pub fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>>
 ----
 
 --
@@ -241,14 +240,14 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `impl Into<String>`
+a| `name` a| The name of the database to retrieve a| `impl AsRef<str>`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Database>
+Result<Arc<Database>>
 ----
 
 [caption=""]

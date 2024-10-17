@@ -10,8 +10,9 @@ This enum is used to specify the type of transaction.
 [options="header"]
 |===
 |Variant
-a| `Read`
-a| `Write`
+a| `Read = 0`
+a| `Schema = 2`
+a| `Write = 1`
 |===
 // end::enum_constants[]
 

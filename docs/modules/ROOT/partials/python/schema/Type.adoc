@@ -6,27 +6,6 @@
 * `Concept`
 
 // tag::methods[]
-[#_Type_get_label_]
-==== get_label
-
-[source,python]
-----
-get_label() -> str
-----
-
-Retrieves the unique label of the type.
-
-[caption=""]
-.Returns
-`str`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-type_.get_label()
-----
-
 [#_Type_is_type_]
 ==== is_type
 

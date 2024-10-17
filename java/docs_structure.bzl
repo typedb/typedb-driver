@@ -39,7 +39,6 @@ dir_mapping = {
     "AttributeType.adoc": "schema",
     "RoleType.adoc": "schema",
     "EntityType.adoc": "schema",
-    "ThingType.adoc": "schema",
     "Type.adoc": "schema",
     "Transaction.adoc": "transaction",
     "Transaction.Type.adoc": "transaction",
@@ -50,7 +49,7 @@ dir_mapping = {
     "Relation.adoc": "data",
     "Entity.adoc": "data",
     "Attribute.adoc": "data",
+    "Instance.adoc": "data",
     "Value.adoc": "data",
-    "Thing.adoc": "data",
     "TypeDBDriverException.adoc": "errors",
 }

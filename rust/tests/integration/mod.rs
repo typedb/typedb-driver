@@ -17,7 +17,5 @@
  * under the License.
  */
 
-mod common;
-mod network;
-mod queries;
-mod runtimes;
+mod cloud;
+mod core;

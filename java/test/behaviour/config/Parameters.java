@@ -54,7 +54,7 @@ public class Parameters {
         return LocalDateTime.parse(dateTime, formatter);
     }
 
-    @ParameterType("entity|attribute|relation|thing")
+    @ParameterType("entity|attribute|relation|instance")
     public Kind kind(String type) {
         return Kind.of(type);
     }

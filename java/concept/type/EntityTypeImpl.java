@@ -21,15 +21,8 @@ package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.EntityType;
 
-import static com.typedb.driver.jni.typedb_driver.entity_type_get_label;
-
-public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
+public class EntityTypeImpl extends TypeImpl implements EntityType {
     public EntityTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
-    }
-
-    @Override
-    public String getLabel() {
-        return entity_type_get_label(nativeObject);
     }
 }

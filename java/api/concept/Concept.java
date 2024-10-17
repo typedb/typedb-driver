@@ -19,15 +19,14 @@
 
 package com.typedb.driver.api.concept;
 
-import com.typedb.driver.api.concept.thing.Attribute;
-import com.typedb.driver.api.concept.thing.Entity;
-import com.typedb.driver.api.concept.thing.Relation;
-import com.typedb.driver.api.concept.thing.Thing;
+import com.typedb.driver.api.concept.instance.Instance;
+import com.typedb.driver.api.concept.instance.Attribute;
+import com.typedb.driver.api.concept.instance.Entity;
+import com.typedb.driver.api.concept.instance.Relation;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.concept.type.RelationType;
 import com.typedb.driver.api.concept.type.RoleType;
-import com.typedb.driver.api.concept.type.ThingType;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.exception.TypeDBDriverException;
@@ -48,19 +47,6 @@ public interface Concept {
      */
     @CheckReturnValue
     default boolean isType() {
-        return false;
-    }
-
-    /**
-     * Checks if the concept is a <code>ThingType</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * concept.isThingType();
-     * </pre>
-     */
-    @CheckReturnValue
-    default boolean isThingType() {
         return false;
     }
 
@@ -117,15 +103,15 @@ public interface Concept {
     }
 
     /**
-     * Checks if the concept is a <code>Thing</code>.
+     * Checks if the concept is an <code>Instance</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isThing();
+     * concept.isInstance();
      * </pre>
      */
     @CheckReturnValue
-    default boolean isThing() {
+    default boolean isInstance() {
         return false;
     }
 
@@ -194,18 +180,6 @@ public interface Concept {
     }
 
     /**
-     * Casts the concept to <code>ThingType</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * concept.asThingType();
-     * </pre>
-     */
-    default ThingType asThingType() {
-        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
-    }
-
-    /**
      * Casts the concept to <code>EntityType</code>.
      *
      * <h3>Examples</h3>
@@ -254,15 +228,15 @@ public interface Concept {
     }
 
     /**
-     * Casts the concept to <code>Thing</code>.
+     * Casts the concept to <code>Instance</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.asThing();
+     * concept.asInstance();
      * </pre>
      */
-    default Thing asThing() {
-        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
+    default Instance asInstance() {
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Instance.class));
     }
 
     /**
@@ -312,4 +286,18 @@ public interface Concept {
     default Value asValue() {
         throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
     }
+
+    /**
+     * Retrieves the unique label of the concept.
+     * If this is an <code>Instance</code>, return the label of the type of this instance.
+     * If this is a <code>Value</code>, return the label of the value type of the value.
+     * If this is a <code>Type</code>, return the label of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.getLabel();
+     * </pre>
+     */
+    @CheckReturnValue
+    String getLabel();
 }

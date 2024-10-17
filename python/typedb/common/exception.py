@@ -88,10 +88,9 @@ class DriverErrorMessage(ErrorMessage):
 DRIVER_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
 TRANSACTION_CLOSED = DriverErrorMessage(2, "The transaction has been closed and no further operation is allowed.")
 DATABASE_DELETED = DriverErrorMessage(3, "The database '%s' has been deleted and no further operation is allowed.")
-MISSING_DB_NAME = DriverErrorMessage(4, "Database name cannot be empty.")
-POSITIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value should be positive, was: '%d'.")
-CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(6, "TLS disabled but the Root CA path provided.")
-UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
+POSITIVE_VALUE_REQUIRED = DriverErrorMessage(4, "Value should be positive, was: '%d'.")
+CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(5, "TLS disabled but the Root CA path provided.")
+UNIMPLEMENTED = DriverErrorMessage(6, "This operation is not implemented yet.")
 
 
 class ConceptErrorMessage(ErrorMessage):
@@ -121,6 +120,7 @@ class QueryErrorMessage(ErrorMessage):
 
 
 VARIABLE_DOES_NOT_EXIST = QueryErrorMessage(1, "The variable '%s' does not exist.")
+# TODO: Move this validation to server and remove the error message from all the drivers
 MISSING_QUERY = QueryErrorMessage(2, "Query cannot be null or empty.")
 
 

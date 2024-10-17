@@ -17,13 +17,18 @@
  * under the License.
  */
 
-use std::{cell::RefCell, ffi::c_char, ptr::null_mut};
+use std::{
+    cell::RefCell,
+    ffi::c_char,
+    ptr::{null, null_mut},
+    sync::Arc,
+};
 
 use env_logger::Env;
 use log::{trace, warn};
 use typedb_driver::{Error, Result};
 
-use super::memory::{free, release_optional, release_string};
+use super::memory::{free, release_arc, release_optional, release_string};
 
 thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
@@ -66,6 +71,14 @@ pub(super) fn try_release_string(result: Result<String>) -> *mut c_char {
 
 pub(super) fn try_release_optional_string(result: Option<Result<String>>) -> *mut c_char {
     ok_record_flatten(result).map(release_string).unwrap_or_else(null_mut)
+}
+
+pub(super) fn try_release_arc<T>(result: Result<Arc<T>>) -> *const T {
+    try_release_optional_arc(ok_record(result))
+}
+
+pub(super) fn try_release_optional_arc<T>(result: Option<Arc<T>>) -> *const T {
+    result.map(release_arc).unwrap_or_else(null)
 }
 
 pub(super) fn unwrap_or_default<T: Copy + Default>(result: Result<T>) -> T {

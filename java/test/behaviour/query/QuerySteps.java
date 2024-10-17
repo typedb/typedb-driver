@@ -23,7 +23,7 @@ import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.JSON;
 import com.typedb.driver.api.answer.ValueGroup;
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.thing.Attribute;
+import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.test.behaviour.config.Parameters;

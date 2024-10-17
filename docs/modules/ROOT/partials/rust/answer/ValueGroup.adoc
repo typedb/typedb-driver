@@ -5,7 +5,7 @@
 
 * `Clone`
 * `Debug`
-* `PartialEq<ValueGroup>`
+* `PartialEq`
 * `StructuralPartialEq`
 
 Contains an element of a TypeQL Get Group Aggregate query result.

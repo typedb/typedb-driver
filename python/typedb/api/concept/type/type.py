@@ -17,27 +17,12 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from typedb.api.concept.concept import Concept
 
 
 class Type(Concept, ABC):
-
-    @abstractmethod
-    def get_label(self) -> str:
-        """
-        Retrieves the unique label of the type.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            type_.get_label()
-        """
-        pass
 
     def is_type(self) -> bool:
         """

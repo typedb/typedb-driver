@@ -30,7 +30,7 @@ import javax.annotation.CheckReturnValue;
  * <p>Multiple types can own the same attribute type, and different instances of the same type or different types
  * can share ownership of the same attribute instance.
  */
-public interface AttributeType extends ThingType {
+public interface AttributeType extends Type {
     /**
      * Retrieves the <code>String</code> describing the value type of this <code>AttributeType</code>.
      *

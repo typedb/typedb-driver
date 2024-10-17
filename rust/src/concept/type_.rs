@@ -17,14 +17,9 @@
  * under the License.
  */
 
-use super::ValueType;
+use std::fmt::{Debug, Display, Formatter};
 
-/// Annotations are used to specify extra schema constraints.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum Annotation {
-    Key,
-    Unique,
-}
+use super::ValueType;
 
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
@@ -43,6 +38,12 @@ impl EntityType {
     /// ```
     pub fn label(&self) -> &str {
         &self.label
+    }
+}
+
+impl Display for EntityType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
     }
 }
 
@@ -67,6 +68,12 @@ impl RelationType {
     /// ```
     pub fn label(&self) -> &str {
         &self.label
+    }
+}
+
+impl Display for RelationType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
     }
 }
 
@@ -111,6 +118,12 @@ impl AttributeType {
     }
 }
 
+impl Display for AttributeType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
 /// Roles are special internal types used by relations. We can not create an instance
 /// of a role in a database. But we can set an instance of another type (role player)
 /// to play a role in a particular instance of a relation type.
@@ -131,5 +144,11 @@ impl RoleType {
     /// ```
     pub fn label(&self) -> &str {
         &self.label
+    }
+}
+
+impl Display for RoleType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
     }
 }

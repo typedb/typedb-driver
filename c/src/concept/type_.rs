@@ -24,30 +24,6 @@ use typedb_driver::concept::Concept;
 use super::concept::{borrow_as_attribute_type, borrow_as_entity_type, borrow_as_relation_type, borrow_as_role_type};
 use crate::memory::release_string;
 
-/// Gets the 'label' of this entity type.
-#[no_mangle]
-pub extern "C" fn entity_type_get_label(entity_type: *const Concept) -> *mut c_char {
-    release_string(borrow_as_entity_type(entity_type).label.clone())
-}
-
-/// Gets the 'label' of this relation type.
-#[no_mangle]
-pub extern "C" fn relation_type_get_label(relation_type: *const Concept) -> *mut c_char {
-    release_string(borrow_as_relation_type(relation_type).label.clone())
-}
-
-/// Gets the 'label' of this attribute type.
-#[no_mangle]
-pub extern "C" fn attribute_type_get_label(attribute_type: *const Concept) -> *mut c_char {
-    release_string(borrow_as_attribute_type(attribute_type).label.clone())
-}
-
-/// Gets the 'label' of this role type.
-#[no_mangle]
-pub extern "C" fn role_type_get_label(role_type: *const Concept) -> *mut c_char {
-    release_string(borrow_as_role_type(role_type).label.clone())
-}
-
 /// Gets the string representation of the value type of this attribute type.
 #[no_mangle]
 pub extern "C" fn attribute_type_get_value_type(attribute_type: *const Concept) -> *mut c_char {

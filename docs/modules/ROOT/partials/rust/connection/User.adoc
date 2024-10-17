@@ -21,7 +21,7 @@ a| `username` a| `String` a| Returns the name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_struct_User_password_update_connection_Connection_password_old_impl_Into_String_password_new_impl_Into_String_]
+[#_struct_User_password_update_connection_TypeDBDriver_password_old_impl_Into_String_password_new_impl_Into_String_]
 ==== password_update
 
 [tabs]
@@ -33,9 +33,9 @@ async::
 ----
 pub async fn password_update(
     &self,
-    connection: &Connection,
+    connection: &TypeDBDriver,
     password_old: impl Into<String>,
-    password_new: impl Into<String>
+    password_new: impl Into<String>,
 ) -> Result
 ----
 
@@ -48,9 +48,9 @@ sync::
 ----
 pub fn password_update(
     &self,
-    connection: &Connection,
+    connection: &TypeDBDriver,
     password_old: impl Into<String>,
-    password_new: impl Into<String>
+    password_new: impl Into<String>,
 ) -> Result
 ----
 
@@ -65,7 +65,7 @@ Updates user password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `connection` a| an opened ``Connection`` a| `&Connection`
+a| `connection` a| an opened ``Connection`` a| `&TypeDBDriver`
 a| `password_old` a| an old password a| `impl Into<String>`
 a| `password_new` a| a new password a| `impl Into<String>`
 |===

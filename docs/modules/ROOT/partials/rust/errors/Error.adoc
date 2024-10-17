@@ -13,7 +13,7 @@ Represents errors encountered during operation.
 a| `Connection(ConnectionError)`
 a| `Internal(InternalError)`
 a| `Other(String)`
-a| `TypeQL(Error)`
+a| `Server(ServerError)`
 |===
 // end::enum_constants[]
 

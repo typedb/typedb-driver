@@ -47,21 +47,21 @@ pub(super) fn release_string(str: String) -> *mut c_char {
     raw
 }
 
-pub(super) fn arc_into_raw<T>(t: Arc<T>) -> *const T {
+pub(super) fn release_arc<T>(t: Arc<T>) -> *const T {
     let raw = Arc::into_raw(t);
-    trace!("Arc into raw of <{}> @ {:?}", std::any::type_name::<T>(), raw);
+    trace!("Releasing ownership of arc <{}> @ {:?}", std::any::type_name::<T>(), raw);
     raw
 }
 
-pub(super) fn arc_from_raw<T>(raw: *const T) -> Arc<T> {
-    trace!("Arc from raw of <{}> @ {:?}", std::any::type_name::<T>(), raw);
+pub(super) fn take_arc<T>(raw: *const T) -> Arc<T> {
+    trace!("Taking ownership of arced <{}> @ {:?}", std::any::type_name::<T>(), raw);
     unsafe { Arc::from_raw(raw) }
 }
 
-pub(super) fn release_arc<T>(raw: *const T) {
-    trace!("Releasing ownership of arced <{}> @ {:?}", std::any::type_name::<T>(), raw);
+pub(super) fn decrement_arc<T>(raw: *const T) {
+    trace!("Decrementing arced <{}> @ {:?}", std::any::type_name::<T>(), raw);
     assert!(!raw.is_null());
-    drop(arc_from_raw(raw))
+    drop(take_arc(raw))
 }
 
 pub(super) fn borrow<T>(raw: *const T) -> &'static T {

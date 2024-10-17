@@ -31,14 +31,14 @@ def create_databases(context: Context, names: list[str]):
         context.driver.databases.create(name)
 
 
+@step("connection create database: {name:NonSemicolon}{may_error:MayError}")
+def step_impl(context: Context, name: str, may_error: MayError):
+    may_error.check(lambda: create_databases(context, [name]))
+
+
 @step("connection create database with empty name{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: create_databases(context, [""]))
-
-
-@step("connection create database: {name:Words}")
-def step_impl(context: Context, name: str):
-    create_databases(context, [name])
 
 
 @step("connection create databases")
@@ -61,7 +61,7 @@ def delete_databases(context: Context, names: list[str]):
         context.driver.databases.get(name).delete()
 
 
-@step("connection delete database: {name:Words}{may_error:MayError}")
+@step("connection delete database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
     may_error.check(lambda: delete_databases(context, [name]))
 
@@ -84,7 +84,7 @@ def has_databases(context: Context, names: list[str]):
     assert_collections_equal([db.name for db in context.driver.databases.all()], names)
 
 
-@step("connection has database: {name:Words}")
+@step("connection has database: {name}")
 def step_impl(context: Context, name: str):
     has_databases(context, [name])
 
@@ -100,7 +100,7 @@ def does_not_have_databases(context: Context, names: list[str]):
         assert_that(name, not_(is_in(databases)))
 
 
-@step("connection does not have database: {name:Words}")
+@step("connection does not have database: {name}")
 def step_impl(context: Context, name: str):
     does_not_have_databases(context, [name])
 
@@ -110,14 +110,14 @@ def step_impl(context: Context):
     does_not_have_databases(context, names=parse_list(context.table))
 
 
-@step("connection get database({name:Words}) has schema")
+@step("connection get database({name}) has schema")
 def step_impl(context: Context, name: str):
     expected_schema = context.text
     real_schema = context.driver.databases.get(name).schema()
     assert_that(real_schema, is_(expected_schema))
 
 
-@step("connection get database({name:Words}) has type schema")
+@step("connection get database({name}) has type schema")
 def step_impl(context: Context, name: str):
     expected_schema = context.text
     real_schema = context.driver.databases.get(name).type_schema()

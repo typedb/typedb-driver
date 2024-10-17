@@ -110,7 +110,7 @@ impl DatabaseManager {
     pub async fn create(&self, name: impl Into<String>) -> Result {
         let name = name.into();
         let database_info = self
-            .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await })
+            .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await }) // TODO: run_failsafe produces additiona Connection error if the database name is incorrect. Is it ok?
             .await?;
         let database = Database::new(database_info, self.server_connections.clone())?;
         self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));

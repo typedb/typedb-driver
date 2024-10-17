@@ -25,17 +25,6 @@ import javax.annotation.CheckReturnValue;
 
 public interface Type extends Concept {
     /**
-     * Retrieves the unique label of the type.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * type.getLabel();
-     * </pre>
-     */
-    @CheckReturnValue
-    String getLabel();
-
-    /**
      * {@inheritDoc}
      */
     @Override

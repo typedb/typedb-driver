@@ -17,38 +17,20 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_test", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rustfmt_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-rust_test(
-    name = "tests",
-    srcs = glob(["integration/runtimes.rs"]),
-    timeout = "eternal",
-    deps = [
-        "//rust:typedb_driver",
-        "@crates//:async-std",
-        "@crates//:chrono",
-        "@crates//:cucumber",
-        "@crates//:futures",
-        "@crates//:itertools",
-        "@crates//:regex",
-        "@crates//:serde_json",
-        "@crates//:serial_test",
-        "@crates//:smol",
-        "@crates//:tokio",
-        "@crates//:uuid",
-    ],
-    data = [
-        "@vaticle_typedb_behaviour//connection:database.feature",
-        "@vaticle_typedb_behaviour//connection:transaction.feature",
-        "@vaticle_typedb_behaviour//connection:user.feature",
-        "@vaticle_typedb_behaviour//driver:driver.feature",
-    ],
-)
 
 rustfmt_test(
     name = "rustfmt_test",
-    targets = ["tests"],
+    targets = [
+        "//rust/tests/behaviour/steps:steps",
+        "//rust/tests/behaviour/connection:test_database",
+        "//rust/tests/behaviour/connection:test_transaction",
+        "//rust/tests/behaviour/driver:test_driver",
+
+        "//rust/tests/integration/core:test_example",
+#        "//rust/tests/integration/cloud:test_example",
+    ],
     size = "small",
 )
 

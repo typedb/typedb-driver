@@ -149,6 +149,7 @@
 %nojavaexception concept_as_entity_type;
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
+%nojavaexception concept_get_label;
 %nojavaexception concept_to_string;
 %nojavaexception concept_equals;
 
@@ -216,8 +217,10 @@
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
-%nojavaexception DatetimeAndZoneId::datetime_in_nanos;
-%nojavaexception DatetimeAndZoneId::zone_id;
+%nojavaexception DatetimeAndTimeZone::datetime_in_nanos;
+%nojavaexception DatetimeAndTimeZone::zone_name;
+%nojavaexception DatetimeAndTimeZone::local_minus_utc_offset;
+%nojavaexception DatetimeAndTimeZone::is_fixed_offset;
 
 %nojavaexception DatetimeInNanos::seconds;
 %nojavaexception DatetimeInNanos::subsec_nanos;
@@ -244,7 +247,7 @@
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
 %nojavaexception ~DatabaseManager;
-%nojavaexception ~DatetimeAndZoneId;
+%nojavaexception ~DatetimeAndTimeZone;
 %nojavaexception ~DatetimeInNanos;
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
