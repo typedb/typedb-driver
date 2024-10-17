@@ -36,8 +36,8 @@ public enum QueryType {
     WRITE(1, com.typedb.driver.jni.QueryType.WriteQuery),
     SCHEMA(2, com.typedb.driver.jni.QueryType.SchemaQuery);
 
-    private final int id;
     public final com.typedb.driver.jni.QueryType nativeObject;
+    private final int id;
 
     QueryType(int id, com.typedb.driver.jni.QueryType nativeObject) {
         this.id = id;

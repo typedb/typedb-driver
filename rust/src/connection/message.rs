@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
@@ -25,7 +25,11 @@ use typedb_protocol::transaction;
 use uuid::Uuid;
 
 use crate::{
-    answer::{concept_row::ConceptRowHeader, concept_tree, concept_tree::ConceptTreesHeader},
+    answer::{
+        concept_document,
+        concept_document::{ConceptDocumentHeader, Node},
+        concept_row::ConceptRowHeader,
+    },
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
@@ -144,9 +148,9 @@ pub(super) enum QueryRequest {
 pub(super) enum QueryResponse {
     Ok(),
     ConceptRowsHeader(ConceptRowHeader),
-    ConceptTreesHeader(ConceptTreesHeader),
+    ConceptDocumentsHeader(ConceptDocumentHeader),
     StreamConceptRows(Vec<Vec<Option<Concept>>>),
-    StreamConceptTrees(Vec<concept_tree::ConceptTree>),
+    StreamConceptDocuments(Vec<Option<Node>>),
     Error(ServerError),
     // Define,
     // Undefine,

@@ -47,22 +47,6 @@ public class Promise<T> {
     }
 
     /**
-     * Retrieves the result of the Promise.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * promise.resolve()
-     * </pre>
-     */
-    public T resolve() { // TODO: Can have a checked exception in some cases!
-        try {
-            return this.inner.get();
-        } catch (com.typedb.driver.jni.Error.Unchecked e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    /**
      * Helper function to map promises.
      *
      * <h3>Examples</h3>
@@ -79,5 +63,21 @@ public class Promise<T> {
             if (res != null) return fn.apply(res);
             else return null;
         });
+    }
+
+    /**
+     * Retrieves the result of the Promise.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * promise.resolve()
+     * </pre>
+     */
+    public T resolve() { // TODO: Can have a checked exception in some cases!
+        try {
+            return this.inner.get();
+        } catch (com.typedb.driver.jni.Error.Unchecked e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 }

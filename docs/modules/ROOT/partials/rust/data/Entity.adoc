@@ -19,7 +19,7 @@ Instance of data of an entity type, representing a standalone object that exists
 |===
 |Name |Type |Description
 a| `iid` a| `IID` a| The unique id of this Entity
-a| `type_` a| `Option<EntityType>` a| The label of the entity type this instance belongs to
+a| `type_` a| `Option<EntityType>` a| The type which this Entity belongs to
 |===
 // end::properties[]
 

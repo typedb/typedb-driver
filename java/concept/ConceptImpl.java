@@ -33,6 +33,7 @@ import com.typedb.driver.concept.value.ValueImpl;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.concept_equals;
+import static com.typedb.driver.jni.typedb_driver.concept_get_label;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_entity;
@@ -42,7 +43,6 @@ import static com.typedb.driver.jni.typedb_driver.concept_is_relation_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_role_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_value;
 import static com.typedb.driver.jni.typedb_driver.concept_to_string;
-import static com.typedb.driver.jni.typedb_driver.concept_get_label;
 
 public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Concept> implements Concept {
     protected ConceptImpl(com.typedb.driver.jni.Concept concept) {

@@ -27,8 +27,8 @@ use uuid::Uuid;
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
     answer::{
+        concept_document::{ConceptDocument, ConceptDocumentHeader},
         concept_row::ConceptRowHeader,
-        concept_tree::{ConceptTree, ConceptTreesHeader},
         QueryType,
     },
     common::{info::DatabaseInfo, RequestID, Result},
@@ -333,12 +333,12 @@ impl TryFromProto<typedb_protocol::query::ResPart> for TransactionResponse {
 impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
     fn try_from_proto(proto: typedb_protocol::query::res_part::Res) -> Result<Self> {
         match proto {
-            typedb_protocol::query::res_part::Res::TreesRes(trees) => {
-                let mut converted = Vec::with_capacity(trees.trees.len());
-                for tree_proto in trees.trees.into_iter() {
-                    converted.push(ConceptTree::try_from_proto(tree_proto)?);
+            typedb_protocol::query::res_part::Res::DocumentsRes(documents) => {
+                let mut converted = Vec::with_capacity(documents.documents.len());
+                for document_proto in documents.documents.into_iter() {
+                    converted.push(TryFromProto::try_from_proto(document_proto)?);
                 }
-                Ok(QueryResponse::StreamConceptTrees(converted))
+                Ok(QueryResponse::StreamConceptDocuments(converted))
             }
             typedb_protocol::query::res_part::Res::RowsRes(rows) => {
                 let mut converted = Vec::with_capacity(rows.rows.len());
@@ -355,13 +355,15 @@ impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse
     fn try_from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Result<Self> {
         match proto {
             typedb_protocol::query::initial_res::ok::Ok::Empty(_) => Ok(QueryResponse::Ok()),
-            typedb_protocol::query::initial_res::ok::Ok::ReadableConceptTreeStream(_tree_stream_header) => {
-                Ok(QueryResponse::ConceptTreesHeader(ConceptTreesHeader {}))
+            typedb_protocol::query::initial_res::ok::Ok::ConceptDocumentStream(document_stream_header) => {
+                Ok(QueryResponse::ConceptDocumentsHeader(ConceptDocumentHeader {
+                    query_type: QueryType::try_from_proto(document_stream_header.query_type)?,
+                }))
             }
-            typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(rows_stream_header) => {
+            typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(row_stream_header) => {
                 Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
-                    column_names: rows_stream_header.column_variable_names,
-                    query_type: QueryType::try_from_proto(rows_stream_header.query_type)?,
+                    column_names: row_stream_header.column_variable_names,
+                    query_type: QueryType::try_from_proto(row_stream_header.query_type)?,
                 }))
             }
         }

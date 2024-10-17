@@ -29,7 +29,7 @@ def before_scenario(context: Context):
     context.transactions = {}
     context.transactions_parallel = []
     context.answer = None  # QueryAnswer
-    context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptTreeIterator
+    context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptDocumentIterator
     context.collected_answer = None  # [ConceptRow] / ... ?
     context.concurrent_answers = None
     context.unwrapped_concurrent_answers = None

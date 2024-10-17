@@ -1,0 +1,19 @@
+[#_enum_Kind]
+=== Kind
+
+Kind represents the base of a defined type to describe its capabilities. For example, “define entity person;” defines a type “person” of a kind “entity”.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Attribute`
+a| `Entity`
+a| `Relation`
+a| `Role`
+|===
+// end::enum_constants[]
+

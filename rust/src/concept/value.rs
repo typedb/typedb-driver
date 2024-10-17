@@ -18,6 +18,7 @@
  */
 
 use std::{
+    borrow::Cow,
     collections::HashMap,
     fmt,
     ops::{Add, Neg, Sub},
@@ -27,7 +28,7 @@ use std::{
 use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
-use crate::Error;
+use crate::{answer::JSON, Error};
 
 /// Represents the type of primitive value is held by a Value or Attribute.
 #[derive(Clone, PartialEq, Eq)]
@@ -45,17 +46,28 @@ pub enum ValueType {
 }
 
 impl ValueType {
+    pub(crate) const NONE_STR: &'static str = "none";
+    pub(crate) const BOOLEAN_STR: &'static str = "boolean";
+    pub(crate) const LONG_STR: &'static str = "long";
+    pub(crate) const DOUBLE_STR: &'static str = "double";
+    pub(crate) const DECIMAL_STR: &'static str = "decimal";
+    pub(crate) const STRING_STR: &'static str = "string";
+    pub(crate) const DATE_STR: &'static str = "date";
+    pub(crate) const DATETIME_STR: &'static str = "datetime";
+    pub(crate) const DATETIME_TZ_STR: &'static str = "datetime-tz";
+    pub(crate) const DURATION_STR: &'static str = "duration";
+
     pub fn name(&self) -> &str {
         match self {
-            Self::Boolean => "boolean",
-            Self::Long => "long",
-            Self::Double => "double",
-            Self::Decimal => "decimal",
-            Self::String => "string",
-            Self::Date => "date",
-            Self::Datetime => "datetime",
-            Self::DatetimeTZ => "datetime-tz",
-            Self::Duration => "duration",
+            Self::Boolean => Self::BOOLEAN_STR,
+            Self::Long => Self::LONG_STR,
+            Self::Double => Self::DOUBLE_STR,
+            Self::Decimal => Self::DECIMAL_STR,
+            Self::String => Self::STRING_STR,
+            Self::Date => Self::DATE_STR,
+            Self::Datetime => Self::DATETIME_STR,
+            Self::DatetimeTZ => Self::DATETIME_TZ_STR,
+            Self::Duration => Self::DURATION_STR,
             Self::Struct(name) => &name,
         }
     }
@@ -215,7 +227,21 @@ impl Value {
 
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
+        match self {
+            Self::Boolean(bool) => write!(f, "{}", bool),
+            Self::Long(long) => write!(f, "{}", long),
+            Self::Double(double) => write!(f, "{}", double),
+            Self::String(string) => write!(f, "\"{}\"", string),
+            Self::Decimal(decimal) => write!(f, "{}", decimal),
+            Self::Date(date) => write!(f, "{}", date.format("%Y-%m-%d")),
+            Self::Datetime(datetime) => write!(f, "{}", datetime.format("%FT%T%.9f")),
+            Self::DatetimeTZ(datetime_tz) => match datetime_tz.timezone() {
+                TimeZone::IANA(tz) => write!(f, "{} {}", datetime_tz.format("%FT%T%.9f"), tz.name()),
+                TimeZone::Fixed(_) => write!(f, "{}", datetime_tz.format("%FT%T%.9f%:z")),
+            },
+            Self::Duration(duration) => write!(f, "{}", duration),
+            Self::Struct(value, name) => write!(f, "{} {}", name, value),
+        }
     }
 }
 
@@ -447,6 +473,10 @@ impl Duration {
     pub fn nanos(&self) -> u64 {
         self.nanos
     }
+
+    fn is_empty(&self) -> bool {
+        self.months == 0 && self.days == 0 && self.nanos == 0
+    }
 }
 
 impl TryFrom<Duration> for chrono::Duration {
@@ -539,9 +569,53 @@ impl FromStr for Duration {
     }
 }
 
+/// ISO-8601 compliant representation of a duration
 impl fmt::Display for Duration {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
+        if self.is_empty() {
+            f.write_str("PT0S")?;
+            return Ok(());
+        }
+
+        write!(f, "P")?;
+
+        if self.months > 0 || self.days > 0 {
+            let years = self.months / Self::MONTHS_PER_YEAR;
+            let months = self.months % Self::MONTHS_PER_YEAR;
+            let days = self.days;
+            if years > 0 {
+                write!(f, "{years}Y")?;
+            }
+            if months > 0 {
+                write!(f, "{months}M")?;
+            }
+            if days > 0 {
+                write!(f, "{days}D")?;
+            }
+        }
+
+        if self.nanos > 0 {
+            write!(f, "T")?;
+
+            let hours = self.nanos / Self::NANOS_PER_HOUR;
+            let minutes = (self.nanos % Self::NANOS_PER_HOUR) / Self::NANOS_PER_MINUTE;
+            let seconds = (self.nanos % Self::NANOS_PER_MINUTE) / Self::NANOS_PER_SEC;
+            let nanos = self.nanos % Self::NANOS_PER_SEC;
+
+            if hours > 0 {
+                write!(f, "{hours}H")?;
+            }
+            if minutes > 0 {
+                write!(f, "{minutes}M")?;
+            }
+            if seconds > 0 && nanos == 0 {
+                write!(f, "{seconds}S")?;
+            } else if nanos > 0 {
+                write!(f, "{seconds}.{nanos:09}S")?;
+            }
+        }
+
+        Ok(())
     }
 }
 
@@ -553,7 +627,7 @@ impl fmt::Debug for Duration {
 
 #[derive(Clone, PartialEq)]
 pub struct Struct {
-    fields: HashMap<String, Option<Value>>,
+    pub(crate) fields: HashMap<String, Option<Value>>,
 }
 
 impl Struct {

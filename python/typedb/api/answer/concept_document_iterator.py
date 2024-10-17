@@ -22,14 +22,14 @@ from abc import ABC
 from typedb.api.answer.query_answer import QueryAnswer
 
 
-class ConceptTreeIterator(QueryAnswer, ABC):
+class ConceptDocumentIterator(QueryAnswer, ABC):
     """
     Represents an iterator over ``ConceptRow``s returned as a server answer.
     """
 
-    def is_concept_trees(self) -> bool:
+    def is_concept_documents(self) -> bool:
         """
-        Checks if the query answer is a ``ConceptTreeIterator``.
+        Checks if the query answer is a ``ConceptDocumentIterator``.
 
         :return:
 
@@ -37,13 +37,13 @@ class ConceptTreeIterator(QueryAnswer, ABC):
         --------
         ::
 
-          query_answer.is_concept_trees()
+          query_answer.is_concept_documents()
         """
         return True
 
-    def as_concept_trees(self) -> ConceptTreeIterator:
+    def as_concept_documents(self) -> ConceptDocumentIterator:
         """
-        Casts the query answer to ``ConceptTreeIterator``.
+        Casts the query answer to ``ConceptDocumentIterator``.
 
         :return:
 
@@ -51,6 +51,6 @@ class ConceptTreeIterator(QueryAnswer, ABC):
         --------
         ::
 
-          query_answer.as_concept_trees()
+          query_answer.as_concept_documents()
         """
         return self

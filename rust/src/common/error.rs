@@ -174,7 +174,9 @@ error_messages! { ConnectionError
     ValueStructNotImplemented =
         27: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        28: "Lists are not yet supported by the driver."
+        28: "Lists are not yet supported by the driver.",
+    UnexpectedKind { kind: i32 } =
+        14: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
 }
 
 error_messages! { InternalError

@@ -22,17 +22,11 @@ package com.typedb.driver.test.behaviour.query;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.JSON;
 import com.typedb.driver.api.answer.ValueGroup;
-import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.instance.Attribute;
-import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -1,0 +1,20 @@
+[#_struct_ConceptDocumentHeader]
+=== ConceptDocumentHeader
+
+*Implements traits:*
+
+* `Debug`
+* `PartialEq`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `query_type` a| `QueryType` a| 
+|===
+// end::properties[]
+
