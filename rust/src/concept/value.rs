@@ -23,6 +23,7 @@ use std::{
     ops::{Add, Neg, Sub},
     str::FromStr,
 };
+use std::borrow::Cow;
 
 use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
@@ -45,17 +46,28 @@ pub enum ValueType {
 }
 
 impl ValueType {
+    pub(crate) const NONE_STR: &'static str = "none";
+    pub(crate) const BOOLEAN_STR: &'static str = "boolean";
+    pub(crate) const LONG_STR: &'static str = "long";
+    pub(crate) const DOUBLE_STR: &'static str = "double";
+    pub(crate) const DECIMAL_STR: &'static str = "decimal";
+    pub(crate) const STRING_STR: &'static str = "string";
+    pub(crate) const DATE_STR: &'static str = "date";
+    pub(crate) const DATETIME_STR: &'static str = "datetime";
+    pub(crate) const DATETIME_TZ_STR: &'static str = "datetime-tz";
+    pub(crate) const DURATION_STR: &'static str = "duration";
+
     pub fn name(&self) -> &str {
         match self {
-            Self::Boolean => "boolean",
-            Self::Long => "long",
-            Self::Double => "double",
-            Self::Decimal => "decimal",
-            Self::String => "string",
-            Self::Date => "date",
-            Self::Datetime => "datetime",
-            Self::DatetimeTZ => "datetime-tz",
-            Self::Duration => "duration",
+            Self::Boolean => Self::BOOLEAN_STR,
+            Self::Long => Self::LONG_STR,
+            Self::Double => Self::DOUBLE_STR,
+            Self::Decimal => Self::DECIMAL_STR,
+            Self::String => Self::STRING_STR,
+            Self::Date => Self::DATE_STR,
+            Self::Datetime => Self::DATETIME_STR,
+            Self::DatetimeTZ => Self::DATETIME_TZ_STR,
+            Self::Duration => Self::DURATION_STR,
             Self::Struct(name) => &name,
         }
     }

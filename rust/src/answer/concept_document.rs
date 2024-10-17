@@ -18,11 +18,13 @@
  */
 
 use std::{borrow::Cow, collections::HashMap, sync::Arc};
+use chrono::DateTime;
 
 use super::{QueryType, JSON};
 use crate::concept::{
     value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
 };
+use crate::concept::value::TimeZone;
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptDocumentHeader {
@@ -103,16 +105,8 @@ impl Leaf {
             Self::Concept(Concept::RoleType(RoleType { label, .. })) => {
                 json_type(Kind::Role, Cow::Owned(label.to_string()))
             }
-            Self::Concept(Concept::Attribute(Attribute { value, type_, .. })) => JSON::Object(
-                [
-                    (TYPE, json_attribute_type(Cow::Owned(type_.unwrap().label), Some(value.get_type()))),
-                    (VALUE, json_value(value)),
-                ]
-                .into(),
-            ),
-            Self::Concept(Concept::Value(value)) => {
-                JSON::Object([(VALUE_TYPE, json_value_type(Some(value.get_type()))), (VALUE, json_value(value))].into())
-            }
+            Self::Concept(Concept::Attribute(Attribute { value, .. })) => json_value(value),
+            Self::Concept(Concept::Value(value)) => json_value(value),
             Self::Concept(concept @ (Concept::Entity(_) | Concept::Relation(_))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {:?}", concept)
             }
@@ -122,12 +116,9 @@ impl Leaf {
     }
 }
 
-const TYPE: Cow<'static, str> = Cow::Borrowed("type");
 const KIND: Cow<'static, str> = Cow::Borrowed("kind");
 const LABEL: Cow<'static, str> = Cow::Borrowed("label");
-
 const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
-const VALUE: Cow<'static, str> = Cow::Borrowed("value");
 
 fn json_type(kind: Kind, label: Cow<'static, str>) -> JSON {
     JSON::Object([(KIND, json_kind(kind)), (LABEL, JSON::String(label))].into())
@@ -145,16 +136,16 @@ fn json_attribute_type(label: Cow<'static, str>, value_type: Option<ValueType>) 
 }
 
 fn json_value_type(value_type: Option<ValueType>) -> JSON {
-    const NONE: Cow<'static, str> = Cow::Borrowed("none");
-    const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
-    const LONG: Cow<'static, str> = Cow::Borrowed("long");
-    const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
-    const DECIMAL: Cow<'static, str> = Cow::Borrowed("decimal");
-    const STRING: Cow<'static, str> = Cow::Borrowed("string");
-    const DATE: Cow<'static, str> = Cow::Borrowed("date");
-    const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
-    const DATETIME_TZ: Cow<'static, str> = Cow::Borrowed("datetime-tz");
-    const DURATION: Cow<'static, str> = Cow::Borrowed("duration");
+    const NONE: Cow<'static, str> = Cow::Borrowed(ValueType::NONE_STR);
+    const BOOLEAN: Cow<'static, str> = Cow::Borrowed(ValueType::BOOLEAN_STR);
+    const LONG: Cow<'static, str> = Cow::Borrowed(ValueType::LONG_STR);
+    const DOUBLE: Cow<'static, str> = Cow::Borrowed(ValueType::DOUBLE_STR);
+    const DECIMAL: Cow<'static, str> = Cow::Borrowed(ValueType::DECIMAL_STR);
+    const STRING: Cow<'static, str> = Cow::Borrowed(ValueType::STRING_STR);
+    const DATE: Cow<'static, str> = Cow::Borrowed(ValueType::DATE_STR);
+    const DATETIME: Cow<'static, str> = Cow::Borrowed(ValueType::DATETIME_STR);
+    const DATETIME_TZ: Cow<'static, str> = Cow::Borrowed(ValueType::DATETIME_TZ_STR);
+    const DURATION: Cow<'static, str> = Cow::Borrowed(ValueType::DURATION_STR);
 
     JSON::String(match value_type {
         None => NONE,
@@ -179,8 +170,8 @@ fn json_value(value: Value) -> JSON {
         Value::Decimal(decimal) => JSON::String(Cow::Owned(decimal.to_string())),
         Value::String(string) => JSON::String(Cow::Owned(string)),
         Value::Date(date) => JSON::String(Cow::Owned(date.format("%Y-%m-%d").to_string())),
-        Value::Datetime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string())),
-        Value::DatetimeTZ(datetime_tz) => JSON::String(Cow::Owned(datetime_tz.to_string())), // TODO: Maybe something else
+        Value::Datetime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.9f").to_string())),
+        Value::DatetimeTZ(datetime_tz) => JSON::String(Cow::Owned(datetime_tz.format("%FT%T%.9f%:z").to_string())),
         Value::Duration(duration) => JSON::String(Cow::Owned(duration.to_string())),
         Value::Struct(struct_, struct_name) => {
             JSON::Object(HashMap::from([(Cow::Owned(struct_name), json_struct(struct_))]))

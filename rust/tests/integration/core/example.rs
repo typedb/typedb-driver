@@ -241,7 +241,7 @@ async fn cleanup() {
 // TODO: Temporary test for fetch
 #[test]
 #[serial]
-fn fetch() {
+fn fetch_base() {
     async_std::task::block_on(async {
         cleanup().await;
 
@@ -339,6 +339,156 @@ fn fetch() {
         println!("Printing documents:");
         while let Some(Ok(document)) = documents_stream.next().await {
             println!("DOC: {:?}", &document);
+            println!("JSON: {}", document.into_json());
+        }
+    });
+
+    async_std::task::block_on(async {
+        cleanup().await;
+    })
+}
+
+
+#[test]
+#[serial]
+fn fetch_attribute() {
+    async_std::task::block_on(async {
+        cleanup().await;
+
+        let driver = TypeDBDriver::new_core("127.0.0.1:1729").await.unwrap();
+
+        if driver.databases().contains("db-name").await.unwrap() {
+            let db = driver.databases().get("db-name").await.unwrap();
+            db.delete().await.unwrap();
+        }
+
+        driver.databases().create("db-name").await.unwrap();
+
+        let define_query = r#"
+        define
+          attribute non-owned value long;
+          attribute age value long;
+          attribute name value string;
+          attribute is-new value boolean;
+          attribute success value double;
+          attribute balance value decimal;
+          attribute birth-date value date;
+          attribute birth-time value datetime;
+          attribute current-time value datetime-tz;
+          attribute current-time-off value datetime-tz;
+          attribute expiration value duration;
+        
+          entity person 
+            owns age @card(0..), 
+            owns name @card(0..), 
+            owns is-new @card(0..), 
+            owns success @card(0..), 
+            owns balance @card(0..), 
+            owns birth-date @card(0..), 
+            owns birth-time @card(0..), 
+            owns current-time @card(0..),
+            owns current-time-off @card(0..),
+            owns expiration @card(0..);
+
+          entity empty-person;
+          entity non-existing-person;
+        "#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Schema).await.unwrap();
+
+        let result = transaction.query(define_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::Ok()));
+
+        transaction.commit().await.unwrap();
+
+        let insert_query = r#"
+        insert
+          $x isa person,
+            has age 25,
+            has name "John",
+            has is-new true,
+            has success 66.6,
+            has balance 1234567890.0001234567890,
+            has birth-date 2024-09-20,
+            has birth-time 1999-02-26T12:15:05,
+            has current-time 2024-09-20T16:40:05 Europe/London,
+            has current-time-off 2024-09-20T16:40:05.028129323+0545,
+            has expiration P1Y10M7DT15H44M5.00394892S;
+
+          $e isa empty-person;
+        "#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Write).await.unwrap();
+
+        let result = transaction.query(insert_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptRowStream(_)));
+        transaction.commit().await.unwrap();
+
+
+        let fetch_query = r#"
+        match
+            $x isa person, has $a;
+            $a isa! $t;
+        fetch {
+            # "single type": $t,
+            # "single attr": $a,
+            "all attributes": { $x.* },
+        };"#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
+
+        let result = transaction.query(fetch_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptDocumentStream(_)));
+        let mut documents_stream = answer.into_documents();
+        println!("Printing documents:");
+        while let Some(Ok(document)) = documents_stream.next().await {
+            println!("DOC: {:?}", &document);
+            println!("JSON: {}", document.into_json());
+        }
+
+
+
+        let fetch_query = r#"
+        match
+            $x isa! empty-person;
+        fetch {
+             $x.*
+        };"#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
+
+        let result = transaction.query(fetch_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptDocumentStream(_)));
+        let mut documents_stream = answer.into_documents();
+        println!("Printing documents AGAIN:");
+        while let Some(Ok(document)) = documents_stream.next().await {
+            println!("DOC: {:?}", &document);
+            println!("JSON: {}", document.into_json());
+        }
+
+
+
+        let fetch_query = r#"
+        match
+            $x isa! non-existing-person;
+        fetch {
+             $x.*
+        };"#;
+
+        let transaction = driver.transaction("db-name", TransactionType::Read).await.unwrap();
+
+        let result = transaction.query(fetch_query).await;
+        let answer = result.unwrap();
+        assert!(matches!(answer, QueryAnswer::ConceptDocumentStream(_)));
+        let mut documents_stream = answer.into_documents();
+        println!("Printing documents AGAIN:");
+        while let Some(Ok(document)) = documents_stream.next().await {
+            println!("DOC: {:?}", &document);
+            println!("JSON: {}", document.into_json());
         }
     });
 
