@@ -25,7 +25,7 @@ use super::{
     error::try_release_optional,
     memory::{borrow_mut, release_optional},
 };
-use crate::error::try_unwrap_arc_optional;
+use crate::error::try_release_optional_arc;
 
 pub struct CIterator<T: 'static>(pub(super) BoxStream<'static, T>);
 
@@ -38,5 +38,5 @@ pub(super) fn iterator_try_next<T: 'static>(it: *mut CIterator<Result<T>>) -> *m
 }
 
 pub(super) fn iterator_arc_next<T: 'static>(it: *mut CIterator<Arc<T>>) -> *const T {
-    try_unwrap_arc_optional(borrow_mut(it).0.next())
+    try_release_optional_arc(borrow_mut(it).0.next())
 }

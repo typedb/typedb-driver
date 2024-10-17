@@ -26,12 +26,12 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, release_optional, release_string, take_ownership},
 };
-use crate::memory::{release_arc, wrap_into_arc};
+use crate::memory::{decrement_arc, take_arc};
 
 /// Frees the native rust <code>Database</code> object
 #[no_mangle]
 pub extern "C" fn database_close(database: *const Database) {
-    release_arc(database)
+    decrement_arc(database)
 }
 
 /// The database name as a string.
@@ -43,19 +43,19 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
 /// Deletes this database.
 #[no_mangle]
 pub extern "C" fn database_delete(database: *const Database) {
-    unwrap_void(wrap_into_arc(database).delete());
+    unwrap_void(take_arc(database).delete());
 }
 
 /// A full schema text as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
-    try_release_string(wrap_into_arc(database).schema())
+    try_release_string(take_arc(database).schema())
 }
 
 /// The types in the schema as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
-    try_release_string(wrap_into_arc(database).type_schema())
+    try_release_string(take_arc(database).type_schema())
 }
 
 // /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.

@@ -170,7 +170,7 @@ error_messages! { ConnectionError
     ValueTimeZoneNameNotRecognised { time_zone: String } =
         25: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
-        26: "Time zone provided by the server has numerical offset '{offset}', which is recognised as a valid value for offset in seconds.",
+        26: "Time zone provided by the server has numerical offset '{offset}', which is not recognised as a valid value for offset in seconds.",
     ValueStructNotImplemented =
         27: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =

@@ -17,20 +17,16 @@
  * under the License.
  */
 
-use std::{
-    ffi::c_char,
-    ptr::{addr_of_mut, null},
-    sync::Arc,
-};
+use std::{ffi::c_char, ptr::addr_of_mut, sync::Arc};
 
-use typedb_driver::{box_stream, Database, DatabaseManager, TypeDBDriver};
+use typedb_driver::{box_stream, Database, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_or_default, unwrap_void},
-    iterator::{iterator_next, CIterator},
-    memory::{borrow, borrow_mut, free, release, string_view},
+    iterator::CIterator,
+    memory::{borrow_mut, free, string_view},
 };
-use crate::{error::try_unwrap_arc, iterator::iterator_arc_next, memory::unwrap_arc};
+use crate::{error::try_release_arc, iterator::iterator_arc_next};
 
 /// An <code>Iterator</code> over databases present on the TypeDB server
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
@@ -71,5 +67,5 @@ pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_c
 /// Retrieve the database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
-    try_unwrap_arc(borrow_mut(driver).databases().get(string_view(name)))
+    try_release_arc(borrow_mut(driver).databases().get(string_view(name)))
 }
