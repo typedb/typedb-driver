@@ -83,7 +83,12 @@ pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut
 /// Produces an <code>Iterator</code> over all JSON <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut StringIterator {
-    release(StringIterator(CIterator(take_ownership(query_answer).into_documents())))
+    release(StringIterator(CIterator(take_ownership(query_answer)
+        .into_documents()
+        .map(|res| res.map(|document|
+            document.into_json().to_string()
+        )))
+    ))
 }
 
 /// Frees the native rust <code>QueryAnswer</code> object.

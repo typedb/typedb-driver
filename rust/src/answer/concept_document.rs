@@ -42,7 +42,7 @@ impl ConceptDocument {
         Self { header, root }
     }
 
-    pub(crate) fn into_json(self) -> JSON {
+    pub fn into_json(self) -> JSON {
         match self.root {
             None => JSON::Null,
             Some(root_node) => root_node.into_json(),
