@@ -216,6 +216,7 @@ public class DriverQueryTest {
                     "};").resolve();
             assertTrue(fetchAnswer.isConceptDocuments());
 
+            // TODO: It will become a mature test when all the other tests are refactored in Java
             System.out.println("Fetch results for manual testing:");
             AtomicInteger fetchCount = new AtomicInteger(0);
             fetchAnswer.asConceptDocuments().stream().forEach(document -> {
