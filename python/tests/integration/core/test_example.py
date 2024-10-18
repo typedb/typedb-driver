@@ -214,7 +214,8 @@ class TestExample(TestCase):
                 count = 0
                 for document in answer.as_concept_documents():
                     count += 1
-                    print(f"Fetched a document: {document}")
+                    print(f"Fetched a document: {document}.")
+                    print(f"This document contains an attribute of type: {document['single attribute type']['label']}")
                 assert_that(count, is_(3))
                 print(f"Total documents fetched: {count}")
 
