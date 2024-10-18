@@ -122,8 +122,8 @@ public interface Transaction extends AutoCloseable {
         WRITE(1, com.typedb.driver.jni.TransactionType.Write),
         SCHEMA(2, com.typedb.driver.jni.TransactionType.Schema);
 
-        private final int id;
         public final com.typedb.driver.jni.TransactionType nativeObject;
+        private final int id;
 
         Type(int id, com.typedb.driver.jni.TransactionType nativeObject) {
             this.id = id;

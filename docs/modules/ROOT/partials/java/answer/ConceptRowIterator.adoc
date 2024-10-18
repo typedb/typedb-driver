@@ -18,7 +18,7 @@
 default ConceptRowIterator asConceptRows()
 ----
 
-Casts the query answer to ``ConceptRowsStreamQueryAnswer``. 
+Casts the query answer to ``ConceptRowStreamQueryAnswer``.
 
 
 [caption=""]
@@ -33,7 +33,7 @@ Casts the query answer to ``ConceptRowsStreamQueryAnswer``.
 default boolean isConceptRows()
 ----
 
-Checks if the query answer is a ``ConceptRowsStream``. 
+Checks if the query answer is a ``ConceptRowStream``.
 
 
 [caption=""]

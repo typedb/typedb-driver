@@ -23,7 +23,10 @@ use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 // EXAMPLE START MARKER
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer},
+    answer::{
+        concept_document::{Leaf, Node},
+        ConceptRow, QueryAnswer,
+    },
     concept::{Concept, ValueType},
     Error, TransactionType, TypeDBDriver,
 };
@@ -76,7 +79,13 @@ fn example() {
 
         // Open a schema transaction to make schema changes
         let transaction = driver.transaction(database.name(), TransactionType::Schema).await.unwrap();
-        let answer = transaction.query("define entity person, owns age; attribute age, value long;").await.unwrap();
+        let define_query = r#"
+        define
+          entity person, owns name, owns age;
+          attribute name, value string;
+          attribute age, value long;
+        "#;
+        let answer = transaction.query(define_query).await.unwrap();
 
         // Work with the driver's enums in a classic way or using helper methods
         if answer.is_ok() && matches!(answer, QueryAnswer::Ok()) {
@@ -90,7 +99,7 @@ fn example() {
         // Open a read transaction to safely read anything without database modifications
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
         let answer = transaction.query("match entity $x;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Collect concept rows that represent the answer as a table
         let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
@@ -128,7 +137,7 @@ fn example() {
 
         // Continue querying in the same transaction if needed
         let answer = transaction.query("match attribute $a;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Concept rows can be used as a stream of results
         let mut rows_stream = answer.into_rows();
@@ -138,30 +147,28 @@ fn example() {
             assert_eq!(column_names_iter.next(), None);
 
             let concept_by_name = row.get(column_name).unwrap();
+            assert!(concept_by_name.is_attribute_type());
+            assert!(concept_by_name.is_type());
+            assert!(concept_by_name.is_long() || concept_by_name.is_string());
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
-                println!(
-                    "Defined attribute type's label: '{}', value type: '{}'",
-                    concept_by_name.get_label(),
-                    concept_by_name.get_value_type().unwrap()
-                );
+                let label = concept_by_name.get_label();
+                let value_type = concept_by_name.get_value_type().unwrap();
+                println!("Defined attribute type's label: '{label}', value type: '{value_type}'");
+                assert!(value_type == ValueType::Long || value_type == ValueType::String);
+                assert!(label == "age" || label == "name");
+                assert_ne!(concept_by_name.get_label(), "person");
+                assert_ne!(concept_by_name.get_label(), "person:age");
             }
 
             println!("It is also possible to just print the concept itself: '{}'", concept_by_name);
-            assert!(concept_by_name.is_attribute_type());
-            assert!(concept_by_name.is_type());
-            assert!(concept_by_name.is_long());
-            assert_eq!(concept_by_name.get_value_type(), Some(ValueType::Long));
-            assert_eq!(concept_by_name.get_label(), "age");
-            assert_ne!(concept_by_name.get_label(), "person");
-            assert_ne!(concept_by_name.get_label(), "person:age");
         }
 
         // Open a write transaction to insert data
         let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
         let answer = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
         // Insert queries also return concept rows
         let mut rows = Vec::new();
@@ -196,11 +203,13 @@ fn example() {
 
         // Open a read transaction to verify that the inserted data is saved
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+
+        // A match query can be used for concept row outputs
         let var = "x";
         let answer = transaction.query(format!("match ${} isa person;", var)).await.unwrap();
-        assert!(answer.is_rows_stream());
+        assert!(answer.is_row_stream());
 
-        // Match queries always return concept rows
+        // Simple match queries always return concept rows
         let mut count = 0;
         let mut stream = answer.into_rows().map(|result| result.unwrap());
         while let Some(row) = stream.next().await {
@@ -225,7 +234,55 @@ fn example() {
         assert_eq!(count, 2);
         println!("Total persons found: {}", count);
 
-        // TODO: We can add a fetch example here!
+        // A fetch query can be used for concept document outputs with flexible structure
+        let fetch_query = r#"
+        match
+          $x isa! person, has $a;
+          $a isa! $t;
+        fetch {
+          "single attribute type": $t,
+          "single attribute": $a,
+          "all attributes": { $x.* },
+        };
+        "#;
+        let answer = transaction.query(fetch_query).await.unwrap();
+        assert!(answer.is_document_stream());
+
+        // Fetch queries always return concept documents
+        let mut count = 0;
+        let mut stream = answer.into_documents().map(|result| result.unwrap());
+        while let Some(document) = stream.next().await {
+            // The content of the document can be explored in details
+            match document.root.as_ref().unwrap() {
+                Node::Map(map) => {
+                    println!("Found a map document:\n{{");
+                    for (parameter_name, node) in map {
+                        print!("  \"{parameter_name}\": ");
+                        match node {
+                            Node::Map(map) => println!("map of {} element(s)", map.len()),
+                            Node::Leaf(leaf) => match leaf.as_ref().unwrap() {
+                                Leaf::Concept(concept) => match concept {
+                                    Concept::AttributeType(type_) => println!("attribute type '{}'", type_.label()),
+                                    Concept::Attribute(attribute) => println!("attribute '{}'", attribute.value),
+                                    _ => unreachable!("Unexpected concept is fetched"),
+                                },
+                                _ => unreachable!("Unexpected leaf type is fetched"),
+                            },
+                            _ => unreachable!("Expected lists in inner maps"),
+                        }
+                        print!("")
+                    }
+                    println!("}}");
+                }
+                _ => unreachable!("Unexpected document type is fetched"),
+            }
+
+            // The document can be converted to a JSON
+            count += 1;
+            println!("JSON representation of the fetched document:\n{}", document.into_json().to_string());
+        }
+        assert_eq!(count, 2);
+        println!("Total documents fetched: {}", count);
         // EXAMPLE END MARKER
     });
 

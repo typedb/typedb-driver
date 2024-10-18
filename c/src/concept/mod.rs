@@ -21,7 +21,7 @@ use std::ptr::addr_of_mut;
 
 use itertools::Itertools;
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, ValueGroup},
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, ValueGroup},
     concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
     BoxPromise, Promise, Result,
 };
@@ -45,7 +45,7 @@ pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut 
     try_release_optional(take_ownership(promise).0.resolve().transpose())
 }
 
-/// Iterator over the <code>ConceptRows</code>s returned by an API method or query.
+/// Iterator over the <code>ConceptRow</code>s returned by an API method or query.
 pub struct ConceptRowIterator(pub CIterator<Result<ConceptRow>>);
 
 /// Forwards the <code>ConceptRowIterator</code> and returns the next <code>ConceptRow</code> if it exists,
@@ -55,7 +55,7 @@ pub extern "C" fn concept_row_iterator_next(it: *mut ConceptRowIterator) -> *mut
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
-/// Frees the native rust <code>ConceptMapIterator</code> object
+/// Frees the native rust <code>ConceptRowIterator</code> object
 #[no_mangle]
 pub extern "C" fn concept_row_iterator_drop(it: *mut ConceptRowIterator) {
     free(it);

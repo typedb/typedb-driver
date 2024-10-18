@@ -38,20 +38,18 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
+    public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-
     public static Driver driver;
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
-    //    public static Options transactionOptions;
-    static boolean isBeforeAllRan = false;
 
-//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
+    //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
 //            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
 //    );
-
-    public static final Map<String, String> serverOptions = Collections.emptyMap();
+    //    public static Options transactionOptions;
+    static boolean isBeforeAllRan = false;
 
     public static Transaction tx() {
         return transactions.get(0);

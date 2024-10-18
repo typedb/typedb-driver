@@ -204,10 +204,11 @@
 %nojavaexception concept_row_get_index;
 %nojavaexception concept_row_to_string;
 
+%nojavaexception query_answer_get_query_type;
 %nojavaexception query_answer_get_rows;
 %nojavaexception query_answer_is_ok;
-%nojavaexception query_answer_is_concept_rows_stream;
-%nojavaexception query_answer_is_concept_trees_stream;
+%nojavaexception query_answer_is_concept_row_stream;
+%nojavaexception query_answer_is_concept_document_stream;
 
 %nojavaexception value_group_to_string;
 %nojavaexception value_group_equals;
@@ -439,6 +440,15 @@
         swigCMemOwn = false;
         try {
             return typedb_driver.query_answer_into_rows(this);
+        } catch (Error e) {
+            throw new Error.Unchecked(e);
+        }
+    }
+
+    public StringIterator intoDocuments() {
+        swigCMemOwn = false;
+        try {
+            return typedb_driver.query_answer_into_documents(this);
         } catch (Error e) {
             throw new Error.Unchecked(e);
         }

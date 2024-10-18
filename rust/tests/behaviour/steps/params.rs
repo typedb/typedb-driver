@@ -466,7 +466,7 @@ impl FromStr for IsByVarIndex {
 pub(crate) enum QueryAnswerType {
     Ok,
     ConceptRows,
-    ConceptTrees,
+    ConceptDocuments,
 }
 
 impl FromStr for QueryAnswerType {
@@ -475,7 +475,7 @@ impl FromStr for QueryAnswerType {
         Ok(match s {
             "ok" => Self::Ok,
             "concept rows" => Self::ConceptRows,
-            "concept trees" => Self::ConceptTrees,
+            "concept trees" => Self::ConceptDocuments, // TODO: "concept documents"
             invalid => return Err(format!("Invalid `QueryAnswerType`: {invalid}")),
         })
     }
@@ -486,7 +486,7 @@ impl fmt::Display for QueryAnswerType {
         match self {
             QueryAnswerType::Ok => write!(f, "Ok"),
             QueryAnswerType::ConceptRows => write!(f, "ConceptRows"),
-            QueryAnswerType::ConceptTrees => write!(f, "ConceptTrees"),
+            QueryAnswerType::ConceptDocuments => write!(f, "ConceptTrees"),
         }
     }
 }

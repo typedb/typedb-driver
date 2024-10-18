@@ -26,7 +26,6 @@ import io.cucumber.java.ParameterType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.typedb.driver.api.Transaction.Type.READ;
@@ -34,7 +33,6 @@ import static com.typedb.driver.api.Transaction.Type.SCHEMA;
 import static com.typedb.driver.api.Transaction.Type.WRITE;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class Parameters {
 
@@ -93,6 +91,16 @@ public class Parameters {
         return typeList;
     }
 
+    @ParameterType("; fails|; parsing fails|")
+    public MayError may_error(String result) {
+        if (result.equals("")) {
+            return MayError.FALSE;
+        } else if (result.equals("; fails") || result.equals("; parsing fails")) {
+            return MayError.TRUE;
+        }
+        return null;
+    }
+
     public enum Kind {
         ENTITY("entity"),
         ATTRIBUTE("attribute"),
@@ -122,11 +130,11 @@ public class Parameters {
         TRUE(true),
         FALSE(false);
 
+        boolean mayError;
+
         MayError(boolean mayError) {
             this.mayError = mayError;
         }
-
-        boolean mayError;
 
         public void check(Runnable function) {
             if (mayError) {
@@ -135,15 +143,5 @@ public class Parameters {
                 function.run();
             }
         }
-    }
-
-    @ParameterType("; fails|; parsing fails|")
-    public MayError may_error(String result) {
-        if (result.equals("")) {
-            return MayError.FALSE;
-        } else if (result.equals("; fails") || result.equals("; parsing fails")) {
-            return MayError.TRUE;
-        }
-        return null;
     }
 }

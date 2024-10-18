@@ -24,7 +24,7 @@ use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
-    answer::{ConceptRow, QueryAnswer},
+    answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
         stream::{BoxStream, Stream},
@@ -105,19 +105,31 @@ impl TransactionStream {
 
             match header {
                 QueryResponse::Ok() => Ok(QueryAnswer::Ok()),
-                QueryResponse::ConceptTreesHeader(trees_header) => {
-                    let answers = box_stream(stream.flat_map(|result| match result {
-                        Ok(QueryResponse::StreamConceptTrees(trees)) => stream_iter(trees.into_iter().map(Ok)),
-                        Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
-                        Ok(other) => {
-                            stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                QueryResponse::ConceptDocumentsHeader(documents_header) => {
+                    let header = Arc::new(documents_header);
+                    let stream_header = header.clone();
+                    let answers = box_stream(stream.flat_map(move |result| {
+                        let header = header.clone();
+                        match result {
+                            Ok(QueryResponse::StreamConceptDocuments(documents)) => {
+                                stream_iter(documents.into_iter().map({
+                                        move |document| {
+                                            Ok(ConceptDocument::new(header.clone(), document))
+                                        }
+                                    }))
+                            }
+                            Ok(QueryResponse::Error(error)) => stream_once(Err(error.into())),
+                            Ok(other) => {
+                                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+                            }
+                            Err(err) => stream_once(Err(err)),
                         }
-                        Err(err) => stream_once(Err(err)),
                     }));
-                    Ok(QueryAnswer::ConceptTreesStream(trees_header, answers))
+                    Ok(QueryAnswer::ConceptDocumentStream(stream_header, answers))
                 },
                 QueryResponse::ConceptRowsHeader(rows_header) => {
                     let header = Arc::new(rows_header);
+                    let stream_header = header.clone();
                     let answers = box_stream(stream.flat_map(move |result| {
                         let header = header.clone();
                         match result {
@@ -135,7 +147,7 @@ impl TransactionStream {
                             Err(err) => stream_once(Err(err)),
                         }
                      }));
-                     Ok(QueryAnswer::ConceptRowsStream(answers))
+                     Ok(QueryAnswer::ConceptRowStream(stream_header, answers))
                 },
                 QueryResponse::Error(error) => Err(error.into()),
                 other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into())

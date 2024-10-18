@@ -39,8 +39,8 @@ impl ConceptRowHeader {
     }
 }
 
-/// A single row of concepts representing substitutions for variables in the query
-/// Contains a Header (column names), and the row of optional concepts
+/// A single row of concepts representing substitutions for variables in the query.
+/// Contains a Header (column names and query type), and the row of optional concepts.
 /// An empty concept in a column means the variable does not have a substitution in this answer.
 #[derive(Clone, PartialEq)]
 pub struct ConceptRow {
@@ -55,8 +55,6 @@ impl ConceptRow {
 
     /// Retrieve the row column names (shared by all elements in this stream).
     ///
-    /// # Arguments
-    ///
     /// # Examples
     ///
     /// ```rust
@@ -67,8 +65,6 @@ impl ConceptRow {
     }
 
     /// Retrieve the executed query's type (shared by all elements in this stream).
-    ///
-    /// # Arguments
     ///
     /// # Examples
     ///

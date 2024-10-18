@@ -91,6 +91,8 @@ impl Debug for ConceptCategory {
 }
 
 impl Concept {
+    pub(crate) const UNKNOWN_LABEL: &'static str = "unknown";
+
     /// Get the IID of this concept, if it exists.
     /// If this is an Entity or Relation Instance, return the IID of the instance.
     /// Otherwise, return empty
@@ -103,19 +105,27 @@ impl Concept {
     }
 
     /// Get the label of the concept.
-    /// If this is an Instance, return the label of the type of this instance.
+    /// If this is an Instance, return the label of the type of this instance ("unknown" if type fetching is disabled).
     /// If this is a Value, return the label of the value type of the value.
     /// If this is a Type, return the label of the type.
     pub fn get_label(&self) -> &str {
+        self.try_get_label().unwrap_or(Self::UNKNOWN_LABEL)
+    }
+
+    /// Get the optional label of the concept.
+    /// If this is an Instance, return the label of the type of this instance (None if type fetching is disabled).
+    /// If this is a Value, return the label of the value type of the value.
+    /// If this is a Type, return the label of the type.
+    pub fn try_get_label(&self) -> Option<&str> {
         match self {
-            Self::EntityType(entity_type) => entity_type.label(),
-            Self::RelationType(relation_type) => relation_type.label(),
-            Self::AttributeType(attribute_type) => attribute_type.label(),
-            Self::RoleType(role_type) => role_type.label(),
-            Self::Entity(entity) => entity.type_().map(|type_| type_.label()).unwrap(),
-            Self::Relation(relation) => relation.type_().map(|type_| type_.label()).unwrap(),
-            Self::Attribute(attribute) => attribute.type_().map(|type_| type_.label()).unwrap(),
-            Self::Value(value) => value.get_type_name(),
+            Self::EntityType(entity_type) => Some(entity_type.label()),
+            Self::RelationType(relation_type) => Some(relation_type.label()),
+            Self::AttributeType(attribute_type) => Some(attribute_type.label()),
+            Self::RoleType(role_type) => Some(role_type.label()),
+            Self::Entity(entity) => entity.type_().map(|type_| type_.label()),
+            Self::Relation(relation) => relation.type_().map(|type_| type_.label()),
+            Self::Attribute(attribute) => attribute.type_().map(|type_| type_.label()),
+            Self::Value(value) => Some(value.get_type_name()),
         }
     }
 
@@ -396,5 +406,38 @@ impl Debug for Concept {
             }
             write!(f, ")")
         }
+    }
+}
+
+/// Kind represents the base of a defined type to describe its capabilities.
+/// For example, "define entity person;" defines a type "person" of a kind "entity".
+#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+pub enum Kind {
+    Entity,
+    Attribute,
+    Relation,
+    Role,
+}
+
+impl Kind {
+    pub const fn name(&self) -> &'static str {
+        match self {
+            Kind::Entity => "entity",
+            Kind::Attribute => "attribute",
+            Kind::Relation => "relation",
+            Kind::Role => "relation:role",
+        }
+    }
+}
+
+impl Debug for Kind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Kind[{}]", self.name())
+    }
+}
+
+impl Display for Kind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
     }
 }

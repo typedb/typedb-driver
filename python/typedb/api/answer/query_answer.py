@@ -17,15 +17,35 @@
 
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, INVALID_QUERY_ANSWER_CASTING
+
+if TYPE_CHECKING:
+    from typedb.api.answer.query_type import QueryType
 
 
 class QueryAnswer(ABC):
     """
     General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
     """
+
+    @property
+    @abstractmethod
+    def query_type(self) -> QueryType:
+        """
+        Retrieves the executed query's type of this ``QueryAnswer``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.query_type
+        """
+        pass
 
     def is_ok(self) -> bool:
         """
@@ -55,9 +75,9 @@ class QueryAnswer(ABC):
         """
         return False
 
-    def is_concept_trees(self) -> bool:
+    def is_concept_documents(self) -> bool:
         """
-        Checks if the query answer is a ``ConceptTreeIterator``.
+        Checks if the query answer is a ``ConceptDocumentIterator``.
 
         :return:
 
@@ -65,7 +85,7 @@ class QueryAnswer(ABC):
         --------
         ::
 
-          query_answer.is_concept_trees()
+          query_answer.is_concept_documents()
         """
         return False
 
@@ -97,9 +117,9 @@ class QueryAnswer(ABC):
         """
         raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptRowIterator"))
 
-    def as_concept_trees(self) -> ConceptTreeIterator:
+    def as_concept_documents(self) -> ConceptDocumentIterator:
         """
-        Casts the query answer to ``ConceptTreeIterator``.
+        Casts the query answer to ``ConceptDocumentIterator``.
 
         :return:
 
@@ -107,6 +127,6 @@ class QueryAnswer(ABC):
         --------
         ::
 
-          query_answer.as_concept_trees()
+          query_answer.as_concept_documents()
         """
-        raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptTreeIterator"))
+        raise TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, (self.__class__.__name__, "ConceptDocumentIterator"))

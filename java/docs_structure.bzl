@@ -18,8 +18,8 @@
 dir_mapping = {
     "ConceptRow.adoc": "answer",
     "ConceptRowIterator.adoc": "answer",
-    "ConceptTree.adoc": "answer",
-    "ConceptTreeIterator.adoc": "answer",
+    "ConceptDocument.adoc": "answer",
+    "ConceptDocumentIterator.adoc": "answer",
     "JSON.adoc": "answer",
     "OkQueryAnswer.adoc": "answer",
     "QueryAnswer.adoc": "answer",

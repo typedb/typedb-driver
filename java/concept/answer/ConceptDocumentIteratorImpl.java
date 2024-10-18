@@ -19,6 +19,32 @@
 
 package com.typedb.driver.concept.answer;
 
-// TODO: Implement
-//public class ConceptTreeImpl extends NativeObject<com.typedb.driver.jni.ConceptTree> implements ConceptTree {
-//}
+import com.typedb.driver.api.answer.ConceptDocumentIterator;
+import com.typedb.driver.api.answer.JSON;
+import com.typedb.driver.common.NativeIterator;
+
+import java.util.stream.Stream;
+
+public class ConceptDocumentIteratorImpl extends QueryAnswerImpl implements ConceptDocumentIterator {
+    NativeIterator<String> nativeIterator;
+
+    public ConceptDocumentIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
+        super(answer);
+        nativeIterator = new NativeIterator<>(answer.intoDocuments());
+    }
+
+    @Override
+    public boolean hasNext() {
+        return nativeIterator.hasNext();
+    }
+
+    @Override
+    public JSON next() {
+        return JSON.parse(nativeIterator.next());
+    }
+
+    @Override
+    public Stream<JSON> stream() {
+        return nativeIterator.stream().map(JSON::parse);
+    }
+}

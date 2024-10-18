@@ -51,29 +51,44 @@ pub extern "C" fn query_answer_promise_resolve(promise: *mut QueryAnswerPromise)
     try_release(take_ownership(promise).0.resolve())
 }
 
+/// Retrieve the executed query's type of the <code>QueryAnswer</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_get_query_type(query_answer: *const QueryAnswer) -> QueryType {
+    borrow(query_answer).get_query_type()
+}
+
 /// Checks if the query answer is an <code>Ok</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_is_ok(query_answer: *const QueryAnswer) -> bool {
     borrow(query_answer).is_ok()
 }
 
-/// Checks if the query answer is a <code>ConceptRowsStream</code>.
+/// Checks if the query answer is a <code>ConceptRowStream</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_is_concept_rows_stream(query_answer: *const QueryAnswer) -> bool {
-    borrow(query_answer).is_rows_stream()
+pub extern "C" fn query_answer_is_concept_row_stream(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_row_stream()
 }
 
-/// Checks if the query answer is a <code>ConceptTreesStream</code>.
+/// Checks if the query answer is a <code>ConceptDocumentStream</code>.
 #[no_mangle]
-pub extern "C" fn query_answer_is_concept_trees_stream(query_answer: *const QueryAnswer) -> bool {
-    // TODO: Rename?
-    borrow(query_answer).is_json_stream()
+pub extern "C" fn query_answer_is_concept_document_stream(query_answer: *const QueryAnswer) -> bool {
+    borrow(query_answer).is_document_stream()
 }
 
-/// Produces an <code>Iterator</code> over all <code>ConceptRow</code> in this <code>QueryAnswer</code>.
+/// Produces an <code>Iterator</code> over all <code>ConceptRow</code>s in this <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_into_rows(query_answer: *mut QueryAnswer) -> *mut ConceptRowIterator {
     release(ConceptRowIterator(CIterator(take_ownership(query_answer).into_rows())))
+}
+
+/// Produces an <code>Iterator</code> over all JSON <code>ConceptDocument</code>s in this <code>QueryAnswer</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_into_documents(query_answer: *mut QueryAnswer) -> *mut StringIterator {
+    release(StringIterator(CIterator(box_stream(
+        take_ownership(query_answer)
+            .into_documents()
+            .map(|result| result.map(|document| document.into_json().to_string())),
+    ))))
 }
 
 /// Frees the native rust <code>QueryAnswer</code> object.

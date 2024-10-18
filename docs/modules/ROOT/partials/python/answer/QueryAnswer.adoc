@@ -3,7 +3,41 @@
 
 General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
 
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this ``QueryAnswer``.
+
+
+|===
+// end::properties[]
+
 // tag::methods[]
+[#_QueryAnswer_as_concept_documents_]
+==== as_concept_documents
+
+[source,python]
+----
+as_concept_documents() -> ConceptDocumentIterator
+----
+
+Casts the query answer to ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`ConceptDocumentIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_documents()
+----
+
 [#_QueryAnswer_as_concept_rows_]
 ==== as_concept_rows
 
@@ -23,27 +57,6 @@ Casts the query answer to ``ConceptRowIterator``.
 [source,python]
 ----
 query_answer.as_concept_rows()
-----
-
-[#_QueryAnswer_as_concept_trees_]
-==== as_concept_trees
-
-[source,python]
-----
-as_concept_trees() -> ConceptTreeIterator
-----
-
-Casts the query answer to ``ConceptTreeIterator``.
-
-[caption=""]
-.Returns
-`ConceptTreeIterator`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-query_answer.as_concept_trees()
 ----
 
 [#_QueryAnswer_as_ok_]
@@ -67,6 +80,27 @@ Casts the query answer to ``OkQueryAnswer``.
 query_answer.as_ok()
 ----
 
+[#_QueryAnswer_is_concept_documents_]
+==== is_concept_documents
+
+[source,python]
+----
+is_concept_documents() -> bool
+----
+
+Checks if the query answer is a ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_documents()
+----
+
 [#_QueryAnswer_is_concept_rows_]
 ==== is_concept_rows
 
@@ -86,27 +120,6 @@ Checks if the query answer is a ``ConceptRowIterator``.
 [source,python]
 ----
 query_answer.is_concept_rows()
-----
-
-[#_QueryAnswer_is_concept_trees_]
-==== is_concept_trees
-
-[source,python]
-----
-is_concept_trees() -> bool
-----
-
-Checks if the query answer is a ``ConceptTreeIterator``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-query_answer.is_concept_trees()
 ----
 
 [#_QueryAnswer_is_ok_]

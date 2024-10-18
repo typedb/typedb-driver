@@ -30,7 +30,7 @@ use crate::common::IID;
 pub struct Entity {
     /// The unique id of this Entity
     pub iid: IID,
-    /// The label of the entity type this instance belongs to
+    /// The type which this Entity belongs to
     pub type_: Option<EntityType>,
 }
 
@@ -57,7 +57,7 @@ impl Entity {
 pub struct Relation {
     /// The unique id of this Relation
     pub iid: IID,
-    /// The label of the relation type this instance belongs to
+    /// The type which this Relation belongs to
     pub type_: Option<RelationType>,
 }
 
@@ -88,7 +88,6 @@ pub struct Attribute {
     /// The (dataful) value of this attribute
     pub value: Value,
     /// The type which this Attribute belongs to
-    /// The label of the attribute type this instance belongs to
     pub type_: Option<AttributeType>,
 }
 

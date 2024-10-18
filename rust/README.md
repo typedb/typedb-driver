@@ -67,7 +67,10 @@ Quickstart"_ section above.
 ```rust
 use futures::{StreamExt, TryStreamExt};
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer},
+    answer::{
+        concept_document::{Leaf, Node},
+        ConceptRow, QueryAnswer,
+    },
     concept::{Concept, ValueType},
     Error, TransactionType, TypeDBDriver,
 };
@@ -104,7 +107,13 @@ fn typedb_example() {
 
         // Open a schema transaction to make schema changes
         let transaction = driver.transaction(database.name(), TransactionType::Schema).await.unwrap();
-        let answer = transaction.query("define entity person, owns age; attribute age, value long;").await.unwrap();
+        let define_query = r#"
+        define
+          entity person, owns name, owns age;
+          attribute name, value string;
+          attribute age, value long;
+        "#;
+        let answer = transaction.query(define_query).await.unwrap();
 
         // Work with the driver's enums in a classic way or using helper methods
         if answer.is_ok() && matches!(answer, QueryAnswer::Ok()) {
@@ -156,11 +165,9 @@ fn typedb_example() {
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
-                println!(
-                    "Defined attribute type's label: '{}', value type: '{}'",
-                    concept_by_name.get_label(),
-                    concept_by_name.get_value_type().unwrap()
-                );
+                let label = concept_by_name.get_label();
+                let value_type = concept_by_name.get_value_type().unwrap();
+                println!("Defined attribute type's label: '{label}', value type: '{value_type}'");
             }
 
             println!("It is also possible to just print the concept itself: '{}'", concept_by_name);
@@ -199,10 +206,12 @@ fn typedb_example() {
 
         // Open a read transaction to verify that the inserted data is saved
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+
+        // A match query can be used for concept row outputs
         let var = "x";
         let answer = transaction.query(format!("match ${} isa person;", var)).await.unwrap();
 
-        // Match queries always return concept rows
+        // Simple match queries always return concept rows
         let mut count = 0;
         let mut stream = answer.into_rows().map(|result| result.unwrap());
         while let Some(row) = stream.next().await {
@@ -218,6 +227,53 @@ fn typedb_example() {
         }
         println!("Total persons found: {}", count);
 
+        // A fetch query can be used for concept document outputs with flexible structure
+        let fetch_query = r#"
+        match
+          $x isa! person, has $a;
+          $a isa! $t;
+        fetch {
+          "single attribute type": $t,
+          "single attribute": $a,
+          "all attributes": { $x.* },
+        };
+        "#;
+        let answer = transaction.query(fetch_query).await.unwrap();
+
+        // Fetch queries always return concept documents
+        let mut count = 0;
+        let mut stream = answer.into_documents().map(|result| result.unwrap());
+        while let Some(document) = stream.next().await {
+            // The content of the document can be explored in details
+            match document.root.as_ref().unwrap() {
+                Node::Map(map) => {
+                    println!("Found a map document:\n{{");
+                    for (parameter_name, node) in map {
+                        print!("  \"{parameter_name}\": ");
+                        match node {
+                            Node::Map(map) => println!("map of {} element(s)", map.len()),
+                            Node::Leaf(leaf) => match leaf.as_ref().unwrap() {
+                                Leaf::Concept(concept) => match concept {
+                                    Concept::AttributeType(type_) => println!("attribute type '{}'", type_.label()),
+                                    Concept::Attribute(attribute) => println!("attribute '{}'", attribute.value),
+                                    _ => unreachable!("Unexpected concept is fetched"),
+                                },
+                                _ => unreachable!("Unexpected leaf type is fetched"),
+                            },
+                            _ => unreachable!("Expected lists in inner maps"),
+                        }
+                        print!("")
+                    }
+                    println!("}}");
+                }
+                _ => unreachable!("Unexpected document type is fetched"),
+            }
+
+            // The document can be converted to a JSON
+            count += 1;
+            println!("JSON representation of the fetched document:\n{}", document.into_json().to_string());
+        }
+        println!("Total documents fetched: {}", count);
         println!("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     })
 }

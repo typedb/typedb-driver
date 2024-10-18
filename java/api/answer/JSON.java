@@ -59,6 +59,10 @@ public abstract class JSON {
         }
     }
 
+    private static java.lang.String indent(java.lang.String string) {
+        return Arrays.stream(string.split("\n")).map(s -> "    " + s).collect(joining("\n"));
+    }
+
     public boolean isObject() {
         return false;
     }
@@ -97,10 +101,6 @@ public abstract class JSON {
 
     public boolean asBoolean() {
         throw new TypeDBDriverException(ILLEGAL_CAST, className(boolean.class));
-    }
-
-    private static java.lang.String indent(java.lang.String string) {
-        return Arrays.stream(string.split("\n")).map(s -> "    " + s).collect(joining("\n"));
     }
 
     private static class Object extends JSON {

@@ -20,18 +20,22 @@ from __future__ import annotations
 from abc import ABC
 
 from typedb.api.answer.query_answer import QueryAnswer
+from typedb.api.answer.query_type import QueryType
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
-from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer
+from typedb.native_driver_wrapper import QueryAnswer as NativeQueryAnswer, query_answer_get_query_type
 
 
-class _QueryAnswer(QueryAnswer, NativeWrapper[NativeQueryAnswer], ABC):
+class _QueryAnswer(QueryAnswer, ABC):
 
     def __init__(self, query_answer: NativeQueryAnswer):
         if not query_answer:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
-        super().__init__(query_answer)
+        self._query_type = QueryType(query_answer_get_query_type(query_answer))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
+
+    @property
+    def query_type(self) -> QueryType:
+        return self._query_type

@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api.answer;
 
+import com.typedb.driver.api.QueryType;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -30,6 +31,17 @@ import static com.typedb.driver.common.util.Objects.className;
  * General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
  */
 public interface QueryAnswer {
+    /**
+     * Retrieves the executed query's type of this <code>QueryAnswer</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * queryAnswer.getQueryType();
+     * </pre>
+     */
+    @CheckReturnValue
+    QueryType getQueryType();
+
     /**
      * Checks if the query answer is an <code>Ok</code>.
      *
@@ -48,7 +60,7 @@ public interface QueryAnswer {
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isConceptRowsStream();
+     * concept.isConceptRows();
      * </pre>
      */
     @CheckReturnValue
@@ -57,15 +69,15 @@ public interface QueryAnswer {
     }
 
     /**
-     * Checks if the query answer is a <code>ConceptTreeIterator</code>.
+     * Checks if the query answer is a <code>ConceptDocumentIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isConceptTrees();
+     * concept.isConceptDocuments();
      * </pre>
      */
     @CheckReturnValue
-    default boolean isConceptTrees() {
+    default boolean isConceptDocuments() {
         return false;
     }
 
@@ -86,7 +98,7 @@ public interface QueryAnswer {
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.asConceptRowsStream();
+     * concept.asConceptRows();
      * </pre>
      */
     default ConceptRowIterator asConceptRows() {
@@ -94,14 +106,14 @@ public interface QueryAnswer {
     }
 
     /**
-     * Casts the query answer to <code>ConceptTreeIterator</code>.
+     * Casts the query answer to <code>ConceptDocumentIterator</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.asConceptTreesStream();
+     * concept.asConceptDocuments();
      * </pre>
      */
-    default ConceptTreeIterator asConceptTreesStream() {
-        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptTreeIterator.class));
+    default ConceptDocumentIterator asConceptDocuments() {
+        throw new TypeDBDriverException(INVALID_QUERY_ANSWER_CASTING, className(this.getClass()), className(ConceptDocumentIterator.class));
     }
 }
