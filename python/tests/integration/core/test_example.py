@@ -73,6 +73,7 @@ class TestExample(TestCase):
                     print(f"OK results do not give any extra interesting information, but they mean that the query "
                           f"is successfully executed!")
                 assert_that(answer.is_ok(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.SCHEMA))
 
                 # Commit automatically closes the transaction. You can still safely call for it inside "with" blocks
                 tx.commit()
@@ -81,6 +82,7 @@ class TestExample(TestCase):
             with driver.transaction(database.name, TransactionType.READ) as tx:
                 answer = tx.query("match entity $x;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.READ))
 
                 # Collect concept rows that represent the answer as a table
                 rows = list(answer.as_concept_rows())
@@ -115,6 +117,7 @@ class TestExample(TestCase):
                 # Continue querying in the same transaction if needed
                 answer = tx.query("match attribute $a;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.READ))
 
                 # Concept rows can be used as any other iterator
                 rows = [row for row in answer.as_concept_rows()]
@@ -149,6 +152,7 @@ class TestExample(TestCase):
                 insert_query = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";"
                 answer = tx.query(insert_query).resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.WRITE))
 
                 # Insert queries also return concept rows
                 rows = list(answer.as_concept_rows())
@@ -180,6 +184,7 @@ class TestExample(TestCase):
                 var = "x"
                 answer = tx.query(f"match ${var} isa person;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.READ))
 
                 # Simple match queries always return concept rows
                 count = 0
@@ -211,6 +216,7 @@ class TestExample(TestCase):
                 """
                 answer = tx.query(fetch_query).resolve()
                 assert_that(answer.is_concept_documents(), is_(True))
+                assert_that(answer.query_type, is_(QueryType.READ))
 
                 # Fetch queries always return concept documents
                 count = 0

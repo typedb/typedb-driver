@@ -17,12 +17,15 @@
  * under the License.
  */
 
-use std::fmt;
+use std::{fmt, sync::Arc};
 
 use futures::{stream, StreamExt};
 
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
-use crate::{box_stream, BoxStream, Result};
+use crate::{
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
+    box_stream, BoxStream, Result,
+};
 
 pub mod concept_document;
 pub mod concept_row;
@@ -31,11 +34,26 @@ mod value_group;
 
 pub enum QueryAnswer {
     Ok(),
-    ConceptRowStream(BoxStream<'static, Result<ConceptRow>>),
-    ConceptDocumentStream(BoxStream<'static, Result<ConceptDocument>>),
+    ConceptRowStream(Arc<ConceptRowHeader>, BoxStream<'static, Result<ConceptRow>>),
+    ConceptDocumentStream(Arc<ConceptDocumentHeader>, BoxStream<'static, Result<ConceptDocument>>),
 }
 
 impl QueryAnswer {
+    /// Retrieve the executed query's type (shared by all elements in this stream).
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// query_answer.get_query_type()
+    /// ```
+    pub fn get_query_type(&self) -> QueryType {
+        match &self {
+            QueryAnswer::Ok() => QueryType::SchemaQuery, // TODO: Get it from protocol
+            QueryAnswer::ConceptRowStream(header, _) => header.query_type,
+            QueryAnswer::ConceptDocumentStream(header, _) => header.query_type,
+        }
+    }
+
     /// Check if the <code>QueryAnswer</code> is an <code>Ok</code> response.
     ///
     /// # Examples
@@ -55,7 +73,7 @@ impl QueryAnswer {
     /// query_answer.is_row_stream()
     /// ```
     pub fn is_row_stream(&self) -> bool {
-        matches!(self, Self::ConceptRowStream(_))
+        matches!(self, Self::ConceptRowStream(_, _))
     }
 
     /// Check if the <code>QueryAnswer</code> is a <code>ConceptDocumentStream</code>.
@@ -66,7 +84,7 @@ impl QueryAnswer {
     /// query_answer.is_document_stream()
     /// ```
     pub fn is_document_stream(&self) -> bool {
-        matches!(self, Self::ConceptDocumentStream(_))
+        matches!(self, Self::ConceptDocumentStream(_, _))
     }
 
     /// Unwraps the <code>QueryAnswer</code> into a <code>ConceptRowStream</code>.
@@ -78,7 +96,7 @@ impl QueryAnswer {
     /// query_answer.into_rows()
     /// ```
     pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>> {
-        if let Self::ConceptRowStream(stream) = self {
+        if let Self::ConceptRowStream(_, stream) = self {
             stream
         } else {
             panic!("Query answer is not a rows stream.")
@@ -94,7 +112,7 @@ impl QueryAnswer {
     /// query_answer.into_documents()
     /// ```
     pub fn into_documents(self) -> BoxStream<'static, Result<ConceptDocument>> {
-        if let Self::ConceptDocumentStream(stream) = self {
+        if let Self::ConceptDocumentStream(_, stream) = self {
             stream
         } else {
             panic!("Query answer is not a documents stream.")
@@ -106,8 +124,8 @@ impl fmt::Debug for QueryAnswer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             QueryAnswer::Ok() => write!(f, "QueryAnswer::Ok"),
-            QueryAnswer::ConceptRowStream(_) => write!(f, "QueryAnswer::ConceptRowStream(<stream>)"),
-            QueryAnswer::ConceptDocumentStream(_) => write!(f, "QueryAnswer::ConceptDocumentStream(<stream>)"),
+            QueryAnswer::ConceptRowStream(_, _) => write!(f, "QueryAnswer::ConceptRowStream(<stream>)"),
+            QueryAnswer::ConceptDocumentStream(_, _) => write!(f, "QueryAnswer::ConceptDocumentStream(<stream>)"),
         }
     }
 }

@@ -15,7 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from typedb.api.answer.concept_document_iterator import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.concept_row_iterator import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.query_answer import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.query_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.instance.attribute import *  # noqa # pylint: disable=unused-import
@@ -34,6 +38,8 @@ from typedb.api.connection.driver import *
 # from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
 # from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
+from typedb.common.datetime import *  # noqa # pylint: disable=unused-import
+from typedb.common.duration import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
 from typedb.connection.driver import _Driver
 

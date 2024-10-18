@@ -34,7 +34,7 @@ class _ConceptDocumentIterator(_QueryAnswer, ConceptDocumentIterator):
     def __init__(self, query_answer: NativeQueryAnswer):
         super().__init__(query_answer)
         self.iterator = map(json.loads,
-                            IteratorWrapper(query_answer_into_documents(self.native_object), string_iterator_next))
+                            IteratorWrapper(query_answer_into_documents(query_answer), string_iterator_next))
 
     def __iter__(self) -> Iterator[Optional[dict]]:
         return iter(self.iterator)

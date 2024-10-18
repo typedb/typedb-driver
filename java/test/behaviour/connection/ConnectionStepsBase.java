@@ -45,7 +45,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
+    //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
 //            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
 //    );
     //    public static Options transactionOptions;

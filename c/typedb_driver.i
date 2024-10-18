@@ -150,6 +150,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_row_get;
 %newobject concept_row_get_column_names;
 %newobject concept_row_get_query_type;
+%newobject query_answer_get_query_type;
 %newobject concept_row_get_concepts;
 %newobject concept_row_get_index;
 %newobject concept_row_to_string;

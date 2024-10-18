@@ -30,7 +30,7 @@ public class ConceptDocumentIteratorImpl extends QueryAnswerImpl implements Conc
 
     public ConceptDocumentIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
-        nativeIterator = new NativeIterator<>(nativeObject.intoDocuments());
+        nativeIterator = new NativeIterator<>(answer.intoDocuments());
     }
 
     @Override

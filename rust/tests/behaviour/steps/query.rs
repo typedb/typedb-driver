@@ -236,14 +236,14 @@ pub async fn answer_unwraps_as(
                 "Expected {expect} {query_answer_type}"
             )
         }
-        QueryAnswer::ConceptRowStream(_) => {
+        QueryAnswer::ConceptRowStream(_, _) => {
             assert_eq!(
                 expect,
                 matches!(query_answer_type, params::QueryAnswerType::ConceptRows),
                 "Expected {expect} {query_answer_type}"
             )
         }
-        QueryAnswer::ConceptDocumentStream(_) => {
+        QueryAnswer::ConceptDocumentStream(_, _) => {
             assert_eq!(
                 expect,
                 matches!(query_answer_type, params::QueryAnswerType::ConceptDocuments),

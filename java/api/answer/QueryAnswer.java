@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api.answer;
 
+import com.typedb.driver.api.QueryType;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -30,6 +31,17 @@ import static com.typedb.driver.common.util.Objects.className;
  * General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
  */
 public interface QueryAnswer {
+    /**
+     * Retrieves the executed query's type of this <code>QueryAnswer</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * queryAnswer.getQueryType();
+     * </pre>
+     */
+    @CheckReturnValue
+    QueryType getQueryType();
+
     /**
      * Checks if the query answer is an <code>Ok</code>.
      *

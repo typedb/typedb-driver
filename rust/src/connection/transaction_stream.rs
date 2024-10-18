@@ -107,6 +107,7 @@ impl TransactionStream {
                 QueryResponse::Ok() => Ok(QueryAnswer::Ok()),
                 QueryResponse::ConceptDocumentsHeader(documents_header) => {
                     let header = Arc::new(documents_header);
+                    let stream_header = header.clone();
                     let answers = box_stream(stream.flat_map(move |result| {
                         let header = header.clone();
                         match result {
@@ -124,10 +125,11 @@ impl TransactionStream {
                             Err(err) => stream_once(Err(err)),
                         }
                     }));
-                    Ok(QueryAnswer::ConceptDocumentStream(answers))
+                    Ok(QueryAnswer::ConceptDocumentStream(stream_header, answers))
                 },
                 QueryResponse::ConceptRowsHeader(rows_header) => {
                     let header = Arc::new(rows_header);
+                    let stream_header = header.clone();
                     let answers = box_stream(stream.flat_map(move |result| {
                         let header = header.clone();
                         match result {
@@ -145,7 +147,7 @@ impl TransactionStream {
                             Err(err) => stream_once(Err(err)),
                         }
                      }));
-                     Ok(QueryAnswer::ConceptRowStream(answers))
+                     Ok(QueryAnswer::ConceptRowStream(stream_header, answers))
                 },
                 QueryResponse::Error(error) => Err(error.into()),
                 other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into())

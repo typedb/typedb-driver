@@ -204,6 +204,7 @@
 %nojavaexception concept_row_get_index;
 %nojavaexception concept_row_to_string;
 
+%nojavaexception query_answer_get_query_type;
 %nojavaexception query_answer_get_rows;
 %nojavaexception query_answer_is_ok;
 %nojavaexception query_answer_is_concept_row_stream;

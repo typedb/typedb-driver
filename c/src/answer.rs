@@ -51,6 +51,12 @@ pub extern "C" fn query_answer_promise_resolve(promise: *mut QueryAnswerPromise)
     try_release(take_ownership(promise).0.resolve())
 }
 
+/// Retrieve the executed query's type of the <code>QueryAnswer</code>.
+#[no_mangle]
+pub extern "C" fn query_answer_get_query_type(query_answer: *const QueryAnswer) -> QueryType {
+    borrow(query_answer).get_query_type()
+}
+
 /// Checks if the query answer is an <code>Ok</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_is_ok(query_answer: *const QueryAnswer) -> bool {

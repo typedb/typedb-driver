@@ -31,7 +31,7 @@ public class ConceptRowIteratorImpl extends QueryAnswerImpl implements ConceptRo
 
     protected ConceptRowIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
-        nativeIterator = new NativeIterator<>(nativeObject.intoRows());
+        nativeIterator = new NativeIterator<>(answer.intoRows());
     }
 
     @Override

@@ -17,15 +17,35 @@
 
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 from typedb.common.exception import TypeDBDriverException, INVALID_QUERY_ANSWER_CASTING
+
+if TYPE_CHECKING:
+    from typedb.api.answer.query_type import QueryType
 
 
 class QueryAnswer(ABC):
     """
     General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
     """
+
+    @property
+    @abstractmethod
+    def query_type(self) -> QueryType:
+        """
+        Retrieves the executed query's type of this ``QueryAnswer``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          query_answer.query_type
+        """
+        pass
 
     def is_ok(self) -> bool:
         """
