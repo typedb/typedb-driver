@@ -26,16 +26,30 @@ import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.instance.Entity;
+import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.common.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -223,138 +237,138 @@ public class DriverQueryTest {
         }, Transaction.Type.READ);
     }
 
-//    @Test
-//    public void attributesTest() {
-//        Database db = typedbDriver.databases().get(DB_NAME);
-//        db.delete();
-//        typedbDriver.databases().create(DB_NAME);
-//
-//        Map<String, String> attributeValueTypes = Map.ofEntries(
-//                Map.entry("root", "none"),
-//                Map.entry("age", "long"),
-//                Map.entry("name", "string"),
-//                Map.entry("is-new", "boolean"),
-//                Map.entry("success", "double"),
-//                Map.entry("balance", "decimal"),
-//                Map.entry("birth-date", "date"),
-//                Map.entry("birth-time", "datetime"),
-//                Map.entry("current-time", "datetime-tz"),
-//                Map.entry("current-time-off", "datetime-tz"),
-//                Map.entry("expiration", "duration")
-//        );
-//
-//        Map<String, String> attributeValues = Map.ofEntries(
-//                Map.entry("age", "25"),
-//                Map.entry("name", "\"John\""),
-//                Map.entry("is-new", "true"),
-//                Map.entry("success", "66.6"),
-//                Map.entry("balance", "1234567890.0001234567890"),
-//                Map.entry("birth-date", "2024-09-20"),
-//                Map.entry("birth-time", "1999-02-26T12:15:05"),
-//                Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
-//                Map.entry("current-time-off", "2024-09-20T16:40:05.028129323+0545"),
-//                Map.entry("expiration", "P1Y10M7DT15H44M5.00394892S")
-//        );
-//
-//        localhostTypeDBTX(tx -> {
-//            for (Map.Entry<String, String> entry : attributeValueTypes.entrySet()) {
-//                String query;
-//                if (Objects.equals(entry.getValue(), "none")) {
-//                    query = String.format("define attribute %s @abstract;", entry.getKey());
-//                } else {
-//                    query = String.format("define attribute %s, value %s; entity person owns %s;", entry.getKey(), entry.getValue(), entry.getKey());
-//                }
-//                assertTrue(tx.query(query).resolve().isOk());
-//            }
-//            tx.commit();
-//        }, Transaction.Type.SCHEMA);
-//
-//        localhostTypeDBTX(tx -> {
-//            QueryAnswer answer = tx.query("match attribute $a;").resolve();
-//            assertTrue(answer.isConceptRows());
-//
-//            AtomicInteger count = new AtomicInteger(0);
-//            answer.asConceptRows().stream().forEach(row -> {
-//                Concept a = row.get("a");
-//                assertTrue(a.isAttributeType());
-//                AttributeType type = a.asAttributeType();
-//                assertEquals(type.getValueType(), attributeValueTypes.get(type.getLabel()));
-//                count.incrementAndGet();
-//            });
-//            assertEquals(count.get(), attributeValueTypes.size());
-//        }, Transaction.Type.READ);
-//
-//        localhostTypeDBTX(tx -> {
-//            for (Map.Entry<String, String> entry : attributeValues.entrySet()) {
-//                QueryAnswer answer = tx.query(String.format("insert $a isa person, has %s %s;", entry.getKey(), entry.getValue())).resolve();
-//                assertTrue(answer.isConceptRows());
-//                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-//                assertEquals(rows.size(), 1);
-//
-//                ConceptRow row = rows.get(0);
-//                List<String> header = row.columnNames().collect(Collectors.toList());
-//                assertEquals(header.size(), 1);
-//                assertTrue(row.getIndex(header.indexOf("a")).isEntity());
-//            }
-//            tx.commit();
-//        }, Transaction.Type.WRITE);
-//
-//        localhostTypeDBTX(tx -> {
-//            {
-//                QueryAnswer answer = tx.query("match attribute $t; $a isa! $t;").resolve();
-//                assertTrue(answer.isConceptRows());
-//                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-//                assertEquals(rows.size(), attributeValues.size());
-//                AtomicInteger checked = new AtomicInteger(0);
-//                rows.forEach(row -> {
-//                    Attribute attribute = row.get("a").asAttribute();
-//                    String attributeName = attribute.getType().getLabel();
-//                    Value value = attribute.getValue();
-//                    assertEquals(value.getType(), attributeValueTypes.get(attributeName));
-//                    if (value.isLong()) {
-//                        assertEquals(Long.parseLong(attributeValues.get(attributeName)), value.asLong());
-//                        checked.incrementAndGet();
-//                    } else if (value.isString()) {
-//                        assertEquals(attributeValues.get(attributeName).substring(1, attributeValues.get(attributeName).length() - 1), value.asString());
-//                        checked.incrementAndGet();
-//                    } else if (value.isBoolean()) {
-//                        assertEquals(Boolean.parseBoolean(attributeValues.get(attributeName)), value.asBoolean());
-//                        checked.incrementAndGet();
-//                    } else if (value.isDouble()) {
-//                        assertEquals(Double.parseDouble(attributeValues.get(attributeName)), value.asDouble(), 0.00000001);
-//                        checked.incrementAndGet();
-//                    } else if (value.isDecimal()) {
-//                        BigDecimal valueAsDecimal = value.asDecimal();
-//                        assertEquals(new BigDecimal(attributeValues.get(attributeName)).setScale(valueAsDecimal.scale(), RoundingMode.UNNECESSARY), valueAsDecimal);
-//                        checked.incrementAndGet();
-//                    } else if (value.isDate()) {
-//                        assertEquals(LocalDate.parse(attributeValues.get(attributeName)), value.asDate());
-//                        checked.incrementAndGet();
-//                    } else if (value.isDatetime()) {
-//                        assertEquals(LocalDateTime.parse(attributeValues.get(attributeName)), value.asDatetime());
-//                        checked.incrementAndGet();
-//                    } else if (value.isDatetimeTZ()) {
-//                        ZonedDateTime expected;
-//                        if (attributeName.contains("-off")) {
-//                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
-//                            expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
-//                        } else {
-//                            String[] expectedValue = attributeValues.get(attributeName).split(" ");
-//                            expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
-//                        }
-//                        assertEquals(expected, value.asDatetimeTZ());
-//                        checked.incrementAndGet();
-//                    } else if (value.isDuration()) {
-//                        String[] expectedValue = attributeValues.get(attributeName).split("T");
-//                        assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
-//                        checked.incrementAndGet();
-//                    }
-//                    // TODO: Add structs
-//                });
-//                assertEquals(checked.get(), attributeValues.size()); // Make sure that every attribute is checked!
-//            }
-//        }, Transaction.Type.READ);
-//    }
+    @Test
+    public void attributesTest() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        Map<String, String> attributeValueTypes = Map.ofEntries(
+                Map.entry("root", "none"),
+                Map.entry("age", "long"),
+                Map.entry("name", "string"),
+                Map.entry("is-new", "boolean"),
+                Map.entry("success", "double"),
+                Map.entry("balance", "decimal"),
+                Map.entry("birth-date", "date"),
+                Map.entry("birth-time", "datetime"),
+                Map.entry("current-time", "datetime-tz"),
+                Map.entry("current-time-off", "datetime-tz"),
+                Map.entry("expiration", "duration")
+        );
+
+        Map<String, String> attributeValues = Map.ofEntries(
+                Map.entry("age", "25"),
+                Map.entry("name", "\"John\""),
+                Map.entry("is-new", "true"),
+                Map.entry("success", "66.6"),
+                Map.entry("balance", "1234567890.0001234567890"),
+                Map.entry("birth-date", "2024-09-20"),
+                Map.entry("birth-time", "1999-02-26T12:15:05"),
+                Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
+                Map.entry("current-time-off", "2024-09-20T16:40:05.028129323+0545"),
+                Map.entry("expiration", "P1Y10M7DT15H44M5.00394892S")
+        );
+
+        localhostTypeDBTX(tx -> {
+            for (Map.Entry<String, String> entry : attributeValueTypes.entrySet()) {
+                String query;
+                if (Objects.equals(entry.getValue(), "none")) {
+                    query = String.format("define attribute %s @abstract;", entry.getKey());
+                } else {
+                    query = String.format("define attribute %s, value %s; entity person owns %s;", entry.getKey(), entry.getValue(), entry.getKey());
+                }
+                assertTrue(tx.query(query).resolve().isOk());
+            }
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("match attribute $a;").resolve();
+            assertTrue(answer.isConceptRows());
+
+            AtomicInteger count = new AtomicInteger(0);
+            answer.asConceptRows().stream().forEach(row -> {
+                Concept a = row.get("a");
+                assertTrue(a.isAttributeType());
+                AttributeType type = a.asAttributeType();
+                assertEquals(type.getValueType(), attributeValueTypes.get(type.getLabel()));
+                count.incrementAndGet();
+            });
+            assertEquals(count.get(), attributeValueTypes.size());
+        }, Transaction.Type.READ);
+
+        localhostTypeDBTX(tx -> {
+            for (Map.Entry<String, String> entry : attributeValues.entrySet()) {
+                QueryAnswer answer = tx.query(String.format("insert $a isa person, has %s %s;", entry.getKey(), entry.getValue())).resolve();
+                assertTrue(answer.isConceptRows());
+                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(rows.size(), 1);
+
+                ConceptRow row = rows.get(0);
+                List<String> header = row.columnNames().collect(Collectors.toList());
+                assertEquals(header.size(), 1);
+                assertTrue(row.getIndex(header.indexOf("a")).isEntity());
+            }
+            tx.commit();
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            {
+                QueryAnswer answer = tx.query("match attribute $t; $a isa! $t;").resolve();
+                assertTrue(answer.isConceptRows());
+                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(rows.size(), attributeValues.size());
+                AtomicInteger checked = new AtomicInteger(0);
+                rows.forEach(row -> {
+                    Attribute attribute = row.get("a").asAttribute();
+                    String attributeName = attribute.getType().getLabel();
+                    Value value = attribute.getValue();
+                    assertEquals(value.getType(), attributeValueTypes.get(attributeName));
+                    if (value.isLong()) {
+                        assertEquals(Long.parseLong(attributeValues.get(attributeName)), value.asLong());
+                        checked.incrementAndGet();
+                    } else if (value.isString()) {
+                        assertEquals(attributeValues.get(attributeName).substring(1, attributeValues.get(attributeName).length() - 1), value.asString());
+                        checked.incrementAndGet();
+                    } else if (value.isBoolean()) {
+                        assertEquals(Boolean.parseBoolean(attributeValues.get(attributeName)), value.asBoolean());
+                        checked.incrementAndGet();
+                    } else if (value.isDouble()) {
+                        assertEquals(Double.parseDouble(attributeValues.get(attributeName)), value.asDouble(), 0.00000001);
+                        checked.incrementAndGet();
+                    } else if (value.isDecimal()) {
+                        BigDecimal valueAsDecimal = value.asDecimal();
+                        assertEquals(new BigDecimal(attributeValues.get(attributeName)).setScale(valueAsDecimal.scale(), RoundingMode.UNNECESSARY), valueAsDecimal);
+                        checked.incrementAndGet();
+                    } else if (value.isDate()) {
+                        assertEquals(LocalDate.parse(attributeValues.get(attributeName)), value.asDate());
+                        checked.incrementAndGet();
+                    } else if (value.isDatetime()) {
+                        assertEquals(LocalDateTime.parse(attributeValues.get(attributeName)), value.asDatetime());
+                        checked.incrementAndGet();
+                    } else if (value.isDatetimeTZ()) {
+                        ZonedDateTime expected;
+                        if (attributeName.contains("-off")) {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+                            expected = OffsetDateTime.parse(attributeValues.get(attributeName), formatter).toZonedDateTime();
+                        } else {
+                            String[] expectedValue = attributeValues.get(attributeName).split(" ");
+                            expected = LocalDateTime.parse(expectedValue[0]).atZone(ZoneId.of(expectedValue[1]));
+                        }
+                        assertEquals(expected, value.asDatetimeTZ());
+                        checked.incrementAndGet();
+                    } else if (value.isDuration()) {
+                        String[] expectedValue = attributeValues.get(attributeName).split("T");
+                        assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
+                        checked.incrementAndGet();
+                    }
+                    // TODO: Add structs
+                });
+                assertEquals(checked.get(), attributeValues.size()); // Make sure that every attribute is checked!
+            }
+        }, Transaction.Type.READ);
+    }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {
         try (Transaction transaction = typedbDriver.transaction(DB_NAME, type/*, options*/)) {

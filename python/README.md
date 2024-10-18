@@ -37,7 +37,6 @@ driver = TypeDB.core_driver(address=TypeDB.DEFAULT_ADDRESS)
 from typedb.driver import *
 
 
-
     def typedb_example():
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
