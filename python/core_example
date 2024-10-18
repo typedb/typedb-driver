@@ -122,6 +122,7 @@ from typedb.driver import *
                 var = "x"
                 answer = tx.query(f"match ${var} isa person;").resolve()
 
+                # Simple match queries always return concept rows
                 count = 0
                 for row in answer.as_concept_rows():
                     x = row.get(var)
@@ -133,20 +134,22 @@ from typedb.driver import *
                 # A fetch query can be used for concept document outputs with flexible structure
                 fetch_query = """
                 match
-                    $x isa! person, has $a;
-                    $a isa! $t; 
+                  $x isa! person, has $a;
+                  $a isa! $t; 
                 fetch {
-                    "single attribute type": $t,
-                    "single attribute": $a,
-                    "all attributes": { $x.* },
+                  "single attribute type": $t,
+                  "single attribute": $a,
+                  "all attributes": { $x.* },
                 };
                 """
                 answer = tx.query(fetch_query).resolve()
 
+                # Fetch queries always return concept documents
                 count = 0
                 for document in answer.as_concept_documents():
                     count += 1
-                    print(f"Fetched a document: {document}")
+                    print(f"Fetched a document: {document}.")
+                    print(f"This document contains an attribute of type: {document['single attribute type']['label']}")
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")

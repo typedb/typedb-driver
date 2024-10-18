@@ -181,6 +181,7 @@ class TestExample(TestCase):
                 answer = tx.query(f"match ${var} isa person;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
 
+                # Simple match queries always return concept rows
                 count = 0
                 for row in answer.as_concept_rows():
                     x = row.get(var)
@@ -200,17 +201,18 @@ class TestExample(TestCase):
                 # A fetch query can be used for concept document outputs with flexible structure
                 fetch_query = """
                 match
-                    $x isa! person, has $a;
-                    $a isa! $t; 
+                  $x isa! person, has $a;
+                  $a isa! $t; 
                 fetch {
-                    "single attribute type": $t,
-                    "single attribute": $a,
-                    "all attributes": { $x.* },
+                  "single attribute type": $t,
+                  "single attribute": $a,
+                  "all attributes": { $x.* },
                 };
                 """
                 answer = tx.query(fetch_query).resolve()
                 assert_that(answer.is_concept_documents(), is_(True))
 
+                # Fetch queries always return concept documents
                 count = 0
                 for document in answer.as_concept_documents():
                     count += 1

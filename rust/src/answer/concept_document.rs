@@ -17,11 +17,11 @@
  * under the License.
  */
 
-use std::{borrow::Cow, collections::HashMap, sync::Arc};
+use std::{borrow::Cow, collections::HashMap, fmt, fmt::Formatter, sync::Arc};
 
 use chrono::DateTime;
 
-use super::{QueryType, JSON};
+use super::{ConceptRow, QueryType, JSON};
 use crate::concept::{
     value::{Struct, TimeZone},
     Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
@@ -65,7 +65,7 @@ impl ConceptDocument {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub(crate) enum Node {
+pub enum Node {
     Map(HashMap<String, Node>),
     List(Vec<Node>),
     Leaf(Option<Leaf>),
@@ -85,7 +85,7 @@ impl Node {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub(crate) enum Leaf {
+pub enum Leaf {
     Empty,
     Concept(Concept),
     ValueType(ValueType),
