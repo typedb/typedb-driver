@@ -1,0 +1,16 @@
+[#_enum_Node]
+=== Node
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Leaf(Option<Leaf>)`
+a| `List(Vec<Node>)`
+a| `Map(HashMap<String, Node>)`
+|===
+// end::enum_constants[]
+

@@ -3,6 +3,19 @@
 
 General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
 
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this ``QueryAnswer``.
+
+
+|===
+// end::properties[]
+
 // tag::methods[]
 [#_QueryAnswer_as_concept_documents_]
 ==== as_concept_documents

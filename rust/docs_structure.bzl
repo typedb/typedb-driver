@@ -23,6 +23,8 @@ dir_mapping = {
     "ConceptDocumentHeader.adoc": "answer",
     "ConceptRow.adoc": "answer",
     "ConceptRowHeader.adoc": "answer",
+    "Node.adoc": "answer",
+    "Leaf.adoc": "answer",
     "Trait_Promise.adoc": "answer",
     "JSON.adoc": "answer",
     "ValueGroup.adoc": "answer",
