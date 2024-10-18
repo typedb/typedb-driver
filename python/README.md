@@ -74,7 +74,7 @@ from typedb.driver import *
                     print(f"OK results do not give any extra interesting information, but they mean that the query "
                           f"is successfully executed!")
 
-                # Commit automatically closes the transaction. You can still safely call for it inside "with" blocks
+                # Commit automatically closes the transaction. It can still be safely called for inside "with" blocks
                 tx.commit()
 
             # Open a read transaction to safely read anything without database modifications
