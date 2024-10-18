@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-5
+cargo add typedb-driver@3.0.0-alpha-6
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-5</version>
+        <version>3.0.0-alpha-6</version>
     </dependency>
 </dependencies>
 ```
@@ -42,31 +42,52 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.0.0-alpha-5
+pip install typedb-driver==3.0.0-alpha-6
 ```
 
 ## New Features
-- **Introduce TypeDB 3.0 Python driver**
-  We introduce the updated Python driver for the upcoming 3.0 release. To align with the updated Rust driver, we removed `Concept API` (so you could simplify your querying workflow with a single `tx.query()` entry point), squeezed sessions and transactions to standalone transactions, and remodeled messaging with the server.
-  
-  As it's an alpha release, some of the features are temporarily disabled both on the server and the driver's side:
-  * Options;
-  * User management;
-  * Cloud connection with replicas information.
-  
-  Moreover, we no longer support Python 3.8 as [its support comes to an end](https://devguide.python.org/versions/) and we want to offer the full support of our newly introduced timezones with the standard library equally for all the versions of the language.
+- **Add concept documents for fetch queries.**
+  We add concept documents to support the results of the reintroduced `fetch` queries.
+
+  In Rust, results of `fetch` are streams of `ConceptDocument`s. It is possible to work with the structured document as a Rust `struct`, but it's also possible to convert it to a `JSON` document and/or its `String` representation.
+
+  In Java, these results are presented as iterators over custom `JSON` class instances. A respective `toString` method is available.
+
+  In Python, these results are presented as iterators over standard `dict` instances (able to be printed).
+
+  Additionally, we add `QueryType` getters for general `QueryAnswer`s, so it's possible to check its type without collection.
+
+  Usage examples are shown in `README` for the Rust and the Python drivers. Example integration tests are also available for all 3 drivers.
+
+
+- **Introduce 3.0 datetime-tz offsets and Rust driver documentation and tests.**
+  We introduce the second version of the Rust driver, adding TimeZone offsets for `datetime-tz` value types, fixing minor bugs and presenting the updated documentation and automated tests.
+
+  Rust driver changes:
+  * Add `datetime-tz` offsets;
+  * Refactor test structure to separate integration and behaviour tests using Bazel, not Cargo flags;
+  * Introduce example integration test for Rust and update README with the formatted code sample;
+  * Introduce updated 3.0 bdds for `connection` and `driver`;
+  * Introduce flags to run Rust bdds in `core` or `cloud` modes when TypeDB Cloud 3.x is implemented;
+  * Fix Rust driver docs parser and update generated docs.
+
+  Java and Python drivers changes:
+  * Add `datetime-tz` offsets;
+  * Rename `Thing` to `Instance`;
+  * Remove `ThingType`,
+  * Added `getLabel`/`get_label` for all `Concept` classes. Previously, it was only available for `Type`s.
+
+  Python driver changes:
+  * Add bdd steps to match the updated declarations.
+
+
+- **Introduce 3.0 Python driver docs and tests.**
+  We introduce the second version of the Python driver, fixing a number of minor bugs from the first version, enhancing existing APIs, and presenting the updated documentation and automated tests.
 
 ## Bugs Fixed
-- **Fix native object ownership checks in python driver**
-  Multiple rarely used features of the python driver used to be broken because of the native object misuse. 
+
 
 ## Code Refactors
 
 
-## Other Improvements 
-- **Bumped API version in antora config**
-
-- **Rename Maven groupId from "com.vaticle" to "com.typedb" to match the package path**
-
-- **Fix CircleCI jobs for Maven installation and Python builds**
-  
+## Other Improvements
