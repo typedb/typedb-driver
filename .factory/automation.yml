@@ -23,7 +23,6 @@ config:
     typedb-protocol: [build, release]
 
 build:
-  TODO REMOVE THIS LINE
   quality:
     filter:
       owner: typedb
