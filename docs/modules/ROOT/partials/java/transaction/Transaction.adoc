@@ -61,7 +61,7 @@ transaction.commit()
 Transaction.Type getType()
 ----
 
-The transaction’s type (READ/WRITE/SCHEMA) 
+The transaction’s type (READ, WRITE, or SCHEMA) 
 
 
 [caption=""]

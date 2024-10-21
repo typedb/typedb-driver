@@ -18,6 +18,11 @@
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
+exports_files(
+    ["ExampleTest.java"],
+    visibility = ["//java:__subpackages__"],
+)
+
 typedb_java_test(
     name = "test-example",
     srcs = ["ExampleTest.java"],

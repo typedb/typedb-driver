@@ -99,6 +99,28 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
+[#_RoleType_asInstance_]
+==== asInstance
+
+[source,java]
+----
+default Instance asInstance()
+----
+
+Casts the concept to ``Instance``. 
+
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asInstance();
+----
+
 [#_RoleType_asRelation_]
 ==== asRelation
 
@@ -166,50 +188,6 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_RoleType_asThing_]
-==== asThing
-
-[source,java]
-----
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThing();
-----
-
-[#_RoleType_asThingType_]
-==== asThingType
-
-[source,java]
-----
-default ThingType asThingType()
-----
-
-Casts the concept to ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThingType();
-----
-
 [#_RoleType_asValue_]
 ==== asValue
 
@@ -230,6 +208,29 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
+----
+
+[#_RoleType_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
 ----
 
 [#_RoleType_isAttribute_]
@@ -324,6 +325,29 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
+[#_RoleType_isInstance_]
+==== isInstance
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isInstance()
+----
+
+Checks if the concept is an ``Instance``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isInstance();
+----
+
 [#_RoleType_isRelation_]
 ==== isRelation
 
@@ -391,52 +415,6 @@ Checks if the concept is a ``RoleType``.
 [source,java]
 ----
 concept.isRoleType();
-----
-
-[#_RoleType_isThing_]
-==== isThing
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThing()
-----
-
-Checks if the concept is a ``Thing``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThing();
-----
-
-[#_RoleType_isThingType_]
-==== isThingType
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThingType()
-----
-
-Checks if the concept is a ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThingType();
 ----
 
 [#_RoleType_isValue_]

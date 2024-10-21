@@ -19,6 +19,8 @@
 
 package com.typedb.driver.test.integration.core;
 
+// EXAMPLE START MARKER
+
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
@@ -32,14 +34,17 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+// EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+// EXAMPLE START MARKER
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+// EXAMPLE END MARKER
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -47,8 +52,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
+// EXAMPLE START MARKER
 public class ExampleTest {
-
+    // EXAMPLE END MARKER
     @BeforeClass
     public static void setUpClass() {
         Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
@@ -59,6 +65,7 @@ public class ExampleTest {
     }
 
     @Test
+    // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
         try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS)) {
@@ -153,19 +160,19 @@ public class ExampleTest {
                     ConceptRow attributeRow = attributeRowIterator.next();
 
                     // Column names are a stream, so they can be used in a similar way
-                    Iterator<String> columnNameIterator = entityRow.columnNames().iterator();
+                    Iterator<String> columnNameIterator = attributeRow.columnNames().iterator();
                     columnName = columnNameIterator.next();
                     assertFalse(columnNameIterator.hasNext());
 
-                    conceptByName = entityRow.get(columnName);
+                    conceptByName = attributeRow.get(columnName);
 
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
                         System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.getValueType());
                         assertTrue(attributeType.isLong() || attributeType.isString());
-                        assertTrue(attributeType.getValueType() == "long" || attributeType.getValueType() == "string");
-                        assertTrue(attributeType.getLabel() == "age" || attributeType.getLabel() == "name");
+                        assertTrue(Objects.equals(attributeType.getValueType(), "long") || Objects.equals(attributeType.getValueType(), "string"));
+                        assertTrue(Objects.equals(attributeType.getLabel(), "age") || Objects.equals(attributeType.getLabel(), "name"));
                         assertNotEquals(attributeType.getLabel(), "person");
                         assertNotEquals(attributeType.getLabel(), "person:age");
 
@@ -235,7 +242,7 @@ public class ExampleTest {
                     System.out.printf("Found a person %s of type %s%n", x, xType);
                 });
                 assertEquals(matchCount.get(), 2);
-                System.out.printf("Total persons found: " + matchCount.get());
+                System.out.println("Total persons found: " + matchCount.get());
 
                 // A fetch query can be used for concept document outputs with flexible structure
                 QueryAnswer fetchAnswer = transaction.query("match" +
@@ -250,26 +257,21 @@ public class ExampleTest {
                 assertEquals(fetchAnswer.getQueryType(), QueryType.READ);
 
                 // Fetch queries always return concept documents
-                System.out.println("Fetch results for manual testing:");
                 AtomicInteger fetchCount = new AtomicInteger(0);
                 fetchAnswer.asConceptDocuments().stream().forEach(document -> {
                     assertNotNull(document);
-                    System.out.println(document);
+                    System.out.println("Fetched a document: " + document);
+                    System.out.print("This document contains an attribute of type: ");
+                    System.out.println(document.asObject().get("single attribute type").asObject().get("label"));
+
                     fetchCount.incrementAndGet();
                 });
                 assertEquals(fetchCount.get(), 3);
-
-                // TODO: Refactor the code above to match this
-//                count = 0
-//                for document in answer.as_concept_documents():
-//                    count += 1
-//                    print(f"Fetched a document: {document}.")
-//                    print(f"This document contains an attribute of type: {document['single attribute type']['label']}")
-//                assert_that(count, is_(3))
-//                print(f"Total documents fetched: {count}")
+                System.out.println("Total documents fetched: " + fetchCount.get());
             }
         }
 
         System.out.println("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     }
 }
+// EXAMPLE END MARKER

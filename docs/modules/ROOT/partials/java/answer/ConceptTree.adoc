@@ -1,7 +1,0 @@
-[#_ConceptTree]
-=== ConceptTree
-
-*Package*: `com.typedb.driver.api.answer`
-
-Contains a tree of concepts.
-

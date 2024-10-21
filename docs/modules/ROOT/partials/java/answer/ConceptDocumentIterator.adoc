@@ -1,0 +1,75 @@
+[#_ConceptDocumentIterator]
+=== ConceptDocumentIterator
+
+*Package*: `com.typedb.driver.api.answer`
+
+*Superinterfaces:*
+
+* `java.util.Iterator<JSON>`
+* `QueryAnswer`
+
+Represents an iterator over concept documents (represented as ``JSON``s) returned as a server answer.
+
+// tag::methods[]
+[#_ConceptDocumentIterator_asConceptDocuments_]
+==== asConceptDocuments
+
+[source,java]
+----
+@CheckReturnValue
+default ConceptDocumentIterator asConceptDocuments()
+----
+
+Casts the query answer to ``ConceptDocumentIterator``. 
+
+
+[caption=""]
+.Returns
+`ConceptDocumentIterator`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asConceptDocuments();
+----
+
+[#_ConceptDocumentIterator_isConceptDocuments_]
+==== isConceptDocuments
+
+[source,java]
+----
+default boolean isConceptDocuments()
+----
+
+Checks if the query answer is a ``ConceptDocumentIterator``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isConceptDocuments();
+----
+
+[#_ConceptDocumentIterator_stream_]
+==== stream
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<JSON> stream()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<JSON>`
+
+// end::methods[]
+

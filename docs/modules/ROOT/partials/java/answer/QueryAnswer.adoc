@@ -3,9 +3,31 @@
 
 *Package*: `com.typedb.driver.api.answer`
 
-TODO: docs
+General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
 
 // tag::methods[]
+[#_QueryAnswer_asConceptDocuments_]
+==== asConceptDocuments
+
+[source,java]
+----
+default ConceptDocumentIterator asConceptDocuments()
+----
+
+Casts the query answer to ``ConceptDocumentIterator``. 
+
+
+[caption=""]
+.Returns
+`ConceptDocumentIterator`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asConceptDocuments();
+----
+
 [#_QueryAnswer_asConceptRows_]
 ==== asConceptRows
 
@@ -14,7 +36,7 @@ TODO: docs
 default ConceptRowIterator asConceptRows()
 ----
 
-Casts the query answer to ``ConceptRowStreamQueryAnswer``.
+Casts the query answer to ``ConceptRowIterator``. 
 
 
 [caption=""]
@@ -25,29 +47,7 @@ Casts the query answer to ``ConceptRowStreamQueryAnswer``.
 .Code examples
 [source,java]
 ----
-concept.asConceptRowStream();
-----
-
-[#_QueryAnswer_asConceptTreesStream_]
-==== asConceptTreesStream
-
-[source,java]
-----
-default ConceptTreeIterator asConceptTreesStream()
-----
-
-Casts the query answer to ``ConceptTreesStreamQueryAnswer``. 
-
-
-[caption=""]
-.Returns
-`ConceptTreeIterator`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asConceptTreesStream();
+concept.asConceptRows();
 ----
 
 [#_QueryAnswer_asOk_]
@@ -72,6 +72,52 @@ Casts the query answer to ``OkQueryAnswer``.
 concept.asOk();
 ----
 
+[#_QueryAnswer_getQueryType_]
+==== getQueryType
+
+[source,java]
+----
+@CheckReturnValue
+QueryType getQueryType()
+----
+
+Retrieves the executed query's type of this ``QueryAnswer``. 
+
+
+[caption=""]
+.Returns
+`QueryType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+queryAnswer.getQueryType();
+----
+
+[#_QueryAnswer_isConceptDocuments_]
+==== isConceptDocuments
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isConceptDocuments()
+----
+
+Checks if the query answer is a ``ConceptDocumentIterator``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isConceptDocuments();
+----
+
 [#_QueryAnswer_isConceptRows_]
 ==== isConceptRows
 
@@ -81,7 +127,7 @@ concept.asOk();
 default boolean isConceptRows()
 ----
 
-Checks if the query answer is a ``ConceptRowStream``.
+Checks if the query answer is a ``ConceptRowIterator``. 
 
 
 [caption=""]
@@ -92,30 +138,7 @@ Checks if the query answer is a ``ConceptRowStream``.
 .Code examples
 [source,java]
 ----
-concept.isConceptRowStream();
-----
-
-[#_QueryAnswer_isConceptTreesStream_]
-==== isConceptTreesStream
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isConceptTreesStream()
-----
-
-Checks if the query answer is a ``ConceptTreesStream``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isConceptTreesStream();
+concept.isConceptRows();
 ----
 
 [#_QueryAnswer_isOk_]

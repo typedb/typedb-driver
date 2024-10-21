@@ -1,0 +1,105 @@
+[#_Duration]
+=== Duration
+
+*Package*: `com.typedb.driver.common`
+
+// tag::methods[]
+[#_Duration_equals_java_lang_Object]
+==== equals
+
+[source,java]
+----
+public boolean equals​(java.lang.Object obj)
+----
+
+Checks if this Duration is equal to another object. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| `java.lang.Object`
+|===
+
+[caption=""]
+.Returns
+`public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+label.equals(obj);
+----
+
+[#_Duration_getDatePart_]
+==== getDatePart
+
+[source,java]
+----
+public java.time.Period getDatePart()
+----
+
+Returns the date part of this duration. 
+
+
+[caption=""]
+.Returns
+`public java.time.Period`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getDatePart();
+----
+
+[#_Duration_getTimePart_]
+==== getTimePart
+
+[source,java]
+----
+public java.time.Duration getTimePart()
+----
+
+Returns the time part of this duration. 
+
+
+[caption=""]
+.Returns
+`public java.time.Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getTimePart();
+----
+
+[#_Duration_toString_]
+==== toString
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+Returns the string representation of the duration. 
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.toString();
+----
+
+// end::methods[]
+

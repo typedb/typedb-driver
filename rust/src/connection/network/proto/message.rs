@@ -354,7 +354,9 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
 impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
     fn try_from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Result<Self> {
         match proto {
-            typedb_protocol::query::initial_res::ok::Ok::Empty(_) => Ok(QueryResponse::Ok()),
+            typedb_protocol::query::initial_res::ok::Ok::Done(done_header) => {
+                Ok(QueryResponse::Ok(QueryType::try_from_proto(done_header.query_type)?))
+            }
             typedb_protocol::query::initial_res::ok::Ok::ConceptDocumentStream(document_stream_header) => {
                 Ok(QueryResponse::ConceptDocumentsHeader(ConceptDocumentHeader {
                     query_type: QueryType::try_from_proto(document_stream_header.query_type)?,

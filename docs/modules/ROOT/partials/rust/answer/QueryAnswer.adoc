@@ -10,7 +10,7 @@
 |Variant
 a| `ConceptDocumentStream(Arc<ConceptDocumentHeader>, BoxStream<'static, Result<ConceptDocument>>)`
 a| `ConceptRowStream(Arc<ConceptRowHeader>, BoxStream<'static, Result<ConceptRow>>)`
-a| `Ok()`
+a| `Ok(QueryType)`
 |===
 // end::enum_constants[]
 

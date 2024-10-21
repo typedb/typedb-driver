@@ -6,7 +6,6 @@
 *Superinterfaces:*
 
 * `Concept`
-* `ThingType`
 * `Type`
 
 Entity types represent the classification of independent objects in the data model of the business domain.
@@ -101,6 +100,28 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
+[#_EntityType_asInstance_]
+==== asInstance
+
+[source,java]
+----
+default Instance asInstance()
+----
+
+Casts the concept to ``Instance``. 
+
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asInstance();
+----
+
 [#_EntityType_asRelation_]
 ==== asRelation
 
@@ -167,28 +188,6 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_EntityType_asThing_]
-==== asThing
-
-[source,java]
-----
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThing();
-----
-
 [#_EntityType_asValue_]
 ==== asValue
 
@@ -209,6 +208,29 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
+----
+
+[#_EntityType_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
 ----
 
 [#_EntityType_isAttribute_]
@@ -303,6 +325,29 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
+[#_EntityType_isInstance_]
+==== isInstance
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isInstance()
+----
+
+Checks if the concept is an ``Instance``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isInstance();
+----
+
 [#_EntityType_isRelation_]
 ==== isRelation
 
@@ -370,29 +415,6 @@ Checks if the concept is a ``RoleType``.
 [source,java]
 ----
 concept.isRoleType();
-----
-
-[#_EntityType_isThing_]
-==== isThing
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThing()
-----
-
-Checks if the concept is a ``Thing``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThing();
 ----
 
 [#_EntityType_isValue_]
