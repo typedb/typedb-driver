@@ -21,6 +21,7 @@ package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -61,16 +62,14 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
     }
 
-    @Override
-    @When("connection opens with default authentication")
-    public void connection_opens_with_a_wrong_host() {
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+    @When("connection opens with a wrong host{may_error}")
+    public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
     }
 
-    @Override
-    @When("connection opens with default authentication")
-    public void connection_opens_with_a_wrong_port() {
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+    @When("connection opens with a wrong port{may_error}")
+    public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
     }
 
     @Override
@@ -80,14 +79,14 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    @Given("connection has been opened")
-    public void connection_is_open() {
-        super.connection_is_open();
+    @Given("connection is open: {bool}")
+    public void connection_is_open(boolean isOpen) {
+        super.connection_is_open(isOpen);
     }
 
     @Override
     @Given("connection has {integer} database(s)")
-    public void connection_has_count_databases() {
-        super.connection_has_count_databases();
+    public void connection_has_count_databases(int count) {
+        super.connection_has_count_databases(count);
     }
 }

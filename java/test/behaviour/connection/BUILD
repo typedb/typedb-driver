@@ -42,6 +42,7 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
+        "//java/test/behaviour/config:parameters",
         "//java:driver-java",
         "//java/api",
 #        "@maven//:com_vaticle_typedb_typedb_runner",

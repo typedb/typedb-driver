@@ -28,11 +28,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -52,6 +54,14 @@ public abstract class ConnectionStepsBase {
 
     public static Transaction tx() {
         return transactions.get(0);
+    }
+
+    public static Transaction txPop() {
+        return transactions.remove(0);
+    }
+
+    public static Optional<Transaction> txOpt() {
+        return transactions.isEmpty() ? Optional.empty() : Optional.of(transactions.get(0));
     }
 
     void beforeAll() {} // Can add "before all" setup steps here
@@ -89,23 +99,16 @@ public abstract class ConnectionStepsBase {
 
     abstract void connection_opens_with_default_authentication();
 
-    abstract void connection_opens_with_a_wrong_host();
-
-    abstract void connection_opens_with_a_wrong_port();
-
     void connection_closes() {
         driver.close();
         driver = null;
     }
 
-    void connection_is_open() {
-        assertNotNull(driver);
-        assertTrue(driver.isOpen());
+    void connection_is_open(boolean isOpen) {
+        assertEquals(isOpen, driver != null && driver.isOpen());
     }
 
-    void connection_has_count_databases() {
-        assertNotNull(driver);
-        assertTrue(driver.isOpen());
-        assertTrue(driver.databases().all().isEmpty());
+    void connection_has_count_databases(int count) {
+        assertEquals(count, driver.databases().all().size());
     }
 }

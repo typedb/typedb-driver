@@ -47,6 +47,11 @@ public class Parameters {
         return Integer.parseInt(number);
     }
 
+    @ParameterType("[^;]+")
+    public String non_semicolon(String non_semicolon) {
+        return non_semicolon;
+    }
+
     @ParameterType("\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
     public LocalDateTime datetime(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -87,14 +92,15 @@ public class Parameters {
         return typeList;
     }
 
-    @ParameterType("; fails|; parsing fails|; fails with a message containing: \"([^\"]*)\"")
-    public MayError may_error(String result, String message) {
+    @ParameterType("|; fails|; parsing fails|; fails with a message containing: \".*\"")
+    public MayError may_error(String result) {
         if (result.equals("")) {
             return new MayError(false);
         } else if (result.equals("; fails") || result.equals("; parsing fails")) {
             return new MayError(true);
         } else if (result.startsWith("; fails with a message containing:")) {
-            return new MayError(true, message);
+            String pattern = result.substring("; fails with a message containing: ".length()).replaceAll("^\"|\"$", "");
+            return new MayError(true, pattern);
         }
         return null;
     }
