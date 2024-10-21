@@ -101,7 +101,6 @@ public abstract class ConnectionStepsBase {
 
     void connection_closes() {
         driver.close();
-        driver = null;
     }
 
     void connection_is_open(boolean isOpen) {

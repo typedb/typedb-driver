@@ -45,11 +45,11 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("CheckReturnValue")
 public class TransactionSteps {
 
-    void assert_transaction_is_open(Optional<Transaction> transaction, boolean isOpen) {
+    void assertTransactionIsOpen(Optional<Transaction> transaction, boolean isOpen) {
         assertEquals(isOpen, transaction.isPresent() && transaction.get().isOpen());
     }
 
-    void assert_transaction_has_type(Transaction transaction, Transaction.Type type) {
+    void assertTransactionHasType(Transaction transaction, Transaction.Type type) {
         assertEquals(type, transaction.getType());
     }
 
@@ -71,19 +71,19 @@ public class TransactionSteps {
 
     @Then("transaction is open: {bool}")
     public void transaction_is_open(boolean isOpen) {
-        assert_transaction_is_open(txOpt(), isOpen);
+        assertTransactionIsOpen(txOpt(), isOpen);
     }
 
     @Then("transactions are open: {bool}")
     public void transactions_are_open(boolean isOpen) {
         for (Transaction transaction : transactions) {
-            assert_transaction_is_open(Optional.of(transaction), isOpen);
+            assertTransactionIsOpen(Optional.of(transaction), isOpen);
         }
     }
 
     @Then("transaction has type: {transaction_type}")
     public void transaction_has_type(Transaction.Type type) {
-        assert_transaction_has_type(tx(), type);
+        assertTransactionHasType(tx(), type);
     }
 
     @Then("transactions have type:")
@@ -91,7 +91,7 @@ public class TransactionSteps {
         Iterator<Transaction.Type> typeIterator = types.iterator();
         for (Transaction transaction : transactions) {
             assertTrue("types list is shorter than saved transactions", typeIterator.hasNext());
-            assert_transaction_has_type(transaction, typeIterator.next());
+            assertTransactionHasType(transaction, typeIterator.next());
         }
         assertFalse("types list is longer than saved transactions", typeIterator.hasNext());
     }
@@ -125,7 +125,7 @@ public class TransactionSteps {
 
         for (CompletableFuture<Transaction> futureTransaction : transactionsParallel) {
             assertions.add(futureTransaction.thenApply(transaction -> {
-                assert_transaction_is_open(Optional.of(transaction), isOpen);
+                assertTransactionIsOpen(Optional.of(transaction), isOpen);
                 return null;
             }));
         }
@@ -141,7 +141,7 @@ public class TransactionSteps {
         for (CompletableFuture<Transaction> futureTransaction : transactionsParallel) {
             assertions.add(futureTransaction.thenApply(transaction -> {
                 assertTrue("types list is shorter than saved transactions", typeIterator.hasNext());
-                assert_transaction_has_type(transaction, typeIterator.next());
+                assertTransactionHasType(transaction, typeIterator.next());
                 return null;
             }));
         }

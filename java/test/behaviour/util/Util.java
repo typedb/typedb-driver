@@ -46,7 +46,8 @@ public class Util {
             function.run();
             fail();
         } catch (RuntimeException e) {
-            assert e.toString().toLowerCase().contains(message.toLowerCase());
+            assertTrue(String.format("Expected message '%s', but got '%s'", message, e),
+                    e.toString().toLowerCase().contains(message.toLowerCase()));
         }
     }
 

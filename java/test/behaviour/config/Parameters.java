@@ -33,6 +33,7 @@ import static com.typedb.driver.api.Transaction.Type.SCHEMA;
 import static com.typedb.driver.api.Transaction.Type.WRITE;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
@@ -58,9 +59,9 @@ public class Parameters {
         return LocalDateTime.parse(dateTime, formatter);
     }
 
-    @ParameterType("entity|attribute|relation|instance")
-    public Kind kind(String type) {
-        return Kind.of(type);
+    @ParameterType("concept|variable|type|instance|entity type|relation type|attribute type|role type|entity|relation|attribute|value")
+    public ConceptKind concept_kind(String type) {
+        return ConceptKind.of(type);
     }
 
     @ParameterType("([a-zA-Z0-9]*)")
@@ -92,41 +93,89 @@ public class Parameters {
         return typeList;
     }
 
+    @ParameterType("ok|concept rows|concept documents")
+    public QueryAnswerType query_answer_type(String value) {
+        return QueryAnswerType.of(value);
+    }
+
     @ParameterType("|; fails|; parsing fails|; fails with a message containing: \".*\"")
-    public MayError may_error(String result) {
-        if (result.equals("")) {
+    public MayError may_error(String value) {
+        if (value.equals("")) {
             return new MayError(false);
-        } else if (result.equals("; fails") || result.equals("; parsing fails")) {
+        } else if (value.equals("; fails") || value.equals("; parsing fails")) {
             return new MayError(true);
-        } else if (result.startsWith("; fails with a message containing:")) {
-            String pattern = result.substring("; fails with a message containing: ".length()).replaceAll("^\"|\"$", "");
+        } else if (value.startsWith("; fails with a message containing:")) {
+            String pattern = value.substring("; fails with a message containing: ".length()).replaceAll("^\"|\"$", "");
             return new MayError(true, pattern);
         }
         return null;
     }
 
-    public enum Kind {
+    @ParameterType("is|is not")
+    public IsOrNot is_or_not(String value) {
+        if (value.equals("is")) {
+            return IsOrNot.IS;
+        } else if (value.equals("is not")) {
+            return IsOrNot.IS_NOT;
+        }
+        return null;
+    }
+
+    public enum ConceptKind {
+        CONCEPT("concept"),
+        TYPE("type"),
+        INSTANCE("instance"),
+        ENTITY_TYPE("entity type"),
+        RELATION_TYPE("relation type"),
+        ATTRIBUTE_TYPE("attribute type"),
+        ROLE_TYPE("role type"),
         ENTITY("entity"),
+        RELATION("relation"),
         ATTRIBUTE("attribute"),
-        RELATION("relation");
+        VALUE("value");
 
-        private final String label;
+        private final String name;
 
-        Kind(String label) {
-            this.label = label;
+        ConceptKind(String name) {
+            this.name = name;
         }
 
-        public static Kind of(String label) {
-            for (Kind t : Kind.values()) {
-                if (t.label.equals(label)) {
+        public static ConceptKind of(String name) {
+            for (ConceptKind t : ConceptKind.values()) {
+                if (t.name.equals(name)) {
                     return t;
                 }
             }
             return null;
         }
 
-        public String label() {
-            return label;
+        public String toString() {
+            return name;
+        }
+    }
+
+    public enum QueryAnswerType {
+        OK("ok"),
+        CONCEPT_ROWS("concept rows"),
+        CONCEPT_DOCUMENTS("concept documents");
+
+        private final String name;
+
+        QueryAnswerType(String name) {
+            this.name = name;
+        }
+
+        public static QueryAnswerType of(String name) {
+            for (QueryAnswerType type : QueryAnswerType.values()) {
+                if (type.name.equals(name)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+
+        public String toString() {
+            return name;
         }
     }
 
@@ -153,6 +202,25 @@ public class Parameters {
             } else {
                 function.run();
             }
+        }
+    }
+
+    public enum IsOrNot {
+        IS(true),
+        IS_NOT(false);
+
+        private final boolean is;
+
+        IsOrNot(boolean is) {
+            this.is = is;
+        }
+
+        public boolean toBoolean() {
+            return is;
+        }
+
+        public void check(boolean toCheck) {
+            assertEquals(is, toCheck);
         }
     }
 }

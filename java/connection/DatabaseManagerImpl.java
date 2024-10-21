@@ -26,7 +26,6 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.List;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Driver.MISSING_DB_NAME;
 import static com.typedb.driver.jni.typedb_driver.databases_all;
 import static com.typedb.driver.jni.typedb_driver.databases_contains;
 import static com.typedb.driver.jni.typedb_driver.databases_create;
@@ -42,7 +41,6 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public Database get(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return new DatabaseImpl(databases_get(nativeDriver, name));
         } catch (com.typedb.driver.jni.Error e) {
@@ -52,7 +50,6 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public boolean contains(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return databases_contains(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {
@@ -62,7 +59,6 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public void create(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             databases_create(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {

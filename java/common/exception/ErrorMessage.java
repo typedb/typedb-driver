@@ -81,10 +81,8 @@ public abstract class ErrorMessage {
                 new Driver(7, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
                 new Driver(8, "Value cannot be less than 1, was: '%d'.");
-        public static final Driver MISSING_DB_NAME =
-                new Driver(9, "Database name cannot be null.");
         public static final Driver UNIMPLEMENTED =
-                new Driver(10, "This operation is not implemented yet.");
+                new Driver(9, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
