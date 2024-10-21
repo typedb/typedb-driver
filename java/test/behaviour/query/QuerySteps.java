@@ -41,8 +41,6 @@ public class QuerySteps {
     private static List<ConceptRow> answerRows;
     private static List<JSON> fetchAnswers;
     private static Optional<Value> valueAnswer;
-    private static List<ValueGroup> valueAnswerGroups;
-    private Map<String, Map<String, String>> rules;
 
     public static List<ConceptRow> answers() {
         return answerRows;
@@ -58,7 +56,6 @@ public class QuerySteps {
         answerRows = null;
         valueAnswer = null;
         fetchAnswers = null;
-        valueAnswerGroups = null;
     }
 
 //    @When("get answers of typeql insert")
@@ -82,7 +79,7 @@ public class QuerySteps {
 //        }
 //    }
 
-    @Then("answer size is: {number}")
+    @Then("answer size is: {integer}")
     public void answer_quantity_assertion(int expectedAnswers) {
         assertEquals(String.format("Expected [%d] answers, but got [%d]", expectedAnswers, answerRows.size()),
                 expectedAnswers, answerRows.size());
@@ -244,7 +241,7 @@ public class QuerySteps {
 //        }
 //    }
 
-//    @Then("number of groups is: {int}")
+//    @Then("number of groups is: {integer}")
 //    public void number_of_groups_is(int expectedGroupCount) {
 //        assertEquals(expectedGroupCount, answerGroups.size());
 //    }

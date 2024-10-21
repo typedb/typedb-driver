@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour.connection.database;
 
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -39,9 +40,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
-    @When("connection create database: {word}")
-    public void connection_create_database(String name) {
-        connection_create_databases(list(name));
+    @When("connection create database: {word}{may_error}")
+    public void connection_create_database(String name, Parameters.MayError mayError) {
+        mayError.check(() -> connection_create_databases(list(name)));
     }
 
     @When("connection create database(s):")

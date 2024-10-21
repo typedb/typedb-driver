@@ -32,6 +32,7 @@ import static com.typedb.driver.api.Transaction.Type.READ;
 import static com.typedb.driver.api.Transaction.Type.SCHEMA;
 import static com.typedb.driver.api.Transaction.Type.WRITE;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
+import static com.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
@@ -42,7 +43,7 @@ public class Parameters {
     }
 
     @ParameterType("[0-9]+")
-    public Integer number(String number) {
+    public Integer integer(String number) {
         return Integer.parseInt(number);
     }
 
@@ -57,12 +58,7 @@ public class Parameters {
         return Kind.of(type);
     }
 
-    @ParameterType("[a-zA-Z0-9-_]+")
-    public String type_label(String typeLabel) {
-        return typeLabel;
-    }
-
-    @ParameterType("\\$([a-zA-Z0-9]+)")
+    @ParameterType("([a-zA-Z0-9]*)")
     public String var(String variable) {
         return variable;
     }
@@ -91,12 +87,14 @@ public class Parameters {
         return typeList;
     }
 
-    @ParameterType("; fails|; parsing fails|")
-    public MayError may_error(String result) {
+    @ParameterType("; fails|; parsing fails|; fails with a message containing: \"([^\"]*)\"")
+    public MayError may_error(String result, String message) {
         if (result.equals("")) {
-            return MayError.FALSE;
+            return new MayError(false);
         } else if (result.equals("; fails") || result.equals("; parsing fails")) {
-            return MayError.TRUE;
+            return new MayError(true);
+        } else if (result.startsWith("; fails with a message containing:")) {
+            return new MayError(true, message);
         }
         return null;
     }
@@ -126,19 +124,26 @@ public class Parameters {
         }
     }
 
-    public enum MayError {
-        TRUE(true),
-        FALSE(false);
+    public class MayError {
+        final boolean mayError;
+        final String message;
 
-        boolean mayError;
+        public MayError(boolean mayError) {
+            this(mayError, "");
+        }
 
-        MayError(boolean mayError) {
+        public MayError(boolean mayError, String message) {
             this.mayError = mayError;
+            this.message = message;
         }
 
         public void check(Runnable function) {
             if (mayError) {
-                assertThrows(function);
+                if (message.isEmpty()) {
+                    assertThrows(function);
+                } else {
+                    assertThrowsWithMessage(function, message);
+                }
             } else {
                 function.run();
             }

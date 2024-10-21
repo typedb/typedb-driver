@@ -19,10 +19,6 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.typedb.core.tool.runner.TypeDBRunner;
-//import com.typedb.core.tool.runner.TypeDBSingleton;
-//import com.typedb.core.tool.runner.TypeDBCoreRunner;
-
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import io.cucumber.java.After;
@@ -34,13 +30,6 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
-//        try {
-//            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
-//            TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
-//            typeDBCoreRunner.start();
-//        } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Before
@@ -64,36 +53,41 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 //    }
 
     @When("typedb starts")
-    public void typedb_starts() {
-//        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-//        if (runner != null && runner.isStopped()) {
-//            runner.start();
-//        }
-    }
+    public void typedb_starts() {}
 
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-        driver = createTypeDBDriver("127.0.0.1:1729");
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+    }
+
+    @Override
+    @When("connection opens with default authentication")
+    public void connection_opens_with_a_wrong_host() {
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+    }
+
+    @Override
+    @When("connection opens with default authentication")
+    public void connection_opens_with_a_wrong_port() {
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
     }
 
     @Override
     @When("connection closes")
-    public void driver_closes() {
-        super.driver_closes();
+    public void connection_closes() {
+        super.connection_closes();
     }
 
     @Override
     @Given("connection has been opened")
-    public void connection_has_been_opened() {
-        super.connection_has_been_opened();
+    public void connection_is_open() {
+        super.connection_is_open();
     }
 
     @Override
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        super.connection_does_not_have_any_database();
+    @Given("connection has {integer} database(s)")
+    public void connection_has_count_databases() {
+        super.connection_has_count_databases();
     }
-
 }

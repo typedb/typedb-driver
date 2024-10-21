@@ -24,6 +24,7 @@ java_library(
     srcs = ["ConnectionStepsBase.java"],
     deps = [
         # Package dependencies
+        "//java:driver-java",
         "//java/api",
 
         # External dependencies from Maven

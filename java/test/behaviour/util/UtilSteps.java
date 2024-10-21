@@ -31,7 +31,7 @@ public class UtilSteps {
         TimeZone.setDefault(TimeZone.getTimeZone(value));
     }
 
-    @Then("wait {int} seconds")
+    @Then("wait {integer} seconds")
     public void wait_seconds(int seconds) throws InterruptedException {
         Thread.sleep(seconds * 1000L);
     }

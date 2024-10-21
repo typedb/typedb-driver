@@ -19,8 +19,7 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.typedb.core.tool.runner.TypeDBSingleton;
-
+import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
@@ -55,9 +54,7 @@ public abstract class ConnectionStepsBase {
         return transactions.get(0);
     }
 
-    void beforeAll() {
-//        TypeDBSingleton.deleteTypeDBRunner();
-    }
+    void beforeAll() {} // Can add "before all" setup steps here
 
     void before() {
         if (!isBeforeAllRan) {
@@ -67,8 +64,6 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-
-        System.out.println("ConnectionSteps.before");
     }
 
     void after() {
@@ -82,12 +77,10 @@ public abstract class ConnectionStepsBase {
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         transactionsParallel.clear();
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-        driver = createTypeDBDriver("127.0.0.1:1729");
+
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
         driver.databases().all().forEach(Database::delete);
         driver.close();
-
-        System.out.println("ConnectionSteps.after");
     }
 
     abstract Driver createTypeDBDriver(String address);
@@ -96,17 +89,21 @@ public abstract class ConnectionStepsBase {
 
     abstract void connection_opens_with_default_authentication();
 
-    void driver_closes() {
+    abstract void connection_opens_with_a_wrong_host();
+
+    abstract void connection_opens_with_a_wrong_port();
+
+    void connection_closes() {
         driver.close();
         driver = null;
     }
 
-    void connection_has_been_opened() {
+    void connection_is_open() {
         assertNotNull(driver);
         assertTrue(driver.isOpen());
     }
 
-    void connection_does_not_have_any_database() {
+    void connection_has_count_databases() {
         assertNotNull(driver);
         assertTrue(driver.isOpen());
         assertTrue(driver.databases().all().isEmpty());
