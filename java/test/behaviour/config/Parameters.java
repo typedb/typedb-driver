@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.config;
 
+import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
@@ -34,6 +35,7 @@ import static com.typedb.driver.api.Transaction.Type.WRITE;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static com.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
@@ -81,6 +83,18 @@ public class Parameters {
         return null;
     }
 
+    @ParameterType("read|write|schema")
+    public QueryType query_type(String type) {
+        if (type.equals("read")) {
+            return QueryType.READ;
+        } else if (type.equals("write")) {
+            return QueryType.WRITE;
+        } else if (type.equals("schema")) {
+            return QueryType.SCHEMA;
+        }
+        return null;
+    }
+
     @DataTableType
     public List<Transaction.Type> transaction_types(List<String> values) {
         List<Transaction.Type> typeList = new ArrayList<>();
@@ -96,6 +110,12 @@ public class Parameters {
     @ParameterType("ok|concept rows|concept documents")
     public QueryAnswerType query_answer_type(String value) {
         return QueryAnswerType.of(value);
+    }
+
+
+    @ParameterType("boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")
+    public ValueType value_type(String value) {
+        return ValueType.of(value);
     }
 
     @ParameterType("|; fails|; parsing fails|; fails with a message containing: \".*\"")
@@ -121,6 +141,26 @@ public class Parameters {
         return null;
     }
 
+    @ParameterType("exists|does not exist")
+    public ExistsOrDoesnt exists_or_doesnt(String value) {
+        if (value.equals("exists")) {
+            return ExistsOrDoesnt.DOES;
+        } else if (value.equals("does not exist")) {
+            return ExistsOrDoesnt.DOES_NOT;
+        }
+        return null;
+    }
+
+    @ParameterType("| by index of variable")
+    public IsByVarIndex by_index_of_var(String value) {
+        if (value.equals(" by index of variable")) {
+            return IsByVarIndex.IS;
+        } else if (value.equals("")) {
+            return IsByVarIndex.IS_NOT;
+        }
+        return null;
+    }
+
     public enum ConceptKind {
         CONCEPT("concept"),
         TYPE("type"),
@@ -141,6 +181,9 @@ public class Parameters {
         }
 
         public static ConceptKind of(String name) {
+            if (name.equals("variable")) {
+                return ConceptKind.CONCEPT;
+            }
             for (ConceptKind t : ConceptKind.values()) {
                 if (t.name.equals(name)) {
                     return t;
@@ -169,6 +212,38 @@ public class Parameters {
             for (QueryAnswerType type : QueryAnswerType.values()) {
                 if (type.name.equals(name)) {
                     return type;
+                }
+            }
+            return null;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
+    public enum ValueType {
+        BOOLEAN("boolean"),
+        LONG("long"),
+        DOUBLE("double"),
+        DECIMAL("decimal"),
+        STRING("string"),
+        DATE("date"),
+        DATETIME("datetime"),
+        DATETIME_TZ("datetime-tz"),
+        DURATION("duration"),
+        STRUCT("struct");
+
+        private final String name;
+
+        ValueType(String name) {
+            this.name = name;
+        }
+
+        public static ValueType of(String name) {
+            for (ValueType v : ValueType.values()) {
+                if (v.name.equals(name)) {
+                    return v;
                 }
             }
             return null;
@@ -212,6 +287,49 @@ public class Parameters {
         private final boolean is;
 
         IsOrNot(boolean is) {
+            this.is = is;
+        }
+
+        public boolean toBoolean() {
+            return is;
+        }
+
+        public void compare(Object lhs, Object rhs) {
+            if (is) assertEquals(lhs, rhs);
+            else assertNotEquals(lhs, rhs);
+        }
+
+        public void check(boolean toCheck) {
+            assertEquals(is, toCheck);
+        }
+    }
+
+    public enum ExistsOrDoesnt {
+        DOES(true),
+        DOES_NOT(false);
+
+        private final boolean does;
+
+        ExistsOrDoesnt(boolean is) {
+            this.does = is;
+        }
+
+        public boolean toBoolean() {
+            return does;
+        }
+
+        public void check(boolean toCheck) {
+            assertEquals(does, toCheck);
+        }
+    }
+
+    public enum IsByVarIndex {
+        IS(true),
+        IS_NOT(false);
+
+        private final boolean is;
+
+        IsByVarIndex(boolean is) {
             this.is = is;
         }
 

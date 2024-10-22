@@ -475,7 +475,7 @@ impl FromStr for QueryAnswerType {
         Ok(match s {
             "ok" => Self::Ok,
             "concept rows" => Self::ConceptRows,
-            "concept trees" => Self::ConceptDocuments, // TODO: "concept documents"
+            "concept documents" => Self::ConceptDocuments,
             invalid => return Err(format!("Invalid `QueryAnswerType`: {invalid}")),
         })
     }

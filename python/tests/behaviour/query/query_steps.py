@@ -78,7 +78,7 @@ def step_impl(context: Context, is_or_not: bool, answer_type: str):
         assert_that(context.answer.is_ok(), is_(is_or_not), "Expected is_ok()")
     elif answer_type == "concept rows":
         assert_that(context.answer.is_concept_rows(), is_(is_or_not), "Expected is_concept_rows()")
-    elif answer_type == "concept trees":
+    elif answer_type == "concept documents":
         assert_that(context.answer.is_concept_documents(), is_(is_or_not), "Expected is_concept_documents()")
 
 
@@ -104,7 +104,7 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: unwrap_answer_rows(context))
 
 
-@step("answer unwraps as concept trees{may_error:MayError}")
+@step("answer unwraps as concept documents{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: unwrap_answer_trees(context))
 
