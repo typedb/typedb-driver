@@ -60,17 +60,15 @@ import static com.typedb.driver.api.concept.value.Value.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.typedb.driver.test.behaviour.util.Util.JSONListMatches;
+import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class QuerySteps {
     private static QueryAnswer queryAnswer;
     private static List<ConceptRow> collectedRows;
     private static List<JSON> collectedDocuments;
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
-    private static List<JSON> fetchAnswers;
 
     private void clearAnswers() {
         queryAnswer = null;
@@ -81,8 +79,6 @@ public class QuerySteps {
 
         collectedRows = null;
         collectedDocuments = null;
-
-        fetchAnswers = null;
     }
 
     private void collectAnswerIfNeeded() {
@@ -938,8 +934,8 @@ public class QuerySteps {
         assertEquals(isValueType, isConceptValueType(varConcept, varKind, valueType));
     }
 
-    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get iid {exists_or_doesnt}")
-    public void answer_get_row_get_variable_get_iid_exists(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) {contains_or_doesnt} iid")
+    public void answer_get_row_get_variable_get_iid_exists(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ContainsOrDoesnt containsOrDoesnt) {
         collectRowsAnswerIfNeeded();
         Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
         String iid;
@@ -953,7 +949,7 @@ public class QuerySteps {
             default:
                 throw new IllegalStateException("ConceptKind does not have iids: " + varKind);
         }
-        existsOrDoesnt.check(iid != null && !iid.isEmpty());
+        containsOrDoesnt.check(iid != null && !iid.isEmpty());
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type}{may_error}")
@@ -979,11 +975,10 @@ public class QuerySteps {
         isOrNot.compare(parseExpectedValue(value, Optional.of(valueType)), unwrapValueAs(varValue, valueType));
     }
 
-    // TODO: Refactor
-    @Then("fetch answers are")
-    public void fetch_answers_are(String expectedJSON) {
-        JSON expected = JSON.parse(expectedJSON);
-        assertTrue("Fetch response is a list of JSON objects, but the behaviour test expects something else", expected.isArray());
-        assertTrue(JSONListMatches(fetchAnswers, expected.asArray()));
+    @Then("answer {contains_or_doesnt} document:")
+    public void answer_contains_document(Parameters.ContainsOrDoesnt containsOrDoesnt, String expectedDocument) {
+        collectDocumentsAnswerIfNeeded();
+        JSON expectedJSON = JSON.parse(expectedDocument);
+        containsOrDoesnt.check(JSONListContains(collectedDocuments, expectedJSON));
     }
 }

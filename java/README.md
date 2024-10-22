@@ -60,7 +60,6 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
 <!-- CORE_EXAMPLE_START_MARKER -->
 
 ```java
-
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
@@ -108,8 +107,7 @@ public class TypeDBExample {
             // Open a schema transaction to make schema changes
             // Use try-with-resources blocks to forget about "close" operations (similarly to connections)
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA)) {
-                String defineQuery = "" +
-                        "define " +
+                String defineQuery = "define " +
                         "entity person, owns name, owns age; " +
                         "attribute name, value string;\n" +
                         "attribute age, value long;";

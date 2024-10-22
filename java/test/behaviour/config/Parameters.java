@@ -142,12 +142,12 @@ public class Parameters {
         return null;
     }
 
-    @ParameterType("exists|does not exist")
-    public ExistsOrDoesnt exists_or_doesnt(String value) {
-        if (value.equals("exists")) {
-            return ExistsOrDoesnt.DOES;
-        } else if (value.equals("does not exist")) {
-            return ExistsOrDoesnt.DOES_NOT;
+    @ParameterType("contains|does not contain")
+    public ContainsOrDoesnt contains_or_doesnt(String value) {
+        if (value.equals("contains")) {
+            return ContainsOrDoesnt.DOES;
+        } else if (value.equals("does not contain")) {
+            return ContainsOrDoesnt.DOES_NOT;
         }
         return null;
     }
@@ -305,13 +305,13 @@ public class Parameters {
         }
     }
 
-    public enum ExistsOrDoesnt {
+    public enum ContainsOrDoesnt {
         DOES(true),
         DOES_NOT(false);
 
         private final boolean does;
 
-        ExistsOrDoesnt(boolean is) {
+        ContainsOrDoesnt(boolean is) {
             this.does = is;
         }
 

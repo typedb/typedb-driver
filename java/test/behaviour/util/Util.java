@@ -67,9 +67,15 @@ public class Util {
         return rhsMatches.size() == rhs.size();
     }
 
+    public static boolean JSONListContains(List<JSON> list, JSON json) {
+        return list.stream().anyMatch(listJSON -> JSONMatches(listJSON, json));
+    }
+
     public static boolean JSONMatches(JSON lhs, JSON rhs) {
-        if (lhs.isObject()) {
-            if (!rhs.isObject()) return false;
+        if (lhs == null) {
+            return rhs == null;
+        } else if (lhs.isObject()) {
+            if (rhs == null || !rhs.isObject()) return false;
             Map<String, JSON> lhsMap = lhs.asObject();
             Map<String, JSON> rhsMap = rhs.asObject();
             if (lhsMap.size() != rhsMap.size()) return false;
