@@ -195,8 +195,7 @@ public class ValueTest {
                         assertEquals(expected, value.asDatetimeTZ());
                         checked.incrementAndGet();
                     } else if (value.isDuration()) {
-                        String[] expectedValue = attributeValues.get(attributeName).split("T");
-                        assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
+                        assertEquals(Duration.parse(attributeValues.get(attributeName)), value.asDuration());
                         checked.incrementAndGet();
                     }
                     // TODO: Add structs

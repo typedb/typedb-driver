@@ -27,6 +27,7 @@ import io.cucumber.java.ParameterType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.typedb.driver.api.Transaction.Type.READ;
@@ -341,4 +342,12 @@ public class Parameters {
             assertEquals(is, toCheck);
         }
     }
+
+    public static final List<DateTimeFormatter> DATETIME_TZ_FORMATTERS = Arrays.asList(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss VV"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS VV"),
+            DateTimeFormatter.ISO_ZONED_DATE_TIME
+    );
 }

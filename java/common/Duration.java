@@ -50,6 +50,22 @@ public class Duration {
     }
 
     /**
+     * Parses a <code>Duration</code> object from a string in ISO 8601 format.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     *     Duration.parse("P1Y10M7DT15H44M5.00394892S");
+     *     Duration.parse("P55W");
+     * </pre>
+     *
+     * @param durationString A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW.
+     */
+    public static Duration parse(String durationString) {
+        String[] durationParts = durationString.split("T");
+        return new Duration(java.time.Period.parse(durationParts[0]), java.time.Duration.parse("PT" + durationParts[1]));
+    }
+
+    /**
      * Returns the date part of this duration.
      *
      * <h3>Examples</h3>

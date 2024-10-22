@@ -37,16 +37,25 @@ import com.typedb.driver.api.concept.type.RelationType;
 import com.typedb.driver.api.concept.type.RoleType;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.Duration;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListMatches;
@@ -119,6 +128,18 @@ public class QuerySteps {
                 return row.get(var);
             default:
                 throw new AssertionError("Unexpected isByVarIndex: " + isByVarIndex);
+        }
+    }
+
+    public Value getRowGetValue(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var) {
+        Concept concept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        switch (varKind) {
+            case ATTRIBUTE:
+                return concept.asAttribute().getValue();
+            case VALUE:
+                return concept.asValue();
+            default:
+                throw new IllegalStateException("ConceptKind does not have values: " + varKind);
         }
     }
 
@@ -634,6 +655,70 @@ public class QuerySteps {
         }
     }
 
+    public Object parseExpectedValue(String value, Optional<Parameters.ValueType> valueTypeOpt) {
+        Parameters.ValueType valueType;
+        valueType = valueTypeOpt.orElse(Parameters.ValueType.STRUCT);
+
+        switch (valueType) {
+            case BOOLEAN:
+                return Boolean.parseBoolean(value);
+            case LONG:
+                return Long.parseLong(value);
+            case DOUBLE:
+                return Double.parseDouble(value);
+            case DECIMAL:
+                return new BigDecimal(value);
+            case STRING:
+                return value.substring(1, value.length() - 1).replaceAll("\\\"", "\"");
+            case DATE:
+                return LocalDate.parse(value);
+            case DATETIME:
+                return LocalDateTime.parse(value);
+            case DATETIME_TZ:
+                for (DateTimeFormatter formatter : DATETIME_TZ_FORMATTERS) {
+                    try {
+                        return ZonedDateTime.parse(value, formatter);
+                    } catch (DateTimeParseException e) {
+                        // Continue to the next formatter if parsing fails
+                    }
+                }
+                throw new AssertionError("DatetimeTZ format is not supported");
+            case DURATION:
+                return Duration.parse(value);
+            case STRUCT:
+                return value; // compare string representations
+            default:
+                throw new AssertionError("Not covered ValueType: " + valueType);
+        }
+    }
+
+    public Object unwrapValueAs(Value value, Parameters.ValueType valueType) {
+        switch (valueType) {
+            case BOOLEAN:
+                return value.asBoolean();
+            case LONG:
+                return value.asLong();
+            case DOUBLE:
+                return value.asDouble();
+            case DECIMAL:
+                return value.asDecimal();
+            case STRING:
+                return value.asString();
+            case DATE:
+                return value.asDate();
+            case DATETIME:
+                return value.asDatetime();
+            case DATETIME_TZ:
+                return value.asDatetimeTZ();
+            case DURATION:
+                return value.asDuration();
+            case STRUCT:
+                return value.asStruct().toString(); // compare string representations
+            default:
+                throw new AssertionError("Not covered ValueType: " + valueType);
+        }
+    }
+
     @Given("typeql write query{may_error}")
     @Given("typeql read query{may_error}")
     @Given("typeql schema query{may_error}")
@@ -679,21 +764,23 @@ public class QuerySteps {
         }
     }
 
-    @Then("answer unwraps as {query_answer_type}")
-    public void answer_unwraps_as(Parameters.QueryAnswerType queryAnswerType) {
-        switch (queryAnswerType) {
-            case OK:
-                OkQueryAnswer _ok = queryAnswer.asOk();
-                break;
-            case CONCEPT_ROWS:
-                ConceptRowIterator _rows = queryAnswer.asConceptRows();
-                break;
-            case CONCEPT_DOCUMENTS:
-                ConceptDocumentIterator _documents = queryAnswer.asConceptDocuments();
-                break;
-            default:
-                throw new AssertionError("Unknown query answer type: " + queryAnswerType);
-        }
+    @Then("answer unwraps as {query_answer_type}{may_error}")
+    public void answer_unwraps_as(Parameters.QueryAnswerType queryAnswerType, Parameters.MayError mayError) {
+        mayError.check(() -> {
+            switch (queryAnswerType) {
+                case OK:
+                    OkQueryAnswer _ok = queryAnswer.asOk();
+                    break;
+                case CONCEPT_ROWS:
+                    ConceptRowIterator _rows = queryAnswer.asConceptRows();
+                    break;
+                case CONCEPT_DOCUMENTS:
+                    ConceptDocumentIterator _documents = queryAnswer.asConceptDocuments();
+                    break;
+                default:
+                    throw new AssertionError("Unknown query answer type: " + queryAnswerType);
+            }
+        });
     }
 
     @Then("answer query type {is_or_not}: {query_type}")
@@ -740,6 +827,19 @@ public class QuerySteps {
         CompletableFuture.allOf(jobs.toArray(new CompletableFuture[0])).join();
     }
 
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}){may_error}")
+    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        mayError.check(() -> getRowGetConcept(rowIndex, isByVarIndex, var));
+    }
+
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}{may_error}")
+    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind varKind, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        mayError.check(() -> unwrapConceptAs(varConcept, varKind));
+    }
+
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {concept_kind}: {bool}")
     public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind checkedKind, boolean isCheckedKind) {
         collectRowsAnswerIfNeeded();
@@ -771,13 +871,6 @@ public class QuerySteps {
         assertEquals(isCheckedKind, isTypeKind);
     }
 
-    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}")
-    public void answer_get_row_get_variable_as(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind kind) {
-        collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
-        unwrapConceptAs(varConcept, kind);
-    }
-
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get label: {non_semicolon}")
     public void answer_get_row_get_variable_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
@@ -789,7 +882,7 @@ public class QuerySteps {
     public void answer_get_row_get_variable_get_type_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
         Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
-        assertEquals(label, getLabelOfUnwrappedConcept(varConcept, varKind));
+        assertEquals(label, getLabelOfUnwrappedConceptsType(varConcept, varKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value type: {non_semicolon}")
@@ -861,6 +954,28 @@ public class QuerySteps {
         existsOrDoesnt.check(iid != null && !iid.isEmpty());
     }
 
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.asUntyped());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type}{may_error}")
+    public void answer_get_row_get_variable_as_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        assertNotNull(varValue.asUntyped());
+        mayError.check(() -> unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type} {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_as_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        isOrNot.compare(parseExpectedValue(value, Optional.of(valueType)), unwrapValueAs(varValue, valueType));
+    }
 
     // TODO: Refactor
     @Then("fetch answers are")
