@@ -152,7 +152,7 @@ impl RPCTransmitter {
                 let req = transaction_request.into_proto();
                 let req_id = RequestID::from(req.req_id.clone());
                 let (request_sink, response_source) = rpc.transaction(req).await?;
-                Ok(Response::TransactionOpen { request_id: req_id, request_sink, response_source })
+                Ok(Response::TransactionStream { open_request_id: req_id, request_sink, response_source })
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),

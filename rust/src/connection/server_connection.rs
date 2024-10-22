@@ -33,7 +33,7 @@ use uuid::Uuid;
 use crate::{
     common::{address::Address, RequestID},
     connection::{
-        message::{Request, Response, TransactionRequest},
+        message::{Request, Response, TransactionRequest, TransactionResponse},
         network::transmitter::{RPCTransmitter, TransactionTransmitter},
         runtime::BackgroundRuntime,
         TransactionStream,
@@ -187,44 +187,6 @@ impl ServerConnection {
         Ok(())
     }
 
-    // #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    // pub(crate) async fn open_session(
-    //     &self,
-    //     database_name: String,
-    //     session_type: SessionType,
-    //     options: Options,
-    // ) -> Result<SessionInfo> {
-    //     let start = Instant::now();
-    //     match self.request(Request::SessionOpen { database_name, session_type, options }).await? {
-    //         Response::SessionOpen { session_id, server_duration } => {
-    //             let (on_close_register_sink, on_close_register_source) = unbounded_async();
-    //             let (pulse_shutdown_sink, pulse_shutdown_source) = unbounded_async();
-    //             self.open_sessions.lock().unwrap().insert(session_id.clone(), pulse_shutdown_sink);
-    //             self.background_runtime.spawn(session_pulse(
-    //                 session_id.clone(),
-    //                 self.request_transmitter.clone(),
-    //                 on_close_register_source,
-    //                 self.background_runtime.callback_handler_sink(),
-    //                 pulse_shutdown_source,
-    //             ));
-    //             Ok(SessionInfo {
-    //                 session_id,
-    //                 network_latency: start.elapsed().saturating_sub(server_duration),
-    //                 on_close_register_sink,
-    //             })
-    //         }
-    //         other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-    //     }
-    // }
-    //
-    // pub(crate) fn close_session(&self, session_id: SessionID) -> Result {
-    //     if let Some(sink) = self.open_sessions.lock().unwrap().remove(&session_id) {
-    //         sink.send(()).ok();
-    //     }
-    //     self.request_blocking(Request::SessionClose { session_id })?;
-    //     Ok(())
-    // }
-
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn open_transaction(
         &self,
@@ -233,6 +195,28 @@ impl ServerConnection {
         options: Options,
     ) -> crate::Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
+
+        let open_request_start = Instant::now();
+        let tracker = self.latency_tracker.clone();
+        let initial_response_handler = Arc::new(move |result: crate::common::Result<TransactionResponse>| {
+            match result {
+                Ok(TransactionResponse::Open { server_duration_millis }) => {
+                    let open_latency =
+                        Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
+                    tracker.update_latency(open_latency)
+                }
+                Err(_) => {
+                    // ignore, error will manifest elsewhere
+                }
+                Ok(TransactionResponse::Commit)
+                | Ok(TransactionResponse::Rollback)
+                | Ok(TransactionResponse::Query(_))
+                | Ok(TransactionResponse::Close) => {
+                    panic!("Unexpected - transaction open response was not TransactionOpen.")
+                }
+            }
+        });
+
         match self
             .request(Request::Transaction(TransactionRequest::Open {
                 database: database_name.to_owned(),
@@ -242,9 +226,14 @@ impl ServerConnection {
             }))
             .await?
         {
-            Response::TransactionOpen { request_id, request_sink, response_source } => {
-                let transmitter =
-                    TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
+            Response::TransactionStream { open_request_id: request_id, request_sink, response_source } => {
+                let transmitter = TransactionTransmitter::new(
+                    self.background_runtime.clone(),
+                    request_sink,
+                    response_source,
+                    request_id.clone(),
+                    initial_response_handler,
+                );
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 self.transaction_shutdown_senders.lock().unwrap().insert(request_id, transmitter_shutdown_sink);
@@ -323,7 +312,7 @@ impl fmt::Debug for ServerConnection {
 }
 
 #[derive(Debug, Clone)]
-struct LatencyTracker {
+pub(crate) struct LatencyTracker {
     latency_millis: Arc<AtomicU64>,
 }
 
@@ -332,11 +321,11 @@ impl LatencyTracker {
         Self { latency_millis: Arc::new(AtomicU64::new(initial_latency.as_millis() as u64)) }
     }
 
-    pub(crate) fn update_latency(&self, latency_millis: Duration) {
+    pub(crate) fn update_latency(&self, latency_millis: u64) {
         let previous_latency = self.latency_millis.load(Ordering::Relaxed);
         // TODO: this is a strange but simple averaging scheme
         //       it might actually be useful as it weights the recent measurement the same as the entire history
-        self.latency_millis.store((latency_millis.as_millis() as u64 + previous_latency) / 2, Ordering::Relaxed);
+        self.latency_millis.store((latency_millis + previous_latency) / 2, Ordering::Relaxed);
     }
 
     fn current_latency(&self) -> Duration {

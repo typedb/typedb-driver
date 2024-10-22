@@ -17,6 +17,8 @@
  * under the License.
  */
 
+use std::{fmt, fmt::Formatter, sync::Arc};
+
 use crossbeam::channel::Sender as SyncSender;
 use itertools::Either;
 use log::{debug, error};
@@ -30,9 +32,26 @@ use crate::{
 
 #[derive(Debug)]
 pub(super) enum ResponseSink<T> {
+    ImmediateOneShot(ImmediateHandler<Result<T>>),
     AsyncOneShot(AsyncOneshotSender<Result<T>>),
     BlockingOneShot(SyncSender<Result<T>>),
     Streamed(UnboundedSender<StreamResponse<T>>),
+}
+
+pub(super) struct ImmediateHandler<T> {
+    pub(super) handler: Arc<dyn Fn(T) -> () + Sync + Send>,
+}
+
+impl<T> ImmediateHandler<T> {
+    pub(super) fn run(&self, value: T) {
+        (self.handler)(value)
+    }
+}
+
+impl<T> fmt::Debug for ImmediateHandler<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Immediate handler")
+    }
 }
 
 pub(super) enum StreamResponse<T> {
@@ -43,6 +62,10 @@ pub(super) enum StreamResponse<T> {
 impl<T> ResponseSink<T> {
     pub(super) fn finish(self, response: Result<T>) {
         let result = match self {
+            Self::ImmediateOneShot(handler) => {
+                handler.run(response);
+                Ok(())
+            }
             Self::AsyncOneShot(sink) => sink.send(response).map_err(|_| InternalError::SendError.into()),
             Self::BlockingOneShot(sink) => sink.send(response).map_err(Error::from),
             Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
@@ -83,6 +106,7 @@ impl<T> ResponseSink<T> {
             Self::AsyncOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::BlockingOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::Streamed(sink) => sink.send(StreamResponse::Result(Err(error.into()))).ok(),
+            Self::ImmediateOneShot(_) => None,
         };
     }
 }

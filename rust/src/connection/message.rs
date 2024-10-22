@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{collections::HashMap, time::Duration};
+use std::time::Duration;
 
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
@@ -26,7 +26,6 @@ use uuid::Uuid;
 
 use crate::{
     answer::{
-        concept_document,
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
     },
@@ -99,8 +98,8 @@ pub(super) enum Response {
     DatabaseRuleSchema {
         schema: String,
     },
-    TransactionOpen {
-        request_id: RequestID,
+    TransactionStream {
+        open_request_id: RequestID,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
     },

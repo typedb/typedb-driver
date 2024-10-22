@@ -45,10 +45,11 @@ use tokio::{
 };
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
+use uuid::Uuid;
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
-use super::response_sink::{ResponseSink, StreamResponse};
+use super::response_sink::{ImmediateHandler, ResponseSink, StreamResponse};
 use crate::{
     common::{
         box_promise,
@@ -60,6 +61,7 @@ use crate::{
         message::{QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
+        server_connection::LatencyTracker,
     },
     Error,
 };
@@ -85,6 +87,8 @@ impl TransactionTransmitter {
         background_runtime: Arc<BackgroundRuntime>,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
+        initial_request_id: RequestID,
+        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) -> () + Sync + Send>,
     ) -> Self {
         let callback_handler_sink = background_runtime.callback_handler_sink();
         let (buffer_sink, buffer_source) = unbounded_async();
@@ -102,6 +106,8 @@ impl TransactionTransmitter {
             callback_handler_sink,
             shutdown_sink.clone(),
             shutdown_source,
+            initial_request_id,
+            initial_response_handler,
         ));
         Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink, background_runtime }
     }
@@ -230,14 +236,20 @@ impl TransactionTransmitter {
         callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
+        initial_request_id: RequestID,
+        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) + Sync + Send>,
     ) {
-        let collector = ResponseCollector {
+        let mut collector = ResponseCollector {
             callbacks: Default::default(),
             is_open,
             error,
             on_close: Default::default(),
             callback_handler_sink,
         };
+        collector.register(
+            initial_request_id,
+            ResponseSink::ImmediateOneShot(ImmediateHandler { handler: initial_response_handler }),
+        );
         tokio::spawn(Self::dispatch_loop(
             queue_source,
             request_sink,
