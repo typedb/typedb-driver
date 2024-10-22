@@ -43,6 +43,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -55,6 +56,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.typedb.driver.api.concept.value.Value.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
@@ -667,9 +669,9 @@ public class QuerySteps {
             case DOUBLE:
                 return Double.parseDouble(value);
             case DECIMAL:
-                return new BigDecimal(value);
+                return new BigDecimal(value).setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY);
             case STRING:
-                return value.substring(1, value.length() - 1).replaceAll("\\\"", "\"");
+                return value.substring(1, value.length() - 1).replace("\\\"", "\"");
             case DATE:
                 return LocalDate.parse(value);
             case DATETIME:
@@ -954,20 +956,20 @@ public class QuerySteps {
         existsOrDoesnt.check(iid != null && !iid.isEmpty());
     }
 
-    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value {is_or_not}: {non_semicolon}")
-    public void answer_get_row_get_variable_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
-        collectRowsAnswerIfNeeded();
-        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
-        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
-        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.asUntyped());
-    }
-
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type}{may_error}")
     public void answer_get_row_get_variable_as_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.MayError mayError) {
         collectRowsAnswerIfNeeded();
         Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
         assertNotNull(varValue.asUntyped());
         mayError.check(() -> unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.asUntyped());
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type} {is_or_not}: {non_semicolon}")

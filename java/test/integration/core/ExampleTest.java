@@ -34,17 +34,15 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-// EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
-// EXAMPLE START MARKER
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-// EXAMPLE END MARKER
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -94,8 +92,7 @@ public class ExampleTest {
             // Open a schema transaction to make schema changes
             // Use try-with-resources blocks to forget about "close" operations (similarly to connections)
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA)) {
-                String defineQuery = "" +
-                        "define " +
+                String defineQuery = "define " +
                         "entity person, owns name, owns age; " +
                         "attribute name, value string;\n" +
                         "attribute age, value long;";

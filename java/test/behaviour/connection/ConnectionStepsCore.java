@@ -54,7 +54,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 //    }
 
     @When("typedb starts")
-    public void typedb_starts() {}
+    public void typedb_starts() {
+    }
 
     @Override
     @When("connection opens with default authentication")

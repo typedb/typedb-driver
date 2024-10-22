@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.typedb.driver.common.collection.Collections.pair;
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_VALUE_CASTING;
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.value_get_boolean;
 import static com.typedb.driver.jni.typedb_driver.value_get_date_as_seconds;
@@ -144,25 +144,25 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     @Override
     public boolean asBoolean() {
-        if (!isBoolean()) throw new TypeDBDriverException(ILLEGAL_CAST, "boolean");
+        if (!isBoolean()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "boolean");
         return value_get_boolean(nativeObject);
     }
 
     @Override
     public long asLong() {
-        if (!isLong()) throw new TypeDBDriverException(ILLEGAL_CAST, "long");
+        if (!isLong()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "long");
         return value_get_long(nativeObject);
     }
 
     @Override
     public double asDouble() {
-        if (!isDouble()) throw new TypeDBDriverException(ILLEGAL_CAST, "double");
+        if (!isDouble()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "double");
         return value_get_double(nativeObject);
     }
 
     @Override
     public BigDecimal asDecimal() {
-        if (!isDecimal()) throw new TypeDBDriverException(ILLEGAL_CAST, "decimal");
+        if (!isDecimal()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "decimal");
         com.typedb.driver.jni.Decimal nativeDecimal = value_get_decimal(nativeObject);
         BigInteger nativeFractional = nativeDecimal.getFractional();
         BigDecimal integerPart = new BigDecimal(nativeDecimal.getInteger());
@@ -174,25 +174,25 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     @Override
     public String asString() {
-        if (!isString()) throw new TypeDBDriverException(ILLEGAL_CAST, "string");
+        if (!isString()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "string");
         return value_get_string(nativeObject);
     }
 
     @Override
     public LocalDate asDate() {
-        if (!isDate()) throw new TypeDBDriverException(ILLEGAL_CAST, "date");
+        if (!isDate()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "date");
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(value_get_date_as_seconds(nativeObject)), ZoneOffset.UTC).toLocalDate();
     }
 
     @Override
     public LocalDateTime asDatetime() {
-        if (!isDatetime()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime");
+        if (!isDatetime()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "datetime");
         return LocalDateTime.ofInstant(instantFromNativeDatetime(value_get_datetime(nativeObject)), ZoneOffset.UTC);
     }
 
     @Override
     public ZonedDateTime asDatetimeTZ() {
-        if (!isDatetimeTZ()) throw new TypeDBDriverException(ILLEGAL_CAST, "datetime-tz");
+        if (!isDatetimeTZ()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "datetime-tz");
         com.typedb.driver.jni.DatetimeAndTimeZone nativeDatetime = value_get_datetime_tz(nativeObject);
         Instant naiveDatetime = instantFromNativeDatetime(nativeDatetime.getDatetime_in_nanos());
         if (nativeDatetime.getIs_fixed_offset()) {
@@ -205,13 +205,13 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     @Override
     public Duration asDuration() {
-        if (!isDuration()) throw new TypeDBDriverException(ILLEGAL_CAST, "duration");
+        if (!isDuration()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "duration");
         return new Duration(value_get_duration(nativeObject));
     }
 
     @Override
     public Map<String, Optional<Value>> asStruct() {
-        if (!isStruct()) throw new TypeDBDriverException(ILLEGAL_CAST, "struct");
+        if (!isStruct()) throw new TypeDBDriverException(INVALID_VALUE_CASTING, "struct");
         return new NativeIterator<>(value_get_struct(nativeObject)).stream().map(fieldAndValue -> {
             String fieldName = fieldAndValue.getString();
             com.typedb.driver.jni.Concept nativeValue = fieldAndValue.getValue();

@@ -22,6 +22,7 @@ package com.typedb.driver.common;
 import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class Duration {
@@ -50,7 +51,7 @@ public class Duration {
     }
 
     /**
-     * Parses a <code>Duration</code> object from a string in ISO 8601 format.
+     * Parses a <code>Duration</code> object from a string in ISO 8601 format. Throws java.time exceptions
      *
      * <h3>Examples</h3>
      * <pre>
@@ -59,10 +60,17 @@ public class Duration {
      * </pre>
      *
      * @param durationString A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW.
+     * @throws DateTimeParseException if the text cannot be parsed to a <code>Duration</code>.
      */
     public static Duration parse(String durationString) {
         String[] durationParts = durationString.split("T");
-        return new Duration(java.time.Period.parse(durationParts[0]), java.time.Duration.parse("PT" + durationParts[1]));
+        java.time.Period period = java.time.Period.parse(durationParts[0]);
+        if (durationParts.length == 1) {
+            return new Duration(period, java.time.Duration.ofNanos(0));
+        } else {
+            return new Duration(period, java.time.Duration.parse("PT" + durationParts[1]));
+        }
+
     }
 
     /**

@@ -35,8 +35,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
     public static final Map<String, String> serverOptions = Collections.emptyMap();
@@ -64,7 +62,8 @@ public abstract class ConnectionStepsBase {
         return transactions.isEmpty() ? Optional.empty() : Optional.of(transactions.get(0));
     }
 
-    void beforeAll() {} // Can add "before all" setup steps here
+    void beforeAll() {
+    } // Can add "before all" setup steps here
 
     void before() {
         if (!isBeforeAllRan) {
@@ -77,6 +76,14 @@ public abstract class ConnectionStepsBase {
     }
 
     void after() {
+        cleanupTransactions();
+
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        driver.databases().all().forEach(Database::delete);
+        driver.close();
+    }
+
+    void cleanupTransactions() {
         transactions.parallelStream().forEach(Transaction::close);
         transactions.clear();
 
@@ -87,10 +94,6 @@ public abstract class ConnectionStepsBase {
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         transactionsParallel.clear();
-
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
-        driver.databases().all().forEach(Database::delete);
-        driver.close();
     }
 
     abstract Driver createTypeDBDriver(String address);
@@ -100,6 +103,7 @@ public abstract class ConnectionStepsBase {
     abstract void connection_opens_with_default_authentication();
 
     void connection_closes() {
+        cleanupTransactions();
         driver.close();
     }
 
