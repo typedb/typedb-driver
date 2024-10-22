@@ -79,6 +79,38 @@ Returns the time part of this duration.
 duration.getTimePart();
 ----
 
+[#_Duration_parse_java_lang_String]
+==== parse
+
+[source,java]
+----
+public static Duration parse​(java.lang.String durationString)
+----
+
+Parses a ``Duration`` object from a string in ISO 8601 format. Throws java.time exceptions 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `durationString` a| A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+Duration.parse("P1Y10M7DT15H44M5.00394892S");
+     Duration.parse("P55W");
+----
+
 [#_Duration_toString_]
 ==== toString
 
