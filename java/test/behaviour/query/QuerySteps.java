@@ -105,16 +105,9 @@ public class QuerySteps {
         assertNotNull("Expected to collect ConceptDocuments, but the answer is not ConceptDocuments", collectedDocuments);
     }
 
-    public void assertAnswerSize(int expectedAnswers) {
-        int answerSize;
-        if (collectedRows != null) {
-            answerSize = collectedRows.size();
-        } else if (collectedDocuments != null) {
-            answerSize = collectedDocuments.size();
-        } else {
-            throw new AssertionError("Query answer is not collected: the size is NULL");
-        }
-        assertEquals(String.format("Expected [%d] answers, but got [%d]", expectedAnswers, answerSize), expectedAnswers, answerSize);
+    public List<Concept> getRowGetConcepts(int rowIndex) {
+        ConceptRow row = collectedRows.get(rowIndex);
+        return row.concepts().collect(Collectors.toList());
     }
 
     public Concept getRowGetConcept(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var) {
@@ -787,9 +780,17 @@ public class QuerySteps {
     }
 
     @Then("answer size is: {integer}")
-    public void answer_size_is(int expectedAnswers) {
+    public void answer_size_is(int size) {
         collectAnswerIfNeeded();
-        assertAnswerSize(expectedAnswers);
+        int answerSize;
+        if (collectedRows != null) {
+            answerSize = collectedRows.size();
+        } else if (collectedDocuments != null) {
+            answerSize = collectedDocuments.size();
+        } else {
+            throw new AssertionError("Query answer is not collected: the size is NULL");
+        }
+        assertEquals(String.format("Expected [%d] answers, but got [%d]", size, answerSize), size, answerSize);
     }
 
     @Then("answer column names are:")
@@ -823,6 +824,12 @@ public class QuerySteps {
                 .collect(Collectors.toList());
 
         CompletableFuture.allOf(jobs.toArray(new CompletableFuture[0])).join();
+    }
+
+    @Then("answer get row\\({integer}) query type {is_or_not}: {query_type}")
+    public void answer_get_row_query_type_is(int rowIndex, Parameters.IsOrNot isOrNot, QueryType queryType) {
+        collectRowsAnswerIfNeeded();
+        isOrNot.compare(queryType, collectedRows.get(rowIndex).getQueryType());
     }
 
     @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}){may_error}")
@@ -973,6 +980,13 @@ public class QuerySteps {
         collectRowsAnswerIfNeeded();
         Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
         isOrNot.compare(parseExpectedValue(value, Optional.of(valueType)), unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get concepts size is: {integer}")
+    public void answer_get_row_get_concepts_size_is(int rowIndex, int size) {
+        collectRowsAnswerIfNeeded();
+        int conceptsSize = getRowGetConcepts(rowIndex).size();
+        assertEquals(String.format("Expected [%d] answers, but got [%d]", size, conceptsSize), size, conceptsSize);
     }
 
     @Then("answer {contains_or_doesnt} document:")

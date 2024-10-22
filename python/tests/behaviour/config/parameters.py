@@ -267,6 +267,19 @@ def parse_is_or_not(value: str) -> bool:
 register_type(IsOrNot=parse_is_or_not)
 
 
+@parse.with_pattern("contains|does not contain")
+def parse_contains_or_doesnt(value: str) -> bool:
+    if value == "contains":
+        return True
+    elif value == "does not contain":
+        return False
+    else:
+        raise ValueError(f"Unrecognised ContainsOrDoesnt: {value}")
+
+
+register_type(ContainsOrDoesnt=parse_contains_or_doesnt)
+
+
 def is_or_not_reason(is_or_not: bool, real, expected) -> str:
     intro_str = "Expected that real value"
     is_or_not_str = "is" if is_or_not else "is not"
