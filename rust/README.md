@@ -116,7 +116,7 @@ fn typedb_example() {
         let answer = transaction.query(define_query).await.unwrap();
 
         // Work with the driver's enums in a classic way or using helper methods
-        if answer.is_ok() && matches!(answer, QueryAnswer::Ok()) {
+        if answer.is_ok() && matches!(answer, QueryAnswer::Ok(_)) {
             println!("OK results do not give any extra interesting information, but they mean that the query is successfully executed!");
         }
 

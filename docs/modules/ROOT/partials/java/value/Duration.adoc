@@ -57,6 +57,94 @@ Returns the date part of this duration.
 duration.getDatePart();
 ----
 
+[#_Duration_getDays_]
+==== getDays
+
+[source,java]
+----
+public int getDays()
+----
+
+Returns the amount of days of this ``Duration`` from the date part. 
+
+
+[caption=""]
+.Returns
+`public int`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getMonths();
+----
+
+[#_Duration_getMonths_]
+==== getMonths
+
+[source,java]
+----
+public int getMonths()
+----
+
+Returns the amount of months of this ``Duration`` from the date part. 
+
+
+[caption=""]
+.Returns
+`public int`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getMonths();
+----
+
+[#_Duration_getNano_]
+==== getNano
+
+[source,java]
+----
+public long getNano()
+----
+
+Returns the number of nanoseconds within the second in this ``Duration`` from the time part. 
+
+
+[caption=""]
+.Returns
+`public long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getNano();
+----
+
+[#_Duration_getSeconds_]
+==== getSeconds
+
+[source,java]
+----
+public long getSeconds()
+----
+
+Returns the amount of seconds of this ``Duration`` from the time part. 
+
+
+[caption=""]
+.Returns
+`public long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getSeconds();
+----
+
 [#_Duration_getTimePart_]
 ==== getTimePart
 
