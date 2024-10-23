@@ -103,7 +103,7 @@ public class ExampleTest {
 
                 QueryAnswer answer = transaction.query(defineQuery).resolve();
                 assertTrue(answer.isOk());
-                assertEquals(answer.getQueryType(), QueryType.SCHEMA);
+                assertEquals(QueryType.SCHEMA, answer.getQueryType());
 
                 // Commit automatically closes the transaction. It can still be safely called for inside "try" blocks
                 transaction.commit();
@@ -115,7 +115,7 @@ public class ExampleTest {
                 QueryAnswer entityAnswer = transaction.query("match entity $x;").resolve();
                 assertTrue(entityAnswer.isConceptRows());
                 assertFalse(entityAnswer.isConceptDocuments());
-                assertEquals(entityAnswer.getQueryType(), QueryType.READ);
+                assertEquals(QueryType.READ, entityAnswer.getQueryType());
 
                 // Collect concept rows that represent the answer as a table
                 List<ConceptRow> entityRows = entityAnswer.asConceptRows().stream().collect(Collectors.toList());
@@ -152,7 +152,7 @@ public class ExampleTest {
                 // Continue querying in the same transaction if needed
                 QueryAnswer attributeAnswer = transaction.query("match attribute $a;").resolve();
                 assertTrue(attributeAnswer.isConceptRows());
-                assertEquals(attributeAnswer.getQueryType(), QueryType.READ);
+                assertEquals(QueryType.READ, attributeAnswer.getQueryType());
 
                 // ConceptRowIterator can be used as any other Iterator
                 ConceptRowIterator attributeRowIterator = attributeAnswer.asConceptRows();
@@ -189,7 +189,7 @@ public class ExampleTest {
                 String insertQuery = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";";
                 QueryAnswer answer = transaction.query(insertQuery).resolve();
                 assertTrue(answer.isConceptRows());
-                assertEquals(answer.getQueryType(), QueryType.WRITE);
+                assertEquals(QueryType.WRITE, answer.getQueryType());
 
                 // Insert queries also return concept rows
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
@@ -224,12 +224,12 @@ public class ExampleTest {
                 String var = "x";
                 QueryAnswer matchAnswer = transaction.query(String.format("match $%s isa person;", var)).resolve();
                 assertTrue(matchAnswer.isConceptRows());
-                assertEquals(matchAnswer.getQueryType(), QueryType.READ);
+                assertEquals(QueryType.READ, matchAnswer.getQueryType());
 
                 // Simple match queries always return concept rows
                 AtomicInteger matchCount = new AtomicInteger(0);
                 matchAnswer.asConceptRows().stream().forEach(row -> {
-                    assertEquals(row.getQueryType(), QueryType.READ);
+                    assertEquals(QueryType.READ, row.getQueryType());
                     Concept x = row.get(var);
                     assertTrue(x.isEntity());
                     assertFalse(x.isEntityType());
@@ -255,7 +255,7 @@ public class ExampleTest {
                         "  \"all attributes\": { $x.* }," +
                         "};").resolve();
                 assertTrue(fetchAnswer.isConceptDocuments());
-                assertEquals(fetchAnswer.getQueryType(), QueryType.READ);
+                assertEquals(QueryType.READ, fetchAnswer.getQueryType());
 
                 // Fetch queries always return concept documents
                 AtomicInteger fetchCount = new AtomicInteger(0);

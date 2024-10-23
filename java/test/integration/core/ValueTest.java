@@ -50,6 +50,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
@@ -200,6 +201,136 @@ public class ValueTest {
                 assertEquals(checked.get(), attributeValues.size()); // Make sure that every attribute is checked!
             }
         }, Transaction.Type.READ);
+    }
+
+    @Test
+    public void duration() {
+        // parse examples do not fail
+        Duration.parse("P1Y10M7DT15H44M5.00394892S");
+        Duration.parse("P55W");
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute d, value duration;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1Y isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P12M PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(12, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P1Y0M0DT0H0M0S"), typedbDuration);
+            assertEquals(Duration.parse("P0Y12M0DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y1M0DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1M isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P1M PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(1, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y1M0DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M31DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M30DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M29DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M28DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1D isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P1D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(1, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M1DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT1H isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT1H", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(3600, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M0DT1H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT1S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT1S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(1, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M0DT0H0M1S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0.000000001S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0.000000001S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(1, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0.000000001S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0.0000001S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0.0000001S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(100, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0.0000001S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0S"), typedbDuration);
+            assertEquals(Duration.parse("P0W"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P7W isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P49D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(49, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P7W"), typedbDuration);
+            assertEquals(Duration.parse("P0Y0M49DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P999Y12M31DT24H59M59.999999999S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P12000M31D PT24H59M59.999999999S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(12000, typedbDuration.getMonths());
+            assertEquals(31, typedbDuration.getDays());
+            assertEquals(89999, typedbDuration.getSeconds());
+            assertEquals(999999999, typedbDuration.getNano());
+            assertEquals(Duration.parse("P999Y12M31DT24H59M59.999999999S"), typedbDuration);
+        }, Transaction.Type.WRITE);
     }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {

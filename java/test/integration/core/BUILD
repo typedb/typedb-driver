@@ -46,6 +46,29 @@ typedb_java_test(
     ],
 )
 
+typedb_java_test(
+    name = "test-value",
+    srcs = ["ValueTest.java"],
+    server_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
+#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+    },
+    test_class = "com.typedb.driver.test.integration.core.ValueTest",
+    deps = [
+        # Internal dependencies
+        "//java:driver-java",
+        "//java/api",
+        "//java/common",
+
+        # External dependencies from @vaticle
+        "@maven//:org_slf4j_slf4j_api",
+#        "@maven//:com_vaticle_typedb_typedb_runner",
+    ],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

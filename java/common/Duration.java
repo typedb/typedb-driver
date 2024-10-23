@@ -70,7 +70,6 @@ public class Duration {
         } else {
             return new Duration(period, java.time.Duration.parse("PT" + durationParts[1]));
         }
-
     }
 
     /**
@@ -95,6 +94,54 @@ public class Duration {
      */
     public java.time.Duration getTimePart() {
         return timePart;
+    }
+
+    /**
+     * Returns the amount of months of this <code>Duration</code> from the date part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getMonths();
+     * </pre>
+     */
+    public int getMonths() {
+        return datePart.getMonths();
+    }
+
+    /**
+     * Returns the amount of days of this <code>Duration</code> from the date part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getMonths();
+     * </pre>
+     */
+    public int getDays() {
+        return datePart.getDays();
+    }
+
+    /**
+     * Returns the amount of seconds of this <code>Duration</code> from the time part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getSeconds();
+     * </pre>
+     */
+    public long getSeconds() {
+        return timePart.getSeconds();
+    }
+
+    /**
+     * Returns the number of nanoseconds within the second in this <code>Duration</code> from the time part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getNano();
+     * </pre>
+     */
+    public long getNano() {
+        return timePart.getNano();
     }
 
     /**
