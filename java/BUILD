@@ -163,6 +163,7 @@ checkstyle_test(
     exclude = glob([
         "README.md",
         "docs/**/*.adoc",
+        "core_example",
     ]),
     license_type = "apache-header",
 )
