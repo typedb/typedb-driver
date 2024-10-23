@@ -33,7 +33,7 @@ use crate::{
     assert_err, generic_step, params,
     params::check_boolean,
     util,
-    util::iter_table,
+    util::{iter_table, list_contains_json, parse_json},
     BehaviourTestOptionalError,
     BehaviourTestOptionalError::{InvalidValueCasting, VariableDoesNotExist},
     Context,
@@ -229,7 +229,7 @@ pub async fn answer_unwraps_as(
 ) {
     let expect = !may_error.expects_error();
     match context.answer.as_ref().unwrap() {
-        QueryAnswer::Ok() => {
+        QueryAnswer::Ok(_) => {
             assert_eq!(
                 expect,
                 matches!(query_answer_type, params::QueryAnswerType::Ok),
@@ -257,8 +257,10 @@ pub async fn answer_unwraps_as(
 #[step(expr = r"answer size is: {int}")]
 pub async fn answer_size_is(context: &mut Context, size: usize) {
     let actual_size = match context.try_get_collected_rows().await {
-        // When trees are implemented: match context.try_get_collected_trees() -> ...
-        None => panic!("No collected answer to check its size"),
+        None => match context.try_get_collected_documents().await {
+            None => panic!("No collected answer to check its size"),
+            Some(documents) => documents.len(),
+        },
         Some(rows) => rows.len(),
     };
     assert_eq!(actual_size, size, "Expected {size} answers, got {actual_size}");
@@ -307,7 +309,19 @@ pub async fn answer_column_names_are(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = r"answer query type {is_or_not}: {query_type}")]
 pub async fn answer_query_type_is(context: &mut Context, is_or_not: params::IsOrNot, query_type: params::QueryType) {
-    let real_query_type = context.get_collected_rows().await.get(0).unwrap().get_query_type();
+    let real_query_type = context.get_answer_query_type().await.unwrap();
+    is_or_not.compare(real_query_type, query_type.query_type);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) query type {is_or_not}: {query_type}")]
+pub async fn answer_get_row_query_type_is(
+    context: &mut Context,
+    index: usize,
+    is_or_not: params::IsOrNot,
+    query_type: params::QueryType,
+) {
+    let real_query_type = context.get_collected_answer_row_index(index).await.get_query_type();
     is_or_not.compare(real_query_type, query_type.query_type);
 }
 
@@ -408,18 +422,18 @@ pub async fn answer_get_row_get_variable_get_type_get_label(
 }
 
 #[apply(generic_step)]
-#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get iid {exists_or_doesnt}")]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) {contains_or_doesnt} iid")]
 pub async fn answer_get_row_get_variable_get_iid_exists(
     context: &mut Context,
     index: usize,
     var_kind: params::ConceptKind,
     is_by_var_index: params::IsByVarIndex,
     var: params::Var,
-    exists_or_doesnt: params::ExistsOrDoesnt,
+    contains_or_doesnt: params::ContainsOrDoesnt,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    exists_or_doesnt.check(&concept.get_iid(), &format!("iid for concept {}", concept.get_label()));
+    contains_or_doesnt.check(&concept.get_iid(), &format!("iid for concept {}", concept.get_label()));
 }
 
 #[apply(generic_step)]
@@ -768,4 +782,27 @@ pub async fn answer_get_row_get_variable_is_struct(
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
     check_boolean!(is_struct, concept.is_struct());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get concepts size is: {int}")]
+pub async fn answer_get_row_get_concepts_size_is(context: &mut Context, index: usize, size: usize) {
+    let concept_row = context.get_collected_answer_row_index(index).await;
+    assert_eq!(size, concept_row.get_concepts().collect_vec().len());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer {contains_or_doesnt} document:")]
+pub async fn answer_contains_document(
+    context: &mut Context,
+    contains_or_doesnt: params::ContainsOrDoesnt,
+    step: &Step,
+) {
+    let expected_document = parse_json(step.docstring().unwrap()).expect("Given docstring is not a JSON document!");
+    let concept_documents =
+        context.get_collected_documents().await.clone().into_iter().map(|document| document.into_json()).collect_vec();
+    contains_or_doesnt.check_bool(
+        list_contains_json(&concept_documents, &expected_document),
+        &format!("Concept documents: {:?}", concept_documents),
+    );
 }

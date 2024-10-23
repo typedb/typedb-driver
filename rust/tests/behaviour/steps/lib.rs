@@ -38,11 +38,13 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, JSON},
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType, JSON},
     concept::Value,
     BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
     UserManager,
 };
+
+use crate::params::QueryAnswerType;
 
 mod connection;
 mod params;
@@ -99,11 +101,12 @@ pub struct Context {
     pub driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
+    pub answer_type: Option<QueryAnswerType>,
+    pub answer_query_type: Option<QueryType>,
     pub collected_rows: Option<Vec<ConceptRow>>,
+    pub collected_documents: Option<Vec<ConceptDocument>>,
     pub concurrent_answers: Vec<QueryAnswer>,
     pub concurrent_rows_streams: Option<Vec<BoxStream<'static, TypeDBResult<ConceptRow>>>>,
-    pub fetch_answer: Option<JSON>,
-    pub value_answer: Option<Option<Value>>,
 }
 
 impl fmt::Debug for Context {
@@ -115,14 +118,15 @@ impl fmt::Debug for Context {
             .field("driver", &self.driver)
             .field("transactions", &self.transactions)
             .field("answer", &self.answer)
+            .field("answer_type", &self.answer_type)
+            .field("answer_query_type", &self.answer_query_type)
             .field("collected_rows", &self.collected_rows)
+            .field("collected_documents", &self.collected_documents)
             .field("concurrent_answers", &self.concurrent_answers)
             .field(
                 "concurrent_rows_streams",
                 &self.concurrent_rows_streams.as_ref().map(|streams| format!("{} streams", streams.len())),
             )
-            .field("fetch_answer", &self.fetch_answer)
-            .field("value_answer", &self.value_answer)
             .finish()
     }
 }
@@ -233,9 +237,10 @@ impl Context {
 
     pub async fn cleanup_answers(&mut self) {
         self.answer = None;
+        self.answer_type = None;
+        self.answer_query_type = None;
         self.collected_rows = None;
-        self.fetch_answer = None;
-        self.value_answer = None;
+        self.collected_documents = None;
     }
 
     pub async fn cleanup_concurrent_answers(&mut self) {
@@ -270,7 +275,14 @@ impl Context {
     }
 
     pub fn set_answer(&mut self, answer: TypeDBResult<QueryAnswer>) -> TypeDBResult {
-        self.answer = Some(answer?);
+        let answer = answer?;
+        self.answer_query_type = Some(answer.get_query_type());
+        self.answer_type = Some(match &answer {
+            QueryAnswer::Ok(_) => QueryAnswerType::Ok,
+            QueryAnswer::ConceptRowStream(_, _) => QueryAnswerType::ConceptRows,
+            QueryAnswer::ConceptDocumentStream(_, _) => QueryAnswerType::ConceptDocuments,
+        });
+        self.answer = Some(answer);
         Ok(())
     }
 
@@ -278,9 +290,13 @@ impl Context {
         self.concurrent_answers = answers;
     }
 
-    pub async fn unwrap_answer_into_rows_if_needed(&mut self) {
-        if self.collected_rows.is_none() {
-            self.unwrap_answer_into_rows().await
+    pub async fn unwrap_answer_if_needed(&mut self) {
+        if self.collected_rows.is_none() && self.collected_documents.is_none() {
+            match self.answer_type.expect("Nothing to unwrap: no answer") {
+                QueryAnswerType::Ok => panic!("Nothing to unwrap: cannot unwrap Ok"),
+                QueryAnswerType::ConceptRows => self.unwrap_answer_into_rows().await,
+                QueryAnswerType::ConceptDocuments => self.unwrap_answer_into_documents().await,
+            }
         }
     }
 
@@ -300,8 +316,25 @@ impl Context {
             Some(self.concurrent_answers.drain(..).map(|answer| answer.into_rows()).collect());
     }
 
+    pub async fn unwrap_answer_into_documents(&mut self) {
+        self.collected_documents =
+            Some(self.answer.take().unwrap().into_documents().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+    }
+
+    pub async fn get_answer(&self) -> Option<&QueryAnswer> {
+        self.answer.as_ref()
+    }
+
+    pub async fn get_answer_query_type(&self) -> Option<QueryType> {
+        self.answer_query_type
+    }
+
+    pub async fn get_answer_type(&self) -> Option<QueryAnswerType> {
+        self.answer_type
+    }
+
     pub async fn try_get_collected_rows(&mut self) -> Option<&Vec<ConceptRow>> {
-        self.unwrap_answer_into_rows_if_needed().await;
+        self.unwrap_answer_if_needed().await;
         self.collected_rows.as_ref()
     }
 
@@ -309,8 +342,17 @@ impl Context {
         self.try_get_collected_rows().await.unwrap()
     }
 
+    pub async fn try_get_collected_documents(&mut self) -> Option<&Vec<ConceptDocument>> {
+        self.unwrap_answer_if_needed().await;
+        self.collected_documents.as_ref()
+    }
+
+    pub async fn get_collected_documents(&mut self) -> &Vec<ConceptDocument> {
+        self.try_get_collected_documents().await.unwrap()
+    }
+
     pub async fn get_collected_answer_row_index(&mut self, index: usize) -> &ConceptRow {
-        self.unwrap_answer_into_rows_if_needed().await;
+        self.unwrap_answer_if_needed().await;
         self.collected_rows.as_ref().unwrap().get(index).unwrap()
     }
 
@@ -386,11 +428,12 @@ impl Default for Context {
             driver: None,
             transactions: VecDeque::new(),
             answer: None,
+            answer_type: None,
+            answer_query_type: None,
             collected_rows: None,
+            collected_documents: None,
             concurrent_answers: Vec::new(),
             concurrent_rows_streams: None,
-            fetch_answer: None,
-            value_answer: None,
         }
     }
 }
