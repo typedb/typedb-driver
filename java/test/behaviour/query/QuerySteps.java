@@ -19,308 +19,980 @@
 
 package com.typedb.driver.test.behaviour.query;
 
+import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.api.answer.ConceptRow;
+import com.typedb.driver.api.answer.ConceptRowIterator;
 import com.typedb.driver.api.answer.JSON;
-import com.typedb.driver.api.answer.ValueGroup;
+import com.typedb.driver.api.answer.OkQueryAnswer;
+import com.typedb.driver.api.answer.QueryAnswer;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.concept.instance.Attribute;
+import com.typedb.driver.api.concept.instance.Entity;
+import com.typedb.driver.api.concept.instance.Instance;
+import com.typedb.driver.api.concept.instance.Relation;
+import com.typedb.driver.api.concept.type.AttributeType;
+import com.typedb.driver.api.concept.type.EntityType;
+import com.typedb.driver.api.concept.type.RelationType;
+import com.typedb.driver.api.concept.type.RoleType;
+import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.Duration;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
-import static com.typedb.driver.test.behaviour.util.Util.JSONListMatches;
+import static com.typedb.driver.api.concept.value.Value.DECIMAL_SCALE;
+import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class QuerySteps {
-    private static List<ConceptRow> answerRows;
-    private static List<JSON> fetchAnswers;
-    private static Optional<Value> valueAnswer;
-    private static List<ValueGroup> valueAnswerGroups;
-    private Map<String, Map<String, String>> rules;
-
-    public static List<ConceptRow> answers() {
-        return answerRows;
-    }
-
-    @Given("typeql define{may_error}")
-    public void typeql_define(String defineQueryStatements, Parameters.MayError mayError) {
-//        TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-//        mayError.check(() -> tx().query(String.join("\n", defineQueryStatements)).resolve());
-    }
+    private static QueryAnswer queryAnswer;
+    private static List<ConceptRow> collectedRows;
+    private static List<JSON> collectedDocuments;
+    private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
 
     private void clearAnswers() {
-        answerRows = null;
-        valueAnswer = null;
-        fetchAnswers = null;
-        valueAnswerGroups = null;
+        queryAnswer = null;
+        if (queryAnswersParallel != null) {
+            CompletableFuture.allOf(queryAnswersParallel.toArray(CompletableFuture[]::new)).join();
+            queryAnswersParallel = null;
+        }
+
+        collectedRows = null;
+        collectedDocuments = null;
     }
 
-//    @When("get answers of typeql insert")
-//    public void get_answers_of_typeql_insert(String typeQLQueryStatements) {
-//        TypeQLInsert typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements));
-//        clearAnswers();
-//        answers = tx().query().insert(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
-//    }
+    private void collectAnswerIfNeeded() {
+        if (collectedRows != null || collectedDocuments != null) {
+            return;
+        }
 
-//    @When("get answers of typeql get")
-//    public void typeql_get(String typeQLQueryStatements) {
-//        try {
-//            TypeQLGet typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asGet();
-//            clearAnswers();
-//            answers = tx().query().get(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
-//        } catch (TypeQLException e) {
-//            // NOTE: We manually close transaction here, because we want to align with all non-java drivers,
-//            // where parsing happens at server-side which closes transaction if they fail
-//            tx().close();
-//            throw e;
-//        }
-//    }
-
-    @Then("answer size is: {number}")
-    public void answer_quantity_assertion(int expectedAnswers) {
-        assertEquals(String.format("Expected [%d] answers, but got [%d]", expectedAnswers, answerRows.size()),
-                expectedAnswers, answerRows.size());
+        if (queryAnswer.isConceptRows()) {
+            collectedRows = queryAnswer.asConceptRows().stream().collect(Collectors.toList());
+        } else if (queryAnswer.isConceptDocuments()) {
+            collectedDocuments = queryAnswer.asConceptDocuments().stream().collect(Collectors.toList());
+        } else {
+            throw new AssertionError("Query answer is not collectable");
+        }
     }
 
-    @Then("uniquely identify answer concepts")
-    public void uniquely_identify_answer_concepts(List<Map<String, String>> answerConcepts) {
-        assertEquals(
-                String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers.",
-                        answerConcepts.size(), answerRows.size()),
-                answerConcepts.size(), answerRows.size()
-        );
+    private void collectRowsAnswerIfNeeded() {
+        collectAnswerIfNeeded();
+        assertNotNull("Expected to collect ConceptRows, but the answer is not ConceptRows", collectedRows);
+    }
 
-        for (ConceptRow row : answerRows) {
-            List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
+    private void collectDocumentsAnswerIfNeeded() {
+        collectAnswerIfNeeded();
+        assertNotNull("Expected to collect ConceptDocuments, but the answer is not ConceptDocuments", collectedDocuments);
+    }
 
-            for (Map<String, String> answerIdentifier : answerConcepts) {
+    public List<Concept> getRowGetConcepts(int rowIndex) {
+        ConceptRow row = collectedRows.get(rowIndex);
+        return row.concepts().collect(Collectors.toList());
+    }
 
-                if (matchAnswerConcept(answerIdentifier, row)) {
-                    matchingIdentifiers.add(answerIdentifier);
+    public Concept getRowGetConcept(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var) {
+        ConceptRow row = collectedRows.get(rowIndex);
+        switch (isByVarIndex) {
+            case IS:
+                return row.getIndex(row.columnNames().collect(Collectors.toList()).indexOf(var));
+            case IS_NOT:
+                return row.get(var);
+            default:
+                throw new AssertionError("Unexpected isByVarIndex: " + isByVarIndex);
+        }
+    }
+
+    public Value getRowGetValue(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var) {
+        Concept concept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        switch (varKind) {
+            case ATTRIBUTE:
+                return concept.asAttribute().getValue();
+            case VALUE:
+                return concept.asValue();
+            default:
+                throw new IllegalStateException("ConceptKind does not have values: " + varKind);
+        }
+    }
+
+    public boolean isConceptKind(Concept concept, Parameters.ConceptKind checkedKind) {
+        switch (checkedKind) {
+            case CONCEPT:
+                return true;
+            case TYPE:
+                return concept.isType();
+            case INSTANCE:
+                return concept.isInstance();
+            case ENTITY_TYPE:
+                return concept.isEntityType();
+            case RELATION_TYPE:
+                return concept.isRelationType();
+            case ATTRIBUTE_TYPE:
+                return concept.isAttributeType();
+            case ROLE_TYPE:
+                return concept.isRoleType();
+            case ENTITY:
+                return concept.isEntity();
+            case RELATION:
+                return concept.isRelation();
+            case ATTRIBUTE:
+                return concept.isAttribute();
+            case VALUE:
+                return concept.isValue();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+        }
+    }
+
+    // We want to call the checks on specific interfaces, not "Concept"s, so the boilerplate is needed
+    public boolean isUnwrappedConceptKind(Concept concept, Parameters.ConceptKind conceptKind, Parameters.ConceptKind checkedKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return concept.isType();
+                    case INSTANCE:
+                        return concept.isInstance();
+                    case ENTITY_TYPE:
+                        return concept.isEntityType();
+                    case RELATION_TYPE:
+                        return concept.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return concept.isAttributeType();
+                    case ROLE_TYPE:
+                        return concept.isRoleType();
+                    case ENTITY:
+                        return concept.isEntity();
+                    case RELATION:
+                        return concept.isRelation();
+                    case ATTRIBUTE:
+                        return concept.isAttribute();
+                    case VALUE:
+                        return concept.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
                 }
+            case TYPE:
+                Type type = concept.asType();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return type.isType();
+                    case INSTANCE:
+                        return type.isInstance();
+                    case ENTITY_TYPE:
+                        return type.isEntityType();
+                    case RELATION_TYPE:
+                        return type.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return type.isAttributeType();
+                    case ROLE_TYPE:
+                        return type.isRoleType();
+                    case ENTITY:
+                        return type.isEntity();
+                    case RELATION:
+                        return type.isRelation();
+                    case ATTRIBUTE:
+                        return type.isAttribute();
+                    case VALUE:
+                        return type.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case INSTANCE:
+                Instance instance = concept.asInstance();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return instance.isType();
+                    case INSTANCE:
+                        return instance.isInstance();
+                    case ENTITY_TYPE:
+                        return instance.isEntityType();
+                    case RELATION_TYPE:
+                        return instance.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return instance.isAttributeType();
+                    case ROLE_TYPE:
+                        return instance.isRoleType();
+                    case ENTITY:
+                        return instance.isEntity();
+                    case RELATION:
+                        return instance.isRelation();
+                    case ATTRIBUTE:
+                        return instance.isAttribute();
+                    case VALUE:
+                        return instance.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case ENTITY_TYPE:
+                EntityType entityType = concept.asEntityType();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return entityType.isType();
+                    case INSTANCE:
+                        return entityType.isInstance();
+                    case ENTITY_TYPE:
+                        return entityType.isEntityType();
+                    case RELATION_TYPE:
+                        return entityType.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return entityType.isAttributeType();
+                    case ROLE_TYPE:
+                        return entityType.isRoleType();
+                    case ENTITY:
+                        return entityType.isEntity();
+                    case RELATION:
+                        return entityType.isRelation();
+                    case ATTRIBUTE:
+                        return entityType.isAttribute();
+                    case VALUE:
+                        return entityType.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case RELATION_TYPE:
+                RelationType relationType = concept.asRelationType();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return relationType.isType();
+                    case INSTANCE:
+                        return relationType.isInstance();
+                    case ENTITY_TYPE:
+                        return relationType.isEntityType();
+                    case RELATION_TYPE:
+                        return relationType.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return relationType.isAttributeType();
+                    case ROLE_TYPE:
+                        return relationType.isRoleType();
+                    case ENTITY:
+                        return relationType.isEntity();
+                    case RELATION:
+                        return relationType.isRelation();
+                    case ATTRIBUTE:
+                        return relationType.isAttribute();
+                    case VALUE:
+                        return relationType.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case ATTRIBUTE_TYPE:
+                AttributeType attributeType = concept.asAttributeType();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return attributeType.isType();
+                    case INSTANCE:
+                        return attributeType.isInstance();
+                    case ENTITY_TYPE:
+                        return attributeType.isEntityType();
+                    case RELATION_TYPE:
+                        return attributeType.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return attributeType.isAttributeType();
+                    case ROLE_TYPE:
+                        return attributeType.isRoleType();
+                    case ENTITY:
+                        return attributeType.isEntity();
+                    case RELATION:
+                        return attributeType.isRelation();
+                    case ATTRIBUTE:
+                        return attributeType.isAttribute();
+                    case VALUE:
+                        return attributeType.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case ROLE_TYPE:
+                RoleType roleType = concept.asRoleType();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return roleType.isType();
+                    case INSTANCE:
+                        return roleType.isInstance();
+                    case ENTITY_TYPE:
+                        return roleType.isEntityType();
+                    case RELATION_TYPE:
+                        return roleType.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return roleType.isAttributeType();
+                    case ROLE_TYPE:
+                        return roleType.isRoleType();
+                    case ENTITY:
+                        return roleType.isEntity();
+                    case RELATION:
+                        return roleType.isRelation();
+                    case ATTRIBUTE:
+                        return roleType.isAttribute();
+                    case VALUE:
+                        return roleType.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case ENTITY:
+                Entity entity = concept.asEntity();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return entity.isType();
+                    case INSTANCE:
+                        return entity.isInstance();
+                    case ENTITY_TYPE:
+                        return entity.isEntityType();
+                    case RELATION_TYPE:
+                        return entity.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return entity.isAttributeType();
+                    case ROLE_TYPE:
+                        return entity.isRoleType();
+                    case ENTITY:
+                        return entity.isEntity();
+                    case RELATION:
+                        return entity.isRelation();
+                    case ATTRIBUTE:
+                        return entity.isAttribute();
+                    case VALUE:
+                        return entity.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case RELATION:
+                Relation relation = concept.asRelation();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return relation.isType();
+                    case INSTANCE:
+                        return relation.isInstance();
+                    case ENTITY_TYPE:
+                        return relation.isEntityType();
+                    case RELATION_TYPE:
+                        return relation.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return relation.isAttributeType();
+                    case ROLE_TYPE:
+                        return relation.isRoleType();
+                    case ENTITY:
+                        return relation.isEntity();
+                    case RELATION:
+                        return relation.isRelation();
+                    case ATTRIBUTE:
+                        return relation.isAttribute();
+                    case VALUE:
+                        return relation.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case ATTRIBUTE:
+                Attribute attribute = concept.asAttribute();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return attribute.isType();
+                    case INSTANCE:
+                        return attribute.isInstance();
+                    case ENTITY_TYPE:
+                        return attribute.isEntityType();
+                    case RELATION_TYPE:
+                        return attribute.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return attribute.isAttributeType();
+                    case ROLE_TYPE:
+                        return attribute.isRoleType();
+                    case ENTITY:
+                        return attribute.isEntity();
+                    case RELATION:
+                        return attribute.isRelation();
+                    case ATTRIBUTE:
+                        return attribute.isAttribute();
+                    case VALUE:
+                        return attribute.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            case VALUE:
+                Value value = concept.asValue();
+                switch (checkedKind) {
+                    case CONCEPT:
+                        return true;
+                    case TYPE:
+                        return value.isType();
+                    case INSTANCE:
+                        return value.isInstance();
+                    case ENTITY_TYPE:
+                        return value.isEntityType();
+                    case RELATION_TYPE:
+                        return value.isRelationType();
+                    case ATTRIBUTE_TYPE:
+                        return value.isAttributeType();
+                    case ROLE_TYPE:
+                        return value.isRoleType();
+                    case ENTITY:
+                        return value.isEntity();
+                    case RELATION:
+                        return value.isRelation();
+                    case ATTRIBUTE:
+                        return value.isAttribute();
+                    case VALUE:
+                        return value.isValue();
+                    default:
+                        throw new AssertionError("Not covered ConceptKind: " + checkedKind);
+                }
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public void unwrapConceptAs(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                break;
+            case TYPE:
+                assertNotNull(concept.asType());
+                break;
+            case INSTANCE:
+                assertNotNull(concept.asInstance());
+                break;
+            case ENTITY_TYPE:
+                assertNotNull(concept.asEntityType());
+                break;
+            case RELATION_TYPE:
+                assertNotNull(concept.asRelationType());
+                break;
+            case ATTRIBUTE_TYPE:
+                assertNotNull(concept.asAttributeType());
+                break;
+            case ROLE_TYPE:
+                assertNotNull(concept.asRoleType());
+                break;
+            case ENTITY:
+                assertNotNull(concept.asEntity());
+                break;
+            case RELATION:
+                assertNotNull(concept.asRelation());
+                break;
+            case ATTRIBUTE:
+                assertNotNull(concept.asAttribute());
+                break;
+            case VALUE:
+                assertNotNull(concept.asValue());
+                break;
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public String getLabelOfUnwrappedConcept(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                return concept.getLabel();
+            case TYPE:
+                return concept.asType().getLabel();
+            case INSTANCE:
+                return concept.asInstance().getLabel();
+            case ENTITY_TYPE:
+                return concept.asEntityType().getLabel();
+            case RELATION_TYPE:
+                return concept.asRelationType().getLabel();
+            case ATTRIBUTE_TYPE:
+                return concept.asAttributeType().getLabel();
+            case ROLE_TYPE:
+                return concept.asRoleType().getLabel();
+            case ENTITY:
+                return concept.asEntity().getLabel();
+            case RELATION:
+                return concept.asRelation().getLabel();
+            case ATTRIBUTE:
+                return concept.asAttribute().getLabel();
+            case VALUE:
+                return concept.asValue().getLabel();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public String getLabelOfUnwrappedConceptsType(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case INSTANCE:
+                return concept.asInstance().getType().getLabel();
+            case ENTITY:
+                return concept.asEntity().getType().getLabel();
+            case RELATION:
+                return concept.asRelation().getType().getLabel();
+            case ATTRIBUTE:
+                return concept.asAttribute().getType().getLabel();
+            default:
+                throw new AssertionError("ConceptKind does not have a type: " + conceptKind);
+        }
+    }
+
+    private boolean isConceptValueType(Concept concept, Parameters.ConceptKind varKind, Parameters.ValueType valueType) {
+        switch (varKind) {
+            case ATTRIBUTE_TYPE:
+                AttributeType varAttributeType = concept.asAttributeType();
+                switch (valueType) {
+                    case BOOLEAN:
+                        return varAttributeType.isBoolean();
+                    case LONG:
+                        return varAttributeType.isLong();
+                    case DOUBLE:
+                        return varAttributeType.isDouble();
+                    case DECIMAL:
+                        return varAttributeType.isDecimal();
+                    case STRING:
+                        return varAttributeType.isString();
+                    case DATE:
+                        return varAttributeType.isDate();
+                    case DATETIME:
+                        return varAttributeType.isDatetime();
+                    case DATETIME_TZ:
+                        return varAttributeType.isDatetimeTZ();
+                    case DURATION:
+                        return varAttributeType.isDuration();
+                    case STRUCT:
+                        return varAttributeType.isStruct();
+                    default:
+                        throw new IllegalStateException("Not covered ValueType: " + valueType);
+                }
+            case ATTRIBUTE:
+                Attribute varAttribute = concept.asAttribute();
+                switch (valueType) {
+                    case BOOLEAN:
+                        return varAttribute.isBoolean();
+                    case LONG:
+                        return varAttribute.isLong();
+                    case DOUBLE:
+                        return varAttribute.isDouble();
+                    case DECIMAL:
+                        return varAttribute.isDecimal();
+                    case STRING:
+                        return varAttribute.isString();
+                    case DATE:
+                        return varAttribute.isDate();
+                    case DATETIME:
+                        return varAttribute.isDatetime();
+                    case DATETIME_TZ:
+                        return varAttribute.isDatetimeTZ();
+                    case DURATION:
+                        return varAttribute.isDuration();
+                    case STRUCT:
+                        return varAttribute.isStruct();
+                    default:
+                        throw new IllegalStateException("Not covered ValueType: " + valueType);
+                }
+            case VALUE:
+                Value varValue = concept.asValue();
+                switch (valueType) {
+                    case BOOLEAN:
+                        return varValue.isBoolean();
+                    case LONG:
+                        return varValue.isLong();
+                    case DOUBLE:
+                        return varValue.isDouble();
+                    case DECIMAL:
+                        return varValue.isDecimal();
+                    case STRING:
+                        return varValue.isString();
+                    case DATE:
+                        return varValue.isDate();
+                    case DATETIME:
+                        return varValue.isDatetime();
+                    case DATETIME_TZ:
+                        return varValue.isDatetimeTZ();
+                    case DURATION:
+                        return varValue.isDuration();
+                    case STRUCT:
+                        return varValue.isStruct();
+                    default:
+                        throw new IllegalStateException("Not covered ValueType: " + valueType);
+                }
+            default:
+                throw new AssertionError("ConceptKind does not have a value or a value type: " + varKind);
+        }
+    }
+
+    public Object parseExpectedValue(String value, Optional<Parameters.ValueType> valueTypeOpt) {
+        Parameters.ValueType valueType;
+        valueType = valueTypeOpt.orElse(Parameters.ValueType.STRUCT);
+
+        switch (valueType) {
+            case BOOLEAN:
+                return Boolean.parseBoolean(value);
+            case LONG:
+                return Long.parseLong(value);
+            case DOUBLE:
+                return Double.parseDouble(value);
+            case DECIMAL:
+                return new BigDecimal(value).setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY);
+            case STRING:
+                return value.substring(1, value.length() - 1).replace("\\\"", "\"");
+            case DATE:
+                return LocalDate.parse(value);
+            case DATETIME:
+                return LocalDateTime.parse(value);
+            case DATETIME_TZ:
+                for (DateTimeFormatter formatter : DATETIME_TZ_FORMATTERS) {
+                    try {
+                        return ZonedDateTime.parse(value, formatter);
+                    } catch (DateTimeParseException e) {
+                        // Continue to the next formatter if parsing fails
+                    }
+                }
+                throw new AssertionError("DatetimeTZ format is not supported");
+            case DURATION:
+                return Duration.parse(value);
+            case STRUCT:
+                return value; // compare string representations
+            default:
+                throw new AssertionError("Not covered ValueType: " + valueType);
+        }
+    }
+
+    public Object unwrapValueAs(Value value, Parameters.ValueType valueType) {
+        switch (valueType) {
+            case BOOLEAN:
+                return value.asBoolean();
+            case LONG:
+                return value.asLong();
+            case DOUBLE:
+                return value.asDouble();
+            case DECIMAL:
+                return value.asDecimal();
+            case STRING:
+                return value.asString();
+            case DATE:
+                return value.asDate();
+            case DATETIME:
+                return value.asDatetime();
+            case DATETIME_TZ:
+                return value.asDatetimeTZ();
+            case DURATION:
+                return value.asDuration();
+            case STRUCT:
+                return value.asStruct().toString(); // compare string representations
+            default:
+                throw new AssertionError("Not covered ValueType: " + valueType);
+        }
+    }
+
+    @Given("typeql write query{may_error}")
+    @Given("typeql read query{may_error}")
+    @Given("typeql schema query{may_error}")
+    public void typeql_query(Parameters.MayError mayError, String query) {
+        clearAnswers();
+        mayError.check(() -> tx().query(query).resolve());
+    }
+
+    @Given("get answers of typeql write query{may_error}")
+    @Given("get answers of typeql read query{may_error}")
+    @Given("get answers of typeql schema query{may_error}")
+    public void get_answers_of_typeql_query(Parameters.MayError mayError, String query) {
+        clearAnswers();
+        mayError.check(() -> queryAnswer = tx().query(query).resolve());
+    }
+
+    @Given("concurrently get answers of typeql write query {integer} times")
+    @Given("concurrently get answers of typeql read query {integer} times")
+    @Given("concurrently get answers of typeql schema query {integer} times")
+    public void concurrently_get_answers_of_typeql_query_count_times(int count, String query) {
+        clearAnswers();
+        queryAnswersParallel = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            queryAnswersParallel.add(CompletableFuture.supplyAsync(() -> tx().query(query).resolve(), threadPool));
+        }
+    }
+
+    @Then("answer type {is_or_not}: {query_answer_type}")
+    public void answer_type_is(Parameters.IsOrNot isOrNot, Parameters.QueryAnswerType queryAnswerType) {
+        switch (queryAnswerType) {
+            case OK:
+                isOrNot.check(queryAnswer.isOk());
+                break;
+            case CONCEPT_ROWS:
+                isOrNot.check(queryAnswer.isConceptRows());
+                break;
+            case CONCEPT_DOCUMENTS:
+                isOrNot.check(queryAnswer.isConceptDocuments());
+                break;
+            default:
+                throw new AssertionError("Unknown query answer type: " + queryAnswerType);
+        }
+    }
+
+    @Then("answer unwraps as {query_answer_type}{may_error}")
+    public void answer_unwraps_as(Parameters.QueryAnswerType queryAnswerType, Parameters.MayError mayError) {
+        mayError.check(() -> {
+            switch (queryAnswerType) {
+                case OK:
+                    OkQueryAnswer _ok = queryAnswer.asOk();
+                    break;
+                case CONCEPT_ROWS:
+                    ConceptRowIterator _rows = queryAnswer.asConceptRows();
+                    break;
+                case CONCEPT_DOCUMENTS:
+                    ConceptDocumentIterator _documents = queryAnswer.asConceptDocuments();
+                    break;
+                default:
+                    throw new AssertionError("Unknown query answer type: " + queryAnswerType);
             }
-//            assertEquals(String.format("An identifier entry (row) should match 1-to-1 to an row, but there were %d matching identifier entries for row with variables %s.", matchingIdentifiers.size(), row.variables().collect(Collectors.toSet())), 1, matchingIdentifiers.size());
+        });
+    }
+
+    @Then("answer query type {is_or_not}: {query_type}")
+    public void answer_type_is(Parameters.IsOrNot isOrNot, QueryType queryType) {
+        isOrNot.compare(queryType, queryAnswer.getQueryType());
+    }
+
+    @Then("answer size is: {integer}")
+    public void answer_size_is(int size) {
+        collectAnswerIfNeeded();
+        int answerSize;
+        if (collectedRows != null) {
+            answerSize = collectedRows.size();
+        } else if (collectedDocuments != null) {
+            answerSize = collectedDocuments.size();
+        } else {
+            throw new AssertionError("Query answer is not collected: the size is NULL");
         }
+        assertEquals(String.format("Expected [%d] answers, but got [%d]", size, answerSize), size, answerSize);
     }
 
-    @Then("order of answer concepts is")
-    public void order_of_answer_concepts_is(List<Map<String, String>> answersIdentifiers) {
-        assertEquals(
-                String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers.",
-                        answersIdentifiers.size(), answerRows.size()),
-                answersIdentifiers.size(), answerRows.size()
-        );
-        for (int i = 0; i < answerRows.size(); i++) {
-            ConceptRow answer = answerRows.get(i);
-            Map<String, String> answerIdentifiers = answersIdentifiers.get(i);
-            assertTrue(
-                    String.format("The answer at index %d does not match the identifier entry (row) at index %d.", i, i),
-                    matchAnswerConcept(answerIdentifiers, answer)
-            );
+    @Then("answer column names are:")
+    public void answer_column_names_are(List<String> names) {
+        collectAnswerIfNeeded();
+        List<String> answerColumnNames = collectedRows.get(0).columnNames().sorted().collect(Collectors.toList());
+        assertEquals(names.stream().sorted().collect(Collectors.toList()), answerColumnNames);
+    }
+
+    @Given("concurrently process {integer} row(s) from answers{may_error}")
+    public void concurrently_process_count_rows_from_answers(int count, Parameters.MayError mayError) {
+        queryAnswersParallel = new ArrayList<>();
+
+        List<CompletableFuture<Object>> jobs = queryAnswersParallel.stream()
+                .map(futureAnswer -> futureAnswer.thenComposeAsync(answer -> {
+                    ConceptRowIterator iterator = answer.asConceptRows();
+                    List<ConceptRow> rows = new ArrayList<>();
+
+                    for (int i = 0; i < count; i++) {
+                        try {
+                            rows.add(iterator.next());
+                        } catch (NoSuchElementException e) {
+                            mayError.check(() -> {
+                                throw e;
+                            });
+                        }
+                    }
+
+                    return null;
+                }, threadPool))
+                .collect(Collectors.toList());
+
+        CompletableFuture.allOf(jobs.toArray(new CompletableFuture[0])).join();
+    }
+
+    @Then("answer get row\\({integer}) query type {is_or_not}: {query_type}")
+    public void answer_get_row_query_type_is(int rowIndex, Parameters.IsOrNot isOrNot, QueryType queryType) {
+        collectRowsAnswerIfNeeded();
+        isOrNot.compare(queryType, collectedRows.get(rowIndex).getQueryType());
+    }
+
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}){may_error}")
+    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        mayError.check(() -> getRowGetConcept(rowIndex, isByVarIndex, var));
+    }
+
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}{may_error}")
+    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind varKind, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        mayError.check(() -> unwrapConceptAs(varConcept, varKind));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {concept_kind}: {bool}")
+    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind checkedKind, boolean isCheckedKind) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(isCheckedKind, isUnwrappedConceptKind(varConcept, varKind, checkedKind));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type is {concept_kind}: {bool}")
+    public void answer_get_row_get_variable_get_type_is_kind(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind checkedKind, boolean isCheckedKind) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        boolean isTypeKind;
+        switch (varKind) {
+            case INSTANCE:
+                isTypeKind = isConceptKind(varConcept.asInstance().getType(), checkedKind);
+                break;
+            case ENTITY:
+                isTypeKind = isConceptKind(varConcept.asEntity().getType(), checkedKind);
+                break;
+            case RELATION:
+                isTypeKind = isConceptKind(varConcept.asRelation().getType(), checkedKind);
+                break;
+            case ATTRIBUTE:
+                isTypeKind = isConceptKind(varConcept.asAttribute().getType(), checkedKind);
+                break;
+            default:
+                throw new AssertionError("ConceptKind does not have a type: " + varKind);
         }
+        assertEquals(isCheckedKind, isTypeKind);
     }
 
-    @Then("aggregate value is: {double}")
-    public void aggregate_value_is(double expectedAnswer) {
-        assertNotNull("The last executed query was not an aggregate query", valueAnswer);
-        assertTrue("The last executed aggregate query returned NaN", valueAnswer.isPresent());
-        double value = valueAnswer.get().isDouble() ? valueAnswer.get().asDouble() : valueAnswer.get().asLong();
-        assertEquals(String.format("Expected answer to equal %f, but it was %f.", expectedAnswer, value),
-                expectedAnswer, value, 0.001);
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get label: {non_semicolon}")
+    public void answer_get_row_get_variable_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(label, getLabelOfUnwrappedConcept(varConcept, varKind));
     }
 
-    @Then("aggregate answer is empty")
-    public void aggregate_answer_is_empty() {
-        assertNotNull("The last executed query was not an aggregate query", valueAnswer);
-        assertTrue(valueAnswer.isEmpty());
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get label: {non_semicolon}")
+    public void answer_get_row_get_variable_get_type_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(label, getLabelOfUnwrappedConceptsType(varConcept, varKind));
     }
 
-//    @Then("answer groups are")
-//    public void answer_groups_are(List<Map<String, String>> answerIdentifierTable) {
-//        Set<AnswerIdentifierGroup> answerIdentifierGroups = answerIdentifierTable.stream()
-//                .collect(Collectors.groupingBy(x -> x.get(AnswerIdentifierGroup.GROUP_COLUMN_NAME)))
-//                .values()
-//                .stream()
-//                .map(AnswerIdentifierGroup::new)
-//                .collect(Collectors.toSet());
-//
-//        assertEquals(String.format("Expected [%d] answer groups, but found [%d].",
-//                        answerIdentifierGroups.size(), answerGroups.size()),
-//                answerIdentifierGroups.size(), answerGroups.size()
-//        );
-//
-//        for (AnswerIdentifierGroup answerIdentifierGroup : answerIdentifierGroups) {
-//            String[] identifier = answerIdentifierGroup.ownerIdentifier.split(":", 2);
-//            UniquenessCheck checker;
-//            switch (identifier[0]) {
-//                case "label":
-//                    checker = new LabelUniquenessCheck(identifier[1]);
-//                    break;
-//                case "key":
-//                    checker = new KeyUniquenessCheck(identifier[1]);
-//                    break;
-//                case "attr":
-//                    checker = new AttributeValueUniquenessCheck(identifier[1]);
-//                    break;
-//                case "value":
-//                    checker = new ValueUniquenessCheck(identifier[1]);
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + identifier[0]);
-//            }
-//            ConceptMapGroup answerGroup = answerGroups.stream()
-//                    .filter(ag -> checker.check(ag.owner()))
-//                    .findAny()
-//                    .orElse(null);
-//            assertNotNull(String.format("The group identifier [%s] does not match any of the answer group owners.", answerIdentifierGroup.ownerIdentifier), answerGroup);
-//
-//            List<Map<String, String>> answersIdentifiers = answerIdentifierGroup.answersIdentifiers;
-//            answerGroup.conceptMaps().forEach(answer -> {
-//                List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
-//
-//                for (Map<String, String> answerIdentifiers : answersIdentifiers) {
-//
-//                    if (matchAnswerConcept(answerIdentifiers, answer)) {
-//                        matchingIdentifiers.add(answerIdentifiers);
-//                    }
-//                }
-//                assertEquals(String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were [%d] matching identifier entries for answer with variables %s.", matchingIdentifiers.size(), answer.variables().collect(Collectors.toSet())), 1, matchingIdentifiers.size());
-//            });
-//        }
-//    }
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value type: {non_semicolon}")
+    public void answer_get_row_get_variable_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
 
-//    @Then("group aggregate values are")
-//    public void group_aggregate_values_are(List<Map<String, String>> answerIdentifierTable) {
-//        Map<String, Double> expectations = new HashMap<>();
-//        for (Map<String, String> answerIdentifierRow : answerIdentifierTable) {
-//            String groupOwnerIdentifier = answerIdentifierRow.get(AnswerIdentifierGroup.GROUP_COLUMN_NAME);
-//            double expectedAnswer = Double.parseDouble(answerIdentifierRow.get("value"));
-//            expectations.put(groupOwnerIdentifier, expectedAnswer);
-//        }
-//
-//        assertEquals(String.format("Expected [%d] answer groups, but found [%d].", expectations.size(), valueAnswerGroups.size()),
-//                expectations.size(), valueAnswerGroups.size()
-//        );
-//
-//        for (Map.Entry<String, Double> expectation : expectations.entrySet()) {
-//            String[] identifier = expectation.getKey().split(":", 2);
-//            UniquenessCheck checker;
-//            switch (identifier[0]) {
-//                case "label":
-//                    checker = new LabelUniquenessCheck(identifier[1]);
-//                    break;
-//                case "key":
-//                    checker = new KeyUniquenessCheck(identifier[1]);
-//                    break;
-//                case "attr":
-//                    checker = new AttributeValueUniquenessCheck(identifier[1]);
-//                    break;
-//                case "value":
-//                    checker = new ValueUniquenessCheck(identifier[1]);
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + identifier[0]);
-//            }
-//            double expectedAnswer = expectation.getValue();
-//            ValueGroup answerGroup = valueAnswerGroups.stream()
-//                    .filter(ag -> checker.check(ag.owner()))
-//                    .findAny()
-//                    .orElse(null);
-//            assertNotNull(String.format("The group identifier [%s] does not match any of the answer group owners.", expectation.getKey()), answerGroup);
-//
-//            Value value = answerGroup.value().get();
-//            double actualAnswer = value.isDouble() ? value.asDouble() : value.asLong();
-//            assertEquals(
-//                    String.format("Expected answer [%f] for group [%s], but got [%f]",
-//                            expectedAnswer, expectation.getKey(), actualAnswer),
-//                    expectedAnswer, actualAnswer, 0.001
-//            );
-//        }
-//    }
-
-//    @Then("number of groups is: {int}")
-//    public void number_of_groups_is(int expectedGroupCount) {
-//        assertEquals(expectedGroupCount, answerGroups.size());
-//    }
-//
-//    public static class AnswerIdentifierGroup {
-//        private final String ownerIdentifier;
-//        private final List<Map<String, String>> answersIdentifiers;
-//
-//        private static final String GROUP_COLUMN_NAME = "owner";
-//
-//        public AnswerIdentifierGroup(List<Map<String, String>> answerIdentifierTable) {
-//            ownerIdentifier = answerIdentifierTable.get(0).get(GROUP_COLUMN_NAME);
-//            answersIdentifiers = new ArrayList<>();
-//            for (Map<String, String> rawAnswerIdentifiers : answerIdentifierTable) {
-//                answersIdentifiers.add(rawAnswerIdentifiers.entrySet().stream()
-//                        .filter(e -> !e.getKey().equals(GROUP_COLUMN_NAME))
-//                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-//            }
-//        }
-//    }
-
-
-//    @Then("group aggregate answer value is empty")
-//    public void group_aggregate_answer_value_not_a_number() {
-//        assertEquals("Step requires exactly 1 grouped answer", 1, valueAnswerGroups.size());
-//        assertTrue(valueAnswerGroups.get(0).value().isEmpty());
-//    }
-
-    private boolean matchAnswerConcept(Map<String, String> answerIdentifiers, ConceptRow row) {
-        for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
-            String var = entry.getKey();
-            String[] identifier = entry.getValue().split(":", 2);
-//            switch (identifier[0]) {
-//                case "label":
-//                    if (!new LabelUniquenessCheck(identifier[1]).check(row.get(var))) {
-//                        return false;
-//                    }
-//                    break;
-//                case "key":
-//                    if (!new KeyUniquenessCheck(identifier[1]).check(row.get(var))) {
-//                        return false;
-//                    }
-//                    break;
-//                case "attr":
-//                    if (!new AttributeValueUniquenessCheck(identifier[1]).check(row.get(var))) {
-//                        return false;
-//                    }
-//                    break;
-//                case "value":
-//                    if (!new ValueUniquenessCheck(identifier[1]).check(row.get(var))) {
-//                        return false;
-//                    }
-//                    break;
-//            }
+        String varValueType;
+        switch (varKind) {
+            case ATTRIBUTE_TYPE:
+                varValueType = varConcept.asAttributeType().getValueType();
+                break;
+            case VALUE:
+                varValueType = varConcept.asValue().getType();
+                break;
+            default:
+                throw new AssertionError("ConceptKind does not have a value type: " + varKind);
         }
-        return true;
+
+        assertEquals(valueType, varValueType);
     }
 
-//    @When("get answers of typeql fetch")
-//    public void typeql_fetch(String typeQLQueryStatements) {
-//        try {
-//            TypeQLFetch typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asFetch();
-//            clearAnswers();
-//            fetchAnswers = tx().query(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
-//        } catch (TypeQLException e) {
-//            // NOTE: We manually close transaction here, because we want to align with all non-java drivers,
-//            // where parsing happens at server-side which closes transaction if they fail
-//            tx().close();
-//            throw e;
-//        }
-//    }
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get value type: {non_semicolon}")
+    public void answer_get_row_get_variable_get_type_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
 
-    @Then("fetch answers are")
-    public void fetch_answers_are(String expectedJSON) {
-        JSON expected = JSON.parse(expectedJSON);
-        assertTrue("Fetch response is a list of JSON objects, but the behaviour test expects something else", expected.isArray());
-        assertTrue(JSONListMatches(fetchAnswers, expected.asArray()));
+        String varValueType;
+        switch (varKind) {
+            case ATTRIBUTE:
+                varValueType = varConcept.asAttribute().getType().getValueType();
+                break;
+            default:
+                throw new AssertionError("ConceptKind does not have a type with a value type: " + varKind);
+        }
+
+        assertEquals(valueType, varValueType);
+    }
+
+    @Then("answer get row\\({integer}) get attribute type{by_index_of_var}\\({var}) is untyped: {bool}")
+    public void answer_get_row_get_attribute_type_is_untyped(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, boolean isUntyped) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(isUntyped, varConcept.asAttributeType().isUntyped());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {value_type}: {bool}")
+    public void answer_get_row_get_variable_is_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, boolean isValueType) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(isValueType, isConceptValueType(varConcept, varKind, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) {contains_or_doesnt} iid")
+    public void answer_get_row_get_variable_get_iid_exists(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ContainsOrDoesnt containsOrDoesnt) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        String iid;
+        switch (varKind) {
+            case ENTITY:
+                iid = varConcept.asEntity().getIID();
+                break;
+            case RELATION:
+                iid = varConcept.asRelation().getIID();
+                break;
+            default:
+                throw new IllegalStateException("ConceptKind does not have iids: " + varKind);
+        }
+        containsOrDoesnt.check(iid != null && !iid.isEmpty());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type}{may_error}")
+    public void answer_get_row_get_variable_as_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        assertNotNull(varValue.asUntyped());
+        mayError.check(() -> unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.asUntyped());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type} {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_as_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
+        isOrNot.compare(parseExpectedValue(value, Optional.of(valueType)), unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get concepts size is: {integer}")
+    public void answer_get_row_get_concepts_size_is(int rowIndex, int size) {
+        collectRowsAnswerIfNeeded();
+        int conceptsSize = getRowGetConcepts(rowIndex).size();
+        assertEquals(String.format("Expected [%d] answers, but got [%d]", size, conceptsSize), size, conceptsSize);
+    }
+
+    @Then("answer {contains_or_doesnt} document:")
+    public void answer_contains_document(Parameters.ContainsOrDoesnt containsOrDoesnt, String expectedDocument) {
+        collectDocumentsAnswerIfNeeded();
+        JSON expectedJSON = JSON.parse(expectedDocument);
+        containsOrDoesnt.check(JSONListContains(collectedDocuments, expectedJSON));
     }
 }

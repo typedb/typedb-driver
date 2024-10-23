@@ -14,7 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
+import json
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from decimal import Decimal
@@ -26,6 +26,7 @@ from hamcrest import *
 from tests.behaviour.config.parameters import ConceptKind, MayError, ValueType, parse_bool, parse_list, \
     try_parse_value_type, is_or_not_reason
 from tests.behaviour.context import Context
+from tests.behaviour.util.util import list_contains_json
 from typedb.api.answer.query_type import QueryType
 from typedb.api.concept.concept import Concept
 from typedb.api.concept.instance.attribute import Attribute
@@ -78,7 +79,7 @@ def step_impl(context: Context, is_or_not: bool, answer_type: str):
         assert_that(context.answer.is_ok(), is_(is_or_not), "Expected is_ok()")
     elif answer_type == "concept rows":
         assert_that(context.answer.is_concept_rows(), is_(is_or_not), "Expected is_concept_rows()")
-    elif answer_type == "concept trees":
+    elif answer_type == "concept documents":
         assert_that(context.answer.is_concept_documents(), is_(is_or_not), "Expected is_concept_documents()")
 
 
@@ -90,7 +91,7 @@ def unwrap_answer_rows(context: Context):
     context.unwrapped_answer = context.answer.as_concept_rows()
 
 
-def unwrap_answer_trees(context: Context):
+def unwrap_answer_documents(context: Context):
     context.unwrapped_answer = context.answer.as_concept_documents()
 
 
@@ -104,9 +105,9 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: unwrap_answer_rows(context))
 
 
-@step("answer unwraps as concept trees{may_error:MayError}")
+@step("answer unwraps as concept documents{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: unwrap_answer_trees(context))
+    may_error.check(lambda: unwrap_answer_documents(context))
 
 
 def unwrap_answer_if_needed(context: Context):
@@ -119,7 +120,7 @@ def unwrap_answer_if_needed(context: Context):
         elif context.answer.is_concept_rows():
             unwrap_answer_rows(context)
         elif context.answer.is_concept_documents():
-            unwrap_answer_trees(context)
+            unwrap_answer_documents(context)
         else:
             raise ValueError(
                 "Cannot unwrap answer: it should be in Ok/ConceptRows/ConceptDocuments, but appeared to be something else")
@@ -148,26 +149,21 @@ def collect_answer_if_needed(context: Context):
     unwrap_answer_if_needed(context)
 
     if context.collected_answer is None:
-        if context.unwrapped_answer.is_concept_rows():
+        if context.unwrapped_answer.is_concept_rows() or context.unwrapped_answer.is_concept_documents():
             context.collected_answer = list(context.unwrapped_answer)
         else:
             raise NotImplemented("Cannot collect answer")
 
 
-def assert_answer_size(answer, size: int):
-    assert_that(len(answer), is_(size))
-
-
 @step("answer size is: {size:Int}")
 def step_impl(context: Context, size: int):
     collect_answer_if_needed(context)
-    assert_answer_size(context.collected_answer, size)
+    assert_that(len(context.collected_answer), is_(size))
 
 
 @step("answer query type {is_or_not:IsOrNot}: {query_type:QueryType}")
 def step_impl(context: Context, is_or_not: bool, query_type: QueryType):
-    collect_answer_if_needed(context)
-    answer_query_type = context.collected_answer[0].query_type
+    answer_query_type = context.answer.query_type
     assert_that(answer_query_type == query_type, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=answer_query_type, expected=query_type))
 
@@ -195,6 +191,12 @@ def step_impl(context: Context):
     collect_answer_if_needed(context)
     column_names = context.collected_answer[0].column_names()
     assert_that(sorted(list(column_names)), equal_to(sorted(parse_list(context.table))))
+
+
+def get_row_get_concepts(context: Context, row_index: int) -> [Concept]:
+    collect_answer_if_needed(context)
+    row = context.collected_answer[row_index]
+    return list(row.concepts())
 
 
 def get_row_get_concept(context: Context, row_index: int, var: str, is_by_var_index: bool) -> Concept:
@@ -269,6 +271,14 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
         return get_row_get_value(context, row_index, var, is_by_var_index)
     else:
         raise ValueError(f"Not all ConceptKind variants are covered! Found {kind}")
+
+
+@step("answer get row({row_index:Int}) query type {is_or_not:IsOrNot}: {query_type:QueryType}")
+def step_impl(context: Context, row_index: int, is_or_not: bool, query_type: QueryType):
+    collect_answer_if_needed(context)
+    answer_query_type = context.collected_answer[row_index].query_type
+    assert_that(answer_query_type == query_type, is_(is_or_not),
+                is_or_not_reason(is_or_not, real=answer_query_type, expected=query_type))
 
 
 @step("answer get row({row_index:Int}) get variable{is_by_var_index:IsByVarIndex}({var:Var}){may_error:MayError}")
@@ -526,10 +536,15 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get iid exists")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str):
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) {contains_or_doesnt:ContainsOrDoesnt} iid")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              contains_or_doesnt: bool):
     concept_iid = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_iid()
-    assert_that(concept_iid, is_not(None))
+    if contains_or_doesnt:
+        assert_that(concept_iid, is_not(None))
+        assert_that(concept_iid, is_not(""))
+    else:
+        assert_that(concept_iid, is_(None))
 
 
 def parse_expected_value(value: str, value_type: Optional[ValueType]):
@@ -644,3 +659,18 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
     expected_value = parse_expected_value(value, value_type)
     assert_that(real_value_as_value_type == expected_value, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=real_value_as_value_type, expected=expected_value))
+
+
+@step("answer get row({row_index:Int}) get concepts size is: {size:Int}")
+def step_impl(context: Context, row_index: int, size: int):
+    collect_answer_if_needed(context)
+    assert_that(len(get_row_get_concepts(context, row_index)), is_(size))
+
+
+@step("answer {contains_or_doesnt:ContainsOrDoesnt} document")
+def step_impl(context: Context, contains_or_doesnt: bool):
+    collect_answer_if_needed(context)
+    expected = json.loads(context.text)
+    assert_that(list_contains_json(context.collected_answer, expected), is_(contains_or_doesnt),
+                "expected?({}) document: {}\nin answer: {}".format(contains_or_doesnt, expected,
+                                                                   context.collected_answer))

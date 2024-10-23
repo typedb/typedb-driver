@@ -17,27 +17,22 @@
  * under the License.
  */
 
-package com.typedb.driver.test.integration;
+package com.typedb.driver.test.integration.core;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
-import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.instance.Attribute;
-import com.typedb.driver.api.concept.instance.Entity;
 import com.typedb.driver.api.concept.type.AttributeType;
-import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -55,14 +50,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
-public class DriverQueryTest {
-    private static final Logger LOG = LoggerFactory.getLogger(DriverQueryTest.class);
+public class ValueTest {
     private static final String DB_NAME = "typedb";
     private static final String ADDRESS = "0.0.0.0:1729";
     private static Driver typedbDriver;
@@ -80,165 +72,7 @@ public class DriverQueryTest {
     }
 
     @Test
-    public void basicTest() {
-        if (typedbDriver.databases().contains(DB_NAME)) {
-            typedbDriver.databases().get(DB_NAME).delete();
-        }
-        typedbDriver.databases().create(DB_NAME);
-        Database database = typedbDriver.databases().get(DB_NAME);
-        assertEquals(database.name(), DB_NAME);
-
-        localhostTypeDBTX(tx -> {
-            QueryAnswer answer = tx.query("define entity person, owns age; attribute age, value long;").resolve();
-            assertTrue(answer.isOk());
-            assertEquals(answer.getQueryType(), QueryType.SCHEMA);
-
-            tx.commit();
-        }, Transaction.Type.SCHEMA);
-
-        localhostTypeDBTX(tx -> {
-            QueryAnswer answer = tx.query("match entity $x;").resolve();
-            assertTrue(answer.isConceptRows());
-            assertFalse(answer.isConceptDocuments());
-            assertEquals(answer.getQueryType(), QueryType.READ);
-
-            List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-            assertEquals(rows.size(), 1);
-
-            ConceptRow row = rows.get(0);
-            List<String> header = row.columnNames().collect(Collectors.toList());
-            assertEquals(header.size(), 1);
-
-            String columnName = header.get(0);
-            Concept conceptByName = row.get(columnName);
-            Concept conceptByIndex = row.getIndex(0);
-            assertEquals(conceptByName, conceptByIndex);
-
-            assertTrue(conceptByName.isEntityType());
-            assertFalse(conceptByName.isEntity());
-            assertFalse(conceptByName.isAttributeType());
-            assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isInstance());
-            assertEquals(conceptByName.asEntityType().getLabel(), "person");
-            assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
-            assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
-        }, Transaction.Type.READ);
-
-        localhostTypeDBTX(tx -> {
-            QueryAnswer answer = tx.query("match attribute $a;").resolve();
-            assertTrue(answer.isConceptRows());
-            assertEquals(answer.getQueryType(), QueryType.READ);
-
-            List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-            assertEquals(rows.size(), 1);
-
-            ConceptRow row = rows.get(0);
-            List<String> header = row.columnNames().collect(Collectors.toList());
-            assertEquals(header.size(), 1);
-
-            String columnName = header.get(0);
-            Concept conceptByName = row.get(columnName);
-            Concept conceptByIndex = row.getIndex(0);
-            assertEquals(conceptByName, conceptByIndex);
-
-            assertTrue(conceptByName.isAttributeType());
-            assertFalse(conceptByName.isAttribute());
-            assertFalse(conceptByName.isEntityType());
-            assertTrue(conceptByName.isType());
-            assertFalse(conceptByName.isInstance());
-            assertFalse(conceptByName.asAttributeType().isBoolean());
-            assertFalse(conceptByName.asAttributeType().isStruct());
-            assertFalse(conceptByName.asAttributeType().isString());
-            assertFalse(conceptByName.asAttributeType().isDecimal());
-            assertFalse(conceptByName.asAttributeType().isDouble());
-            assertTrue(conceptByName.asAttributeType().isLong());
-            assertEquals(conceptByName.asAttributeType().getLabel(), "age");
-            assertNotEquals(conceptByName.asAttributeType().getLabel(), "person");
-        }, Transaction.Type.READ);
-
-        localhostTypeDBTX(tx -> {
-            QueryAnswer answer = tx.query("insert $z isa person, has age 10; $x isa person, has age 20;").resolve();
-            assertTrue(answer.isConceptRows());
-            assertEquals(answer.getQueryType(), QueryType.WRITE);
-
-            List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
-            assertEquals(rows.size(), 1);
-
-            ConceptRow row = rows.get(0);
-            List<String> header = row.columnNames().collect(Collectors.toList());
-            assertEquals(header.size(), 2);
-            assertTrue(header.contains("x"));
-            assertTrue(header.contains("z"));
-
-            Concept x = row.getIndex(header.indexOf("x"));
-            assertTrue(x.isEntity());
-            assertFalse(x.isEntityType());
-            assertFalse(x.isAttribute());
-            assertFalse(x.isType());
-            assertTrue(x.isInstance());
-            assertEquals(x.asEntity().getType().asEntityType().getLabel(), "person");
-            assertNotEquals(x.asEntity().getType().asEntityType().getLabel(), "not person");
-
-            Concept z = row.get("z");
-            assertTrue(z.isEntity());
-            assertFalse(z.isEntityType());
-            assertFalse(z.isAttribute());
-            assertFalse(z.isType());
-            assertTrue(z.isInstance());
-            Entity zEntity = z.asEntity();
-            assertEquals(zEntity.getType().asEntityType().getLabel(), "person");
-            assertNotEquals(zEntity.getType().asEntityType().getLabel(), "not person");
-
-            tx.commit();
-        }, Transaction.Type.WRITE);
-
-        localhostTypeDBTX(tx -> {
-            String var = "x";
-            QueryAnswer matchAnswer = tx.query(String.format("match $%s isa person;", var)).resolve();
-            assertTrue(matchAnswer.isConceptRows());
-            assertEquals(matchAnswer.getQueryType(), QueryType.READ);
-
-            AtomicInteger matchCount = new AtomicInteger(0);
-            matchAnswer.asConceptRows().stream().forEach(row -> {
-                assertEquals(row.getQueryType(), QueryType.READ);
-                Concept x = row.get(var);
-                assertTrue(x.isEntity());
-                assertFalse(x.isEntityType());
-                assertFalse(x.isAttribute());
-                assertFalse(x.isType());
-                assertTrue(x.isInstance());
-                EntityType xType = x.asEntity().getType().asEntityType();
-                assertEquals(xType.getLabel(), "person");
-                assertNotEquals(xType.getLabel(), "not person");
-                matchCount.incrementAndGet();
-            });
-            assertEquals(matchCount.get(), 2);
-
-            QueryAnswer fetchAnswer = tx.query("match" +
-                    "    $x isa! person, has $a;" +
-                    "    $a isa! $t;" +
-                    "fetch {" +
-                    "    \"single attribute type\": $t," +
-                    "    \"single attribute\": $a," +
-                    "    \"all attributes\": { $x.* }," +
-                    "};").resolve();
-            assertTrue(fetchAnswer.isConceptDocuments());
-            assertEquals(fetchAnswer.getQueryType(), QueryType.READ);
-
-            // TODO: It will become a mature test when all the other tests are refactored in Java
-            System.out.println("Fetch results for manual testing:");
-            AtomicInteger fetchCount = new AtomicInteger(0);
-            fetchAnswer.asConceptDocuments().stream().forEach(document -> {
-                assertNotNull(document);
-                System.out.println(document);
-                fetchCount.incrementAndGet();
-            });
-            assertEquals(fetchCount.get(), 2);
-        }, Transaction.Type.READ);
-    }
-
-    @Test
-    public void attributesTest() {
+    public void attributes() {
         Database db = typedbDriver.databases().get(DB_NAME);
         db.delete();
         typedbDriver.databases().create(DB_NAME);
@@ -359,8 +193,7 @@ public class DriverQueryTest {
                         assertEquals(expected, value.asDatetimeTZ());
                         checked.incrementAndGet();
                     } else if (value.isDuration()) {
-                        String[] expectedValue = attributeValues.get(attributeName).split("T");
-                        assertEquals(new Duration(java.time.Period.parse(expectedValue[0]), java.time.Duration.parse("PT" + expectedValue[1])), value.asDuration());
+                        assertEquals(Duration.parse(attributeValues.get(attributeName)), value.asDuration());
                         checked.incrementAndGet();
                     }
                     // TODO: Add structs
@@ -368,6 +201,136 @@ public class DriverQueryTest {
                 assertEquals(checked.get(), attributeValues.size()); // Make sure that every attribute is checked!
             }
         }, Transaction.Type.READ);
+    }
+
+    @Test
+    public void duration() {
+        // parse examples do not fail
+        Duration.parse("P1Y10M7DT15H44M5.00394892S");
+        Duration.parse("P55W");
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute d, value duration;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1Y isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P12M PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(12, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P1Y0M0DT0H0M0S"), typedbDuration);
+            assertEquals(Duration.parse("P0Y12M0DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y1M0DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1M isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P1M PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(1, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y1M0DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M31DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M30DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M29DT0H0M0S"), typedbDuration);
+            assertNotEquals(Duration.parse("P0Y0M28DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P1D isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P1D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(1, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M1DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT1H isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT1H", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(3600, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M0DT1H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT1S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT1S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(1, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0Y0M0DT0H0M1S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0.000000001S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0.000000001S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(1, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0.000000001S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0.0000001S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0.0000001S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(100, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0.0000001S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P0DT0S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P0D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(0, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P0DT0S"), typedbDuration);
+            assertEquals(Duration.parse("P0W"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P7W isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P49D PT0S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(0, typedbDuration.getMonths());
+            assertEquals(49, typedbDuration.getDays());
+            assertEquals(0, typedbDuration.getSeconds());
+            assertEquals(0, typedbDuration.getNano());
+            assertEquals(Duration.parse("P7W"), typedbDuration);
+            assertEquals(Duration.parse("P0Y0M49DT0H0M0S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $d P999Y12M31DT24H59M59.999999999S isa d;").resolve();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().asDuration();
+            assertEquals("P12000M31D PT24H59M59.999999999S", typedbDuration.toString()); // we just reuse the java's classes
+            assertEquals(12000, typedbDuration.getMonths());
+            assertEquals(31, typedbDuration.getDays());
+            assertEquals(89999, typedbDuration.getSeconds());
+            assertEquals(999999999, typedbDuration.getNano());
+            assertEquals(Duration.parse("P999Y12M31DT24H59M59.999999999S"), typedbDuration);
+        }, Transaction.Type.WRITE);
     }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {

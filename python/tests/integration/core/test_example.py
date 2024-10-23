@@ -74,13 +74,14 @@ class TestExample(TestCase):
                 assert_that(answer.is_ok(), is_(True))
                 assert_that(answer.query_type, is_(QueryType.SCHEMA))
 
-                # Commit automatically closes the transaction. You can still safely call for it inside "with" blocks
+                # Commit automatically closes the transaction. It can still be safely called inside "with" blocks
                 tx.commit()
 
             # Open a read transaction to safely read anything without database modifications
             with driver.transaction(database.name, TransactionType.READ) as tx:
                 answer = tx.query("match entity $x;").resolve()
                 assert_that(answer.is_concept_rows(), is_(True))
+                assert_that(answer.is_concept_documents(), is_(False))
                 assert_that(answer.query_type, is_(QueryType.READ))
 
                 # Collect concept rows that represent the answer as a table

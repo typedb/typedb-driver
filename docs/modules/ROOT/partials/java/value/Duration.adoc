@@ -1,0 +1,225 @@
+[#_Duration]
+=== Duration
+
+*Package*: `com.typedb.driver.common`
+
+// tag::methods[]
+[#_Duration_equals_java_lang_Object]
+==== equals
+
+[source,java]
+----
+public boolean equals​(java.lang.Object obj)
+----
+
+Checks if this Duration is equal to another object. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| `java.lang.Object`
+|===
+
+[caption=""]
+.Returns
+`public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+label.equals(obj);
+----
+
+[#_Duration_getDatePart_]
+==== getDatePart
+
+[source,java]
+----
+public java.time.Period getDatePart()
+----
+
+Returns the date part of this duration. 
+
+
+[caption=""]
+.Returns
+`public java.time.Period`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getDatePart();
+----
+
+[#_Duration_getDays_]
+==== getDays
+
+[source,java]
+----
+public int getDays()
+----
+
+Returns the amount of days of this ``Duration`` from the date part. 
+
+
+[caption=""]
+.Returns
+`public int`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getMonths();
+----
+
+[#_Duration_getMonths_]
+==== getMonths
+
+[source,java]
+----
+public int getMonths()
+----
+
+Returns the amount of months of this ``Duration`` from the date part. 
+
+
+[caption=""]
+.Returns
+`public int`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getMonths();
+----
+
+[#_Duration_getNano_]
+==== getNano
+
+[source,java]
+----
+public long getNano()
+----
+
+Returns the number of nanoseconds within the second in this ``Duration`` from the time part. 
+
+
+[caption=""]
+.Returns
+`public long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getNano();
+----
+
+[#_Duration_getSeconds_]
+==== getSeconds
+
+[source,java]
+----
+public long getSeconds()
+----
+
+Returns the amount of seconds of this ``Duration`` from the time part. 
+
+
+[caption=""]
+.Returns
+`public long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getSeconds();
+----
+
+[#_Duration_getTimePart_]
+==== getTimePart
+
+[source,java]
+----
+public java.time.Duration getTimePart()
+----
+
+Returns the time part of this duration. 
+
+
+[caption=""]
+.Returns
+`public java.time.Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.getTimePart();
+----
+
+[#_Duration_parse_java_lang_String]
+==== parse
+
+[source,java]
+----
+public static Duration parse​(java.lang.String durationString)
+----
+
+Parses a ``Duration`` object from a string in ISO 8601 format. Throws java.time exceptions 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `durationString` a| A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+Duration.parse("P1Y10M7DT15H44M5.00394892S");
+     Duration.parse("P55W");
+----
+
+[#_Duration_toString_]
+==== toString
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+Returns the string representation of the duration. 
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+duration.toString();
+----
+
+// end::methods[]
+

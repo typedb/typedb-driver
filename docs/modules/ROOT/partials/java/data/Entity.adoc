@@ -1,12 +1,12 @@
 [#_Entity]
 === Entity
 
-*Package*: `com.typedb.driver.api.concept.thing`
+*Package*: `com.typedb.driver.api.concept.instance`
 
 *Superinterfaces:*
 
 * `Concept`
-* `Thing`
+* `Instance`
 
 Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
@@ -166,28 +166,6 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Entity_asThingType_]
-==== asThingType
-
-[source,java]
-----
-default ThingType asThingType()
-----
-
-Casts the concept to ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThingType();
-----
-
 [#_Entity_asType_]
 ==== asType
 
@@ -253,6 +231,29 @@ Retrieves the unique id of the ``Entity``.
 [source,java]
 ----
 entity.getIID();
+----
+
+[#_Entity_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
 ----
 
 [#_Entity_getType_]
@@ -437,29 +438,6 @@ Checks if the concept is a ``RoleType``.
 [source,java]
 ----
 concept.isRoleType();
-----
-
-[#_Entity_isThingType_]
-==== isThingType
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThingType()
-----
-
-Checks if the concept is a ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThingType();
 ----
 
 [#_Entity_isType_]

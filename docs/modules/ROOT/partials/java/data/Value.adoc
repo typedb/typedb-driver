@@ -201,7 +201,7 @@ value.asDouble();
 
 [source,java]
 ----
-com.typedb.driver.common.Duration asDuration()
+Duration asDuration()
 ----
 
 Returns a ``duration`` value of this value concept. If the value has another type, raises an exception. 
@@ -209,7 +209,7 @@ Returns a ``duration`` value of this value concept. If the value has another typ
 
 [caption=""]
 .Returns
-`com.typedb.driver.common.Duration`
+`Duration`
 
 [caption=""]
 .Code examples
@@ -260,6 +260,28 @@ Casts the concept to ``EntityType``.
 [source,java]
 ----
 concept.asEntityType();
+----
+
+[#_Value_asInstance_]
+==== asInstance
+
+[source,java]
+----
+default Instance asInstance()
+----
+
+Casts the concept to ``Instance``. 
+
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asInstance();
 ----
 
 [#_Value_asLong_]
@@ -394,50 +416,6 @@ Returns a ``struct`` value of this value concept represented as a map from field
 value.asStruct();
 ----
 
-[#_Value_asThing_]
-==== asThing
-
-[source,java]
-----
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThing();
-----
-
-[#_Value_asThingType_]
-==== asThingType
-
-[source,java]
-----
-default ThingType asThingType()
-----
-
-Casts the concept to ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThingType();
-----
-
 [#_Value_asType_]
 ==== asType
 
@@ -504,6 +482,29 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
+[#_Value_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
+----
+
 [#_Value_getType_]
 ==== getType
 
@@ -512,7 +513,7 @@ concept.asValue();
 java.lang.String getType()
 ----
 
-Retrieves the string representation of the type of this value concept. 
+Retrieves the ``String`` describing the value type of this ``Value`` concept. 
 
 
 [caption=""]
@@ -772,6 +773,29 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
+[#_Value_isInstance_]
+==== isInstance
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isInstance()
+----
+
+Checks if the concept is an ``Instance``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isInstance();
+----
+
 [#_Value_isLong_]
 ==== isLong
 
@@ -905,52 +929,6 @@ Returns ``True`` if the value which this value concept holds is of type ``struct
 [source,java]
 ----
 value.isStruct();
-----
-
-[#_Value_isThing_]
-==== isThing
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThing()
-----
-
-Checks if the concept is a ``Thing``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThing();
-----
-
-[#_Value_isThingType_]
-==== isThingType
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThingType()
-----
-
-Checks if the concept is a ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThingType();
 ----
 
 [#_Value_isType_]

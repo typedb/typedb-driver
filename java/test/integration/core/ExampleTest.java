@@ -1,65 +1,25 @@
-# TypeDB Java Driver
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-## Driver Architecture
-To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+package com.typedb.driver.test.integration.core;
 
-## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Java, refer to the [API Reference](https://typedb.com/docs/drivers/java/api-reference).
-
-## Import TypeDB Driver for Java through Maven
-
-```xml
-<repositories>
-    <repository>
-        <id>repo.typedb.com</id>
-        <url>https://repo.typedb.com/public/public-release/maven/</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>com.typedb</groupId>
-        <artifactId>typedb-driver</artifactId>
-        <version>{version}</version>
-    </dependency>
-</dependencies>
-```
-
-Further documentation: https://typedb.com/docs/drivers/java/overview
-
-## Build TypeDB Driver for Java from Source
-
-> Note: You don't need to compile TypeDB Driver from source if you just want to use it in your code. See the _"Import TypeDB Driver for Java"_ section above.
-
-1. Make sure you have the following dependencies installed on your machine:
-    - Java JDK 11 or higher
-    - [Bazel](https://docs.bazel.build/versions/master/install.html)
-
-2. Build the JAR:
-
-   a) to build the native/raw JAR:
-   ```
-   bazel build //java:driver-java
-   ```
-   The Java library JAR will be produced at: `bazel-bin/java/libdriver-java.jar`
-
-   b) to build the JAR for a Maven application:
-   ```
-   bazel build //java/:assemble-maven
-   ```
-   The Maven JAR and POM will be produced at: 
-   ```
-   bazel-bin/java/com.typedb:api.jar
-   bazel-bin/java/pom.xml
-   ```
-
-## Example usage
-
-### TypeDB Core
-
-<!-- CORE_EXAMPLE_START_MARKER -->
-
-```java
+// EXAMPLE START MARKER
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
@@ -73,19 +33,48 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+// EXAMPLE END MARKER
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+// EXAMPLE START MARKER
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class TypeDBExample {
+// EXAMPLE END MARKER
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@SuppressWarnings("Duplicates")
+// EXAMPLE START MARKER
+public class ExampleTest {
+    // EXAMPLE END MARKER
+    @BeforeClass
+    public static void setUpClass() {
+        Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
+        if (typedbDriver.databases().contains("typedb")) {
+            typedbDriver.databases().get("typedb").delete();
+        }
+        typedbDriver.close();
+    }
+
+    @Test
+    // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
         try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS)) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");
+            assertEquals(database.name(), "typedb");
 
             // Open transactions of 3 types
             Transaction tx = driver.transaction(database.name(), Transaction.Type.READ);
@@ -113,6 +102,8 @@ public class TypeDBExample {
                         "attribute age, value long;";
 
                 QueryAnswer answer = transaction.query(defineQuery).resolve();
+                assertTrue(answer.isOk());
+                assertEquals(QueryType.SCHEMA, answer.getQueryType());
 
                 // Commit automatically closes the transaction. It can still be safely called inside "try" blocks
                 transaction.commit();
@@ -122,21 +113,28 @@ public class TypeDBExample {
             // Open a read transaction to safely read anything without database modifications
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
                 QueryAnswer entityAnswer = transaction.query("match entity $x;").resolve();
+                assertTrue(entityAnswer.isConceptRows());
+                assertFalse(entityAnswer.isConceptDocuments());
+                assertEquals(QueryType.READ, entityAnswer.getQueryType());
 
                 // Collect concept rows that represent the answer as a table
                 List<ConceptRow> entityRows = entityAnswer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(entityRows.size(), 1);
                 ConceptRow entityRow = entityRows.get(0);
 
                 // Collect column names to get concepts by index if the variable names are lost
                 List<String> entityHeader = entityRow.columnNames().collect(Collectors.toList());
+                assertEquals(entityHeader.size(), 1);
 
                 String columnName = entityHeader.get(0);
+                assertEquals(columnName, "x");
 
                 // Get concept by the variable name (column name)
                 Concept conceptByName = entityRow.get(columnName);
 
                 // Get concept by the header's index
                 Concept conceptByIndex = entityRow.getIndex(0);
+                assertEquals(conceptByName, conceptByIndex);
 
                 // Check if it's an entity type before the conversion
                 if (conceptByName.isEntityType()) {
@@ -145,9 +143,16 @@ public class TypeDBExample {
                             conceptByName.asEntityType().getLabel(),
                             conceptByIndex.asEntityType().getLabel());
                 }
+                assertTrue(conceptByName.isEntityType());
+                assertTrue(conceptByName.isType());
+                assertEquals(conceptByName.asEntityType().getLabel(), "person");
+                assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
+                assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
 
                 // Continue querying in the same transaction if needed
                 QueryAnswer attributeAnswer = transaction.query("match attribute $a;").resolve();
+                assertTrue(attributeAnswer.isConceptRows());
+                assertEquals(QueryType.READ, attributeAnswer.getQueryType());
 
                 // ConceptRowIterator can be used as any other Iterator
                 ConceptRowIterator attributeRowIterator = attributeAnswer.asConceptRows();
@@ -158,6 +163,7 @@ public class TypeDBExample {
                     // Column names are a stream, so they can be used in a similar way
                     Iterator<String> columnNameIterator = attributeRow.columnNames().iterator();
                     columnName = columnNameIterator.next();
+                    assertFalse(columnNameIterator.hasNext());
 
                     conceptByName = attributeRow.get(columnName);
 
@@ -165,8 +171,15 @@ public class TypeDBExample {
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
                         System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.getValueType());
+                        assertTrue(attributeType.isLong() || attributeType.isString());
+                        assertTrue(Objects.equals(attributeType.getValueType(), "long") || Objects.equals(attributeType.getValueType(), "string"));
+                        assertTrue(Objects.equals(attributeType.getLabel(), "age") || Objects.equals(attributeType.getLabel(), "name"));
+                        assertNotEquals(attributeType.getLabel(), "person");
+                        assertNotEquals(attributeType.getLabel(), "person:age");
 
                         System.out.printf("It is also possible to just print the concept itself: '%s'%n", conceptByName);
+                        assertTrue(conceptByName.isAttributeType());
+                        assertTrue(conceptByName.isType());
                     }
                 }
             }
@@ -175,9 +188,12 @@ public class TypeDBExample {
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
                 String insertQuery = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";";
                 QueryAnswer answer = transaction.query(insertQuery).resolve();
+                assertTrue(answer.isConceptRows());
+                assertEquals(QueryType.WRITE, answer.getQueryType());
 
                 // Insert queries also return concept rows
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(rows.size(), 1);
                 ConceptRow row = rows.get(0);
                 row.columnNames().iterator().forEachRemaining(columnName -> {
                     Concept insertedConcept = row.get(columnName);
@@ -189,6 +205,9 @@ public class TypeDBExample {
 
                 // It is possible to ask for the column names again
                 List<String> header = row.columnNames().collect(Collectors.toList());
+                assertEquals(header.size(), 2);
+                assertTrue(header.contains("x"));
+                assertTrue(header.contains("z"));
 
                 Concept x = row.getIndex(header.indexOf("x"));
                 if (x.isEntity()) {
@@ -204,15 +223,26 @@ public class TypeDBExample {
                 // A match query can be used for concept row outputs
                 String var = "x";
                 QueryAnswer matchAnswer = transaction.query(String.format("match $%s isa person;", var)).resolve();
+                assertTrue(matchAnswer.isConceptRows());
+                assertEquals(QueryType.READ, matchAnswer.getQueryType());
 
                 // Simple match queries always return concept rows
                 AtomicInteger matchCount = new AtomicInteger(0);
                 matchAnswer.asConceptRows().stream().forEach(row -> {
+                    assertEquals(QueryType.READ, row.getQueryType());
                     Concept x = row.get(var);
+                    assertTrue(x.isEntity());
+                    assertFalse(x.isEntityType());
+                    assertFalse(x.isAttribute());
+                    assertFalse(x.isType());
+                    assertTrue(x.isInstance());
                     EntityType xType = x.asEntity().getType().asEntityType();
+                    assertEquals(xType.getLabel(), "person");
+                    assertNotEquals(xType.getLabel(), "not person");
                     matchCount.incrementAndGet();
                     System.out.printf("Found a person %s of type %s%n", x, xType);
                 });
+                assertEquals(matchCount.get(), 2);
                 System.out.println("Total persons found: " + matchCount.get());
 
                 // A fetch query can be used for concept document outputs with flexible structure
@@ -224,16 +254,20 @@ public class TypeDBExample {
                         "  \"single attribute\": $a," +
                         "  \"all attributes\": { $x.* }," +
                         "};").resolve();
+                assertTrue(fetchAnswer.isConceptDocuments());
+                assertEquals(QueryType.READ, fetchAnswer.getQueryType());
 
                 // Fetch queries always return concept documents
                 AtomicInteger fetchCount = new AtomicInteger(0);
                 fetchAnswer.asConceptDocuments().stream().forEach(document -> {
+                    assertNotNull(document);
                     System.out.println("Fetched a document: " + document);
                     System.out.print("This document contains an attribute of type: ");
                     System.out.println(document.asObject().get("single attribute type").asObject().get("label"));
 
                     fetchCount.incrementAndGet();
                 });
+                assertEquals(fetchCount.get(), 3);
                 System.out.println("Total documents fetched: " + fetchCount.get());
             }
         }
@@ -241,28 +275,4 @@ public class TypeDBExample {
         System.out.println("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     }
 }
-```
-
-<!-- CORE_EXAMPLE_END_MARKER -->
-
-## FAQs
-
-**Q:** I see a large number of Netty and gRPC log messages. How can I disable them?
-
-**A:** Create a Logback configuration file and set the minimum log level to ERROR. You can do so with the following steps:
-1. Create a file in your `resources` path (`src/main/resources` by default in a Maven project) named `logback.xml`.
-2. Copy the following document into `logback.xml`:
-```xml
-<configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <root level="ERROR">
-        <appender-ref ref="STDOUT"/>
-    </root>
-
-</configuration>
-```
+// EXAMPLE END MARKER

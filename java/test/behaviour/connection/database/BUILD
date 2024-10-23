@@ -30,6 +30,7 @@ java_library(
         # Internal Package Dependencies
         "//java/api:api",
         "//java/common:common",
+        "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
 
         # External Maven Dependencies

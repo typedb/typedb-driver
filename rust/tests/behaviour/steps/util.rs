@@ -53,128 +53,11 @@ pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> 
     rows.iter().map(|row| keys.iter().zip(row).map(|(k, v)| (k.as_str(), v.as_str())).collect())
 }
 
-pub async fn match_answer_concept_map(
-    context: &Context,
-    answer_identifiers: &HashMap<&str, &str>,
-    answer: &ConceptRow,
-) -> bool {
-    // stream::iter(answer_identifiers.keys())
-    //     .all(|key| async {
-    //         answer.map.contains_key(*key)
-    //             && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
-    //     })
-    //     .await
-    todo!()
+pub fn list_contains_json(list: &Vec<JSON>, json: &JSON) -> bool {
+    list.iter().any(|list_json| jsons_equal_up_to_reorder(list_json, json))
 }
 
-pub async fn match_answer_concept(context: &Context, answer_identifier: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = answer_identifier.splitn(2, ':').collect();
-    match identifiers[0] {
-        "key" => key_values_equal(context, identifiers[1], answer).await,
-        "label" => labels_equal(identifiers[1], answer),
-        "value" => values_equal(identifiers[1], answer),
-        "attr" => attribute_values_equal(identifiers[1], answer),
-        _ => unreachable!(),
-    }
-}
-
-async fn key_values_equal(context: &Context, expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
-    assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
-    //
-    // let res = match answer {
-    //     Concept::Entity(entity) => {
-    //         async { entity.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-    //             .await
-    //     }
-    //     Concept::Relation(rel) => {
-    //         async { rel.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-    //             .await
-    //     }
-    //     Concept::Attribute(attr) => {
-    //         async { attr.get_has(context.transaction(), vec![], vec![Annotation::Key]) }
-    //             .and_then(|stream| async { stream.try_collect::<Vec<_>>().await })
-    //             .await
-    //     }
-    //     _ => unreachable!("Unexpected Concept type: {answer:?}"),
-    // };
-    // match res {
-    //     Ok(keys) => keys
-    //         .into_iter()
-    //         .find(|key| key.type_.label == identifiers[0])
-    //         .map(|attr| value_equals_str(&attr.value, identifiers[1]))
-    //         .unwrap_or(false),
-    //     Err(_) => false,
-    // }
-    todo!()
-}
-
-fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
-    match answer {
-        Concept::EntityType(EntityType { label, .. }) => expected_label == label,
-        Concept::RelationType(RelationType { label, .. }) => expected_label == label,
-        Concept::RoleType(RoleType { label, .. }) => expected_label == label.to_string(),
-        Concept::AttributeType(AttributeType { label, .. }) => expected_label == label,
-        _ => unreachable!(),
-    }
-}
-
-fn attribute_values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
-    assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
-    let Concept::Attribute(Attribute { value, .. }) = answer else { unreachable!() };
-    value_equals_str(value, identifiers[1])
-}
-
-fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
-    assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
-    let Concept::Value(value) = answer else { unreachable!() };
-    value_equals_str(value, identifiers[1].trim())
-}
-
-fn value_equals_str(value: &Value, expected: &str) -> bool {
-    match value {
-        Value::String(val) => val == expected,
-        Value::Long(val) => expected.parse::<i64>().map(|expected| expected.eq(val)).unwrap_or(false),
-        Value::Double(val) => {
-            expected.parse::<f64>().map(|expected| equals_approximate(expected, *val)).unwrap_or(false)
-        }
-        Value::Boolean(val) => expected.parse::<bool>().map(|expected| expected.eq(val)).unwrap_or(false),
-        Value::Datetime(val) => {
-            if expected.contains(':') {
-                val == &NaiveDateTime::parse_from_str(expected, "%Y-%m-%dT%H:%M:%S").unwrap()
-            } else {
-                let my_date = NaiveDate::parse_from_str(expected, "%Y-%m-%d").unwrap();
-                let my_time = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
-                val == &NaiveDateTime::new(my_date, my_time)
-            }
-        }
-        Value::Decimal(_) => {
-            todo!()
-        }
-        Value::Date(_) => {
-            todo!()
-        }
-        Value::DatetimeTZ(_) => {
-            todo!()
-        }
-        Value::Duration(_) => {
-            todo!()
-        }
-        Value::Struct(_, _) => {
-            todo!()
-        }
-    }
-}
-
-pub fn json_matches_str(string: &str, json: &JSON) -> TypeDBResult<bool> {
-    parse_json(string).map(|rhs| jsons_equal_up_to_reorder(json, &rhs))
-}
-
-fn parse_json(json: &str) -> TypeDBResult<JSON> {
+pub(crate) fn parse_json(json: &str) -> TypeDBResult<JSON> {
     fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
         match json {
             serde_json::Value::Null => JSON::Null,
@@ -235,35 +118,8 @@ fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
 }
 
 pub fn equals_approximate(first: f64, second: f64) -> bool {
-    const EPS: f64 = 1e-4;
+    const EPS: f64 = 1e-10;
     (first - second).abs() < EPS
-}
-
-pub async fn match_templated_answer(
-    context: &Context,
-    step: &Step,
-    answer: &ConceptRow,
-) -> TypeDBResult<Vec<ConceptRow>> {
-    let query = apply_query_template(step.docstring().unwrap(), answer);
-    // let parsed = parse_query(&query).map_err(|err| Error::Other(err.to_string()))?;
-    // context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
-    todo!()
-}
-
-fn apply_query_template(query_template: &str, answer: &ConceptRow) -> String {
-    // let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
-    // re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
-    todo!()
-}
-
-fn get_iid(concept: &Concept) -> String {
-    let iid = match concept {
-        Concept::Entity(Entity { iid, .. }) => iid,
-        Concept::Relation(Relation { iid, .. }) => iid,
-        Concept::Attribute(Attribute { iid, .. }) => iid,
-        _ => unreachable!("Unexpected Concept type: {concept:?}"),
-    };
-    iid.to_string()
 }
 
 #[macro_export]

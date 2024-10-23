@@ -47,3 +47,10 @@ def json_matches(lhs, rhs) -> bool:
         return len(rhs_matches) == len(rhs)
     else:
         return lhs == rhs
+
+
+def list_contains_json(json_list: list, json: dict) -> bool:
+    for json_from_list in json_list:
+        if json_matches(json_from_list, json):
+            return True
+    return False

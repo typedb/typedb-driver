@@ -8,6 +8,8 @@
 * `java.util.Iterator<ConceptRow>`
 * `QueryAnswer`
 
+Represents an iterator over ``ConceptRow``s returned as a server answer.
+
 // tag::methods[]
 [#_ConceptRowIterator_asConceptRows_]
 ==== asConceptRows
@@ -18,12 +20,19 @@
 default ConceptRowIterator asConceptRows()
 ----
 
-Casts the query answer to ``ConceptRowStreamQueryAnswer``.
+Casts the query answer to ``ConceptRowIterator``. 
 
 
 [caption=""]
 .Returns
 `ConceptRowIterator`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asConceptRows();
+----
 
 [#_ConceptRowIterator_isConceptRows_]
 ==== isConceptRows
@@ -33,12 +42,19 @@ Casts the query answer to ``ConceptRowStreamQueryAnswer``.
 default boolean isConceptRows()
 ----
 
-Checks if the query answer is a ``ConceptRowStream``.
+Checks if the query answer is a ``ConceptRowIterator``. 
 
 
 [caption=""]
 .Returns
 `boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isConceptRows();
+----
 
 [#_ConceptRowIterator_stream_]
 ==== stream
@@ -49,11 +65,19 @@ Checks if the query answer is a ``ConceptRowStream``.
 java.util.stream.Stream<ConceptRow> stream()
 ----
 
+Creates a stream over ``ConceptRow``s based on this iterator. 
 
 
 [caption=""]
 .Returns
 `java.util.stream.Stream<ConceptRow>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+answer.asConceptRows().stream();
+----
 
 // end::methods[]
 

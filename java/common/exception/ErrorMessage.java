@@ -81,10 +81,8 @@ public abstract class ErrorMessage {
                 new Driver(7, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
                 new Driver(8, "Value cannot be less than 1, was: '%d'.");
-        public static final Driver MISSING_DB_NAME =
-                new Driver(9, "Database name cannot be null.");
         public static final Driver UNIMPLEMENTED =
-                new Driver(10, "This operation is not implemented yet.");
+                new Driver(9, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
@@ -101,6 +99,8 @@ public abstract class ErrorMessage {
                 new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
         public static final Concept MISSING_VARIABLE =
                 new Concept(3, "Variable name cannot be null or empty.");
+        public static final Concept INVALID_VALUE_CASTING =
+                new Concept(4, "Invalid value casting to '%s'.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
@@ -129,10 +129,8 @@ public abstract class ErrorMessage {
                 new Internal(1, "Unexpected native value encountered!");
         public static final Internal ILLEGAL_STATE =
                 new Internal(2, "Illegal state has been reached!");
-        public static final Internal ILLEGAL_CAST =
-                new Internal(3, "Illegal casting operation to '%s'.");
         public static final Internal NULL_NATIVE_VALUE =
-                new Internal(4, "Unhandled null pointer to a native object encountered!");
+                new Internal(3, "Unhandled null pointer to a native object encountered!");
 
         private static final String codePrefix = "JIN";
         private static final String messagePrefix = "Java Internal Error";

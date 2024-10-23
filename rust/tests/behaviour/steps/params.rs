@@ -408,18 +408,18 @@ impl FromStr for IsOrNot {
 }
 
 #[derive(Debug, Parameter)]
-#[param(name = "exists_or_doesnt", regex = "(exists|does not exist)")]
-pub(crate) enum ExistsOrDoesnt {
-    Exists,
-    DoesNotExist,
+#[param(name = "contains_or_doesnt", regex = "(contains|does not contain)")]
+pub(crate) enum ContainsOrDoesnt {
+    Contains,
+    DoesNotContain,
 }
 
-impl ExistsOrDoesnt {
+impl ContainsOrDoesnt {
     pub fn check<T: fmt::Debug>(&self, scrutinee: &Option<T>, message: &str) {
         match (self, scrutinee) {
-            (Self::Exists, Some(_)) | (Self::DoesNotExist, None) => (),
-            (Self::Exists, None) => panic!("{message} does not exist"),
-            (Self::DoesNotExist, Some(value)) => panic!("{message} exists: {value:?}"),
+            (Self::Contains, Some(_)) | (Self::DoesNotContain, None) => (),
+            (Self::Contains, None) => panic!("Expected to contain, not found: {message}"),
+            (Self::DoesNotContain, Some(value)) => panic!("Expected not to contain, {value:?} is found: {message}"),
         }
     }
 
@@ -430,15 +430,22 @@ impl ExistsOrDoesnt {
         };
         self.check(&option, message)
     }
+
+    pub fn check_bool(&self, contains: bool, message: &str) {
+        match self {
+            ContainsOrDoesnt::Contains => assert!(contains, "Expected to contain, not found: {message}"),
+            ContainsOrDoesnt::DoesNotContain => assert!(!contains, "Expected not to contain, but found: {message}"),
+        }
+    }
 }
 
-impl FromStr for ExistsOrDoesnt {
+impl FromStr for ContainsOrDoesnt {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s {
-            "exists" => Self::Exists,
-            "does not exist" => Self::DoesNotExist,
-            invalid => return Err(format!("Invalid `ExistsOrDoesnt`: {invalid}")),
+            "contains" => Self::Contains,
+            "does not contain" => Self::DoesNotContain,
+            invalid => return Err(format!("Invalid `ContainsOrDoesnt`: {invalid}")),
         })
     }
 }
@@ -461,8 +468,8 @@ impl FromStr for IsByVarIndex {
     }
 }
 
-#[derive(Debug, Parameter)]
-#[param(name = "query_answer_type", regex = "(ok|concept rows|concept trees)")]
+#[derive(Debug, Clone, Copy, Parameter)]
+#[param(name = "query_answer_type", regex = "(ok|concept rows|concept documents)")]
 pub(crate) enum QueryAnswerType {
     Ok,
     ConceptRows,
@@ -475,7 +482,7 @@ impl FromStr for QueryAnswerType {
         Ok(match s {
             "ok" => Self::Ok,
             "concept rows" => Self::ConceptRows,
-            "concept trees" => Self::ConceptDocuments, // TODO: "concept documents"
+            "concept documents" => Self::ConceptDocuments,
             invalid => return Err(format!("Invalid `QueryAnswerType`: {invalid}")),
         })
     }

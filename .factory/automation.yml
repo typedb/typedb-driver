@@ -74,8 +74,7 @@ build:
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         # TODO: Temporarily update only 3.0 drivers
-        # DOCS_DIRS="docs/modules/ROOT/partials/rust docs/modules/ROOT/partials/java docs/modules/ROOT/partials/python docs/modules/ROOT/partials/nodejs docs/modules/ROOT/partials/cpp docs/modules/ROOT/partials/c docs/modules/ROOT/partials/csharp"
-        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/python")
+        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python")
         find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
         git add "${DOCS_DIRS[@]}"
@@ -169,21 +168,27 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-#    test-java-behaviour-core:
-#      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        .factory/test-core.sh //java/test/behaviour/connection/... --test_output=errors --jobs=1
-#        # TODO: delete --jobs=1 if we fix the issue with excess memory usage
-#        .factory/test-core.sh //java/test/behaviour/concept/... --test_output=errors
-#        .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
-#        .factory/test-core.sh //java/test/behaviour/query/language/... --test_output=errors --jobs=1
-#
+#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+#          .factory/test-cloud.sh //java/test/integration/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cloud-servers.sh
+#        exit $TEST_SUCCESS
+
+    test-java-behaviour-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+
 #    test-java-behaviour-cloud:
 #      image: vaticle-ubuntu-22.04
 #      dependencies:
@@ -193,11 +198,12 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .factory/test-cloud.sh //java/test/behaviour/connection/... --test_output=errors --jobs=1
-#        # TODO: delete --jobs=1 if we fix the issue with excess memory usage
-#        .factory/test-cloud.sh //java/test/behaviour/concept/... --test_output=errors
-#        .factory/test-cloud.sh //java/test/behaviour/driver/query/... --test_output=errors
-#        .factory/test-cloud.sh //java/test/behaviour/query/language/... --test_output=errors --jobs=1
+#
+#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
+#          .factory/test-cloud.sh //java/test/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cloud-servers.sh
+#        exit $TEST_SUCCESS
 
     test-python-integration:
       image: vaticle-ubuntu-22.04
@@ -253,7 +259,7 @@ build:
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #
-#        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cloud.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cloud-servers.sh
@@ -312,7 +318,7 @@ build:
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        source tool/test/start-cloud-servers.sh && # use source to receive export vars
+#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cloud.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -381,7 +387,7 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        source tool/test/start-cloud-servers.sh &&
+#        source tool/test/start-cloud-servers.sh 3 &&
 #          .factory/test-cloud.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cloud.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cloud.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -452,7 +458,7 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        source tool/test/start-cloud-servers.sh &&
+#        source tool/test/start-cloud-servers.sh 3 &&
 #          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&

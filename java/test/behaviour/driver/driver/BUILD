@@ -22,9 +22,9 @@ load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 typedb_behaviour_java_test(
     name = "test",
     srcs = [
-        "QueryTest.java",
+        "DriverTest.java",
     ],
-    test_class = "com.typedb.driver.test.behaviour.driver.query.QueryTest",
+    test_class = "com.typedb.driver.test.behaviour.driver.query.DriverTest",
     data = [
         "@vaticle_typedb_behaviour//driver:driver.feature",
     ],

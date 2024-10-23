@@ -28,6 +28,7 @@ use crate::{
     answer::{
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
+        QueryType,
     },
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
@@ -145,7 +146,7 @@ pub(super) enum QueryRequest {
 
 #[derive(Debug)]
 pub(super) enum QueryResponse {
-    Ok(),
+    Ok(QueryType),
     ConceptRowsHeader(ConceptRowHeader),
     ConceptDocumentsHeader(ConceptDocumentHeader),
     StreamConceptRows(Vec<Vec<Option<Concept>>>),

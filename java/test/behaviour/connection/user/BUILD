@@ -20,24 +20,24 @@ package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
-java_library(
-    name = "steps",
-    srcs = [
-        "UserSteps.java",
-    ],
-    visibility = ["//visibility:public"],
-    deps = [
-        # Internal Package Dependencies
-        "//java/api",
-        "//java/test/behaviour/connection:steps-base",
-        "//java/test/behaviour/util",
-
-        # External Maven Dependencies
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
-    ],
-)
-
+#java_library(
+#    name = "steps",
+#    srcs = [
+#        "UserSteps.java",
+#    ],
+#    visibility = ["//visibility:public"],
+#    deps = [
+#        # Internal Package Dependencies
+#        "//java/api",
+#        "//java/test/behaviour/connection:steps-base",
+#        "//java/test/behaviour/util",
+#
+#        # External Maven Dependencies
+#        "@maven//:junit_junit",
+#        "@maven//:io_cucumber_cucumber_java",
+#    ],
+#)
+#
 #typedb_java_test(
 #    name = "test-cloud",
 #    size = "large",

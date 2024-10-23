@@ -27,6 +27,7 @@ load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
 load("//java:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
 
 java_library(
     name = "driver-java",
@@ -130,6 +131,31 @@ javadoc_to_adoc(
     docs_dirs = dir_mapping,
 )
 
+test_to_example(
+    name = "example_core",
+    input = "//java/test/integration/core:ExampleTest.java",
+    output = "java/core_example",
+    removed_lines = ["assert", "todo"],
+    changed_words = {
+        "ExampleTest": "TypeDBExample",
+    },
+    header_comment_sign = "//",
+)
+
+# Temporary manual usage:
+# 1. Run: bazel run //java:example_core; bazel run //java:readme_example_core
+# 2. Enjoy your updated README.md!
+update_markdown_example(
+    name = "readme_example_core",
+    # TODO: Use ":example_core" as a rule with a single output instead
+    input = ":core_example",
+    output = ":README.md",
+    start_marker = "CORE_EXAMPLE_START_MARKER",
+    end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "java",
+    removed_header = "//",
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
@@ -137,6 +163,7 @@ checkstyle_test(
     exclude = glob([
         "README.md",
         "docs/**/*.adoc",
+        "core_example",
     ]),
     license_type = "apache-header",
 )

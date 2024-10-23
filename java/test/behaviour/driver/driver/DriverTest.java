@@ -29,10 +29,10 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.typedb.driver.test.behaviour",
-        features = "external/vaticle_typedb_behaviour/driver/query.feature",
+        features = "external/vaticle_typedb_behaviour/driver/driver.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
-public class QueryTest extends BehaviourTest {
+public class DriverTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:

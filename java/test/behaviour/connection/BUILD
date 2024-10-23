@@ -24,6 +24,7 @@ java_library(
     srcs = ["ConnectionStepsBase.java"],
     deps = [
         # Package dependencies
+        "//java:driver-java",
         "//java/api",
 
         # External dependencies from Maven
@@ -41,6 +42,7 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
+        "//java/test/behaviour/config:parameters",
         "//java:driver-java",
         "//java/api",
 #        "@maven//:com_vaticle_typedb_typedb_runner",

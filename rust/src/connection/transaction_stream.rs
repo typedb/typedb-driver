@@ -104,7 +104,7 @@ impl TransactionStream {
             };
 
             match header {
-                QueryResponse::Ok() => Ok(QueryAnswer::Ok()),
+                QueryResponse::Ok(query_type) => Ok(QueryAnswer::Ok(query_type)),
                 QueryResponse::ConceptDocumentsHeader(documents_header) => {
                     let header = Arc::new(documents_header);
                     let stream_header = header.clone();

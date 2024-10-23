@@ -113,15 +113,15 @@ package com.typedb.driver.test.behaviour.connection;
 //    }
 //
 //    @Override
-//    @Given("connection does not have any database")
-//    public void connection_does_not_have_any_database() {
-//        super.connection_does_not_have_any_database();
+//    @Given("connection has {integer} database(s)")
+//    public void connection_has_count_databases() {
+//        super.connection_has_count_databases();
 //    }
 //
 //    @Override
 //    @When("connection closes")
-//    public void driver_closes() {
-//        super.driver_closes();
+//    public void connection_closes() {
+//        super.connection_closes();
 //    }
 //
 //    @Given("typedb has configuration")

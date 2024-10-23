@@ -33,7 +33,7 @@ mod json;
 mod value_group;
 
 pub enum QueryAnswer {
-    Ok(),
+    Ok(QueryType),
     ConceptRowStream(Arc<ConceptRowHeader>, BoxStream<'static, Result<ConceptRow>>),
     ConceptDocumentStream(Arc<ConceptDocumentHeader>, BoxStream<'static, Result<ConceptDocument>>),
 }
@@ -48,7 +48,7 @@ impl QueryAnswer {
     /// ```
     pub fn get_query_type(&self) -> QueryType {
         match &self {
-            QueryAnswer::Ok() => QueryType::SchemaQuery, // TODO: Get it from protocol
+            QueryAnswer::Ok(query_type) => query_type.clone(),
             QueryAnswer::ConceptRowStream(header, _) => header.query_type,
             QueryAnswer::ConceptDocumentStream(header, _) => header.query_type,
         }
@@ -62,7 +62,7 @@ impl QueryAnswer {
     /// query_answer.is_ok()
     /// ```
     pub fn is_ok(&self) -> bool {
-        matches!(self, Self::Ok())
+        matches!(self, Self::Ok(_))
     }
 
     /// Check if the <code>QueryAnswer</code> is a <code>ConceptRowStream</code>.
@@ -123,7 +123,7 @@ impl QueryAnswer {
 impl fmt::Debug for QueryAnswer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            QueryAnswer::Ok() => write!(f, "QueryAnswer::Ok"),
+            QueryAnswer::Ok(_) => write!(f, "QueryAnswer::Ok"),
             QueryAnswer::ConceptRowStream(_, _) => write!(f, "QueryAnswer::ConceptRowStream(<stream>)"),
             QueryAnswer::ConceptDocumentStream(_, _) => write!(f, "QueryAnswer::ConceptDocumentStream(<stream>)"),
         }

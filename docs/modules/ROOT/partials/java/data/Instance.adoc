@@ -1,15 +1,14 @@
-[#_ThingType]
-=== ThingType
+[#_Instance]
+=== Instance
 
-*Package*: `com.typedb.driver.api.concept.type`
+*Package*: `com.typedb.driver.api.concept.instance`
 
 *Superinterfaces:*
 
 * `Concept`
-* `Type`
 
 // tag::methods[]
-[#_ThingType_asAttribute_]
+[#_Instance_asAttribute_]
 ==== asAttribute
 
 [source,java]
@@ -31,7 +30,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_ThingType_asAttributeType_]
+[#_Instance_asAttributeType_]
 ==== asAttributeType
 
 [source,java]
@@ -53,7 +52,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_ThingType_asEntity_]
+[#_Instance_asEntity_]
 ==== asEntity
 
 [source,java]
@@ -75,7 +74,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_ThingType_asEntityType_]
+[#_Instance_asEntityType_]
 ==== asEntityType
 
 [source,java]
@@ -97,7 +96,30 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_ThingType_asRelation_]
+[#_Instance_asInstance_]
+==== asInstance
+
+[source,java]
+----
+@CheckReturnValue
+default Instance asInstance()
+----
+
+Casts the concept to ``Instance``. 
+
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+instance.asInstance();
+----
+
+[#_Instance_asRelation_]
 ==== asRelation
 
 [source,java]
@@ -119,7 +141,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_ThingType_asRelationType_]
+[#_Instance_asRelationType_]
 ==== asRelationType
 
 [source,java]
@@ -141,7 +163,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_ThingType_asRoleType_]
+[#_Instance_asRoleType_]
 ==== asRoleType
 
 [source,java]
@@ -163,52 +185,29 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_ThingType_asThing_]
-==== asThing
+[#_Instance_asType_]
+==== asType
 
 [source,java]
 ----
-default Thing asThing()
+default Type asType()
 ----
 
-Casts the concept to ``Thing``. 
+Casts the concept to ``Type``. 
 
 
 [caption=""]
 .Returns
-`Thing`
+`Type`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-concept.asThing();
+concept.asType();
 ----
 
-[#_ThingType_asThingType_]
-==== asThingType
-
-[source,java]
-----
-@CheckReturnValue
-default ThingType asThingType()
-----
-
-Casts the concept to ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThingType();
-----
-
-[#_ThingType_asValue_]
+[#_Instance_asValue_]
 ==== asValue
 
 [source,java]
@@ -230,7 +229,53 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_ThingType_isAttribute_]
+[#_Instance_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
+----
+
+[#_Instance_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+Type getType()
+----
+
+Retrieves the type which this ``Instance`` belongs to. 
+
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+instance.getType();
+----
+
+[#_Instance_isAttribute_]
 ==== isAttribute
 
 [source,java]
@@ -253,7 +298,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_ThingType_isAttributeType_]
+[#_Instance_isAttributeType_]
 ==== isAttributeType
 
 [source,java]
@@ -276,7 +321,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_ThingType_isEntity_]
+[#_Instance_isEntity_]
 ==== isEntity
 
 [source,java]
@@ -299,7 +344,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_ThingType_isEntityType_]
+[#_Instance_isEntityType_]
 ==== isEntityType
 
 [source,java]
@@ -322,7 +367,30 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_ThingType_isRelation_]
+[#_Instance_isInstance_]
+==== isInstance
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isInstance()
+----
+
+Checks if the concept is a ``Instance``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+instance.isInstance();
+----
+
+[#_Instance_isRelation_]
 ==== isRelation
 
 [source,java]
@@ -345,7 +413,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_ThingType_isRelationType_]
+[#_Instance_isRelationType_]
 ==== isRelationType
 
 [source,java]
@@ -368,7 +436,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_ThingType_isRoleType_]
+[#_Instance_isRoleType_]
 ==== isRoleType
 
 [source,java]
@@ -391,16 +459,16 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_ThingType_isThing_]
-==== isThing
+[#_Instance_isType_]
+==== isType
 
 [source,java]
 ----
 @CheckReturnValue
-default boolean isThing()
+default boolean isType()
 ----
 
-Checks if the concept is a ``Thing``. 
+Checks if the concept is a ``Type``. 
 
 
 [caption=""]
@@ -411,33 +479,10 @@ Checks if the concept is a ``Thing``.
 .Code examples
 [source,java]
 ----
-concept.isThing();
+concept.isType();
 ----
 
-[#_ThingType_isThingType_]
-==== isThingType
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThingType()
-----
-
-Checks if the concept is a ``ThingType``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThingType();
-----
-
-[#_ThingType_isValue_]
+[#_Instance_isValue_]
 ==== isValue
 
 [source,java]

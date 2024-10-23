@@ -19,8 +19,7 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-//import com.typedb.core.tool.runner.TypeDBSingleton;
-
+import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
@@ -29,13 +28,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public abstract class ConnectionStepsBase {
     public static final Map<String, String> serverOptions = Collections.emptyMap();
@@ -55,9 +54,16 @@ public abstract class ConnectionStepsBase {
         return transactions.get(0);
     }
 
-    void beforeAll() {
-//        TypeDBSingleton.deleteTypeDBRunner();
+    public static Transaction txPop() {
+        return transactions.remove(0);
     }
+
+    public static Optional<Transaction> txOpt() {
+        return transactions.isEmpty() ? Optional.empty() : Optional.of(transactions.get(0));
+    }
+
+    void beforeAll() {
+    } // Can add "before all" setup steps here
 
     void before() {
         if (!isBeforeAllRan) {
@@ -67,11 +73,17 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-
-        System.out.println("ConnectionSteps.before");
     }
 
     void after() {
+        cleanupTransactions();
+
+        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        driver.databases().all().forEach(Database::delete);
+        driver.close();
+    }
+
+    void cleanupTransactions() {
         transactions.parallelStream().forEach(Transaction::close);
         transactions.clear();
 
@@ -82,12 +94,6 @@ public abstract class ConnectionStepsBase {
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         transactionsParallel.clear();
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-        driver = createTypeDBDriver("127.0.0.1:1729");
-        driver.databases().all().forEach(Database::delete);
-        driver.close();
-
-        System.out.println("ConnectionSteps.after");
     }
 
     abstract Driver createTypeDBDriver(String address);
@@ -96,19 +102,16 @@ public abstract class ConnectionStepsBase {
 
     abstract void connection_opens_with_default_authentication();
 
-    void driver_closes() {
+    void connection_closes() {
+        cleanupTransactions();
         driver.close();
-        driver = null;
     }
 
-    void connection_has_been_opened() {
-        assertNotNull(driver);
-        assertTrue(driver.isOpen());
+    void connection_is_open(boolean isOpen) {
+        assertEquals(isOpen, driver != null && driver.isOpen());
     }
 
-    void connection_does_not_have_any_database() {
-        assertNotNull(driver);
-        assertTrue(driver.isOpen());
-        assertTrue(driver.databases().all().isEmpty());
+    void connection_has_count_databases(int count) {
+        assertEquals(count, driver.databases().all().size());
     }
 }

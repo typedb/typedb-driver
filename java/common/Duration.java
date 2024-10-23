@@ -22,6 +22,7 @@ package com.typedb.driver.common;
 import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class Duration {
@@ -50,6 +51,28 @@ public class Duration {
     }
 
     /**
+     * Parses a <code>Duration</code> object from a string in ISO 8601 format. Throws java.time exceptions
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     *     Duration.parse("P1Y10M7DT15H44M5.00394892S");
+     *     Duration.parse("P55W");
+     * </pre>
+     *
+     * @param durationString A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW.
+     * @throws DateTimeParseException if the text cannot be parsed to a <code>Duration</code>.
+     */
+    public static Duration parse(String durationString) {
+        String[] durationParts = durationString.split("T");
+        java.time.Period period = java.time.Period.parse(durationParts[0]);
+        if (durationParts.length == 1) {
+            return new Duration(period, java.time.Duration.ofNanos(0));
+        } else {
+            return new Duration(period, java.time.Duration.parse("PT" + durationParts[1]));
+        }
+    }
+
+    /**
      * Returns the date part of this duration.
      *
      * <h3>Examples</h3>
@@ -71,6 +94,54 @@ public class Duration {
      */
     public java.time.Duration getTimePart() {
         return timePart;
+    }
+
+    /**
+     * Returns the amount of months of this <code>Duration</code> from the date part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getMonths();
+     * </pre>
+     */
+    public int getMonths() {
+        return datePart.getMonths();
+    }
+
+    /**
+     * Returns the amount of days of this <code>Duration</code> from the date part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getMonths();
+     * </pre>
+     */
+    public int getDays() {
+        return datePart.getDays();
+    }
+
+    /**
+     * Returns the amount of seconds of this <code>Duration</code> from the time part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getSeconds();
+     * </pre>
+     */
+    public long getSeconds() {
+        return timePart.getSeconds();
+    }
+
+    /**
+     * Returns the number of nanoseconds within the second in this <code>Duration</code> from the time part.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * duration.getNano();
+     * </pre>
+     */
+    public long getNano() {
+        return timePart.getNano();
     }
 
     /**

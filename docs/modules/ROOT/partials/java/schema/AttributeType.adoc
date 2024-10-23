@@ -6,7 +6,6 @@
 *Superinterfaces:*
 
 * `Concept`
-* `ThingType`
 * `Type`
 
 Attribute types represent properties that other types can own.
@@ -107,6 +106,28 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
+[#_AttributeType_asInstance_]
+==== asInstance
+
+[source,java]
+----
+default Instance asInstance()
+----
+
+Casts the concept to ``Instance``. 
+
+
+[caption=""]
+.Returns
+`Instance`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asInstance();
+----
+
 [#_AttributeType_asRelation_]
 ==== asRelation
 
@@ -173,28 +194,6 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_AttributeType_asThing_]
-==== asThing
-
-[source,java]
-----
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThing();
-----
-
 [#_AttributeType_asValue_]
 ==== asValue
 
@@ -215,6 +214,29 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
+----
+
+[#_AttributeType_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.getLabel();
 ----
 
 [#_AttributeType_getValueType_]
@@ -486,6 +508,29 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
+[#_AttributeType_isInstance_]
+==== isInstance
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isInstance()
+----
+
+Checks if the concept is an ``Instance``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isInstance();
+----
+
 [#_AttributeType_isLong_]
 ==== isLong
 
@@ -619,29 +664,6 @@ Returns ``True`` if this attribute type is of type ``struct``. Otherwise, return
 [source,java]
 ----
 attributeType.isStruct();
-----
-
-[#_AttributeType_isThing_]
-==== isThing
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThing()
-----
-
-Checks if the concept is a ``Thing``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.isThing();
 ----
 
 [#_AttributeType_isUntyped_]

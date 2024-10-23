@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour.connection.database;
 
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -39,9 +40,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
-    @When("connection create database: {word}")
-    public void connection_create_database(String name) {
-        connection_create_databases(list(name));
+    @When("connection create database: {non_semicolon}{may_error}")
+    public void connection_create_database(String name, Parameters.MayError mayError) {
+        mayError.check(() -> connection_create_databases(list(name)));
+    }
+
+    @When("connection create database with empty name{may_error}")
+    public void connection_create_database_with_empty_name(Parameters.MayError mayError) {
+        mayError.check(() -> connection_create_databases(list("")));
     }
 
     @When("connection create database(s):")
@@ -62,9 +68,9 @@ public class DatabaseSteps {
         CompletableFuture.allOf(creations).join();
     }
 
-    @When("connection delete database: {word}")
-    public void connection_delete_database(String name) {
-        connection_delete_databases(list(name));
+    @When("connection delete database: {word}{may_error}")
+    public void connection_delete_database(String name, Parameters.MayError mayError) {
+        mayError.check(() -> connection_delete_databases(list(name)));
     }
 
     @When("connection delete database(s):")
