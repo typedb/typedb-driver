@@ -114,7 +114,7 @@ public class TypeDBExample {
 
                 QueryAnswer answer = transaction.query(defineQuery).resolve();
 
-                // Commit automatically closes the transaction. It can still be safely called for inside "try" blocks
+                // Commit automatically closes the transaction. It can still be safely called inside "try" blocks
                 transaction.commit();
             }
 

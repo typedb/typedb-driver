@@ -105,7 +105,7 @@ public class ExampleTest {
                 assertTrue(answer.isOk());
                 assertEquals(QueryType.SCHEMA, answer.getQueryType());
 
-                // Commit automatically closes the transaction. It can still be safely called for inside "try" blocks
+                // Commit automatically closes the transaction. It can still be safely called inside "try" blocks
                 transaction.commit();
             }
 

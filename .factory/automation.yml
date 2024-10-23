@@ -21,7 +21,7 @@ config:
     dependencies: [build]
     typedb-behaviour: [build]
     typedb-protocol: [build, release]
-TODO UNBREAK ME
+
 build:
   quality:
     filter:

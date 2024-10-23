@@ -74,7 +74,7 @@ class TestExample(TestCase):
                 assert_that(answer.is_ok(), is_(True))
                 assert_that(answer.query_type, is_(QueryType.SCHEMA))
 
-                # Commit automatically closes the transaction. It can still be safely called for inside "with" blocks
+                # Commit automatically closes the transaction. It can still be safely called inside "with" blocks
                 tx.commit()
 
             # Open a read transaction to safely read anything without database modifications
