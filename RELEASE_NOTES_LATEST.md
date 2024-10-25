@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-6
+cargo add typedb-driver@3.0.0-alpha-7
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-6</version>
+        <version>3.0.0-alpha-7</version>
     </dependency>
 </dependencies>
 ```
@@ -42,52 +42,30 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.0.0-alpha-6
+pip install typedb-driver==3.0.0-alpha-7
 ```
 
 ## New Features
-- **Add concept documents for fetch queries.**
-  We add concept documents to support the results of the reintroduced `fetch` queries.
 
-  In Rust, results of `fetch` are streams of `ConceptDocument`s. It is possible to work with the structured document as a Rust `struct`, but it's also possible to convert it to a `JSON` document and/or its `String` representation.
-
-  In Java, these results are presented as iterators over custom `JSON` class instances. A respective `toString` method is available.
-
-  In Python, these results are presented as iterators over standard `dict` instances (able to be printed).
-
-  Additionally, we add `QueryType` getters for general `QueryAnswer`s, so it's possible to check its type without collection.
-
-  Usage examples are shown in `README` for the Rust and the Python drivers. Example integration tests are also available for all 3 drivers.
-
-
-- **Introduce 3.0 datetime-tz offsets and Rust driver documentation and tests.**
-  We introduce the second version of the Rust driver, adding TimeZone offsets for `datetime-tz` value types, fixing minor bugs and presenting the updated documentation and automated tests.
-
-  Rust driver changes:
-  * Add `datetime-tz` offsets;
-  * Refactor test structure to separate integration and behaviour tests using Bazel, not Cargo flags;
-  * Introduce example integration test for Rust and update README with the formatted code sample;
-  * Introduce updated 3.0 bdds for `connection` and `driver`;
-  * Introduce flags to run Rust bdds in `core` or `cloud` modes when TypeDB Cloud 3.x is implemented;
-  * Fix Rust driver docs parser and update generated docs.
-
-  Java and Python drivers changes:
-  * Add `datetime-tz` offsets;
-  * Rename `Thing` to `Instance`;
-  * Remove `ThingType`,
-  * Added `getLabel`/`get_label` for all `Concept` classes. Previously, it was only available for `Type`s.
-
-  Python driver changes:
-  * Add bdd steps to match the updated declarations.
-
-
-- **Introduce 3.0 Python driver docs and tests.**
-  We introduce the second version of the Python driver, fixing a number of minor bugs from the first version, enhancing existing APIs, and presenting the updated documentation and automated tests.
 
 ## Bugs Fixed
+- **Add handler for initial TransactionOpen response instead of erroring**
 
+  We eliminate the wrong error shown in logs when opening a transaction for all the 3.0 drivers.
 
 ## Code Refactors
-
+- **Receive `QueryAnswer`'s `QueryType` from the server for all answer types**
+  
+  The protocol has been updated, and `Ok` `QueryAnswer`s receive correct `QueryType`s from the server instead of the client-side hardcode usage.
+  
 
 ## Other Improvements
+- **Introduce 3.0 Java driver docs and tests. Implement new fetch BDD steps in 3.0 drivers**
+
+  We introduce updated documentation, usage examples, and automated tests for the Java driver, to cover all the existing driver's APIs by sustainable validations.
+  
+  Additionally, we implement additional BDD steps to check concept documents in BDDs for other 3.0 drivers: Rust and Python. 
+  
+
+
+    
