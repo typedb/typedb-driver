@@ -38,7 +38,12 @@ import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNR
 public class Loader {
 
     private static final String DRIVER_JNI_LIB_RESOURCE = "typedb_driver_jni";
-    private static final String DRIVER_JNI_LIBRARY_NAME = System.mapLibraryName(DRIVER_JNI_LIB_RESOURCE);
+    private static final String DRIVER_JNI_LIBRARY_NAME = Loader.mapLibraryName();
+
+    private static String mapLibraryName() {
+        String fullName = DRIVER_JNI_LIB_RESOURCE + "-" + DRIVER_JNI_JAR_NAME.get(new Pair<>(OS.detect(), Arch.detect()));
+        return System.mapLibraryName(fullName );
+    }
 
     private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
             new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64", new Pair<>(OS.MAC, Arch.ARM64), "macosx-arm64", new Pair<>(OS.LINUX, Arch.x86_64),

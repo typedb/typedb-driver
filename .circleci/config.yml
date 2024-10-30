@@ -821,32 +821,32 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
 
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
 
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -857,7 +857,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [development, master]
+              only: [development, master, native-library-names-include-platform]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
