@@ -43,24 +43,24 @@ pub(super) enum Request {
 
     ServersAll,
 
+    DatabasesAll,
+    DatabaseGet { database_name: String },
     DatabasesContains { database_name: String },
     DatabaseCreate { database_name: String },
-    DatabaseGet { database_name: String },
-    DatabasesAll,
 
+    DatabaseDelete { database_name: String },
     DatabaseSchema { database_name: String },
     DatabaseTypeSchema { database_name: String },
-    DatabaseDelete { database_name: String },
 
     Transaction(TransactionRequest),
 
     UsersAll,
-    UsersContain { username: String },
+    UsersGet { username: String },
+    UsersContains { username: String },
     UsersCreate { username: String, password: String },
     UsersDelete { username: String },
-    UsersGet { username: String },
-    UsersPasswordSet { username: String, password: String },
 
+    UsersPasswordSet { username: String, password: String },
     UserPasswordUpdate { username: String, password_old: String, password_new: String },
 }
 

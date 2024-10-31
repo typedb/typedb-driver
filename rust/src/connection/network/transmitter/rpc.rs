@@ -156,7 +156,7 @@ impl RPCTransmitter {
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::UsersContain { .. } => {
+            Request::UsersContains { .. } => {
                 rpc.users_contain(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::UsersCreate { .. } => rpc.users_create(request.try_into_proto()?).await.map(Response::from_proto),

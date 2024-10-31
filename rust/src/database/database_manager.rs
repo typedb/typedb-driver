@@ -53,6 +53,36 @@ impl DatabaseManager {
         Ok(Self { server_connections, databases_cache: RwLock::new(databases) })
     }
 
+    /// Retrieves all databases present on the TypeDB server
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().all();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().all().await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn all(&self) -> Result<Vec<Arc<Database>>> {
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.all_databases().await {
+                Ok(list) => {
+                    let mut new_databases: Vec<Arc<Database>> = Vec::new();
+                    for db_info in list {
+                        new_databases.push(Arc::new(Database::new(db_info, self.server_connections.clone())?));
+                    }
+                    let mut databases = self.databases_cache.write().unwrap();
+                    databases.clear();
+                    databases
+                        .extend(new_databases.iter().map(|database| (database.name().to_owned(), database.clone())));
+                    return Ok(new_databases);
+                }
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+    }
+
     /// Retrieve the database with the given name.
     ///
     /// # Arguments
@@ -115,36 +145,6 @@ impl DatabaseManager {
         let database = Database::new(database_info, self.server_connections.clone())?;
         self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));
         Ok(())
-    }
-
-    /// Retrieves all databases present on the TypeDB server
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().all();")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().all().await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn all(&self) -> Result<Vec<Arc<Database>>> {
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.all_databases().await {
-                Ok(list) => {
-                    let mut new_databases: Vec<Arc<Database>> = Vec::new();
-                    for db_info in list {
-                        new_databases.push(Arc::new(Database::new(db_info, self.server_connections.clone())?));
-                    }
-                    let mut databases = self.databases_cache.write().unwrap();
-                    databases.clear();
-                    databases
-                        .extend(new_databases.iter().map(|database| (database.name().to_owned(), database.clone())));
-                    return Ok(new_databases);
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

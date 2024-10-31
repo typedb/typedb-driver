@@ -85,6 +85,20 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
     }
 
+    pub(super) async fn databases_all(
+        &mut self,
+        req: database_manager::all::Req,
+    ) -> Result<database_manager::all::Res> {
+        self.single(|this| Box::pin(this.grpc.databases_all(req.clone()))).await
+    }
+
+    pub(super) async fn databases_get(
+        &mut self,
+        req: database_manager::get::Req,
+    ) -> Result<database_manager::get::Res> {
+        self.single(|this| Box::pin(this.grpc.databases_get(req.clone()))).await
+    }
+
     pub(super) async fn databases_contains(
         &mut self,
         req: database_manager::contains::Req,
@@ -97,20 +111,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         req: database_manager::create::Req,
     ) -> Result<database_manager::create::Res> {
         self.single(|this| Box::pin(this.grpc.databases_create(req.clone()))).await
-    }
-
-    pub(super) async fn databases_get(
-        &mut self,
-        req: database_manager::get::Req,
-    ) -> Result<database_manager::get::Res> {
-        self.single(|this| Box::pin(this.grpc.databases_get(req.clone()))).await
-    }
-
-    pub(super) async fn databases_all(
-        &mut self,
-        req: database_manager::all::Req,
-    ) -> Result<database_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.databases_all(req.clone()))).await
     }
 
     pub(super) async fn database_delete(&mut self, req: database::delete::Req) -> Result<database::delete::Res> {
@@ -152,6 +152,11 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         // self.single(|this| Box::pin(this.grpc.users_all(req.clone()))).await
     }
 
+    pub(super) async fn users_get(&mut self, req: user_manager::get::Req) -> Result<user_manager::get::Res> {
+        todo!()
+        // self.single(|this| Box::pin(this.grpc.users_get(req.clone()))).await
+    }
+
     pub(super) async fn users_contain(
         &mut self,
         req: user_manager::contains::Req,
@@ -168,11 +173,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn users_delete(&mut self, req: user_manager::delete::Req) -> Result<user_manager::delete::Res> {
         todo!()
         // self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
-    }
-
-    pub(super) async fn users_get(&mut self, req: user_manager::get::Req) -> Result<user_manager::get::Res> {
-        todo!()
-        // self.single(|this| Box::pin(this.grpc.users_get(req.clone()))).await
     }
 
     pub(super) async fn users_password_set(

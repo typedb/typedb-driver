@@ -40,6 +40,40 @@ impl UserManager {
         Self { connection }
     }
 
+    /// Retrieves all users which exist on the TypeDB server.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.all().await;
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn all(&self) -> Result<Vec<User>> {
+        self.run_any_node(|server_connection: ServerConnection| async move { server_connection.all_users().await })
+            .await
+    }
+
+    /// Retrieve a user with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.get(username).await;
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
+        let username = username.into();
+        self.run_any_node(|server_connection: ServerConnection| {
+            let username = username.clone();
+            async move { server_connection.get_user(username).await }
+        })
+            .await
+    }
+
     /// Returns the logged-in user for the connection.
     ///
     /// # Examples
@@ -53,19 +87,6 @@ impl UserManager {
             Some(username) => self.get(username).await,
             None => Ok(None), // FIXME error
         }
-    }
-
-    /// Retrieves all users which exist on the TypeDB server.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.all().await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn all(&self) -> Result<Vec<User>> {
-        self.run_any_node(|server_connection: ServerConnection| async move { server_connection.all_users().await })
-            .await
     }
 
     /// Checks if a user with the given name exists.
@@ -130,27 +151,6 @@ impl UserManager {
         self.run_any_node(|server_connection: ServerConnection| {
             let username = username.clone();
             async move { server_connection.delete_user(username).await }
-        })
-        .await
-    }
-
-    /// Retrieve a user with the given name.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` -- The name of the user to retrieve
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.get(username).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        let username = username.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            async move { server_connection.get_user(username).await }
         })
         .await
     }

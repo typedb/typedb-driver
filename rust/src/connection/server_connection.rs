@@ -134,6 +134,22 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn all_databases(&self) -> crate::Result<Vec<DatabaseInfo>> {
+        match self.request(Request::DatabasesAll).await? {
+            Response::DatabasesAll { databases } => Ok(databases),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn get_database_replicas(&self, database_name: String) -> crate::Result<DatabaseInfo> {
+        match self.request(Request::DatabaseGet { database_name }).await? {
+            Response::DatabaseGet { database } => Ok(database),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn database_exists(&self, database_name: String) -> crate::Result<bool> {
         match self.request(Request::DatabasesContains { database_name }).await? {
             Response::DatabasesContains { contains } => Ok(contains),
@@ -150,19 +166,9 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_database_replicas(&self, database_name: String) -> crate::Result<DatabaseInfo> {
-        match self.request(Request::DatabaseGet { database_name }).await? {
-            Response::DatabaseGet { database } => Ok(database),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn all_databases(&self) -> crate::Result<Vec<DatabaseInfo>> {
-        match self.request(Request::DatabasesAll).await? {
-            Response::DatabasesAll { databases } => Ok(databases),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
+    pub(crate) async fn delete_database(&self, database_name: String) -> crate::Result {
+        self.request(Request::DatabaseDelete { database_name }).await?;
+        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -179,12 +185,6 @@ impl ServerConnection {
             Response::DatabaseTypeSchema { schema } => Ok(schema),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn delete_database(&self, database_name: String) -> crate::Result {
-        self.request(Request::DatabaseDelete { database_name }).await?;
-        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -252,8 +252,16 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn get_user(&self, username: String) -> crate::Result<Option<User>> {
+        match self.request(Request::UsersGet { username }).await? {
+            Response::UsersGet { user } => Ok(user),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn contains_user(&self, username: String) -> crate::Result<bool> {
-        match self.request(Request::UsersContain { username }).await? {
+        match self.request(Request::UsersContains { username }).await? {
             Response::UsersContain { contains } => Ok(contains),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
@@ -271,14 +279,6 @@ impl ServerConnection {
     pub(crate) async fn delete_user(&self, username: String) -> crate::Result {
         match self.request(Request::UsersDelete { username }).await? {
             Response::UsersDelete => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_user(&self, username: String) -> crate::Result<Option<User>> {
-        match self.request(Request::UsersGet { username }).await? {
-            Response::UsersGet { user } => Ok(user),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
