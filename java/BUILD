@@ -72,6 +72,7 @@ deploy_maven(
 
 swig_native_java_library(
     name = "typedb_driver_jni",
+    library_name_with_platform = "typedb_driver_jni-{platform}",
     lib = "//c:typedb_driver_clib_headers",
     package = "com.vaticle.typedb.driver.jni",
     interface = "//c:typedb_driver.i",
