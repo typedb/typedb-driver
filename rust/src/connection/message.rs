@@ -55,10 +55,10 @@ pub(super) enum Request {
     Transaction(TransactionRequest),
 
     UsersAll,
-    UsersGet { username: String },
-    UsersContains { username: String },
-    UsersCreate { username: String, password: String },
-    UsersDelete { username: String },
+    UsersGet { name: String },
+    UsersContains { name: String },
+    UsersCreate { name: String, password: String },
+    UsersDelete { name: String },
 
     UsersPasswordSet { username: String, password: String },
     UserPasswordUpdate { username: String, password_old: String, password_new: String },

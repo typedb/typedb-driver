@@ -170,25 +170,9 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         // self.single(|this| Box::pin(this.grpc.users_create(req.clone()))).await
     }
 
-    pub(super) async fn users_delete(&mut self, req: user_manager::delete::Req) -> Result<user_manager::delete::Res> {
+    pub(super) async fn users_delete(&mut self, req: user::delete::Req) -> Result<user::delete::Res> {
         todo!()
         // self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
-    }
-
-    pub(super) async fn users_password_set(
-        &mut self,
-        req: user_manager::password_set::Req,
-    ) -> Result<user_manager::password_set::Res> {
-        todo!()
-        // self.single(|this| Box::pin(this.grpc.users_password_set(req.clone()))).await
-    }
-
-    pub(super) async fn user_password_update(
-        &mut self,
-        req: user::password_update::Req,
-    ) -> Result<user::password_update::Res> {
-        todo!()
-        // self.single(|this| Box::pin(this.grpc.user_password_update(req.clone()))).await
     }
 
     async fn single<F, R>(&mut self, call: F) -> Result<R>

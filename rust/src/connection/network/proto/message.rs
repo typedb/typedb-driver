@@ -181,7 +181,7 @@ impl TryIntoProto<user_manager::all::Req> for Request {
 impl TryIntoProto<user_manager::get::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::get::Req> {
         match self {
-            Self::UsersGet { username } => Ok(user_manager::get::Req { username }),
+            Self::UsersGet { name } => Ok(user_manager::get::Req { name }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -190,7 +190,7 @@ impl TryIntoProto<user_manager::get::Req> for Request {
 impl TryIntoProto<user_manager::contains::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::contains::Req> {
         match self {
-            Self::UsersContains { username } => Ok(user_manager::contains::Req { username }),
+            Self::UsersContains { name } => Ok(user_manager::contains::Req { name }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -199,36 +199,16 @@ impl TryIntoProto<user_manager::contains::Req> for Request {
 impl TryIntoProto<user_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::create::Req> {
         match self {
-            Self::UsersCreate { username, password } => Ok(user_manager::create::Req { username, password }),
+            Self::UsersCreate { name, password } => Ok(user_manager::create::Req { name, password }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
 
-impl TryIntoProto<user_manager::delete::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::delete::Req> {
+impl TryIntoProto<user::delete::Req> for Request {
+    fn try_into_proto(self) -> Result<user::delete::Req> {
         match self {
-            Self::UsersDelete { username } => Ok(user_manager::delete::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::password_set::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::password_set::Req> {
-        match self {
-            Self::UsersPasswordSet { username, password } => Ok(user_manager::password_set::Req { username, password }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user::password_update::Req> for Request {
-    fn try_into_proto(self) -> Result<user::password_update::Req> {
-        match self {
-            Self::UserPasswordUpdate { username, password_old, password_new } => {
-                Ok(user::password_update::Req { username, password_old, password_new })
-            }
+            Self::UsersDelete { username } => Ok(user::delete::Req { username }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -412,20 +392,8 @@ impl FromProto<user_manager::create::Res> for Response {
     }
 }
 
-impl FromProto<user_manager::delete::Res> for Response {
-    fn from_proto(_proto: user_manager::delete::Res) -> Self {
+impl FromProto<user::delete::Res> for Response {
+    fn from_proto(_proto: user::delete::Res) -> Self {
         Self::UsersDelete
-    }
-}
-
-impl FromProto<user_manager::password_set::Res> for Response {
-    fn from_proto(_proto: user_manager::password_set::Res) -> Self {
-        Self::UsersPasswordSet
-    }
-}
-
-impl FromProto<user::password_update::Res> for Response {
-    fn from_proto(_proto: user::password_update::Res) -> Self {
-        Self::UserPasswordUpdate
     }
 }

@@ -162,13 +162,7 @@ impl RPCTransmitter {
             Request::UsersCreate { .. } => rpc.users_create(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersDelete { .. } => rpc.users_delete(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersGet { .. } => rpc.users_get(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::UsersPasswordSet { .. } => {
-                rpc.users_password_set(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-
-            Request::UserPasswordUpdate { .. } => {
-                rpc.user_password_update(request.try_into_proto()?).await.map(Response::from_proto)
-            }
+            _ => todo!()
         }
     }
 }
