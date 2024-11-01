@@ -199,7 +199,7 @@ impl TryIntoProto<user_manager::contains::Req> for Request {
 impl TryIntoProto<user_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::create::Req> {
         match self {
-            Self::UsersCreate { name, password } => Ok(user_manager::create::Req { name, password }),
+            Self::UsersCreate { user } => Ok(user_manager::create::Req { user: Some(typedb_protocol::User { name: "".to_string(), password: "".to_string()}) }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -208,7 +208,7 @@ impl TryIntoProto<user_manager::create::Req> for Request {
 impl TryIntoProto<user::delete::Req> for Request {
     fn try_into_proto(self) -> Result<user::delete::Req> {
         match self {
-            Self::UsersDelete { username } => Ok(user::delete::Req { username }),
+            Self::UsersDelete { name } => Ok(user::delete::Req { name }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }

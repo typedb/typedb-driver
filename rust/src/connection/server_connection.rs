@@ -282,27 +282,6 @@ impl ServerConnection {
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn set_user_password(&self, username: String, password: String) -> crate::Result {
-        match self.request(Request::UsersPasswordSet { username, password }).await? {
-            Response::UsersPasswordSet => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn update_user_password(
-        &self,
-        username: String,
-        password_old: String,
-        password_new: String,
-    ) -> crate::Result {
-        match self.request(Request::UserPasswordUpdate { username, password_old, password_new }).await? {
-            Response::UserPasswordUpdate => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
 }
 
 impl fmt::Debug for ServerConnection {
