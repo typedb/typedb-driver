@@ -228,8 +228,8 @@ impl Context {
                 .await
                 .unwrap()
                 .into_iter()
-                .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
+                .filter(|user| user.name != Context::ADMIN_USERNAME)
+                .map(|user| self.driver.as_ref().unwrap().users().delete(user.name)),
         )
         .await
         .ok();

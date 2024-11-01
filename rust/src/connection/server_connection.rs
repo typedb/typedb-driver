@@ -252,32 +252,32 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_user(&self, username: String) -> crate::Result<Option<User>> {
-        match self.request(Request::UsersGet { username }).await? {
+    pub(crate) async fn get_user(&self, name: String) -> crate::Result<Option<User>> {
+        match self.request(Request::UsersGet { name }).await? {
             Response::UsersGet { user } => Ok(user),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn contains_user(&self, username: String) -> crate::Result<bool> {
-        match self.request(Request::UsersContains { username }).await? {
+    pub(crate) async fn contains_user(&self, name: String) -> crate::Result<bool> {
+        match self.request(Request::UsersContains { name }).await? {
             Response::UsersContain { contains } => Ok(contains),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn create_user(&self, username: String, password: String) -> crate::Result {
-        match self.request(Request::UsersCreate { username, password }).await? {
+    pub(crate) async fn create_user(&self, name: String, password: String) -> crate::Result {
+        match self.request(Request::UsersCreate { user: User { name, password } }).await? {
             Response::UsersCreate => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn delete_user(&self, username: String) -> crate::Result {
-        match self.request(Request::UsersDelete { username }).await? {
+    pub(crate) async fn delete_user(&self, name: String) -> crate::Result {
+        match self.request(Request::UsersDelete { name }).await? {
             Response::UsersDelete => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }

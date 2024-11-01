@@ -155,30 +155,6 @@ impl UserManager {
         .await
     }
 
-    /// Sets a new password for a user. This operation can only be performed by administrators.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` -- The name of the user to set the password of
-    /// * `password` -- The new password
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.password_set(username, password).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn set_password(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let username = username.into();
-        let password = password.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            let password = password.clone();
-            async move { server_connection.set_user_password(username, password).await }
-        })
-        .await
-    }
-
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_any_node<F, P, R>(&self, task: F) -> Result<R>
     where
