@@ -44,8 +44,6 @@ pub struct TypeDBDriver {
     is_cloud: bool,
 }
 
-impl TypeDBDriver {}
-
 impl TypeDBDriver {
     const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION") {
         None => "0.0.0",
@@ -219,32 +217,6 @@ impl TypeDBDriver {
         todo!()
     }
 
-    fn fetch_server_list(
-        background_runtime: Arc<BackgroundRuntime>,
-        addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
-        credential: Credential,
-    ) -> Result<HashSet<Address>> {
-        let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
-        for address in &addresses {
-            let server_connection =
-                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
-            match server_connection {
-                Ok(server_connection) => match server_connection.servers_all() {
-                    Ok(servers) => return Ok(servers.into_iter().collect()),
-                    Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                    )) => (),
-                    Err(err) => Err(err)?,
-                },
-                Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                )) => (),
-                Err(err) => Err(err)?,
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailed { addresses }.into())
-    }
-
     /// Checks it this connection is opened.
     //
     /// # Examples
@@ -267,12 +239,16 @@ impl TypeDBDriver {
         self.is_cloud
     }
 
-    pub fn databases(&self) -> &DatabaseManager {
-        &self.database_manager
+    pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
+        self.server_connections.get(id)
     }
 
-    pub fn users(&self) -> &UserManager {
-        todo!()
+    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
+        self.server_connections.iter()
+    }
+
+    pub fn databases(&self) -> &DatabaseManager {
+        &self.database_manager
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -301,6 +277,54 @@ impl TypeDBDriver {
         Ok(Transaction::new(transaction_stream))
     }
 
+    fn fetch_server_list(
+        background_runtime: Arc<BackgroundRuntime>,
+        addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
+        credential: Credential,
+    ) -> Result<HashSet<Address>> {
+        let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
+        for address in &addresses {
+            let server_connection =
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
+            match server_connection {
+                Ok(server_connection) => match server_connection.servers_all() {
+                    Ok(servers) => return Ok(servers.into_iter().collect()),
+                    Err(Error::Connection(
+                            ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                        )) => (),
+                    Err(err) => Err(err)?,
+                },
+                Err(Error::Connection(
+                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    )) => (),
+                Err(err) => Err(err)?,
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailed { addresses }.into())
+    }
+
+    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
+        self.server_connections.keys()
+    }
+
+    pub(crate) fn server_count(&self) -> usize {
+        self.server_connections.len()
+    }
+
+    pub fn users(&self) -> &UserManager {
+        todo!()
+    }
+
+    pub(crate) fn username(&self) -> Option<&str> {
+        self.username.as_deref()
+    }
+
+    pub(crate) fn unable_to_connect_error(&self) -> Error {
+        Error::Connection(ConnectionError::ServerConnectionFailed {
+            addresses: self.servers().map(Address::clone).collect_vec(),
+        })
+    }
+
     /// Closes this connection if it is open.
     ///
     /// # Examples
@@ -316,32 +340,6 @@ impl TypeDBDriver {
         let result =
             self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
         self.background_runtime.force_close().and(result)
-    }
-
-    pub(crate) fn server_count(&self) -> usize {
-        self.server_connections.len()
-    }
-
-    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
-        self.server_connections.keys()
-    }
-
-    pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
-        self.server_connections.get(id)
-    }
-
-    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
-        self.server_connections.iter()
-    }
-
-    pub(crate) fn username(&self) -> Option<&str> {
-        self.username.as_deref()
-    }
-
-    pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailed {
-            addresses: self.servers().map(Address::clone).collect_vec(),
-        })
     }
 }
 
