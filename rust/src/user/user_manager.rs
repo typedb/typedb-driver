@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+use std::collections::HashMap;
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
@@ -24,69 +24,18 @@ use crate::{
     common::Result, connection::server_connection::ServerConnection, driver::TypeDBDriver, error::ConnectionError,
     DatabaseManager, Error, User,
 };
+use crate::common::address::Address;
 
 /// Provides access to all user management methods.
 #[derive(Debug)]
 pub struct UserManager {
-    // FIXME: currently required to be `pub` because we refer to it in bindings and over FFI
-    #[doc(hidden)]
-    pub connection: TypeDBDriver,
+    server_connections: HashMap<Address, ServerConnection>,
 }
 
 impl UserManager {
-    const SYSTEM_DB: &'static str = "_system";
 
-    pub fn new(connection: TypeDBDriver) -> Self {
-        Self { connection }
-    }
-
-    /// Retrieves all users which exist on the TypeDB server.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.all().await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn all(&self) -> Result<Vec<User>> {
-        self.run_any_node(|server_connection: ServerConnection| async move { server_connection.all_users().await })
-            .await
-    }
-
-    /// Retrieve a user with the given name.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` -- The name of the user to retrieve
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.get(username).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        let username = username.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            async move { server_connection.get_user(username).await }
-        })
-            .await
-    }
-
-    /// Returns the logged-in user for the connection.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.current_user().await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn current_user(&self) -> Result<Option<User>> {
-        match self.connection.username() {
-            Some(username) => self.get(username).await,
-            None => Ok(None), // FIXME error
-        }
+    pub fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
+        Self { server_connections }
     }
 
     /// Checks if a user with the given name exists.
@@ -102,12 +51,35 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
-        let username = username.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            async move { server_connection.contains_user(username).await }
-        })
-        .await
+        todo!()
+    }
+
+    /// Retrieve a user with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.get(username).await;
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
+        todo!()
+    }
+
+    /// Retrieves all users which exist on the TypeDB server.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.all().await;
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn all(&self) -> Result<Vec<User>> {
+        todo!()
     }
 
     /// Create a user with the given name &amp; password.
@@ -124,14 +96,8 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let username = username.into();
-        let password = password.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            let password = password.clone();
-            async move { server_connection.create_user(username, password).await }
-        })
-        .await
+        let (_, conn) = self.server_connections.iter().next().unwrap();
+        conn.create_user(username.into(), password.into()).await
     }
 
     /// Deletes a user with the given name.
@@ -147,29 +113,6 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(&self, username: impl Into<String>) -> Result {
-        let username = username.into();
-        self.run_any_node(|server_connection: ServerConnection| {
-            let username = username.clone();
-            async move { server_connection.delete_user(username).await }
-        })
-        .await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn run_any_node<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection) -> P,
-        P: Future<Output = Result<R>>,
-    {
-        // if !self.connection.is_cloud() {
-        //     Err(Error::Connection(ConnectionError::UserManagementCloudOnly))
-        // } else {
-        //     DatabaseManager::new(self.connection.clone())
-        //         .get(Self::SYSTEM_DB)
-        //         .await?
-        //         .run_failsafe(|database| task(database.connection().clone()))
-        //         .await
-        // }
         todo!()
     }
 }
