@@ -51,7 +51,7 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
-        todo!()
+        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.contains_user(username).await }).await
     }
 
     /// Retrieve a user with the given name.
@@ -67,7 +67,7 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        todo!()
+        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.get_user(username).await }).await
     }
 
     /// Retrieves all users which exist on the TypeDB server.
@@ -79,7 +79,7 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
-        todo!()
+        self.run_failsafe(todo!(), |server_connection, _| async move { server_connection.all_users().await }).await
     }
 
     /// Create a user with the given name &amp; password.
@@ -96,8 +96,7 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let (_, conn) = self.server_connections.iter().next().unwrap();
-        conn.create_user(username.into(), password.into()).await
+        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.create_user(username, todo!()).await }).await
     }
 
     /// Deletes a user with the given name.
@@ -113,6 +112,16 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(&self, username: impl Into<String>) -> Result {
+        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.delete_user(username).await }).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
+    where
+        F: Fn(ServerConnection, String) -> P,
+        P: Future<Output = Result<R>>,
+    {
         todo!()
     }
+
 }
