@@ -33,6 +33,7 @@ use crate::{
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
+    user::User,
     Options, TransactionType,
 };
 
@@ -58,17 +59,6 @@ pub(super) enum Request {
     UsersContains { name: String },
     UsersCreate { user: User },
     UsersDelete { name: String },
-}
-
-#[derive(Debug)]
-pub(super) struct User {
-    name: String,
-    credential: Credential
-}
-
-#[derive(Debug)]
-pub(super) enum Credential {
-    Password { value: String }
 }
 
 #[derive(Debug)]
