@@ -51,7 +51,15 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
-        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.contains_user(username).await }).await
+        let uname = username.into();
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.contains_user(uname.clone()).await {
+                Ok(res) => return Ok(res),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     /// Retrieve a user with the given name.
@@ -67,7 +75,15 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.get_user(username).await }).await
+        let uname = username.into();
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.get_user(uname.clone()).await {
+                Ok(res) => return Ok(res),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     /// Retrieves all users which exist on the TypeDB server.
@@ -79,7 +95,14 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
-        self.run_failsafe(todo!(), |server_connection, _| async move { server_connection.all_users().await }).await
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.all_users().await {
+                Ok(res) => return Ok(res),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     /// Create a user with the given name &amp; password.
@@ -96,7 +119,16 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.create_user(username, todo!()).await }).await
+        let uname = username.into();
+        let passwd = password.into();
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.create_user(uname.clone(), passwd.clone()).await {
+                Ok(res) => return Ok(res),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     /// Deletes a user with the given name.
@@ -112,16 +144,14 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(&self, username: impl Into<String>) -> Result {
-        self.run_failsafe(username.into(), |server_connection, username| async move { server_connection.delete_user(username).await }).await
+        let uname = username.into();
+        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
+        for (server_id, server_connection) in self.server_connections.iter() {
+            match server_connection.delete_user(uname.clone()).await {
+                Ok(res) => return Ok(res),
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+            }
+        }
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection, String) -> P,
-        P: Future<Output = Result<R>>,
-    {
-        todo!()
-    }
-
 }

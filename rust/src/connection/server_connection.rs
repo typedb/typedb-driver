@@ -262,7 +262,10 @@ impl ServerConnection {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn contains_user(&self, name: String) -> crate::Result<bool> {
         match self.request(Request::UsersContains { name }).await? {
-            Response::UsersContain { contains } => Ok(contains),
+            Response::UsersContain { contains } => {
+                println!("server_connection::contains_user");
+                Ok(contains)
+            }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
