@@ -381,7 +381,8 @@ impl Context {
         _password: Option<&str>,
     ) -> TypeDBResult {
         assert!(!self.is_cloud);
-        let driver = TypeDBDriver::new_core(address).await?;
+        let credential = Credential::without_tls(_username.unwrap(), _password.unwrap());
+        let driver = TypeDBDriver::new_core(address, credential).await?;
         self.driver = Some(driver);
         Ok(())
     }

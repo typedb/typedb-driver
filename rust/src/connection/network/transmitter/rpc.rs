@@ -46,11 +46,13 @@ pub(in crate::connection) struct RPCTransmitter {
 }
 
 impl RPCTransmitter {
-    pub(in crate::connection) fn start_core(address: Address, runtime: &BackgroundRuntime) -> Result<Self> {
+    pub(in crate::connection) fn start_core(
+        address: Address, credential: Credential, runtime: &BackgroundRuntime
+    ) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
-            let channel = open_plaintext_channel(address);
+            let (channel, call_credential) = open_callcred_channel(address, credential)?;
             let rpc = RPCStub::new(channel, None).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())

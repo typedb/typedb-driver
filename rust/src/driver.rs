@@ -66,8 +66,10 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        Self::new_core_with_description(address, "rust").await
+    pub async fn new_core(
+        address: impl AsRef<str>, credential: Credential,
+    ) -> Result<Self> {
+        Self::new_core_with_description(address, credential, "rust").await
     }
 
     /// Creates a new TypeDB Server connection with a description.
@@ -84,7 +86,9 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>) -> Result<Self> {
+    pub async fn new_core_with_description(
+        address: impl AsRef<str>, credential: Credential, driver_lang: impl AsRef<str>
+    ) -> Result<Self> {
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
@@ -92,6 +96,7 @@ impl TypeDBDriver {
         let (server_connection, database_info) = ServerConnection::new_core(
             background_runtime.clone(),
             address.clone(),
+            credential,
             driver_lang.as_ref(),
             TypeDBDriver::VERSION,
         )

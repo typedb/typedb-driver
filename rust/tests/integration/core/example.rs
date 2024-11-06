@@ -22,19 +22,17 @@ use futures::{StreamExt, TryStreamExt};
 // EXAMPLE END MARKER
 use serial_test::serial;
 // EXAMPLE START MARKER
-use typedb_driver::{
-    answer::{
-        concept_document::{Leaf, Node},
-        ConceptRow, QueryAnswer,
-    },
-    concept::{Concept, ValueType},
-    Error, TransactionType, TypeDBDriver,
-};
+use typedb_driver::{answer::{
+    concept_document::{Leaf, Node},
+    ConceptRow, QueryAnswer,
+}, concept::{Concept, ValueType}, Credential, Error, TransactionType, TypeDBDriver};
 
 // EXAMPLE END MARKER
 
 async fn cleanup() {
-    let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+    let driver = TypeDBDriver::new_core(
+        TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+    ).await.unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
         driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
     }
@@ -49,7 +47,9 @@ fn example() {
         cleanup().await;
         // EXAMPLE START MARKER
         // Open a driver connection
-        let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+        let driver = TypeDBDriver::new_core(
+            TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+        ).await.unwrap();
 
         // Create a database
         driver.databases().create("typedb").await.unwrap();

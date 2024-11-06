@@ -49,7 +49,7 @@ impl GRPCChannel for PlainTextChannel {}
 
 impl GRPCChannel for CallCredChannel {}
 
-pub(super) fn open_plaintext_channel(address: Address) -> PlainTextChannel {
+pub(super) fn open_plaintext_channel(address: Address, username: impl Into<String>, password: impl Into<String>) -> PlainTextChannel {
     PlainTextChannel::new(Channel::builder(address.into_uri()).connect_lazy(), PlainTextFacade)
 }
 

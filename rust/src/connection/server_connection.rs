@@ -57,10 +57,13 @@ impl ServerConnection {
     pub(crate) async fn new_core(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
+        credential: Credential,
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
-        let request_transmitter = Arc::new(RPCTransmitter::start_core(address, &background_runtime)?);
+        let request_transmitter = Arc::new(
+            RPCTransmitter::start_core(address, credential, &background_runtime)?
+        );
         let (connection_id, latency, database_info) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
         let latency_tracker = LatencyTracker::new(latency);
