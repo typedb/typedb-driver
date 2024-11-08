@@ -55,10 +55,7 @@ impl GRPCChannel for CallCredChannel {}
 const TIMEOUT: Duration = Duration::from_secs(60);
 
 pub(super) fn open_plaintext_channel(address: Address) -> PlainTextChannel {
-    PlainTextChannel::new(
-        Channel::builder(address.into_uri()).timeout(TIMEOUT).connect_lazy(),
-        PlainTextFacade,
-    )
+    PlainTextChannel::new(Channel::builder(address.into_uri()).timeout(TIMEOUT).connect_lazy(), PlainTextFacade)
 }
 
 #[derive(Clone, Debug)]
