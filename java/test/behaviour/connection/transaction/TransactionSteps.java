@@ -55,6 +55,7 @@ public class TransactionSteps {
 
     @When("connection open {transaction_type} transaction for database: {non_semicolon}{may_error}")
     public void connection_open_transaction_for_database(Transaction.Type type, String databaseName, Parameters.MayError mayError) {
+        transactions.clear();
         mayError.check(() -> {
             Transaction transaction = driver.transaction(databaseName, type);
             transactions.add(transaction);
