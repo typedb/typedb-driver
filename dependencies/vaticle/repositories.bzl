@@ -32,9 +32,8 @@ def vaticle_typedb_protocol():
     )
 
 def vaticle_typedb_behaviour():
-    # TODO: Return typedb after merge
     git_repository(
         name = "vaticle_typedb_behaviour",
-        remote = "https://github.com/farost/typedb-behaviour",
-        commit = "1af26664cffe316b40636c897733704543447f3b",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+        remote = "https://github.com/typedb/typedb-behaviour",
+        commit = "0f24dc7a841de46697297a1eac9993df8eca3acd",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
     )
