@@ -96,7 +96,6 @@ venv
 
 # Cargo files #
 Cargo.lock
-Cargo.toml
 
 # Temporary paket files for C# #
 paket-files/
