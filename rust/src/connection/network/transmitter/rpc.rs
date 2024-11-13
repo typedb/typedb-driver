@@ -31,7 +31,7 @@ use crate::{
     connection::{
         message::{Request, Response},
         network::{
-            channel::{open_callcred_channel, open_plaintext_channel, GRPCChannel},
+            channel::{open_callcred_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },

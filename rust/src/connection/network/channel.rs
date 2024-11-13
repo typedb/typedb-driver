@@ -37,7 +37,6 @@ use crate::{
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
 
-pub(super) type PlainTextChannel = InterceptedService<Channel, PlainTextFacade>;
 pub(super) type CallCredChannel = InterceptedService<Channel, CredentialInjector>;
 
 pub(super) trait GRPCChannel:
@@ -45,22 +44,8 @@ pub(super) trait GRPCChannel:
 {
 }
 
-impl GRPCChannel for PlainTextChannel {}
-
 impl GRPCChannel for CallCredChannel {}
 
-pub(super) fn open_plaintext_channel(address: Address, username: impl Into<String>, password: impl Into<String>) -> PlainTextChannel {
-    PlainTextChannel::new(Channel::builder(address.into_uri()).connect_lazy(), PlainTextFacade)
-}
-
-#[derive(Clone, Debug)]
-pub(super) struct PlainTextFacade;
-
-impl Interceptor for PlainTextFacade {
-    fn call(&mut self, request: Request<()>) -> StdResult<Request<()>, Status> {
-        Ok(request)
-    }
-}
 
 pub(super) fn open_callcred_channel(
     address: Address,
