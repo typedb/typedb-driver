@@ -20,10 +20,7 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use crate::{
-    common::Result, connection::server_connection::ServerConnection, driver::TypeDBDriver, error::ConnectionError,
-    DatabaseManager, Error, User,
-};
+use crate::{common::Result, connection::server_connection::ServerConnection, driver::TypeDBDriver, User};
 
 /// Provides access to all user management methods.
 #[derive(Debug)]

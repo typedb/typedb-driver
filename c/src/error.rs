@@ -31,7 +31,7 @@ use typedb_driver::{Error, Result};
 use super::memory::{free, release_arc, release_optional, release_string};
 
 thread_local! {
-    static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
+    static LAST_ERROR: RefCell<Option<Error>> = const { RefCell::new(None) };
 }
 
 /// Enables logging in the TypeDB driver.

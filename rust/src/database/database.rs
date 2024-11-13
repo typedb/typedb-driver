@@ -22,10 +22,7 @@ use std::future::Future;
 use std::{
     collections::HashMap,
     fmt,
-    sync::{
-        atomic::{AtomicU64, Ordering},
-        Arc, RwLock,
-    },
+    sync::{Arc, RwLock},
     thread::sleep,
     time::Duration,
 };
@@ -41,9 +38,7 @@ use crate::{
         Error, Result,
     },
     connection::server_connection::ServerConnection,
-    driver::TypeDBDriver,
     error::InternalError,
-    Options, Transaction, TransactionType,
 };
 
 /// A TypeDB database

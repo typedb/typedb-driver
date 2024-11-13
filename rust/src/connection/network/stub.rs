@@ -20,7 +20,7 @@
 use std::sync::Arc;
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use log::{debug, trace, warn};
+use log::{debug, warn};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
@@ -82,7 +82,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.servers_all(req))).await
     }
 
     pub(super) async fn databases_contains(
@@ -110,7 +110,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         &mut self,
         req: database_manager::all::Req,
     ) -> Result<database_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.databases_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.databases_all(req))).await
     }
 
     pub(super) async fn database_delete(&mut self, req: database::delete::Req) -> Result<database::delete::Res> {

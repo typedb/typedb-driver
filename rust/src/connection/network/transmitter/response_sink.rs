@@ -20,13 +20,12 @@
 use std::{fmt, fmt::Formatter, sync::Arc};
 
 use crossbeam::channel::Sender as SyncSender;
-use itertools::Either;
 use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 
 use crate::{
     common::{RequestID, Result},
-    error::{ConnectionError, InternalError},
+    error::InternalError,
     Error,
 };
 
@@ -39,7 +38,7 @@ pub(super) enum ResponseSink<T> {
 }
 
 pub(super) struct ImmediateHandler<T> {
-    pub(super) handler: Arc<dyn Fn(T) -> () + Sync + Send>,
+    pub(super) handler: Arc<dyn Fn(T) + Sync + Send>,
 }
 
 impl<T> ImmediateHandler<T> {

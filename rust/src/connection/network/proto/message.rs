@@ -26,11 +26,7 @@ use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{
-        concept_document::{ConceptDocument, ConceptDocumentHeader},
-        concept_row::ConceptRowHeader,
-        QueryType,
-    },
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},

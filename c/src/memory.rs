@@ -20,7 +20,7 @@
 use std::{
     cell::RefCell,
     ffi::{c_char, CStr, CString},
-    ptr::{null, null_mut},
+    ptr::null_mut,
     sync::Arc,
 };
 
@@ -28,7 +28,7 @@ use log::trace;
 use typedb_driver::Error;
 
 thread_local! {
-    static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
+    static LAST_ERROR: RefCell<Option<Error>> = const { RefCell::new(None) };
 }
 
 pub(super) fn release<T>(t: T) -> *mut T {

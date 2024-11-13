@@ -27,7 +27,6 @@ use typedb_protocol::{
     concept,
     concept_document::{self, node::leaf::Leaf as LeafProto},
     row_entry::Entry,
-    value,
     value::{datetime_tz::Timezone as TimezoneProto, Value as ValueProtoInner},
     value_type::ValueType as ValueTypeProto,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
@@ -231,24 +230,21 @@ impl TryFromProto<ValueTypeStructProto> for ValueType {
 impl TryFromProto<EntityProto> for Entity {
     fn try_from_proto(proto: EntityProto) -> Result<Self> {
         let EntityProto { iid, entity_type } = proto;
-        Ok(Self { iid: iid.into(), type_: entity_type.map(|type_| EntityType::from_proto(type_)) })
+        Ok(Self { iid: iid.into(), type_: entity_type.map(EntityType::from_proto) })
     }
 }
 
 impl TryFromProto<RelationProto> for Relation {
     fn try_from_proto(proto: RelationProto) -> Result<Self> {
         let RelationProto { iid, relation_type } = proto;
-        Ok(Self { iid: iid.into(), type_: relation_type.map(|type_| RelationType::from_proto(type_)) })
+        Ok(Self { iid: iid.into(), type_: relation_type.map(RelationType::from_proto) })
     }
 }
 
 impl TryFromProto<AttributeProto> for Attribute {
     fn try_from_proto(proto: AttributeProto) -> Result<Self> {
         let AttributeProto { iid, attribute_type, value } = proto;
-        let type_ = match attribute_type {
-            None => None,
-            Some(attribute_type) => Some(AttributeType::from_proto(attribute_type)),
-        };
+        let type_ = attribute_type.map(AttributeType::from_proto);
         Ok(Self {
             iid: iid.into(),
             type_,

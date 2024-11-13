@@ -19,12 +19,10 @@
 
 use std::{fmt, sync::Arc};
 
-use futures::{stream, StreamExt};
-
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
 use crate::{
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
-    box_stream, BoxStream, Result,
+    BoxStream, Result,
 };
 
 pub mod concept_document;
@@ -47,8 +45,8 @@ impl QueryAnswer {
     /// query_answer.get_query_type()
     /// ```
     pub fn get_query_type(&self) -> QueryType {
-        match &self {
-            QueryAnswer::Ok(query_type) => query_type.clone(),
+        match self {
+            &QueryAnswer::Ok(query_type) => query_type,
             QueryAnswer::ConceptRowStream(header, _) => header.query_type,
             QueryAnswer::ConceptDocumentStream(header, _) => header.query_type,
         }

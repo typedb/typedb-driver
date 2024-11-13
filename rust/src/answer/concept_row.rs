@@ -88,7 +88,7 @@ impl ConceptRow {
     /// concept_row.get(var_name)
     /// ```
     pub fn get(&self, column_name: &str) -> Option<&Concept> {
-        self.header.get_index(column_name).map(|index| self.get_index(index)).flatten()
+        self.header.get_index(column_name).and_then(|index| self.get_index(index))
     }
 
     /// Retrieves a concept for a given column index. Returns an empty optional if
@@ -104,7 +104,7 @@ impl ConceptRow {
     /// concept_row.get_position(column_index)
     /// ```
     pub fn get_index(&self, column_index: usize) -> Option<&Concept> {
-        self.row.get(column_index).map(|inner| inner.as_ref()).flatten()
+        self.row.get(column_index).and_then(|inner| inner.as_ref())
     }
 
     /// Produces an iterator over all concepts in this `ConceptRow`, skipping empty results

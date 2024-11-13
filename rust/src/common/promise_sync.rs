@@ -52,6 +52,6 @@ macro_rules! promisify {
 #[macro_export]
 macro_rules! resolve {
     ($promise:expr $(,)?) => {
-        $crate::common::Promise::resolve($promise)
+        ($promise)()
     };
 }

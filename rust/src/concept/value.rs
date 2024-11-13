@@ -18,7 +18,6 @@
  */
 
 use std::{
-    borrow::Cow,
     collections::HashMap,
     fmt,
     ops::{Add, Neg, Sub},
@@ -28,7 +27,7 @@ use std::{
 use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
-use crate::{answer::JSON, Error};
+use crate::Error;
 
 /// Represents the type of primitive value is held by a Value or Attribute.
 #[derive(Clone, PartialEq, Eq)]
@@ -68,7 +67,7 @@ impl ValueType {
             Self::Datetime => Self::DATETIME_STR,
             Self::DatetimeTZ => Self::DATETIME_TZ_STR,
             Self::Duration => Self::DURATION_STR,
-            Self::Struct(name) => &name,
+            Self::Struct(name) => name,
         }
     }
 }

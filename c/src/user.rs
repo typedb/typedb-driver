@@ -17,15 +17,6 @@
  * under the License.
  */
 
-use std::ffi::c_char;
-
-use typedb_driver::{User, UserManager};
-
-use super::{
-    error::unwrap_void,
-    memory::{borrow, free, release_string, string_view},
-};
-
 // /// Frees the native rust <code>User</code> object.
 // #[no_mangle]
 // pub extern "C" fn user_drop(user: *mut User) {

@@ -21,7 +21,7 @@ use std::ffi::c_char;
 
 use typedb_driver::concept::Concept;
 
-use super::concept::{borrow_as_attribute_type, borrow_as_entity_type, borrow_as_relation_type, borrow_as_role_type};
+use super::concept::borrow_as_attribute_type;
 use crate::memory::release_string;
 
 /// Gets the string representation of the value type of this attribute type.

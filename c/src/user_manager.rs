@@ -17,16 +17,6 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::addr_of_mut};
-
-use typedb_driver::{box_stream, TypeDBDriver, User, UserManager};
-
-use super::{
-    error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
-    iterator::{iterator_next, CIterator},
-    memory::{borrow, free, release, string_view},
-};
-
 // /// Creates a <code>UserManager</code> on the specified connection
 // #[no_mangle]
 // pub extern "C" fn user_manager_new(connection: *const TypeDBDriver) -> *mut UserManager {

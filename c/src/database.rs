@@ -17,14 +17,13 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::addr_of_mut, sync::Arc};
+use std::ffi::c_char;
 
-use typedb_driver::{box_stream, info::ReplicaInfo, Database};
+use typedb_driver::Database;
 
 use super::{
     error::{try_release_string, unwrap_void},
-    iterator::{iterator_next, CIterator},
-    memory::{borrow, borrow_mut, free, release, release_optional, release_string, take_ownership},
+    memory::{borrow, release_string},
 };
 use crate::memory::{decrement_arc, take_arc};
 

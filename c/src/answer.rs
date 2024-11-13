@@ -39,7 +39,7 @@ pub struct QueryAnswerPromise(BoxPromise<'static, Result<QueryAnswer>>);
 
 impl QueryAnswerPromise {
     pub fn new(promise: impl Promise<'static, Result<QueryAnswer>>) -> Self {
-        Self(Box::new(|| Ok(promise.resolve()?)))
+        Self(Box::new(|| promise.resolve()))
     }
 }
 
@@ -106,7 +106,7 @@ pub extern "C" fn concept_row_drop(concept_row: *mut ConceptRow) {
 /// Produces an <code>Iterator</code> over all <code>String</code> column names of the <code>ConceptRow</code>'s header.
 #[no_mangle]
 pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
+    release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().iter().cloned().map(Ok)))))
 }
 
 /// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.

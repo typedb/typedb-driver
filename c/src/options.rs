@@ -17,12 +17,6 @@
  * under the License.
  */
 
-use std::time::Duration;
-
-use typedb_driver::Options;
-
-use super::memory::{borrow, borrow_mut, free, release};
-
 // /// Produces a new <code>TypeDBOptions</code> object.
 // #[no_mangle]
 // pub extern "C" fn options_new() -> *mut Options {

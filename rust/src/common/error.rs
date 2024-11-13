@@ -19,7 +19,6 @@
 
 use std::{collections::HashSet, error::Error as StdError, fmt};
 
-use chrono::{MappedLocalTime, NaiveDateTime};
 use itertools::Itertools;
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
@@ -349,23 +348,19 @@ impl From<Status> for Error {
             } else {
                 Self::from_message(status.message())
             }
+        } else if status.code() == Code::Unavailable {
+            Self::parse_unavailable(status.message())
+        } else if status.code() == Code::Unknown
+            || is_rst_stream(&status)
+            || status.code() == Code::InvalidArgument
+            || status.code() == Code::FailedPrecondition
+            || status.code() == Code::AlreadyExists
+        {
+            Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
+        } else if status.code() == Code::Unimplemented {
+            Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
         } else {
-            if status.code() == Code::Unavailable {
-                Self::parse_unavailable(status.message())
-            } else if status.code() == Code::Unknown
-                || is_rst_stream(&status)
-                || status.code() == Code::InvalidArgument
-                || status.code() == Code::FailedPrecondition
-                || status.code() == Code::AlreadyExists
-            {
-                Self::Connection(ConnectionError::ServerConnectionFailedStatusError {
-                    error: status.message().to_owned(),
-                })
-            } else if status.code() == Code::Unimplemented {
-                Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
-            } else {
-                Self::from_message(status.message())
-            }
+            Self::from_message(status.message())
         }
     }
 }

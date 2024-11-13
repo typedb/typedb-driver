@@ -3,7 +3,6 @@
 
 
 [features]
-    default = []
 	sync = []
 
 [package]
@@ -34,10 +33,12 @@
 	[dev-dependencies.steps]
 		path = "../rust/tests/behaviour/steps"
 		features = []
+		default-features = false
 
 	[dev-dependencies.config]
 		path = "../rust/tests/behaviour/config"
-		features = ["bazel"]
+		features = []
+		default-features = false
 
 	[dev-dependencies.serial_test]
 		features = ["async", "default", "futures", "log", "logging"]
@@ -60,6 +61,7 @@
 		features = []
 		rev = "71d7975a4617bb142015d27deaa3f8e886c00f0f"
 		git = "https://github.com/typedb/typedb-protocol"
+		default-features = false
 
 	[dependencies.log]
 		features = ["kv", "kv_unstable", "std", "value-bag"]

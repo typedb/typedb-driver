@@ -19,8 +19,6 @@
 
 use std::{
     collections::HashMap,
-    future::Future,
-    pin::Pin,
     sync::{Arc, RwLock},
     time::Duration,
 };
@@ -29,8 +27,6 @@ use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]
 use futures::TryStreamExt;
-#[cfg(feature = "sync")]
-use itertools::Itertools;
 use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
@@ -38,14 +34,13 @@ use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     select,
     sync::{
-        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
         oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
     },
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
-use uuid::Uuid;
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
@@ -58,10 +53,9 @@ use crate::{
         Callback, Promise, RequestID, Result,
     },
     connection::{
-        message::{QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
+        message::{QueryResponse, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
-        server_connection::LatencyTracker,
     },
     Error,
 };
@@ -88,7 +82,7 @@ impl TransactionTransmitter {
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
         initial_request_id: RequestID,
-        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) -> () + Sync + Send>,
+        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) + Sync + Send>,
     ) -> Self {
         let callback_handler_sink = background_runtime.callback_handler_sink();
         let (buffer_sink, buffer_source) = unbounded_async();
@@ -155,7 +149,7 @@ impl TransactionTransmitter {
     ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
             let error = self.error();
-            return box_promise(|| Err(error.into()));
+            return box_promise(|| Err(error));
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
@@ -169,7 +163,7 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
         if !self.is_open() {
-            return Err(self.error().into());
+            return Err(self.error());
         }
         let (res_part_sink, recv) = unbounded_async();
         self.request_sink

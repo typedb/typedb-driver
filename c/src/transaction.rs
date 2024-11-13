@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{DatabaseManager, Error, Transaction, TransactionType, TypeDBDriver};
+use typedb_driver::{Error, Transaction, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -87,6 +87,5 @@ pub extern "C" fn transaction_on_close(
     callback_id: usize,
     callback: extern "C" fn(usize, *mut Error),
 ) {
-    borrow(txn)
-        .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut())));
+    borrow(txn).on_close(move |error| callback(callback_id, error.map(release).unwrap_or(null_mut())));
 }

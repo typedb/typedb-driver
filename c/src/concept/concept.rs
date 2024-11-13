@@ -159,7 +159,7 @@ pub extern "C" fn string_and_opt_value_drop(string_and_opt_value: *mut StringAnd
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
 pub extern "C" fn attribute_type_is_untyped(attribute_type: *const Concept) -> bool {
-    matches!(borrow_as_attribute_type(attribute_type).value_type, None)
+    borrow_as_attribute_type(attribute_type).value_type.is_none()
 }
 
 /// Returns <code>true</code> if the attribute type is of type <code>boolean</code>.
@@ -306,8 +306,8 @@ pub extern "C" fn value_is_struct(value: *const Concept) -> bool {
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_boolean(value: *const Concept) -> bool {
-    if let Value::Boolean(bool) = borrow_as_value(value) {
-        *bool
+    if let &Value::Boolean(bool) = borrow_as_value(value) {
+        bool
     } else {
         unreachable!("Attempting to unwrap a non-boolean {:?} as boolean", borrow_as_value(value))
     }
@@ -317,8 +317,8 @@ pub extern "C" fn value_get_boolean(value: *const Concept) -> bool {
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_long(value: *const Concept) -> i64 {
-    if let Value::Long(long) = borrow_as_value(value) {
-        *long
+    if let &Value::Long(long) = borrow_as_value(value) {
+        long
     } else {
         unreachable!("Attempting to unwrap a non-long {:?} as long", borrow_as_value(value))
     }
@@ -328,8 +328,8 @@ pub extern "C" fn value_get_long(value: *const Concept) -> i64 {
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_double(value: *const Concept) -> f64 {
-    if let Value::Double(double) = borrow_as_value(value) {
-        *double
+    if let &Value::Double(double) = borrow_as_value(value) {
+        double
     } else {
         unreachable!("Attempting to unwrap a non-double {:?} as double", borrow_as_value(value))
     }
@@ -339,8 +339,8 @@ pub extern "C" fn value_get_double(value: *const Concept) -> f64 {
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_decimal(value: *const Concept) -> Decimal {
-    if let Value::Decimal(decimal) = borrow_as_value(value) {
-        decimal.clone()
+    if let &Value::Decimal(decimal) = borrow_as_value(value) {
+        decimal
     } else {
         unreachable!("Attempting to unwrap a non-decimal {:?} as decimal", borrow_as_value(value))
     }
@@ -394,8 +394,8 @@ pub extern "C" fn value_get_datetime_tz(value: *const Concept) -> DatetimeAndTim
 /// If the value has another type, the error is set.
 #[no_mangle]
 pub extern "C" fn value_get_duration(value: *const Concept) -> Duration {
-    if let Value::Duration(duration) = borrow_as_value(value) {
-        duration.clone()
+    if let &Value::Duration(duration) = borrow_as_value(value) {
+        duration
     } else {
         unreachable!("Attempting to unwrap a non-duration {:?} as duration", borrow_as_value(value))
     }
@@ -483,7 +483,7 @@ pub extern "C" fn concept_is_role_type(concept: *const Concept) -> bool {
 /// Gets the 'label' of this <code>Concept</code> object.
 #[no_mangle]
 pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
-    release_string(borrow(concept).get_label().clone().to_owned())
+    release_string(borrow(concept).get_label().to_owned())
 }
 
 /// A string representation of this <code>Concept</code> object.

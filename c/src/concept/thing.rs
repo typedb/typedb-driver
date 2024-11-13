@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::concept::{Concept, Value};
+use typedb_driver::concept::Concept;
 
 use super::concept::{borrow_as_attribute, borrow_as_entity, borrow_as_relation};
 use crate::memory::{release, release_string};

@@ -20,7 +20,6 @@
 use std::fmt::{Debug, Display, Formatter};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
-use chrono_tz::Tz;
 
 pub use self::{
     thing::{Attribute, Entity, Relation},
@@ -174,7 +173,7 @@ impl Concept {
     /// If this a boolean-valued Value, return the boolean value.
     /// Otherwise, return empty.
     pub fn get_boolean(&self) -> Option<bool> {
-        self.get_value().map(|value| value.get_boolean()).flatten()
+        self.get_value().and_then(|value| value.get_boolean())
     }
 
     /// Get the long value of this concept, if it exists.
@@ -182,7 +181,7 @@ impl Concept {
     /// If this a long-valued Value, return the long value.
     /// Otherwise, return empty.
     pub fn get_long(&self) -> Option<i64> {
-        self.get_value().map(|value| value.get_long()).flatten()
+        self.get_value().and_then(|value| value.get_long())
     }
 
     /// Get the double value of this concept, if it exists.
@@ -190,7 +189,7 @@ impl Concept {
     /// If this a double-valued Value, return the double value.
     /// Otherwise, return empty.
     pub fn get_double(&self) -> Option<f64> {
-        self.get_value().map(|value| value.get_double()).flatten()
+        self.get_value().and_then(|value| value.get_double())
     }
 
     /// Get the fixed-decimal value of this concept, if it exists.
@@ -198,7 +197,7 @@ impl Concept {
     /// If this a fixed-decimal valued Value, return the fixed-decimal value.
     /// Otherwise, return empty.
     pub fn get_decimal(&self) -> Option<Decimal> {
-        self.get_value().map(|value| value.get_decimal()).flatten()
+        self.get_value().and_then(|value| value.get_decimal())
     }
 
     /// Get the string value of this concept, if it exists.
@@ -206,7 +205,7 @@ impl Concept {
     /// If this a string-valued Value, return the string value.
     /// Otherwise, return empty.
     pub fn get_string(&self) -> Option<&str> {
-        self.get_value().map(|value| value.get_string()).flatten()
+        self.get_value().and_then(|value| value.get_string())
     }
 
     /// Get the date value of this concept, if it exists.
@@ -214,7 +213,7 @@ impl Concept {
     /// If this a date-valued Value, return the date value.
     /// Otherwise, return empty.
     pub fn get_date(&self) -> Option<NaiveDate> {
-        self.get_value().map(|value| value.get_date()).flatten()
+        self.get_value().and_then(|value| value.get_date())
     }
 
     /// Get the datetime value of this concept, if it exists.
@@ -222,7 +221,7 @@ impl Concept {
     /// If this a datetime-valued Value, return the datetime value.
     /// Otherwise, return empty.
     pub fn get_datetime(&self) -> Option<NaiveDateTime> {
-        self.get_value().map(|value| value.get_datetime()).flatten()
+        self.get_value().and_then(|value| value.get_datetime())
     }
 
     /// Get the timezoned-datetime value of this concept, if it exists.
@@ -230,7 +229,7 @@ impl Concept {
     /// If this a timezoned-datetime valued Value, return the timezoned-datetime value.
     /// Otherwise, return empty.
     pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
-        self.get_value().map(|value| value.get_datetime_tz()).flatten()
+        self.get_value().and_then(|value| value.get_datetime_tz())
     }
 
     /// Get the duration value of this concept, if it exists.
@@ -238,7 +237,7 @@ impl Concept {
     /// If this a duration-valued Value, return the duration value.
     /// Otherwise, return empty.
     pub fn get_duration(&self) -> Option<Duration> {
-        self.get_value().map(|value| value.get_duration()).flatten()
+        self.get_value().and_then(|value| value.get_duration())
     }
 
     /// Get the struct value of this concept, if it exists.
@@ -246,7 +245,7 @@ impl Concept {
     /// If this a struct-valued Value, return the struct value.
     /// Otherwise, return empty.
     pub fn get_struct(&self) -> Option<&Struct> {
-        self.get_value().map(|value| value.get_struct()).flatten()
+        self.get_value().and_then(|value| value.get_struct())
     }
 
     /// Get the category of this concept
