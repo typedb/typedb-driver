@@ -214,19 +214,15 @@ impl ServerError {
     pub(crate) fn message(&self) -> String {
         self.to_string()
     }
-
-    fn to_string(&self) -> String {
-        if self.stack_trace.is_empty() {
-            format!("[{}] {}. {}", self.error_code, self.error_domain, self.message)
-        } else {
-            format!("\n{}", self.stack_trace.join("\nCaused: "))
-        }
-    }
 }
 
 impl fmt::Display for ServerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string())
+        if self.stack_trace.is_empty() {
+            write!(f, "[{}] {}. {}", self.error_code, self.error_domain, self.message)
+        } else {
+            write!(f, "\n{}", self.stack_trace.join("\nCaused: "))
+        }
     }
 }
 
