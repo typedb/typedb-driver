@@ -19,19 +19,16 @@
 
 use std::collections::HashSet;
 
-use cucumber::{gherkin::Step, given, then, when};
-use futures::{
-    future::{join_all, try_join_all},
-    stream, StreamExt, TryFutureExt,
-};
+use cucumber::gherkin::Step;
+use futures::future::join_all;
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TypeDBDriver};
+use typedb_driver::{Database, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, util::iter_table, Context};
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
-    may_error.check(driver.databases().create(name).await);
+    may_error.check(driver.databases().create(name));
 }
 
 #[apply(generic_step)]
@@ -67,32 +64,30 @@ async fn connection_create_databases_in_parallel(context: &mut Context, step: &S
 #[apply(generic_step)]
 #[step(expr = "connection delete database: {word}{may_error}")]
 pub async fn connection_delete_database(context: &mut Context, name: String, may_error: params::MayError) {
-    may_error.check(context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await);
+    may_error.check(context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete));
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection delete database(s):")]
 async fn connection_delete_databases(context: &mut Context, step: &Step) {
     for name in iter_table(step) {
-        context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).await.unwrap();
+        context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).unwrap();
     }
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection delete databases in parallel:")]
 async fn connection_delete_databases_in_parallel(context: &mut Context, step: &Step) {
-    try_join_all(
-        iter_table(step).map(|name| context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete)),
-    )
-    .await
-    .unwrap();
+    for name in iter_table(step) {
+        context.driver.as_ref().unwrap().databases().get(name).and_then(Database::delete).unwrap();
+    }
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection has database: {word}")]
 async fn connection_has_database(context: &mut Context, name: String) {
     assert_with_timeout!(
-        context.driver.as_ref().unwrap().databases().contains(name.clone()).await.unwrap(),
+        context.driver.as_ref().unwrap().databases().contains(name.clone()).unwrap(),
         "Connection doesn't contain database {name}.",
     );
 }
@@ -101,17 +96,14 @@ async fn connection_has_database(context: &mut Context, name: String) {
 #[step(expr = "connection has database(s):")]
 async fn connection_has_databases(context: &mut Context, step: &Step) {
     let names: HashSet<String> = iter_table(step).map(|name| name.to_owned()).collect();
-    assert_with_timeout!(
-        context.all_databases().await == names,
-        "Connection doesn't contain at least one of the databases.",
-    );
+    assert_with_timeout!(context.all_databases() == names, "Connection doesn't contain at least one of the databases.",);
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection does not have database: {word}")]
 async fn connection_does_not_have_database(context: &mut Context, name: String) {
     assert_with_timeout!(
-        !context.driver.as_ref().unwrap().databases().contains(name.clone()).await.unwrap(),
+        !context.driver.as_ref().unwrap().databases().contains(name.clone()).unwrap(),
         "Connection contains database {name}.",
     );
 }
@@ -120,7 +112,7 @@ async fn connection_does_not_have_database(context: &mut Context, name: String) 
 #[step(expr = "connection does not have database(s):")]
 async fn connection_does_not_have_databases(context: &mut Context, step: &Step) {
     assert_with_timeout!(
-        stream::iter(iter_table(step)).all(|name| async { !context.all_databases().await.contains(name) }).await,
+        iter_table(step).all(|name| !context.all_databases().contains(name)),
         "Connection contains at least one of the databases.",
     )
 }

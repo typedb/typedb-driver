@@ -17,12 +17,12 @@
  * under the License.
  */
 
-use std::{collections::VecDeque, time::Duration};
+use std::collections::VecDeque;
 
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::{future::join_all, FutureExt};
 use macro_rules_attribute::apply;
-use typedb_driver::{Result as TypeDBResult, Transaction, TransactionType, TypeDBDriver};
+use typedb_driver::{resolve, Result as TypeDBResult, Transaction, TransactionType, TypeDBDriver};
 
 use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
 
@@ -31,7 +31,7 @@ async fn open_transaction_for_database(
     database_name: impl AsRef<str>,
     transaction_type: TransactionType,
 ) -> TypeDBResult<Transaction> {
-    driver.as_ref().unwrap().transaction(database_name, transaction_type).await
+    driver.as_ref().unwrap().transaction(database_name, transaction_type)
 }
 
 #[apply(generic_step)]
@@ -100,7 +100,7 @@ pub async fn transactions_have_type(context: &mut Context, step: &Step) {
 #[apply(generic_step)]
 #[step(expr = "transaction commits{may_error}")]
 pub async fn transaction_commits(context: &mut Context, may_error: params::MayError) {
-    may_error.check(context.take_transaction().commit().await);
+    may_error.check(resolve!(context.take_transaction().commit()));
 }
 
 #[apply(generic_step)]
@@ -112,5 +112,5 @@ pub async fn transaction_closes(context: &mut Context) {
 #[apply(generic_step)]
 #[step(expr = "transaction rollbacks{may_error}")]
 pub async fn transaction_rollbacks(context: &mut Context, may_error: params::MayError) {
-    may_error.check(context.transaction().rollback().await);
+    may_error.check(resolve!(context.transaction().rollback()));
 }

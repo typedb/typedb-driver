@@ -20,29 +20,15 @@
 use std::{
     borrow::Cow,
     collections::{HashMap, HashSet},
-    env, iter, mem,
-    path::{Path, PathBuf},
+    env,
 };
 
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use cucumber::{
-    gherkin::{Feature, Step},
-    given, then, when, StatsWriter, World,
-};
-use futures::{
-    future::{try_join_all, Either},
-    stream::{self, StreamExt},
-};
-use itertools::Itertools;
+use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptRow, JSON},
-    concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
-    DatabaseManager, Error, Result as TypeDBResult,
-};
+use typedb_driver::{answer::JSON, Result as TypeDBResult};
 
-use crate::{assert_with_timeout, generic_step, Context};
+use crate::{generic_step, Context};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)

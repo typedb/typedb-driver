@@ -25,7 +25,7 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     crate_root = "lib.rs",
     deps = [
-        "//rust:typedb_driver",
+        "//rust:typedb_driver_sync",
         "@crates//:async-std",
         "@crates//:chrono",
         "@crates//:cucumber",

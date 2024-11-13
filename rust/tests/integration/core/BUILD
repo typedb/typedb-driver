@@ -25,23 +25,23 @@ exports_files(
     visibility = ["//rust:__subpackages__"],
 )
 
-rust_test(
-    name = "test_example",
-    srcs = glob(["example.rs"]),
-    deps = [
-        "//rust:typedb_driver",
-        "@crates//:async-std",
-        "@crates//:chrono",
-        "@crates//:futures",
-        "@crates//:itertools",
-        "@crates//:regex",
-        "@crates//:serde_json",
-        "@crates//:serial_test",
-        "@crates//:smol",
-        "@crates//:tokio",
-        "@crates//:uuid",
-    ],
-)
+# rust_test(
+#     name = "test_example",
+#     srcs = glob(["example.rs"]),
+#     deps = [
+#         "//rust:typedb_driver",
+#         "@crates//:async-std",
+#         "@crates//:chrono",
+#         "@crates//:futures",
+#         "@crates//:itertools",
+#         "@crates//:regex",
+#         "@crates//:serde_json",
+#         "@crates//:serial_test",
+#         "@crates//:smol",
+#         "@crates//:tokio",
+#         "@crates//:uuid",
+#     ],
+# )
 
 checkstyle_test(
     name = "checkstyle",

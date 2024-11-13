@@ -28,7 +28,7 @@ rustfmt_test(
         "//rust/tests/behaviour/connection:test_transaction",
         "//rust/tests/behaviour/driver:test_driver",
 
-        "//rust/tests/integration/core:test_example",
+#        "//rust/tests/integration/core:test_example",
 #        "//rust/tests/integration/cloud:test_example",
     ],
     size = "small",

@@ -45,7 +45,8 @@ features = {}
 
 	[dependencies.typedb-driver]
 		path = "../../../../rust"
-		features = []
+		features = ["sync"]
+		default-features = false
 
 	[dependencies.futures]
 		features = ["alloc", "async-await", "default", "executor", "futures-executor", "std", "thread-pool"]

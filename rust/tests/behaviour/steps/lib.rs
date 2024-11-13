@@ -21,8 +21,7 @@
 #![deny(elided_lifetimes_in_paths)]
 
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    env::VarError,
+    collections::{HashSet, VecDeque},
     error::Error,
     fmt,
     fmt::Formatter,
@@ -32,16 +31,14 @@ use std::{
 
 use cucumber::{gherkin::Feature, StatsWriter, World};
 use futures::{
-    future::{try_join_all, Either},
+    future::Either,
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType, JSON},
-    concept::Value,
-    BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
-    UserManager,
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
+    BoxStream, Credential, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -185,13 +182,12 @@ impl Context {
         Ok(())
     }
 
-    pub async fn all_databases(&self) -> HashSet<String> {
+    pub fn all_databases(&self) -> HashSet<String> {
         self.driver
             .as_ref()
             .unwrap()
             .databases()
             .all()
-            .await
             .unwrap()
             .into_iter()
             .map(|db| db.name().to_owned())
@@ -203,9 +199,9 @@ impl Context {
             self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap();
         }
 
-        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
-            .await
-            .unwrap();
+        for db in self.driver.as_ref().unwrap().databases().all().unwrap() {
+            db.delete().unwrap()
+        }
     }
 
     pub async fn cleanup_transactions(&mut self) {
@@ -215,24 +211,17 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
+        let driver = self.driver.as_ref().unwrap();
+        if self.driver.is_none() || !driver.is_open() {
             return;
         }
 
-        try_join_all(
-            self.driver
-                .as_ref()
-                .unwrap()
-                .users()
-                .all()
-                .await
-                .unwrap()
-                .into_iter()
-                .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
-        )
-        .await
-        .ok();
+        for user in driver.users().all().unwrap() {
+            if user.username == Context::ADMIN_USERNAME {
+                continue;
+            }
+            driver.users().delete(user.username).ok();
+        }
     }
 
     pub async fn cleanup_answers(&mut self) {
@@ -249,11 +238,11 @@ impl Context {
     }
 
     pub fn transaction_opt(&self) -> Option<&Transaction> {
-        self.transactions.get(0)
+        self.transactions.front()
     }
 
     pub fn transaction(&self) -> &Transaction {
-        self.transactions.get(0).unwrap()
+        self.transactions.front().unwrap()
     }
 
     pub fn take_transaction(&mut self) -> Transaction {
@@ -308,7 +297,7 @@ impl Context {
 
     pub async fn unwrap_answer_into_rows(&mut self) {
         self.collected_rows =
-            Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+            Some(self.answer.take().unwrap().into_rows().map(|result| result.unwrap()).collect::<Vec<_>>());
     }
 
     pub async fn unwrap_concurrent_answers_into_rows_streams(&mut self) {
@@ -318,7 +307,7 @@ impl Context {
 
     pub async fn unwrap_answer_into_documents(&mut self) {
         self.collected_documents =
-            Some(self.answer.take().unwrap().into_documents().map(|result| result.unwrap()).collect::<Vec<_>>().await);
+            Some(self.answer.take().unwrap().into_documents().map(|result| result.unwrap()).collect::<Vec<_>>());
     }
 
     pub async fn get_answer(&self) -> Option<&QueryAnswer> {
@@ -381,7 +370,7 @@ impl Context {
         _password: Option<&str>,
     ) -> TypeDBResult {
         assert!(!self.is_cloud);
-        let driver = TypeDBDriver::new_core(address).await?;
+        let driver = TypeDBDriver::new_core(address)?;
         self.driver = Some(driver);
         Ok(())
     }

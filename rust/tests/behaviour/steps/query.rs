@@ -17,34 +17,31 @@
  * under the License.
  */
 
-use std::{collections::VecDeque, ops::Index};
-
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::{future::join_all, StreamExt, TryStreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, JSON},
+    answer::{ConceptRow, QueryAnswer},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
-    Result as TypeDBResult, Transaction,
+    resolve, Result as TypeDBResult, Transaction,
 };
 
 use crate::{
-    assert_err, generic_step, params,
+    generic_step, params,
     params::check_boolean,
-    util,
     util::{iter_table, list_contains_json, parse_json},
     BehaviourTestOptionalError,
-    BehaviourTestOptionalError::{InvalidValueCasting, VariableDoesNotExist},
+    BehaviourTestOptionalError::InvalidValueCasting,
     Context,
 };
 
 async fn run_query(transaction: &Transaction, query: impl AsRef<str>) -> TypeDBResult<QueryAnswer> {
-    transaction.query(query).await
+    resolve!(transaction.query(query))
 }
 
 fn get_collected_column_names(concept_row: &ConceptRow) -> Vec<String> {
-    concept_row.get_column_names().into_iter().cloned().collect()
+    concept_row.get_column_names().to_vec()
 }
 
 async fn get_answer_rows_var(
@@ -280,7 +277,7 @@ pub async fn concurrently_process_rows_from_answers(context: &mut Context, count
             let mut rows = Vec::new();
 
             for _ in 0..count {
-                if let Some(row) = stream.next().await {
+                if let Some(row) = stream.next() {
                     rows.push(row.unwrap());
                 } else {
                     failed = true;
@@ -348,9 +345,9 @@ pub async fn answer_get_row_get_variable_as(
     may_error: params::MayError,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
-    may_error.check((|| {
-        kind.matches_concept(concept).then(|| ()).ok_or(BehaviourTestOptionalError::InvalidConceptConversion)
-    })());
+    may_error.check({
+        kind.matches_concept(concept).then_some(()).ok_or(BehaviourTestOptionalError::InvalidConceptConversion)
+    });
 }
 
 #[apply(generic_step)]
@@ -541,7 +538,7 @@ pub async fn answer_get_row_get_variable_get_specific_value(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    let actual_value = concept.get_value().expect("Value is expected");
+    let _actual_value = concept.get_value().expect("Value is expected");
     let expected_value = value.into_typedb(value_type.value_type.clone());
     match value_type.value_type {
         ValueType::Boolean => {
@@ -630,8 +627,8 @@ pub async fn answer_get_row_get_variable_is_untyped(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    check_boolean!(is_untyped, matches!(concept.get_value_type(), None));
-    check_boolean!(is_untyped, matches!(concept.get_value_label(), None));
+    check_boolean!(is_untyped, concept.get_value_type().is_none());
+    check_boolean!(is_untyped, concept.get_value_label().is_none());
 }
 
 #[apply(generic_step)]
