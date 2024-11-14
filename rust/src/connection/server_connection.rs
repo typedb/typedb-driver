@@ -62,7 +62,7 @@ impl ServerConnection {
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
         let request_transmitter = Arc::new(
-            RPCTransmitter::start_core(address, credential, &background_runtime)?
+            RPCTransmitter::start(address, credential, &background_runtime)?
         );
         let (connection_id, latency, database_info) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;

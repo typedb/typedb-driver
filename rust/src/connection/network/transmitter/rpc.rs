@@ -46,13 +46,7 @@ pub(in crate::connection) struct RPCTransmitter {
 }
 
 impl RPCTransmitter {
-    pub(in crate::connection) fn start_core(
-        address: Address, credential: Credential, runtime: &BackgroundRuntime
-    ) -> Result<Self> {
-        Self::start_cloud(address, credential, runtime)
-    }
-
-    pub(in crate::connection) fn start_cloud(
+    pub(in crate::connection) fn start(
         address: Address,
         credential: Credential,
         runtime: &BackgroundRuntime,
