@@ -20,7 +20,7 @@ workspace(name = "vaticle_typedb_driver")
 ##############################
 # Load @vaticle_dependencies #
 ##############################
-load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
+load("//dependencies/typedb:repositories.bzl", "vaticle_dependencies")
 vaticle_dependencies()
 
 # Load //builder/bazel for RBE
@@ -205,12 +205,12 @@ install_deps()
 ##############################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
+load("//dependencies/typedb:repositories.bzl", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
 vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
 
 # Load artifacts
-load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact")
+load("//dependencies/typedb:artifacts.bzl", "vaticle_typedb_artifact")
 vaticle_typedb_artifact()
 #vaticle_typedb_cloud_artifact()
 
@@ -289,7 +289,7 @@ load(
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 # Load TypeDB maven artifacts
-#load("//dependencies/vaticle:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
+#load("//dependencies/typedb:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
