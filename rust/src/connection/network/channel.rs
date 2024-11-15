@@ -46,7 +46,6 @@ pub(super) trait GRPCChannel:
 
 impl GRPCChannel for CallCredChannel {}
 
-
 pub(super) fn open_callcred_channel(
     address: Address,
     credential: Credential,
