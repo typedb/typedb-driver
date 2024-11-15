@@ -83,7 +83,7 @@ impl ServerConnection {
         credential: Credential,
     ) -> crate::Result<Self> {
         todo!()
-        // let request_transmitter = Arc::new(RPCTransmitter::start_cloud(address, credential, &background_runtime)?);
+        // let request_transmitter = Arc::new(RPCTransmitter::start(address, credential, &background_runtime)?);
         // Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
