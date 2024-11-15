@@ -36,11 +36,11 @@ java_binary(
 native_typedb_artifact(
     name = "native-typedb-artifact",
     native_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_artifact_linux-arm64//file"],
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_artifact_linux-x86_64//file"],
-        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_artifact_mac-arm64//file"],
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_artifact_mac-x86_64//file"],
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_artifact_windows-x86_64//file"],
+        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_artifact_linux-arm64//file"],
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_artifact_linux-x86_64//file"],
+        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_artifact_mac-arm64//file"],
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_artifact_mac-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_artifact_windows-x86_64//file"],
     },
     output = "typedb-artifact.tar.gz",
     visibility = ["//visibility:public"],

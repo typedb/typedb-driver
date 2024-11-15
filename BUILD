@@ -55,7 +55,7 @@ checkstyle_test(
 
 release_validate_deps(
     name = "release-validate-deps",
-    refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    refs = "@typedb_driver_workspace_refs//:refs.json",
     tagged_deps = [
         "@typedb_protocol",
     ],

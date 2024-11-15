@@ -84,7 +84,7 @@ assemble_crate(
     target = ":typedb_driver",
     universe_manifests = ["@typedb_dependencies//library/crates:Cargo.toml"],
     crate_features = { "sync": [] },
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    workspace_refs = "@typedb_driver_workspace_refs//:refs.json",
 )
 
 deploy_crate(

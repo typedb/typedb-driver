@@ -49,7 +49,7 @@ assemble_maven(
     scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":driver-java",
     version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    workspace_refs = "@typedb_driver_workspace_refs//:refs.json",
     platform_overrides = {
         ":typedb_driver_jni": json.encode([
            "com.typedb:typedb-driver-jni-linux-arm64:{pom_version}",
@@ -93,7 +93,7 @@ assemble_maven(
     scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":typedb_driver_jni",
     version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    workspace_refs = "@typedb_driver_workspace_refs//:refs.json",
 )
 
 deploy_maven(

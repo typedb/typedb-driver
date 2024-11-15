@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-workspace(name = "vaticle_typedb_driver")
+workspace(name = "typedb_driver")
 
 ##############################
 # Load @typedb_dependencies #
@@ -190,15 +190,15 @@ load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules
 google_common_workspace_rules()
 
 ######################################
-# Load @vaticle_typedb_driver_python #
+# Load @typedb_driver_python #
 ######################################
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
-    name = "vaticle_typedb_driver_pip",
+    name = "typedb_driver_pip",
     requirements_lock = "//python:requirements_dev.txt",
 )
-load("@vaticle_typedb_driver_pip//:requirements.bzl", type_driver_install_deps = "install_deps")
+load("@typedb_driver_pip//:requirements.bzl", type_driver_install_deps = "install_deps")
 type_driver_install_deps()
 
 ##############################
@@ -211,8 +211,8 @@ typedb_behaviour()
 typedb_protocol()
 
 # Load artifacts
-load("//dependencies/typedb:artifacts.bzl", "vaticle_typedb_artifact")
-vaticle_typedb_artifact()
+load("//dependencies/typedb:artifacts.bzl", "typedb_artifact")
+typedb_artifact()
 #vaticle_typedb_cloud_artifact()
 
 ####################
@@ -284,27 +284,27 @@ uploader_install_deps()
 load("@typedb_dependencies//tool/common:deps.bzl", typedb_dependencies_tool_maven_artifacts = "maven_artifacts")
 load(
     "//dependencies/maven:artifacts.bzl",
-    vaticle_typedb_driver_maven_artifacts = "artifacts",
-    vaticle_typedb_driver_maven_overrides = "overrides",
+    typedb_driver_maven_artifacts = "artifacts",
+    typedb_driver_maven_overrides = "overrides",
 )
 load("@typedb_bazel_distribution//maven:deps.bzl", typedb_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 # Load TypeDB maven artifacts
-#load("//dependencies/typedb:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
+#load("//dependencies/typedb:artifacts.bzl", typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
 
 load("@typedb_dependencies//library/maven:rules.bzl", "maven")
 maven(
     typedb_dependencies_tool_maven_artifacts +
-    vaticle_typedb_driver_maven_artifacts +
+    typedb_driver_maven_artifacts +
     typedb_bazel_distribution_maven_artifacts,
-#    internal_artifacts = vaticle_typedb_driver_vaticle_maven_artifacts,
-    override_targets = vaticle_typedb_driver_maven_overrides,
+#    internal_artifacts = typedb_driver_vaticle_maven_artifacts,
+    override_targets = typedb_driver_maven_overrides,
 )
 
 ################################################
-# Create @vaticle_typedb_driver_workspace_refs #
+# Create @typedb_driver_workspace_refs #
 ################################################
 load("@typedb_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
-    name = "vaticle_typedb_driver_workspace_refs"
+    name = "typedb_driver_workspace_refs"
 )

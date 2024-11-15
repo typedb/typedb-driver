@@ -18,9 +18,9 @@
 load("@typedb_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
 
-def vaticle_typedb_artifact():
+def typedb_artifact():
     native_artifact_files(
-        name = "vaticle_typedb_artifact",
+        name = "typedb_artifact",
         group_name = "typedb-all-{platform}",
         artifact_name = "typedb-all-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],

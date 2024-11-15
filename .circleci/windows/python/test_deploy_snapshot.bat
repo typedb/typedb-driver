@@ -22,8 +22,8 @@ CALL refreshenv
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
-bazel --output_user_root=C:\b build @vaticle_typedb_artifact_windows-x86_64//file
-powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
+bazel --output_user_root=C:\b build @typedb_artifact_windows-x86_64//file
+powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
 7z x typedb-server-windows.zip
 RD /S /Q typedb-server-windows
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"

@@ -27,11 +27,11 @@ typedb_java_test(
     name = "test-example",
     srcs = ["ExampleTest.java"],
     server_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
-        "@typedb_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
     },
     test_class = "com.typedb.driver.test.integration.core.ExampleTest",
     deps = [
@@ -50,11 +50,11 @@ typedb_java_test(
     name = "test-value",
     srcs = ["ValueTest.java"],
     server_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
-        "@typedb_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
     },
     test_class = "com.typedb.driver.test.integration.core.ValueTest",
     deps = [

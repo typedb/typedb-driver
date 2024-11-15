@@ -6,7 +6,7 @@ index a6df7ba2..420f8397 100644
  # specific language governing permissions and limitations
  # under the License.
  
--workspace(name = "vaticle_typedb_driver")
+-workspace(name = "typedb_driver")
 +workspace(name = "v")
  
  ##############################

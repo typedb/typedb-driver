@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
+load("@typedb_driver_pip//:requirements.bzl", "requirement")
 
 
 def py_behave_test(*, name, background, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
