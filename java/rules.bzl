@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
+load("@typedb_dependencies//builder/swig:java.bzl", "swig_java")
 
 def swig_native_java_library(name, platforms, maven_coordinates, tags=[], **kwargs):
     swig_java(

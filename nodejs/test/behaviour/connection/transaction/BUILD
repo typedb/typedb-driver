@@ -16,7 +16,7 @@
 # under the License.
 
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test", "behaviour_test_ts_config")
 
 checkstyle_test(
@@ -42,7 +42,7 @@ ts_project(
 
 typedb_behaviour_node_test(
     name = "test",
-    features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
+    features = ["@typedb_behaviour//connection:transaction.feature"],
     data = [
         ":steps",
         "//nodejs/test/behaviour/connection/database:steps",

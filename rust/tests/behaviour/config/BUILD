@@ -19,7 +19,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 load("@rules_rust//rust:defs.bzl", "rust_library")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//rust/tests/behaviour:defs.bzl", "crate_features_common")
 
 string_flag(

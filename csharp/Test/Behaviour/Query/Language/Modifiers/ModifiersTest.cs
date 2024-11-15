@@ -21,7 +21,7 @@ using Xunit.Gherkin.Quick;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
-    [FeatureFile("external/vaticle_typedb_behaviour/query/language/modifiers.feature")]
+    [FeatureFile("external/typedb_behaviour/query/language/modifiers.feature")]
     public partial class BehaviourSteps
     {
     }

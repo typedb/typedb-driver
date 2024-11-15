@@ -15,15 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
-load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
-load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("@typedb_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
+load("@typedb_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@typedb_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
-load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
+load("@typedb_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load(":build_opts.bzl", "cxxopts")
 load("//cpp:docs_structure.bzl", "dir_mapping")
@@ -50,8 +50,8 @@ cc_binary(
     ],
     copts = cxxopts,
     linkopts = select({
-        "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
-        "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
+        "@typedb_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+        "@typedb_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
         "//conditions:default": [],
     }),
     local_defines = ["_COMPILING_TYPEDB_DRIVER"],
@@ -181,22 +181,22 @@ deploy_artifact(
 alias(
     name = "assemble-cpp-driver",
     actual = select({
-        "@vaticle_bazel_distribution//platform:is_linux_arm64" : ":assemble-linux-arm64-targz",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64" : ":assemble-linux-x86_64-targz",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64" : ":assemble-mac-arm64-zip",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64" : ":assemble-mac-x86_64-zip",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64" : ":assemble-windows-x86_64-zip"
+        "@typedb_bazel_distribution//platform:is_linux_arm64" : ":assemble-linux-arm64-targz",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64" : ":assemble-linux-x86_64-targz",
+        "@typedb_bazel_distribution//platform:is_mac_arm64" : ":assemble-mac-arm64-zip",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64" : ":assemble-mac-x86_64-zip",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64" : ":assemble-windows-x86_64-zip"
     })
 )
 
 alias(
     name = "deploy-cpp-driver",
     actual = select({
-        "@vaticle_bazel_distribution//platform:is_linux_arm64" : ":deploy-linux-arm64-targz",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64" : ":deploy-linux-x86_64-targz",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64" : ":deploy-mac-arm64-zip",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64" : ":deploy-mac-x86_64-zip",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64" : ":deploy-windows-x86_64-zip"
+        "@typedb_bazel_distribution//platform:is_linux_arm64" : ":deploy-linux-arm64-targz",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64" : ":deploy-linux-x86_64-targz",
+        "@typedb_bazel_distribution//platform:is_mac_arm64" : ":deploy-mac-arm64-zip",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64" : ":deploy-mac-x86_64-zip",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64" : ":deploy-windows-x86_64-zip"
     })
 )
 

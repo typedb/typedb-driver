@@ -26,7 +26,7 @@ fi
 TYPEDB_PROTOCOL_VERSION=$(grep -o '"[^"]*".*sync-marker.*typedb_protocol' dependencies/typedb/repositories.bzl | sed 's/.*"\(.*\)".*/\1/')
 if [ -z "$TYPEDB_PROTOCOL_VERSION" ]; then
   # the following line only prints when the script is run directly
-  echo "@vaticle_typedb_protocol version not found in dependencies/typedb/repositories.bzl, cannot stamp"
+  echo "@typedb_protocol version not found in dependencies/typedb/repositories.bzl, cannot stamp"
   exit 1
 elif [[ "$TYPEDB_PROTOCOL_VERSION" =~ ^[0-9a-f]{40}$ ]]; then # SHA
   TYPEDB_PROTOCOL_VERSION=0.0.0-$TYPEDB_PROTOCOL_VERSION

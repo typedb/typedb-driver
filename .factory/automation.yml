@@ -30,7 +30,7 @@ build:
     dependency-analysis:
       image: typedb-ubuntu-22.04
       command: |
-        bazel run @vaticle_dependencies//factory/analysis:dependency-analysis
+        bazel run @typedb_dependencies//factory/analysis:dependency-analysis
 
   correctness:
     build:
@@ -44,14 +44,14 @@ build:
         python3 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
         bazel build //rust/...
         bazel build //java/...
         bazel build //python/...
-        bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
+        bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
         # TODO: Return these three steps when npm is reimplemented for 3.0
@@ -62,17 +62,17 @@ build:
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
 #      command: |
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        dependencies/maven/update.sh
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
-#        bazel run @vaticle_dependencies//tool/unuseddeps:unused-deps -- list
+#        bazel run @typedb_dependencies//tool/unuseddeps:unused-deps -- list
 
     build-docs:
       image: typedb-ubuntu-22.04
       command: |
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         # TODO: Temporarily update only 3.0 drivers
         DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python")
         find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
@@ -87,8 +87,8 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
         
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         
@@ -111,8 +111,8 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-core-server.sh &&
           bazel test //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
@@ -127,8 +127,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          bazel test //rust/tests/behaviour/... --//rust/tests/behaviour/config:mode=cloud \
@@ -144,8 +144,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          bazel test //c/tests/integration:test-driver --test_output=errors &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -159,8 +159,8 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //java/test/integration/... --test_output=errors &&
@@ -181,8 +181,8 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
@@ -196,8 +196,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cloud.sh //java/test/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -214,8 +214,8 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-core-server.sh &&
           bazel test //python/tests/integration/core/... --test_output=streamed --jobs=1 &&
@@ -238,8 +238,8 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
@@ -256,8 +256,8 @@ build:
 #        export PATH="$HOME/.local/bin:$PATH"
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cloud.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -272,7 +272,7 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        bazel build //nodejs/...
 #        cp -rL bazel-bin/nodejs/node_modules nodejs/.
 #        cp -rL bazel-bin/nodejs/dist nodejs/.
@@ -298,7 +298,7 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          .factory/test-core.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
 #          .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
@@ -317,7 +317,7 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cloud.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -340,8 +340,8 @@ build:
 #        sudo apt install clang-format-15 -y && sudo ln -s $(which clang-format-15) /usr/bin/clang-format
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          bazel test //cpp/test/integration:test-cpp-driver-core --test_output=streamed --jobs=1 &&
 #          export CORE_FAILED= || export CORE_FAILED=1
@@ -364,8 +364,8 @@ build:
 #        sudo apt install clang-format-15 -y && sudo ln -s $(which clang-format-15) /usr/bin/clang-format
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          .factory/test-core.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
 #          .factory/test-core.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
@@ -385,8 +385,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cloud-servers.sh 3 &&
 #          .factory/test-cloud.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cloud.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -408,8 +408,8 @@ build:
 #        sudo apt-get update
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          bazel test //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
 #          bazel test //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
@@ -434,8 +434,8 @@ build:
 #        sudo apt-get update
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-core-server.sh &&
 #          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
 #          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
@@ -456,8 +456,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cloud-servers.sh 3 &&
 #          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -504,7 +504,7 @@ build:
 #        sudo apt update && sudo apt install -y python3.9 python3.9-distutils python3-pip
 #        python3.9 -m pip install -U cffi
 #        export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-#        bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
+#        bazel run @typedb_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
 
 # TODO #512: assembly tests for all drivers to run in factory
 
@@ -521,7 +521,7 @@ release:
       image: typedb-ubuntu-22.04
       command: |
         export NOTES_VALIDATE_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run @vaticle_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
+        bazel run @typedb_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
 
   deployment:
     trigger-release-circleci:

@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//builder/swig:go.bzl", "swig_go")
+load("@typedb_dependencies//builder/swig:go.bzl", "swig_go")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 def swig_native_go_library(name, visibility, tags=[], **kwargs):

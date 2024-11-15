@@ -16,4 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-bazel run @vaticle_dependencies//tool/release/notes:create -- vaticle typedb-driver HEAD $(cat VERSION) ./RELEASE_TEMPLATE.md ./RELEASE_NOTES_LATEST.md
+bazel run @typedb_dependencies//tool/release/notes:create -- vaticle typedb-driver HEAD $(cat VERSION) ./RELEASE_TEMPLATE.md ./RELEASE_NOTES_LATEST.md

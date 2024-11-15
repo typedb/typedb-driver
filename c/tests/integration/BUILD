@@ -16,8 +16,8 @@
 # under the License.
 
 package(default_visibility = ["//visibility:public"])
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 
 cc_library(
     name = "lib-test-driver",

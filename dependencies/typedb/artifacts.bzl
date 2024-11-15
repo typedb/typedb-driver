@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
+load("@typedb_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
 
 def vaticle_typedb_artifact():
     native_artifact_files(

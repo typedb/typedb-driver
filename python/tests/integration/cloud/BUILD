@@ -16,7 +16,7 @@
 # under the License.
 
 load(":cloud_test_rule.bzl", "typedb_cloud_py_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
 

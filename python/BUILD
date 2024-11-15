@@ -15,9 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_bazel_distribution//docs:python/rules.bzl", "sphinx_docs")
-load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_bazel_distribution//docs:python/rules.bzl", "sphinx_docs")
+load("@typedb_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 load("//python:docs_structure.bzl", "dir_mapping")
@@ -113,8 +113,8 @@ checkstyle_test(
 filegroup(
     name = "ci",
     data = [
-        "@vaticle_dependencies//tool/checkstyle:test-coverage",
-        "@vaticle_dependencies//distribution/artifact:create-netrc",
-        "@vaticle_dependencies//tool/release/notes:create",
+        "@typedb_dependencies//tool/checkstyle:test-coverage",
+        "@typedb_dependencies//distribution/artifact:create-netrc",
+        "@typedb_dependencies//tool/release/notes:create",
     ],
 )

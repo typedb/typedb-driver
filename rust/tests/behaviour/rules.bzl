@@ -16,7 +16,7 @@
 # under the License.
 
 load("@rules_rust//rust:defs.bzl", "rust_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":defs.bzl", "crate_features_common")
 
 behaviour_test_deps = [

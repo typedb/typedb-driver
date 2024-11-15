@@ -25,13 +25,13 @@ use steps::Context;
 #[serial]
 async fn test() {
     // Bazel specific path: when running the test in bazel, the external data from
-    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+    // @typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
     #[cfg(feature = "bazel")]
-    let path = "../vaticle_typedb_behaviour/connection/transaction.feature";
+    let path = "../typedb_behaviour/connection/transaction.feature";
 
     #[cfg(not(feature = "bazel"))]
-    let path = "../bazel-typedb-driver/external/vaticle_typedb_behaviour/connection/transaction.feature";
+    let path = "../bazel-typedb-driver/external/typedb_behaviour/connection/transaction.feature";
 
     assert!(Context::test(path, is_cloud()).await);
 }

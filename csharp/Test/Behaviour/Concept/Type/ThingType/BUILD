@@ -18,7 +18,7 @@
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 filegroup(
     name = "steps",

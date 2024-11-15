@@ -16,4 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-bazel run @vaticle_dependencies//tool/ide:rust_sync
+bazel run @typedb_dependencies//tool/ide:rust_sync

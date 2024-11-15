@@ -24,14 +24,14 @@ exports_files([
     "VERSION",
 ])
 
-load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+load("@typedb_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
-load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@nodejs_npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
 load("//nodejs:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
@@ -43,12 +43,12 @@ npm_link_all_packages(
 npm_link_package(
     name = "typedb-protocol",
     root_package = "nodejs",
-    src = "@vaticle_typedb_protocol//grpc/nodejs:typedb-protocol-package",
+    src = "@typedb_protocol//grpc/nodejs:typedb-protocol-package",
 )
 
 genrule(
     name = "typedb-protocol-override",
-    srcs = ["@vaticle_typedb_protocol//grpc/nodejs:typedb-protocol-package"],
+    srcs = ["@typedb_protocol//grpc/nodejs:typedb-protocol-package"],
     outs = ["dist/node_modules/typedb-protocol"],
     cmd = "cp -r $(SRCS) $(OUTS)",
     visibility = ["//visibility:public"],
@@ -209,8 +209,8 @@ checkstyle_test(
 filegroup(
     name = "ci",
     data = [
-        "@vaticle_dependencies//distribution/artifact:create-netrc",
-        "@vaticle_dependencies//tool/release/notes:create",
-        "@vaticle_dependencies//tool/release/notes:validate",
+        "@typedb_dependencies//distribution/artifact:create-netrc",
+        "@typedb_dependencies//tool/release/notes:create",
+        "@typedb_dependencies//tool/release/notes:validate",
     ],
 )

@@ -19,7 +19,7 @@ package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 filegroup(
     name = "steps",
@@ -38,7 +38,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-core",
     ],
-    features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
+    features = ["@typedb_behaviour//connection:transaction.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
@@ -61,7 +61,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
-    features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
+    features = ["@typedb_behaviour//connection:transaction.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",

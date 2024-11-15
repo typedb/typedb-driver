@@ -18,10 +18,10 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test", "rust_test")
-load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
-load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
+load("@typedb_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//rust:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
 load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
@@ -42,7 +42,7 @@ typedb_driver_deps = [
     "@crates//:tonic",
     "@crates//:tonic-types",
     "@crates//:uuid",
-    "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
+    "@typedb_protocol//grpc/rust:typedb_protocol",
 ]
 typedb_driver_proc_macro_deps = [
     "@crates//:maybe-async",
@@ -82,7 +82,7 @@ assemble_crate(
     readme_file = ":README.md",
     repository = "https://github.com/typedb/typedb-driver",
     target = ":typedb_driver",
-    universe_manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
+    universe_manifests = ["@typedb_dependencies//library/crates:Cargo.toml"],
     crate_features = { "sync": [] },
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 )

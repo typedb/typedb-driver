@@ -16,4 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-bazel run @vaticle_dependencies//library/maven:update
+bazel run @typedb_dependencies//library/maven:update

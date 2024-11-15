@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@npm//nodejs:@cucumber/cucumber/package_json.bzl", cucumber_bin = "bin")
+load("@nodejs_npm//nodejs:@cucumber/cucumber/package_json.bzl", cucumber_bin = "bin")
 
 def behaviour_test_ts_config():
     return {

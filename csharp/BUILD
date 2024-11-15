@@ -16,10 +16,10 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load("@vaticle_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
-load("@vaticle_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@typedb_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_packs", "nullable_context")
 load(":rules.bzl", "swig_native_csharp_library", "swig_native_nuget_pack")
 load("//csharp:docs_structure.bzl", "dir_mapping")
@@ -70,11 +70,11 @@ swig_native_nuget_pack(
     nuspec_template = "TypeDB.Driver.Pinvoke.nuspec",
     visibility= ["//visibility:public"],
     platforms = {
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": "osx-arm64",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "osx-x64",
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x64",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "win-x64",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "osx-arm64",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "osx-x64",
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "linux-x64",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64": "win-x64",
     },
 )
 

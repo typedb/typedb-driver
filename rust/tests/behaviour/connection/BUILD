@@ -18,24 +18,24 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_behaviour_test(
     name = "test_database",
     srcs = ["database.rs"],
-    data = ["@vaticle_typedb_behaviour//connection:database.feature"],
+    data = ["@typedb_behaviour//connection:database.feature"],
 )
 
 rust_behaviour_test(
     name = "test_transaction",
     srcs = ["transaction.rs"],
-    data = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
+    data = ["@typedb_behaviour//connection:transaction.feature"],
 )
 
 #rust_behaviour_test(
 #    name = "test_user",
 #    srcs = ["user.rs"],
-#    data = ["@vaticle_typedb_behaviour//connection:user.feature"],
+#    data = ["@typedb_behaviour//connection:user.feature"],
 #)
 
 checkstyle_test(

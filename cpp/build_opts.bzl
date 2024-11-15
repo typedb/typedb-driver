@@ -16,6 +16,6 @@
 # under the License.
 
 cxxopts = select({
-    "@vaticle_bazel_distribution//platform:is_windows": ["/std:c++17"],
+    "@typedb_bazel_distribution//platform:is_windows": ["/std:c++17"],
     "//conditions:default": ["-std=c++17"],
 })

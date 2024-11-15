@@ -16,7 +16,7 @@
 # under the License.
 
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//nodejs/test/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 checkstyle_test(

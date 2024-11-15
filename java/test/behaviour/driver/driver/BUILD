@@ -16,7 +16,7 @@
 # under the License.
 
 package(default_visibility = ["//visibility:__subpackages__"])
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 typedb_behaviour_java_test(
@@ -26,7 +26,7 @@ typedb_behaviour_java_test(
     ],
     test_class = "com.typedb.driver.test.behaviour.driver.query.DriverTest",
     data = [
-        "@vaticle_typedb_behaviour//driver:driver.feature",
+        "@typedb_behaviour//driver:driver.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
