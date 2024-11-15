@@ -28,9 +28,9 @@ def typedb_artifact():
         tag = "3.0.0-alpha-8"
     )
 
-#def vaticle_typedb_cloud_artifact():
+#def typedb_cloud_artifact():
 #    native_artifact_files(
-#        name = "vaticle_typedb_cloud_artifact",
+#        name = "typedb_cloud_artifact",
 #        group_name = "typedb-cloud-server-{platform}",
 #        artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
 #        tag_source = deployment_private["artifact"]["release"]["download"],

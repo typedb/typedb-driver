@@ -213,7 +213,7 @@ typedb_protocol()
 # Load artifacts
 load("//dependencies/typedb:artifacts.bzl", "typedb_artifact")
 typedb_artifact()
-#vaticle_typedb_cloud_artifact()
+#typedb_cloud_artifact()
 
 ####################
 # Load npm modules #
