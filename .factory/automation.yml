@@ -28,13 +28,13 @@ build:
       owner: typedb
       branch: [master, development]
     dependency-analysis:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         bazel run @vaticle_dependencies//factory/analysis:dependency-analysis
 
   correctness:
     build:
-      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       machine: 16-core-64-gb
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -60,7 +60,7 @@ build:
         # npm run lint
 
 #    build-dependency:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      command: |
 #        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        dependencies/maven/update.sh
@@ -68,7 +68,7 @@ build:
 #        bazel run @vaticle_dependencies//tool/unuseddeps:unused-deps -- list
 
     build-docs:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
@@ -81,7 +81,7 @@ build:
         git diff --exit-code HEAD "${DOCS_DIRS[@]}"
 
     test-rust-unit-integration:
-      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
         - build
       command: |
@@ -105,7 +105,7 @@ build:
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-core:
-      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
         - build
       command: |
@@ -121,7 +121,7 @@ build:
         exit $TEST_SUCCESS
 
 #    test-rust-behaviour-cloud:
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+#      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
 #        - build
 #      command: |
@@ -138,7 +138,7 @@ build:
 #        exit $TEST_SUCCESS
 
 #    test-c-integration:
-#      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+#      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
 #      dependencies:
 #        - build
 #      command: |
@@ -153,7 +153,7 @@ build:
 #        exit $TEST_SUCCESS
 
     test-java-integration:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       dependencies:
         - build
       command: |
@@ -175,7 +175,7 @@ build:
 #        exit $TEST_SUCCESS
 
     test-java-behaviour-core:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       dependencies:
         - build
       command: |
@@ -190,7 +190,7 @@ build:
         tool/test/stop-core-server.sh
 
 #    test-java-behaviour-cloud:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      command: |
@@ -206,7 +206,7 @@ build:
 #        exit $TEST_SUCCESS
 
     test-python-integration:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       dependencies:
         - build
       type: foreground
@@ -230,7 +230,7 @@ build:
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-python-behaviour-core:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       dependencies:
         - build
       type: foreground
@@ -248,7 +248,7 @@ build:
         exit $TEST_SUCCESS
 
 #    test-python-behaviour-cloud:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -266,7 +266,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-nodejs-integration:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      command: |
@@ -292,7 +292,7 @@ build:
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 #
 #    test-nodejs-behaviour-core:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      command: |
@@ -311,7 +311,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-nodejs-behaviour-cloud:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      command: |
@@ -331,7 +331,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-cpp-integration:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -355,7 +355,7 @@ build:
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 #
 #    test-cpp-behaviour-core:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -378,7 +378,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-cpp-behaviour-cloud:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -400,7 +400,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-csharp-integration:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -426,7 +426,7 @@ build:
 #        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 #
 #    test-csharp-behaviour-core:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -449,7 +449,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    test-csharp-behaviour-cloud:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
 #      type: foreground
@@ -472,7 +472,7 @@ build:
 #        exit $TEST_SUCCESS
 #
 #    sync-dependencies:
-#      image: vaticle-ubuntu-22.04
+#      image: typedb-ubuntu-22.04
 #      filter:
 #        owner: typedb
 #        branch: [master, development]
@@ -514,18 +514,18 @@ release:
     branch: [master, "3.0"]
   validation:
     validate-dependencies:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         bazel test //:release-validate-deps --test_output=streamed
     validate-release-notes:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         export NOTES_VALIDATE_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @vaticle_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
 
   deployment:
     trigger-release-circleci:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         git checkout -b release
         git push -f origin release
