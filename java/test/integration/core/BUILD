@@ -42,7 +42,7 @@ typedb_java_test(
 
         # External dependencies from @vaticle
         "@maven//:org_slf4j_slf4j_api",
-#        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_typedb_typedb_runner",
     ],
 )
 
@@ -65,7 +65,7 @@ typedb_java_test(
 
         # External dependencies from @vaticle
         "@maven//:org_slf4j_slf4j_api",
-#        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_typedb_typedb_runner",
     ],
 )
 

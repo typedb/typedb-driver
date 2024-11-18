@@ -39,6 +39,6 @@ def typedb_artifact():
 #    )
 
 #maven_artifacts = {
-#    'com.vaticle.typedb:typedb-runner': '2.28.3',
-#    'com.vaticle.typedb:typedb-cloud-runner': '2.28.3',
+#    'com.typedb:typedb-runner': '2.28.3',
+#    'com.typedb:typedb-cloud-runner': '2.28.3',
 #}
