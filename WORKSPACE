@@ -201,9 +201,9 @@ pip_parse(
 load("@typedb_driver_pip//:requirements.bzl", type_driver_install_deps = "install_deps")
 type_driver_install_deps()
 
-##############################
-# Load @vaticle dependencies #
-##############################
+#############################
+# Load @typedb dependencies #
+#############################
 
 # Load repositories
 load("//dependencies/typedb:repositories.bzl", "typedb_behaviour", "typedb_protocol")
@@ -290,14 +290,14 @@ load(
 load("@typedb_bazel_distribution//maven:deps.bzl", typedb_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 # Load TypeDB maven artifacts
-#load("//dependencies/typedb:artifacts.bzl", typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
+#load("//dependencies/typedb:artifacts.bzl", typedb_driver_maven_artifacts = "maven_artifacts")
 
 load("@typedb_dependencies//library/maven:rules.bzl", "maven")
 maven(
     typedb_dependencies_tool_maven_artifacts +
     typedb_driver_maven_artifacts +
     typedb_bazel_distribution_maven_artifacts,
-#    internal_artifacts = typedb_driver_vaticle_maven_artifacts,
+#    internal_artifacts = typedb_driver_maven_artifacts,
     override_targets = typedb_driver_maven_overrides,
 )
 
