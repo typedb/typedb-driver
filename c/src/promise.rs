@@ -39,6 +39,12 @@ pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
     unwrap_void(take_ownership(promise).0.resolve());
 }
 
+/// Frees the native rust <code>VoidPromise</code> object.
+#[no_mangle]
+pub extern "C" fn void_promise_drop(promise: *mut VoidPromise) {
+    drop(take_ownership(promise))
+}
+
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
 pub struct BoolPromise(pub BoxPromise<'static, Result<bool>>);
@@ -51,6 +57,12 @@ pub extern "C" fn bool_promise_resolve(promise: *mut BoolPromise) -> bool {
     unwrap_or_default(take_ownership(promise).0.resolve())
 }
 
+/// Frees the native rust <code>BoolPromise</code> object.
+#[no_mangle]
+pub extern "C" fn bool_promise_drop(promise: *mut BoolPromise) {
+    drop(take_ownership(promise))
+}
+
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
 pub struct StringPromise(pub BoxPromise<'static, Result<Option<String>>>);
@@ -61,4 +73,10 @@ pub struct StringPromise(pub BoxPromise<'static, Result<Option<String>>>);
 #[no_mangle]
 pub extern "C" fn string_promise_resolve(promise: *mut StringPromise) -> *mut c_char {
     try_release_optional_string(take_ownership(promise).0.resolve().transpose())
+}
+
+/// Frees the native rust <code>StringPromise</code> object.
+#[no_mangle]
+pub extern "C" fn string_promise_drop(promise: *mut StringPromise) {
+    drop(take_ownership(promise))
 }
