@@ -175,9 +175,10 @@ fn typedb_example() {
 
         // Open a write transaction to insert data
         let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
-        let answer = transaction.query(
-            "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";"
-        ).await.unwrap();
+        let answer = transaction
+            .query("insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";")
+            .await
+            .unwrap();
 
         // Insert queries also return concept rows
         let mut rows = Vec::new();
@@ -221,7 +222,8 @@ fn typedb_example() {
             let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
 
             // Commit will still fail if at least one of the queries produce an error.
-            let queries = ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"];
+            let queries =
+                ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"];
             let mut promises = vec![];
             for query in queries {
                 promises.push(transaction.query(query));
