@@ -135,7 +135,7 @@ test_to_example(
     name = "example_core",
     input = "//java/test/integration/core:ExampleTest.java",
     output = "java/core_example",
-    removed_lines = ["assert", "todo"],
+    removed_lines = ["assert", "fail(", "todo"],
     changed_words = {
         "ExampleTest": "TypeDBExample",
     },

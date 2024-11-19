@@ -39,6 +39,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 // EXAMPLE START MARKER
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 // EXAMPLE START MARKER
@@ -218,6 +220,34 @@ public class ExampleTest {
                 transaction.commit();
             }
 
+            // Open another write transaction to try inserting even more data
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // When loading a large dataset, it's often better not to resolve every query's promise immediately.
+                // Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+                // just call `commit`, which will wait for all ongoing operations to finish before executing.
+                List<String> queries = List.of("insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";");
+                for (String query : queries) {
+                    transaction.query(query);
+                }
+                transaction.commit();
+            }
+
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // Commit will still fail if at least one of the queries produce an error.
+                List<String> queries = List.of("insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";");
+                List<Promise<? extends QueryAnswer>> promises = new ArrayList<>();
+                for (String query : queries) {
+                    promises.add(transaction.query(query));
+                }
+
+                try {
+                    transaction.commit();
+                    fail("TypeDBDriverException is expected");
+                } catch (TypeDBDriverException expectedException) {
+                    System.out.println("Commit result will contain the unresolved query's error: " + expectedException);
+                }
+            }
+
             // Open a read transaction to verify that the inserted data is saved
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
                 // A match query can be used for concept row outputs
@@ -242,7 +272,7 @@ public class ExampleTest {
                     matchCount.incrementAndGet();
                     System.out.printf("Found a person %s of type %s%n", x, xType);
                 });
-                assertEquals(matchCount.get(), 2);
+                assertEquals(matchCount.get(), 4);
                 System.out.println("Total persons found: " + matchCount.get());
 
                 // A fetch query can be used for concept document outputs with flexible structure
@@ -267,7 +297,7 @@ public class ExampleTest {
 
                     fetchCount.incrementAndGet();
                 });
-                assertEquals(fetchCount.get(), 3);
+                assertEquals(fetchCount.get(), 5);
                 System.out.println("Total documents fetched: " + fetchCount.get());
             }
         }

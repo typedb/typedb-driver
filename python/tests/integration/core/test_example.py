@@ -191,14 +191,15 @@ class TestExample(TestCase):
             with driver.transaction(database.name, TransactionType.WRITE) as tx:
                 # Commit will still fail if at least one of the queries produce an error.
                 queries = ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"]
+                promises = []
                 for query in queries:
-                    tx.query(query)
+                    promises.append(tx.query(query))
 
                 try:
                     tx.commit()
                     assert False, "TypeDBDriverException is expected"
                 except TypeDBDriverException as expected_exception:
-                    print(f"Commit will contain the unresolved query's error: {expected_exception}")
+                    print(f"Commit result will contain the unresolved query's error: {expected_exception}")
 
             # Open a read transaction to verify that the previously inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
@@ -229,7 +230,7 @@ class TestExample(TestCase):
                 fetch_query = """
                 match
                   $x isa! person, has $a;
-                  $a isa! $t; 
+                  $a isa! $t;
                 fetch {
                   "single attribute type": $t,
                   "single attribute": $a,

@@ -95,7 +95,7 @@ struct Type {};
 struct Type {};
 %newobject function_prefix ## _resolve;
 %delobject function_prefix ## _resolve;
-%extend Type { ~Type() { function_prefix ## _resolve(self); } }
+%extend Type { ~Type() { function_prefix ## _drop(self); } }
 %delobject function_prefix ## _drop;
 %enddef
 
