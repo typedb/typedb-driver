@@ -56,6 +56,7 @@ pub(super) fn open_callcred_channel(
     }
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credential));
+    call_credentials.set_token("tokenx".to_string());
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))
 }
 

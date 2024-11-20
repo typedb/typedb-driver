@@ -64,16 +64,16 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     async fn renew_token(&mut self) -> Result {
-        if let Some(call_credentials) = &self.call_credentials {
-            todo!()
-            // trace!("renewing token...");
-            // call_credentials.reset_token();
-            // let req = user::token::Req { username: call_credentials.username().to_owned() };
-            // trace!("sending token request...");
-            // let token = self.grpc.user_token(req).await?.into_inner().token;
-            // call_credentials.set_token(token);
-            // trace!("renewed token");
-        }
+        // if let Some(call_credentials) = &self.call_credentials {
+        //     todo!()
+        //     // trace!("renewing token...");
+        //     // call_credentials.reset_token();
+        //     // let req = user::token::Req { username: call_credentials.username().to_owned() };
+        //     // trace!("sending token request...");
+        //     // let token = self.grpc.user_token(req).await?.into_inner().token;
+        //     // call_credentials.set_token(token);
+        //     // trace!("renewed token");
+        // }
         Ok(())
     }
 

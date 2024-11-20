@@ -31,7 +31,7 @@ use typedb_driver::{answer::{
 
 async fn cleanup() {
     let driver = TypeDBDriver::new_core(
-        TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+        TypeDBDriver::DEFAULT_ADDRESS, Credential::new("admin", "password")
     ).await.unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
         driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
@@ -48,7 +48,7 @@ fn example() {
         // EXAMPLE START MARKER
         // Open a driver connection
         let driver = TypeDBDriver::new_core(
-            TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+            TypeDBDriver::DEFAULT_ADDRESS, Credential::new("admin", "password")
         ).await.unwrap();
 
         // Create a database

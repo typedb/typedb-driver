@@ -67,7 +67,7 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core(
-        address: impl AsRef<str>, credential: Credential,
+        address: impl AsRef<str>, credential: Credential, connection_settings:
     ) -> Result<Self> {
         Self::new_core_with_description(address, credential, "rust").await
     }
