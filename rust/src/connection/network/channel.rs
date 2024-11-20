@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 
 use tonic::{
     body::BoxBody,
@@ -51,9 +51,6 @@ pub(super) fn open_callcred_channel(
     credential: Credential,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
     let mut builder = Channel::builder(address.into_uri());
-    if credential.is_tls_enabled() {
-        builder = builder.tls_config(credential.tls_config().clone().unwrap())?;
-    }
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credential));
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))

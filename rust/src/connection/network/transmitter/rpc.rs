@@ -26,19 +26,15 @@ use tokio::{
 };
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
-use crate::{
-    common::{address::Address, RequestID, Result},
-    connection::{
-        message::{Request, Response},
-        network::{
-            channel::{open_callcred_channel, GRPCChannel},
-            proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
-            stub::RPCStub,
-        },
-        runtime::BackgroundRuntime,
+use crate::{common::{address::Address, RequestID, Result}, connection::{
+    message::{Request, Response},
+    network::{
+        channel::{open_callcred_channel, GRPCChannel},
+        proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
+        stub::RPCStub,
     },
-    Credential, Error,
-};
+    runtime::BackgroundRuntime,
+}, ConnectionSettings, Credential, Error};
 
 pub(in crate::connection) struct RPCTransmitter {
     request_sink: UnboundedSender<(Request, ResponseSink<Response>)>,
@@ -49,6 +45,7 @@ impl RPCTransmitter {
     pub(in crate::connection) fn start(
         address: Address,
         credential: Credential,
+        connection_settings: ConnectionSettings,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {
         let (req_sink, req_src) = unbounded_async();

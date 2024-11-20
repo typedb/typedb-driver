@@ -21,8 +21,8 @@
 #![deny(elided_lifetimes_in_paths)]
 
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    env::VarError,
+    collections::{HashSet, VecDeque}
+    ,
     error::Error,
     fmt,
     fmt::Formatter,
@@ -37,12 +37,7 @@ use futures::{
 };
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType, JSON},
-    concept::Value,
-    BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
-    UserManager,
-};
+use typedb_driver::{answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType}, BoxStream, ConnectionSettings, Credential, Options, Result as TypeDBResult, Transaction, TypeDBDriver};
 
 use crate::params::QueryAnswerType;
 
@@ -381,8 +376,9 @@ impl Context {
         _password: Option<&str>,
     ) -> TypeDBResult {
         assert!(!self.is_cloud);
-        let credential = Credential::without_tls(_username.unwrap(), _password.unwrap());
-        let driver = TypeDBDriver::new_core(address, credential).await?;
+        let credential = Credential::new(_username.unwrap(), _password.unwrap());
+        let conn_settings = ConnectionSettings::new(false, None)?;
+        let driver = TypeDBDriver::new_core(address, credential, conn_settings).await?;
         self.driver = Some(driver);
         Ok(())
     }
@@ -396,12 +392,11 @@ impl Context {
         assert!(self.is_cloud);
         let driver = TypeDBDriver::new_cloud(
             addresses,
-            Credential::with_tls(
+            Credential::new(
                 username.expect("Username is required for cloud connection"),
-                password.expect("Password is required for cloud connection"),
-                Some(&self.tls_root_ca),
-            )
-            .unwrap(),
+                password.expect("Password is required for cloud connection")
+            ),
+            ConnectionSettings::new(false, None)?
         )?;
         self.driver = Some(driver);
         Ok(())

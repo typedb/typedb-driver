@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{fmt, marker::PhantomData, pin::Pin};
+use std::{fmt, pin::Pin};
 
 use crate::{
     answer::QueryAnswer,

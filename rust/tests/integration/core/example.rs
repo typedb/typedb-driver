@@ -25,13 +25,15 @@ use serial_test::serial;
 use typedb_driver::{answer::{
     concept_document::{Leaf, Node},
     ConceptRow, QueryAnswer,
-}, concept::{Concept, ValueType}, Credential, Error, TransactionType, TypeDBDriver};
+}, concept::{Concept, ValueType}, ConnectionSettings, Credential, Error, TransactionType, TypeDBDriver};
 
 // EXAMPLE END MARKER
 
 async fn cleanup() {
     let driver = TypeDBDriver::new_core(
-        TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+        TypeDBDriver::DEFAULT_ADDRESS,
+        Credential::new("admin", "password"),
+        ConnectionSettings::new(false, None).unwrap()
     ).await.unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
         driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
@@ -48,7 +50,9 @@ fn example() {
         // EXAMPLE START MARKER
         // Open a driver connection
         let driver = TypeDBDriver::new_core(
-            TypeDBDriver::DEFAULT_ADDRESS, Credential::without_tls("admin", "password")
+            TypeDBDriver::DEFAULT_ADDRESS,
+            Credential::new("admin", "password"),
+            ConnectionSettings::new(false, None).unwrap()
         ).await.unwrap();
 
         // Create a database

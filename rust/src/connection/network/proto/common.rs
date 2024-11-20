@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use typedb_protocol::{query, transaction, Options as OptionsProto};
+use typedb_protocol::{transaction, Options as OptionsProto};
 
 use super::{IntoProto, TryFromProto};
 use crate::{answer::QueryType, error::ConnectionError, Options, Result, TransactionType};

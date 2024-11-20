@@ -19,12 +19,12 @@
 
 use std::{fmt, sync::Arc};
 
-use futures::{stream, StreamExt};
+use futures::StreamExt;
 
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
 use crate::{
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
-    box_stream, BoxStream, Result,
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader}
+    , BoxStream, Result,
 };
 
 pub mod concept_document;

@@ -27,7 +27,7 @@ use uuid::Uuid;
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
     answer::{
-        concept_document::{ConceptDocument, ConceptDocumentHeader},
+        concept_document::ConceptDocumentHeader,
         concept_row::ConceptRowHeader,
         QueryType,
     },

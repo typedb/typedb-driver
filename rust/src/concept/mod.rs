@@ -20,7 +20,6 @@
 use std::fmt::{Debug, Display, Formatter};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
-use chrono_tz::Tz;
 
 pub use self::{
     thing::{Attribute, Entity, Relation},
