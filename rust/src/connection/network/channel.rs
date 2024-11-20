@@ -61,33 +61,21 @@ pub(super) fn open_callcred_channel(
 
 #[derive(Debug)]
 pub(super) struct CallCredentials {
-    credential: Credential,
-    token: RwLock<Option<String>>,
+    credential: Credential
 }
 
 impl CallCredentials {
     pub(super) fn new(credential: Credential) -> Self {
-        Self { credential, token: RwLock::new(None) }
+        Self { credential }
     }
 
     pub(super) fn username(&self) -> &str {
         self.credential.username()
     }
 
-    pub(super) fn set_token(&self, token: String) {
-        *self.token.write().unwrap() = Some(token);
-    }
-
-    pub(super) fn reset_token(&self) {
-        *self.token.write().unwrap() = None;
-    }
-
     pub(super) fn inject(&self, mut request: Request<()>) -> Request<()> {
         request.metadata_mut().insert("username", self.credential.username().try_into().unwrap());
-        match &*self.token.read().unwrap() {
-            Some(token) => request.metadata_mut().insert("token", token.try_into().unwrap()),
-            None => request.metadata_mut().insert("password", self.credential.password().try_into().unwrap()),
-        };
+        request.metadata_mut().insert("password", self.credential.password().try_into().unwrap());
         request
     }
 }
