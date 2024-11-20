@@ -35,7 +35,7 @@ use crate::{
     util,
     util::{iter_table, list_contains_json, parse_json},
     BehaviourTestOptionalError,
-    BehaviourTestOptionalError::{InvalidValueCasting, VariableDoesNotExist},
+    BehaviourTestOptionalError::{InvalidValueRetrieval, VariableDoesNotExist},
     Context,
 };
 
@@ -391,6 +391,36 @@ pub async fn answer_get_row_get_variable_get_type_is_kind(
 }
 
 #[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get label {is_or_not} none")]
+pub async fn answer_get_row_get_variable_try_get_label_is_none(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+) {
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    is_or_not.check_none(&concept.try_get_label());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get label: {word}")]
+pub async fn answer_get_row_get_variable_try_get_label(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    label: String,
+) {
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    assert_eq!(label.as_str(), concept.try_get_label().unwrap());
+}
+
+#[apply(generic_step)]
 #[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get label: {word}")]
 pub async fn answer_get_row_get_variable_get_label(
     context: &mut Context,
@@ -433,10 +463,44 @@ pub async fn answer_get_row_get_variable_get_iid_exists(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    contains_or_doesnt.check(&concept.get_iid(), &format!("iid for concept {}", concept.get_label()));
+    contains_or_doesnt.check(&concept.try_get_iid(), &format!("iid for concept {}", concept.get_label()));
 }
 
 #[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get iid {is_or_not} none")]
+pub async fn answer_get_row_get_variable_try_get_iid_is_none(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+) {
+    // Basically the same as non-try version in Rust, but can differ in other drivers
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    is_or_not.check_none(&concept.try_get_iid());
+}
+
+#[apply(generic_step)]
+#[step(
+    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get value type {is_or_not} none"
+)]
+pub async fn answer_get_row_get_variable_try_get_value_type_is_none(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+) {
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    is_or_not.check_none(&concept.try_get_value_type());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get value type: {word}")]
 #[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get value type: {word}")]
 pub async fn answer_get_row_get_variable_get_value_type(
     context: &mut Context,
@@ -448,8 +512,11 @@ pub async fn answer_get_row_get_variable_get_value_type(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), concept.get_value_label().unwrap_or("none"));
-    assert_eq!(value_type, concept.get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned()));
+    assert_eq!(value_type.as_str(), concept.try_get_value_label().unwrap_or("none"));
+    assert_eq!(
+        value_type,
+        concept.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+    );
 }
 
 #[apply(generic_step)]
@@ -465,11 +532,32 @@ pub async fn answer_get_row_get_variable_get_type_get_value_type(
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     let type_ = concept_get_type(concept);
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), type_.get_value_label().unwrap_or("none"));
-    assert_eq!(value_type, type_.get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned()));
+    assert_eq!(value_type.as_str(), type_.try_get_value_label().unwrap_or("none"));
+    assert_eq!(
+        value_type,
+        type_.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+    );
 }
 
 #[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get value {is_or_not} none")]
+pub async fn answer_get_row_get_variable_try_get_value_is_none(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+) {
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    is_or_not.check_none(&concept.try_get_value());
+}
+
+#[apply(generic_step)]
+#[step(
+    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get value {is_or_not}: {value}"
+)]
 #[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get value {is_or_not}: {value}")]
 pub async fn answer_get_row_get_variable_get_value(
     context: &mut Context,
@@ -482,7 +570,7 @@ pub async fn answer_get_row_get_variable_get_value(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    let actual_value = concept.get_value().expect("Value is expected");
+    let actual_value = concept.try_get_value().expect("Value is expected");
     let value_type = actual_value.get_type();
     let expected_value = value.into_typedb(value_type.clone());
     match value_type {
@@ -498,8 +586,31 @@ pub async fn answer_get_row_get_variable_get_value(
 }
 
 #[apply(generic_step)]
-#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) as {value_type}{may_error}")]
-pub async fn answer_get_row_get_variable_as_value_type(
+#[step(expr = r"answer get row\({int}\) get value{is_by_var_index}\({var}\) get {is_or_not}: {value}")]
+pub async fn answer_get_row_get_value_get_specific_value(
+    context: &mut Context,
+    index: usize,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+    value: params::Value,
+) {
+    answer_get_row_get_variable_get_value(
+        context,
+        index,
+        params::ConceptKind::Value,
+        is_by_var_index,
+        var,
+        is_or_not,
+        value,
+    )
+    .await
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get {value_type}{may_error}")]
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get {value_type}{may_error}")]
+pub async fn answer_get_row_get_variable_get_value_of_type(
     context: &mut Context,
     index: usize,
     var_kind: params::ConceptKind,
@@ -512,22 +623,43 @@ pub async fn answer_get_row_get_variable_as_value_type(
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
     let type_name = value_type.value_type.name().to_string();
     may_error.check(match value_type.value_type {
-        ValueType::Boolean => concept.get_boolean().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Long => concept.get_long().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Double => concept.get_double().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Decimal => concept.get_decimal().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::String => concept.get_string().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Date => concept.get_date().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Datetime => concept.get_datetime().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::DatetimeTZ => concept.get_datetime_tz().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Duration => concept.get_duration().map(|_| ()).ok_or(InvalidValueCasting(type_name)),
-        ValueType::Struct(_) => concept.get_struct().map(|_| ()).ok_or(InvalidValueCasting("struct".to_owned())),
+        ValueType::Boolean => concept.try_get_boolean().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Long => concept.try_get_long().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Double => concept.try_get_double().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Decimal => concept.try_get_decimal().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::String => concept.try_get_string().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Date => concept.try_get_date().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Datetime => concept.try_get_datetime().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::DatetimeTZ => concept.try_get_datetime_tz().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Duration => concept.try_get_duration().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Struct(_) => concept.try_get_struct().map(|_| ()).ok_or(InvalidValueRetrieval("struct".to_owned())),
     });
 }
 
 #[apply(generic_step)]
 #[step(
-    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) as {value_type} {is_or_not}: {value}"
+    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get {value_type} {is_or_not} none"
+)]
+pub async fn answer_get_row_get_variable_try_get_specific_value_is_none(
+    context: &mut Context,
+    index: usize,
+    var_kind: params::ConceptKind,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    value_type: params::ValueType,
+    is_or_not: params::IsOrNot,
+) {
+    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
+    check_concept_is_kind(concept, var_kind, params::Boolean::True);
+    is_or_not.check_none(&concept.try_get_value());
+}
+
+#[apply(generic_step)]
+#[step(
+    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) try get {value_type} {is_or_not}: {value}"
+)]
+#[step(
+    expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) get {value_type} {is_or_not}: {value}"
 )]
 pub async fn answer_get_row_get_variable_get_specific_value(
     context: &mut Context,
@@ -541,74 +673,74 @@ pub async fn answer_get_row_get_variable_get_specific_value(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    let actual_value = concept.get_value().expect("Value is expected");
+    let actual_value = concept.try_get_value().expect("Value is expected");
     let expected_value = value.into_typedb(value_type.value_type.clone());
     match value_type.value_type {
         ValueType::Boolean => {
-            let actual_boolean = concept.get_boolean().unwrap();
+            let actual_boolean = concept.try_get_boolean().unwrap();
             match expected_value {
                 Value::Boolean(expected_boolean) => is_or_not.compare(actual_boolean, expected_boolean),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Long => {
-            let actual_long = concept.get_long().unwrap();
+            let actual_long = concept.try_get_long().unwrap();
             match expected_value {
                 Value::Long(expected_long) => is_or_not.compare(actual_long, expected_long),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Double => {
-            let actual_double = concept.get_double().unwrap();
+            let actual_double = concept.try_get_double().unwrap();
             match expected_value {
                 Value::Double(expected_double) => is_or_not.compare(actual_double, expected_double),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Decimal => {
-            let actual_decimal = concept.get_decimal().unwrap();
+            let actual_decimal = concept.try_get_decimal().unwrap();
             match expected_value {
                 Value::Decimal(expected_decimal) => is_or_not.compare(actual_decimal, expected_decimal),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::String => {
-            let actual_string = concept.get_string().unwrap();
+            let actual_string = concept.try_get_string().unwrap();
             match expected_value {
                 Value::String(expected_string) => is_or_not.compare(actual_string, expected_string.as_str()),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Date => {
-            let actual_date = concept.get_date().unwrap();
+            let actual_date = concept.try_get_date().unwrap();
             match expected_value {
                 Value::Date(expected_date) => is_or_not.compare(actual_date, expected_date),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Datetime => {
-            let actual_datetime = concept.get_datetime().unwrap();
+            let actual_datetime = concept.try_get_datetime().unwrap();
             match expected_value {
                 Value::Datetime(expected_datetime) => is_or_not.compare(actual_datetime, expected_datetime),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::DatetimeTZ => {
-            let actual_datetime_tz = concept.get_datetime_tz().unwrap();
+            let actual_datetime_tz = concept.try_get_datetime_tz().unwrap();
             match expected_value {
                 Value::DatetimeTZ(expected_datetime_tz) => is_or_not.compare(actual_datetime_tz, expected_datetime_tz),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Duration => {
-            let actual_duration = concept.get_duration().unwrap();
+            let actual_duration = concept.try_get_duration().unwrap();
             match expected_value {
                 Value::Duration(expected_duration) => is_or_not.compare(actual_duration, expected_duration),
                 _ => is_or_not.check(false),
             }
         }
         ValueType::Struct(_) => {
-            let actual_struct = concept.get_struct().unwrap();
+            let actual_struct = concept.try_get_struct().unwrap();
             // Compare string representations
             match expected_value {
                 Value::String(expected_struct) => is_or_not.compare(expected_struct, actual_struct.to_string()),
@@ -616,22 +748,6 @@ pub async fn answer_get_row_get_variable_get_specific_value(
             }
         }
     }
-}
-
-#[apply(generic_step)]
-#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) is untyped: {boolean}")]
-pub async fn answer_get_row_get_variable_is_untyped(
-    context: &mut Context,
-    index: usize,
-    var_kind: params::ConceptKind,
-    is_by_var_index: params::IsByVarIndex,
-    var: params::Var,
-    is_untyped: params::Boolean,
-) {
-    let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
-    check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    check_boolean!(is_untyped, matches!(concept.get_value_type(), None));
-    check_boolean!(is_untyped, matches!(concept.get_value_label(), None));
 }
 
 #[apply(generic_step)]

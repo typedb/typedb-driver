@@ -6,216 +6,6 @@
 * `Concept`
 
 // tag::methods[]
-[#_Value_as_boolean_]
-==== as_boolean
-
-[source,python]
-----
-as_boolean() -> bool
-----
-
-Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_boolean()
-----
-
-[#_Value_as_date_]
-==== as_date
-
-[source,python]
-----
-as_date() -> date
-----
-
-Returns a timezone naive ``date`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`date`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_date()
-----
-
-[#_Value_as_datetime_]
-==== as_datetime
-
-[source,python]
-----
-as_datetime() -> Datetime
-----
-
-Returns a timezone naive ``datetime`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Datetime`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_datetime()
-----
-
-[#_Value_as_datetime_tz_]
-==== as_datetime_tz
-
-[source,python]
-----
-as_datetime_tz() -> Datetime
-----
-
-Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Datetime`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_datetime_tz()
-----
-
-[#_Value_as_decimal_]
-==== as_decimal
-
-[source,python]
-----
-as_decimal() -> Decimal
-----
-
-Returns a ``decimal`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Decimal`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_decimal()
-----
-
-[#_Value_as_double_]
-==== as_double
-
-[source,python]
-----
-as_double() -> float
-----
-
-Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`float`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_double()
-----
-
-[#_Value_as_duration_]
-==== as_duration
-
-[source,python]
-----
-as_duration() -> Duration
-----
-
-Returns a timezone naive ``duration`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Duration`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_duration()
-----
-
-[#_Value_as_long_]
-==== as_long
-
-[source,python]
-----
-as_long() -> int
-----
-
-Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`int`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_long()
-----
-
-[#_Value_as_string_]
-==== as_string
-
-[source,python]
-----
-as_string() -> str
-----
-
-Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`str`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_string()
-----
-
-[#_Value_as_struct_]
-==== as_struct
-
-[source,python]
-----
-as_struct() -> STRUCT
-----
-
-Returns a ``struct`` value of this value concept represented as a map from field names to values. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`STRUCT`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_struct()
-----
-
 [#_Value_as_value_]
 ==== as_value
 
@@ -242,20 +32,230 @@ value.as_value()
 
 [source,python]
 ----
-get() -> VALUE
+get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]
 ----
 
 Retrieves the value which this value concept holds.
 
 [caption=""]
 .Returns
-`VALUE`
+`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
 value.get()
+----
+
+[#_Value_get_boolean_]
+==== get_boolean
+
+[source,python]
+----
+get_boolean() -> bool
+----
+
+Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_boolean()
+----
+
+[#_Value_get_date_]
+==== get_date
+
+[source,python]
+----
+get_date() -> date
+----
+
+Returns a timezone naive ``date`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`date`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_date()
+----
+
+[#_Value_get_datetime_]
+==== get_datetime
+
+[source,python]
+----
+get_datetime() -> Datetime
+----
+
+Returns a timezone naive ``datetime`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_datetime()
+----
+
+[#_Value_get_datetime_tz_]
+==== get_datetime_tz
+
+[source,python]
+----
+get_datetime_tz() -> Datetime
+----
+
+Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_datetime_tz()
+----
+
+[#_Value_get_decimal_]
+==== get_decimal
+
+[source,python]
+----
+get_decimal() -> Decimal
+----
+
+Returns a ``decimal`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Decimal`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_decimal()
+----
+
+[#_Value_get_double_]
+==== get_double
+
+[source,python]
+----
+get_double() -> float
+----
+
+Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`float`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_double()
+----
+
+[#_Value_get_duration_]
+==== get_duration
+
+[source,python]
+----
+get_duration() -> Duration
+----
+
+Returns a timezone naive ``duration`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Duration`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_duration()
+----
+
+[#_Value_get_long_]
+==== get_long
+
+[source,python]
+----
+get_long() -> int
+----
+
+Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`int`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_long()
+----
+
+[#_Value_get_string_]
+==== get_string
+
+[source,python]
+----
+get_string() -> str
+----
+
+Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_string()
+----
+
+[#_Value_get_struct_]
+==== get_struct
+
+[source,python]
+----
+get_struct() -> Dict[str, Value | None]
+----
+
+Returns a ``struct`` value of this value concept represented as a map from field names to values. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Dict[str, Value | None]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_struct()
 ----
 
 [#_Value_get_type_]
@@ -277,216 +277,6 @@ Retrieves the ``str`` describing the value type of this ``Value`` concept.
 [source,python]
 ----
 value.get_type()
-----
-
-[#_Value_is_boolean_]
-==== is_boolean
-
-[source,python]
-----
-is_boolean() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_boolean()
-----
-
-[#_Value_is_date_]
-==== is_date
-
-[source,python]
-----
-is_date() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``date``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_date()
-----
-
-[#_Value_is_datetime_]
-==== is_datetime
-
-[source,python]
-----
-is_datetime() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_datetime()
-----
-
-[#_Value_is_datetime_tz_]
-==== is_datetime_tz
-
-[source,python]
-----
-is_datetime_tz() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``datetime-tz``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_datetime_tz()
-----
-
-[#_Value_is_decimal_]
-==== is_decimal
-
-[source,python]
-----
-is_decimal() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``decimal``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_decimal()
-----
-
-[#_Value_is_double_]
-==== is_double
-
-[source,python]
-----
-is_double() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_double()
-----
-
-[#_Value_is_duration_]
-==== is_duration
-
-[source,python]
-----
-is_duration() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``duration``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_duration()
-----
-
-[#_Value_is_long_]
-==== is_long
-
-[source,python]
-----
-is_long() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_long()
-----
-
-[#_Value_is_string_]
-==== is_string
-
-[source,python]
-----
-is_string() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_string()
-----
-
-[#_Value_is_struct_]
-==== is_struct
-
-[source,python]
-----
-is_struct() -> bool
-----
-
-Returns ``True`` if the value which this value concept holds is of type ``struct``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_struct()
 ----
 
 [#_Value_is_value_]

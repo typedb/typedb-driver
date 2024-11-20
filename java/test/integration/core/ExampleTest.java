@@ -20,6 +20,7 @@
 package com.typedb.driver.test.integration.core;
 
 // EXAMPLE START MARKER
+
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
@@ -34,7 +35,6 @@ import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 // EXAMPLE END MARKER
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -111,7 +111,6 @@ public class ExampleTest {
                 transaction.commit();
             }
 
-
             // Open a read transaction to safely read anything without database modifications
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
                 QueryAnswer entityAnswer = transaction.query("match entity $x;").resolve();
@@ -138,15 +137,19 @@ public class ExampleTest {
                 Concept conceptByIndex = entityRow.getIndex(0);
                 assertEquals(conceptByName, conceptByIndex);
 
+                System.out.printf("Getting concepts by variable names (%s) and indexes (%s) is equally correct. ",
+                        conceptByName.getLabel(),
+                        conceptByIndex.getLabel());
+
                 // Check if it's an entity type before the conversion
                 if (conceptByName.isEntityType()) {
-                    System.out.printf("Getting concepts by variable names and indexes is equally correct. " +
-                                    "Both represent the defined entity type: '%s' (in case of a doubt: '%s')%n",
+                    System.out.printf("Both represent the defined entity type: '%s' (in case of a doubt: '%s')%n",
                             conceptByName.asEntityType().getLabel(),
                             conceptByIndex.asEntityType().getLabel());
                 }
                 assertTrue(conceptByName.isEntityType());
                 assertTrue(conceptByName.isType());
+                assertEquals(conceptByName.getLabel(), "person");
                 assertEquals(conceptByName.asEntityType().getLabel(), "person");
                 assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
                 assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
@@ -172,9 +175,9 @@ public class ExampleTest {
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
-                        System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.getValueType());
+                        System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.tryGetValueType().get());
                         assertTrue(attributeType.isLong() || attributeType.isString());
-                        assertTrue(Objects.equals(attributeType.getValueType(), "long") || Objects.equals(attributeType.getValueType(), "string"));
+                        assertTrue(Objects.equals(attributeType.tryGetValueType().get(), "long") || Objects.equals(attributeType.tryGetValueType().get(), "string"));
                         assertTrue(Objects.equals(attributeType.getLabel(), "age") || Objects.equals(attributeType.getLabel(), "name"));
                         assertNotEquals(attributeType.getLabel(), "person");
                         assertNotEquals(attributeType.getLabel(), "person:age");
@@ -212,8 +215,9 @@ public class ExampleTest {
                 assertTrue(header.contains("z"));
 
                 Concept x = row.getIndex(header.indexOf("x"));
+                System.out.printf("As we expect an entity instance, we can try to get its IID (unique identification): %s. ", x.tryGetIID());
                 if (x.isEntity()) {
-                    System.out.println("Each entity receives a unique IID. It can be retrieved directly: " + x.asEntity().getIID());
+                    System.out.println("It can also be retrieved directly and safely after a cast: " + x.asEntity().getIID());
                 }
 
                 // Do not forget to commit if the changes should be persisted

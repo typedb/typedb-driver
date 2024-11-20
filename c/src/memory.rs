@@ -47,6 +47,10 @@ pub(super) fn release_string(str: String) -> *mut c_char {
     raw
 }
 
+pub(super) fn release_optional_string(str: Option<String>) -> *mut c_char {
+    str.map(release_string).unwrap_or_else(null_mut)
+}
+
 pub(super) fn release_arc<T>(t: Arc<T>) -> *const T {
     let raw = Arc::into_raw(t);
     trace!("Releasing ownership of arc <{}> @ {:?}", std::any::type_name::<T>(), raw);

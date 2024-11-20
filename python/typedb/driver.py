@@ -20,7 +20,6 @@ from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-imp
 from typedb.api.answer.concept_row_iterator import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.query_answer import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.query_type import *  # noqa # pylint: disable=unused-import
-from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.instance.attribute import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.instance.entity import *  # noqa # pylint: disable=unused-import

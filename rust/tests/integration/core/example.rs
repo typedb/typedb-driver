@@ -154,7 +154,7 @@ fn example() {
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
                 let label = concept_by_name.get_label();
-                let value_type = concept_by_name.get_value_type().unwrap();
+                let value_type = concept_by_name.try_get_value_type().unwrap();
                 println!("Defined attribute type's label: '{label}', value type: '{value_type}'");
                 assert!(value_type == ValueType::Long || value_type == ValueType::String);
                 assert!(label == "age" || label == "name");
@@ -197,7 +197,7 @@ fn example() {
         assert!(column_names.contains(&"z".to_owned()));
 
         let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap();
-        if let Some(iid) = x.get_iid() {
+        if let Some(iid) = x.try_get_iid() {
             println!("Each entity receives a unique IID. It can be retrieved directly: {}", iid);
         }
 

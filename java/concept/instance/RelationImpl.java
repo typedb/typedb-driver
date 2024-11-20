@@ -20,9 +20,11 @@
 package com.typedb.driver.concept.instance;
 
 import com.typedb.driver.api.concept.instance.Relation;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.type.RelationTypeImpl;
 
-import static com.typedb.driver.jni.typedb_driver.relation_get_iid;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.NULL_CONCEPT_PROPERTY;
+import static com.typedb.driver.common.util.Objects.className;
 import static com.typedb.driver.jni.typedb_driver.relation_get_type;
 
 public class RelationImpl extends InstanceImpl implements Relation {
@@ -38,7 +40,7 @@ public class RelationImpl extends InstanceImpl implements Relation {
 
     @Override
     public final String getIID() {
-        return relation_get_iid(nativeObject);
+        return tryGetIID().orElseThrow(() -> new TypeDBDriverException(NULL_CONCEPT_PROPERTY, className(this.getClass())));
     }
 
     @Override

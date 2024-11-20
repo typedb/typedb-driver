@@ -96,10 +96,12 @@ from typedb.driver import *
                 # Get concept by the header's index
                 concept_by_index = row.get_index(0)
 
+                print(f"Getting concepts by variable names ({concept_by_name.get_label()}) and "
+                      f"indexes ({concept_by_index.get_label()}) is equally correct. ")
+
                 # Check if it's an entity type before the conversion
                 if concept_by_name.is_entity_type():
-                    print(f"Getting concepts by variable names and indexes is equally correct. "
-                          f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
+                    print(f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
                           f"(in case of a doubt: '{concept_by_index.as_entity_type().get_label()}')")
 
                 # Continue querying in the same transaction if needed
@@ -119,7 +121,7 @@ from typedb.driver import *
                     if concept_by_name.is_attribute_type():
                         attribute_type = concept_by_name.as_attribute_type()
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
-                              f"value type: '{attribute_type.get_value_type()}'")
+                              f"value type: '{attribute_type.try_get_value_type()}'")
 
 
                     print(f"It is also possible to just print the concept itself: '{concept_by_name}'")
@@ -143,8 +145,10 @@ from typedb.driver import *
                 header = [name for name in row.column_names()]
 
                 x = row.get_index(header.index("x"))
+                print(
+                    "As we expect an entity instance, we can try to get its IID (unique identification): {x.try_get_iid()}. ")
                 if x.is_entity():
-                    print(f"Each entity receives a unique IID. It can be retrieved directly: {x.as_entity().get_iid()}")
+                    print(f"It can also be retrieved directly and safely after a cast: {x.as_entity().get_iid()}")
 
                 # Do not forget to commit if the changes should be persisted
                 tx.commit()

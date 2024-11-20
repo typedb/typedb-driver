@@ -93,10 +93,10 @@ impl Debug for ConceptCategory {
 impl Concept {
     pub(crate) const UNKNOWN_LABEL: &'static str = "unknown";
 
-    /// Get the IID of this concept, if it exists.
-    /// If this is an Entity or Relation Instance, return the IID of the instance.
-    /// Otherwise, return empty
-    pub fn get_iid(&self) -> Option<&IID> {
+    /// Retrieves the unique id (IID) of this Concept.
+    /// If this is an Entity or Relation Instance, returns the IID of the instance.
+    /// Otherwise, returns None.
+    pub fn try_get_iid(&self) -> Option<&IID> {
         match self {
             Self::Entity(entity) => Some(&entity.iid),
             Self::Relation(relation) => Some(&relation.iid),
@@ -104,18 +104,18 @@ impl Concept {
         }
     }
 
-    /// Get the label of the concept.
-    /// If this is an Instance, return the label of the type of this instance ("unknown" if type fetching is disabled).
-    /// If this is a Value, return the label of the value type of the value.
-    /// If this is a Type, return the label of the type.
+    /// Retrieves the label of this Concept.
+    /// If this is an Instance, returns the label of the type of this instance ("unknown" if type fetching is disabled).
+    /// If this is a Value, returns the label of the value type of the value.
+    /// If this is a Type, returns the label of the type.
     pub fn get_label(&self) -> &str {
         self.try_get_label().unwrap_or(Self::UNKNOWN_LABEL)
     }
 
-    /// Get the optional label of the concept.
-    /// If this is an Instance, return the label of the type of this instance (None if type fetching is disabled).
-    /// If this is a Value, return the label of the value type of the value.
-    /// If this is a Type, return the label of the type.
+    /// Retrieves the optional label of the concept.
+    /// If this is an Instance, returns the label of the type of this instance (None if type fetching is disabled).
+    /// If this is a Value, returns the label of the value type of the value.
+    /// If this is a Type, returns the label of the type.
     pub fn try_get_label(&self) -> Option<&str> {
         match self {
             Self::EntityType(entity_type) => Some(entity_type.label()),
@@ -129,12 +129,12 @@ impl Concept {
         }
     }
 
-    /// Get the label of the value type of the concept, if it exists.
-    /// If this is an Attribute Instance, return the label of the value of this instance.
-    /// If this is a Value, return the label of the value.
-    /// If this is an Attribute Type, it returns the label of the value type that the schema permits for the attribute type, if one is defined.
-    /// Otherwise, return empty.
-    pub fn get_value_label(&self) -> Option<&str> {
+    /// Retrieves the label of the value type of the concept, if it exists.
+    /// If this is an Attribute Instance, returns the label of the value of this instance.
+    /// If this is a Value, returns the label of the value.
+    /// If this is an Attribute Type, returns the label of the value type that the schema permits for the attribute type, if one is defined.
+    /// Otherwise, returns None.
+    pub fn try_get_value_label(&self) -> Option<&str> {
         match self {
             Self::AttributeType(attribute_type) => attribute_type.value_type().map(|value_type| value_type.name()),
             Self::Attribute(attribute) => Some(attribute.value.get_type_name()),
@@ -143,12 +143,12 @@ impl Concept {
         }
     }
 
-    /// Get the value type enum of the concept, if it exists
-    /// If this is an Attribute Instance, return the value type of the value of this instance.
-    /// If this is a Value, return the value type of the value.
-    /// If this is an Attribute Type, it returns value type that the schema permits for the attribute type, if one is defined.
-    /// Otherwise, return empty.
-    pub fn get_value_type(&self) -> Option<ValueType> {
+    /// Retrieves the value type enum of the concept, if it exists.
+    /// If this is an Attribute Instance, returns the value type of the value of this instance.
+    /// If this is a Value, returns the value type of the value.
+    /// If this is an Attribute Type, returns value type that the schema permits for the attribute type, if one is defined.
+    /// Otherwise, returns None.
+    pub fn try_get_value_type(&self) -> Option<ValueType> {
         match self {
             Self::AttributeType(attribute_type) => attribute_type.value_type().cloned(),
             Self::Attribute(attribute) => Some(attribute.value.get_type()),
@@ -157,11 +157,11 @@ impl Concept {
         }
     }
 
-    /// Get the value of this concept, if it exists.
-    /// If this is an Attribute Instance, return the value of this instance.
-    /// If this a Value, return the value.
-    /// Otherwise, return empty.
-    pub fn get_value(&self) -> Option<&Value> {
+    /// Retrieves the value of this Concept, if it exists.
+    /// If this is an Attribute Instance, returns the value of this instance.
+    /// If this a Value, returns the value.
+    /// Otherwise, returns empty.
+    pub fn try_get_value(&self) -> Option<&Value> {
         match self {
             Self::Attribute(attribute) => Some(&attribute.value),
             Self::Value(value) => Some(value),
@@ -169,87 +169,87 @@ impl Concept {
         }
     }
 
-    /// Get the boolean value of this concept, if it exists.
-    /// If this is a boolean-valued Attribute Instance, return the boolean value of this instance.
-    /// If this a boolean-valued Value, return the boolean value.
-    /// Otherwise, return empty.
-    pub fn get_boolean(&self) -> Option<bool> {
-        self.get_value().map(|value| value.get_boolean()).flatten()
+    /// Retrieves the boolean value of this Concept, if it exists.
+    /// If this is a boolean-valued Attribute Instance, returns the boolean value of this instance.
+    /// If this a boolean-valued Value, returns the boolean value.
+    /// Otherwise, returns None.
+    pub fn try_get_boolean(&self) -> Option<bool> {
+        self.try_get_value().map(|value| value.get_boolean()).flatten()
     }
 
-    /// Get the long value of this concept, if it exists.
-    /// If this is a long-valued Attribute Instance, return the long value of this instance.
-    /// If this a long-valued Value, return the long value.
-    /// Otherwise, return empty.
-    pub fn get_long(&self) -> Option<i64> {
-        self.get_value().map(|value| value.get_long()).flatten()
+    /// Retrieves the long value of this Concept, if it exists.
+    /// If this is a long-valued Attribute Instance, returns the long value of this instance.
+    /// If this a long-valued Value, returns the long value.
+    /// Otherwise, returns None.
+    pub fn try_get_long(&self) -> Option<i64> {
+        self.try_get_value().map(|value| value.get_long()).flatten()
     }
 
-    /// Get the double value of this concept, if it exists.
-    /// If this is a double-valued Attribute Instance, return the double value of this instance.
-    /// If this a double-valued Value, return the double value.
-    /// Otherwise, return empty.
-    pub fn get_double(&self) -> Option<f64> {
-        self.get_value().map(|value| value.get_double()).flatten()
+    /// Retrieves the double value of this Concept, if it exists.
+    /// If this is a double-valued Attribute Instance, returns the double value of this instance.
+    /// If this a double-valued Value, returns the double value.
+    /// Otherwise, returns None.
+    pub fn try_get_double(&self) -> Option<f64> {
+        self.try_get_value().map(|value| value.get_double()).flatten()
     }
 
-    /// Get the fixed-decimal value of this concept, if it exists.
-    /// If this is a fixed-decimal valued Attribute Instance, return the fixed-decimal value of this instance.
-    /// If this a fixed-decimal valued Value, return the fixed-decimal value.
-    /// Otherwise, return empty.
-    pub fn get_decimal(&self) -> Option<Decimal> {
-        self.get_value().map(|value| value.get_decimal()).flatten()
+    /// Retrieves the fixed-decimal value of this Concept, if it exists.
+    /// If this is a fixed-decimal valued Attribute Instance, returns the fixed-decimal value of this instance.
+    /// If this a fixed-decimal valued Value, returns the fixed-decimal value.
+    /// Otherwise, returns None.
+    pub fn try_get_decimal(&self) -> Option<Decimal> {
+        self.try_get_value().map(|value| value.get_decimal()).flatten()
     }
 
-    /// Get the string value of this concept, if it exists.
-    /// If this is a string-valued Attribute Instance, return the string value of this instance.
-    /// If this a string-valued Value, return the string value.
-    /// Otherwise, return empty.
-    pub fn get_string(&self) -> Option<&str> {
-        self.get_value().map(|value| value.get_string()).flatten()
+    /// Retrieves the string value of this Concept, if it exists.
+    /// If this is a string-valued Attribute Instance, returns the string value of this instance.
+    /// If this a string-valued Value, returns the string value.
+    /// Otherwise, returns None.
+    pub fn try_get_string(&self) -> Option<&str> {
+        self.try_get_value().map(|value| value.get_string()).flatten()
     }
 
-    /// Get the date value of this concept, if it exists.
-    /// If this is a date-valued Attribute Instance, return the date value of this instance.
-    /// If this a date-valued Value, return the date value.
-    /// Otherwise, return empty.
-    pub fn get_date(&self) -> Option<NaiveDate> {
-        self.get_value().map(|value| value.get_date()).flatten()
+    /// Retrieves the date value of this Concept, if it exists.
+    /// If this is a date-valued Attribute Instance, returns the date value of this instance.
+    /// If this a date-valued Value, returns the date value.
+    /// Otherwise, returns None.
+    pub fn try_get_date(&self) -> Option<NaiveDate> {
+        self.try_get_value().map(|value| value.get_date()).flatten()
     }
 
-    /// Get the datetime value of this concept, if it exists.
-    /// If this is a datetime-valued Attribute Instance, return the datetime value of this instance.
-    /// If this a datetime-valued Value, return the datetime value.
-    /// Otherwise, return empty.
-    pub fn get_datetime(&self) -> Option<NaiveDateTime> {
-        self.get_value().map(|value| value.get_datetime()).flatten()
+    /// Retrieves the datetime value of this Concept, if it exists.
+    /// If this is a datetime-valued Attribute Instance, returns the datetime value of this instance.
+    /// If this a datetime-valued Value, returns the datetime value.
+    /// Otherwise, returns None.
+    pub fn try_get_datetime(&self) -> Option<NaiveDateTime> {
+        self.try_get_value().map(|value| value.get_datetime()).flatten()
     }
 
-    /// Get the timezoned-datetime value of this concept, if it exists.
-    /// If this is a timezoned-datetime valued Attribute Instance, return the timezoned-datetime value of this instance.
-    /// If this a timezoned-datetime valued Value, return the timezoned-datetime value.
-    /// Otherwise, return empty.
-    pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
-        self.get_value().map(|value| value.get_datetime_tz()).flatten()
+    /// Retrieves the timezoned-datetime value of this Concept, if it exists.
+    /// If this is a timezoned-datetime valued Attribute Instance, returns the timezoned-datetime value of this instance.
+    /// If this a timezoned-datetime valued Value, returns the timezoned-datetime value.
+    /// Otherwise, returns None.
+    pub fn try_get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
+        self.try_get_value().map(|value| value.get_datetime_tz()).flatten()
     }
 
-    /// Get the duration value of this concept, if it exists.
-    /// If this is a duration-valued Attribute Instance, return the duration value of this instance.
-    /// If this a duration-valued Value, return the duration value.
-    /// Otherwise, return empty.
-    pub fn get_duration(&self) -> Option<Duration> {
-        self.get_value().map(|value| value.get_duration()).flatten()
+    /// Retrieves the duration value of this Concept, if it exists.
+    /// If this is a duration-valued Attribute Instance, returns the duration value of this instance.
+    /// If this a duration-valued Value, returns the duration value.
+    /// Otherwise, returns None.
+    pub fn try_get_duration(&self) -> Option<Duration> {
+        self.try_get_value().map(|value| value.get_duration()).flatten()
     }
 
-    /// Get the struct value of this concept, if it exists.
-    /// If this is a struct-valued Attribute Instance, return the struct value of this instance.
-    /// If this a struct-valued Value, return the struct value.
-    /// Otherwise, return empty.
-    pub fn get_struct(&self) -> Option<&Struct> {
-        self.get_value().map(|value| value.get_struct()).flatten()
+    /// Retrieves the struct value of this Concept, if it exists.
+    /// If this is a struct-valued Attribute Instance, returns the struct value of this instance.
+    /// If this a struct-valued Value, returns the struct value.
+    /// Otherwise, returns None.
+    pub fn try_get_struct(&self) -> Option<&Struct> {
+        self.try_get_value().map(|value| value.get_struct()).flatten()
     }
 
-    /// Get the category of this concept
+    /// Retrieves the category of this Concept.
     pub fn get_category(&self) -> ConceptCategory {
         match self {
             Self::EntityType(_) => ConceptCategory::EntityType,
@@ -263,7 +263,7 @@ impl Concept {
         }
     }
 
-    /// Check if this concept represents a Type from the schema of the database.
+    /// Check if this Concept represents a Type from the schema of the database.
     /// These are exactly: Entity Types, Relation Types, Role Types, and Attribute Types
     ///
     /// Equivalent to:
@@ -277,27 +277,27 @@ impl Concept {
         }
     }
 
-    /// Check if this concept represents an Entity Type from the schema of the database
+    /// Check if this Concept represents an Entity Type from the schema of the database
     pub fn is_entity_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::EntityType)
     }
 
-    /// Check if this concept represents a Relation Type from the schema of the database
+    /// Check if this Concept represents a Relation Type from the schema of the database
     pub fn is_relation_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::RelationType)
     }
 
-    /// Check if this concept represents a Role Type from the schema of the database
+    /// Check if this Concept represents a Role Type from the schema of the database
     pub fn is_role_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::RoleType)
     }
 
-    /// Check if this concept represents an Attribute Type from the schema of the database
+    /// Check if this Concept represents an Attribute Type from the schema of the database
     pub fn is_attribute_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::AttributeType)
     }
 
-    /// Check if this concept represents a stored database instance from the database.
+    /// Check if this Concept represents a stored database instance from the database.
     /// These are exactly: Entity, Relation, and Attribute
     ///
     /// Equivalent to:
@@ -311,74 +311,74 @@ impl Concept {
         }
     }
 
-    /// Check if this concept represents an Entity instance from the database
+    /// Check if this Concept represents an Entity instance from the database
     pub fn is_entity(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Entity)
     }
 
-    /// Check if this concept represents an Relation instance from the database
+    /// Check if this Concept represents an Relation instance from the database
     pub fn is_relation(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Relation)
     }
 
-    /// Check if this concept represents an Attribute instance from the database
+    /// Check if this Concept represents an Attribute instance from the database
     pub fn is_attribute(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Attribute)
     }
 
-    /// Check if this concept represents a Value returned by the database
+    /// Check if this Concept represents a Value returned by the database
     pub fn is_value(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Value)
     }
 
-    /// Check if this concept holds a boolean as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a boolean as an AttributeType, an Attribute, or a Value
     pub fn is_boolean(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Boolean))
+        matches!(self.try_get_value_type(), Some(ValueType::Boolean))
     }
 
-    /// Check if this concept holds a long as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a long as an AttributeType, an Attribute, or a Value
     pub fn is_long(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Long))
+        matches!(self.try_get_value_type(), Some(ValueType::Long))
     }
 
-    /// Check if this concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
     pub fn is_decimal(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Decimal))
+        matches!(self.try_get_value_type(), Some(ValueType::Decimal))
     }
 
-    /// Check if this concept holds a double as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a double as an AttributeType, an Attribute, or a Value
     pub fn is_double(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Double))
+        matches!(self.try_get_value_type(), Some(ValueType::Double))
     }
 
-    /// Check if this concept holds a string as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a string as an AttributeType, an Attribute, or a Value
     pub fn is_string(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::String))
+        matches!(self.try_get_value_type(), Some(ValueType::String))
     }
 
-    /// Check if this concept holds a date as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a date as an AttributeType, an Attribute, or a Value
     pub fn is_date(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Date))
+        matches!(self.try_get_value_type(), Some(ValueType::Date))
     }
 
-    /// Check if this concept holds a datetime as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Datetime))
+        matches!(self.try_get_value_type(), Some(ValueType::Datetime))
     }
 
-    /// Check if this concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime_tz(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::DatetimeTZ))
+        matches!(self.try_get_value_type(), Some(ValueType::DatetimeTZ))
     }
 
-    /// Check if this concept holds a duration as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a duration as an AttributeType, an Attribute, or a Value
     pub fn is_duration(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Duration))
+        matches!(self.try_get_value_type(), Some(ValueType::Duration))
     }
 
-    /// Check if this concept holds a struct as an AttributeType, an Attribute, or a Value
+    /// Check if this Concept holds a struct as an AttributeType, an Attribute, or a Value
     pub fn is_struct(&self) -> bool {
-        matches!(self.get_value_type(), Some(ValueType::Struct(_)))
+        matches!(self.try_get_value_type(), Some(ValueType::Struct(_)))
     }
 }
 
@@ -394,13 +394,13 @@ impl Debug for Concept {
             write!(f, "{}({})", self.get_category(), self.get_label())
         } else {
             write!(f, "{}({}", self.get_category(), self.get_label())?;
-            if self.get_iid().is_some() {
-                write!(f, ": {}", self.get_iid().unwrap())?;
-                if self.get_value().is_some() {
-                    write!(f, ", {}", self.get_value().unwrap())?;
+            if self.try_get_iid().is_some() {
+                write!(f, ": {}", self.try_get_iid().unwrap())?;
+                if self.try_get_value().is_some() {
+                    write!(f, ", {}", self.try_get_value().unwrap())?;
                 }
-            } else if self.get_value().is_some() {
-                write!(f, ": {}", self.get_value().unwrap())?;
+            } else if self.try_get_value().is_some() {
+                write!(f, ": {}", self.try_get_value().unwrap())?;
             } else {
                 // shouldn't be reachable?
             }

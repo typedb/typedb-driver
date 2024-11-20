@@ -20,9 +20,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.concept.instance.entity import Entity
+from typedb.common.exception import TypeDBDriverException, NULL_CONCEPT_PROPERTY
 from typedb.concept.concept_factory import wrap_entity_type
 from typedb.concept.instance.instance import _Instance
-from typedb.native_driver_wrapper import entity_get_type, entity_get_iid
+from typedb.native_driver_wrapper import entity_get_type
 
 if TYPE_CHECKING:
     from typedb.concept.type.entity_type import _EntityType
@@ -34,7 +35,9 @@ class _Entity(Entity, _Instance):
         return wrap_entity_type(entity_get_type(self.native_object))
 
     def get_iid(self) -> str:
-        return entity_get_iid(self.native_object)
+        if (iid := self.try_get_iid()) is None:
+            raise TypeDBDriverException(NULL_CONCEPT_PROPERTY, self.__class__.__name__)
+        return iid
 
     def __eq__(self, other):
         if other is self:

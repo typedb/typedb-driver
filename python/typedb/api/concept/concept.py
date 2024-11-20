@@ -18,8 +18,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from datetime import date
+from decimal import Decimal
+from typing import TYPE_CHECKING, Dict, Optional, Union
 
+from typedb.common.datetime import Datetime
+from typedb.common.duration import Duration
 from typedb.common.exception import TypeDBDriverException, INVALID_CONCEPT_CASTING
 
 if TYPE_CHECKING:
@@ -36,6 +40,8 @@ if TYPE_CHECKING:
 
 
 class Concept(ABC):
+    STRUCT = Dict[str, Optional["Value"]]
+    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
 
     def is_type(self) -> bool:
         """
@@ -318,10 +324,342 @@ class Concept(ABC):
         raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
 
     @abstractmethod
+    def is_boolean(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``boolean``
+        or if this ``Concept`` is an ``AttributeType`` of type ``boolean``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_boolean()
+        """
+        pass
+
+    @abstractmethod
+    def is_long(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``long``
+        or if this ``Concept`` is an ``AttributeType`` of type ``long``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_long()
+        """
+        pass
+
+    @abstractmethod
+    def is_double(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``double``
+        or if this ``Concept`` is an ``AttributeType`` of type ``double``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_double()
+        """
+        pass
+
+    @abstractmethod
+    def is_decimal(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``decimal``
+        or if this ``Concept`` is an ``AttributeType`` of type ``decimal``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_decimal()
+        """
+        pass
+
+    @abstractmethod
+    def is_string(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``string``
+        or if this ``Concept`` is an ``AttributeType`` of type ``string``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_string()
+        """
+        pass
+
+    @abstractmethod
+    def is_date(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``date``
+        or if this ``Concept`` is an ``AttributeType`` of type ``date``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_date()
+        """
+        pass
+
+    @abstractmethod
+    def is_datetime(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``datetime``
+        or if this ``Concept`` is an ``AttributeType`` of type ``datetime``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_datetime()
+        """
+        pass
+
+    @abstractmethod
+    def is_datetime_tz(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``datetime-tz``
+        or if this ``Concept`` is an ``AttributeType`` of type ``datetime-tz``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_datetime_tz()
+        """
+        pass
+
+    @abstractmethod
+    def is_duration(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``duration``
+        or if this ``Concept`` is an ``AttributeType`` of type ``duration``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_duration()
+        """
+        pass
+
+    @abstractmethod
+    def is_struct(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``struct``
+        or if this ``Concept`` is an ``AttributeType`` of type ``struct``.
+        Otherwise, returns ``False``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_struct()
+        """
+        pass
+
+    # TODO: Could be useful to have is_struct(struct_name)
+
+    @abstractmethod
+    def try_get_boolean(self) -> Optional[bool]:
+        """
+        Returns a ``boolean`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_boolean()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_long(self) -> Optional[int]:
+        """
+        Returns a ``long`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_long()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_double(self) -> Optional[float]:
+        """
+        Returns a ``double`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_double()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_decimal(self) -> Optional[Decimal]:
+        """
+        Returns a ``decimal`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_decimal()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_string(self) -> Optional[str]:
+        """
+        Returns a ``string`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_string()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_date(self) -> Optional[date]:
+        """
+        Returns a timezone naive ``date`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_date()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_datetime(self) -> Optional[Datetime]:
+        """
+        Returns a timezone naive ``datetime`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_datetime()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_datetime_tz(self) -> Optional[Datetime]:
+        """
+        Returns a timezone naive ``datetime_tz`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_datetime_tz()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_duration(self) -> Optional[Duration]:
+        """
+        Returns a timezone naive ``duration`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_duration()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_struct(self) -> Optional[STRUCT]:
+        """
+        Returns a ``struct`` value of this ``Concept`` represented as a map from field names to values.
+        If it's not a ``Value`` or it has another type, raises an exception.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            value.try_get_struct()
+        """
+        pass
+
+    @abstractmethod
     def get_label(self) -> str:
         """
         Get the label of the concept.
-        If this is an ``Instance``, return the label of the type of this instance.
+        If this is an ``Instance``, return the label of the type of this instance ("unknown" if type fetching is disabled).
         If this is a ``Value``, return the label of the value type of the value.
         If this is a ``Type``, return the label of the type.
 
@@ -332,5 +670,69 @@ class Concept(ABC):
         ::
 
             concept.get_label()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_label(self) -> Optional[str]:
+        """
+        Get the label of the concept.
+        If this is an ``Instance``, return the label of the type of this instance (``None`` if type fetching is disabled).
+        Returns ``None`` if type fetching is disabled.
+        If this is a ``Value``, return the label of the value type of the value.
+        If this is a ``Type``, return the label of the type.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.try_get_label()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_iid(self) -> Optional[str]:
+        """
+        Retrieves the unique id of the ``Concept``. Returns ``None`` if absent.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.try_get_iid()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_value_type(self) -> Optional[str]:
+        """
+        Retrieves the ``str` describing the value type fo this ``Concept``. Returns ``None`` if absent.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.try_get_value_type()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_value(self) -> Optional[VALUE]:
+        """
+        Retrieves the value which this ``Concept`` holds. Returns ``None`` if this ``Concept`` does not hold any value.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.try_get_value()
         """
         pass

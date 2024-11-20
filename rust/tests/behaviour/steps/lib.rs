@@ -445,7 +445,7 @@ impl Default for Context {
 pub enum BehaviourTestOptionalError {
     VariableDoesNotExist(String),
     InvalidConceptConversion,
-    InvalidValueCasting(String),
+    InvalidValueRetrieval(String),
 }
 
 impl fmt::Display for BehaviourTestOptionalError {
@@ -453,7 +453,7 @@ impl fmt::Display for BehaviourTestOptionalError {
         match self {
             Self::VariableDoesNotExist(var) => write!(f, "The variable '{}' does not exist.", var),
             Self::InvalidConceptConversion => write!(f, "Invalid concept conversion."),
-            Self::InvalidValueCasting(type_) => write!(f, "Invalid value casting to '{}'.", type_),
+            Self::InvalidValueRetrieval(type_) => write!(f, "Could not retrieve a '{}' value.", type_),
         }
     }
 }
@@ -463,7 +463,7 @@ impl Error for BehaviourTestOptionalError {
         match self {
             Self::VariableDoesNotExist(_) => None,
             Self::InvalidConceptConversion => None,
-            Self::InvalidValueCasting(_) => None,
+            Self::InvalidValueRetrieval(_) => None,
         }
     }
 }

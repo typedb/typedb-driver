@@ -220,7 +220,7 @@ concept.as_value()
 get_label() -> str
 ----
 
-Get the label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type.
+Get the label of the concept. If this is an ``Instance``, return the label of the type of this instance (“unknown” if type fetching is disabled). If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type.
 
 [caption=""]
 .Returns
@@ -273,6 +273,153 @@ Checks if the concept is an ``AttributeType``.
 [source,python]
 ----
 concept.is_attribute_type()
+----
+
+[#_Concept_is_boolean_]
+==== is_boolean
+
+[source,python]
+----
+is_boolean() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``boolean`` or if this ``Concept`` is an ``AttributeType`` of type ``boolean``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_boolean()
+----
+
+[#_Concept_is_date_]
+==== is_date
+
+[source,python]
+----
+is_date() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``date`` or if this ``Concept`` is an ``AttributeType`` of type ``date``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_date()
+----
+
+[#_Concept_is_datetime_]
+==== is_datetime
+
+[source,python]
+----
+is_datetime() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``datetime`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_datetime()
+----
+
+[#_Concept_is_datetime_tz_]
+==== is_datetime_tz
+
+[source,python]
+----
+is_datetime_tz() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``datetime-tz`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime-tz``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_datetime_tz()
+----
+
+[#_Concept_is_decimal_]
+==== is_decimal
+
+[source,python]
+----
+is_decimal() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``decimal`` or if this ``Concept`` is an ``AttributeType`` of type ``decimal``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_decimal()
+----
+
+[#_Concept_is_double_]
+==== is_double
+
+[source,python]
+----
+is_double() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``double`` or if this ``Concept`` is an ``AttributeType`` of type ``double``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_double()
+----
+
+[#_Concept_is_duration_]
+==== is_duration
+
+[source,python]
+----
+is_duration() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``duration`` or if this ``Concept`` is an ``AttributeType`` of type ``duration``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_duration()
 ----
 
 [#_Concept_is_entity_]
@@ -338,6 +485,27 @@ Checks if the concept is a ``Instance``.
 concept.is_instance()
 ----
 
+[#_Concept_is_long_]
+==== is_long
+
+[source,python]
+----
+is_long() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``long`` or if this ``Concept`` is an ``AttributeType`` of type ``long``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_long()
+----
+
 [#_Concept_is_relation_]
 ==== is_relation
 
@@ -401,6 +569,48 @@ Checks if the concept is a ``RoleType``.
 concept.is_role_type()
 ----
 
+[#_Concept_is_string_]
+==== is_string
+
+[source,python]
+----
+is_string() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``string`` or if this ``Concept`` is an ``AttributeType`` of type ``string``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_string()
+----
+
+[#_Concept_is_struct_]
+==== is_struct
+
+[source,python]
+----
+is_struct() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``struct`` or if this ``Concept`` is an ``AttributeType`` of type ``struct``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_struct()
+----
+
 [#_Concept_is_type_]
 ==== is_type
 
@@ -441,6 +651,300 @@ Checks if the concept is a ``Value``.
 [source,python]
 ----
 concept.is_value()
+----
+
+[#_Concept_try_get_boolean_]
+==== try_get_boolean
+
+[source,python]
+----
+try_get_boolean() -> bool | None
+----
+
+Returns a ``boolean`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`bool | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_boolean()
+----
+
+[#_Concept_try_get_date_]
+==== try_get_date
+
+[source,python]
+----
+try_get_date() -> date | None
+----
+
+Returns a timezone naive ``date`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`date | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_date()
+----
+
+[#_Concept_try_get_datetime_]
+==== try_get_datetime
+
+[source,python]
+----
+try_get_datetime() -> Datetime | None
+----
+
+Returns a timezone naive ``datetime`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_datetime()
+----
+
+[#_Concept_try_get_datetime_tz_]
+==== try_get_datetime_tz
+
+[source,python]
+----
+try_get_datetime_tz() -> Datetime | None
+----
+
+Returns a timezone naive ``datetime_tz`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Datetime | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_datetime_tz()
+----
+
+[#_Concept_try_get_decimal_]
+==== try_get_decimal
+
+[source,python]
+----
+try_get_decimal() -> Decimal | None
+----
+
+Returns a ``decimal`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Decimal | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_decimal()
+----
+
+[#_Concept_try_get_double_]
+==== try_get_double
+
+[source,python]
+----
+try_get_double() -> float | None
+----
+
+Returns a ``double`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`float | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_double()
+----
+
+[#_Concept_try_get_duration_]
+==== try_get_duration
+
+[source,python]
+----
+try_get_duration() -> Duration | None
+----
+
+Returns a timezone naive ``duration`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Duration | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_duration()
+----
+
+[#_Concept_try_get_iid_]
+==== try_get_iid
+
+[source,python]
+----
+try_get_iid() -> str | None
+----
+
+Retrieves the unique id of the ``Concept``. Returns ``None`` if absent.
+
+[caption=""]
+.Returns
+`str | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.try_get_iid()
+----
+
+[#_Concept_try_get_label_]
+==== try_get_label
+
+[source,python]
+----
+try_get_label() -> str | None
+----
+
+Get the label of the concept. If this is an ``Instance``, return the label of the type of this instance (``None`` if type fetching is disabled). Returns ``None`` if type fetching is disabled. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type.
+
+[caption=""]
+.Returns
+`str | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.try_get_label()
+----
+
+[#_Concept_try_get_long_]
+==== try_get_long
+
+[source,python]
+----
+try_get_long() -> int | None
+----
+
+Returns a ``long`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`int | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_long()
+----
+
+[#_Concept_try_get_string_]
+==== try_get_string
+
+[source,python]
+----
+try_get_string() -> str | None
+----
+
+Returns a ``string`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`str | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_string()
+----
+
+[#_Concept_try_get_struct_]
+==== try_get_struct
+
+[source,python]
+----
+try_get_struct() -> STRUCT | None
+----
+
+Returns a ``struct`` value of this ``Concept`` represented as a map from field names to values. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`STRUCT | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_struct()
+----
+
+[#_Concept_try_get_value_]
+==== try_get_value
+
+[source,python]
+----
+try_get_value() -> VALUE | None
+----
+
+Retrieves the value which this ``Concept`` holds. Returns ``None`` if this ``Concept`` does not hold any value.
+
+[caption=""]
+.Returns
+`VALUE | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.try_get_value()
+----
+
+[#_Concept_try_get_value_type_]
+==== try_get_value_type
+
+[source,python]
+----
+try_get_value_type() -> str | None
+----
+
+Retrieves the ``str` describing the value type fo this ``Concept``. Returns ``None`` if absent.
+
+[caption=""]
+.Returns
+`str | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.try_get_value_type()
 ----
 
 // end::methods[]

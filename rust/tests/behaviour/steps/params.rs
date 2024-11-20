@@ -384,6 +384,17 @@ impl IsOrNot {
         };
     }
 
+    pub fn check_none<T: fmt::Debug>(&self, value: &Option<T>) {
+        match self {
+            Self::Is => {
+                assert!(matches!(value, None), "expected to be none")
+            }
+            Self::IsNot => {
+                assert!(matches!(value, Some(_)), "expected to be NOT none")
+            }
+        };
+    }
+
     pub fn compare<T: PartialEq + fmt::Debug>(&self, left: T, right: T) {
         match self {
             Self::Is => {

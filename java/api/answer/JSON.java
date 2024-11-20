@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_VALUE_CASTING;
+import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_VALUE_RETRIEVAL;
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.typedb.driver.common.util.Objects.className;
 import static java.util.stream.Collectors.joining;
@@ -84,23 +84,23 @@ public abstract class JSON {
     }
 
     public Map<java.lang.String, JSON> asObject() {
-        throw new TypeDBDriverException(INVALID_VALUE_CASTING, className(Map.class));
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(Map.class));
     }
 
     public List<JSON> asArray() {
-        throw new TypeDBDriverException(INVALID_VALUE_CASTING, className(List.class));
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(List.class));
     }
 
     public double asNumber() {
-        throw new TypeDBDriverException(INVALID_VALUE_CASTING, className(double.class));
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
     }
 
     public java.lang.String asString() {
-        throw new TypeDBDriverException(INVALID_VALUE_CASTING, className(java.lang.String.class));
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(java.lang.String.class));
     }
 
     public boolean asBoolean() {
-        throw new TypeDBDriverException(INVALID_VALUE_CASTING, className(boolean.class));
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(boolean.class));
     }
 
     private static class Object extends JSON {

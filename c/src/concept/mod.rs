@@ -20,18 +20,13 @@
 use std::ptr::addr_of_mut;
 
 use itertools::Itertools;
-use typedb_driver::{
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, ValueGroup},
-    concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
-    BoxPromise, Promise, Result,
-};
+use typedb_driver::{answer::ConceptRow, concept::Concept, BoxPromise, Promise, Result};
 
 use super::{iterator::iterator_try_next, memory::free};
 use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
 
 mod concept;
 mod thing;
-mod type_;
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
@@ -80,21 +75,5 @@ pub extern "C" fn concept_iterator_next(it: *mut ConceptIterator) -> *mut Concep
 /// Frees the native rust <code>ConceptIterator</code> object
 #[no_mangle]
 pub extern "C" fn concept_iterator_drop(it: *mut ConceptIterator) {
-    free(it);
-}
-
-/// Iterator over the <code>ValueGroup</code>s in the result of the Get Group Aggregate query.
-pub struct ValueGroupIterator(CIterator<Result<ValueGroup>>);
-
-/// Forwards the <code>ValueGroupIterator</code> and returns the next <code>ValueGroup</code> if it exists,
-/// or null if there are no more elements.
-#[no_mangle]
-pub extern "C" fn value_group_iterator_next(it: *mut ValueGroupIterator) -> *mut ValueGroup {
-    unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
-}
-
-/// Frees the native rust <code>ValueGroupIterator</code> object
-#[no_mangle]
-pub extern "C" fn value_group_iterator_drop(it: *mut ValueGroupIterator) {
     free(it);
 }
