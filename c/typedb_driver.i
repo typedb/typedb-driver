@@ -93,9 +93,10 @@ struct Type {};
 
 %define %promiseproxy(Type, function_prefix)
 struct Type {};
-%extend Type { ~Type() { function_prefix ## _resolve(self); } }
 %newobject function_prefix ## _resolve;
 %delobject function_prefix ## _resolve;
+%extend Type { ~Type() { function_prefix ## _drop(self); } }
+%delobject function_prefix ## _drop;
 %enddef
 
 %promiseproxy(BoolPromise, bool_promise)

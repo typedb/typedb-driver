@@ -49,12 +49,12 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         #             native_connection = driver_open_cloud_translated(
         #                     public_addresses, private_addresses, credential.native_object)
         #     except TypeDBDriverExceptionNative as e:
-        #         raise TypeDBDriverException.of(e)
+        #         raise TypeDBDriverException.of(e) from None
         # else:
         try:
             native_driver = driver_open_core(addresses[0], Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)
         # self._user_manager = _UserManager(native_connection)
 

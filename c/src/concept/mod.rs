@@ -45,6 +45,12 @@ pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut 
     try_release_optional(take_ownership(promise).0.resolve().transpose())
 }
 
+/// Frees the native rust <code>ConceptPromise</code> object.
+#[no_mangle]
+pub extern "C" fn concept_promise_drop(promise: *mut ConceptPromise) {
+    drop(take_ownership(promise))
+}
+
 /// Iterator over the <code>ConceptRow</code>s returned by an API method or query.
 pub struct ConceptRowIterator(pub CIterator<Result<ConceptRow>>);
 

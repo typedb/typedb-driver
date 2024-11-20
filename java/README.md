@@ -73,6 +73,7 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -197,6 +198,33 @@ public class TypeDBExample {
 
                 // Do not forget to commit if the changes should be persisted
                 transaction.commit();
+            }
+
+            // Open another write transaction to try inserting even more data
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // When loading a large dataset, it's often better not to resolve every query's promise immediately.
+                // Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+                // just call `commit`, which will wait for all ongoing operations to finish before executing.
+                List<String> queries = List.of("insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";");
+                for (String query : queries) {
+                    transaction.query(query);
+                }
+                transaction.commit();
+            }
+
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // Commit will still fail if at least one of the queries produce an error.
+                List<String> queries = List.of("insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";");
+                List<Promise<? extends QueryAnswer>> promises = new ArrayList<>();
+                for (String query : queries) {
+                    promises.add(transaction.query(query));
+                }
+
+                try {
+                    transaction.commit();
+                } catch (TypeDBDriverException expectedException) {
+                    System.out.println("Commit result will contain the unresolved query's error: " + expectedException);
+                }
             }
 
             // Open a read transaction to verify that the inserted data is saved

@@ -47,27 +47,27 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         try:
             return database_schema(self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     def type_schema(self) -> str:
         try:
             return database_type_schema(self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     def delete(self) -> None:
         try:
             self._native_object.thisown = 0
             database_delete(self._native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     # def replicas(self) -> set[Replica]:
     #     try:
     #         repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
     #         return set(_Database.Replica(replica_info) for replica_info in repl_iter)
     #     except TypeDBDriverExceptionNative as e:
-    #         raise TypeDBDriverException.of(e)
+    #         raise TypeDBDriverException.of(e) from None
     #
     # def primary_replica(self) -> Optional[Replica]:
     #     if res := database_get_primary_replica_info(self.native_object):

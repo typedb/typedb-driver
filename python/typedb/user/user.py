@@ -52,4 +52,4 @@
 #         try:
 #             user_password_update(self.native_object, self._user_manager.native_object, password_old, password_new)
 #         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e)
+#             raise TypeDBDriverException.of(e) from None

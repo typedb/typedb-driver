@@ -51,6 +51,12 @@ pub extern "C" fn query_answer_promise_resolve(promise: *mut QueryAnswerPromise)
     try_release(take_ownership(promise).0.resolve())
 }
 
+/// Frees the native rust <code>QueryAnswerPromise</code> object.
+#[no_mangle]
+pub extern "C" fn query_answer_promise_drop(promise: *mut QueryAnswerPromise) {
+    drop(take_ownership(promise))
+}
+
 /// Retrieve the executed query's type of the <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_get_query_type(query_answer: *const QueryAnswer) -> QueryType {

@@ -167,7 +167,10 @@ fn example() {
 
         // Open a write transaction to insert data
         let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
-        let answer = transaction.query("insert $z isa person, has age 10; $x isa person, has age 20;").await.unwrap();
+        let answer = transaction
+            .query("insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";")
+            .await
+            .unwrap();
         assert!(answer.is_row_stream());
 
         // Insert queries also return concept rows
@@ -201,6 +204,32 @@ fn example() {
         // Do not forget to commit if the changes should be persisted
         transaction.commit().await.unwrap();
 
+        // Open another write transaction to try inserting even more data
+        let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
+        // When loading a large dataset, it's often better not to resolve every query's promise immediately.
+        // Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+        // just call `commit`, which will wait for all ongoing operations to finish before executing.
+        let queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"];
+        for query in queries {
+            transaction.query(query);
+        }
+        transaction.commit().await.unwrap();
+
+        {
+            let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
+
+            // Commit will still fail if at least one of the queries produce an error.
+            let queries =
+                ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"];
+            let mut promises = vec![];
+            for query in queries {
+                promises.push(transaction.query(query));
+            }
+
+            let result = transaction.commit().await;
+            println!("Commit result will contain the unresolved query's error: {}", result.unwrap_err());
+        }
+
         // Open a read transaction to verify that the inserted data is saved
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
 
@@ -231,7 +260,7 @@ fn example() {
                 _ => unreachable!("An entity is expected"),
             }
         }
-        assert_eq!(count, 2);
+        assert_eq!(count, 4);
         println!("Total persons found: {}", count);
 
         // A fetch query can be used for concept document outputs with flexible structure
@@ -281,7 +310,7 @@ fn example() {
             count += 1;
             println!("JSON representation of the fetched document:\n{}", document.into_json().to_string());
         }
-        assert_eq!(count, 2);
+        assert_eq!(count, 5);
         println!("Total documents fetched: {}", count);
         // EXAMPLE END MARKER
     });

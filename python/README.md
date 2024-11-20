@@ -149,7 +149,30 @@ from typedb.driver import *
                 # Do not forget to commit if the changes should be persisted
                 tx.commit()
 
-            # Open a read transaction to verify that the inserted data is saved
+            # Open another write transaction to try inserting even more data
+            with driver.transaction(database.name, TransactionType.WRITE) as tx:
+                # When loading a large dataset, it's often better not to resolve every query's promise immediately.
+                # Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+                # just call `commit`, which will wait for all ongoing operations to finish before executing.
+                queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"]
+                for query in queries:
+                    tx.query(query)
+                tx.commit()
+
+            with driver.transaction(database.name, TransactionType.WRITE) as tx:
+                # Commit will still fail if at least one of the queries produce an error.
+                queries = ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"]
+                promises = []
+                for query in queries:
+                    promises.append(tx.query(query))
+
+                try:
+                    tx.commit()
+                    assert False, "TypeDBDriverException is expected"
+                except TypeDBDriverException as expected_exception:
+                    print(f"Commit result will contain the unresolved query's error: {expected_exception}")
+
+            # Open a read transaction to verify that the previously inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
                 # A match query can be used for concept row outputs
                 var = "x"
@@ -168,7 +191,7 @@ from typedb.driver import *
                 fetch_query = """
                 match
                   $x isa! person, has $a;
-                  $a isa! $t; 
+                  $a isa! $t;
                 fetch {
                   "single attribute type": $t,
                   "single attribute": $a,
