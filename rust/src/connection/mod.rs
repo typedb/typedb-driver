@@ -23,7 +23,6 @@ pub(crate) use self::transaction_stream::TransactionStream;
 mod credential;
 mod message;
 mod network;
-mod connection_settings;
 pub(crate) mod runtime;
 pub(crate) mod server_connection;
 pub(crate) mod transaction_stream;
