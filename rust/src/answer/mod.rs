@@ -21,7 +21,7 @@ use std::{fmt, sync::Arc};
 
 use futures::{stream, StreamExt};
 
-pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON, value_group::ValueGroup};
+pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON};
 use crate::{
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
     box_stream, BoxStream, Result,
@@ -30,7 +30,6 @@ use crate::{
 pub mod concept_document;
 pub mod concept_row;
 mod json;
-mod value_group;
 
 pub enum QueryAnswer {
     Ok(QueryType),

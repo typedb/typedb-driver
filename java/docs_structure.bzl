@@ -23,7 +23,6 @@ dir_mapping = {
     "OkQueryAnswer.adoc": "answer",
     "QueryAnswer.adoc": "answer",
     "QueryType.adoc": "answer",
-    "ValueGroup.adoc": "answer",
     "Promise_T_.adoc": "answer",
     "Concept.adoc": "concept",
     "TypeDB.adoc": "connection",

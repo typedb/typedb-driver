@@ -105,7 +105,7 @@ class ConceptErrorMessage(ErrorMessage):
 
 INVALID_CONCEPT_CASTING = ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.")
 INVALID_QUERY_ANSWER_CASTING = ConceptErrorMessage(2, "Invalid query answer conversion from '%s' to '%s'.")
-INVALID_VALUE_CASTING = ConceptErrorMessage(3, "Invalid value casting to '%s'.")
+INVALID_VALUE_RETRIEVAL = ConceptErrorMessage(3, "Could not retrieve a '%s' value.")
 MISSING_VARIABLE = ConceptErrorMessage(4, "Variable name cannot be null or empty.")
 
 
@@ -137,6 +137,7 @@ class InternalErrorMessage(ErrorMessage):
 UNEXPECTED_NATIVE_VALUE = InternalErrorMessage(1, "Unexpected native value encountered!")
 ILLEGAL_STATE = InternalErrorMessage(2, "Illegal state has been reached!")
 NULL_NATIVE_OBJECT = InternalErrorMessage(3, "Unhandled null pointer to a native object encountered!")
+NULL_CONCEPT_PROPERTY = InternalErrorMessage(4, "Unexpected null for a concept (%s) property is found!");
 
 
 class TypeDBException(Exception):

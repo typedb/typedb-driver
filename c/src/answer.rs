@@ -20,7 +20,7 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, QueryType, ValueGroup},
+    answer::{ConceptRow, QueryAnswer, QueryType},
     box_stream,
     concept::Concept,
     BoxPromise, Promise, Result,
@@ -151,34 +151,4 @@ pub extern "C" fn concept_row_equals(lhs: *const ConceptRow, rhs: *const Concept
 #[no_mangle]
 pub extern "C" fn concept_row_to_string(concept_row: *const ConceptRow) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept_row)))
-}
-
-/// Frees the native rust <code>ValueGroup</code> object
-#[no_mangle]
-pub extern "C" fn value_group_drop(value_group: *mut ValueGroup) {
-    free(value_group);
-}
-
-/// A string representation of this <code>ValueGroup</code> object
-#[no_mangle]
-pub extern "C" fn value_group_to_string(value_group: *const ValueGroup) -> *mut c_char {
-    release_string(format!("{:?}", borrow(value_group)))
-}
-
-/// Checks whether the provided <code>ValueGroup</code> objects are equal
-#[no_mangle]
-pub extern "C" fn value_group_equals(lhs: *const ValueGroup, rhs: *const ValueGroup) -> bool {
-    borrow(lhs) == borrow(rhs)
-}
-
-/// Retrieves the concept that is the group owner.
-#[no_mangle]
-pub extern "C" fn value_group_get_owner(value_group: *mut ValueGroup) -> *mut Concept {
-    release(borrow(value_group).owner.clone())
-}
-
-/// Retrieves the <code>Value</code> answer of the group.
-#[no_mangle]
-pub extern "C" fn value_group_get_value(value_group: *mut ValueGroup) -> *mut Concept {
-    release_optional(borrow(value_group).value.clone().map(Concept::Value))
 }

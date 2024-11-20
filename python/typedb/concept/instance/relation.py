@@ -20,9 +20,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.concept.instance.relation import Relation
+from typedb.common.exception import TypeDBDriverException, NULL_CONCEPT_PROPERTY
 from typedb.concept.concept_factory import wrap_relation_type
 from typedb.concept.instance.instance import _Instance
-from typedb.native_driver_wrapper import relation_get_type, relation_get_iid
+from typedb.native_driver_wrapper import relation_get_type
 
 if TYPE_CHECKING:
     from typedb.concept.type.relation_type import _RelationType
@@ -34,7 +35,9 @@ class _Relation(Relation, _Instance):
         return wrap_relation_type(relation_get_type(self.native_object))
 
     def get_iid(self) -> str:
-        return relation_get_iid(self.native_object)
+        if (iid := self.try_get_iid()) is None:
+            raise TypeDBDriverException(NULL_CONCEPT_PROPERTY, self.__class__.__name__)
+        return iid
 
     def __eq__(self, other):
         if other is self:

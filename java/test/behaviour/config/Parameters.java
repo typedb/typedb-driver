@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.typedb.driver.api.Transaction.Type.READ;
 import static com.typedb.driver.api.Transaction.Type.SCHEMA;
@@ -302,6 +303,11 @@ public class Parameters {
 
         public void check(boolean toCheck) {
             assertEquals(is, toCheck);
+        }
+
+        public void checkNone(Object object) {
+            if (is) assertEquals("expected none", object, Optional.empty());
+            else assertNotEquals("expected not none", object, Optional.empty());
         }
     }
 

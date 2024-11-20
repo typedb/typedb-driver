@@ -150,51 +150,42 @@
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
 %nojavaexception concept_get_label;
+%nojavaexception concept_try_get_label;
 %nojavaexception concept_to_string;
 %nojavaexception concept_equals;
 
-%nojavaexception entity_get_iid;
-%nojavaexception relation_get_iid;
+%nojavaexception concept_get_label;
+%nojavaexception concept_try_get_label;
+%nojavaexception concept_try_get_iid;
+%nojavaexception concept_try_get_value_type;
+%nojavaexception concept_try_get_value;
+
+%nojavaexception concept_is_boolean;
+%nojavaexception concept_is_date;
+%nojavaexception concept_is_datetime;
+%nojavaexception concept_is_datetime_tz;
+%nojavaexception concept_is_decimal;
+%nojavaexception concept_is_double;
+%nojavaexception concept_is_duration;
+%nojavaexception concept_is_long;
+%nojavaexception concept_is_string;
+%nojavaexception concept_is_struct;
+
+// Should call concept_is_X before concept_get_X and throw language-specific exception in impl
+%nojavaexception concept_get_boolean;
+%nojavaexception concept_get_date_as_seconds;
+%nojavaexception concept_get_datetime;
+%nojavaexception concept_get_datetime_tz;
+%nojavaexception concept_get_decimal;
+%nojavaexception concept_get_double;
+%nojavaexception concept_get_duration;
+%nojavaexception concept_get_long;
+%nojavaexception concept_get_string;
+%nojavaexception concept_get_struct;
+
 %nojavaexception entity_get_type;
 %nojavaexception relation_get_type;
 %nojavaexception attribute_get_type;
-%nojavaexception attribute_get_value;
-
-%nojavaexception value_get_boolean;
-%nojavaexception value_get_date_as_seconds;
-%nojavaexception value_get_datetime;
-%nojavaexception value_get_datetime_tz;
-%nojavaexception value_get_decimal;
-%nojavaexception value_get_double;
-%nojavaexception value_get_duration;
-%nojavaexception value_get_long;
-%nojavaexception value_get_string;
-%nojavaexception value_get_struct;
-%nojavaexception value_is_boolean;
-%nojavaexception value_is_date;
-%nojavaexception value_is_datetime;
-%nojavaexception value_is_datetime_tz;
-%nojavaexception value_is_decimal;
-%nojavaexception value_is_double;
-%nojavaexception value_is_duration;
-%nojavaexception value_is_long;
-%nojavaexception value_is_string;
-%nojavaexception value_is_struct;
-
-%nojavaexception value_get_value_type;
-%nojavaexception attribute_type_get_value_type;
-
-%nojavaexception attribute_type_is_boolean;
-%nojavaexception attribute_type_is_date;
-%nojavaexception attribute_type_is_datetime;
-%nojavaexception attribute_type_is_datetime_tz;
-%nojavaexception attribute_type_is_decimal;
-%nojavaexception attribute_type_is_double;
-%nojavaexception attribute_type_is_duration;
-%nojavaexception attribute_type_is_long;
-%nojavaexception attribute_type_is_string;
-%nojavaexception attribute_type_is_struct;
-%nojavaexception attribute_type_is_untyped;
 
 %nojavaexception concept_row_equals;
 %nojavaexception concept_row_get;
@@ -209,11 +200,6 @@
 %nojavaexception query_answer_is_ok;
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
-
-%nojavaexception value_group_to_string;
-%nojavaexception value_group_equals;
-%nojavaexception value_group_get_owner;
-%nojavaexception value_group_get_value;
 
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
@@ -267,14 +253,7 @@
 //%nojavaexception ~UserIterator;
 //%nojavaexception ~UserManager;
 %nojavaexception ~Value;
-%nojavaexception ~ValueGroup;
-%nojavaexception ~ValueGroupIterator;
 
-/* one-shot network requests do not throw when first constructed, only when resolved */
-%nojavaexception entity_type_get_label;
-%nojavaexception relation_type_get_label;
-%nojavaexception attribute_type_get_label;
-%nojavaexception role_type_get_label;
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
 
@@ -416,7 +395,6 @@
 
 %iterator(Concept, concept)
 %iterator(ConceptRow, concept_row)
-%iterator(ValueGroup, value_group)
 %iterator(String, string)
 %iterator(StringAndOptValue, string_and_opt_value)
 //%iterator(User, user)

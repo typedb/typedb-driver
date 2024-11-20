@@ -21,81 +21,8 @@ package com.typedb.driver.concept.type;
 
 import com.typedb.driver.api.concept.type.AttributeType;
 
-import static com.typedb.driver.jni.typedb_driver.attribute_type_get_value_type;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_boolean;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_date;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_datetime;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_datetime_tz;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_decimal;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_double;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_duration;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_long;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_string;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_struct;
-import static com.typedb.driver.jni.typedb_driver.attribute_type_is_untyped;
-
 public class AttributeTypeImpl extends TypeImpl implements AttributeType {
     public AttributeTypeImpl(com.typedb.driver.jni.Concept concept) {
         super(concept);
-    }
-
-    @Override
-    public String getValueType() {
-        return attribute_type_get_value_type(nativeObject);
-    }
-
-    @Override
-    public boolean isUntyped() {
-        return attribute_type_is_untyped(nativeObject);
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return attribute_type_is_boolean(nativeObject);
-    }
-
-    @Override
-    public boolean isLong() {
-        return attribute_type_is_long(nativeObject);
-    }
-
-    @Override
-    public boolean isDouble() {
-        return attribute_type_is_double(nativeObject);
-    }
-
-    @Override
-    public boolean isDecimal() {
-        return attribute_type_is_decimal(nativeObject);
-    }
-
-    @Override
-    public boolean isString() {
-        return attribute_type_is_string(nativeObject);
-    }
-
-    @Override
-    public boolean isDate() {
-        return attribute_type_is_date(nativeObject);
-    }
-
-    @Override
-    public boolean isDatetime() {
-        return attribute_type_is_datetime(nativeObject);
-    }
-
-    @Override
-    public boolean isDatetimeTZ() {
-        return attribute_type_is_datetime_tz(nativeObject);
-    }
-
-    @Override
-    public boolean isDuration() {
-        return attribute_type_is_duration(nativeObject);
-    }
-
-    @Override
-    public boolean isStruct() {
-        return attribute_type_is_struct(nativeObject);
     }
 }

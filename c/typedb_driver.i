@@ -88,9 +88,6 @@ struct Type {};
 
 %dropproxy(QueryAnswer, query_answer)
 
-%dropproxy(ValueGroup, value_group)
-%dropproxy(ValueGroupIterator, value_group_iterator)
-
 %define %promiseproxy(Type, function_prefix)
 struct Type {};
 %newobject function_prefix ## _resolve;
@@ -156,10 +153,6 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_row_get_index;
 %newobject concept_row_to_string;
 
-%newobject value_group_get_owner;
-%newobject value_group_get_value;
-%newobject value_group_to_string;
-
 %newobject value_get_string;
 %newobject value_get_datetime_tz;
 
@@ -167,21 +160,15 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject concept_to_string;
 
-%newobject entity_get_iid;
-%newobject relation_get_iid;
-
 %newobject entity_get_type;
 %newobject relation_get_type;
 %newobject attribute_get_type;
 
-%newobject attribute_get_value;
-%newobject attribute_type_get_value_type;
-%newobject value_get_value_type;
-
-%newobject entity_type_get_label;
-%newobject relation_type_get_label;
-%newobject attribute_type_get_label;
-%newobject role_type_get_label;
+%newobject concept_get_label;
+%newobject concept_try_get_label;
+%newobject concept_try_get_iid;
+%newobject concept_try_get_value_type;
+%newobject concept_try_get_value;
 
 %newobject driver_open_core;
 //%newobject driver_open_cloud;
@@ -212,7 +199,6 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_iterator_next;
 %newobject concept_row_iterator_next;
 %newobject database_iterator_next;
-%newobject value_group_iterator_next;
 %newobject string_iterator_next;
 %newobject string_and_opt_value_iterator_next;
 //%newobject user_iterator_next;

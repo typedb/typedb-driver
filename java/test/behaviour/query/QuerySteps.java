@@ -51,12 +51,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.typedb.driver.api.concept.value.Value.DECIMAL_SCALE;
+import static com.typedb.driver.api.concept.Concept.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
@@ -546,6 +547,122 @@ public class QuerySteps {
         }
     }
 
+    public Optional<String> tryGetLabelOfUnwrappedConcept(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                return concept.tryGetLabel();
+            case TYPE:
+                return concept.asType().tryGetLabel();
+            case INSTANCE:
+                return concept.asInstance().tryGetLabel();
+            case ENTITY_TYPE:
+                return concept.asEntityType().tryGetLabel();
+            case RELATION_TYPE:
+                return concept.asRelationType().tryGetLabel();
+            case ATTRIBUTE_TYPE:
+                return concept.asAttributeType().tryGetLabel();
+            case ROLE_TYPE:
+                return concept.asRoleType().tryGetLabel();
+            case ENTITY:
+                return concept.asEntity().tryGetLabel();
+            case RELATION:
+                return concept.asRelation().tryGetLabel();
+            case ATTRIBUTE:
+                return concept.asAttribute().tryGetLabel();
+            case VALUE:
+                return concept.asValue().tryGetLabel();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public Optional<String> tryGetIIDOfUnwrappedConcept(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                return concept.tryGetIID();
+            case TYPE:
+                return concept.asType().tryGetIID();
+            case INSTANCE:
+                return concept.asInstance().tryGetIID();
+            case ENTITY_TYPE:
+                return concept.asEntityType().tryGetIID();
+            case RELATION_TYPE:
+                return concept.asRelationType().tryGetIID();
+            case ATTRIBUTE_TYPE:
+                return concept.asAttributeType().tryGetIID();
+            case ROLE_TYPE:
+                return concept.asRoleType().tryGetIID();
+            case ENTITY:
+                return concept.asEntity().tryGetIID();
+            case RELATION:
+                return concept.asRelation().tryGetIID();
+            case ATTRIBUTE:
+                return concept.asAttribute().tryGetIID();
+            case VALUE:
+                return concept.asValue().tryGetIID();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public Optional<String> tryGetValueTypeOfUnwrappedConcept(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                return concept.tryGetValueType();
+            case TYPE:
+                return concept.asType().tryGetValueType();
+            case INSTANCE:
+                return concept.asInstance().tryGetValueType();
+            case ENTITY_TYPE:
+                return concept.asEntityType().tryGetValueType();
+            case RELATION_TYPE:
+                return concept.asRelationType().tryGetValueType();
+            case ATTRIBUTE_TYPE:
+                return concept.asAttributeType().tryGetValueType();
+            case ROLE_TYPE:
+                return concept.asRoleType().tryGetValueType();
+            case ENTITY:
+                return concept.asEntity().tryGetValueType();
+            case RELATION:
+                return concept.asRelation().tryGetValueType();
+            case ATTRIBUTE:
+                return concept.asAttribute().tryGetValueType();
+            case VALUE:
+                return concept.asValue().tryGetValueType();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
+    public Optional<Value> tryGetValueOfUnwrappedConcept(Concept concept, Parameters.ConceptKind conceptKind) {
+        switch (conceptKind) {
+            case CONCEPT:
+                return concept.tryGetValue();
+            case TYPE:
+                return concept.asType().tryGetValue();
+            case INSTANCE:
+                return concept.asInstance().tryGetValue();
+            case ENTITY_TYPE:
+                return concept.asEntityType().tryGetValue();
+            case RELATION_TYPE:
+                return concept.asRelationType().tryGetValue();
+            case ATTRIBUTE_TYPE:
+                return concept.asAttributeType().tryGetValue();
+            case ROLE_TYPE:
+                return concept.asRoleType().tryGetValue();
+            case ENTITY:
+                return concept.asEntity().tryGetValue();
+            case RELATION:
+                return concept.asRelation().tryGetValue();
+            case ATTRIBUTE:
+                return concept.asAttribute().tryGetValue();
+            case VALUE:
+                return concept.asValue().tryGetValue();
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+    }
+
     public String getLabelOfUnwrappedConceptsType(Concept concept, Parameters.ConceptKind conceptKind) {
         switch (conceptKind) {
             case INSTANCE:
@@ -562,87 +679,29 @@ public class QuerySteps {
     }
 
     private boolean isConceptValueType(Concept concept, Parameters.ConceptKind varKind, Parameters.ValueType valueType) {
-        switch (varKind) {
-            case ATTRIBUTE_TYPE:
-                AttributeType varAttributeType = concept.asAttributeType();
-                switch (valueType) {
-                    case BOOLEAN:
-                        return varAttributeType.isBoolean();
-                    case LONG:
-                        return varAttributeType.isLong();
-                    case DOUBLE:
-                        return varAttributeType.isDouble();
-                    case DECIMAL:
-                        return varAttributeType.isDecimal();
-                    case STRING:
-                        return varAttributeType.isString();
-                    case DATE:
-                        return varAttributeType.isDate();
-                    case DATETIME:
-                        return varAttributeType.isDatetime();
-                    case DATETIME_TZ:
-                        return varAttributeType.isDatetimeTZ();
-                    case DURATION:
-                        return varAttributeType.isDuration();
-                    case STRUCT:
-                        return varAttributeType.isStruct();
-                    default:
-                        throw new IllegalStateException("Not covered ValueType: " + valueType);
-                }
-            case ATTRIBUTE:
-                Attribute varAttribute = concept.asAttribute();
-                switch (valueType) {
-                    case BOOLEAN:
-                        return varAttribute.isBoolean();
-                    case LONG:
-                        return varAttribute.isLong();
-                    case DOUBLE:
-                        return varAttribute.isDouble();
-                    case DECIMAL:
-                        return varAttribute.isDecimal();
-                    case STRING:
-                        return varAttribute.isString();
-                    case DATE:
-                        return varAttribute.isDate();
-                    case DATETIME:
-                        return varAttribute.isDatetime();
-                    case DATETIME_TZ:
-                        return varAttribute.isDatetimeTZ();
-                    case DURATION:
-                        return varAttribute.isDuration();
-                    case STRUCT:
-                        return varAttribute.isStruct();
-                    default:
-                        throw new IllegalStateException("Not covered ValueType: " + valueType);
-                }
-            case VALUE:
-                Value varValue = concept.asValue();
-                switch (valueType) {
-                    case BOOLEAN:
-                        return varValue.isBoolean();
-                    case LONG:
-                        return varValue.isLong();
-                    case DOUBLE:
-                        return varValue.isDouble();
-                    case DECIMAL:
-                        return varValue.isDecimal();
-                    case STRING:
-                        return varValue.isString();
-                    case DATE:
-                        return varValue.isDate();
-                    case DATETIME:
-                        return varValue.isDatetime();
-                    case DATETIME_TZ:
-                        return varValue.isDatetimeTZ();
-                    case DURATION:
-                        return varValue.isDuration();
-                    case STRUCT:
-                        return varValue.isStruct();
-                    default:
-                        throw new IllegalStateException("Not covered ValueType: " + valueType);
-                }
+        switch (valueType) {
+            case BOOLEAN:
+                return concept.isBoolean();
+            case LONG:
+                return concept.isLong();
+            case DOUBLE:
+                return concept.isDouble();
+            case DECIMAL:
+                return concept.isDecimal();
+            case STRING:
+                return concept.isString();
+            case DATE:
+                return concept.isDate();
+            case DATETIME:
+                return concept.isDatetime();
+            case DATETIME_TZ:
+                return concept.isDatetimeTZ();
+            case DURATION:
+                return concept.isDuration();
+            case STRUCT:
+                return concept.isStruct();
             default:
-                throw new AssertionError("ConceptKind does not have a value or a value type: " + varKind);
+                throw new IllegalStateException("Not covered ValueType: " + valueType);
         }
     }
 
@@ -686,25 +745,93 @@ public class QuerySteps {
     public Object unwrapValueAs(Value value, Parameters.ValueType valueType) {
         switch (valueType) {
             case BOOLEAN:
-                return value.asBoolean();
+                return value.getBoolean();
             case LONG:
-                return value.asLong();
+                return value.getLong();
             case DOUBLE:
-                return value.asDouble();
+                return value.getDouble();
             case DECIMAL:
-                return value.asDecimal();
+                return value.getDecimal();
             case STRING:
-                return value.asString();
+                return value.getString();
             case DATE:
-                return value.asDate();
+                return value.getDate();
             case DATETIME:
-                return value.asDatetime();
+                return value.getDatetime();
             case DATETIME_TZ:
-                return value.asDatetimeTZ();
+                return value.getDatetimeTZ();
             case DURATION:
-                return value.asDuration();
+                return value.getDuration();
             case STRUCT:
-                return value.asStruct().toString(); // compare string representations
+                return value.getStruct().toString(); // compare string representations
+            default:
+                throw new AssertionError("Not covered ValueType: " + valueType);
+        }
+    }
+
+    public Object tryGetAsValueType(Concept concept, Parameters.ConceptKind conceptKind, Parameters.ValueType valueType) {
+        // Casting without explicit type declaration is enough here, otherwise it's too verbose
+        Concept castedConcept;
+        switch (conceptKind) {
+            case CONCEPT:
+                castedConcept = concept;
+                break;
+            case TYPE:
+                castedConcept = concept.asType();
+                break;
+            case INSTANCE:
+                castedConcept = concept.asInstance();
+                break;
+            case ENTITY_TYPE:
+                castedConcept = concept.asEntityType();
+                break;
+            case RELATION_TYPE:
+                castedConcept = concept.asRelationType();
+                break;
+            case ATTRIBUTE_TYPE:
+                castedConcept = concept.asAttributeType();
+                break;
+            case ROLE_TYPE:
+                castedConcept = concept.asRoleType();
+                break;
+            case ENTITY:
+                castedConcept = concept.asEntity();
+                break;
+            case RELATION:
+                castedConcept = concept.asRelation();
+                break;
+            case ATTRIBUTE:
+                castedConcept = concept.asAttribute();
+                break;
+            case VALUE:
+                castedConcept = concept.asValue();
+                break;
+            default:
+                throw new AssertionError("Not covered ConceptKind: " + conceptKind);
+        }
+
+        switch (valueType) {
+            case BOOLEAN:
+                return castedConcept.tryGetBoolean();
+            case LONG:
+                return castedConcept.tryGetLong();
+            case DOUBLE:
+                return castedConcept.tryGetDouble();
+            case DECIMAL:
+                return castedConcept.tryGetDecimal();
+            case STRING:
+                return castedConcept.tryGetString();
+            case DATE:
+                return castedConcept.tryGetDate();
+            case DATETIME:
+                return castedConcept.tryGetDatetime();
+            case DATETIME_TZ:
+                return castedConcept.tryGetDatetimeTZ();
+            case DURATION:
+                return castedConcept.tryGetDuration();
+            case STRUCT:
+                Optional<Map<String, Optional<Value>>> struct = castedConcept.tryGetStruct();
+                return struct.isPresent() ? Optional.of(struct.get().toString()) : struct; // compare string representations
             default:
                 throw new AssertionError("Not covered ValueType: " + valueType);
         }
@@ -883,6 +1010,20 @@ public class QuerySteps {
         assertEquals(label, getLabelOfUnwrappedConcept(varConcept, varKind));
     }
 
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get label: {non_semicolon}")
+    public void answer_get_row_get_variable_try_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        assertEquals(label, tryGetLabelOfUnwrappedConcept(varConcept, varKind).get());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get label {is_or_not} none")
+    public void answer_get_row_get_variable_try_get_label_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        isOrNot.checkNone(tryGetLabelOfUnwrappedConcept(varConcept, varKind));
+    }
+
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get label: {non_semicolon}")
     public void answer_get_row_get_variable_get_type_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
@@ -898,7 +1039,7 @@ public class QuerySteps {
         String varValueType;
         switch (varKind) {
             case ATTRIBUTE_TYPE:
-                varValueType = varConcept.asAttributeType().getValueType();
+                varValueType = varConcept.asAttributeType().tryGetValueType().orElseGet(() -> "none");
                 break;
             case VALUE:
                 varValueType = varConcept.asValue().getType();
@@ -910,6 +1051,22 @@ public class QuerySteps {
         assertEquals(valueType, varValueType);
     }
 
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value type: {non_semicolon}")
+    public void answer_get_row_get_variable_try_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        String varValueType = tryGetValueTypeOfUnwrappedConcept(varConcept, varKind).get();
+        assertEquals(valueType, varValueType);
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value type {is_or_not} none")
+    public void answer_get_row_get_variable_try_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Optional<String> varValueType = tryGetValueTypeOfUnwrappedConcept(varConcept, varKind);
+        isOrNot.checkNone(varValueType);
+    }
+
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get value type: {non_semicolon}")
     public void answer_get_row_get_variable_get_type_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
         collectRowsAnswerIfNeeded();
@@ -918,20 +1075,13 @@ public class QuerySteps {
         String varValueType;
         switch (varKind) {
             case ATTRIBUTE:
-                varValueType = varConcept.asAttribute().getType().getValueType();
+                varValueType = varConcept.asAttribute().getType().tryGetValueType().orElseGet(() -> "none");
                 break;
             default:
                 throw new AssertionError("ConceptKind does not have a type with a value type: " + varKind);
         }
 
         assertEquals(valueType, varValueType);
-    }
-
-    @Then("answer get row\\({integer}) get attribute type{by_index_of_var}\\({var}) is untyped: {bool}")
-    public void answer_get_row_get_attribute_type_is_untyped(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, boolean isUntyped) {
-        collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
-        assertEquals(isUntyped, varConcept.asAttributeType().isUntyped());
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {value_type}: {bool}")
@@ -959,11 +1109,18 @@ public class QuerySteps {
         containsOrDoesnt.check(iid != null && !iid.isEmpty());
     }
 
-    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type}{may_error}")
-    public void answer_get_row_get_variable_as_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.MayError mayError) {
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get iid {is_or_not} none")
+    public void answer_get_row_get_variable_try_get_iid_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        Optional<String> iid = tryGetIIDOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind);
+        isOrNot.checkNone(iid);
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get {value_type}{may_error}")
+    public void answer_get_row_get_variable_get_by_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.MayError mayError) {
         collectRowsAnswerIfNeeded();
         Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
-        assertNotNull(varValue.asUntyped());
+        assertNotNull(varValue.get());
         mayError.check(() -> unwrapValueAs(varValue, valueType));
     }
 
@@ -972,14 +1129,51 @@ public class QuerySteps {
         collectRowsAnswerIfNeeded();
         Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
         Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
-        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.asUntyped());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.get());
     }
 
-    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) as {value_type} {is_or_not}: {non_semicolon}")
-    public void answer_get_row_get_variable_as_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get {value_type} {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_get_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
         collectRowsAnswerIfNeeded();
         Value varValue = getRowGetValue(rowIndex, varKind, isByVarIndex, var);
         isOrNot.compare(parseExpectedValue(value, Optional.of(valueType)), unwrapValueAs(varValue, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get {value_type} {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_try_get_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        isOrNot.compare(Optional.of(parseExpectedValue(value, Optional.of(valueType))), tryGetAsValueType(varConcept, varKind, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get {value_type} {is_or_not} none")
+    public void answer_get_row_get_variable_try_get_value_type_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        isOrNot.checkNone(tryGetAsValueType(varConcept, varKind, valueType));
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_variable_try_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind).get();
+        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.get());
+    }
+
+    @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value {is_or_not} none")
+    public void answer_get_row_get_variable_try_get_value_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        Optional<Value> varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind);
+        isOrNot.checkNone(varValue);
+    }
+
+    @Then("answer get row\\({integer}) get value{by_index_of_var}\\({var}) get {is_or_not}: {non_semicolon}")
+    public void answer_get_row_get_value_get_is(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
+        collectRowsAnswerIfNeeded();
+        Value varValue = getRowGetConcept(rowIndex, isByVarIndex, var).asValue();
+        Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
+        isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.get());
     }
 
     @Then("answer get row\\({integer}) get concepts size is: {integer}")

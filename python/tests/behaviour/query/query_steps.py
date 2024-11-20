@@ -24,7 +24,7 @@ from typing import Optional
 from behave import *
 from hamcrest import *
 from tests.behaviour.config.parameters import ConceptKind, MayError, ValueType, parse_bool, parse_list, \
-    try_parse_value_type, is_or_not_reason
+    try_parse_value_type, is_or_not_reason, check_is_none
 from tests.behaviour.context import Context
 from tests.behaviour.util.util import list_contains_json
 from typedb.api.answer.query_type import QueryType
@@ -435,6 +435,21 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get label {is_or_not:IsOrNot} none")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              is_or_not: bool):
+    concept_label = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).try_get_label()
+    check_is_none(concept_label, is_or_not)
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get label: {label}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, label: str):
+    concept_label = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).try_get_label()
+    assert_that(concept_label, is_(label))
+
+
+@step(
     "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get type get label: {label}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, label: str):
     concept_label = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_type().get_label()
@@ -442,26 +457,43 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) get value type: {value_type:Words}")
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get value type: {value_type:Words}")
 def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, value_type: str):
-    concept_value_type = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).get_value_type()
-    # can be "none" (not a value type), that's why we don't convert it to ValueType
+    concept_value_type = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index,
+                                                     kind).try_get_value_type()
+    assert_that(concept_value_type, is_(value_type))
+
+
+@step(
+    "answer get row({row_index:Int}) get value{is_by_var_index:IsByVarIndex}({var:Var}) get value type: {value_type:Words}")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: str):
+    value_value_type = get_row_get_value(context, row_index, var, is_by_var_index).get_type()
+    assert_that(value_value_type, is_(value_type))
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get value type {is_or_not:IsOrNot} none")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              is_or_not: bool):
+    concept_value_type = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index,
+                                                     kind).try_get_value_type()
+    check_is_none(concept_value_type, is_or_not)
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get value type: {value_type:Words}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, value_type: str):
+    concept_value_type = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index,
+                                                     kind).try_get_value_type()
     assert_that(concept_value_type, is_(value_type))
 
 
 @step(
     "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) get type get value type: {value_type:Words}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: str):
-    type_value_type = get_row_get_attribute(context, row_index, var, is_by_var_index).get_type().get_value_type()
+    type_value_type = get_row_get_attribute(context, row_index, var, is_by_var_index).get_type().try_get_value_type()
     # can be "none" (not a value type), that's why we don't convert it to ValueType
     assert_that(type_value_type, is_(value_type))
-
-
-@step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is untyped: {is_untyped:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_untyped: bool):
-    result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_untyped()
-    assert_that(result, is_(is_untyped))
 
 
 @step(
@@ -547,6 +579,14 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
         assert_that(concept_iid, is_(None))
 
 
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get iid {is_or_not:IsOrNot} none")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              is_or_not: bool):
+    concept_iid = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).try_get_iid()
+    check_is_none(concept_iid, is_or_not)
+
+
 def parse_expected_value(value: str, value_type: Optional[ValueType]):
     if value_type is None:
         value_type = ValueType.STRUCT  # consider it as a custom struct
@@ -586,29 +626,75 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
         raise ValueError(f"ValueType {value_type} is not covered by this step")
 
 
-def get_as_value_type(concept, value_type: ValueType) -> Value.VALUE:
+def get_by_value_type(concept, value_type: ValueType) -> Concept.VALUE:
     if value_type == ValueType.BOOLEAN:
-        return concept.as_boolean()
+        return concept.get_boolean()
     elif value_type == ValueType.LONG:
-        return concept.as_long()
+        return concept.get_long()
     elif value_type == ValueType.DOUBLE:
-        return concept.as_double()
+        return concept.get_double()
     elif value_type == ValueType.DECIMAL:
-        return concept.as_decimal()
+        return concept.get_decimal()
     elif value_type == ValueType.STRING:
-        return concept.as_string()
+        return concept.get_string()
     elif value_type == ValueType.DATE:
-        return concept.as_date()
+        return concept.get_date()
     elif value_type == ValueType.DATETIME:
-        return concept.as_datetime()
+        return concept.get_datetime()
     elif value_type == ValueType.DATETIME_TZ:
-        return concept.as_datetime_tz()
+        return concept.get_datetime_tz()
     elif value_type == ValueType.DURATION:
-        return concept.as_duration()
+        return concept.get_duration()
     elif value_type == ValueType.STRUCT:
-        return str(concept.as_struct())  # compare string representations
+        return str(concept.get_struct())  # compare string representations
     else:
         raise ValueError(f"ValueType {value_type} is not covered by this step")
+
+
+def try_get_by_value_type(concept, value_type: ValueType) -> Optional[Concept.VALUE]:
+    if value_type == ValueType.BOOLEAN:
+        return concept.try_get_boolean()
+    elif value_type == ValueType.LONG:
+        return concept.try_get_long()
+    elif value_type == ValueType.DOUBLE:
+        return concept.try_get_double()
+    elif value_type == ValueType.DECIMAL:
+        return concept.try_get_decimal()
+    elif value_type == ValueType.STRING:
+        return concept.try_get_string()
+    elif value_type == ValueType.DATE:
+        return concept.try_get_date()
+    elif value_type == ValueType.DATETIME:
+        return concept.try_get_datetime()
+    elif value_type == ValueType.DATETIME_TZ:
+        return concept.try_get_datetime_tz()
+    elif value_type == ValueType.DURATION:
+        return concept.try_get_duration()
+    elif value_type == ValueType.STRUCT:
+        struct = concept.try_get_struct()
+        return str(struct) if struct is not None else None  # compare string representations
+    else:
+        raise ValueError(f"ValueType {value_type} is not covered by this step")
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get value {is_or_not:IsOrNot} none")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              is_or_not: bool):
+    concept = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind)
+    concept_value = concept.try_get_value()
+    check_is_none(concept_value, is_or_not)
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get value {is_or_not:IsOrNot}: {value}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_or_not: bool,
+              value: str):
+    concept = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind)
+    concept_value = concept.try_get_value()
+    expected_value = parse_expected_value(value, try_parse_value_type(concept.try_get_value_type()))
+    assert_that(concept_value == expected_value, is_(is_or_not),
+                is_or_not_reason(is_or_not, real=concept_value, expected=expected_value))
 
 
 @step(
@@ -616,28 +702,49 @@ def get_as_value_type(concept, value_type: ValueType) -> Value.VALUE:
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, is_or_not: bool, value: str):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
     attribute_value = attribute.get_value()
-    expected_value = parse_expected_value(value, try_parse_value_type(attribute.get_type().get_value_type()))
+    expected_value = parse_expected_value(value, try_parse_value_type(attribute.get_type().try_get_value_type()))
     assert_that(attribute_value == expected_value, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=attribute_value, expected=expected_value))
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type:ValueType}{may_error:MayError}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) get {value_type:ValueType}{may_error:MayError}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType,
               may_error: MayError):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
-    may_error.check(lambda: get_as_value_type(attribute, value_type))
+    may_error.check(lambda: get_by_value_type(attribute, value_type))
 
 
 @step(
-    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
+    "answer get row({row_index:Int}) get attribute{is_by_var_index:IsByVarIndex}({var:Var}) get {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
 def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType, is_or_not: bool,
               value: str):
     attribute = get_row_get_attribute(context, row_index, var, is_by_var_index)
-    attribute_value_as_value_type = get_as_value_type(attribute, value_type)
+    attribute_value_as_value_type = get_by_value_type(attribute, value_type)
     expected_value = parse_expected_value(value, value_type)
     assert_that(attribute_value_as_value_type == expected_value, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=attribute_value_as_value_type, expected=expected_value))
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get {value_type:ValueType} {is_or_not:IsOrNot} none")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              value_type: ValueType, is_or_not: bool):
+    concept = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind)
+    concept_value = try_get_by_value_type(concept, value_type)
+    check_is_none(concept_value, is_or_not)
+
+
+@step(
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) try get {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str,
+              value_type: ValueType, is_or_not: bool,
+              value: str):
+    concept = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind)
+    concept_value = try_get_by_value_type(concept, value_type)
+    expected_value = parse_expected_value(value, value_type)
+    assert_that(concept_value == expected_value, is_(is_or_not),
+                is_or_not_reason(is_or_not, real=concept_value, expected=expected_value))
 
 
 @step(
@@ -651,11 +758,11 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
 
 
 @step(
-    "answer get row({row_index:Int}) get value{is_by_var_index:IsByVarIndex}({var:Var}) as {value_type} {is_or_not:IsOrNot}: {value}")
-def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: str, is_or_not: bool,
+    "answer get row({row_index:Int}) get value{is_by_var_index:IsByVarIndex}({var:Var}) get {value_type:ValueType} {is_or_not:IsOrNot}: {value}")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, value_type: ValueType, is_or_not: bool,
               value: str):
     real_value = get_row_get_value(context, row_index, var, is_by_var_index)
-    real_value_as_value_type = get_as_value_type(real_value, value_type)
+    real_value_as_value_type = get_by_value_type(real_value, value_type)
     expected_value = parse_expected_value(value, value_type)
     assert_that(real_value_as_value_type == expected_value, is_(is_or_not),
                 is_or_not_reason(is_or_not, real=real_value_as_value_type, expected=expected_value))

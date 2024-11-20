@@ -26,15 +26,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
 public interface Value extends Concept {
-    int DECIMAL_SCALE = 19;
-
-    DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     /**
      * {@inheritDoc}
      */
@@ -62,127 +57,15 @@ public interface Value extends Concept {
     String getType();
 
     /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>boolean</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isBoolean()
-     * </pre>
-     */
-    boolean isBoolean();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>long</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isLong();
-     * </pre>
-     */
-    boolean isLong();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>double</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDouble();
-     * </pre>
-     */
-    boolean isDouble();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>decimal</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDecimal();
-     * </pre>
-     */
-    boolean isDecimal();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>string</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isString();
-     * </pre>
-     */
-    boolean isString();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>date</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDate();
-     * </pre>
-     */
-    boolean isDate();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>datetime</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDatetime();
-     * </pre>
-     */
-    boolean isDatetime();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>datetime-tz</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDatetimeTZ();
-     * </pre>
-     */
-    boolean isDatetimeTZ();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>duration</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isDuration();
-     * </pre>
-     */
-    boolean isDuration();
-
-    /**
-     * Returns <code>True</code> if the value which this value concept holds is of type <code>struct</code>.
-     * Otherwise, returns <code>false</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * value.isStruct();
-     * </pre>
-     */
-    boolean isStruct();
-
-    // TODO: Could be useful to have isStruct(struct_name)
-
-    /**
      * Returns an untyped <code>Object</code> value of this value concept.
      * This is useful for value equality or printing without having to switch on the actual contained value.
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asUntyped();
+     * value.get();
      * </pre>
      */
-    Object asUntyped();
+    Object get();
 
     /**
      * Returns a <code>boolean</code> value of this value concept.
@@ -190,20 +73,20 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asBoolean();
+     * value.getBoolean();
      * </pre>
      */
-    boolean asBoolean();
+    boolean getBoolean();
 
     /**
      * Returns a <code>long</code> value of this value concept. If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asLong();
+     * value.getLong();
      * </pre>
      */
-    long asLong();
+    long getLong();
 
     /**
      * Returns a <code>double</code> value of this value concept.
@@ -211,10 +94,10 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDouble();
+     * value.getDouble();
      * </pre>
      */
-    double asDouble();
+    double getDouble();
 
     /**
      * Returns a <code>decimal</code> value of this value concept.
@@ -222,20 +105,20 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDecimal();
+     * value.getDecimal();
      * </pre>
      */
-    BigDecimal asDecimal();
+    BigDecimal getDecimal();
 
     /**
      * Returns a <code>string</code> value of this value concept. If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asString();
+     * value.getString();
      * </pre>
      */
-    String asString();
+    String getString();
 
     /**
      * Returns a <code>date</code> value of this value concept.
@@ -243,10 +126,10 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDate();
+     * value.getDate();
      * </pre>
      */
-    LocalDate asDate();
+    LocalDate getDate();
 
     /**
      * Returns a <code>datetime</code> value of this value concept.
@@ -254,10 +137,10 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDatetime();
+     * value.getDatetime();
      * </pre>
      */
-    LocalDateTime asDatetime();
+    LocalDateTime getDatetime();
 
     /**
      * Returns a <code>datetime-tz</code> value of this value concept.
@@ -265,10 +148,10 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDatetimeTZ();
+     * value.getDatetimeTZ();
      * </pre>
      */
-    ZonedDateTime asDatetimeTZ();
+    ZonedDateTime getDatetimeTZ();
 
     /**
      * Returns a <code>duration</code> value of this value concept.
@@ -276,10 +159,10 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asDuration();
+     * value.getDuration();
      * </pre>
      */
-    Duration asDuration();
+    Duration getDuration();
 
     /**
      * Returns a <code>struct</code> value of this value concept represented as a map from field names to values.
@@ -287,8 +170,8 @@ public interface Value extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.asStruct();
+     * value.getStruct();
      * </pre>
      */
-    Map<String, Optional<Value>> asStruct();
+    Map<String, Optional<Value>> getStruct();
 }

@@ -103,13 +103,16 @@ class TestExample(TestCase):
                 concept_by_index = row.get_index(0)
                 assert_that(concept_by_name, is_(equal_to(concept_by_index)))
 
+                print(f"Getting concepts by variable names ({concept_by_name.get_label()}) and "
+                      f"indexes ({concept_by_index.get_label()}) is equally correct. ")
+
                 # Check if it's an entity type before the conversion
                 if concept_by_name.is_entity_type():
-                    print(f"Getting concepts by variable names and indexes is equally correct. "
-                          f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
+                    print(f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
                           f"(in case of a doubt: '{concept_by_index.as_entity_type().get_label()}')")
                 assert_that(concept_by_name.is_entity_type(), is_(True))
                 assert_that(concept_by_name.is_type(), is_(True))
+                assert_that(concept_by_name.get_label(), is_("person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_("person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_not("not person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_not("age"))
@@ -135,10 +138,10 @@ class TestExample(TestCase):
                     if concept_by_name.is_attribute_type():
                         attribute_type = concept_by_name.as_attribute_type()
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
-                              f"value type: '{attribute_type.get_value_type()}'")
+                              f"value type: '{attribute_type.try_get_value_type()}'")
 
                         assert_that(attribute_type.is_long() or attribute_type.is_string(), is_(True))
-                        assert_that(attribute_type.get_value_type(), is_in(["long", "string"]))
+                        assert_that(attribute_type.try_get_value_type(), is_in(["long", "string"]))
                         assert_that(attribute_type.get_label(), is_in(["age", "name"]))
                         assert_that(attribute_type.get_label(), is_not("person"))
                         assert_that(attribute_type.get_label(), is_not("person:age"))
@@ -172,8 +175,10 @@ class TestExample(TestCase):
                 assert_that("z" in header, is_(True))
 
                 x = row.get_index(header.index("x"))
+                print(
+                    "As we expect an entity instance, we can try to get its IID (unique identification): {x.try_get_iid()}. ")
                 if x.is_entity():
-                    print(f"Each entity receives a unique IID. It can be retrieved directly: {x.as_entity().get_iid()}")
+                    print(f"It can also be retrieved directly and safely after a cast: {x.as_entity().get_iid()}")
 
                 # Do not forget to commit if the changes should be persisted
                 tx.commit()
