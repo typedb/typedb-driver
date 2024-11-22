@@ -133,8 +133,8 @@ error_messages! { ConnectionError
         6: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors { errors: String } =
         7: "The transaction is closed because of the error(s):\n{errors}",
-    DatabaseDoesNotExist { name: String } =
-        8: "The database '{name}' does not exist.",
+    DatabaseNotFound { name: String } =
+        8: "Database '{name}' not found.",
     MissingResponseField { field: &'static str } =
         9: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
     UnknownRequestId { request_id: RequestID } =
@@ -271,7 +271,7 @@ impl Error {
             // TODO: CLS and ENT are synonyms which we can simplify on protocol change
             Some("[CLS08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
             Some("[ENT08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
-            Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist {
+            Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseNotFound {
                 name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
             }),
             _ => Self::Other(message.to_owned()),

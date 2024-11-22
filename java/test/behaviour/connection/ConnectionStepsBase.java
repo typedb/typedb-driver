@@ -41,6 +41,7 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     public static Driver driver;
+    public static Driver backgroundDriver;
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
@@ -73,6 +74,8 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
+
+        backgroundDriver = createDefaultTypeDBDriver();
     }
 
     void after() {
@@ -81,6 +84,7 @@ public abstract class ConnectionStepsBase {
         driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
         driver.databases().all().forEach(Database::delete);
         driver.close();
+        backgroundDriver.close();
     }
 
     void cleanupTransactions() {
@@ -97,6 +101,8 @@ public abstract class ConnectionStepsBase {
     }
 
     abstract Driver createTypeDBDriver(String address);
+
+    abstract Driver createDefaultTypeDBDriver();
 
 //    abstract Options createOptions();
 

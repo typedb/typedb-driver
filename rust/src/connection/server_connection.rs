@@ -195,27 +195,8 @@ impl ServerConnection {
         options: Options,
     ) -> crate::Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
-
         let open_request_start = Instant::now();
         let tracker = self.latency_tracker.clone();
-        let initial_response_handler = Arc::new(move |result: crate::common::Result<TransactionResponse>| {
-            match result {
-                Ok(TransactionResponse::Open { server_duration_millis }) => {
-                    let open_latency =
-                        Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
-                    tracker.update_latency(open_latency)
-                }
-                Err(_) => {
-                    // ignore, error will manifest elsewhere
-                }
-                Ok(TransactionResponse::Commit)
-                | Ok(TransactionResponse::Rollback)
-                | Ok(TransactionResponse::Query(_))
-                | Ok(TransactionResponse::Close) => {
-                    panic!("Unexpected - transaction open response was not TransactionOpen.")
-                }
-            }
-        });
 
         match self
             .request(Request::Transaction(TransactionRequest::Open {
@@ -227,13 +208,8 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionStream { open_request_id: request_id, request_sink, response_source } => {
-                let transmitter = TransactionTransmitter::new(
-                    self.background_runtime.clone(),
-                    request_sink,
-                    response_source,
-                    request_id.clone(),
-                    initial_response_handler,
-                );
+                let transmitter =
+                    TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 self.transaction_shutdown_senders.lock().unwrap().insert(request_id, transmitter_shutdown_sink);

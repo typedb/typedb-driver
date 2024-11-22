@@ -68,11 +68,18 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>> {
         let name = name.as_ref();
+
         if !self.contains(name.to_owned()).await? {
             self.databases_cache.write().unwrap().remove(name);
-            return Err(ConnectionError::DatabaseDoesNotExist { name: name.to_owned() }.into());
+            return Err(ConnectionError::DatabaseNotFound { name: name.to_owned() }.into());
         }
-        Ok(self.databases_cache.read().unwrap().get(name).unwrap().clone())
+
+        if let Some(cached_database) = self.try_get_cached(name) {
+            return Ok(cached_database);
+        }
+
+        self.cache_insert(Database::get(name.to_owned(), self.server_connections.clone()).await?);
+        Ok(self.try_get_cached(name).unwrap())
     }
 
     /// Checks if a database with the given name exists
@@ -112,8 +119,7 @@ impl DatabaseManager {
         let database_info = self
             .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await }) // TODO: run_failsafe produces additiona Connection error if the database name is incorrect. Is it ok?
             .await?;
-        let database = Database::new(database_info, self.server_connections.clone())?;
-        self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));
+        self.cache_insert(Database::new(database_info, self.server_connections.clone())?);
         Ok(())
     }
 
@@ -149,8 +155,18 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
-        let cached_database = self.databases_cache.read().unwrap().get(name).cloned();
-        Ok(cached_database.unwrap_or(self.get(name).await?))
+        match self.try_get_cached(name) {
+            Some(cached_database) => Ok(cached_database),
+            None => self.get(name).await,
+        }
+    }
+
+    fn try_get_cached(&self, name: &str) -> Option<Arc<Database>> {
+        self.databases_cache.read().unwrap().get(name).cloned()
+    }
+
+    fn cache_insert(&self, database: Database) {
+        self.databases_cache.write().unwrap().insert(database.name().to_owned(), Arc::new(database));
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

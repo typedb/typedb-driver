@@ -200,7 +200,9 @@ impl Context {
 
     pub async fn cleanup_databases(&mut self) {
         if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap();
+            self.set_driver(
+                self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap(),
+            );
         }
 
         try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
@@ -367,7 +369,11 @@ impl Context {
         self.try_get_concurrent_rows_streams().await.unwrap()
     }
 
-    async fn create_default_driver(&mut self, username: Option<&str>, password: Option<&str>) -> TypeDBResult {
+    async fn create_default_driver(
+        &self,
+        username: Option<&str>,
+        password: Option<&str>,
+    ) -> TypeDBResult<TypeDBDriver> {
         match self.is_cloud {
             false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
             true => self.create_cloud_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
@@ -375,25 +381,23 @@ impl Context {
     }
 
     async fn create_core_driver(
-        &mut self,
+        &self,
         address: &str,
         _username: Option<&str>,
         _password: Option<&str>,
-    ) -> TypeDBResult {
+    ) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cloud);
-        let driver = TypeDBDriver::new_core(address).await?;
-        self.driver = Some(driver);
-        Ok(())
+        TypeDBDriver::new_core(address).await
     }
 
     async fn create_cloud_driver(
-        &mut self,
+        &self,
         addresses: &[&str],
         username: Option<&str>,
         password: Option<&str>,
-    ) -> TypeDBResult {
+    ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cloud);
-        let driver = TypeDBDriver::new_cloud(
+        TypeDBDriver::new_cloud(
             addresses,
             Credential::with_tls(
                 username.expect("Username is required for cloud connection"),
@@ -401,9 +405,11 @@ impl Context {
                 Some(&self.tls_root_ca),
             )
             .unwrap(),
-        )?;
+        )
+    }
+
+    pub fn set_driver(&mut self, driver: TypeDBDriver) {
         self.driver = Some(driver);
-        Ok(())
     }
 
     pub fn reset_driver(&mut self) {
@@ -437,6 +443,15 @@ impl Default for Context {
         }
     }
 }
+
+macro_rules! in_background {
+    ($context:ident, |$background:ident| $expr:expr) => {
+        let $background = $context.create_default_driver(None, None).await.unwrap();
+        $expr
+        $background.force_close().unwrap();
+    };
+}
+pub(crate) use in_background;
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,
