@@ -16,7 +16,7 @@ a| `CloudReplicaNotPrimary`
 a| `CloudSSLCertificateNotValidated`
 a| `CloudTokenCredentialInvalid`
 a| `ConnectionFailed`
-a| `DatabaseDoesNotExist`
+a| `DatabaseNotFound`
 a| `InvalidResponseField`
 a| `ListsNotImplemented`
 a| `MissingPort`
