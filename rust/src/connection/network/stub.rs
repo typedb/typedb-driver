@@ -42,39 +42,14 @@ pub(super) struct RPCStub<Channel: GRPCChannel> {
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
-        let mut this = Self { grpc: GRPC::new(channel), call_credentials };
-        if let Err(err) = this.renew_token().await {
-            warn!("{err:?}");
-        }
-        this
+        Self { grpc: GRPC::new(channel), call_credentials }
     }
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
     where
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
     {
-        match call(self).await {
-            Err(Error::Connection(ConnectionError::CloudTokenCredentialInvalid)) => {
-                debug!("Request rejected because token credential was invalid. Renewing token...");
-                self.renew_token().await?;
-                call(self).await
-            }
-            res => res,
-        }
-    }
-
-    async fn renew_token(&mut self) -> Result {
-        // if let Some(call_credentials) = &self.call_credentials {
-        //     todo!()
-        //     // trace!("renewing token...");
-        //     // call_credentials.reset_token();
-        //     // let req = user::token::Req { username: call_credentials.username().to_owned() };
-        //     // trace!("sending token request...");
-        //     // let token = self.grpc.user_token(req).await?.into_inner().token;
-        //     // call_credentials.set_token(token);
-        //     // trace!("renewed token");
-        // }
-        Ok(())
+        call(self).await
     }
 
     pub(super) async fn connection_open(&mut self, req: connection::open::Req) -> Result<connection::open::Res> {
