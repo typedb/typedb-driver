@@ -35,7 +35,7 @@ Casts the concept to ``Attribute``.
 .Code examples
 [source,java]
 ----
-attribute.asAttribute();
+concept.asAttribute();
 ----
 
 [#_Attribute_asAttributeType_]
@@ -58,160 +58,6 @@ Casts the concept to ``AttributeType``.
 [source,java]
 ----
 concept.asAttributeType();
-----
-
-[#_Attribute_asBoolean_]
-==== asBoolean
-
-[source,java]
-----
-boolean asBoolean()
-----
-
-Returns a ``boolean`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asBoolean();
-----
-
-[#_Attribute_asDate_]
-==== asDate
-
-[source,java]
-----
-java.time.LocalDate asDate()
-----
-
-Returns a ``date`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.time.LocalDate`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDate();
-----
-
-[#_Attribute_asDatetime_]
-==== asDatetime
-
-[source,java]
-----
-java.time.LocalDateTime asDatetime()
-----
-
-Returns a ``datetime`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.time.LocalDateTime`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDatetime();
-----
-
-[#_Attribute_asDatetimeTZ_]
-==== asDatetimeTZ
-
-[source,java]
-----
-java.time.ZonedDateTime asDatetimeTZ()
-----
-
-Returns a ``datetime-tz`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.time.ZonedDateTime`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDatetimeTZ();
-----
-
-[#_Attribute_asDecimal_]
-==== asDecimal
-
-[source,java]
-----
-java.math.BigDecimal asDecimal()
-----
-
-Returns a ``decimal`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.math.BigDecimal`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDecimal();
-----
-
-[#_Attribute_asDouble_]
-==== asDouble
-
-[source,java]
-----
-double asDouble()
-----
-
-Returns a ``double`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`double`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDouble();
-----
-
-[#_Attribute_asDuration_]
-==== asDuration
-
-[source,java]
-----
-Duration asDuration()
-----
-
-Returns a ``duration`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`Duration`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asDuration();
 ----
 
 [#_Attribute_asEntity_]
@@ -256,28 +102,6 @@ Casts the concept to ``EntityType``.
 [source,java]
 ----
 concept.asEntityType();
-----
-
-[#_Attribute_asLong_]
-==== asLong
-
-[source,java]
-----
-long asLong()
-----
-
-Returns a ``long`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`long`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asLong();
 ----
 
 [#_Attribute_asRelation_]
@@ -346,50 +170,6 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Attribute_asString_]
-==== asString
-
-[source,java]
-----
-java.lang.String asString()
-----
-
-Returns a ``string`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.lang.String`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asString();
-----
-
-[#_Attribute_asStruct_]
-==== asStruct
-
-[source,java]
-----
-java.util.Map<java.lang.String,​java.util.Optional<Value>> asStruct()
-----
-
-Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names to values. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`java.util.Map<java.lang.String,​java.util.Optional<Value>>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asStruct();
-----
-
 [#_Attribute_asType_]
 ==== asType
 
@@ -410,28 +190,6 @@ Casts the concept to ``Type``.
 [source,java]
 ----
 concept.asType();
-----
-
-[#_Attribute_asUntyped_]
-==== asUntyped
-
-[source,java]
-----
-java.lang.Object asUntyped()
-----
-
-Returns an untyped ``Object`` value of the value concept that this attribute holds. This is useful for value equality or printing without having to switch on the actual contained value. 
-
-
-[caption=""]
-.Returns
-`java.lang.Object`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.asUntyped();
 ----
 
 [#_Attribute_asValue_]
@@ -456,6 +214,160 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
+[#_Attribute_getBoolean_]
+==== getBoolean
+
+[source,java]
+----
+boolean getBoolean()
+----
+
+Returns a ``boolean`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getBoolean();
+----
+
+[#_Attribute_getDate_]
+==== getDate
+
+[source,java]
+----
+java.time.LocalDate getDate()
+----
+
+Returns a ``date`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.time.LocalDate`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDate();
+----
+
+[#_Attribute_getDatetime_]
+==== getDatetime
+
+[source,java]
+----
+java.time.LocalDateTime getDatetime()
+----
+
+Returns a ``datetime`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.time.LocalDateTime`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDatetime();
+----
+
+[#_Attribute_getDatetimeTZ_]
+==== getDatetimeTZ
+
+[source,java]
+----
+java.time.ZonedDateTime getDatetimeTZ()
+----
+
+Returns a ``datetime-tz`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.time.ZonedDateTime`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDatetimeTZ();
+----
+
+[#_Attribute_getDecimal_]
+==== getDecimal
+
+[source,java]
+----
+java.math.BigDecimal getDecimal()
+----
+
+Returns a ``decimal`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.math.BigDecimal`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDecimal();
+----
+
+[#_Attribute_getDouble_]
+==== getDouble
+
+[source,java]
+----
+double getDouble()
+----
+
+Returns a ``double`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`double`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDouble();
+----
+
+[#_Attribute_getDuration_]
+==== getDuration
+
+[source,java]
+----
+Duration getDuration()
+----
+
+Returns a ``duration`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`Duration`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getDuration();
+----
+
 [#_Attribute_getLabel_]
 ==== getLabel
 
@@ -465,7 +377,7 @@ concept.asValue();
 java.lang.String getLabel()
 ----
 
-Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance ("unknown" if type fetching is disabled). If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
 
 
 [caption=""]
@@ -477,6 +389,72 @@ Retrieves the unique label of the concept. If this is an ``Instance``, return th
 [source,java]
 ----
 concept.getLabel();
+----
+
+[#_Attribute_getLong_]
+==== getLong
+
+[source,java]
+----
+long getLong()
+----
+
+Returns a ``long`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getLong();
+----
+
+[#_Attribute_getString_]
+==== getString
+
+[source,java]
+----
+java.lang.String getString()
+----
+
+Returns a ``string`` value of the value concept that this attribute holds. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getString();
+----
+
+[#_Attribute_getStruct_]
+==== getStruct
+
+[source,java]
+----
+java.util.Map<java.lang.String,​java.util.Optional<Value>> getStruct()
+----
+
+Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names to values. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`java.util.Map<java.lang.String,​java.util.Optional<Value>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getStruct();
 ----
 
 [#_Attribute_getType_]
@@ -507,6 +485,7 @@ attribute.getType();
 
 [source,java]
 ----
+@CheckReturnValue
 Value getValue()
 ----
 
@@ -522,6 +501,29 @@ Retrieves the value which the ``Attribute`` instance holds.
 [source,java]
 ----
 attribute.getValue();
+----
+
+[#_Attribute_getValueType_]
+==== getValueType
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getValueType()
+----
+
+Retrieves the description of the value type of the value which the ``Attribute`` instance holds. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getValueType();
 ----
 
 [#_Attribute_isAttribute_]
@@ -544,7 +546,7 @@ Checks if the concept is an ``Attribute``.
 .Code examples
 [source,java]
 ----
-attribute.isAttribute();
+concept.isAttribute();
 ----
 
 [#_Attribute_isAttributeType_]
@@ -575,10 +577,11 @@ concept.isAttributeType();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isBoolean()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``boolean``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``boolean`` or if this ``Concept`` is an ``AttributeType`` of type ``boolean``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -589,7 +592,7 @@ Returns ``True`` if this attribute holds a value of type ``boolean``. Otherwise,
 .Code examples
 [source,java]
 ----
-attribute.isBoolean()
+concept.isBoolean()
 ----
 
 [#_Attribute_isDate_]
@@ -597,10 +600,11 @@ attribute.isBoolean()
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDate()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``date``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``date`` or if this ``Concept`` is an ``AttributeType`` of type ``date``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -611,7 +615,7 @@ Returns ``True`` if this attribute holds a value of type ``date``. Otherwise, re
 .Code examples
 [source,java]
 ----
-attribute.isDate();
+concept.isDate();
 ----
 
 [#_Attribute_isDatetime_]
@@ -619,10 +623,11 @@ attribute.isDate();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDatetime()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``datetime``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -633,7 +638,7 @@ Returns ``True`` if this attribute holds a value of type ``datetime``. Otherwise
 .Code examples
 [source,java]
 ----
-attribute.isDatetime();
+concept.isDatetime();
 ----
 
 [#_Attribute_isDatetimeTZ_]
@@ -641,10 +646,11 @@ attribute.isDatetime();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDatetimeTZ()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``datetime-tz``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime-tz`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime-tz``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -655,7 +661,7 @@ Returns ``True`` if this attribute holds a value of type ``datetime-tz``. Otherw
 .Code examples
 [source,java]
 ----
-attribute.isDatetimeTZ();
+concept.isDatetimeTZ();
 ----
 
 [#_Attribute_isDecimal_]
@@ -663,10 +669,11 @@ attribute.isDatetimeTZ();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDecimal()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``decimal``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``decimal`` or if this ``Concept`` is an ``AttributeType`` of type ``decimal``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -677,7 +684,7 @@ Returns ``True`` if this attribute holds a value of type ``decimal``. Otherwise,
 .Code examples
 [source,java]
 ----
-attribute.isDecimal();
+concept.isDecimal();
 ----
 
 [#_Attribute_isDouble_]
@@ -685,10 +692,11 @@ attribute.isDecimal();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDouble()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``double``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``double`` or if this ``Concept`` is an ``AttributeType`` of type ``double``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -699,7 +707,7 @@ Returns ``True`` if this attribute holds a value of type ``double``. Otherwise, 
 .Code examples
 [source,java]
 ----
-attribute.isDouble();
+concept.isDouble();
 ----
 
 [#_Attribute_isDuration_]
@@ -707,10 +715,11 @@ attribute.isDouble();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isDuration()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``duration``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``duration`` or if this ``Concept`` is an ``AttributeType`` of type ``duration``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -721,7 +730,7 @@ Returns ``True`` if this attribute holds a value of type ``duration``. Otherwise
 .Code examples
 [source,java]
 ----
-attribute.isDuration();
+concept.isDuration();
 ----
 
 [#_Attribute_isEntity_]
@@ -775,10 +784,11 @@ concept.isEntityType();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isLong()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``long``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``long`` or if this ``Concept`` is an ``AttributeType`` of type ``long``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -789,7 +799,7 @@ Returns ``True`` if this attribute holds a value of type ``long``. Otherwise, re
 .Code examples
 [source,java]
 ----
-attribute.isLong();
+concept.isLong();
 ----
 
 [#_Attribute_isRelation_]
@@ -866,10 +876,11 @@ concept.isRoleType();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isString()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``string``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``string`` or if this ``Concept`` is an ``AttributeType`` of type ``string``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -880,7 +891,7 @@ Returns ``True`` if this attribute holds a value of type ``string``. Otherwise, 
 .Code examples
 [source,java]
 ----
-attribute.isString();
+concept.isString();
 ----
 
 [#_Attribute_isStruct_]
@@ -888,10 +899,11 @@ attribute.isString();
 
 [source,java]
 ----
+@CheckReturnValue
 boolean isStruct()
 ----
 
-Returns ``True`` if this attribute holds a value of type ``struct``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``struct`` or if this ``Concept`` is an ``AttributeType`` of type ``struct``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -902,7 +914,7 @@ Returns ``True`` if this attribute holds a value of type ``struct``. Otherwise, 
 .Code examples
 [source,java]
 ----
-attribute.isStruct();
+concept.isStruct();
 ----
 
 [#_Attribute_isType_]
@@ -949,6 +961,318 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
+----
+
+[#_Attribute_tryGetBoolean_]
+==== tryGetBoolean
+
+[source,java]
+----
+java.util.Optional<java.lang.Boolean> tryGetBoolean()
+----
+
+Returns a ``boolean`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetBoolean();
+----
+
+[#_Attribute_tryGetDate_]
+==== tryGetDate
+
+[source,java]
+----
+java.util.Optional<java.time.LocalDate> tryGetDate()
+----
+
+Returns a ``date`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.time.LocalDate>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDate();
+----
+
+[#_Attribute_tryGetDatetime_]
+==== tryGetDatetime
+
+[source,java]
+----
+java.util.Optional<java.time.LocalDateTime> tryGetDatetime()
+----
+
+Returns a ``datetime`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.time.LocalDateTime>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDatetime();
+----
+
+[#_Attribute_tryGetDatetimeTZ_]
+==== tryGetDatetimeTZ
+
+[source,java]
+----
+java.util.Optional<java.time.ZonedDateTime> tryGetDatetimeTZ()
+----
+
+Returns a ``datetime-tz`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.time.ZonedDateTime>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDatetimeTZ();
+----
+
+[#_Attribute_tryGetDecimal_]
+==== tryGetDecimal
+
+[source,java]
+----
+java.util.Optional<java.math.BigDecimal> tryGetDecimal()
+----
+
+Returns a ``decimal`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.math.BigDecimal>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDecimal();
+----
+
+[#_Attribute_tryGetDouble_]
+==== tryGetDouble
+
+[source,java]
+----
+java.util.Optional<java.lang.Double> tryGetDouble()
+----
+
+Returns a ``double`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Double>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDouble();
+----
+
+[#_Attribute_tryGetDuration_]
+==== tryGetDuration
+
+[source,java]
+----
+java.util.Optional<Duration> tryGetDuration()
+----
+
+Returns a ``duration`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<Duration>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetDuration();
+----
+
+[#_Attribute_tryGetIID_]
+==== tryGetIID
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetIID()
+----
+
+Retrieves the unique id of the ``Concept``. Returns ``null`` if absent. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetIID();
+----
+
+[#_Attribute_tryGetLabel_]
+==== tryGetLabel
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetLabel()
+----
+
+Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance (``null`` if type fetching is disabled). Returns ``null`` if type fetching is disabled. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetLabel();
+----
+
+[#_Attribute_tryGetLong_]
+==== tryGetLong
+
+[source,java]
+----
+java.util.Optional<java.lang.Long> tryGetLong()
+----
+
+Returns a ``long`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Long>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetLong();
+----
+
+[#_Attribute_tryGetString_]
+==== tryGetString
+
+[source,java]
+----
+java.util.Optional<java.lang.String> tryGetString()
+----
+
+Returns a ``string`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetString();
+----
+
+[#_Attribute_tryGetStruct_]
+==== tryGetStruct
+
+[source,java]
+----
+java.util.Optional<java.util.Map<java.lang.String,​java.util.Optional<Value>>> tryGetStruct()
+----
+
+Returns a ``struct`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.util.Map<java.lang.String,​java.util.Optional<Value>>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetStruct();
+----
+
+[#_Attribute_tryGetValue_]
+==== tryGetValue
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<Value> tryGetValue()
+----
+
+Retrieves the value which this ``Concept`` holds. Returns ``null`` if this ``Concept`` does not hold any value. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<Value>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetValue();
+----
+
+[#_Attribute_tryGetValueType_]
+==== tryGetValueType
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetValueType()
+----
+
+Retrieves the ``String`` describing the value type of this ``Concept``. Returns ``null`` if not absent. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetValueType();
 ----
 
 // end::methods[]

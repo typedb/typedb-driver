@@ -17,8 +17,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 exports_files([
     "VERSION",
@@ -55,9 +55,9 @@ checkstyle_test(
 
 release_validate_deps(
     name = "release-validate-deps",
-    refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    refs = "@typedb_driver_workspace_refs//:refs.json",
     tagged_deps = [
-        "@vaticle_typedb_protocol",
+        "@typedb_protocol",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail
     version_file = ":VERSION",
@@ -67,13 +67,13 @@ release_validate_deps(
 filegroup(
     name = "tools",
     data = [
-        "@vaticle_dependencies//tool/checkstyle:test-coverage",
-        "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
-        "@vaticle_dependencies//tool/release/notes:create",
-        "@vaticle_dependencies//tool/ide:rust_sync",
-        "@vaticle_dependencies//tool/sonarcloud:code-analysis",
-        "@vaticle_dependencies//tool/unuseddeps:unused-deps",
+        "@typedb_dependencies//tool/checkstyle:test-coverage",
+        "@typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh",
+        "@typedb_dependencies//tool/release/notes:create",
+        "@typedb_dependencies//tool/ide:rust_sync",
+        "@typedb_dependencies//tool/sonarcloud:code-analysis",
+        "@typedb_dependencies//tool/unuseddeps:unused-deps",
         "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs",
-        "@vaticle_dependencies//tool/sync:dependencies",
+        "@typedb_dependencies//tool/sync:dependencies",
     ],
 )

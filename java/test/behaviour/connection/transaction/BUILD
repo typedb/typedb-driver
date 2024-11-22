@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
@@ -47,7 +47,7 @@ typedb_behaviour_java_test(
     ],
     test_class = "com.typedb.driver.test.behaviour.connection.transaction.TransactionTest",
     data = [
-        "@vaticle_typedb_behaviour//connection:transaction.feature",
+        "@typedb_behaviour//connection:transaction.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",

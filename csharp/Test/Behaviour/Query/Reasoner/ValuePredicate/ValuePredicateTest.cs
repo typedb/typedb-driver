@@ -21,7 +21,7 @@ using Xunit.Gherkin.Quick;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
-    [FeatureFile("external/vaticle_typedb_behaviour/query/reasoner/value-predicate.feature")]
+    [FeatureFile("external/typedb_behaviour/query/reasoner/value-predicate.feature")]
     public partial class BehaviourSteps
     {
     }

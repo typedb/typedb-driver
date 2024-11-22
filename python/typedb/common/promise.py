@@ -60,4 +60,4 @@ class Promise(Generic[T]):
         try:
             return self.inner()
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None

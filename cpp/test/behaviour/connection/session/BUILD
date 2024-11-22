@@ -15,12 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 typedb_behaviour_cpp_test(
     name = "test",
-    feature = "@vaticle_typedb_behaviour//connection:session.feature"
+    feature = "@typedb_behaviour//connection:session.feature"
 )
 
 checkstyle_test(

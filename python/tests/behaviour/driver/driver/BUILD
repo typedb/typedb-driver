@@ -17,11 +17,11 @@
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
 load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test(
     name = "test",
-    feats = ["@vaticle_typedb_behaviour//driver:driver.feature"],
+    feats = ["@typedb_behaviour//driver:driver.feature"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",

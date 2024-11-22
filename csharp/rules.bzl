@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
-load("@vaticle_bazel_distribution//nuget:rules.bzl", "nuget_pack")
+load("@typedb_dependencies//builder/swig:csharp.bzl", "swig_csharp")
+load("@typedb_bazel_distribution//nuget:rules.bzl", "nuget_pack")
 
 def swig_native_csharp_library(name, native_lib_name, namespace, nullable_context, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
     swig_csharp(

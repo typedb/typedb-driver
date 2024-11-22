@@ -21,8 +21,8 @@ package com.typedb.driver.concept.instance;
 
 import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.type.AttributeTypeImpl;
-import com.typedb.driver.concept.value.ValueImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,8 +31,9 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.NULL_CONCEPT_PROPERTY;
+import static com.typedb.driver.common.util.Objects.className;
 import static com.typedb.driver.jni.typedb_driver.attribute_get_type;
-import static com.typedb.driver.jni.typedb_driver.attribute_get_value;
 
 public class AttributeImpl extends InstanceImpl implements Attribute {
     public AttributeImpl(com.typedb.driver.jni.Concept concept) {
@@ -46,112 +47,62 @@ public class AttributeImpl extends InstanceImpl implements Attribute {
 
     @Override
     public Value getValue() {
-        return new ValueImpl(attribute_get_value(nativeObject));
+        return tryGetValue().orElseThrow(() -> new TypeDBDriverException(NULL_CONCEPT_PROPERTY, className(this.getClass())));
     }
 
     @Override
-    public boolean isBoolean() {
-        return getValue().isBoolean();
+    public String getValueType() {
+        return getValue().getType();
     }
 
     @Override
-    public boolean isLong() {
-        return getValue().isLong();
+    public boolean getBoolean() {
+        return getValue().getBoolean();
     }
 
     @Override
-    public boolean isDouble() {
-        return getValue().isDouble();
+    public long getLong() {
+        return getValue().getLong();
     }
 
     @Override
-    public boolean isDecimal() {
-        return getValue().isDecimal();
+    public double getDouble() {
+        return getValue().getDouble();
     }
 
     @Override
-    public boolean isString() {
-        return getValue().isString();
+    public BigDecimal getDecimal() {
+        return getValue().getDecimal();
     }
 
     @Override
-    public boolean isDate() {
-        return getValue().isDate();
+    public String getString() {
+        return getValue().getString();
     }
 
     @Override
-    public boolean isDatetime() {
-        return getValue().isDatetime();
+    public LocalDate getDate() {
+        return getValue().getDate();
     }
 
     @Override
-    public boolean isDatetimeTZ() {
-        return getValue().isDatetimeTZ();
+    public LocalDateTime getDatetime() {
+        return getValue().getDatetime();
     }
 
     @Override
-    public boolean isDuration() {
-        return getValue().isDuration();
+    public ZonedDateTime getDatetimeTZ() {
+        return getValue().getDatetimeTZ();
     }
 
     @Override
-    public boolean isStruct() {
-        return getValue().isStruct();
+    public com.typedb.driver.common.Duration getDuration() {
+        return getValue().getDuration();
     }
 
     @Override
-    public Object asUntyped() {
-        return getValue().asUntyped();
-    }
-
-    @Override
-    public boolean asBoolean() {
-        return getValue().asBoolean();
-    }
-
-    @Override
-    public long asLong() {
-        return getValue().asLong();
-    }
-
-    @Override
-    public double asDouble() {
-        return getValue().asDouble();
-    }
-
-    @Override
-    public BigDecimal asDecimal() {
-        return getValue().asDecimal();
-    }
-
-    @Override
-    public String asString() {
-        return getValue().asString();
-    }
-
-    @Override
-    public LocalDate asDate() {
-        return getValue().asDate();
-    }
-
-    @Override
-    public LocalDateTime asDatetime() {
-        return getValue().asDatetime();
-    }
-
-    @Override
-    public ZonedDateTime asDatetimeTZ() {
-        return getValue().asDatetimeTZ();
-    }
-
-    @Override
-    public com.typedb.driver.common.Duration asDuration() {
-        return getValue().asDuration();
-    }
-
-    @Override
-    public Map<String, Optional<Value>> asStruct() {
-        return getValue().asStruct();
+    public Map<String, Optional<Value>> getStruct() {
+        return getValue().getStruct();
     }
 
     @Override

@@ -15,15 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 cc_test(
     name = "user-test-cloud",
     deps = ["//cpp/test/behaviour/steps:cloud-steps"],
-    data = ["@vaticle_typedb_behaviour//connection:user.feature", "//tool/test/resources:certificates"],
+    data = ["@typedb_behaviour//connection:user.feature", "//tool/test/resources:certificates"],
     env = {"ROOT_CA": "tool/test/resources/encryption/ext-grpc-root-ca.pem"},
-    args = ["$(location @vaticle_typedb_behaviour//connection:user.feature)"]
+    args = ["$(location @typedb_behaviour//connection:user.feature)"]
 )
 
 checkstyle_test(

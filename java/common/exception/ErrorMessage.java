@@ -99,8 +99,8 @@ public abstract class ErrorMessage {
                 new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
         public static final Concept MISSING_VARIABLE =
                 new Concept(3, "Variable name cannot be null or empty.");
-        public static final Concept INVALID_VALUE_CASTING =
-                new Concept(4, "Invalid value casting to '%s'.");
+        public static final Concept INVALID_VALUE_RETRIEVAL =
+                new Concept(4, "Could not retrieve a '%s' value.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
@@ -131,6 +131,8 @@ public abstract class ErrorMessage {
                 new Internal(2, "Illegal state has been reached!");
         public static final Internal NULL_NATIVE_VALUE =
                 new Internal(3, "Unhandled null pointer to a native object encountered!");
+        public static final Internal NULL_CONCEPT_PROPERTY =
+                new Internal(4, "Unexpected null for a concept (%s) property is found!");
 
         private static final String codePrefix = "JIN";
         private static final String messagePrefix = "Java Internal Error";

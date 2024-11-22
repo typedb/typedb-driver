@@ -23,7 +23,7 @@ under the License.
     <id>$packageid$</id>
     <version>$version$</version>
     <authors>TypeDB</authors>
-    <copyright>Copyright © 2024 Vaticle</copyright>
+    <copyright>Copyright © 2024 TypeDB</copyright>
     <owners>TypeDB</owners>
     <title>TypeDB Driver</title>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

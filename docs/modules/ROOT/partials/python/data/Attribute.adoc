@@ -31,12 +31,12 @@ Casts the concept to ``Attribute``.
 attribute.as_attribute()
 ----
 
-[#_Attribute_as_boolean_]
-==== as_boolean
+[#_Attribute_get_boolean_]
+==== get_boolean
 
 [source,python]
 ----
-as_boolean() -> bool
+get_boolean() -> bool
 ----
 
 Returns a ``boolean`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -49,15 +49,15 @@ Returns a ``boolean`` value of the value concept that this attribute holds. If t
 .Code examples
 [source,python]
 ----
-attribute.as_boolean()
+attribute.get_boolean()
 ----
 
-[#_Attribute_as_date_]
-==== as_date
+[#_Attribute_get_date_]
+==== get_date
 
 [source,python]
 ----
-as_date() -> date
+get_date() -> date
 ----
 
 Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -70,15 +70,15 @@ Returns a timezone naive ``date`` value of the value concept that this attribute
 .Code examples
 [source,python]
 ----
-attribute.as_date()
+attribute.get_date()
 ----
 
-[#_Attribute_as_datetime_]
-==== as_datetime
+[#_Attribute_get_datetime_]
+==== get_datetime
 
 [source,python]
 ----
-as_datetime() -> Datetime
+get_datetime() -> Datetime
 ----
 
 Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -91,15 +91,15 @@ Returns a timezone naive ``datetime`` value of the value concept that this attri
 .Code examples
 [source,python]
 ----
-attribute.as_datetime()
+attribute.get_datetime()
 ----
 
-[#_Attribute_as_datetime_tz_]
-==== as_datetime_tz
+[#_Attribute_get_datetime_tz_]
+==== get_datetime_tz
 
 [source,python]
 ----
-as_datetime_tz() -> Datetime
+get_datetime_tz() -> Datetime
 ----
 
 Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -112,15 +112,15 @@ Returns a timezone naive ``datetime_tz`` value of the value concept that this at
 .Code examples
 [source,python]
 ----
-attribute.as_datetime_tz()
+attribute.get_datetime_tz()
 ----
 
-[#_Attribute_as_decimal_]
-==== as_decimal
+[#_Attribute_get_decimal_]
+==== get_decimal
 
 [source,python]
 ----
-as_decimal() -> Decimal
+get_decimal() -> Decimal
 ----
 
 Returns a ``decimal`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -133,15 +133,15 @@ Returns a ``decimal`` value of the value concept that this attribute holds. If t
 .Code examples
 [source,python]
 ----
-attribute.as_decimal()
+attribute.get_decimal()
 ----
 
-[#_Attribute_as_double_]
-==== as_double
+[#_Attribute_get_double_]
+==== get_double
 
 [source,python]
 ----
-as_double() -> float
+get_double() -> float
 ----
 
 Returns a ``double`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -154,15 +154,15 @@ Returns a ``double`` value of the value concept that this attribute holds. If th
 .Code examples
 [source,python]
 ----
-attribute.as_double()
+attribute.get_double()
 ----
 
-[#_Attribute_as_duration_]
-==== as_duration
+[#_Attribute_get_duration_]
+==== get_duration
 
 [source,python]
 ----
-as_duration() -> Duration
+get_duration() -> Duration
 ----
 
 Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -175,15 +175,15 @@ Returns a timezone naive ``duration`` value of the value concept that this attri
 .Code examples
 [source,python]
 ----
-attribute.as_duration()
+attribute.get_duration()
 ----
 
-[#_Attribute_as_long_]
-==== as_long
+[#_Attribute_get_long_]
+==== get_long
 
 [source,python]
 ----
-as_long() -> int
+get_long() -> int
 ----
 
 Returns a ``long`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -196,15 +196,15 @@ Returns a ``long`` value of the value concept that this attribute holds. If the 
 .Code examples
 [source,python]
 ----
-attribute.as_long()
+attribute.get_long()
 ----
 
-[#_Attribute_as_string_]
-==== as_string
+[#_Attribute_get_string_]
+==== get_string
 
 [source,python]
 ----
-as_string() -> str
+get_string() -> str
 ----
 
 Returns a ``string`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
@@ -217,28 +217,28 @@ Returns a ``string`` value of the value concept that this attribute holds. If th
 .Code examples
 [source,python]
 ----
-attribute.as_string()
+attribute.get_string()
 ----
 
-[#_Attribute_as_struct_]
-==== as_struct
+[#_Attribute_get_struct_]
+==== get_struct
 
 [source,python]
 ----
-as_struct() -> Dict[str, Value | None]
+get_struct() -> Concept.STRUCT
 ----
 
 Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names to values. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`Dict[str, Value | None]`
+`Concept.STRUCT`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute.as_struct()
+attribute.get_struct()
 ----
 
 [#_Attribute_get_type_]
@@ -267,20 +267,41 @@ attribute.get_type()
 
 [source,python]
 ----
-get_value() -> VALUE
+get_value() -> Concept.VALUE
 ----
 
 Retrieves the value which the ``Attribute`` instance holds.
 
 [caption=""]
 .Returns
-`VALUE`
+`Concept.VALUE`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
 attribute.get_value()
+----
+
+[#_Attribute_get_value_type_]
+==== get_value_type
+
+[source,python]
+----
+get_value_type() -> str
+----
+
+Retrieves the description of the value type of the value which the ``Attribute`` instance holds.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.get_value_type()
 ----
 
 [#_Attribute_is_attribute_]
@@ -302,216 +323,6 @@ Checks if the concept is an ``Attribute``.
 [source,python]
 ----
 attribute.is_attribute()
-----
-
-[#_Attribute_is_boolean_]
-==== is_boolean
-
-[source,python]
-----
-is_boolean() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``boolean``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_boolean()
-----
-
-[#_Attribute_is_date_]
-==== is_date
-
-[source,python]
-----
-is_date() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``date``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_date()
-----
-
-[#_Attribute_is_datetime_]
-==== is_datetime
-
-[source,python]
-----
-is_datetime() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``datetime``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_datetime()
-----
-
-[#_Attribute_is_datetime_tz_]
-==== is_datetime_tz
-
-[source,python]
-----
-is_datetime_tz() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``datetime_tz``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_datetime_tz()
-----
-
-[#_Attribute_is_decimal_]
-==== is_decimal
-
-[source,python]
-----
-is_decimal() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``decimal``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_decimal()
-----
-
-[#_Attribute_is_double_]
-==== is_double
-
-[source,python]
-----
-is_double() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``double``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_double()
-----
-
-[#_Attribute_is_duration_]
-==== is_duration
-
-[source,python]
-----
-is_duration() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``duration``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_duration()
-----
-
-[#_Attribute_is_long_]
-==== is_long
-
-[source,python]
-----
-is_long() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``long``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_long()
-----
-
-[#_Attribute_is_string_]
-==== is_string
-
-[source,python]
-----
-is_string() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``string``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_string()
-----
-
-[#_Attribute_is_struct_]
-==== is_struct
-
-[source,python]
-----
-is_struct() -> bool
-----
-
-Returns ``True`` if this attribute holds a value of type ``struct``. Otherwise, returns ``False``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.is_struct()
 ----
 
 // end::methods[]

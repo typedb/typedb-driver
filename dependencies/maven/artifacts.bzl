@@ -54,6 +54,6 @@ artifacts = [
   "org.zeroturnaround:zt-exec"
 ]
 
-# Override libraries conflicting with versions defined in @vaticle_dependencies
+# Override libraries conflicting with versions defined in @typedb_dependencies
 overrides = {
 }

@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_library(
@@ -28,7 +28,7 @@ cc_library(
         "@gtest//:gtest",
     ],
     copts = cxxopts + select({
-        "@vaticle_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
+        "@typedb_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
         "//conditions:default": ["-Iexternal/gherkin_cpp/include"],
     }),
     strip_include_prefix = "include",

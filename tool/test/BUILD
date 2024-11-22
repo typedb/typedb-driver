@@ -16,9 +16,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-load("@vaticle_dependencies//builder/java:rules.bzl", "native_typedb_artifact")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+load("@typedb_dependencies//builder/java:rules.bzl", "native_typedb_artifact")
 
 checkstyle_test(
     name = "checkstyle",
@@ -36,11 +36,11 @@ java_binary(
 native_typedb_artifact(
     name = "native-typedb-artifact",
     native_artifacts = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_artifact_linux-arm64//file"],
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_artifact_linux-x86_64//file"],
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_artifact_mac-arm64//file"],
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_artifact_mac-x86_64//file"],
-#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_artifact_windows-x86_64//file"],
+        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_artifact_linux-arm64//file"],
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_artifact_linux-x86_64//file"],
+        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_artifact_mac-arm64//file"],
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_artifact_mac-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_artifact_windows-x86_64//file"],
     },
     output = "typedb-artifact.tar.gz",
     visibility = ["//visibility:public"],
@@ -49,11 +49,11 @@ native_typedb_artifact(
 #native_typedb_artifact(
 #    name = "native-typedb-cloud-artifact",
 #    native_artifacts = {
-#        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_cloud_artifact_linux-arm64//file"],
-#        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_cloud_artifact_linux-x86_64//file"],
-#        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_cloud_artifact_mac-arm64//file"],
-#        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_cloud_artifact_mac-x86_64//file"],
-#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_cloud_artifact_windows-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_cloud_artifact_linux-arm64//file"],
+#        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_cloud_artifact_linux-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_cloud_artifact_mac-arm64//file"],
+#        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_cloud_artifact_mac-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_cloud_artifact_windows-x86_64//file"],
 #    },
 #    output = "typedb-cloud-artifact.tar.gz",
 #    visibility = ["//visibility:public"],

@@ -18,10 +18,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import date
+from decimal import Decimal
 from typing import TYPE_CHECKING
 
+from typedb.api.concept.concept import Concept
 from typedb.api.concept.instance.instance import Instance
-from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
 
@@ -54,7 +56,7 @@ class Attribute(Instance, ABC):
         pass
 
     @abstractmethod
-    def get_value(self) -> VALUE:
+    def get_value(self) -> Concept.VALUE:
         """
         Retrieves the value which the ``Attribute`` instance holds.
 
@@ -69,10 +71,9 @@ class Attribute(Instance, ABC):
         pass
 
     @abstractmethod
-    def is_boolean(self) -> bool:
+    def get_value_type(self) -> str:
         """
-        Returns ``True`` if this attribute holds a value of type ``boolean``.
-        Otherwise, returns ``False``.
+        Retrieves the description of the value type of the value which the ``Attribute`` instance holds.
 
         :return:
 
@@ -80,156 +81,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.is_boolean()
+            attribute.get_value_type()
         """
         pass
 
     @abstractmethod
-    def is_long(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``long``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_long()
-        """
-        pass
-
-    @abstractmethod
-    def is_double(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``double``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_double()
-        """
-        pass
-
-    @abstractmethod
-    def is_decimal(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``decimal``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_decimal()
-        """
-        pass
-
-    @abstractmethod
-    def is_string(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``string``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_string()
-        """
-        pass
-
-    @abstractmethod
-    def is_date(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``date``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_date()
-        """
-        pass
-
-    @abstractmethod
-    def is_datetime(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``datetime``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_datetime()
-        """
-        pass
-
-    @abstractmethod
-    def is_datetime_tz(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``datetime_tz``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_datetime_tz()
-        """
-        pass
-
-    @abstractmethod
-    def is_duration(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``duration``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_duration()
-        """
-        pass
-
-    @abstractmethod
-    def is_struct(self) -> bool:
-        """
-        Returns ``True`` if this attribute holds a value of type ``struct``.
-        Otherwise, returns ``False``.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.is_struct()
-        """
-        pass
-
-    @abstractmethod
-    def as_boolean(self) -> bool:
+    def get_boolean(self) -> bool:
         """
         Returns a ``boolean`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -240,12 +97,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_boolean()
+            attribute.get_boolean()
         """
         pass
 
     @abstractmethod
-    def as_long(self) -> int:
+    def get_long(self) -> int:
         """
         Returns a ``long`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -256,12 +113,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_long()
+            attribute.get_long()
         """
         pass
 
     @abstractmethod
-    def as_double(self) -> float:
+    def get_double(self) -> float:
         """
         Returns a ``double`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -272,12 +129,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_double()
+            attribute.get_double()
         """
         pass
 
     @abstractmethod
-    def as_decimal(self) -> Decimal:
+    def get_decimal(self) -> Decimal:
         """
         Returns a ``decimal`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -288,12 +145,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_decimal()
+            attribute.get_decimal()
         """
         pass
 
     @abstractmethod
-    def as_string(self) -> str:
+    def get_string(self) -> str:
         """
         Returns a ``string`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -304,12 +161,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_string()
+            attribute.get_string()
         """
         pass
 
     @abstractmethod
-    def as_date(self) -> date:
+    def get_date(self) -> date:
         """
         Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -320,12 +177,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_date()
+            attribute.get_date()
         """
         pass
 
     @abstractmethod
-    def as_datetime(self) -> Datetime:
+    def get_datetime(self) -> Datetime:
         """
         Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -336,12 +193,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_datetime()
+            attribute.get_datetime()
         """
         pass
 
     @abstractmethod
-    def as_datetime_tz(self) -> Datetime:
+    def get_datetime_tz(self) -> Datetime:
         """
         Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -352,12 +209,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_datetime_tz()
+            attribute.get_datetime_tz()
         """
         pass
 
     @abstractmethod
-    def as_duration(self) -> Duration:
+    def get_duration(self) -> Duration:
         """
         Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
@@ -368,12 +225,12 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_duration()
+            attribute.get_duration()
         """
         pass
 
     @abstractmethod
-    def as_struct(self) -> Value.STRUCT:
+    def get_struct(self) -> Concept.STRUCT:
         """
         Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names
         to values. If the value has another type, raises an exception.
@@ -384,7 +241,7 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.as_struct()
+            attribute.get_struct()
         """
         pass
 

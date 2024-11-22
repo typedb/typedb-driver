@@ -15,22 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
+load("@typedb_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
 
-def vaticle_typedb_artifact():
+def typedb_artifact():
     native_artifact_files(
-        name = "vaticle_typedb_artifact",
+        name = "typedb_artifact",
         group_name = "typedb-all-{platform}",
         artifact_name = "typedb-all-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],
         commit_source = deployment["artifact"]["snapshot"]["download"],
-        commit = "2c110dc1dce03270842b3a92f859f0b4a7a18cb4"
+        commit = "4237d1429d7f97e709a3b1ddc2c30ce3c3b792a0"
     )
 
-#def vaticle_typedb_cloud_artifact():
+#def typedb_cloud_artifact():
 #    native_artifact_files(
-#        name = "vaticle_typedb_cloud_artifact",
+#        name = "typedb_cloud_artifact",
 #        group_name = "typedb-cloud-server-{platform}",
 #        artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
 #        tag_source = deployment_private["artifact"]["release"]["download"],
@@ -39,6 +39,6 @@ def vaticle_typedb_artifact():
 #    )
 
 #maven_artifacts = {
-#    'com.vaticle.typedb:typedb-runner': '2.28.3',
-#    'com.vaticle.typedb:typedb-cloud-runner': '2.28.3',
+#    'com.typedb:typedb-runner': '2.28.3',
+#    'com.typedb:typedb-cloud-runner': '2.28.3',
 #}

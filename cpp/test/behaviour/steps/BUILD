@@ -15,9 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_library(

@@ -17,23 +17,23 @@
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-def vaticle_dependencies():
+def typedb_dependencies():
     git_repository(
-        name = "vaticle_dependencies",
-        remote = "https://github.com/typedb/dependencies",
-        commit = "2acdb27e8f0139e1535855328396654535472703",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        name = "typedb_dependencies",
+        remote = "https://github.com/typedb/typedb-dependencies",
+        commit = "33d71e44027e502f9bd9a788a3bb4948cebddc9f",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_dependencies
     )
 
-def vaticle_typedb_protocol():
+def typedb_protocol():
     git_repository(
-        name = "vaticle_typedb_protocol",
+        name = "typedb_protocol",
         remote = "https://github.com/typedb/typedb-protocol",
         commit = "1f08f7ef4b538f06063c6fa9ba1be199b7874814",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
     )
 
-def vaticle_typedb_behaviour():
+def typedb_behaviour():
     git_repository(
-        name = "vaticle_typedb_behaviour",
+        name = "typedb_behaviour",
         remote = "https://github.com/typedb/typedb-behaviour",
-        commit = "4ec10ad5a5f9a7fd19b327240a33bcb77e502f57",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+        commit = "ce1d517f2444cddbb37b7290a8003d336ac14b98",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_behaviour
     )

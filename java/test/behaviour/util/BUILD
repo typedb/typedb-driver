@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "util",

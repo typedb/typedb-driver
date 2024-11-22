@@ -20,9 +20,11 @@
 package com.typedb.driver.concept.instance;
 
 import com.typedb.driver.api.concept.instance.Entity;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.type.EntityTypeImpl;
 
-import static com.typedb.driver.jni.typedb_driver.entity_get_iid;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.NULL_CONCEPT_PROPERTY;
+import static com.typedb.driver.common.util.Objects.className;
 import static com.typedb.driver.jni.typedb_driver.entity_get_type;
 
 public class EntityImpl extends InstanceImpl implements Entity {
@@ -40,10 +42,9 @@ public class EntityImpl extends InstanceImpl implements Entity {
         return this;
     }
 
-
     @Override
     public final String getIID() {
-        return entity_get_iid(nativeObject);
+        return tryGetIID().orElseThrow(() -> new TypeDBDriverException(NULL_CONCEPT_PROPERTY, className(this.getClass())));
     }
 
     @Override

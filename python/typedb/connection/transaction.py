@@ -48,7 +48,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             super().__init__(
                 transaction_new(driver.native_object, database_name, transaction_type.value))  # , options.native_object
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -91,13 +91,13 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             self._native_object.thisown = 0
             void_promise_resolve(transaction_commit(self._native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     def rollback(self):
         try:
             void_promise_resolve(transaction_rollback(self.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None
 
     def close(self):
         if self._native_object.thisown:

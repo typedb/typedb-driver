@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
 checkstyle_test(
@@ -26,7 +26,7 @@ checkstyle_test(
 
 typedb_behaviour_node_test(
     name = "test",
-    features = ["@vaticle_typedb_behaviour//query/language:delete.feature"],
+    features = ["@typedb_behaviour//query/language:delete.feature"],
     data = [
         "//nodejs/test/behaviour/connection/database:steps",
         "//nodejs/test/behaviour/connection/session:steps",

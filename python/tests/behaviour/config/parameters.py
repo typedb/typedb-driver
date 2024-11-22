@@ -287,6 +287,17 @@ def is_or_not_reason(is_or_not: bool, real, expected) -> str:
     return f"\nExpected that real value <{real}>\n{is_or_not_str: >{spaces_num}} <{expected}>"
 
 
+def is_none_or_not_reason(is_none_or_not: bool, real) -> str:
+    intro_str = "Expected that real value"
+    is_or_not_str = "is none" if is_none_or_not else "is not none"
+    spaces_num = len(intro_str)
+    return f"\nExpected that real value <{real}>\n{is_or_not_str: >{spaces_num}}"
+
+
+def check_is_none(value, is_none_or_not: bool):
+    assert_that(value, is_(None) if is_none_or_not else is_not(None), is_none_or_not_reason(is_none_or_not, real=value))
+
+
 @parse.with_pattern("| by index of variable")
 def parse_by_index_of_variable_or_not(value: str) -> bool:
     return value == " by index of variable"

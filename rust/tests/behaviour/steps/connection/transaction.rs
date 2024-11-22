@@ -42,6 +42,7 @@ pub async fn connection_open_transaction_for_database(
     database_name: String,
     may_error: params::MayError,
 ) {
+    context.cleanup_transactions().await;
     may_error.check(context.push_transaction(
         open_transaction_for_database(&context.driver, &database_name, type_.transaction_type).await,
     ));

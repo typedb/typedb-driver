@@ -29,14 +29,23 @@ import com.typedb.driver.api.concept.type.RelationType;
 import com.typedb.driver.api.concept.type.RoleType;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
+import com.typedb.driver.common.Duration;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static com.typedb.driver.common.util.Objects.className;
 
 public interface Concept {
+    int DECIMAL_SCALE = 19;
+
     /**
      * Checks if the concept is a <code>Type</code>.
      *
@@ -167,6 +176,7 @@ public interface Concept {
         return false;
     }
 
+
     /**
      * Casts the concept to <code>Type</code>.
      *
@@ -288,8 +298,250 @@ public interface Concept {
     }
 
     /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>boolean</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>boolean</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isBoolean()
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isBoolean();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>long</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>long</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isLong();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isLong();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>double</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>double</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDouble();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDouble();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>decimal</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>decimal</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDecimal();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDecimal();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>string</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>string</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isString();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isString();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>date</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>date</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDate();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDate();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>datetime</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>datetime</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDatetime();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDatetime();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>datetime-tz</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>datetime-tz</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDatetimeTZ();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDatetimeTZ();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>duration</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>duration</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isDuration();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isDuration();
+
+    /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>struct</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>struct</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isStruct();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isStruct();
+
+    // TODO: Could be useful to have isStruct(struct_name)
+
+    /**
+     * Returns a <code>boolean</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetBoolean();
+     * </pre>
+     */
+    Optional<Boolean> tryGetBoolean();
+
+    /**
+     * Returns a <code>long</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetLong();
+     * </pre>
+     */
+    Optional<Long> tryGetLong();
+
+    /**
+     * Returns a <code>double</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDouble();
+     * </pre>
+     */
+    Optional<Double> tryGetDouble();
+
+    /**
+     * Returns a <code>decimal</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDecimal();
+     * </pre>
+     */
+    Optional<BigDecimal> tryGetDecimal();
+
+    /**
+     * Returns a <code>string</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetString();
+     * </pre>
+     */
+    Optional<String> tryGetString();
+
+    /**
+     * Returns a <code>date</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDate();
+     * </pre>
+     */
+    Optional<LocalDate> tryGetDate();
+
+    /**
+     * Returns a <code>datetime</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDatetime();
+     * </pre>
+     */
+    Optional<LocalDateTime> tryGetDatetime();
+
+    /**
+     * Returns a <code>datetime-tz</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDatetimeTZ();
+     * </pre>
+     */
+    Optional<ZonedDateTime> tryGetDatetimeTZ();
+
+    /**
+     * Returns a <code>duration</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetDuration();
+     * </pre>
+     */
+    Optional<Duration> tryGetDuration();
+
+    /**
+     * Returns a <code>struct</code> value of this <code>Concept</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetStruct();
+     * </pre>
+     */
+    Optional<Map<String, Optional<Value>>> tryGetStruct();
+
+    /**
      * Retrieves the unique label of the concept.
-     * If this is an <code>Instance</code>, return the label of the type of this instance.
+     * If this is an <code>Instance</code>, return the label of the type of this instance ("unknown" if type fetching is disabled).
      * If this is a <code>Value</code>, return the label of the value type of the value.
      * If this is a <code>Type</code>, return the label of the type.
      *
@@ -300,4 +552,54 @@ public interface Concept {
      */
     @CheckReturnValue
     String getLabel();
+
+    /**
+     * Retrieves the unique label of the concept.
+     * If this is an <code>Instance</code>, return the label of the type of this instance (<code>null</code> if type fetching is disabled).
+     * Returns <code>null</code> if type fetching is disabled.
+     * If this is a <code>Value</code>, return the label of the value type of the value.
+     * If this is a <code>Type</code>, return the label of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetLabel();
+     * </pre>
+     */
+    @CheckReturnValue
+    Optional<String> tryGetLabel();
+
+    /**
+     * Retrieves the unique id of the <code>Concept</code>. Returns <code>null</code> if absent.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetIID();
+     * </pre>
+     */
+    @CheckReturnValue
+    Optional<String> tryGetIID();
+
+    /**
+     * Retrieves the <code>String</code> describing the value type of this <code>Concept</code>.
+     * Returns <code>null</code> if not absent.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetValueType();
+     * </pre>
+     */
+    @CheckReturnValue
+    Optional<String> tryGetValueType();
+
+    /**
+     * Retrieves the value which this <code>Concept</code> holds.
+     * Returns <code>null</code> if this <code>Concept</code> does not hold any value.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetValue();
+     * </pre>
+     */
+    @CheckReturnValue
+    Optional<Value> tryGetValue();
 }

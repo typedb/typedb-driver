@@ -36,4 +36,4 @@ class IteratorWrapper:
                 return next_item
             raise StopIteration
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+            raise TypeDBDriverException.of(e) from None

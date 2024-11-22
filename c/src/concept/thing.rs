@@ -17,24 +17,12 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::null_mut};
+use std::ptr::null_mut;
 
-use typedb_driver::concept::{Concept, Value};
+use typedb_driver::concept::Concept;
 
 use super::concept::{borrow_as_attribute, borrow_as_entity, borrow_as_relation};
-use crate::memory::{release, release_string};
-
-/// Retrieves the unique id of the ``Entity``.
-#[no_mangle]
-pub extern "C" fn entity_get_iid(thing: *mut Concept) -> *mut c_char {
-    release_string(borrow_as_entity(thing).iid().to_string())
-}
-
-/// Retrieves the unique id of the ``Relation``.
-#[no_mangle]
-pub extern "C" fn relation_get_iid(thing: *mut Concept) -> *mut c_char {
-    release_string(borrow_as_relation(thing).iid().to_string())
-}
+use crate::memory::release;
 
 /// Retrieves the type which this ``Entity`` belongs to.
 #[no_mangle]
@@ -58,10 +46,4 @@ pub extern "C" fn attribute_get_type(attribute: *const Concept) -> *mut Concept 
         .type_()
         .map(|type_| release(Concept::AttributeType(type_.clone())))
         .unwrap_or_else(null_mut)
-}
-
-/// Retrieves the value of the ``Attribute``.
-#[no_mangle]
-pub extern "C" fn attribute_get_value(attribute: *const Concept) -> *mut Concept {
-    release(Concept::Value(borrow_as_attribute(attribute).value.clone()))
 }

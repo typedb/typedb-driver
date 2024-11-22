@@ -19,7 +19,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
     name = "query",

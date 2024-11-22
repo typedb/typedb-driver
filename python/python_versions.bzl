@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
+load("//dependencies/typedb:repositories.bzl", "typedb_dependencies")
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_versions = [

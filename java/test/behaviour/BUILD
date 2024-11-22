@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "behaviour",
@@ -24,7 +24,7 @@ java_library(
     deps = [
         # External Maven Dependencies
         "@maven//:junit_junit",
-#        "@maven//:com_vaticle_typedb_typedb_runner",
+#        "@maven//:com_typedb_typedb_runner",
     ],
 )
 

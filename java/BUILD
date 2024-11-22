@@ -18,11 +18,11 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
-load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
-load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@typedb_dependencies//distribution/maven:version.bzl", "version")
+load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
+load("@typedb_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
@@ -49,7 +49,7 @@ assemble_maven(
     scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":driver-java",
     version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    workspace_refs = "@typedb_driver_workspace_refs//:refs.json",
     platform_overrides = {
         ":typedb_driver_jni": json.encode([
            "com.typedb:typedb-driver-jni-linux-arm64:{pom_version}",
@@ -77,11 +77,11 @@ swig_native_java_library(
     enable_cxx = True,
     maven_coordinates = "com.typedb:typedb-driver-jni-{platform}:{pom_version}",
     platforms = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": "macosx-arm64",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "macosx-x86_64",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "macosx-arm64",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "macosx-x86_64",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
     },
 )
 
@@ -93,7 +93,7 @@ assemble_maven(
     scm_url = "https://github.com/typedb/typedb-driver-java",
     target = ":typedb_driver_jni",
     version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+    workspace_refs = "@typedb_driver_workspace_refs//:refs.json",
 )
 
 deploy_maven(
@@ -135,7 +135,7 @@ test_to_example(
     name = "example_core",
     input = "//java/test/integration/core:ExampleTest.java",
     output = "java/core_example",
-    removed_lines = ["assert", "todo"],
+    removed_lines = ["assert", "fail(", "todo"],
     changed_words = {
         "ExampleTest": "TypeDBExample",
     },

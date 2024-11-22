@@ -16,7 +16,7 @@
 # under the License.
 
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//nodejs/test/behaviour:rules.bzl", "node_cucumber_test", "behaviour_test_ts_config")
 
 checkstyle_test(
@@ -43,7 +43,7 @@ ts_project(
 node_cucumber_test(
     name = "test-cloud",
     steps = "@//nodejs/test/behaviour/connection:steps-cloud",
-    features = ["@vaticle_typedb_behaviour//connection:user.feature"],
+    features = ["@typedb_behaviour//connection:user.feature"],
     data = [
         ":steps",
     ],

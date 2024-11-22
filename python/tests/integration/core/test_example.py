@@ -103,13 +103,16 @@ class TestExample(TestCase):
                 concept_by_index = row.get_index(0)
                 assert_that(concept_by_name, is_(equal_to(concept_by_index)))
 
+                print(f"Getting concepts by variable names ({concept_by_name.get_label()}) and "
+                      f"indexes ({concept_by_index.get_label()}) is equally correct. ")
+
                 # Check if it's an entity type before the conversion
                 if concept_by_name.is_entity_type():
-                    print(f"Getting concepts by variable names and indexes is equally correct. "
-                          f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
+                    print(f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
                           f"(in case of a doubt: '{concept_by_index.as_entity_type().get_label()}')")
                 assert_that(concept_by_name.is_entity_type(), is_(True))
                 assert_that(concept_by_name.is_type(), is_(True))
+                assert_that(concept_by_name.get_label(), is_("person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_("person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_not("not person"))
                 assert_that(concept_by_name.as_entity_type().get_label(), is_not("age"))
@@ -135,10 +138,10 @@ class TestExample(TestCase):
                     if concept_by_name.is_attribute_type():
                         attribute_type = concept_by_name.as_attribute_type()
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
-                              f"value type: '{attribute_type.get_value_type()}'")
+                              f"value type: '{attribute_type.try_get_value_type()}'")
 
                         assert_that(attribute_type.is_long() or attribute_type.is_string(), is_(True))
-                        assert_that(attribute_type.get_value_type(), is_in(["long", "string"]))
+                        assert_that(attribute_type.try_get_value_type(), is_in(["long", "string"]))
                         assert_that(attribute_type.get_label(), is_in(["age", "name"]))
                         assert_that(attribute_type.get_label(), is_not("person"))
                         assert_that(attribute_type.get_label(), is_not("person:age"))
@@ -172,13 +175,38 @@ class TestExample(TestCase):
                 assert_that("z" in header, is_(True))
 
                 x = row.get_index(header.index("x"))
+                print(
+                    "As we expect an entity instance, we can try to get its IID (unique identification): {x.try_get_iid()}. ")
                 if x.is_entity():
-                    print(f"Each entity receives a unique IID. It can be retrieved directly: {x.as_entity().get_iid()}")
+                    print(f"It can also be retrieved directly and safely after a cast: {x.as_entity().get_iid()}")
 
                 # Do not forget to commit if the changes should be persisted
                 tx.commit()
 
-            # Open a read transaction to verify that the inserted data is saved
+            # Open another write transaction to try inserting even more data
+            with driver.transaction(database.name, TransactionType.WRITE) as tx:
+                # When loading a large dataset, it's often better not to resolve every query's promise immediately.
+                # Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+                # just call `commit`, which will wait for all ongoing operations to finish before executing.
+                queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"]
+                for query in queries:
+                    tx.query(query)
+                tx.commit()
+
+            with driver.transaction(database.name, TransactionType.WRITE) as tx:
+                # Commit will still fail if at least one of the queries produce an error.
+                queries = ["insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";"]
+                promises = []
+                for query in queries:
+                    promises.append(tx.query(query))
+
+                try:
+                    tx.commit()
+                    assert False, "TypeDBDriverException is expected"
+                except TypeDBDriverException as expected_exception:
+                    print(f"Commit result will contain the unresolved query's error: {expected_exception}")
+
+            # Open a read transaction to verify that the previously inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
                 # A match query can be used for concept row outputs
                 var = "x"
@@ -200,14 +228,14 @@ class TestExample(TestCase):
                     assert_that(x_type.get_label(), is_not("not person"))
                     count += 1
                     print(f"Found a person {x} of type {x_type}")
-                assert_that(count, is_(2))
+                assert_that(count, is_(4))
                 print(f"Total persons found: {count}")
 
                 # A fetch query can be used for concept document outputs with flexible structure
                 fetch_query = """
                 match
                   $x isa! person, has $a;
-                  $a isa! $t; 
+                  $a isa! $t;
                 fetch {
                   "single attribute type": $t,
                   "single attribute": $a,
@@ -224,7 +252,7 @@ class TestExample(TestCase):
                     count += 1
                     print(f"Fetched a document: {document}.")
                     print(f"This document contains an attribute of type: {document['single attribute type']['label']}")
-                assert_that(count, is_(3))
+                assert_that(count, is_(5))
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")

@@ -18,12 +18,12 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_behaviour_test(
     name = "test_driver",
     srcs = ["driver.rs"],
-    data = ["@vaticle_typedb_behaviour//driver:driver.feature"],
+    data = ["@typedb_behaviour//driver:driver.feature"],
 )
 
 checkstyle_test(

@@ -160,7 +160,6 @@ pub(super) enum QueryResponse {
     // GetAggregate { answer: Option<Value> },
     //
     // GetGroup { answers: Vec<ConceptMapGroup> },
-    // GetGroupAggregate { answers: Vec<ValueGroup> },
     //
     // Fetch { answers: Vec<readable_concept::Tree> },
 }

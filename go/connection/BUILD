@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 #go_library(

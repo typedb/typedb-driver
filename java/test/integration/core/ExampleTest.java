@@ -20,6 +20,7 @@
 package com.typedb.driver.test.integration.core;
 
 // EXAMPLE START MARKER
+
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
@@ -34,11 +35,11 @@ import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 // EXAMPLE END MARKER
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 // EXAMPLE START MARKER
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 // EXAMPLE START MARKER
@@ -109,7 +111,6 @@ public class ExampleTest {
                 transaction.commit();
             }
 
-
             // Open a read transaction to safely read anything without database modifications
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
                 QueryAnswer entityAnswer = transaction.query("match entity $x;").resolve();
@@ -136,15 +137,19 @@ public class ExampleTest {
                 Concept conceptByIndex = entityRow.getIndex(0);
                 assertEquals(conceptByName, conceptByIndex);
 
+                System.out.printf("Getting concepts by variable names (%s) and indexes (%s) is equally correct. ",
+                        conceptByName.getLabel(),
+                        conceptByIndex.getLabel());
+
                 // Check if it's an entity type before the conversion
                 if (conceptByName.isEntityType()) {
-                    System.out.printf("Getting concepts by variable names and indexes is equally correct. " +
-                                    "Both represent the defined entity type: '%s' (in case of a doubt: '%s')%n",
+                    System.out.printf("Both represent the defined entity type: '%s' (in case of a doubt: '%s')%n",
                             conceptByName.asEntityType().getLabel(),
                             conceptByIndex.asEntityType().getLabel());
                 }
                 assertTrue(conceptByName.isEntityType());
                 assertTrue(conceptByName.isType());
+                assertEquals(conceptByName.getLabel(), "person");
                 assertEquals(conceptByName.asEntityType().getLabel(), "person");
                 assertNotEquals(conceptByName.asEntityType().getLabel(), "not person");
                 assertNotEquals(conceptByName.asEntityType().getLabel(), "age");
@@ -170,9 +175,9 @@ public class ExampleTest {
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
-                        System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.getValueType());
+                        System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.tryGetValueType().get());
                         assertTrue(attributeType.isLong() || attributeType.isString());
-                        assertTrue(Objects.equals(attributeType.getValueType(), "long") || Objects.equals(attributeType.getValueType(), "string"));
+                        assertTrue(Objects.equals(attributeType.tryGetValueType().get(), "long") || Objects.equals(attributeType.tryGetValueType().get(), "string"));
                         assertTrue(Objects.equals(attributeType.getLabel(), "age") || Objects.equals(attributeType.getLabel(), "name"));
                         assertNotEquals(attributeType.getLabel(), "person");
                         assertNotEquals(attributeType.getLabel(), "person:age");
@@ -210,12 +215,41 @@ public class ExampleTest {
                 assertTrue(header.contains("z"));
 
                 Concept x = row.getIndex(header.indexOf("x"));
+                System.out.printf("As we expect an entity instance, we can try to get its IID (unique identification): %s. ", x.tryGetIID());
                 if (x.isEntity()) {
-                    System.out.println("Each entity receives a unique IID. It can be retrieved directly: " + x.asEntity().getIID());
+                    System.out.println("It can also be retrieved directly and safely after a cast: " + x.asEntity().getIID());
                 }
 
                 // Do not forget to commit if the changes should be persisted
                 transaction.commit();
+            }
+
+            // Open another write transaction to try inserting even more data
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // When loading a large dataset, it's often better not to resolve every query's promise immediately.
+                // Instead, collect promises and handle them later. Alternatively, if a commit is expected in the end,
+                // just call `commit`, which will wait for all ongoing operations to finish before executing.
+                List<String> queries = List.of("insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";");
+                for (String query : queries) {
+                    transaction.query(query);
+                }
+                transaction.commit();
+            }
+
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                // Commit will still fail if at least one of the queries produce an error.
+                List<String> queries = List.of("insert $c isa not-person, has name \"Chris\";", "insert $d isa person, has name \"David\";");
+                List<Promise<? extends QueryAnswer>> promises = new ArrayList<>();
+                for (String query : queries) {
+                    promises.add(transaction.query(query));
+                }
+
+                try {
+                    transaction.commit();
+                    fail("TypeDBDriverException is expected");
+                } catch (TypeDBDriverException expectedException) {
+                    System.out.println("Commit result will contain the unresolved query's error: " + expectedException);
+                }
             }
 
             // Open a read transaction to verify that the inserted data is saved
@@ -242,7 +276,7 @@ public class ExampleTest {
                     matchCount.incrementAndGet();
                     System.out.printf("Found a person %s of type %s%n", x, xType);
                 });
-                assertEquals(matchCount.get(), 2);
+                assertEquals(matchCount.get(), 4);
                 System.out.println("Total persons found: " + matchCount.get());
 
                 // A fetch query can be used for concept document outputs with flexible structure
@@ -267,7 +301,7 @@ public class ExampleTest {
 
                     fetchCount.incrementAndGet();
                 });
-                assertEquals(fetchCount.get(), 3);
+                assertEquals(fetchCount.get(), 5);
                 System.out.println("Total documents fetched: " + fetchCount.get());
             }
         }

@@ -21,90 +21,66 @@ from datetime import date
 from decimal import Decimal
 from typing import Mapping, Union
 
+from typedb.api.concept.concept import Concept
 from typedb.api.concept.instance.attribute import Attribute
-from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
-from typedb.concept.concept_factory import wrap_attribute_type, wrap_value
+from typedb.common.exception import TypeDBDriverException, NULL_CONCEPT_PROPERTY
+from typedb.concept.concept_factory import wrap_attribute_type
 from typedb.concept.instance.instance import _Instance
 from typedb.concept.type.attribute_type import _AttributeType
 from typedb.concept.value.value import _Value
-from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value
+from typedb.native_driver_wrapper import attribute_get_type
 
 
 class _Attribute(Attribute, _Instance):
 
-    def _value(self) -> _Value:
-        return wrap_value(attribute_get_value(self.native_object))
-
     def get_type(self) -> _AttributeType:
         return wrap_attribute_type(attribute_get_type(self.native_object))
 
-    def get_value(self) -> Value.VALUE:
-        return self._value().get()
+    def get_value(self) -> Concept.VALUE:
+        return self._get_value_concept().get()
 
-    def is_boolean(self) -> bool:
-        return self._value().is_boolean()
+    def get_value_type(self) -> str:
+        return self._get_value_concept().get_type()
 
-    def is_long(self) -> bool:
-        return self._value().is_long()
+    def get_boolean(self) -> bool:
+        return self._get_value_concept().get_boolean()
 
-    def is_double(self) -> bool:
-        return self._value().is_double()
+    def get_long(self) -> int:
+        return self._get_value_concept().get_long()
 
-    def is_decimal(self) -> bool:
-        return self._value().is_decimal()
+    def get_double(self) -> float:
+        return self._get_value_concept().get_double()
 
-    def is_string(self) -> bool:
-        return self._value().is_string()
+    def get_decimal(self) -> Decimal:
+        return self._get_value_concept().get_decimal()
 
-    def is_date(self) -> bool:
-        return self._value().is_date()
+    def get_string(self) -> str:
+        return self._get_value_concept().get_string()
 
-    def is_datetime(self) -> bool:
-        return self._value().is_datetime()
+    def get_date(self) -> date:
+        return self._get_value_concept().get_date()
 
-    def is_datetime_tz(self) -> bool:
-        return self._value().is_datetime_tz()
+    def get_datetime(self) -> Datetime:
+        return self._get_value_concept().get_datetime()
 
-    def is_duration(self) -> bool:
-        return self._value().is_duration()
+    def get_datetime_tz(self) -> Datetime:
+        return self._get_value_concept().get_datetime_tz()
 
-    def is_struct(self) -> bool:
-        return self._value().is_struct()
+    def get_duration(self) -> Duration:
+        return self._get_value_concept().get_duration()
 
-    def as_boolean(self) -> bool:
-        return self._value().as_boolean()
-
-    def as_long(self) -> int:
-        return self._value().as_long()
-
-    def as_double(self) -> float:
-        return self._value().as_double()
-
-    def as_decimal(self) -> Decimal:
-        return self._value().as_decimal()
-
-    def as_string(self) -> str:
-        return self._value().as_string()
-
-    def as_date(self) -> date:
-        return self._value().as_date()
-
-    def as_datetime(self) -> Datetime:
-        return self._value().as_datetime()
-
-    def as_datetime_tz(self) -> Datetime:
-        return self._value().as_datetime_tz()
-
-    def as_duration(self) -> Duration:
-        return self._value().as_duration()
-
-    def as_struct(self) -> Value.STRUCT:
-        return self._value().as_struct()
+    def get_struct(self) -> Concept.STRUCT:
+        return self._get_value_concept().get_struct()
 
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
-        return {"type": self.get_type().get_label()} | self._value().to_json()
+        return {"type": self.get_type().get_label()} | self._get_value_concept().to_json()
+
+    def _get_value_concept(self) -> _Value:
+        if (value := self._try_get_value_concept()) is None:
+            raise TypeDBDriverException(NULL_CONCEPT_PROPERTY, self.__class__.__name__)
+        return value
 
     def __eq__(self, other):
         if other is self:

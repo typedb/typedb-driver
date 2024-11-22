@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
 load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 py_library(
     name = "steps",
@@ -27,7 +27,7 @@ py_library(
 
 typedb_behaviour_py_test(
     name = "test",
-    feats = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
+    feats = ["@typedb_behaviour//connection:transaction.feature"],
     steps = [
         ":steps",
         "//python/tests/behaviour/connection:steps",

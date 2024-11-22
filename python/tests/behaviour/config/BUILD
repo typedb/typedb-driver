@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 py_library(
     name = "parameters",
