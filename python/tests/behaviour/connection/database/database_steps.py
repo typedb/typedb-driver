@@ -26,25 +26,30 @@ from tests.behaviour.util.util import assert_collections_equal
 from typedb.driver import *
 
 
-def create_databases(context: Context, names: list[str]):
+def create_databases(driver: Driver, names: list[str]):
     for name in names:
-        context.driver.databases.create(name)
+        driver.databases.create(name)
+
+
+def delete_databases(driver: Driver, names: list[str]):
+    for name in names:
+        driver.databases.get(name).delete()
 
 
 @step("connection create database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: create_databases(context, [name]))
+    may_error.check(lambda: create_databases(context.driver, [name]))
 
 
 @step("connection create database with empty name{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: create_databases(context, [""]))
+    may_error.check(lambda: create_databases(context.driver, [""]))
 
 
 @step("connection create databases")
 def step_impl(context: Context):
     names = parse_list(context.table)
-    create_databases(context, names)
+    create_databases(context.driver, names)
 
 
 @step("connection create databases in parallel")
@@ -56,19 +61,21 @@ def step_impl(context: Context):
             executor.submit(partial(context.driver.databases.create, name))
 
 
-def delete_databases(context: Context, names: list[str]):
-    for name in names:
-        context.driver.databases.get(name).delete()
+@step("in background, connection create database: {name:NonSemicolon}{may_error:MayError}")
+def step_impl(context: Context, name: str, may_error: MayError):
+    background = context.create_driver_fn()
+    may_error.check(lambda: create_databases(background, [name]))
+    background.close()
 
 
 @step("connection delete database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: delete_databases(context, [name]))
+    may_error.check(lambda: delete_databases(context.driver, [name]))
 
 
 @step("connection delete databases")
 def step_impl(context: Context):
-    delete_databases(context, names=parse_list(context.table))
+    delete_databases(context.driver, names=parse_list(context.table))
 
 
 @step("connection delete databases in parallel")
@@ -80,6 +87,14 @@ def step_impl(context: Context):
             executor.submit(partial(context.driver.databases.get(name).delete))
 
 
+@step("in background, connection delete database: {name:NonSemicolon}{may_error:MayError}")
+def step_impl(context: Context, name: str, may_error: MayError):
+    background = context.create_driver_fn()
+    may_error.check(lambda: delete_databases(background, [name]))
+    background.close()
+
+
+# TODO: Use "contains" instead. Cover "all" interface explicitly
 def has_databases(context: Context, names: list[str]):
     assert_collections_equal([db.name for db in context.driver.databases.all()], names)
 

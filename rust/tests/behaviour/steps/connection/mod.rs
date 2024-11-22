@@ -35,13 +35,13 @@ async fn typedb_starts(_: &mut Context) {}
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
 async fn connection_opens_with_default_authentication(context: &mut Context) {
-    context.create_default_driver(None, None).await.unwrap();
+    context.set_driver(context.create_default_driver(None, None).await.unwrap());
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection opens with authentication: {word}, {word}")]
 async fn connection_opens_with_authentication(context: &mut Context, username: String, password: String) {
-    context.create_default_driver(Some(&username), Some(&password)).await.unwrap()
+    context.set_driver(context.create_default_driver(Some(&username), Some(&password)).await.unwrap())
 }
 
 fn change_host(address: &str, new_host: &str) -> String {
