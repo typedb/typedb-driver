@@ -51,9 +51,9 @@ build:
         bazel build //rust/...
         # bazel build //java/...
         # bazel build //python/...
-        # bazel run @typedb_dependencies//tool/checkstyle:test-coverage
-        # bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        # bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
+         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
+         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
         # TODO: Return these three steps when npm is reimplemented for 3.0
         # cd nodejs
         # npm install
