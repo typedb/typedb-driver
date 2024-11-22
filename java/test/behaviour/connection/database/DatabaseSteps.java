@@ -39,7 +39,6 @@ import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.th
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
     public void createDatabases(Driver driver, List<String> names) {

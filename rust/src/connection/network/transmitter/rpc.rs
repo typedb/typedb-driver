@@ -157,7 +157,9 @@ impl RPCTransmitter {
                 match response_source.next().await {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
-                            Ok(TransactionResponse::Open { server_duration_millis }) => {
+                            Ok(TransactionResponse::Open { server_duration_millis: _ }) => {
+                                // TODO: Return as a part of Response::TransactionStream and use
+                                // the code below outside:
                                 // let open_latency =
                                 //     Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
                                 // tracker.update_latency(open_latency)
@@ -171,9 +173,9 @@ impl RPCTransmitter {
                             }
                         }
                     }
-                    Some(Ok(unexpected_message)) => panic!("Unexpected message {unexpected_message:?}"),
+                    Some(Ok(unexpected_message)) => panic!("Unexpected message {unexpected_message:?}"), // TODO: return Err()
                     Some(Err(status)) => return Err(status.into()),
-                    None => panic!("Unexpected close"),
+                    None => panic!("Unexpected close"), // TODO: return Err()
                 }
                 Ok(Response::TransactionStream { open_request_id: req_id, request_sink, response_source })
             }
