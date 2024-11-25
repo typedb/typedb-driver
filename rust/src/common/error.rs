@@ -176,7 +176,9 @@ error_messages! { ConnectionError
     ListsNotImplemented =
         28: "Lists are not yet supported by the driver.",
     UnexpectedKind { kind: i32 } =
-        14: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
+        29: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
+    UnexpectedConnectionClose =
+        30: "Connection closed unexpectedly.",
 }
 
 error_messages! { InternalError

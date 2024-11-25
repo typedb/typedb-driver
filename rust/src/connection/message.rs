@@ -103,6 +103,7 @@ pub(super) enum Response {
         open_request_id: RequestID,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
+        server_duration_millis: u64,
     },
 
     UsersAll {

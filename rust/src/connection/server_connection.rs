@@ -196,7 +196,6 @@ impl ServerConnection {
     ) -> crate::Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
         let open_request_start = Instant::now();
-        let tracker = self.latency_tracker.clone();
 
         match self
             .request(Request::Transaction(TransactionRequest::Open {
@@ -207,7 +206,16 @@ impl ServerConnection {
             }))
             .await?
         {
-            Response::TransactionStream { open_request_id: request_id, request_sink, response_source } => {
+            Response::TransactionStream {
+                open_request_id: request_id,
+                request_sink,
+                response_source,
+                server_duration_millis,
+            } => {
+                let open_latency =
+                    Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
+                self.latency_tracker.update_latency(open_latency);
+
                 let transmitter =
                     TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
