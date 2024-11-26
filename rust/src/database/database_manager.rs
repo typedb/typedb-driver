@@ -87,7 +87,7 @@ impl DatabaseManager {
     ///
     /// # Arguments
     ///
-    /// * `name` -- The name of the database to retrieve
+    /// * `name` — The name of the database to retrieve
     ///
     /// # Examples
     ///
@@ -109,7 +109,7 @@ impl DatabaseManager {
     ///
     /// # Arguments
     ///
-    /// * `name` -- The database name to be checked
+    /// * `name` — The database name to be checked
     ///
     /// # Examples
     ///
@@ -131,7 +131,7 @@ impl DatabaseManager {
     ///
     /// # Arguments
     ///
-    /// * `name` -- The name of the database to be created
+    /// * `name` — The name of the database to be created
     ///
     /// # Examples
     ///

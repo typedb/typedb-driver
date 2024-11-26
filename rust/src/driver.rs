@@ -57,7 +57,7 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address` -- The address (host:port) on which the TypeDB Server is running
+    /// * `address` — The address (host:port) on which the TypeDB Server is running
     ///
     /// # Examples
     ///
@@ -78,8 +78,8 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address` -- The address (host:port) on which the TypeDB Server is running
-    /// * `driver_lang` -- The language of the driver connecting to the server
+    /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `driver_lang` — The language of the driver connecting to the server
     ///
     /// # Examples
     ///
@@ -134,8 +134,8 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `init_addresses` -- Addresses (host:port) on which TypeDB Cloud nodes are running
-    /// * `credential` -- User credential and TLS encryption setting
+    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
+    /// * `credential` — User credential and TLS encryption setting
     ///
     /// # Examples
     ///
@@ -168,9 +168,9 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address_translation` -- Translation map from addresses to be used by the driver for connection
+    /// * `address_translation` — Translation map from addresses to be used by the driver for connection
     ///    to addresses received from the TypeDB server(s)
-    /// * `credential` -- User credential and TLS encryption setting
+    /// * `credential` — User credential and TLS encryption setting
     ///
     /// # Examples
     ///
