@@ -21,8 +21,7 @@
 #![deny(elided_lifetimes_in_paths)]
 
 use std::{
-    collections::{HashSet, VecDeque}
-    ,
+    collections::{HashSet, VecDeque},
     error::Error,
     fmt,
     fmt::Formatter,
@@ -37,7 +36,10 @@ use futures::{
 };
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType}, BoxStream, ConnectionSettings, Credential, Options, Result as TypeDBResult, Transaction, TypeDBDriver};
+use typedb_driver::{
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
+    BoxStream, ConnectionSettings, Credential, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
+};
 
 use crate::params::QueryAnswerType;
 
@@ -394,9 +396,9 @@ impl Context {
             addresses,
             Credential::new(
                 username.expect("Username is required for cloud connection"),
-                password.expect("Password is required for cloud connection")
+                password.expect("Password is required for cloud connection"),
             ),
-            ConnectionSettings::new(false, None)?
+            ConnectionSettings::new(false, None)?,
         )?;
         self.driver = Some(driver);
         Ok(())

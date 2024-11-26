@@ -67,7 +67,9 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core(
-        address: impl AsRef<str>, credential: Credential, connection_settings: ConnectionSettings,
+        address: impl AsRef<str>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
     ) -> Result<Self> {
         Self::new_core_with_description(address, credential, connection_settings, "rust").await
     }
@@ -87,7 +89,10 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_core_with_description(
-        address: impl AsRef<str>, credential: Credential, connection_settings: ConnectionSettings, driver_lang: impl AsRef<str>
+        address: impl AsRef<str>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+        driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
@@ -101,7 +106,7 @@ impl TypeDBDriver {
             driver_lang.as_ref(),
             TypeDBDriver::VERSION,
         )
-            .await?;
+        .await?;
 
         // // validate
         // let advertised_address = server_connection
@@ -121,7 +126,7 @@ impl TypeDBDriver {
             user_manager,
             background_runtime,
             username: None,
-            is_cloud: false
+            is_cloud: false,
         })
     }
 
@@ -147,7 +152,11 @@ impl TypeDBDriver {
     ///     )?,
     /// )
     /// ```
-    pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential, connection_settings: ConnectionSettings) -> Result<Self> {
+    pub fn new_cloud<T: AsRef<str> + Sync>(
+        init_addresses: &[T],
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+    ) -> Result<Self> {
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credential.clone())?;
         // let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
@@ -175,7 +184,11 @@ impl TypeDBDriver {
     ///     credential,
     /// )
     /// ```
-    pub fn new_cloud_with_translation<T, U>(address_translation: HashMap<T, U>, credential: Credential, connection_settings: ConnectionSettings) -> Result<Self>
+    pub fn new_cloud_with_translation<T, U>(
+        address_translation: HashMap<T, U>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+    ) -> Result<Self>
     where
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,
@@ -207,7 +220,7 @@ impl TypeDBDriver {
         address_to_server: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credential: Credential,
-        connection_settings: ConnectionSettings
+        connection_settings: ConnectionSettings,
     ) -> Result<TypeDBDriver> {
         // let server_connections: HashMap<Address, ServerConnection> = address_to_server
         //     .into_iter()
@@ -237,7 +250,7 @@ impl TypeDBDriver {
         background_runtime: Arc<BackgroundRuntime>,
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credential,
-        connection_settings: ConnectionSettings
+        connection_settings: ConnectionSettings,
     ) -> Result<HashSet<Address>> {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {
@@ -247,13 +260,13 @@ impl TypeDBDriver {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                            ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                        )) => (),
+                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    )) => (),
                     Err(err) => Err(err)?,
                 },
                 Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                    )) => (),
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                )) => (),
                 Err(err) => Err(err)?,
             }
         }

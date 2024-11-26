@@ -26,8 +26,7 @@ use itertools::Itertools;
 use typedb_protocol::{
     concept,
     concept_document::{self, node::leaf::Leaf as LeafProto},
-    row_entry::Entry
-    ,
+    row_entry::Entry,
     value::{datetime_tz::Timezone as TimezoneProto, Value as ValueProtoInner},
     value_type::ValueType as ValueTypeProto,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,

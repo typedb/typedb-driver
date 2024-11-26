@@ -17,8 +17,8 @@
  * under the License.
  */
 
-use std::fs;
-use std::path::Path;
+use std::{fs, path::Path};
+
 use tonic::transport::{Certificate, ClientTlsConfig};
 
 /// User connection settings for connecting to TypeDB.

@@ -26,11 +26,7 @@ use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{
-        concept_document::ConceptDocumentHeader,
-        concept_row::ConceptRowHeader,
-        QueryType,
-    },
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},
@@ -199,7 +195,9 @@ impl TryIntoProto<user_manager::contains::Req> for Request {
 impl TryIntoProto<user_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::create::Req> {
         match self {
-            Self::UsersCreate { user } => Ok(user_manager::create::Req { user: Some(typedb_protocol::User { name: "".to_string(), password: "".to_string()}) }),
+            Self::UsersCreate { user } => Ok(user_manager::create::Req {
+                user: Some(typedb_protocol::User { name: "".to_string(), password: "".to_string() }),
+            }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }

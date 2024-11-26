@@ -120,8 +120,11 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
         let name = name.into();
-        self.run_failsafe(name, |server_connection, name| async move { server_connection.contains_database(name).await })
-            .await
+        self.run_failsafe(
+            name,
+            |server_connection, name| async move { server_connection.contains_database(name).await },
+        )
+        .await
     }
 
     /// Create a database with the given name

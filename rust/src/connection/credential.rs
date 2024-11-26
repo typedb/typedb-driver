@@ -57,8 +57,6 @@ impl Credential {
 
 impl fmt::Debug for Credential {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Credential")
-            .field("username", &self.username)
-            .finish()
+        f.debug_struct("Credential").field("username", &self.username).finish()
     }
 }

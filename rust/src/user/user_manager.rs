@@ -18,10 +18,11 @@
  */
 use std::collections::HashMap;
 
-use crate::common::address::Address;
 use crate::{
-    common::Result, connection::server_connection::ServerConnection, error::ConnectionError
-    , User,
+    common::{address::Address, Result},
+    connection::server_connection::ServerConnection,
+    error::ConnectionError,
+    User,
 };
 
 /// Provides access to all user management methods.
@@ -31,7 +32,6 @@ pub struct UserManager {
 }
 
 impl UserManager {
-
     pub fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
         Self { server_connections }
     }
@@ -54,7 +54,7 @@ impl UserManager {
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.contains_user(username.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -78,7 +78,7 @@ impl UserManager {
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.get_user(uname.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -97,7 +97,7 @@ impl UserManager {
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.all_users().await {
                 Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -123,7 +123,7 @@ impl UserManager {
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.create_user(uname.clone(), passwd.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
@@ -147,7 +147,7 @@ impl UserManager {
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.delete_user(uname.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
+                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?

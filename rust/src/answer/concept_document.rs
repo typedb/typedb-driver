@@ -21,8 +21,7 @@ use std::{borrow::Cow, collections::HashMap, sync::Arc};
 
 use super::{QueryType, JSON};
 use crate::concept::{
-    value::Struct,
-    Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
+    value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
 };
 
 #[derive(Debug, PartialEq)]

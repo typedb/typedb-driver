@@ -30,7 +30,10 @@ use tonic::{
     Request, Status,
 };
 
-use crate::{common::{address::Address, Result, StdResult}, ConnectionSettings, Credential};
+use crate::{
+    common::{address::Address, Result, StdResult},
+    ConnectionSettings, Credential,
+};
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
 
@@ -56,7 +59,7 @@ pub(super) fn open_callcred_channel(
 
 #[derive(Debug)]
 pub(super) struct CallCredentials {
-    credential: Credential
+    credential: Credential,
 }
 
 impl CallCredentials {
