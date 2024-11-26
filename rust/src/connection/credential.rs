@@ -32,8 +32,8 @@ impl Credential {
     ///
     /// # Arguments
     ///
-    /// * `username` -  The name of the user to connect as
-    /// * `password` - The password for the user
+    /// * `username` --  The name of the user to connect as
+    /// * `password` -- The password for the user
     ///
     /// # Examples
     ///

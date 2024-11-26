@@ -62,8 +62,8 @@ impl Transaction {
     ///
     /// # Arguments
     ///
-    /// * `query` - The TypeQL query to be executed
-    /// * `options` - Query options
+    /// * `query` -- The TypeQL query to be executed
+    /// * `options` -- Query options
     ///
     /// # Examples
     ///
@@ -88,7 +88,7 @@ impl Transaction {
     ///
     /// # Arguments
     ///
-    /// * `function` - The callback function.
+    /// * `function` -- The callback function.
     ///
     /// # Examples
     ///

@@ -33,7 +33,7 @@ impl ConnectionSettings {
     ///
     /// # Arguments
     ///
-    /// * `tls_root_ca` - Path to the CA certificate to use for authenticating server certificates.
+    /// * `tls_root_ca` -- Path to the CA certificate to use for authenticating server certificates.
     ///
     /// # Examples
     ///
