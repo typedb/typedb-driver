@@ -45,7 +45,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         Self { grpc: GRPC::new(channel), call_credentials }
     }
 
-    async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
+    async fn call<F, R>(&mut self, call: F) -> Result<R>
     where
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
     {
@@ -107,7 +107,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         &mut self,
         open_req: transaction::Req,
     ) -> Result<(UnboundedSender<transaction::Client>, Streaming<transaction::Server>)> {
-        self.call_with_auto_renew_token(|this| {
+        self.call(|this| {
             let transaction_req = transaction::Client { reqs: vec![open_req.clone()] };
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
@@ -150,6 +150,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
         R: 'static,
     {
-        self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
+        self.call(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
     }
 }
