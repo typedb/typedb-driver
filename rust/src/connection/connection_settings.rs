@@ -38,7 +38,7 @@ impl ConnectionSettings {
     /// # Examples
     ///
     /// ```rust
-    /// ConnectionSettings::with_tls(Some(&path_to_ca));
+    /// ConnectionSettings::new(true, Some(&path_to_ca));
     ///```
     pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
         let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
