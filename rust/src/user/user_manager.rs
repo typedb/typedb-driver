@@ -40,7 +40,7 @@ impl UserManager {
     ///
     /// # Arguments
     ///
-    /// * `username` -- The user name to be checked
+    /// * `username` - The user name to be checked
     ///
     /// # Examples
     ///
@@ -64,7 +64,7 @@ impl UserManager {
     ///
     /// # Arguments
     ///
-    /// * `username` -- The name of the user to retrieve
+    /// * `username` - The name of the user to retrieve
     ///
     /// # Examples
     ///
@@ -107,8 +107,8 @@ impl UserManager {
     ///
     /// # Arguments
     ///
-    /// * `username` -- The name of the user to be created
-    /// * `password` -- The password of the user to be created
+    /// * `username` - The name of the user to be created
+    /// * `password` - The password of the user to be created
     ///
     /// # Examples
     ///
@@ -133,7 +133,7 @@ impl UserManager {
     ///
     /// # Arguments
     ///
-    /// * `username` -- The name of the user to be deleted
+    /// * `username` - The name of the user to be deleted
     ///
     /// # Examples
     ///
