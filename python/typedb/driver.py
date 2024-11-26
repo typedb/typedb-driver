@@ -31,7 +31,8 @@ from typedb.api.concept.type.relation_type import *  # noqa # pylint: disable=un
 from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
-# from typedb.api.connection.credential import *
+from typedb.api.connection.connection_settings import *
+from typedb.api.connection.credential import *
 from typedb.api.connection.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.driver import *
 # from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
@@ -50,14 +51,16 @@ class TypeDB:
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod
-    def core_driver(address: str) -> Driver:
+    def core_driver(address: str, credential: Credential, connection_settings: ConnectionSettings) -> Driver:
         """
         Creates a connection to TypeDB.
 
         :param address: Address of the TypeDB server.
+        :param credential: The credential to connect with.
+        :param connection_settings: The connection settings to connect with.
         :return:
         """
-        return _Driver([address])
+        return _Driver.core(address, credential, connection_settings)
 
     # @staticmethod
     # def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential) -> Driver:

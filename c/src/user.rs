@@ -51,7 +51,7 @@ pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
 /// @param password_old The current password of this user
 /// @param password_new The new password
 #[no_mangle]
-pub extern "C" fn user_password_update(
+pub extern "C" fn user_update_password(
     user: *mut User,
     driver: *const TypeDBDriver,
     password_old: *const c_char,

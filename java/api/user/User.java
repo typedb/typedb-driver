@@ -30,7 +30,7 @@ public interface User {
      * Returns the name of this user.
      */
     @CheckReturnValue
-    String username();
+    String name();
 
     // TODO: Not implemented
 //    /**
@@ -44,5 +44,5 @@ public interface User {
      * @param passwordOld The current password of this user
      * @param passwordNew The new password
      */
-    void passwordUpdate(String passwordOld, String passwordNew);
+    void updatePassword(String passwordOld, String passwordNew);
 }

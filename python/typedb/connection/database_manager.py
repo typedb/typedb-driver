@@ -20,46 +20,41 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.connection.database import DatabaseManager
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database import _Database
 from typedb.native_driver_wrapper import databases_contains, databases_create, databases_get, \
-    databases_all, database_iterator_next, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+    databases_all, database_iterator_next, TypeDBDriverExceptionNative
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
 
 
-class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDriver]):
+class _DatabaseManager(DatabaseManager):
 
     def __init__(self, native_driver: NativeDriver):
-        super().__init__(native_driver)
-
-    @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException(ILLEGAL_STATE)
+        self.native_driver = native_driver
 
     def get(self, name: str) -> _Database:
         try:
-            return _Database(databases_get(self.native_object, name))
+            return _Database(databases_get(self.native_driver, name))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def contains(self, name: str) -> bool:
         try:
-            return databases_contains(self.native_object, name)
+            return databases_contains(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def create(self, name: str) -> None:
         try:
-            databases_create(self.native_object, name)
+            databases_create(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def all(self) -> list[_Database]:
         try:
-            return list(map(_Database, IteratorWrapper(databases_all(self.native_object), database_iterator_next)))
+            return list(map(_Database, IteratorWrapper(databases_all(self.native_driver), database_iterator_next)))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

@@ -24,7 +24,7 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.jni.typedb_driver.user_get_name;
-import static com.typedb.driver.jni.typedb_driver.user_password_update;
+import static com.typedb.driver.jni.typedb_driver.user_update_password;
 
 public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
     private final UserManagerImpl users;
@@ -35,7 +35,7 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
     }
 
     @Override
-    public String username() {
+    public String name() {
         return user_get_name(nativeObject);
     }
 
@@ -48,9 +48,9 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
 //    }
 
     @Override
-    public void passwordUpdate(String passwordOld, String passwordNew) {
+    public void updatePassword(String passwordOld, String passwordNew) {
         try {
-            user_password_update(nativeObject, users.nativeDriver, passwordOld, passwordNew);
+            user_update_password(nativeObject, users.nativeDriver, passwordOld, passwordNew);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

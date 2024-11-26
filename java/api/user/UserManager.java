@@ -105,11 +105,11 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().passwordSet(username, password);
+     * driver.users().setPassword(username, password);
      * </pre>
      *
      * @param username The name of the user to set the password of
      * @param password The new password
      */
-    void passwordSet(String username, String password);
+    void setPassword(String username, String password); // TODO: Why is it not in user?
 }

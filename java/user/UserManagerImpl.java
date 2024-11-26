@@ -99,7 +99,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void passwordSet(String username, String password) {
+    public void setPassword(String username, String password) {
         try {
             users_set_password(nativeDriver, username, password);
         } catch (com.typedb.driver.jni.Error e) {

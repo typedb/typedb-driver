@@ -21,7 +21,6 @@ config:
     dependencies: [build]
     typedb-behaviour: [build]
     typedb-protocol: [build, release]
-TODO unbreak factory
 
 build:
   quality:
@@ -50,7 +49,7 @@ build:
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
         bazel build //rust/...
-        # bazel build //java/... # TODO: uncomment when authentication has been implemented for the Java driver
+        bazel build //java/...
         # bazel build //python/... # TODO: uncomment when authentication has been implemented for the Python driver
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors

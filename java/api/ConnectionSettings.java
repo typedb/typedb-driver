@@ -36,16 +36,16 @@ import static com.typedb.driver.jni.typedb_driver.connection_settings_new;
  */
 public class ConnectionSettings extends NativeObject<com.typedb.driver.jni.ConnectionSettings> {
     /**
-     * @param tlsEnabled    Specify whether the connection to TypeDB Server must be done over TLS.
+     * @param isTlsEnabled  Specify whether the connection to TypeDB Server must be done over TLS.
      * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
      */
-    public ConnectionSettings(boolean tlsEnabled, @Nullable String tlsRootCAPath) { // TODO: Maybe Optional<String>?
-        super(newNative(tlsEnabled, tlsRootCAPath));
+    public ConnectionSettings(boolean isTlsEnabled, String tlsRootCAPath) { // TODO: Maybe Optional<String>? Optional.of(Path.of(..))?..
+        super(newNative(isTlsEnabled, tlsRootCAPath));
     }
 
-    private static com.typedb.driver.jni.ConnectionSettings newNative(boolean tlsEnabled, @Nullable String tlsRootCAPath) {
+    private static com.typedb.driver.jni.ConnectionSettings newNative(boolean isTlsEnabled, @Nullable String tlsRootCAPath) {
         try {
-            return connection_settings_new(tlsEnabled, tlsRootCAPath);
+            return connection_settings_new(isTlsEnabled, tlsRootCAPath);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
