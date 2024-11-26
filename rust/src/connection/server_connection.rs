@@ -46,6 +46,7 @@ use crate::{
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
     background_runtime: Arc<BackgroundRuntime>,
+    username: String,
     connection_id: Uuid,
     request_transmitter: Arc<RPCTransmitter>,
     transaction_shutdown_senders: Arc<Mutex<HashMap<RequestID, UnboundedSender<()>>>>,
@@ -62,6 +63,7 @@ impl ServerConnection {
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
+        let username = credential.username().to_string();
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credential, connection_settings, &background_runtime)?);
         let (connection_id, latency, database_info) =
@@ -69,6 +71,7 @@ impl ServerConnection {
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
             background_runtime,
+            username,
             connection_id,
             request_transmitter,
             transaction_shutdown_senders: Default::default(),
@@ -105,6 +108,10 @@ impl ServerConnection {
             }
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
+    }
+
+    pub fn username(&self) -> &str {
+        self.username.as_str()
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

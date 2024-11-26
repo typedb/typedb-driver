@@ -36,6 +36,12 @@ impl UserManager {
         Self { server_connections }
     }
 
+    pub fn current_user(&self) -> &str {
+        let (_, connection) = self.server_connections.iter().next()
+            .expect("Unexpected condition: the server connection collection is empty");
+        connection.username()
+    }
+
     /// Checks if a user with the given name exists.
     ///
     /// # Arguments
