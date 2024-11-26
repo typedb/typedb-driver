@@ -19,83 +19,91 @@
 
 package com.typedb.driver.user;
 
-// TODO: Currently disabled in 3.0
+import com.typedb.driver.api.user.User;
+import com.typedb.driver.api.user.UserManager;
+import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 
-//public class UserManagerImpl extends NativeObject<com.typedb.driver.jni.UserManager> implements UserManager {
-//    public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver nativeDriver) {
-//        super(newNative(nativeDriver));
-//    }
-//
-//    private static com.typedb.driver.jni.UserManager newNative(com.typedb.driver.jni.TypeDBDriver nativeDriver) {
-//        try {
-//            return user_manager_new(nativeDriver);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public boolean contains(String username) {
-//        try {
-//            return users_contains(nativeObject, username);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public void create(String username, String password) {
-//        try {
-//            users_create(nativeObject, username, password);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public void delete(String username) {
-//        try {
-//            users_delete(nativeObject, username);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public Set<User> all() {
-//        try {
-//            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public User get(String username) {
-//        try {
-//            com.typedb.driver.jni.User user = users_get(nativeObject, username);
-//            if (user != null) return new UserImpl(user, this);
-//            else return null;
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    @Override
-//    public void passwordSet(String username, String password) {
-//        try {
-//            users_set_password(nativeObject, username, password);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//
-//    public User getCurrentUser() {
-//        try {
-//            return new UserImpl(users_current_user(nativeObject), this);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//}
+import static com.typedb.driver.jni.typedb_driver.users_all;
+import static com.typedb.driver.jni.typedb_driver.users_contains;
+import static com.typedb.driver.jni.typedb_driver.users_create;
+import static com.typedb.driver.jni.typedb_driver.users_current_username;
+import static com.typedb.driver.jni.typedb_driver.users_delete;
+import static com.typedb.driver.jni.typedb_driver.users_get;
+import static com.typedb.driver.jni.typedb_driver.users_set_password;
+
+public class UserManagerImpl implements UserManager {
+    com.typedb.driver.jni.TypeDBDriver nativeDriver;
+
+    public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
+        nativeDriver = driver;
+    }
+
+    @Override
+    public boolean contains(String username) {
+        try {
+            return users_contains(nativeDriver, username);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public void create(String username, String password) {
+        try {
+            users_create(nativeDriver, username, password);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public void delete(String username) {
+        try {
+            users_delete(nativeDriver, username);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public User get(String username) {
+        try {
+            com.typedb.driver.jni.User user = users_get(nativeDriver, username);
+            if (user != null) return new UserImpl(user, this);
+            else return null;
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        try { // TODO: Make noexcept if we leave it returning just a String
+            return users_current_username(nativeDriver);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public Set<User> all() {
+        try {
+            return new NativeIterator<>(users_all(nativeDriver)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public void passwordSet(String username, String password) {
+        try {
+            users_set_password(nativeDriver, username, password);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+}

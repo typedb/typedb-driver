@@ -54,7 +54,8 @@ struct Type {};
 
 %dropproxy(Error, error)
 
-//%dropproxy(Credential, credential)
+%dropproxy(ConnectionSettings, connection_settings)
+%dropproxy(Credential, credential)
 //%dropproxy(Options, options)
 
 #define typedb_driver_drop driver_close
@@ -64,15 +65,13 @@ struct Type {};
 %dropproxy(TypeDBDriver, typedb_driver)
 %dropproxy(Transaction, transaction)
 
-// %dropproxy(DatabaseManager, database_manager);
 %dropproxy(Database, database)
 %dropproxy(DatabaseIterator, database_iterator)
 //%dropproxy(ReplicaInfo, replica_info)
 //%dropproxy(ReplicaInfoIterator, replica_info_iterator)
 
-//%dropproxy(UserManager, user_manager);
-//%dropproxy(User, user)
-//%dropproxy(UserIterator, user_iterator)
+%dropproxy(User, user)
+%dropproxy(UserIterator, user_iterator)
 
 %dropproxy(Concept, concept)
 %dropproxy(ConceptIterator, concept_iterator)
@@ -174,7 +173,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 //%newobject driver_open_cloud;
 //%newobject driver_open_cloud_translated;
 
-//%newobject credential_new;
+%newobject connection_settings_new;
+%newobject credential_new;
 
 %newobject database_get_name;
 %newobject database_schema;
@@ -201,16 +201,15 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject database_iterator_next;
 %newobject string_iterator_next;
 %newobject string_and_opt_value_iterator_next;
-//%newobject user_iterator_next;
+%newobject user_iterator_next;
 
 %newobject transaction_new;
 %newobject transaction_query;
 
-//%newobject users_all;
-//%newobject users_current_user;
-//%newobject users_get;
+%newobject users_all;
+%newobject users_current_username;
+%newobject users_get;
 
-//%newobject user_get_username;
-//%newobject user_manager_new;
+%newobject user_get_name;
 
 %include "typedb_driver.h"

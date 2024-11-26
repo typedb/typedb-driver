@@ -22,6 +22,8 @@ package com.typedb.driver.test.integration.core;
 // EXAMPLE START MARKER
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
@@ -34,19 +36,15 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-// EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-// EXAMPLE START MARKER
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-// EXAMPLE END MARKER
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -61,7 +59,7 @@ public class ExampleTest {
     // EXAMPLE END MARKER
     @BeforeClass
     public static void setUpClass() {
-        Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
+        Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credential("admin", "password"), new ConnectionSettings(false, null));
         if (typedbDriver.databases().contains("typedb")) {
             typedbDriver.databases().get("typedb").delete();
         }
@@ -72,7 +70,7 @@ public class ExampleTest {
     // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS)) {
+        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credential("admin", "password"), new ConnectionSettings(false, null))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");

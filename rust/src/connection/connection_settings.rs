@@ -22,7 +22,7 @@ use std::{fs, path::Path};
 use tonic::transport::{Certificate, ClientTlsConfig};
 
 /// User connection settings for connecting to TypeDB.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ConnectionSettings {
     is_tls_enabled: bool,
     tls_config: Option<ClientTlsConfig>,
@@ -33,6 +33,7 @@ impl ConnectionSettings {
     ///
     /// # Arguments
     ///
+    /// * `is_tls_enabled` — Specify whether the connection to TypeDB Server must be done over TLS.
     /// * `tls_root_ca` — Path to the CA certificate to use for authenticating server certificates.
     ///
     /// # Examples

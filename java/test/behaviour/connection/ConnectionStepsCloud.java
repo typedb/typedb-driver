@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.typedb.driver.test.behaviour.connection;
 
 //import com.typedb.core.tool.runner.TypeDBRunner;
@@ -56,13 +55,6 @@ package com.typedb.driver.test.behaviour.connection;
 //    @After
 //    public synchronized void after() {
 //        super.after();
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//        driver.users().all().forEach(user -> {
-//            if (!user.username().equals("admin")) {
-//                driver.users().delete(user.username());
-//            }
-//        });
-//        driver.close();
 //        try {
 //            // sleep for eventual consistency to catch up with database deletion on all servers
 //            Thread.sleep(100);
@@ -73,7 +65,7 @@ package com.typedb.driver.test.behaviour.connection;
 //
 //    @Override
 //    TypeDBDriver createTypeDBDriver(String address) {
-//        return createTypeDBDriver(address, "admin", "password", false);
+//        return createTypeDBDriver(address, DEFAULT_USERNAME, DEFAULT_PASSWORD, false);
 //    }
 //
 //    TypeDBDriver createTypeDBDriver(String address, String username, String password, boolean tlsEnabled) {

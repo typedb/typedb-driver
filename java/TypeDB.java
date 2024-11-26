@@ -19,6 +19,8 @@
 
 package com.typedb.driver;
 
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.connection.DriverImpl;
 
@@ -34,9 +36,11 @@ public class TypeDB {
      * </pre>
      *
      * @param address The address of the TypeDB server
+     * @param credential The credential to connect with
+     * @param connectionSettings The connection settings to connect with
      */
-    public static Driver coreDriver(String address) {
-        return new DriverImpl(address);
+    public static Driver coreDriver(String address, Credential credential, ConnectionSettings connectionSettings) {
+        return new DriverImpl(address, credential, connectionSettings);
     }
 
 //    /**

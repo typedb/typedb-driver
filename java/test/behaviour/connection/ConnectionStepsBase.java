@@ -20,6 +20,8 @@
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
@@ -37,6 +39,10 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 
 public abstract class ConnectionStepsBase {
+    public static final String ADMIN_USERNAME = "admin";
+    public static final String ADMIN_PASSWORD = "password";
+    public static final Credential DEFAULT_CREDENTIAL = new Credential(ADMIN_USERNAME, ADMIN_PASSWORD);
+    public static final ConnectionSettings DEFAULT_CONNECTION_SETTINGS = new ConnectionSettings(false, null);
     public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -45,10 +51,10 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-    //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
+//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
 //            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
 //    );
-    //    public static Options transactionOptions;
+//    public static Options transactionOptions;
     static boolean isBeforeAllRan = false;
 
     public static Transaction tx() {
@@ -81,8 +87,13 @@ public abstract class ConnectionStepsBase {
     void after() {
         cleanupTransactions();
 
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        driver = createDefaultTypeDBDriver();
         driver.databases().all().forEach(Database::delete);
+//        driver.users().all().forEach(user -> {
+//            if (!user.username().equals(ADMIN_USERNAME)) {
+//                driver.users().delete(user.username());
+//            }
+//        });
         driver.close();
         backgroundDriver.close();
     }
@@ -100,7 +111,7 @@ public abstract class ConnectionStepsBase {
         transactionsParallel.clear();
     }
 
-    abstract Driver createTypeDBDriver(String address);
+    abstract Driver createTypeDBDriver(String address, Credential credential, ConnectionSettings connectionSettings);
 
     abstract Driver createDefaultTypeDBDriver();
 

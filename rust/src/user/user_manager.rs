@@ -36,7 +36,7 @@ impl UserManager {
         Self { server_connections }
     }
 
-    pub fn current_user(&self) -> &str {
+    pub fn current_username(&self) -> &str {
         let (_, connection) = self
             .server_connections
             .iter()

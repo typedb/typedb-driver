@@ -19,11 +19,15 @@
 
 package com.typedb.driver.connection;
 
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.user.UserManagerImpl;
 
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
@@ -31,8 +35,8 @@ import static com.typedb.driver.jni.typedb_driver.driver_open_core;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 
-    public DriverImpl(String address) throws TypeDBDriverException {
-        this(openCore(address));
+    public DriverImpl(String address, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
+        this(openCore(address, credential, connectionSettings));
     }
 
 //    public TypeDBDriverImpl(Set<String> initAddresses, Credential credential) throws TypeDBDriverException {
@@ -47,9 +51,9 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         super(connection);
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCore(String address) {
+    private static com.typedb.driver.jni.TypeDBDriver openCore(String address, Credential credential, ConnectionSettings connectionSettings) {
         try {
-            return driver_open_core(address, LANGUAGE);
+            return driver_open_core(address, credential.nativeObject, connectionSettings.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -86,15 +90,10 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         return driver_is_open(nativeObject);
     }
 
-//    @Override
-//    public User user() {
-//        return users().getCurrentUser();
-//    }
-//
-//    @Override
-//    public UserManager users() {
-//        return new TypeDBUserManagerImpl(nativeObject);
-//    }
+    @Override
+    public UserManager users() {
+        return new UserManagerImpl(nativeObject);
+    }
 
     @Override
     public DatabaseManager databases() {

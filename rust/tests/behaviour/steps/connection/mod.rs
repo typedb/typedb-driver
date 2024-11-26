@@ -35,13 +35,13 @@ async fn typedb_starts(_: &mut Context) {}
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
 async fn connection_opens_with_default_authentication(context: &mut Context) {
-    context.set_driver(context.create_default_driver(None, None).await.unwrap());
+    context.set_driver(context.create_default_driver().await.unwrap());
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection opens with authentication: {word}, {word}")]
 async fn connection_opens_with_authentication(context: &mut Context, username: String, password: String) {
-    context.set_driver(context.create_default_driver(Some(&username), Some(&password)).await.unwrap())
+    context.set_driver(context.create_driver(Some(&username), Some(&password)).await.unwrap())
 }
 
 fn change_host(address: &str, new_host: &str) -> String {
@@ -64,16 +64,14 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
             context
                 .create_core_driver(
                     &change_host(Context::DEFAULT_CORE_ADDRESS, "surely-not-localhost"),
-                    Some(Context::ADMIN_USERNAME),
-                    Some(Context::ADMIN_PASSWORD),
+                    Context::ADMIN_USERNAME,
+                    Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
             let updated_address = change_host(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
-            context
-                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
-                .await
+            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }
@@ -86,16 +84,14 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
             context
                 .create_core_driver(
                     &change_port(Context::DEFAULT_CORE_ADDRESS, "0"),
-                    Some(Context::ADMIN_USERNAME),
-                    Some(Context::ADMIN_PASSWORD),
+                    Context::ADMIN_USERNAME,
+                    Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
             let updated_address = change_port(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "0");
-            context
-                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
-                .await
+            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }

@@ -17,23 +17,34 @@
  * under the License.
  */
 
-use std::ffi::c_char;
+use std::{ffi::c_char, path::Path};
 
-use typedb_driver::TypeDBDriver;
+use typedb_driver::{ConnectionSettings, Credential, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, free, string_view},
 };
+use crate::memory::release;
 
 /// Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 ///
 /// @param address The address (host:port) on which the TypeDB Server is running
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn driver_open_core(address: *const c_char, driver_lang: *const c_char) -> *mut TypeDBDriver {
+pub extern "C" fn driver_open_core(
+    address: *const c_char,
+    credential: *const Credential,
+    connection_settings: *const ConnectionSettings,
+    driver_lang: *const c_char,
+) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
-    try_release(TypeDBDriver::new_core_with_description(string_view(address), string_view(driver_lang)))
+    try_release(TypeDBDriver::new_core_with_description(
+        string_view(address),
+        borrow(credential).clone(),
+        borrow(connection_settings).clone(),
+        string_view(driver_lang),
+    ))
 }
 
 ///// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
@@ -87,31 +98,33 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
 
-///// Creates a new <code>Credential</code> for connecting to TypeDB Cloud.
-/////
-///// @param username The name of the user to connect as
-///// @param password The password for the user
-///// @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
-///// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
-// #[no_mangle]
-// pub extern "C" fn credential_new(
-//     username: *const c_char,
-//     password: *const c_char,
-//     tls_root_ca: *const c_char,
-//     with_tls: bool,
-// ) -> *mut Credential {
-//     let username = string_view(username);
-//     let password = string_view(password);
-//     if with_tls {
-//         let tls_root_ca = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
-//         try_release(Credential::with_tls(username, password, tls_root_ca))
-//     } else {
-//         release(Credential::without_tls(username, password))
-//     }
-// }
+// Creates a new <code>Credential</code> for connecting to TypeDB Server.
 //
-///// Frees the native rust <code>Credential</code> object
-// #[no_mangle]
-// pub extern "C" fn credential_drop(credential: *mut Credential) {
-//     free(credential);
-// }
+// @param username The name of the user to connect as
+// @param password The password for the user
+#[no_mangle]
+pub extern "C" fn credential_new(username: *const c_char, password: *const c_char) -> *mut Credential {
+    release(Credential::new(string_view(username), string_view(password)))
+}
+
+// Frees the native rust <code>Credential</code> object
+#[no_mangle]
+pub extern "C" fn credential_drop(credential: *mut Credential) {
+    free(credential);
+}
+
+// Creates a new <code>ConnectionSettings</code> for connecting to TypeDB Server.
+//
+// @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
+// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
+#[no_mangle]
+pub extern "C" fn connection_settings_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut ConnectionSettings {
+    let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
+    try_release(ConnectionSettings::new(is_tls_enabled, tls_root_ca_path))
+}
+
+// Frees the native rust <code>ConnectionSettings</code> object
+#[no_mangle]
+pub extern "C" fn connection_settings_drop(connection_settings: *mut ConnectionSettings) {
+    free(connection_settings);
+}

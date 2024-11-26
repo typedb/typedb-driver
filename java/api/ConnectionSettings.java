@@ -22,28 +22,30 @@ package com.typedb.driver.api;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.typedb.driver.jni.typedb_driver.credential_new;
+import javax.annotation.Nullable;
+
+import static com.typedb.driver.jni.typedb_driver.connection_settings_new;
 
 /**
- * User credentials for connecting to TypeDB Server.
+ * User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
  *
  * <h3>Examples</h3>
  * <pre>
- * Credential credential = new Credential(username, password);
+ * ConnectionSettings connectionSettings = new ConnectionSettings(true, Path.of("path/to/ca-certificate.pem"));
  * </pre>
  */
-public class Credential extends NativeObject<com.typedb.driver.jni.Credential> {
+public class ConnectionSettings extends NativeObject<com.typedb.driver.jni.ConnectionSettings> {
     /**
-     * @param username The name of the user to connect as
-     * @param password The password for the user
+     * @param tlsEnabled    Specify whether the connection to TypeDB Server must be done over TLS.
+     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
      */
-    public Credential(String username, String password) {
-        super(newNative(username, password));
+    public ConnectionSettings(boolean tlsEnabled, @Nullable String tlsRootCAPath) { // TODO: Maybe Optional<String>?
+        super(newNative(tlsEnabled, tlsRootCAPath));
     }
 
-    private static com.typedb.driver.jni.Credential newNative(String username, String password) {
+    private static com.typedb.driver.jni.ConnectionSettings newNative(boolean tlsEnabled, @Nullable String tlsRootCAPath) {
         try {
-            return credential_new(username, password);
+            return connection_settings_new(tlsEnabled, tlsRootCAPath);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }

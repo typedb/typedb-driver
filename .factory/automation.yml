@@ -21,6 +21,7 @@ config:
     dependencies: [build]
     typedb-behaviour: [build]
     typedb-protocol: [build, release]
+TODO unbreak factory
 
 build:
   quality:

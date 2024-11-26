@@ -20,6 +20,8 @@
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
@@ -44,13 +46,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    Driver createTypeDBDriver(String address) {
-        return TypeDB.coreDriver(address);
+    Driver createTypeDBDriver(String address, Credential credential, ConnectionSettings connectionSettings) {
+        return TypeDB.coreDriver(address, credential, connectionSettings);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIAL, DEFAULT_CONNECTION_SETTINGS);
     }
 
 //    @Override
@@ -70,12 +72,20 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
+        mayError.check(() -> driver = createTypeDBDriver(
+                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CREDENTIAL,
+                DEFAULT_CONNECTION_SETTINGS
+        ));
     }
 
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
+        mayError.check(() -> driver = createTypeDBDriver(
+                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CREDENTIAL,
+                DEFAULT_CONNECTION_SETTINGS
+        ));
     }
 
     @Override
