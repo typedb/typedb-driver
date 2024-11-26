@@ -49,10 +49,10 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
-        let uname = username.into();
+        let username = username.into();
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.contains_user(uname.clone()).await {
+            match server_connection.contains_user(username.clone()).await {
                 Ok(res) => return Ok(res),
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err))
             }
