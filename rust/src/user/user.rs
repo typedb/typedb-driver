@@ -17,50 +17,8 @@
  * under the License.
  */
 
-use crate::{common::Result, driver::TypeDBDriver, error::ConnectionError};
-
 #[derive(Clone, Debug)]
-/// User information
 pub struct User {
-    /// Returns the name of this user.
-    pub username: String,
-    /// Returns the number of seconds remaining till this user’s current password expires.
-    pub password_expiry_seconds: Option<i64>,
-}
-
-impl User {
-    /// Updates user password.
-    ///
-    /// # Arguments
-    ///
-    /// * `connection` -- an opened `Connection`
-    /// * `password_old` -- an old password
-    /// * `password_new` -- a new password
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// user.password_update(connection, "oldpassword", "nEwp@ssw0rd").await;
-    ///```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn password_update(
-        &self,
-        connection: &TypeDBDriver,
-        password_old: impl Into<String>,
-        password_new: impl Into<String>,
-    ) -> Result {
-        let password_old = password_old.into();
-        let password_new = password_new.into();
-        let mut error_buffer = Vec::with_capacity(connection.server_count());
-        for (server_id, server_connection) in connection.connections() {
-            match server_connection
-                .update_user_password(self.username.clone(), password_old.clone(), password_new.clone())
-                .await
-            {
-                Ok(()) => return Ok(()),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::CloudAllNodesFailed { errors: error_buffer.join("\n") })?
-    }
+    pub name: String,
+    pub password: String,
 }

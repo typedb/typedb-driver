@@ -28,13 +28,19 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Error, TransactionType, TypeDBDriver,
+    ConnectionSettings, Credential, Error, TransactionType, TypeDBDriver,
 };
 
 // EXAMPLE END MARKER
 
 async fn cleanup() {
-    let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+    let driver = TypeDBDriver::new_core(
+        TypeDBDriver::DEFAULT_ADDRESS,
+        Credential::new("admin", "password"),
+        ConnectionSettings::new(false, None).unwrap(),
+    )
+    .await
+    .unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
         driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
     }
@@ -49,7 +55,13 @@ fn example() {
         cleanup().await;
         // EXAMPLE START MARKER
         // Open a driver connection
-        let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+        let driver = TypeDBDriver::new_core(
+            TypeDBDriver::DEFAULT_ADDRESS,
+            Credential::new("admin", "password"),
+            ConnectionSettings::new(false, None).unwrap(),
+        )
+        .await
+        .unwrap();
 
         // Create a database
         driver.databases().create("typedb").await.unwrap();

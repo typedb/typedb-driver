@@ -17,14 +17,11 @@
  * under the License.
  */
 
-use std::{borrow::Cow, collections::HashMap, fmt, fmt::Formatter, sync::Arc};
+use std::{borrow::Cow, collections::HashMap, sync::Arc};
 
-use chrono::DateTime;
-
-use super::{ConceptRow, QueryType, JSON};
+use super::{QueryType, JSON};
 use crate::concept::{
-    value::{Struct, TimeZone},
-    Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
+    value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
 };
 
 #[derive(Debug, PartialEq)]

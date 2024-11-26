@@ -17,60 +17,31 @@
  * under the License.
  */
 
-use std::{fmt, fs, path::Path};
+use std::fmt;
 
-use tonic::transport::{Certificate, ClientTlsConfig};
-
-use crate::Result;
-
-/// User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+/// User credentials for connecting to TypeDB
 #[derive(Clone)]
 pub struct Credential {
     username: String,
     password: String,
-    is_tls_enabled: bool,
-    tls_config: Option<ClientTlsConfig>,
 }
 
-/// User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+/// User credentials for connecting to TypeDB
 impl Credential {
-    /// Creates a credential with username and password. Specifies the connection must use TLS
+    /// Creates a credential with username and password.
     ///
     /// # Arguments
     ///
-    /// * `username` --  The name of the user to connect as
-    /// * `password` -- The password for the user
-    /// * `tls_root_ca` -- Path to the CA certificate to use for authenticating server certificates.
+    /// * `username` —  The name of the user to connect as
+    /// * `password` — The password for the user
     ///
     /// # Examples
     ///
     /// ```rust
-    /// Credential::with_tls(username, password, Some(&path_to_ca));
+    /// Credential::new(username, password);
     ///```
-    pub fn with_tls(username: &str, password: &str, tls_root_ca: Option<&Path>) -> Result<Self> {
-        let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
-            ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
-        } else {
-            ClientTlsConfig::new()
-        });
-
-        Ok(Self { username: username.to_owned(), password: password.to_owned(), is_tls_enabled: true, tls_config })
-    }
-
-    /// Creates a credential with username and password. The connection will not use TLS
-    ///
-    /// # Arguments
-    ///
-    /// * `username` --  The name of the user to connect as
-    /// * `password` -- The password for the user
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// Credential::without_tls(username, password);
-    ///```
-    pub fn without_tls(username: &str, password: &str) -> Self {
-        Self { username: username.to_owned(), password: password.to_owned(), is_tls_enabled: false, tls_config: None }
+    pub fn new(username: &str, password: &str) -> Self {
+        Self { username: username.to_owned(), password: password.to_owned() }
     }
 
     /// Retrieves the username used.
@@ -82,23 +53,10 @@ impl Credential {
     pub fn password(&self) -> &str {
         &self.password
     }
-
-    /// Retrieves whether TLS is enabled for the connection.
-    pub fn is_tls_enabled(&self) -> bool {
-        self.is_tls_enabled
-    }
-
-    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
-        &self.tls_config
-    }
 }
 
 impl fmt::Debug for Credential {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Credential")
-            .field("username", &self.username)
-            .field("is_tls_enabled", &self.is_tls_enabled)
-            .field("tls_config", &self.tls_config)
-            .finish()
+        f.debug_struct("Credential").field("username", &self.username).finish()
     }
 }

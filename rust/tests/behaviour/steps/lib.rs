@@ -21,8 +21,7 @@
 #![deny(elided_lifetimes_in_paths)]
 
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    env::VarError,
+    collections::{HashSet, VecDeque},
     error::Error,
     fmt,
     fmt::Formatter,
@@ -38,10 +37,8 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType, JSON},
-    concept::Value,
-    BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
-    UserManager,
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
+    BoxStream, ConnectionSettings, Credential, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -230,8 +227,8 @@ impl Context {
                 .await
                 .unwrap()
                 .into_iter()
-                .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
+                .filter(|user| user.name != Context::ADMIN_USERNAME)
+                .map(|user| self.driver.as_ref().unwrap().users().delete(user.name)),
         )
         .await
         .ok();
@@ -387,7 +384,9 @@ impl Context {
         _password: Option<&str>,
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cloud);
-        TypeDBDriver::new_core(address).await
+        let credential = Credential::new(_username.unwrap(), _password.unwrap());
+        let conn_settings = ConnectionSettings::new(false, None)?;
+        TypeDBDriver::new_core(address, credential, conn_settings).await
     }
 
     async fn create_cloud_driver(
@@ -399,12 +398,11 @@ impl Context {
         assert!(self.is_cloud);
         TypeDBDriver::new_cloud(
             addresses,
-            Credential::with_tls(
+            Credential::new(
                 username.expect("Username is required for cloud connection"),
                 password.expect("Password is required for cloud connection"),
-                Some(&self.tls_root_ca),
-            )
-            .unwrap(),
+            ),
+            ConnectionSettings::new(false, None)?,
         )
     }
 

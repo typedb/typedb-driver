@@ -24,7 +24,7 @@ use crate::user::User;
 
 impl FromProto<UserProto> for User {
     fn from_proto(proto: UserProto) -> Self {
-        let UserProto { username, password_expiry_seconds } = proto;
-        Self { username, password_expiry_seconds }
+        let UserProto { name, password } = proto;
+        Self { name, password }
     }
 }

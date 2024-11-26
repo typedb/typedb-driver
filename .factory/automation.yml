@@ -49,11 +49,11 @@ build:
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
         bazel build //rust/...
-        bazel build //java/...
-        bazel build //python/...
+        # bazel build //java/... # TODO: uncomment when authentication has been implemented for the Java driver
+        # bazel build //python/... # TODO: uncomment when authentication has been implemented for the Python driver
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
+        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
         # TODO: Return these three steps when npm is reimplemented for 3.0
         # cd nodejs
         # npm install

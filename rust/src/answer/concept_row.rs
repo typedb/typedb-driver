@@ -80,7 +80,7 @@ impl ConceptRow {
     ///
     /// # Arguments
     ///
-    /// * `var_name` -- The variable name in the row to retrieve
+    /// * `var_name` — The variable name in the row to retrieve
     ///
     /// # Examples
     ///
@@ -96,7 +96,7 @@ impl ConceptRow {
     ///
     /// # Arguments
     ///
-    /// * `column_index` -- The position in the row to retrieve
+    /// * `column_index` — The position in the row to retrieve
     ///
     /// # Examples
     ///

@@ -32,19 +32,18 @@ use crate::{
         Result,
     },
     connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
-    Credential, DatabaseManager, Options, Transaction, TransactionType, UserManager,
+    ConnectionSettings, Credential, DatabaseManager, Options, Transaction, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
 pub struct TypeDBDriver {
     server_connections: HashMap<Address, ServerConnection>,
     database_manager: DatabaseManager,
+    user_manager: UserManager,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
     is_cloud: bool,
 }
-
-impl TypeDBDriver {}
 
 impl TypeDBDriver {
     const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION") {
@@ -58,7 +57,7 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address` -- The address (host:port) on which the TypeDB Server is running
+    /// * `address` — The address (host:port) on which the TypeDB Server is running
     ///
     /// # Examples
     ///
@@ -67,16 +66,20 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        Self::new_core_with_description(address, "rust").await
+    pub async fn new_core(
+        address: impl AsRef<str>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+    ) -> Result<Self> {
+        Self::new_core_with_description(address, credential, connection_settings, "rust").await
     }
 
     /// Creates a new TypeDB Server connection with a description.
     ///
     /// # Arguments
     ///
-    /// * `address` -- The address (host:port) on which the TypeDB Server is running
-    /// * `driver_lang` -- The language of the driver connecting to the server
+    /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `driver_lang` — The language of the driver connecting to the server
     ///
     /// # Examples
     ///
@@ -85,7 +88,12 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core_with_description(address: impl AsRef<str>, driver_lang: impl AsRef<str>) -> Result<Self> {
+    pub async fn new_core_with_description(
+        address: impl AsRef<str>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+        driver_lang: impl AsRef<str>,
+    ) -> Result<Self> {
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
@@ -93,6 +101,8 @@ impl TypeDBDriver {
         let (server_connection, database_info) = ServerConnection::new_core(
             background_runtime.clone(),
             address.clone(),
+            credential,
+            connection_settings,
             driver_lang.as_ref(),
             TypeDBDriver::VERSION,
         )
@@ -108,16 +118,24 @@ impl TypeDBDriver {
         // TODO: this solidifies the assumption that servers don't change
         let server_connections: HashMap<Address, ServerConnection> = [(address, server_connection)].into();
         let database_manager = DatabaseManager::new(server_connections.clone(), database_info)?;
+        let user_manager = UserManager::new(server_connections.clone());
 
-        Ok(Self { server_connections, database_manager, background_runtime, username: None, is_cloud: false })
+        Ok(Self {
+            server_connections,
+            database_manager,
+            user_manager,
+            background_runtime,
+            username: None,
+            is_cloud: false,
+        })
     }
 
     /// Creates a new TypeDB Cloud connection.
     ///
     /// # Arguments
     ///
-    /// * `init_addresses` -- Addresses (host:port) on which TypeDB Cloud nodes are running
-    /// * `credential` -- User credential and TLS encryption setting
+    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
+    /// * `credential` — User credential and TLS encryption setting
     ///
     /// # Examples
     ///
@@ -134,7 +152,11 @@ impl TypeDBDriver {
     ///     )?,
     /// )
     /// ```
-    pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
+    pub fn new_cloud<T: AsRef<str> + Sync>(
+        init_addresses: &[T],
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+    ) -> Result<Self> {
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credential.clone())?;
         // let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
@@ -146,9 +168,9 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address_translation` -- Translation map from addresses to be used by the driver for connection
+    /// * `address_translation` — Translation map from addresses to be used by the driver for connection
     ///    to addresses received from the TypeDB server(s)
-    /// * `credential` -- User credential and TLS encryption setting
+    /// * `credential` — User credential and TLS encryption setting
     ///
     /// # Examples
     ///
@@ -162,7 +184,11 @@ impl TypeDBDriver {
     ///     credential,
     /// )
     /// ```
-    pub fn new_cloud_with_translation<T, U>(address_translation: HashMap<T, U>, credential: Credential) -> Result<Self>
+    pub fn new_cloud_with_translation<T, U>(
+        address_translation: HashMap<T, U>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+    ) -> Result<Self>
     where
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,
@@ -194,6 +220,7 @@ impl TypeDBDriver {
         address_to_server: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credential: Credential,
+        connection_settings: ConnectionSettings,
     ) -> Result<TypeDBDriver> {
         // let server_connections: HashMap<Address, ServerConnection> = address_to_server
         //     .into_iter()
@@ -223,6 +250,7 @@ impl TypeDBDriver {
         background_runtime: Arc<BackgroundRuntime>,
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credential,
+        connection_settings: ConnectionSettings,
     ) -> Result<HashSet<Address>> {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {
@@ -272,7 +300,7 @@ impl TypeDBDriver {
     }
 
     pub fn users(&self) -> &UserManager {
-        todo!()
+        &self.user_manager
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
