@@ -48,6 +48,11 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         return TypeDB.coreDriver(address);
     }
 
+    @Override
+    Driver createDefaultTypeDBDriver() {
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+    }
+
 //    @Override
 //    Options createOptions() {
 //        return new Options();
@@ -60,7 +65,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        driver = createDefaultTypeDBDriver();
     }
 
     @When("connection opens with a wrong host{may_error}")

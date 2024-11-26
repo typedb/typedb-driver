@@ -17,6 +17,7 @@
  * under the License.
  */
 
+use futures::StreamExt;
 use tokio::{
     select,
     sync::{
@@ -24,12 +25,13 @@ use tokio::{
         oneshot::channel as oneshot_async,
     },
 };
+use typedb_protocol::{transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
-    common::{address::Address, RequestID, Result},
+    common::{address::Address, error::ConnectionError, RequestID, Result},
     connection::{
-        message::{Request, Response},
+        message::{Request, Response, TransactionResponse},
         network::{
             channel::{open_callcred_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
@@ -139,9 +141,31 @@ impl RPCTransmitter {
 
             Request::Transaction(transaction_request) => {
                 let req = transaction_request.into_proto();
-                let req_id = RequestID::from(req.req_id.clone());
-                let (request_sink, response_source) = rpc.transaction(req).await?;
-                Ok(Response::TransactionStream { open_request_id: req_id, request_sink, response_source })
+                let open_request_id = RequestID::from(req.req_id.clone());
+                let (request_sink, mut response_source) = rpc.transaction(req).await?;
+                match response_source.next().await {
+                    Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
+                        match TransactionResponse::try_from_proto(res) {
+                            Ok(TransactionResponse::Open { server_duration_millis }) => {
+                                Ok(Response::TransactionStream {
+                                    open_request_id,
+                                    request_sink,
+                                    response_source,
+                                    server_duration_millis,
+                                })
+                            }
+                            Err(error) => Err(error),
+                            Ok(other) => Err(Error::Connection(ConnectionError::UnexpectedResponse {
+                                response: format!("{other:?}"),
+                            })),
+                        }
+                    }
+                    Some(Ok(other)) => {
+                        Err(Error::Connection(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }))
+                    }
+                    Some(Err(status)) => Err(status.into()),
+                    None => Err(Error::Connection(ConnectionError::UnexpectedConnectionClose)),
+                }
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),

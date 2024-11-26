@@ -67,6 +67,15 @@ impl Database {
         Ok(Self { name, replicas, server_connections })
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(super) async fn get(name: String, server_connections: HashMap<Address, ServerConnection>) -> Result<Self> {
+        Ok(Self {
+            name: name.clone(),
+            replicas: RwLock::new(Replica::fetch_all(name, &server_connections).await?),
+            server_connections,
+        })
+    }
+
     /// Retrieves the database name as a string.
     pub fn name(&self) -> &str {
         self.name.as_str()
@@ -325,7 +334,7 @@ impl Replica {
                     return Self::try_from_info(info, server_connections);
                 }
                 Err(Error::Connection(
-                    ConnectionError::DatabaseDoesNotExist { .. }
+                    ConnectionError::DatabaseNotFound { .. }
                     | ConnectionError::ServerConnectionFailedStatusError { .. }
                     | ConnectionError::ConnectionFailed,
                 )) => {

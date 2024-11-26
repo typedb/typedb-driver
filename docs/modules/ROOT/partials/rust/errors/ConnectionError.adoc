@@ -16,7 +16,7 @@ a| `CloudReplicaNotPrimary`
 a| `CloudSSLCertificateNotValidated`
 a| `CloudTokenCredentialInvalid`
 a| `ConnectionFailed`
-a| `DatabaseDoesNotExist`
+a| `DatabaseNotFound`
 a| `InvalidResponseField`
 a| `ListsNotImplemented`
 a| `MissingPort`
@@ -29,6 +29,7 @@ a| `ServerConnectionFailedWithError`
 a| `ServerConnectionIsClosed`
 a| `TransactionIsClosed`
 a| `TransactionIsClosedWithErrors`
+a| `UnexpectedConnectionClose`
 a| `UnexpectedKind`
 a| `UnexpectedQueryType`
 a| `UnexpectedResponse`

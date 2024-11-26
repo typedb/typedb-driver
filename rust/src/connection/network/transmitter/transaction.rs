@@ -87,8 +87,6 @@ impl TransactionTransmitter {
         background_runtime: Arc<BackgroundRuntime>,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
-        initial_request_id: RequestID,
-        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) -> () + Sync + Send>,
     ) -> Self {
         let callback_handler_sink = background_runtime.callback_handler_sink();
         let (buffer_sink, buffer_source) = unbounded_async();
@@ -96,6 +94,7 @@ impl TransactionTransmitter {
         let (shutdown_sink, shutdown_source) = unbounded_async();
         let is_open = Arc::new(AtomicCell::new(true));
         let error = Arc::new(RwLock::new(None));
+
         background_runtime.spawn(Self::start_workers(
             buffer_source,
             request_sink,
@@ -106,8 +105,6 @@ impl TransactionTransmitter {
             callback_handler_sink,
             shutdown_sink.clone(),
             shutdown_source,
-            initial_request_id,
-            initial_response_handler,
         ));
         Self { request_sink: buffer_sink, is_open, error, on_close_register_sink, shutdown_sink, background_runtime }
     }
@@ -236,8 +233,6 @@ impl TransactionTransmitter {
         callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
-        initial_request_id: RequestID,
-        initial_response_handler: Arc<dyn Fn(Result<TransactionResponse>) + Sync + Send>,
     ) {
         let mut collector = ResponseCollector {
             callbacks: Default::default(),
@@ -246,10 +241,6 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
-        collector.register(
-            initial_request_id,
-            ResponseSink::ImmediateOneShot(ImmediateHandler { handler: initial_response_handler }),
-        );
         tokio::spawn(Self::dispatch_loop(
             queue_source,
             request_sink,
@@ -317,9 +308,7 @@ impl TransactionTransmitter {
         loop {
             match grpc_source.next().await {
                 Some(Ok(message)) => collector.collect(message).await,
-                Some(Err(status)) => {
-                    break collector.close_with_error(status.into()).await;
-                }
+                Some(Err(status)) => break collector.close_with_error(status.into()).await,
                 None => break collector.close().await,
             }
         }
