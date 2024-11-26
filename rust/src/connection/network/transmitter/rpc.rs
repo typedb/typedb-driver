@@ -48,15 +48,15 @@ impl RPCTransmitter {
         connection_settings: ConnectionSettings,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {
-        let (req_sink, req_src) = unbounded_async();
-        let (shutdown_sink, shutdown_src) = unbounded_async();
+        let (request_sink, request_source) = unbounded_async();
+        let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
             let (channel, call_cred) = open_callcred_channel(address, credential, connection_settings)?;
             let rpc = RPCStub::new(channel, Some(call_cred)).await;
-            tokio::spawn(Self::dispatcher_loop(rpc, req_src, shutdown_src));
+            tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())
         })?;
-        Ok(Self { request_sink: req_sink, shutdown_sink })
+        Ok(Self { request_sink, shutdown_sink })
     }
 
     #[cfg(not(feature = "sync"))]
