@@ -148,7 +148,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn database_exists(&self, database_name: String) -> crate::Result<bool> {
+    pub(crate) async fn contains_database(&self, database_name: String) -> crate::Result<bool> {
         match self.request(Request::DatabasesContains { database_name }).await? {
             Response::DatabasesContains { contains } => Ok(contains),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
