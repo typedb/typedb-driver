@@ -51,7 +51,7 @@ impl RPCTransmitter {
         let (req_sink, req_src) = unbounded_async();
         let (shutdown_sink, shutdown_src) = unbounded_async();
         runtime.run_blocking(async move {
-            let (channel, call_cred) = open_callcred_channel(address, credential)?;
+            let (channel, call_cred) = open_callcred_channel(address, credential, connection_settings)?;
             let rpc = RPCStub::new(channel, Some(call_cred)).await;
             tokio::spawn(Self::dispatcher_loop(rpc, req_src, shutdown_src));
             Ok::<(), Error>(())

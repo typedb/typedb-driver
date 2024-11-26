@@ -30,10 +30,7 @@ use tonic::{
     Request, Status,
 };
 
-use crate::{
-    common::{address::Address, Result, StdResult},
-    Credential,
-};
+use crate::{common::{address::Address, Result, StdResult}, ConnectionSettings, Credential};
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
 
@@ -49,8 +46,9 @@ impl GRPCChannel for CallCredChannel {}
 pub(super) fn open_callcred_channel(
     address: Address,
     credential: Credential,
+    connection_settings: ConnectionSettings,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
-    let mut builder = Channel::builder(address.into_uri());
+    let mut builder = Channel::builder(address.into_uri()); // TODO: configure TLS
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credential));
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))
