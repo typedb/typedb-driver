@@ -3,21 +3,20 @@
 
 TypeDB user information
 
-// tag::methods[]
-[#_User_name_]
-==== name
-
-[source,python]
-----
-name() -> str
-----
-
-Returns the name of this user.
-
 [caption=""]
-.Returns
-`str`
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `str` a| Returns the name of this user.
 
+
+|===
+// end::properties[]
+
+// tag::methods[]
 [#_User_update_password_password_old_str_password_new_str]
 ==== update_password
 
