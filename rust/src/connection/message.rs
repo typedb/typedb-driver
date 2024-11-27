@@ -114,9 +114,6 @@ pub(super) enum Response {
     UsersGet {
         user: Option<User>,
     },
-    UsersPasswordSet,
-
-    UserPasswordUpdate,
 }
 
 #[derive(Debug)]

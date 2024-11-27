@@ -20,5 +20,5 @@
 #[derive(Clone, Debug)]
 pub struct User {
     pub name: String,
-    pub password: String,
+    pub password: Option<String>,
 }

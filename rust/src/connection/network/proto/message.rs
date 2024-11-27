@@ -196,7 +196,7 @@ impl TryIntoProto<user_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::create::Req> {
         match self {
             Self::UsersCreate { user } => Ok(user_manager::create::Req {
-                user: Some(typedb_protocol::User { name: "".to_string(), password: "".to_string() }),
+                user: Some(typedb_protocol::User { name: user.name, password: user.password }),
             }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }

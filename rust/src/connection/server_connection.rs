@@ -266,7 +266,7 @@ impl ServerConnection {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn create_user(&self, name: String, password: String) -> crate::Result {
-        match self.request(Request::UsersCreate { user: User { name, password } }).await? {
+        match self.request(Request::UsersCreate { user: User { name, password: Some(password) } }).await? {
             Response::UsersCreate => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
