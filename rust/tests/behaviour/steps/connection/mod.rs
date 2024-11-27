@@ -39,9 +39,16 @@ async fn connection_opens_with_default_authentication(context: &mut Context) {
 }
 
 #[apply(generic_step)]
-#[step(expr = "connection opens with authentication: {word}, {word}")]
-async fn connection_opens_with_authentication(context: &mut Context, username: String, password: String) {
-    context.set_driver(context.create_driver(Some(&username), Some(&password)).await.unwrap())
+#[step(expr = "connection opens with username '{word}', password '{word}'{may_error}")]
+async fn connection_opens_with_authentication(
+    context: &mut Context,
+    username: String,
+    password: String,
+    may_error: params::MayError,
+) {
+    if let Some(driver) = may_error.check(context.create_driver(Some(&username), Some(&password)).await) {
+        context.set_driver(driver)
+    }
 }
 
 fn change_host(address: &str, new_host: &str) -> String {
@@ -106,6 +113,12 @@ async fn connection_has_been_opened(context: &mut Context, is_open: params::Bool
 #[step(expr = r"connection has {int} database(s)")]
 async fn connection_has_count_databases(context: &mut Context, count: usize) {
     assert_eq!(context.driver.as_ref().unwrap().databases().all().await.unwrap().len(), count);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection has {int} user(s)")]
+async fn connection_has_count_users(context: &mut Context, count: usize) {
+    assert_eq!(context.driver.as_ref().unwrap().users().all().await.unwrap().len(), count);
 }
 
 #[apply(generic_step)]

@@ -17,127 +17,85 @@
  * under the License.
  */
 
-// use cucumber::{given, then, when};
-// use tokio::time::sleep;
-// use typedb_driver::Result as TypeDBResult;
-//
-// use crate::{assert_err, assert_with_timeout, Context, generic_step};
-// use macro_rules_attribute::apply;
+use std::collections::HashSet;
 
-// #[apply(generic_step)]
-// #[step(expr = "users get all")]
-// async fn users_get_all(context: &mut Context) -> TypeDBResult {
-//     context.driver.as_ref().unwrap().users().all().await?;
-//     Ok(())
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users get all; throws exception")]
-// async fn users_get_all_throws(context: &mut Context) {
-//     assert_err!(users_get_all(context).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users get user: {word}")]
-// async fn users_get_user(context: &mut Context, username: String) -> TypeDBResult {
-//     context.driver.as_ref().unwrap().users().get(username).await?;
-//     Ok(())
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users get user: {word}; throws exception")]
-// async fn users_get_user_throws(context: &mut Context, username: String) {
-//     assert_err!(users_get_user(context, username).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users contains: {word}")]
-// async fn users_contains(context: &mut Context, username: String) -> TypeDBResult {
-//     assert_with_timeout!(context.driver.as_ref().unwrap().users().contains(username.clone()).await?, "User {username} doesn't exist.");
-//     Ok(())
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users contains: {word}; throws exception")]
-// async fn users_contains_throws(context: &mut Context, username: String) {
-//     assert_err!(users_contains(context, username).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users not contains: {word}")]
-// async fn users_not_contains(context: &mut Context, username: String) -> TypeDBResult {
-//     assert_with_timeout!(!context.driver.as_ref().unwrap().users().contains(username.clone()).await?, "User {username} exists.");
-//     Ok(())
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users not contains: {word}; throws exception")]
-// async fn users_not_contains_throws(context: &mut Context, username: String) {
-//     assert_err!(users_not_contains(context, username).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users create: {word}, {word}")]
-// async fn users_create(context: &mut Context, username: String, password: String) -> TypeDBResult {
-//     context.driver.as_ref().unwrap().users().create(username, password).await
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users create: {word}, {word}; throws exception")]
-// async fn users_create_throws(context: &mut Context, username: String, password: String) {
-//     assert_err!(users_create(context, username, password).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users password set: {word}, {word}")]
-// async fn users_password_set(context: &mut Context, username: String, password: String) -> TypeDBResult {
-//     context.driver.as_ref().unwrap().users().set_password(username, password).await
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users password set: {word}, {word}; throws exception")]
-// async fn users_password_set_throws(context: &mut Context, username: String, password: String) {
-//     assert_err!(users_password_set(context, username, password).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "user password update: {word}, {word}")]
-// async fn user_password_update(context: &mut Context, password_old: String, password_new: String) -> TypeDBResult {
-//     let connected_user = context.driver.as_ref().unwrap().users().current_user().await?;
-//     assert!(connected_user.is_some());
-//     connected_user.unwrap().password_update(&context.driver, password_old, password_new).await
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "user password update: {word}, {word}; throws exception")]
-// async fn user_password_update_throws(context: &mut Context, password_old: String, password_new: String) {
-//     assert_err!(user_password_update(context, password_old, password_new).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users delete: {word}")]
-// async fn user_delete(context: &mut Context, username: String) -> TypeDBResult {
-//     context.driver.as_ref().unwrap().users().delete(username).await
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "users delete: {word}; throws exception")]
-// async fn user_delete_throws(context: &mut Context, username: String) {
-//     assert_err!(user_delete(context, username).await);
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "user expiry-seconds")]
-// async fn user_expiry_seconds(context: &mut Context) -> TypeDBResult {
-//     let connected_user = context.driver.as_ref().unwrap().users().current_user().await?;
-//     assert!(connected_user.is_some());
-//     assert!(connected_user.unwrap().password_expiry_seconds.is_some());
-//     Ok(())
-// }
-//
-// #[apply(generic_step)]
-// #[step(expr = "get connected user")]
-// async fn get_connected_user(context: &mut Context) -> TypeDBResult {
-//     assert!(context.driver.as_ref().unwrap().users().current_user().await?.is_some());
-//     Ok(())
-// }
+use cucumber::{gherkin::Step, given, then, when};
+use macro_rules_attribute::apply;
+use tokio::time::sleep;
+use typedb_driver::Result as TypeDBResult;
+
+use crate::{assert_err, assert_with_timeout, generic_step, params, util::iter_table, Context};
+
+async fn all_user_names(context: &Context) -> HashSet<String> {
+    context.driver.as_ref().unwrap().users().all().await.unwrap().into_iter().map(|user| user.name).collect()
+}
+
+#[apply(generic_step)]
+#[step(expr = "get all users:")]
+async fn get_all_users(context: &mut Context, step: &Step) {
+    let expected_users: HashSet<String> = iter_table(step).map(|name| name.to_owned()).collect();
+    assert_with_timeout!(all_user_names(context).await == expected_users, "Connection's databases are not as expected",);
+}
+
+#[apply(generic_step)]
+#[step(expr = "get all users; fails")]
+async fn get_all_users_fails(context: &mut Context) {
+    params::MayError::True(None).check(context.driver.as_ref().unwrap().users().all().await);
+}
+
+#[apply(generic_step)]
+#[step(expr = "get all users {contains_or_doesnt}: {word}")]
+async fn get_all_users_contains(context: &mut Context, contains_or_doesnt: params::ContainsOrDoesnt, username: String) {
+    contains_or_doesnt.check(&all_user_names(context).await.iter().find(|&name| name == &username), "user");
+}
+
+#[apply(generic_step)]
+#[step(expr = "users get user: {word}; fails")]
+async fn users_get_user_fails(context: &mut Context, username: String) {
+    params::MayError::True(None).check(context.driver.as_ref().unwrap().users().get(username).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"get user\({word}\) get name: {word}")]
+async fn get_user_get_name(context: &mut Context, user: String, name: String) {
+    let user = context.driver.as_ref().unwrap().users().get(user).await.unwrap().unwrap();
+    assert_eq!(user.name, name);
+}
+
+#[apply(generic_step)]
+#[step(expr = "create user with username {word}, password {word}{may_error}")]
+async fn create_user(context: &mut Context, username: String, password: String, may_error: params::MayError) {
+    may_error.check(context.driver.as_ref().unwrap().users().create(username, password).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"get user\({word}\) set password: {word}{may_error}")]
+async fn get_user_set_password(context: &mut Context, username: String, password: String, may_error: params::MayError) {
+    todo!("Password setting not implemented")
+    // may_error.check(context.driver.as_ref().unwrap().users().set_password(username, password).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"get user\({word}\) update password from '{word}' to '{word}' {may_error}")]
+async fn get_user_update_password(
+    context: &mut Context,
+    username: String,
+    password_old: String,
+    password_new: String,
+    may_error: params::MayError,
+) {
+    todo!("Password updating not implemented")
+    // may_error.check(context.driver.as_ref().unwrap().users().get(username).unwrap().unwrap().password_update(password_old, password_new).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = "delete user: {word}")]
+async fn delete_user(context: &mut Context, username: String, may_error: params::MayError) {
+    may_error.check(context.driver.as_ref().unwrap().users().delete(username).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = "get current username: {word}")]
+async fn get_current_username(context: &mut Context, username: String) {
+    assert_eq!(context.driver.as_ref().unwrap().users().current_username(), &username);
+}
