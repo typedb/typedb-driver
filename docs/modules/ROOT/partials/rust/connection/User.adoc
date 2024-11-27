@@ -6,8 +6,6 @@
 * `Clone`
 * `Debug`
 
-User information
-
 [caption=""]
 .Fields
 // tag::properties[]
@@ -15,74 +13,8 @@ User information
 [options="header"]
 |===
 |Name |Type |Description
-a| `password_expiry_seconds` a| `Option<i64>` a| Returns the number of seconds remaining till this user’s current password expires.
-a| `username` a| `String` a| Returns the name of this user.
+a| `name` a| `String` a| 
+a| `password` a| `Option<String>` a| 
 |===
 // end::properties[]
-
-// tag::methods[]
-[#_struct_User_password_update_connection_TypeDBDriver_password_old_impl_Into_String_password_new_impl_Into_String_]
-==== password_update
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn password_update(
-    &self,
-    connection: &TypeDBDriver,
-    password_old: impl Into<String>,
-    password_new: impl Into<String>,
-) -> Result
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn password_update(
-    &self,
-    connection: &TypeDBDriver,
-    password_old: impl Into<String>,
-    password_new: impl Into<String>,
-) -> Result
-----
-
---
-====
-
-Updates user password.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `connection` a| an opened ``Connection`` a| `&TypeDBDriver`
-a| `password_old` a| an old password a| `impl Into<String>`
-a| `password_new` a| a new password a| `impl Into<String>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-user.password_update(connection, "oldpassword", "nEwp@ssw0rd").await;
-----
-
-// end::methods[]
 

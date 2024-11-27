@@ -39,6 +39,7 @@ class _User(User, NativeWrapper[NativeUser]):
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
 
+    @property
     def name(self) -> str:
         return user_get_name(self.native_object)
 

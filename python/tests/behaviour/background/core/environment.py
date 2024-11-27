@@ -26,12 +26,9 @@ def before_all(context: Context):
     environment_base.before_all(context)
     context.create_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
         create_driver(context, host, port, user, password)
-    context.setup_context_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
-        setup_context_driver(context, host, port, user, password)
+    context.setup_context_driver_fn = lambda host="localhost", port=None, username=None, password=None: \
+        setup_context_driver(context, host, port, username, password)
     context.setup_context_driver_fn()
-    for database in context.driver.databases.all():
-        database.delete()
-    context.driver.close()
 
 
 def before_scenario(context: Context, scenario):
@@ -48,11 +45,14 @@ def setup_context_driver(context, host="localhost", port=None, username=None, pa
 
 
 def create_driver(context, host="localhost", port=None, username=None, password=None) -> Driver:
-    if username is not None or password is not None:
-        raise Exception("Core driver does not support authentication")
     if port is None:
         port = int(context.config.userdata["port"])
-    return TypeDB.core_driver(address=f"{host}:{port}")
+    if username is None:
+        username = "admin"
+    if password is None:
+        password = "password"
+    credential = Credential(username, password)
+    return TypeDB.core_driver(address=f"{host}:{port}", credential=credential, connection_settings=ConnectionSettings())
 
 
 def after_scenario(context: Context, scenario):
@@ -61,7 +61,13 @@ def after_scenario(context: Context, scenario):
     # TODO: reset the database through the TypeDB runner once it exists
     context.setup_context_driver_fn()
     for database in context.driver.databases.all():
+        if database.name == "system":  # Temporary hack for system database
+            continue
         database.delete()
+    for user in context.driver.users.all():
+        if user.name == "admin":
+            continue
+        context.driver.users.delete(user.name)
     context.driver.close()
 
 

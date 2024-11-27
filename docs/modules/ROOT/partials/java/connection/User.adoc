@@ -1,0 +1,50 @@
+[#_User]
+=== User
+
+*Package*: `com.typedb.driver.api.user`
+
+TypeDB user information
+
+// tag::methods[]
+[#_User_name_]
+==== name
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String name()
+----
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_User_updatePassword_java_lang_String_java_lang_String]
+==== updatePassword
+
+[source,java]
+----
+void updatePassword​(java.lang.String passwordOld,
+                    java.lang.String passwordNew)
+----
+
+Updates the password for this user.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `passwordOld` a| The current password of this user a| `java.lang.String`
+a| `passwordNew` a| The new password a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

@@ -117,7 +117,7 @@ Registers a callback function which will be executed when this transaction is cl
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| 
+a| `function` a|  — The callback function. a| 
 |===
 
 [caption=""]
@@ -174,8 +174,8 @@ Performs a TypeQL query in this transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL query to be executed a| `impl AsRef<str>`
-a| `options` a| Query options a| `Options`
+a| `query` a|  — The TypeQL query to be executed a| `impl AsRef<str>`
+a| `options` a|  — Query options a| `Options`
 |===
 
 [caption=""]

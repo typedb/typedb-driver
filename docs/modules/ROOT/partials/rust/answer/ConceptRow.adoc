@@ -39,7 +39,7 @@ Retrieves a concept for a given variable. Returns an empty optional if the varia
 [options="header"]
 |===
 |Name |Description |Type
-a| `var_name` a| The variable name in the row to retrieve a| 
+a| `var_name` a|  — The variable name in the row to retrieve a| 
 |===
 
 [caption=""]
@@ -120,7 +120,7 @@ Retrieves a concept for a given column index. Returns an empty optional if the p
 [options="header"]
 |===
 |Name |Description |Type
-a| `column_index` a| The position in the row to retrieve a| `usize`
+a| `column_index` a|  — The position in the row to retrieve a| `usize`
 |===
 
 [caption=""]

@@ -397,9 +397,10 @@ impl Context {
         username: &str,
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(self.is_cloud);
+        assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
         let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
-        TypeDBDriver::new_cloud(&addresses, Credential::new(username, password), ConnectionSettings::new(false, None)?).await
+        TypeDBDriver::new_cloud(&addresses, Credential::new(username, password), ConnectionSettings::new(false, None)?)
+            .await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {

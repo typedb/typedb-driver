@@ -102,7 +102,7 @@ Checks if a database with the given name exists
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The database name to be checked a| `impl Into<String>`
+a| `name` a|  — The database name to be checked a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -171,7 +171,7 @@ Create a database with the given name
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to be created a| `impl Into<String>`
+a| `name` a|  — The name of the database to be created a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -240,7 +240,7 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `impl AsRef<str>`
+a| `name` a|  — The name of the database to retrieve a| `impl AsRef<str>`
 |===
 
 [caption=""]

@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from collections.abc import Mapping as ABCMapping
+from typing import Iterable, Mapping, Union
+
 from typedb.api.answer.concept_document_iterator import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row_iterator import *  # noqa # pylint: disable=unused-import

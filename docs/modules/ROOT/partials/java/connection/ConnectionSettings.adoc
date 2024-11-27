@@ -1,0 +1,43 @@
+[#_ConnectionSettings]
+=== ConnectionSettings
+
+*Package*: `com.typedb.driver.api`
+
+User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+ConnectionSettings connectionSettings = new ConnectionSettings(true, Path.of("path/to/ca-certificate.pem"));
+----
+
+// tag::methods[]
+[#_ConnectionSettings_ConnectionSettings_boolean_java_lang_String]
+==== ConnectionSettings
+
+[source,java]
+----
+public ConnectionSettings​(boolean isTlsEnabled,
+                          java.lang.String tlsRootCAPath)
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `isTlsEnabled` a| Specify whether the connection to TypeDB Server must be done over TLS. a| `boolean`
+a| `tlsRootCAPath` a| Path to the CA certificate to use for authenticating server certificates. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public`
+
+// end::methods[]
+

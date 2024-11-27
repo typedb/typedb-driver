@@ -57,7 +57,7 @@ public class UserSteps {
     }
 
     @Then("get user\\({non_semicolon}) get name: {non_semicolon}")
-    public void get_user_error(String user, String name) {
+    public void get_user_get_name(String user, String name) {
         assertEquals(name, driver.users().get(user).name());
     }
 

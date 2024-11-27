@@ -18,6 +18,8 @@
  */
 package com.typedb.driver.test.behaviour.connection;
 
+// TODO: Uncomment and test when we have replications and encryption
+
 //import com.typedb.core.tool.runner.TypeDBRunner;
 //import com.typedb.core.tool.runner.TypeDBSingleton;
 //import com.typedb.cloud.tool.runner.TypeDBCloudRunner;
@@ -65,7 +67,7 @@ package com.typedb.driver.test.behaviour.connection;
 //
 //    @Override
 //    TypeDBDriver createTypeDBDriver(String address) {
-//        return createTypeDBDriver(address, DEFAULT_USERNAME, DEFAULT_PASSWORD, false);
+//        return createTypeDBDriver(address, DEFAULT_USERNAME, DEFAULT_PASSWORD, false); // TODO: Probably requires connection settings with tls enabled by default
 //    }
 //
 //    TypeDBDriver createTypeDBDriver(String address, String username, String password, boolean tlsEnabled) {
@@ -76,6 +78,18 @@ package com.typedb.driver.test.behaviour.connection;
 //    Options createOptions() {
 //        return new Options();
 //    }
+//
+//@When("connection opens with default authentication")
+//public void connection_opens_with_default_authentication() {
+//    driver = createDefaultTypeDBDriver();
+//}
+//
+//@When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
+//public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+//    Credential credential = new Credential(username, password);
+//    mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS)); // TODO: Probably requires connection settings with tls enabled by default
+//}
+//
 //
 //    @Override
 //    @Given("connection has been opened")
