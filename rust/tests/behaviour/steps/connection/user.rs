@@ -63,7 +63,7 @@ async fn get_user_get_name(context: &mut Context, user: String, name: String) {
 }
 
 #[apply(generic_step)]
-#[step(expr = "create user with username {word}, password {word}{may_error}")]
+#[step(expr = "create user with username '{word}', password '{word}'{may_error}")]
 async fn create_user(context: &mut Context, username: String, password: String, may_error: params::MayError) {
     may_error.check(context.driver.as_ref().unwrap().users().create(username, password).await);
 }
@@ -89,7 +89,7 @@ async fn get_user_update_password(
 }
 
 #[apply(generic_step)]
-#[step(expr = "delete user: {word}")]
+#[step(expr = "delete user: {word}{may_error}")]
 async fn delete_user(context: &mut Context, username: String, may_error: params::MayError) {
     may_error.check(context.driver.as_ref().unwrap().users().delete(username).await);
 }

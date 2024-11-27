@@ -64,12 +64,6 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void typedb_starts() {
     }
 
-    @Override
-    @When("connection opens with default authentication")
-    public void connection_opens_with_default_authentication() {
-        driver = createDefaultTypeDBDriver();
-    }
-
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
@@ -104,5 +98,11 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Given("connection has {integer} database(s)")
     public void connection_has_count_databases(int count) {
         super.connection_has_count_databases(count);
+    }
+
+    @Override
+    @Given("connection has {integer} user(s)")
+    public void connection_has_count_users(int count) {
+        super.connection_has_count_users(count);
     }
 }

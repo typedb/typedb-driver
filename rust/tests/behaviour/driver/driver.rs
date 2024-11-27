@@ -31,7 +31,7 @@ async fn test() {
     let path = "../typedb_behaviour/driver/driver.feature";
 
     #[cfg(not(feature = "bazel"))]
-    let path = "bazel-typedb-driver/external/typedb_behaviour/driver/driver.feature";
+    let path = "../../typedb-behaviour/driver/driver.feature";
 
     assert!(Context::test(path, is_cloud()).await);
 }

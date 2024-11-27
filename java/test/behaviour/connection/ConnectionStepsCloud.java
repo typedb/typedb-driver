@@ -78,27 +78,6 @@ package com.typedb.driver.test.behaviour.connection;
 //    }
 //
 //    @Override
-//    @When("connection opens with default authentication")
-//    public void connection_opens_with_default_authentication() {
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//    }
-//
-//    @When("connection opens with authentication: {word}, {word}")
-//    public void connection_opens_with_authentication(String username, String password) {
-//        if (driver != null) {
-//            driver.close();
-//            driver = null;
-//        }
-//
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
-//    }
-//
-//    @When("connection opens with authentication: {word}, {word}; throws exception")
-//    public void connection_opens_with_authentication_throws_exception(String username, String password) {
-//        assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
-//    }
-//
-//    @Override
 //    @Given("connection has been opened")
 //    public void connection_has_been_opened() {
 //        super.connection_has_been_opened();

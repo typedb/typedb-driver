@@ -175,7 +175,7 @@ impl Context {
         self.transaction_options = Options::new();
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
-        // self.cleanup_users().await;
+        self.cleanup_users().await;
         self.cleanup_answers().await;
         self.cleanup_concurrent_answers().await;
         self.reset_driver();
@@ -200,7 +200,7 @@ impl Context {
             self.set_driver(self.create_default_driver().await.unwrap());
         }
 
-        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
+        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().filter(|db| db.name() != "system").map(|db| db.delete()))
             .await
             .unwrap();
     }
@@ -229,7 +229,10 @@ impl Context {
                 .map(|user| self.driver.as_ref().unwrap().users().delete(user.name)),
         )
         .await
-        .ok();
+        .expect("Expected users cleanup");
+
+        // TODO: Return
+        // self.driver.as_ref().unwrap().users().set_password(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await.unwrap();
     }
 
     pub async fn cleanup_answers(&mut self) {

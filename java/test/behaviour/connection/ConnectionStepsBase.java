@@ -25,6 +25,8 @@ import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.test.behaviour.config.Parameters;
+import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,7 +119,16 @@ public abstract class ConnectionStepsBase {
 
 //    abstract Options createOptions();
 
-    abstract void connection_opens_with_default_authentication();
+    @When("connection opens with default authentication")
+    public void connection_opens_with_default_authentication() {
+        driver = createDefaultTypeDBDriver();
+    }
+
+    @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
+    public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+        Credential credential = new Credential(username, password);
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS));
+    }
 
     void connection_closes() {
         cleanupTransactions();
@@ -130,5 +141,9 @@ public abstract class ConnectionStepsBase {
 
     void connection_has_count_databases(int count) {
         assertEquals(count, driver.databases().all().size());
+    }
+
+    void connection_has_count_users(int count) {
+        assertEquals(count, driver.users().all().size());
     }
 }
