@@ -84,7 +84,7 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| `impl Into<String>`
+a| `username` a|  — The user name to be checked a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -143,8 +143,8 @@ Create a user with the given name &amp; password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be created a| `impl Into<String>`
-a| `password` a| The password of the user to be created a| `impl Into<String>`
+a| `username` a|  — The name of the user to be created a| `impl Into<String>`
+a| `password` a|  — The password of the user to be created a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -159,48 +159,6 @@ Result
 [source,rust]
 ----
 driver.users.create(username, password).await;
-----
-
-[#_struct_UserManager_current_user_]
-==== current_user
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn current_user(&self) -> Result<Option<User>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn current_user(&self) -> Result<Option<User>>
-----
-
---
-====
-
-Returns the logged-in user for the connection.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Option<User>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-driver.users.current_user().await;
 ----
 
 [#_struct_UserManager_delete_username_impl_Into_String_]
@@ -237,7 +195,7 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be deleted a| `impl Into<String>`
+a| `username` a|  — The name of the user to be deleted a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -288,7 +246,7 @@ Retrieve a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to retrieve a| `impl Into<String>`
+a| `username` a|  — The name of the user to retrieve a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -303,66 +261,6 @@ Result<Option<User>>
 [source,rust]
 ----
 driver.users.get(username).await;
-----
-
-[#_struct_UserManager_set_password_username_impl_Into_String_password_impl_Into_String_]
-==== set_password
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn set_password(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>,
-) -> Result
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn set_password(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>,
-) -> Result
-----
-
---
-====
-
-Sets a new password for a user. This operation can only be performed by administrators.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `username` a| The name of the user to set the password of a| `impl Into<String>`
-a| `password` a| The new password a| `impl Into<String>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-driver.users.password_set(username, password).await;
 ----
 
 // end::methods[]

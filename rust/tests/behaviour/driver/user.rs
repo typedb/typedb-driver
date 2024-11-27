@@ -17,21 +17,21 @@
  * under the License.
  */
 
-// use config::is_cloud;
-// use steps::Context;
-// use serial_test::serial;
+use config::is_cloud;
+use serial_test::serial;
+use steps::Context;
 
-// #[tokio::test]
-// #[serial]
-// async fn test() {
-//     // Bazel specific path: when running the test in bazel, the external data from
-//     // @typedb_behaviour is stored in a directory that is a sibling to
-//     // the working directory.
-//     #[cfg(feature = "bazel")]
-//     let path = "../typedb_behaviour/connection/user.feature";
-//
-//     #[cfg(not(feature = "bazel"))]
-//     let path = "../bazel-typedb-driver/external/typedb_behaviour/connection/user.feature";
-//
-//     assert!(Context::test(path, is_cloud()).await);
-// }
+#[tokio::test]
+#[serial]
+async fn test() {
+    // Bazel specific path: when running the test in bazel, the external data from
+    // @typedb_behaviour is stored in a directory that is a sibling to
+    // the working directory.
+    #[cfg(feature = "bazel")]
+    let path = "../typedb_behaviour/driver/user.feature";
+
+    #[cfg(not(feature = "bazel"))]
+    let path = "../bazel-typedb-driver/external/typedb_behaviour/driver/user.feature";
+
+    assert!(Context::test(path, is_cloud()).await);
+}

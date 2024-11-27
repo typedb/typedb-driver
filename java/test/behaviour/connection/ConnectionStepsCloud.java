@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.typedb.driver.test.behaviour.connection;
+
+// TODO: Uncomment and test when we have replications and encryption
 
 //import com.typedb.core.tool.runner.TypeDBRunner;
 //import com.typedb.core.tool.runner.TypeDBSingleton;
@@ -56,13 +57,6 @@ package com.typedb.driver.test.behaviour.connection;
 //    @After
 //    public synchronized void after() {
 //        super.after();
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//        driver.users().all().forEach(user -> {
-//            if (!user.username().equals("admin")) {
-//                driver.users().delete(user.username());
-//            }
-//        });
-//        driver.close();
 //        try {
 //            // sleep for eventual consistency to catch up with database deletion on all servers
 //            Thread.sleep(100);
@@ -73,7 +67,7 @@ package com.typedb.driver.test.behaviour.connection;
 //
 //    @Override
 //    TypeDBDriver createTypeDBDriver(String address) {
-//        return createTypeDBDriver(address, "admin", "password", false);
+//        return createTypeDBDriver(address, DEFAULT_USERNAME, DEFAULT_PASSWORD, false); // TODO: Probably requires connection settings with tls enabled by default
 //    }
 //
 //    TypeDBDriver createTypeDBDriver(String address, String username, String password, boolean tlsEnabled) {
@@ -85,26 +79,17 @@ package com.typedb.driver.test.behaviour.connection;
 //        return new Options();
 //    }
 //
-//    @Override
-//    @When("connection opens with default authentication")
-//    public void connection_opens_with_default_authentication() {
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//    }
+//@When("connection opens with default authentication")
+//public void connection_opens_with_default_authentication() {
+//    driver = createDefaultTypeDBDriver();
+//}
 //
-//    @When("connection opens with authentication: {word}, {word}")
-//    public void connection_opens_with_authentication(String username, String password) {
-//        if (driver != null) {
-//            driver.close();
-//            driver = null;
-//        }
+//@When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
+//public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+//    Credential credential = new Credential(username, password);
+//    mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS)); // TODO: Probably requires connection settings with tls enabled by default
+//}
 //
-//        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
-//    }
-//
-//    @When("connection opens with authentication: {word}, {word}; throws exception")
-//    public void connection_opens_with_authentication_throws_exception(String username, String password) {
-//        assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
-//    }
 //
 //    @Override
 //    @Given("connection has been opened")

@@ -19,35 +19,40 @@
 
 package com.typedb.driver.user;
 
-// TODO: Currently disabled in 3.0
+import com.typedb.driver.api.user.User;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
+import static com.typedb.driver.jni.typedb_driver.user_get_name;
+import static com.typedb.driver.jni.typedb_driver.user_update_password;
 
-//public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
-//    private final UserManagerImpl users;
-//
-//    UserImpl(com.typedb.driver.jni.User user, UserManagerImpl users) {
-//        super(user);
-//        this.users = users;
-//    }
-//
-//    @Override
-//    public String username() {
-//        return user_get_username(nativeObject);
-//    }
-//
+public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
+    private final UserManagerImpl users;
+
+    UserImpl(com.typedb.driver.jni.User user, UserManagerImpl users) {
+        super(user);
+        this.users = users;
+    }
+
+    @Override
+    public String name() {
+        return user_get_name(nativeObject);
+    }
+
+// TODO: Not implemented
 //    @Override
 //    public Optional<Long> passwordExpirySeconds() {
 //        var res = user_get_password_expiry_seconds(nativeObject);
 //        if (res >= 0) return Optional.of(res);
 //        else return Optional.empty();
 //    }
-//
-//    @Override
-//    public void passwordUpdate(String passwordOld, String passwordNew) {
-//        try {
-//            user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
-//}
+
+    @Override
+    public void updatePassword(String passwordOld, String passwordNew) {
+        try {
+            user_update_password(nativeObject, users.nativeDriver, passwordOld, passwordNew);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+}

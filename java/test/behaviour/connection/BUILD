@@ -26,6 +26,7 @@ java_library(
         # Package dependencies
         "//java:driver-java",
         "//java/api",
+        "//java/test/behaviour/config:parameters",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

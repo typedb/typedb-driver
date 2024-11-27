@@ -19,51 +19,33 @@
 
 package com.typedb.driver.api;
 
-// TODO: Currently disabled in 3.0
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
+import static com.typedb.driver.jni.typedb_driver.credential_new;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+ * User credentials for connecting to TypeDB Server.
  *
  * <h3>Examples</h3>
  * <pre>
- * // Creates a credential as above, but the connection will be made over TLS.
- * Credential credential = new Credential(username, password, true);
- *
- * // Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
- * Credential credential = new Credential(username, password, Path.of("path/to/ca-certificate.pem"));
+ * Credential credential = new Credential(username, password);
  * </pre>
  */
-//public class Credential extends NativeObject<com.typedb.driver.jni.Credential> {
-//    /**
-//     *
-//     * @param username The name of the user to connect as
-//     * @param password The password for the user
-//     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
-//     */
-//    public Credential(String username, String password, boolean tlsEnabled) {
-//        this(username, password, null, tlsEnabled);
-//    }
-//
-//    /**
-//     *
-//     * @param username The name of the user to connect as
-//     * @param password The password for the user
-//     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
-//     */
-//    public Credential(String username, String password, Path tlsRootCAPath) {
-//        this(username, password, tlsRootCAPath.toString(), true);
-//    }
-//
-//    private Credential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
-//        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
-//    }
-//
-//    private static com.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
-//        assert tlsEnabled || tlsRootCAPath == null;
-//        try {
-//            return credential_new(username, password, tlsRootCAPath, tlsEnabled);
-//        } catch (com.typedb.driver.jni.Error error) {
-//            throw new TypeDBDriverException(error);
-//        }
-//    }
-//}
+public class Credential extends NativeObject<com.typedb.driver.jni.Credential> {
+    /**
+     * @param username The name of the user to connect as
+     * @param password The password for the user
+     */
+    public Credential(String username, String password) {
+        super(newNative(username, password));
+    }
+
+    private static com.typedb.driver.jni.Credential newNative(String username, String password) {
+        try {
+            return credential_new(username, password);
+        } catch (com.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
+    }
+}

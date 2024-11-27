@@ -20,6 +20,8 @@
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
@@ -44,13 +46,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    Driver createTypeDBDriver(String address) {
-        return TypeDB.coreDriver(address);
+    Driver createTypeDBDriver(String address, Credential credential, ConnectionSettings connectionSettings) {
+        return TypeDB.coreDriver(address, credential, connectionSettings);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIAL, DEFAULT_CONNECTION_SETTINGS);
     }
 
 //    @Override
@@ -62,20 +64,33 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void typedb_starts() {
     }
 
-    @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
         driver = createDefaultTypeDBDriver();
     }
 
+    @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
+    public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+        Credential credential = new Credential(username, password);
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS));
+    }
+
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
+        mayError.check(() -> driver = createTypeDBDriver(
+                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CREDENTIAL,
+                DEFAULT_CONNECTION_SETTINGS
+        ));
     }
 
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost")));
+        mayError.check(() -> driver = createTypeDBDriver(
+                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CREDENTIAL,
+                DEFAULT_CONNECTION_SETTINGS
+        ));
     }
 
     @Override
@@ -94,5 +109,11 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Given("connection has {integer} database(s)")
     public void connection_has_count_databases(int count) {
         super.connection_has_count_databases(count);
+    }
+
+    @Override
+    @Given("connection has {integer} user(s)")
+    public void connection_has_count_users(int count) {
+        super.connection_has_count_users(count);
     }
 }

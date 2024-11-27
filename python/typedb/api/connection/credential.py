@@ -15,36 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import Optional
-
-from typedb.common.exception import TypeDBDriverException, CLOUD_CREDENTIAL_INCONSISTENT, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
 
 
 class Credential(NativeWrapper[NativeCredential]):
     """
-    User credentials and TLS encryption settings for connecting to TypeDB Cloud. Arguments:
-    1) username: The name of the user to connect as. 2) password: The password for the user.
-    3) tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
-    4) tls_enabled: Specify whether the connection to TypeDB Cloud must be done over TLS.
+    User credentials and TLS encryption settings for connecting to TypeDB Server.
 
     Examples:
     --------
     ::
 
-        # Creates a credential using the specified username and password.
         credential = Credential(username, password)
-
-        # Creates a credential as above, but with TLS and the specified CA to authenticate server certificates.
-        credential = Credential(username, password, tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
     """
 
-    def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
-                 tls_enabled: bool = False):
-        if tls_root_ca_path is not None and not tls_enabled:
-            raise TypeDBDriverException(CLOUD_CREDENTIAL_INCONSISTENT)
-        super().__init__(credential_new(username, password, tls_root_ca_path, tls_enabled))
+    def __init__(self, username: str, password: str):
+        super().__init__(credential_new(username, password))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

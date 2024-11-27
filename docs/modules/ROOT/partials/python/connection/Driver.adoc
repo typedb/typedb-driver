@@ -9,6 +9,7 @@
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
+a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
 |===
 // end::properties[]
 

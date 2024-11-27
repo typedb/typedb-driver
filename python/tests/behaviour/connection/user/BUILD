@@ -16,7 +16,6 @@
 # under the License.
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-#load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test_cloud")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 py_library(
@@ -24,24 +23,6 @@ py_library(
     srcs = ["user_steps.py"],
     deps = [],
 )
-
-#typedb_behaviour_py_test_cloud(
-#    name = "test",
-#    feats = ["@typedb_behaviour//connection:user.feature"],
-#    steps = [
-#        ":steps",
-#        "//python/tests/behaviour/connection:steps",
-#    ],
-#    deps = [
-#        "//python:driver_python",
-#        "//python/tests/behaviour/config:parameters",
-#        "//python/tests/behaviour:context",
-#        "//python/tests/behaviour/util:util",
-#        "//python/tests/behaviour/background",
-#    ],
-#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-#    size = "small",
-#)
 
 checkstyle_test(
     name = "checkstyle",

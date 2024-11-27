@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from typedb.api.connection.database import DatabaseManager
     # from typedb.api.connection.options import Options
     from typedb.api.connection.transaction import Transaction, TransactionType
-    # from typedb.api.user.user import UserManager, User
+    from typedb.api.user.user import UserManager
 
 
 class Driver(ABC):
@@ -86,29 +86,14 @@ class Driver(ABC):
         """
         pass
 
-    # @property
-    # @abstractmethod
-    # def users(self) -> UserManager:
-    #     """
-    #     The ``UserManager`` instance for this connection, providing access to user management methods.
-    #     Only for TypeDB Cloud.
-    #     """
-    #     pass
-    # 
-    # @abstractmethod
-    # def user(self) -> User:
-    #     """
-    #     Returns the logged-in user for the connection. Only for TypeDB Cloud.
-    # 
-    #     :return:
-    # 
-    #     Examples:
-    #     ---------
-    #     ::
-    # 
-    #         driver.user()
-    #     """
-    #     pass
+    @property
+    @abstractmethod
+    def users(self) -> UserManager:
+        """
+        The ``UserManager`` instance for this connection, providing access to user management methods.
+        Only for TypeDB Cloud.
+        """
+        pass
 
     @abstractmethod
     def __enter__(self):

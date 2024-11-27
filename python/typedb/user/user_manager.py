@@ -15,74 +15,67 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# from __future__ import annotations
-#
-# from typing import TYPE_CHECKING, Optional
-#
-# from typedb.native_driver_wrapper import user_manager_new, users_contains, users_create, users_delete, users_all, \
-#     users_get, users_set_password, users_current_user, user_iterator_next, UserManager as NativeUserManager, \
-#     TypeDBDriverExceptionNative
-#
-# from typedb.api.user.user import UserManager
-# from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
-# from typedb.common.iterator_wrapper import IteratorWrapper
-# from typedb.common.native_wrapper import NativeWrapper
-# from typedb.user.user import _User
-#
-# if TYPE_CHECKING:
-#     from typedb.api.user.user import User
-#     from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
-#
-#
-# class _UserManager(UserManager, NativeWrapper[NativeUserManager]):
-#
-#     def __init__(self, connection: NativeDriver):
-#         super().__init__(user_manager_new(connection))
-#
-#     @property
-#     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-#         return TypeDBDriverException(ILLEGAL_STATE)
-#
-#     def contains(self, username: str) -> bool:
-#         try:
-#             return users_contains(self.native_object, username)
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def create(self, username: str, password: str) -> None:
-#         try:
-#             users_create(self.native_object, username, password)
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def delete(self, username: str) -> None:
-#         try:
-#             users_delete(self.native_object, username)
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def all(self) -> list[User]:
-#         try:
-#             return [_User(user, self) for user in IteratorWrapper(users_all(self.native_object), user_iterator_next)]
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def get(self, username: str) -> Optional[User]:
-#         try:
-#             if user := users_get(self.native_object, username):
-#                 return _User(user, self)
-#             return None
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def password_set(self, username: str, password: str) -> None:
-#         try:
-#             users_set_password(self.native_object, username, password)
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
-#
-#     def get_current_user(self) -> User:
-#         try:
-#             return _User(users_current_user(self.native_object), self)
-#         except TypeDBDriverExceptionNative as e:
-#             raise TypeDBDriverException.of(e) from None
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Optional
+
+from typedb.api.user.user import UserManager
+from typedb.common.exception import TypeDBDriverException
+from typedb.common.iterator_wrapper import IteratorWrapper
+from typedb.native_driver_wrapper import users_contains, users_create, users_delete, users_all, users_get, \
+    users_set_password, users_current_username, user_iterator_next, TypeDBDriverExceptionNative
+from typedb.user.user import _User
+
+if TYPE_CHECKING:
+    from typedb.api.user.user import User
+    from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
+
+
+class _UserManager(UserManager):
+
+    def __init__(self, native_driver: NativeDriver):
+        self.native_driver = native_driver
+
+    def contains(self, username: str) -> bool:
+        try:
+            return users_contains(self.native_driver, username)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def create(self, username: str, password: str) -> None:
+        try:
+            users_create(self.native_driver, username, password)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def delete(self, username: str) -> None:
+        try:
+            users_delete(self.native_driver, username)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def all(self) -> list[User]:
+        try:
+            return [_User(user, self) for user in IteratorWrapper(users_all(self.native_driver), user_iterator_next)]
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def get(self, username: str) -> Optional[User]:
+        try:
+            if user := users_get(self.native_driver, username):
+                return _User(user, self)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def set_password(self, username: str, password: str) -> None:
+        try:
+            users_set_password(self.native_driver, username, password)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def get_current_username(self) -> str:
+        try:  # TODO: remove try if we leave it as str
+            return users_current_username(self.native_driver)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None

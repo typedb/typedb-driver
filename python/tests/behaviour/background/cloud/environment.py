@@ -17,13 +17,14 @@
 
 from typedb.driver import *
 
+# TODO: Uncomment and test when we have replications and encryption
 # IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 #
 #
 # def before_all(context: Context):
 #     environment_base.before_all(context)
 #     context.credential_root_ca_path = os.environ["ROOT_CA"]
-#     context.setup_context_driver_fn = lambda user="admin", password="password": \
+#     context.setup_context_driver_fn = lambda username="admin", password="password": \
 #         setup_context_driver(context, user, password)
 #
 #

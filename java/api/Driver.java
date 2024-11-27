@@ -20,6 +20,7 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.api.user.UserManager;
 
 import javax.annotation.CheckReturnValue;
 
@@ -71,25 +72,13 @@ public interface Driver extends AutoCloseable {
     void close();
 
     /**
-     * Returns the logged-in user for the connection. Only for TypeDB Cloud.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.user();
-     * </pre>
-     */
-//    @CheckReturnValue
-//    User user();
-
-    /**
      * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-     * Only for TypeDB Cloud.
      *
      * <h3>Examples</h3>
      * <pre>
      * driver.users();
      * </pre>
      */
-//    @CheckReturnValue
-//    UserManager users();
+    @CheckReturnValue
+    UserManager users();
 }

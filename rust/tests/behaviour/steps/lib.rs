@@ -173,9 +173,10 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.transaction_options = Options::new();
+        self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
-        // self.cleanup_users().await;
+        self.cleanup_users().await;
         self.cleanup_answers().await;
         self.cleanup_concurrent_answers().await;
         self.reset_driver();
@@ -196,15 +197,20 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            self.set_driver(
-                self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap(),
-            );
-        }
-
-        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
-            .await
-            .unwrap();
+        try_join_all(
+            self.driver
+                .as_ref()
+                .unwrap()
+                .databases()
+                .all()
+                .await
+                .unwrap()
+                .into_iter()
+                .filter(|db| db.name() != "system") // TODO: A temporary hack before we hide the system db
+                .map(|db| db.delete()),
+        )
+        .await
+        .unwrap();
     }
 
     pub async fn cleanup_transactions(&mut self) {
@@ -214,10 +220,6 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            return;
-        }
-
         try_join_all(
             self.driver
                 .as_ref()
@@ -231,7 +233,10 @@ impl Context {
                 .map(|user| self.driver.as_ref().unwrap().users().delete(user.name)),
         )
         .await
-        .ok();
+        .expect("Expected users cleanup");
+
+        // TODO: Return
+        // self.driver.as_ref().unwrap().users().set_password(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await.unwrap();
     }
 
     pub async fn cleanup_answers(&mut self) {
@@ -366,25 +371,22 @@ impl Context {
         self.try_get_concurrent_rows_streams().await.unwrap()
     }
 
-    async fn create_default_driver(
-        &self,
-        username: Option<&str>,
-        password: Option<&str>,
-    ) -> TypeDBResult<TypeDBDriver> {
+    async fn create_default_driver(&self) -> TypeDBResult<TypeDBDriver> {
+        self.create_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await
+    }
+
+    async fn create_driver(&self, username: Option<&str>, password: Option<&str>) -> TypeDBResult<TypeDBDriver> {
+        let username = username.unwrap_or(Self::ADMIN_USERNAME);
+        let password = password.unwrap_or(Self::ADMIN_USERNAME);
         match self.is_cloud {
             false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
             true => self.create_cloud_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
         }
     }
 
-    async fn create_core_driver(
-        &self,
-        address: &str,
-        _username: Option<&str>,
-        _password: Option<&str>,
-    ) -> TypeDBResult<TypeDBDriver> {
+    async fn create_core_driver(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cloud);
-        let credential = Credential::new(_username.unwrap(), _password.unwrap());
+        let credential = Credential::new(username, password);
         let conn_settings = ConnectionSettings::new(false, None)?;
         TypeDBDriver::new_core(address, credential, conn_settings).await
     }
@@ -392,18 +394,13 @@ impl Context {
     async fn create_cloud_driver(
         &self,
         addresses: &[&str],
-        username: Option<&str>,
-        password: Option<&str>,
+        username: &str,
+        password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(self.is_cloud);
-        TypeDBDriver::new_cloud(
-            addresses,
-            Credential::new(
-                username.expect("Username is required for cloud connection"),
-                password.expect("Password is required for cloud connection"),
-            ),
-            ConnectionSettings::new(false, None)?,
-        )
+        assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
+        let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
+        TypeDBDriver::new_cloud(&addresses, Credential::new(username, password), ConnectionSettings::new(false, None)?)
+            .await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {
@@ -444,7 +441,7 @@ impl Default for Context {
 
 macro_rules! in_background {
     ($context:ident, |$background:ident| $expr:expr) => {
-        let $background = $context.create_default_driver(None, None).await.unwrap();
+        let $background = $context.create_default_driver().await.unwrap();
         $expr
         $background.force_close().unwrap();
     };

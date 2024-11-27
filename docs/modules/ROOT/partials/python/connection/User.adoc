@@ -1,0 +1,45 @@
+[#_User]
+=== User
+
+TypeDB user information
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `str` a| Returns the name of this user.
+
+
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_User_update_password_password_old_str_password_new_str]
+==== update_password
+
+[source,python]
+----
+update_password(password_old: str, password_new: str) -> None
+----
+
+Updates the password for this user.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `password_old` a| The current password of this user a| `str` a| 
+a| `password_new` a| The new password a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+// end::methods[]
+

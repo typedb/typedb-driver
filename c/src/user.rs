@@ -19,47 +19,48 @@
 
 use std::ffi::c_char;
 
-use typedb_driver::{User, UserManager};
+use typedb_driver::{TypeDBDriver, User, UserManager};
 
 use super::{
     error::unwrap_void,
     memory::{borrow, free, release_string, string_view},
 };
 
-// /// Frees the native rust <code>User</code> object.
-// #[no_mangle]
-// pub extern "C" fn user_drop(user: *mut User) {
-//     free(user);
-// }
-//
-// /// Returns the name of this user.
-// #[no_mangle]
-// pub extern "C" fn user_get_username(user: *mut User) -> *mut c_char {
-//     release_string(borrow(user).username.clone())
-// }
-//
+/// Frees the native rust <code>User</code> object.
+#[no_mangle]
+pub extern "C" fn user_drop(user: *mut User) {
+    free(user);
+}
+
+/// Returns the name of this user.
+#[no_mangle]
+pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
+    release_string(borrow(user).name.clone())
+}
+
 // /// Returns the number of seconds remaining till this user’s current password expires.
 // #[no_mangle]
 // pub extern "C" fn user_get_password_expiry_seconds(user: *mut User) -> i64 {
 //     borrow(user).password_expiry_seconds.unwrap_or(-1)
 // }
-//
-// /// Updates the password for the current authenticated user.
-// ///
-// /// @param user The user to update the password of - must be the current user.
-// /// @param user_manager The <code>UserManager</code> object on this connection.
-// /// @param password_old The current password of this user
-// /// @param password_new The new password
-// #[no_mangle]
-// pub extern "C" fn user_password_update(
-//     user: *mut User,
-//     user_manager: *const UserManager,
-//     password_old: *const c_char,
-//     password_new: *const c_char,
-// ) {
-//     unwrap_void(borrow(user).password_update(
-//         &borrow(user_manager).connection,
-//         string_view(password_old),
-//         string_view(password_new),
-//     ));
-// }
+
+/// Updates the password for the current authenticated user.
+///
+/// @param user The user to update the password of - must be the current user.
+/// @param user_manager The <code>UserManager</code> object on this connection.
+/// @param password_old The current password of this user
+/// @param password_new The new password
+#[no_mangle]
+pub extern "C" fn user_update_password(
+    user: *mut User,
+    driver: *const TypeDBDriver,
+    password_old: *const c_char,
+    password_new: *const c_char,
+) {
+    todo!("User update functions")
+    // unwrap_void(borrow(user).password_update(
+    //     &borrow(driver).connection, // ?
+    //     string_view(password_old),
+    //     string_view(password_new),
+    // ));
+}
