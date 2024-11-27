@@ -34,13 +34,14 @@ async fn all_user_names(context: &Context) -> HashSet<String> {
 #[step(expr = "get all users:")]
 async fn get_all_users(context: &mut Context, step: &Step) {
     let expected_users: HashSet<String> = iter_table(step).map(|name| name.to_owned()).collect();
-    assert_with_timeout!(all_user_names(context).await == expected_users, "Connection's databases are not as expected",);
+    let users = all_user_names(context).await;
+    assert_with_timeout!(users == expected_users, "Expected users: {users:?}, got: {expected_users:?}");
 }
 
 #[apply(generic_step)]
-#[step(expr = "get all users; fails")]
-async fn get_all_users_fails(context: &mut Context) {
-    params::MayError::True(None).check(context.driver.as_ref().unwrap().users().all().await);
+#[step(expr = "get all users{may_error}")]
+async fn get_all_users_error(context: &mut Context, may_error: params::MayError) {
+    may_error.check(context.driver.as_ref().unwrap().users().all().await);
 }
 
 #[apply(generic_step)]
@@ -50,9 +51,9 @@ async fn get_all_users_contains(context: &mut Context, contains_or_doesnt: param
 }
 
 #[apply(generic_step)]
-#[step(expr = "users get user: {word}; fails")]
-async fn users_get_user_fails(context: &mut Context, username: String) {
-    params::MayError::True(None).check(context.driver.as_ref().unwrap().users().get(username).await);
+#[step(expr = "get user: {word}{may_error}")]
+async fn get_user(context: &mut Context, username: String, may_error: params::MayError) {
+    may_error.check(context.driver.as_ref().unwrap().users().get(username).await);
 }
 
 #[apply(generic_step)]
@@ -76,7 +77,7 @@ async fn get_user_set_password(context: &mut Context, username: String, password
 }
 
 #[apply(generic_step)]
-#[step(expr = r"get user\({word}\) update password from '{word}' to '{word}' {may_error}")]
+#[step(expr = r"get user\({word}\) update password from '{word}' to '{word}'{may_error}")]
 async fn get_user_update_password(
     context: &mut Context,
     username: String,

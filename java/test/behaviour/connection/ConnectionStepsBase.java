@@ -19,14 +19,12 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.ConnectionSettings;
 import com.typedb.driver.api.Credential;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.test.behaviour.config.Parameters;
-import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +51,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
+    //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
 //            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
 //    );
 //    public static Options transactionOptions;
@@ -90,12 +88,10 @@ public abstract class ConnectionStepsBase {
         cleanupTransactions();
 
         driver = createDefaultTypeDBDriver();
-        driver.databases().all().forEach(Database::delete);
-//        driver.users().all().forEach(user -> {
-//            if (!user.username().equals(ADMIN_USERNAME)) {
-//                driver.users().delete(user.username());
-//            }
-//        });
+        // TODO: A temporary filter hack before we hide the system db
+        driver.databases().all().stream().filter(db -> !db.name().equals("system")).forEach(Database::delete);
+        driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().delete(user.name()));
+        // TODO: Set admin password to default
         driver.close();
         backgroundDriver.close();
     }
@@ -119,16 +115,9 @@ public abstract class ConnectionStepsBase {
 
 //    abstract Options createOptions();
 
-    @When("connection opens with default authentication")
-    public void connection_opens_with_default_authentication() {
-        driver = createDefaultTypeDBDriver();
-    }
+    abstract void connection_opens_with_default_authentication();
 
-    @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
-    public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
-        Credential credential = new Credential(username, password);
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS));
-    }
+    abstract void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError);
 
     void connection_closes() {
         cleanupTransactions();

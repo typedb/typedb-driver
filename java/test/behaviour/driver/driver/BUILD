@@ -24,7 +24,7 @@ typedb_behaviour_java_test(
     srcs = [
         "DriverTest.java",
     ],
-    test_class = "com.typedb.driver.test.behaviour.driver.query.DriverTest",
+    test_class = "com.typedb.driver.test.behaviour.driver.driver.DriverTest",
     data = [
         "@typedb_behaviour//driver:driver.feature",
     ],

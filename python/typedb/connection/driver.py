@@ -25,8 +25,8 @@ from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_open_core, driver_is_open, driver_force_close, \
-    TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
+    driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
@@ -41,18 +41,18 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credential: Credential,
                  connection_settings: ConnectionSettings):
         try:
-            # if is_cloud:
-            # if isinstance(addresses, list):
-            #     native_connection = driver_open_cloud(addresses, credential.native_object)
-            # else:
-            #     public_addresses = list(addresses.keys())
-            #     private_addresses = [addresses[public] for public in public_addresses]
-            #     native_connection = driver_open_cloud_translated(
-            #         public_addresses, private_addresses, credential.native_object)
-            # else:
-            assert not is_cloud, "Cloud is not implemented"
-            native_driver = driver_open_core(addresses[0], credential.native_object, connection_settings.native_object,
-                                             Driver.LANGUAGE)
+            if is_cloud:
+                if isinstance(addresses, list):
+                    native_driver = driver_open_cloud(addresses, credential.native_object)
+                else:
+                    public_addresses = list(addresses.keys())
+                    private_addresses = [addresses[public] for public in public_addresses]
+                    native_driver = driver_open_cloud_translated(
+                        public_addresses, private_addresses, credential.native_object)
+            else:
+                native_driver = driver_open_core(addresses[0], credential.native_object,
+                                                 connection_settings.native_object,
+                                                 Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)

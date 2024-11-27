@@ -16,7 +16,7 @@
 # under the License.
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-#load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test_cloud")
+load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 py_library(
@@ -25,23 +25,25 @@ py_library(
     deps = [],
 )
 
-#typedb_behaviour_py_test_cloud(
-#    name = "test",
-#    feats = ["@typedb_behaviour//connection:user.feature"],
-#    steps = [
-#        ":steps",
-#        "//python/tests/behaviour/connection:steps",
-#    ],
-#    deps = [
-#        "//python:driver_python",
-#        "//python/tests/behaviour/config:parameters",
-#        "//python/tests/behaviour:context",
-#        "//python/tests/behaviour/util:util",
-#        "//python/tests/behaviour/background",
-#    ],
-#    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-#    size = "small",
-#)
+typedb_behaviour_py_test(
+    name = "test",
+    feats = ["@typedb_behaviour//driver:user.feature"],
+    steps = [
+        ":steps",
+        "//python/tests/behaviour/connection:steps",
+        "//python/tests/behaviour/connection/transaction:steps",
+        "//python/tests/behaviour/query:steps",
+    ],
+    deps = [
+        "//python:driver_python",
+        "//python/tests/behaviour/config:parameters",
+        "//python/tests/behaviour:context",
+        "//python/tests/behaviour/background",
+        "//python/tests/behaviour/util:util",
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    size = "small",
+)
 
 checkstyle_test(
     name = "checkstyle",

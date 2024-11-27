@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package com.typedb.driver.test.behaviour.connection.user;
+package com.typedb.driver.test.behaviour.driver.user;
 
 import com.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
@@ -29,10 +29,10 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.typedb.driver.test.behaviour",
-        features = "external/typedb_behaviour/connection/user.feature",
+        features = "external/typedb_behaviour/driver/user.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
-public class UserTestCloud extends BehaviourTest {
+public class UserTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:

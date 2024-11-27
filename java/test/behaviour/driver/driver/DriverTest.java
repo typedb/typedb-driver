@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.typedb.driver.test.behaviour.driver.query;
+package com.typedb.driver.test.behaviour.driver.driver;
 
 import com.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;

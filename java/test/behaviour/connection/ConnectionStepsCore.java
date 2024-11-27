@@ -64,6 +64,17 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void typedb_starts() {
     }
 
+    @When("connection opens with default authentication")
+    public void connection_opens_with_default_authentication() {
+        driver = createDefaultTypeDBDriver();
+    }
+
+    @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
+    public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+        Credential credential = new Credential(username, password);
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS));
+    }
+
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(

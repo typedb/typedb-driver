@@ -37,7 +37,7 @@ from typedb.api.connection.database import *  # noqa # pylint: disable=unused-im
 from typedb.api.connection.driver import *
 # from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
-# from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
+from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
 from typedb.common.datetime import *  # noqa # pylint: disable=unused-import
 from typedb.common.duration import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
@@ -62,18 +62,20 @@ class TypeDB:
         """
         return _Driver.core(address, credential, connection_settings)
 
-    # @staticmethod
-    # def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential) -> Driver:
-    #     """
-    #     Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
-    #
-    #     :param addresses:
-    #     :param credential:
-    #     :return:
-    #     """
-    #     if isinstance(addresses, str):
-    #         return _Driver([addresses], credential)
-    #     elif isinstance(addresses, ABCMapping):
-    #         return _Driver(dict(addresses), credential)
-    #     else:
-    #         return _Driver(list(addresses), credential)
+    @staticmethod
+    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential,
+                     connection_settings: ConnectionSettings) -> Driver:
+        """
+        Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+
+        :param addresses: TypeDB server addresses as a single string, a list of strings, or as an address translation mapping.
+        :param credential: The credential to connect with.
+        :param connection_settings: The connection settings to connect with.
+        :return:
+        """
+        if isinstance(addresses, str):
+            return _Driver.cloud([addresses], credential, credential, connection_settings)
+        elif isinstance(addresses, ABCMapping):
+            return _Driver.cloud(dict(addresses), credential, credential, connection_settings)
+        else:
+            return _Driver.cloud(list(addresses), credential, credential, connection_settings)

@@ -28,10 +28,10 @@ async fn test() {
     // @typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
     #[cfg(feature = "bazel")]
-    let path = "../typedb_behaviour/connection/user.feature";
+    let path = "../typedb_behaviour/driver/user.feature";
 
     #[cfg(not(feature = "bazel"))]
-    let path = "../bazel-typedb-driver/external/typedb_behaviour/connection/user.feature";
+    let path = "../bazel-typedb-driver/external/typedb_behaviour/driver/user.feature";
 
     assert!(Context::test(path, is_cloud()).await);
 }

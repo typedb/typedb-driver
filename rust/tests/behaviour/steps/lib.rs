@@ -173,6 +173,7 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.transaction_options = Options::new();
+        self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
         self.cleanup_users().await;
@@ -196,10 +197,6 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            self.set_driver(self.create_default_driver().await.unwrap());
-        }
-
         try_join_all(
             self.driver
                 .as_ref()
@@ -209,7 +206,7 @@ impl Context {
                 .await
                 .unwrap()
                 .into_iter()
-                .filter(|db| db.name() != "system")
+                .filter(|db| db.name() != "system") // TODO: A temporary hack before we hide the system db
                 .map(|db| db.delete()),
         )
         .await
@@ -223,10 +220,6 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            return;
-        }
-
         try_join_all(
             self.driver
                 .as_ref()
@@ -405,7 +398,8 @@ impl Context {
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cloud);
-        TypeDBDriver::new_cloud(addresses, Credential::new(username, password), ConnectionSettings::new(false, None)?)
+        let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
+        TypeDBDriver::new_cloud(&addresses, Credential::new(username, password), ConnectionSettings::new(false, None)?).await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {

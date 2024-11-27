@@ -36,15 +36,19 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+// EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+// EXAMPLE START MARKER
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+// EXAMPLE END MARKER
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

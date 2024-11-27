@@ -18,55 +18,37 @@
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
-java_library(
-    name = "steps-base",
-    srcs = ["ConnectionStepsBase.java"],
+typedb_behaviour_java_test(
+    name = "test",
+    srcs = [
+        "UserTest.java",
+    ],
+    test_class = "com.typedb.driver.test.behaviour.driver.user.UserTest",
+    data = [
+        "@typedb_behaviour//driver:user.feature",
+    ],
+    connection_steps_core = "//java/test/behaviour/connection:steps-core",
+    connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
+    steps = [
+        "//java/test/behaviour/connection/transaction:steps",
+        "//java/test/behaviour/connection/user:steps",
+        "//java/test/behaviour/query:steps",
+        "//java/test/behaviour/util:steps",
+    ],
     deps = [
-        # Package dependencies
-        "//java:driver-java",
-        "//java/api",
-        "//java/test/behaviour/config:parameters",
+        # Internal Package Dependencies
+        "//java/test/behaviour:behaviour",
 
         # External dependencies from Maven
-        "@maven//:junit_junit",
-#        "@maven//:com_typedb_typedb_runner",
+        "@maven//:io_cucumber_cucumber_junit",
     ],
-)
-
-java_library(
-    name = "steps-core",
-    srcs = [
-        "ConnectionStepsCore.java",
-    ],
-    visibility = ["//visibility:public"],
-    deps = [
-        # Package dependencies
-        ":steps-base",
+    runtime_deps = [
         "//java/test/behaviour/config:parameters",
-        "//java:driver-java",
-        "//java/api",
-#        "@maven//:com_typedb_typedb_runner",
-        "@maven//:io_cucumber_cucumber_java",
     ],
-)
-
-java_library(
-    name = "steps-cloud",
-    srcs = [
-        "ConnectionStepsCloud.java",
-    ],
+    size = "enormous",
     visibility = ["//visibility:public"],
-    deps = [
-        # Package dependencies
-        ":steps-base",
-        "//java:driver-java",
-        "//java/api",
-        "//java/test/behaviour/util",
-#        "@maven//:com_typedb_typedb_runner",
-#        "@maven//:com_typedb_typedb_cloud_runner",
-        "@maven//:io_cucumber_cucumber_java",
-    ],
 )
 
 checkstyle_test(

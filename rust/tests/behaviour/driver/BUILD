@@ -26,6 +26,12 @@ rust_behaviour_test(
     data = ["@typedb_behaviour//driver:driver.feature"],
 )
 
+rust_behaviour_test(
+    name = "test_user",
+    srcs = ["user.rs"],
+    data = ["@typedb_behaviour//driver:user.feature"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
