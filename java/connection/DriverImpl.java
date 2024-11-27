@@ -29,9 +29,16 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.user.UserManagerImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
 import static com.typedb.driver.jni.typedb_driver.driver_open_core;
+import static com.typedb.driver.jni.typedb_driver.driver_open_cloud;
+import static com.typedb.driver.jni.typedb_driver.driver_open_cloud_translated;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 
@@ -39,13 +46,13 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         this(openCore(address, credential, connectionSettings));
     }
 
-//    public TypeDBDriverImpl(Set<String> initAddresses, Credential credential) throws TypeDBDriverException {
-//        this(openCloud(initAddresses, credential));
-//    }
-//
-//    public TypeDBDriverImpl(Map<String, String> addressTranslation, Credential credential) throws TypeDBDriverException {
-//        this(openCloud(addressTranslation, credential));
-//    }
+    public DriverImpl(Set<String> initAddresses, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
+        this(openCloud(initAddresses, credential, connectionSettings));
+    }
+
+    public DriverImpl(Map<String, String> addressTranslation, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
+        this(openCloud(addressTranslation, credential, connectionSettings));
+    }
 
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
         super(connection);
@@ -59,31 +66,33 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         }
     }
 
-//    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credential credential) {
-//        try {
-//            return driver_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject);
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
+    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credential credential, ConnectionSettings connectionSettings) {
+        try {
+            return driver_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject, connectionSettings.nativeObject, LANGUAGE);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
 
-//    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credential credential) {
-//        try {
-//            List<String> publicAddresses = new ArrayList();
-//            List<String> privateAddresses = new ArrayList();
-//            for (Map.Entry<String, String> entry: addressTranslation.entrySet()) {
-//                publicAddresses.add(entry.getKey());
-//                privateAddresses.add(entry.getValue());
-//            }
-//            return driver_open_cloud_translated(
-//                publicAddresses.toArray(new String[0]),
-//                privateAddresses.toArray(new String[0]),
-//                credential.nativeObject
-//            );
-//        } catch (com.typedb.driver.jni.Error e) {
-//            throw new TypeDBDriverException(e);
-//        }
-//    }
+    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credential credential, ConnectionSettings connectionSettings) {
+        try {
+            List<String> publicAddresses = new ArrayList();
+            List<String> privateAddresses = new ArrayList();
+            for (Map.Entry<String, String> entry: addressTranslation.entrySet()) {
+                publicAddresses.add(entry.getKey());
+                privateAddresses.add(entry.getValue());
+            }
+            return driver_open_cloud_translated(
+                publicAddresses.toArray(new String[0]),
+                privateAddresses.toArray(new String[0]),
+                credential.nativeObject,
+                connectionSettings.nativeObject,
+                LANGUAGE
+            );
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
 
     @Override
     public boolean isOpen() {

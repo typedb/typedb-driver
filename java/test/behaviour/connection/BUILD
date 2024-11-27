@@ -26,10 +26,12 @@ java_library(
         # Package dependencies
         "//java:driver-java",
         "//java/api",
+        "//java/test/behaviour/config:parameters",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
 #        "@maven//:com_typedb_typedb_runner",
+        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 

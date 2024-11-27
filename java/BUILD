@@ -37,6 +37,7 @@ java_library(
     deps = [
         # Internal dependencies
         "//java/api",
+        "//java/common",
         "//java/connection",
     ],
 )

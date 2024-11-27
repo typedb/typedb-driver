@@ -46,6 +46,7 @@ pub struct TypeDBDriver {
 }
 
 impl TypeDBDriver {
+    const DRIVER_LANG: &'static str = "rust";
     const VERSION: &'static str = match option_env!("CARGO_PKG_VERSION") {
         None => "0.0.0",
         Some(version) => version,
@@ -58,6 +59,8 @@ impl TypeDBDriver {
     /// # Arguments
     ///
     /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
     ///
     /// # Examples
     ///
@@ -71,7 +74,7 @@ impl TypeDBDriver {
         credential: Credential,
         connection_settings: ConnectionSettings,
     ) -> Result<Self> {
-        Self::new_core_with_description(address, credential, connection_settings, "rust").await
+        Self::new_core_with_description(address, credential, connection_settings, Self::DRIVER_LANG).await
     }
 
     /// Creates a new TypeDB Server connection with a description.
@@ -79,6 +82,8 @@ impl TypeDBDriver {
     /// # Arguments
     ///
     /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
     /// * `driver_lang` — The language of the driver connecting to the server
     ///
     /// # Examples
@@ -130,61 +135,67 @@ impl TypeDBDriver {
         })
     }
 
+    // TODO: Add examples
     /// Creates a new TypeDB Cloud connection.
     ///
     /// # Arguments
     ///
     /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
-    /// * `credential` — User credential and TLS encryption setting
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// Connection::new_cloud(
-    ///     &["localhost:11729", "localhost:21729", "localhost:31729"],
-    ///     Credential::with_tls(
-    ///         "admin",
-    ///         "password",
-    ///         Some(&PathBuf::from(
-    ///             std::env::var("ROOT_CA")
-    ///                 .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
-    ///         )),
-    ///     )?,
-    /// )
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
     /// ```
-    pub fn new_cloud<T: AsRef<str> + Sync>(
-        init_addresses: &[T],
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_cloud<T: AsRef<str> + Sync>(
+        // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
+        init_addresses: &Vec<T>,
         credential: Credential,
         connection_settings: ConnectionSettings,
     ) -> Result<Self> {
+        Self::new_cloud_with_description(init_addresses, credential, connection_settings, Self::DRIVER_LANG).await
+    }
+
+    // TODO: Add examples
+    /// Creates a new TypeDB Cloud connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
+    /// * `driver_lang` — The language of the driver connecting to the server
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_cloud_with_description<T: AsRef<str> + Sync>(
+        // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
+        init_addresses: &Vec<T>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+        driver_lang: impl AsRef<str>,
+    ) -> Result<Self> {
+        if let Some(single_address) = init_addresses.iter().next() {
+            Self::new_core_with_description(single_address, credential, connection_settings, driver_lang).await
+        } else {
+            todo!("Only a single address is accepted for TypeDB Cloud 3.0")
+        }
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credential.clone())?;
         // let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
         // Self::new_cloud_impl(server_to_address, background_runtime, credential)
-        todo!()
     }
 
+    // TODO: Add examples
     /// Creates a new TypeDB Cloud connection.
     ///
     /// # Arguments
     ///
     /// * `address_translation` — Translation map from addresses to be used by the driver for connection
     ///    to addresses received from the TypeDB server(s)
-    /// * `credential` — User credential and TLS encryption setting
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// Connection::new_cloud_with_translation(
-    ///     [
-    ///         ("typedb-cloud.ext:11729", "localhost:11729"),
-    ///         ("typedb-cloud.ext:21729", "localhost:21729"),
-    ///         ("typedb-cloud.ext:31729", "localhost:31729"),
-    ///     ].into(),
-    ///     credential,
-    /// )
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
     /// ```
-    pub fn new_cloud_with_translation<T, U>(
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_cloud_with_translation<T, U>(
+        // TODO: Find a better name
         address_translation: HashMap<T, U>,
         credential: Credential,
         connection_settings: ConnectionSettings,
@@ -193,6 +204,38 @@ impl TypeDBDriver {
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,
     {
+        Self::new_cloud_with_translation_with_description(
+            address_translation,
+            credential,
+            connection_settings,
+            Self::DRIVER_LANG,
+        )
+        .await
+    }
+
+    // TODO: Add examples
+    /// Creates a new TypeDB Cloud connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `address_translation` — Translation map from addresses to be used by the driver for connection
+    ///    to addresses received from the TypeDB server(s)
+    /// * `credential` — The Credential to connect with
+    /// * `connection_settings` — The ConnectionSettings to connect with
+    /// * `driver_lang` — The language of the driver connecting to the server
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_cloud_with_translation_with_description<T, U>(
+        address_translation: HashMap<T, U>,
+        credential: Credential,
+        connection_settings: ConnectionSettings,
+        driver_lang: impl AsRef<str>,
+    ) -> Result<Self>
+    where
+        T: AsRef<str> + Sync,
+        U: AsRef<str> + Sync,
+    {
+        todo!("No address translation is available and only a single server is accepted for TypeDB Cloud 3.0")
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         //
         // let fetched =
@@ -213,7 +256,6 @@ impl TypeDBDriver {
         // debug_assert_eq!(fetched, provided);
         //
         // Self::new_cloud_impl(address_to_server, background_runtime, credential)
-        todo!()
     }
 
     fn new_cloud_impl(

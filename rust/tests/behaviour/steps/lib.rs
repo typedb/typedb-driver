@@ -200,9 +200,20 @@ impl Context {
             self.set_driver(self.create_default_driver().await.unwrap());
         }
 
-        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().filter(|db| db.name() != "system").map(|db| db.delete()))
-            .await
-            .unwrap();
+        try_join_all(
+            self.driver
+                .as_ref()
+                .unwrap()
+                .databases()
+                .all()
+                .await
+                .unwrap()
+                .into_iter()
+                .filter(|db| db.name() != "system")
+                .map(|db| db.delete()),
+        )
+        .await
+        .unwrap();
     }
 
     pub async fn cleanup_transactions(&mut self) {

@@ -170,8 +170,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_try_get_value;
 
 %newobject driver_open_core;
-//%newobject driver_open_cloud;
-//%newobject driver_open_cloud_translated;
+%newobject driver_open_cloud;
+%newobject driver_open_cloud_translated;
 
 %newobject connection_settings_new;
 %newobject credential_new;
