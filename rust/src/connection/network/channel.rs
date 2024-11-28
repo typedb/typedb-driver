@@ -51,7 +51,12 @@ pub(super) fn open_callcred_channel(
     credential: Credential,
     connection_settings: ConnectionSettings,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
-    let mut builder = Channel::builder(address.into_uri()); // TODO: configure TLS
+    let mut builder = Channel::builder(address.into_uri());
+    if connection_settings.is_tls_enabled() {
+        let tls_config =
+            connection_settings.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
+        builder = builder.tls_config(tls_config)?;
+    }
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credential));
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))
