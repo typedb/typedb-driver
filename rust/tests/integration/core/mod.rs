@@ -18,4 +18,3 @@
  */
 
 mod example;
-mod tmp;
