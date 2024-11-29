@@ -88,8 +88,6 @@ public abstract class ConnectionStepsBase {
         cleanupTransactions();
 
         driver = createDefaultTypeDBDriver();
-        // TODO: A temporary filter hack before we hide the system db
-        driver.databases().all().stream().filter(db -> !db.name().equals("system")).forEach(Database::delete);
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().delete(user.name()));
         // TODO: Set admin password to default
         driver.close();

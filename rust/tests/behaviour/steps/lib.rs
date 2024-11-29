@@ -206,7 +206,6 @@ impl Context {
                 .await
                 .unwrap()
                 .into_iter()
-                .filter(|db| db.name() != "system") // TODO: A temporary hack before we hide the system db
                 .map(|db| db.delete()),
         )
         .await
