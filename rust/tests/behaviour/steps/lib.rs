@@ -197,19 +197,9 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        try_join_all(
-            self.driver
-                .as_ref()
-                .unwrap()
-                .databases()
-                .all()
-                .await
-                .unwrap()
-                .into_iter()
-                .map(|db| db.delete()),
-        )
-        .await
-        .unwrap();
+        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
+            .await
+            .unwrap();
     }
 
     pub async fn cleanup_transactions(&mut self) {
