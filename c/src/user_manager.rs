@@ -31,7 +31,7 @@ use crate::{error::try_release_string, memory::release_string};
 /// Retrieves the username of the user who opened this connection
 #[no_mangle]
 pub extern "C" fn users_current_username(driver: *const TypeDBDriver) -> *mut c_char {
-    release_string(borrow(driver).users().current_username().clone().to_owned())
+    release_string(borrow(driver).users().get_current_user().clone().to_owned())
 }
 
 /// Iterator over a set of <code>User</code>s
