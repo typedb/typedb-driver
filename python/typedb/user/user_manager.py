@@ -23,7 +23,7 @@ from typedb.api.user.user import UserManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.native_driver_wrapper import users_contains, users_create, users_delete, users_all, users_get, \
-    users_set_password, users_current_username, user_iterator_next, TypeDBDriverExceptionNative
+    users_set_password, users_get_current_user, user_iterator_next, TypeDBDriverExceptionNative
 from typedb.user.user import _User
 
 if TYPE_CHECKING:
@@ -74,8 +74,11 @@ class _UserManager(UserManager):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def get_current_username(self) -> str:
+    def get_current_user(self) -> Optional[User]:
         try:  # TODO: remove try if we leave it as str
-            return users_current_username(self.native_driver)
-        except TypeDBDriverExceptionNative as e:
+            # return users_current_username(self.native_driver)
+            if user := users_get_current_user(self.native_driver):
+                return _User(user, self)
+            return None
+    except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
