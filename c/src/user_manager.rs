@@ -28,12 +28,6 @@ use super::{
 };
 use crate::{error::try_release_string, memory::release_string};
 
-/// Retrieves the username of the user who opened this connection
-#[no_mangle]
-pub extern "C" fn users_current_username(driver: *const TypeDBDriver) -> *mut User {
-    try_release_optional(borrow(driver).users().get_current_user().transpose())
-}
-
 /// Iterator over a set of <code>User</code>s
 pub struct UserIterator(CIterator<User>);
 
@@ -78,6 +72,12 @@ pub extern "C" fn users_delete(driver: *const TypeDBDriver, username: *const c_c
 #[no_mangle]
 pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char) -> *mut User {
     try_release_optional(borrow(driver).users().get(string_view(username)).transpose())
+}
+
+/// Retrieves the username of the user who opened this connection
+#[no_mangle]
+pub extern "C" fn users_get_current_user(driver: *const TypeDBDriver) -> *mut User {
+    try_release_optional(borrow(driver).users().get_current_user().transpose())
 }
 
 /// Sets a new password for a user. This operation can only be performed by administrators.
