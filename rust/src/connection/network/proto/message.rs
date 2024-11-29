@@ -32,6 +32,7 @@ use crate::{
     error::{ConnectionError, InternalError, ServerError},
     user::User,
 };
+use crate::info::UserInfo;
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
@@ -380,13 +381,13 @@ impl FromProto<typedb_protocol::Error> for QueryResponse {
 
 impl FromProto<user_manager::all::Res> for Response {
     fn from_proto(proto: user_manager::all::Res) -> Self {
-        Self::UsersAll { users: proto.users.into_iter().map(User::from_proto).collect() }
+        Self::UsersAll { users: proto.users.into_iter().map(UserInfo::from_proto).collect() }
     }
 }
 
 impl FromProto<user_manager::get::Res> for Response {
     fn from_proto(proto: user_manager::get::Res) -> Self {
-        Self::UsersGet { user: proto.user.map(User::from_proto) }
+        Self::UsersGet { user: proto.user.map(UserInfo::from_proto) }
     }
 }
 

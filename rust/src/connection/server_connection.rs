@@ -42,6 +42,7 @@ use crate::{
     info::DatabaseInfo,
     ConnectionSettings, Credential, Options, TransactionType, User,
 };
+use crate::info::UserInfo;
 
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
@@ -238,7 +239,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn all_users(&self) -> crate::Result<Vec<User>> {
+    pub(crate) async fn all_users(&self) -> crate::Result<Vec<UserInfo>> {
         match self.request(Request::UsersAll).await? {
             Response::UsersAll { users } => Ok(users),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -246,7 +247,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_user(&self, name: String) -> crate::Result<Option<User>> {
+    pub(crate) async fn get_user(&self, name: String) -> crate::Result<Option<UserInfo>> {
         match self.request(Request::UsersGet { name }).await? {
             Response::UsersGet { user } => Ok(user),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -266,7 +267,7 @@ impl ServerConnection {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn create_user(&self, name: String, password: String) -> crate::Result {
-        match self.request(Request::UsersCreate { user: User { name, password: Some(password) } }).await? {
+        match self.request(Request::UsersCreate {user: UserInfo { name, password: Some(password) } }).await? {
             Response::UsersCreate => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
@@ -277,7 +278,7 @@ impl ServerConnection {
         match self
             .request(Request::UsersUpdate {
                 username: name,
-                user: User { name: "".to_string(), password: Some(password) }, // TODO: make 'name' optional
+                user: UserInfo { name: "".to_string(), password: Some(password) }, // TODO: make 'name' optional
             })
             .await?
         {

@@ -18,11 +18,10 @@
  */
 
 use typedb_protocol::User as UserProto;
-
+use crate::info::UserInfo;
 use super::FromProto;
-use crate::user::User;
 
-impl FromProto<UserProto> for User {
+impl FromProto<UserProto> for UserInfo {
     fn from_proto(proto: UserProto) -> Self {
         let UserProto { name, password } = proto;
         Self { name, password }

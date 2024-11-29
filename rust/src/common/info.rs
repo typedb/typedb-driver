@@ -38,3 +38,9 @@ pub struct ReplicaInfo {
     /// The raft protocol ‘term’ of this replica.
     pub term: i64,
 }
+
+#[derive(Debug)]
+pub(crate) struct UserInfo {
+    pub(crate) name: String,
+    pub(crate) password: Option<String>,
+}
