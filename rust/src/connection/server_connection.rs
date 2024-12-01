@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::DatabaseInfo,
-    ConnectionSettings, Credentials, Options, TransactionType, User,
+    DriverOptions, Credentials, Options, TransactionType, User,
 };
 
 #[derive(Clone)]
@@ -59,7 +59,7 @@ impl ServerConnection {
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {

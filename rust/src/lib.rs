@@ -22,7 +22,7 @@
 
 pub use self::{
     common::{box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, TransactionType, IID},
-    connection::{ConnectionSettings, Credentials},
+    connection::{DriverOptions, Credentials},
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,
     transaction::Transaction,

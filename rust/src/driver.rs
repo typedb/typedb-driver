@@ -32,7 +32,7 @@ use crate::{
         Result,
     },
     connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
-    ConnectionSettings, Credentials, DatabaseManager, Options, Transaction, TransactionType, UserManager,
+    DriverOptions, Credentials, DatabaseManager, Options, Transaction, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -72,7 +72,7 @@ impl TypeDBDriver {
     pub async fn new_core(
         address: impl AsRef<str>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
     ) -> Result<Self> {
         Self::new_core_with_description(address, credential, connection_settings, Self::DRIVER_LANG).await
     }
@@ -96,7 +96,7 @@ impl TypeDBDriver {
     pub async fn new_core_with_description(
         address: impl AsRef<str>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
         let id = address.as_ref().to_string();
@@ -149,7 +149,7 @@ impl TypeDBDriver {
         // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
         init_addresses: &Vec<T>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
     ) -> Result<Self> {
         Self::new_cloud_with_description(init_addresses, credential, connection_settings, Self::DRIVER_LANG).await
     }
@@ -169,7 +169,7 @@ impl TypeDBDriver {
         // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
         init_addresses: &Vec<T>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
         if let Some(single_address) = init_addresses.iter().next() {
@@ -198,7 +198,7 @@ impl TypeDBDriver {
         // TODO: Find a better name
         address_translation: HashMap<T, U>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
     ) -> Result<Self>
     where
         T: AsRef<str> + Sync,
@@ -228,7 +228,7 @@ impl TypeDBDriver {
     pub async fn new_cloud_with_translation_with_description<T, U>(
         address_translation: HashMap<T, U>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self>
     where
@@ -262,7 +262,7 @@ impl TypeDBDriver {
         address_to_server: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
     ) -> Result<TypeDBDriver> {
         // let server_connections: HashMap<Address, ServerConnection> = address_to_server
         //     .into_iter()
@@ -292,7 +292,7 @@ impl TypeDBDriver {
         background_runtime: Arc<BackgroundRuntime>,
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
     ) -> Result<HashSet<Address>> {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {

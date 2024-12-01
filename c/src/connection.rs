@@ -20,7 +20,7 @@
 use std::{ffi::c_char, path::Path};
 
 use itertools::Itertools;
-use typedb_driver::{ConnectionSettings, Credentials, TypeDBDriver};
+use typedb_driver::{DriverOptions, Credentials, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -38,7 +38,7 @@ use crate::memory::{release, string_array_view};
 pub extern "C" fn driver_open_core(
     address: *const c_char,
     credential: *const Credentials,
-    connection_settings: *const ConnectionSettings,
+    connection_settings: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
@@ -60,7 +60,7 @@ pub extern "C" fn driver_open_core(
 pub extern "C" fn driver_open_cloud(
     addresses: *const *const c_char,
     credential: *const Credentials,
-    connection_settings: *const ConnectionSettings,
+    connection_settings: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
@@ -87,7 +87,7 @@ pub extern "C" fn driver_open_cloud_translated(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
     credential: *const Credentials,
-    connection_settings: *const ConnectionSettings,
+    connection_settings: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
@@ -139,13 +139,13 @@ pub extern "C" fn credential_drop(credential: *mut Credentials) {
 // @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
 // @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
 #[no_mangle]
-pub extern "C" fn connection_settings_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut ConnectionSettings {
+pub extern "C" fn connection_settings_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
-    try_release(ConnectionSettings::new(is_tls_enabled, tls_root_ca_path))
+    try_release(DriverOptions::new(is_tls_enabled, tls_root_ca_path))
 }
 
 // Frees the native rust <code>ConnectionSettings</code> object
 #[no_mangle]
-pub extern "C" fn connection_settings_drop(connection_settings: *mut ConnectionSettings) {
+pub extern "C" fn connection_settings_drop(connection_settings: *mut DriverOptions) {
     free(connection_settings);
 }

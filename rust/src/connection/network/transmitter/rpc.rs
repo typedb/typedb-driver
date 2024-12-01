@@ -39,7 +39,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
-    ConnectionSettings, Credentials, Error,
+    DriverOptions, Credentials, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {
@@ -51,7 +51,7 @@ impl RPCTransmitter {
     pub(in crate::connection) fn start(
         address: Address,
         credential: Credentials,
-        connection_settings: ConnectionSettings,
+        connection_settings: DriverOptions,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
