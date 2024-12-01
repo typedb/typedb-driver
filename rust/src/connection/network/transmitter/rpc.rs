@@ -39,7 +39,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
-    ConnectionSettings, Credential, Error,
+    ConnectionSettings, Credentials, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {
@@ -50,7 +50,7 @@ pub(in crate::connection) struct RPCTransmitter {
 impl RPCTransmitter {
     pub(in crate::connection) fn start(
         address: Address,
-        credential: Credential,
+        credential: Credentials,
         connection_settings: ConnectionSettings,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {

@@ -32,7 +32,7 @@ use tonic::{
 
 use crate::{
     common::{address::Address, Result, StdResult},
-    ConnectionSettings, Credential,
+    ConnectionSettings, Credentials,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
@@ -48,7 +48,7 @@ impl GRPCChannel for CallCredChannel {}
 
 pub(super) fn open_callcred_channel(
     address: Address,
-    credential: Credential,
+    credential: Credentials,
     connection_settings: ConnectionSettings,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
     let mut builder = Channel::builder(address.into_uri());
@@ -64,11 +64,11 @@ pub(super) fn open_callcred_channel(
 
 #[derive(Debug)]
 pub(super) struct CallCredentials {
-    credential: Credential,
+    credential: Credentials,
 }
 
 impl CallCredentials {
-    pub(super) fn new(credential: Credential) -> Self {
+    pub(super) fn new(credential: Credentials) -> Self {
         Self { credential }
     }
 

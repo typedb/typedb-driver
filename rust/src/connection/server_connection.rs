@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::DatabaseInfo,
-    ConnectionSettings, Credential, Options, TransactionType, User,
+    ConnectionSettings, Credentials, Options, TransactionType, User,
 };
 
 #[derive(Clone)]
@@ -58,7 +58,7 @@ impl ServerConnection {
     pub(crate) async fn new_core(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
-        credential: Credential,
+        credential: Credentials,
         connection_settings: ConnectionSettings,
         driver_lang: &str,
         driver_version: &str,
@@ -83,7 +83,7 @@ impl ServerConnection {
     pub(crate) fn new_cloud(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
-        credential: Credential,
+        credential: Credentials,
     ) -> crate::Result<Self> {
         todo!()
         // let request_transmitter = Arc::new(RPCTransmitter::start(address, credential, &background_runtime)?);

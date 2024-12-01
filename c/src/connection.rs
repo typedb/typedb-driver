@@ -20,7 +20,7 @@
 use std::{ffi::c_char, path::Path};
 
 use itertools::Itertools;
-use typedb_driver::{ConnectionSettings, Credential, TypeDBDriver};
+use typedb_driver::{ConnectionSettings, Credentials, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -37,7 +37,7 @@ use crate::memory::{release, string_array_view};
 #[no_mangle]
 pub extern "C" fn driver_open_core(
     address: *const c_char,
-    credential: *const Credential,
+    credential: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
@@ -59,7 +59,7 @@ pub extern "C" fn driver_open_core(
 #[no_mangle]
 pub extern "C" fn driver_open_cloud(
     addresses: *const *const c_char,
-    credential: *const Credential,
+    credential: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
@@ -86,7 +86,7 @@ pub extern "C" fn driver_open_cloud(
 pub extern "C" fn driver_open_cloud_translated(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
-    credential: *const Credential,
+    credential: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
@@ -124,13 +124,13 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
 // @param username The name of the user to connect as
 // @param password The password for the user
 #[no_mangle]
-pub extern "C" fn credential_new(username: *const c_char, password: *const c_char) -> *mut Credential {
-    release(Credential::new(string_view(username), string_view(password)))
+pub extern "C" fn credential_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
+    release(Credentials::new(string_view(username), string_view(password)))
 }
 
 // Frees the native rust <code>Credential</code> object
 #[no_mangle]
-pub extern "C" fn credential_drop(credential: *mut Credential) {
+pub extern "C" fn credential_drop(credential: *mut Credentials) {
     free(credential);
 }
 

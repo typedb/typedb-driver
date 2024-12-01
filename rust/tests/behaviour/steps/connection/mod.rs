@@ -20,7 +20,7 @@
 use cucumber::{given, then, when};
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Credential, TypeDBDriver};
+use typedb_driver::{Credentials, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
