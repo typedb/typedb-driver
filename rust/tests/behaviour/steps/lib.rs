@@ -197,20 +197,9 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        try_join_all(
-            self.driver
-                .as_ref()
-                .unwrap()
-                .databases()
-                .all()
-                .await
-                .unwrap()
-                .into_iter()
-                .filter(|db| db.name() != "system") // TODO: A temporary hack before we hide the system db
-                .map(|db| db.delete()),
-        )
-        .await
-        .unwrap();
+        try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
+            .await
+            .unwrap();
     }
 
     pub async fn cleanup_transactions(&mut self) {

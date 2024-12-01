@@ -61,8 +61,6 @@ def after_scenario(context: Context, scenario):
     # TODO: reset the database through the TypeDB runner once it exists
     context.setup_context_driver_fn()
     for database in context.driver.databases.all():
-        if database.name == "system":  # Temporary hack for system database
-            continue
         database.delete()
     for user in context.driver.users.all():
         if user.name == "admin":
