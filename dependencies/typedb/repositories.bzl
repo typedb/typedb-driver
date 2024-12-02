@@ -35,6 +35,6 @@ def typedb_behaviour():
     # TODO: Return typedb after BDD merge
     git_repository(
         name = "typedb_behaviour",
-        remote = "https://github.com/farost/typedb-behaviour",
-        commit = "9e9624e3d0805af6a69c7652d9bc04ff86880f91",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_behaviour
+        remote = "https://github.com/typedb/typedb-behaviour",
+        commit = "aaf3ad22575e3cb5f003a5aad96e5de96ff6cb27",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_behaviour
     )
