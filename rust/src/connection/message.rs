@@ -58,6 +58,7 @@ pub(super) enum Request {
     UsersGet { name: String },
     UsersContains { name: String },
     UsersCreate { user: User },
+    UsersUpdate { username: String, user: User },
     UsersDelete { name: String },
 }
 
@@ -110,6 +111,7 @@ pub(super) enum Response {
         contains: bool,
     },
     UsersCreate,
+    UsersUpdate,
     UsersDelete,
     UsersGet {
         user: Option<User>,

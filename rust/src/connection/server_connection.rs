@@ -273,6 +273,16 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn update_password(&self, name: String, password: String) -> crate::Result {
+        match self.request(Request::UsersUpdate {
+            username: name, user: User { name: "".to_string(), password: Some(password) } // TODO: make 'name' optional
+        }).await? {
+            Response::UsersUpdate => Ok(()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn delete_user(&self, name: String) -> crate::Result {
         match self.request(Request::UsersDelete { name }).await? {
             Response::UsersDelete => Ok(()),
