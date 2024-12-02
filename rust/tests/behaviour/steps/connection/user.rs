@@ -70,23 +70,14 @@ async fn create_user(context: &mut Context, username: String, password: String, 
 }
 
 #[apply(generic_step)]
-#[step(expr = r"get user\({word}\) set password: {word}{may_error}")]
-async fn get_user_set_password(context: &mut Context, username: String, password: String, may_error: params::MayError) {
-    todo!("Password setting not implemented")
-    // may_error.check(context.driver.as_ref().unwrap().users().set_password(username, password).await);
-}
-
-#[apply(generic_step)]
-#[step(expr = r"get user\({word}\) update password from '{word}' to '{word}'{may_error}")]
+#[step(expr = r"get user\({word}\) update password to '{word}'{may_error}")]
 async fn get_user_update_password(
     context: &mut Context,
     username: String,
-    password_old: String,
-    password_new: String,
+    password: String,
     may_error: params::MayError,
 ) {
-    todo!("Password updating not implemented")
-    // may_error.check(context.driver.as_ref().unwrap().users().get(username).unwrap().unwrap().password_update(password_old, password_new).await);
+    may_error.check(context.driver.as_ref().unwrap().users().update_password(username, password).await);
 }
 
 #[apply(generic_step)]

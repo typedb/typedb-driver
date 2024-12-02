@@ -203,6 +203,17 @@ impl TryIntoProto<user_manager::create::Req> for Request {
     }
 }
 
+impl TryIntoProto<user::update::Req> for Request {
+    fn try_into_proto(self) -> Result<user::update::Req> {
+        match self {
+            Self::UsersUpdate { username, user } => Ok(user::update::Req {
+                name: username, user:  Some(typedb_protocol::User { name: user.name, password: user.password })
+            }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
 impl TryIntoProto<user::delete::Req> for Request {
     fn try_into_proto(self) -> Result<user::delete::Req> {
         match self {
@@ -387,6 +398,12 @@ impl FromProto<user_manager::contains::Res> for Response {
 impl FromProto<user_manager::create::Res> for Response {
     fn from_proto(_proto: user_manager::create::Res) -> Self {
         Self::UsersCreate
+    }
+}
+
+impl FromProto<user::update::Res> for Response {
+    fn from_proto(_proto: user::update::Res) -> Self {
+        Self::UsersUpdate
     }
 }
 

@@ -141,6 +141,10 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.users_create(req.clone()))).await
     }
 
+    pub(super) async fn users_update(&mut self, req: user::update::Req) -> Result<user::update::Res> {
+        self.single(|this| Box::pin(this.grpc.users_update(req.clone()))).await
+    }
+
     pub(super) async fn users_delete(&mut self, req: user::delete::Req) -> Result<user::delete::Res> {
         self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
     }
