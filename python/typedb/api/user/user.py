@@ -125,7 +125,7 @@ class UserManager(ABC):
         pass
 
     @abstractmethod
-    def get_current_username(self) -> str:
+    def get_current_user(self) -> Optional[User]:
         """
         Retrieve the name of the user who opened the current connection.
 
@@ -135,7 +135,7 @@ class UserManager(ABC):
         ---------
         ::
 
-           driver.users.get_current_username()
+           driver.users.get_current_user()
         """
         pass
 

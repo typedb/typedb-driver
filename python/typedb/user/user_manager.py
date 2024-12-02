@@ -76,7 +76,7 @@ class _UserManager(UserManager):
 
     def get_current_user(self) -> Optional[User]:
         try:  # TODO: remove try if we leave it as str
-            # return users_current_username(self.native_driver)
+            # return users_get_current_user(self.native_driver)
             if user := users_get_current_user(self.native_driver):
                 return _User(user, self)
             return None
