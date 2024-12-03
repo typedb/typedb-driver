@@ -48,7 +48,7 @@ impl User {
     /// user.update_password(username, password).await;
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn update_password(self, password: impl Into<String>) -> Result<()> {
+    pub async fn update_password(&self, password: impl Into<String>) -> Result<()> {
         let password = password.into();
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {

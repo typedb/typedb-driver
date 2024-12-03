@@ -81,9 +81,9 @@ async fn get_user_update_password(
     let driver = context.driver.as_ref().unwrap();
     let get_user_result = driver.users().get(username);
     let update_password_result = get_user_result
-        .and_then(|user_opt| {
+        .and_then(|user_opt| async move {
             let user = user_opt.unwrap();
-            user.update_password(password)
+            user.update_password(password).await
         }).await;
     may_error.check(update_password_result);
 }
