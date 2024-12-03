@@ -161,10 +161,10 @@ impl Context {
                     context.unwrap().after_scenario().await.unwrap();
                 })
             })
-            .filter_run(glob, |_, _, sc|
-                sc.name.contains(std::env::var("SCENARIO_FILTER").as_deref().unwrap_or("")) &&
-                    !sc.tags.iter().any(Self::is_ignore_tag)
-            )
+            .filter_run(glob, |_, _, sc| {
+                sc.name.contains(std::env::var("SCENARIO_FILTER").as_deref().unwrap_or(""))
+                    && !sc.tags.iter().any(Self::is_ignore_tag)
+            })
             .await
             .execution_has_failed()
     }
