@@ -19,8 +19,8 @@
 
 use std::ffi::c_char;
 
-use typedb_driver::{TypeDBDriver, User, UserManager};
-
+use typedb_driver::{Database, TypeDBDriver, User, UserManager};
+use crate::memory::take_arc;
 use super::{
     error::unwrap_void,
     memory::{borrow, free, release_string, string_view},
@@ -54,8 +54,7 @@ pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
 pub extern "C" fn user_update_password(
     user: *mut User,
     driver: *const TypeDBDriver,
-    password_old: *const c_char,
-    password_new: *const c_char,
+    password: *const c_char,
 ) {
     todo!("User update functions")
     // unwrap_void(borrow(user).password_update(
@@ -63,4 +62,11 @@ pub extern "C" fn user_update_password(
     //     string_view(password_old),
     //     string_view(password_new),
     // ));
+}
+
+
+/// Deletes this database.
+#[no_mangle]
+pub extern "C" fn user_delete(user: *mut User) {
+    todo!("User delete functions")
 }

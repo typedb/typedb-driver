@@ -71,7 +71,7 @@ pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_c
 /// Deletes the user with the given username.
 #[no_mangle]
 pub extern "C" fn users_delete(driver: *const TypeDBDriver, username: *const c_char) {
-    unwrap_void(borrow(driver).users().delete(string_view(username)));
+    todo!("User delete functions")
 }
 
 /// Retrieves a user with the given name.
@@ -88,5 +88,5 @@ pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char
 /// @param password The new password
 #[no_mangle]
 pub extern "C" fn users_set_password(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
-    unwrap_void(borrow(driver).users().update_password(string_view(username), string_view(password)));
+    todo!("User delete functions")
 }
