@@ -88,7 +88,7 @@ public interface UserManager {
      * </pre>
      */
     @CheckReturnValue
-    String getCurrentUsername();
+    User getCurrentUser();
 
     /**
      * Retrieves all users which exist on the TypeDB server.

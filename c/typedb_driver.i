@@ -207,7 +207,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject transaction_query;
 
 %newobject users_all;
-%newobject users_current_username;
+%newobject users_get_current_user;
 %newobject users_get;
 
 %newobject user_get_name;

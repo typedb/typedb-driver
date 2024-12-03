@@ -83,6 +83,6 @@ public class UserSteps {
 
     @Then("get current username: {non_semicolon}")
     public void get_current_username(String username) {
-        assertEquals(username, driver.users().getCurrentUsername());
+        assertEquals(username, driver.users().getCurrentUser().name());
     }
 }
