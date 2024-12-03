@@ -39,16 +39,7 @@ public class UserManagerImpl implements UserManager {
     public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
     }
-
-    @Override
-    public String getCurrentUsername() {
-        try { // TODO: Make noexcept if we leave it returning just a String
-            return users_current_username(nativeDriver);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
+    
     @Override
     public boolean contains(String username) {
         try {
