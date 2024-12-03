@@ -100,5 +100,5 @@ async fn delete_user(context: &mut Context, username: String, may_error: params:
 #[apply(generic_step)]
 #[step(expr = "get current username: {word}")]
 async fn get_current_username(context: &mut Context, username: String) {
-    assert_eq!(context.driver.as_ref().unwrap().users().current_username(), &username);
+    assert_eq!(context.driver.as_ref().unwrap().users().get_current_user().await.unwrap().unwrap().name, username);
 }

@@ -27,17 +27,6 @@ import java.util.Set;
  */
 public interface UserManager {
     /**
-     * Retrieves the name of the user who opened the current connection.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().getCurrentUsername();
-     * </pre>
-     */
-    @CheckReturnValue
-    String getCurrentUsername();
-
-    /**
      * Checks if a user with the given name exists.
      *
      * <h3>Examples</h3>
@@ -64,6 +53,17 @@ public interface UserManager {
     User get(String username);
 
     // TODO: I don't like this, leaving this way for now. Use driver.users().get(username)
+
+    /**
+     * Retrieves the name of the user who opened the current connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users().getCurrentUsername();
+     * </pre>
+     */
+    @CheckReturnValue
+    User getCurrentUser();
 
     /**
      * Retrieves all users which exist on the TypeDB server.

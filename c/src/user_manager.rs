@@ -28,12 +28,6 @@ use super::{
 };
 use crate::{error::try_release_string, memory::release_string};
 
-/// Retrieves the username of the user who opened this connection
-#[no_mangle]
-pub extern "C" fn users_current_username(driver: *const TypeDBDriver) -> *mut c_char {
-    release_string(borrow(driver).users().current_username().clone().to_owned())
-}
-
 /// Iterator over a set of <code>User</code>s
 pub struct UserIterator(CIterator<User>);
 
@@ -72,4 +66,10 @@ pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_c
 #[no_mangle]
 pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char) -> *mut User {
     try_release_optional(borrow(driver).users().get(string_view(username)).transpose())
+}
+
+/// Retrieves the username of the user who opened this connection
+#[no_mangle]
+pub extern "C" fn users_get_current_user(driver: *const TypeDBDriver) -> *mut User {
+    try_release_optional(borrow(driver).users().get_current_user().transpose())
 }

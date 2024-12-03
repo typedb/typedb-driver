@@ -36,13 +36,14 @@ impl UserManager {
         Self { server_connections }
     }
 
-    pub fn current_username(&self) -> &str {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get_current_user(&self) -> Result<Option<User>> {
         let (_, connection) = self
             .server_connections
             .iter()
             .next()
             .expect("Unexpected condition: the server connection collection is empty");
-        connection.username()
+        self.get(connection.username()).await
     }
 
     /// Checks if a user with the given name exists.

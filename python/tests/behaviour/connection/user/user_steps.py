@@ -69,4 +69,4 @@ def step_impl(context: Context, username: str, may_error: MayError):
 
 @step("get current username: {username:NonSemicolon}")
 def step_impl(context: Context, username: str):
-    assert_that(context.driver.users.get_current_username(), is_(equal_to(username)))
+    assert_that(context.driver.users.get_current_user().name, is_(equal_to(username)))

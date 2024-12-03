@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
-import static com.typedb.driver.jni.typedb_driver.users_current_username;
+import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
 import static com.typedb.driver.jni.typedb_driver.users_get;
 
 public class UserManagerImpl implements UserManager {
@@ -62,6 +62,17 @@ public class UserManagerImpl implements UserManager {
     public User get(String username) {
         try {
             com.typedb.driver.jni.User user = users_get(nativeDriver, username);
+            if (user != null) return new UserImpl(user, this);
+            else return null;
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public User getCurrentUser() {
+        try { // TODO: Make noexcept if we leave it returning just a String
+            com.typedb.driver.jni.User user = users_get_current_user(nativeDriver);
             if (user != null) return new UserImpl(user, this);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {
