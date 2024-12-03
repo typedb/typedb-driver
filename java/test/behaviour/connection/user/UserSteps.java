@@ -68,7 +68,7 @@ public class UserSteps {
 
     @When("get user\\({non_semicolon}) set password: {non_semicolon}{may_error}")
     public void get_user_set_password(String username, String passwordNew, Parameters.MayError mayError) {
-        mayError.check(() -> driver.users().setPassword(username, passwordNew));
+        mayError.check(() -> driver.users().get(username).updatePassword(passwordNew));
     }
 
     @When("get user\\({non_semicolon}) update password to '{non_semicolon}'{may_error}")
@@ -78,7 +78,7 @@ public class UserSteps {
 
     @When("delete user: {non_semicolon}{may_error}")
     public void delete_user(String username, Parameters.MayError mayError) {
-        mayError.check(() -> driver.users().delete(username));
+        mayError.check(() -> driver.users().get(username).delete());
     }
 
     @Then("get current username: {non_semicolon}")

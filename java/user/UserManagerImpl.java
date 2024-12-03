@@ -31,9 +31,7 @@ import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
 import static com.typedb.driver.jni.typedb_driver.users_current_username;
-import static com.typedb.driver.jni.typedb_driver.users_delete;
 import static com.typedb.driver.jni.typedb_driver.users_get;
-import static com.typedb.driver.jni.typedb_driver.users_set_password;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
