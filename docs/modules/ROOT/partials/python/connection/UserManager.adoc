@@ -146,12 +146,12 @@ a| `username` a| The name of the user to retrieve a| `str` a|
 driver.users.get(username)
 ----
 
-[#_UserManager_get_current_username_]
-==== get_current_username
+[#_UserManager_get_current_user_]
+==== get_current_user
 
 [source,python]
 ----
-get_current_username() -> str
+get_current_user() -> Optional[User]
 ----
 
 Retrieve the name of the user who opened the current connection.
@@ -164,7 +164,7 @@ Retrieve the name of the user who opened the current connection.
 .Code examples
 [source,python]
 ----
-driver.users.get_current_username()
+driver.users.get_current_user()
 ----
 
 [#_UserManager_set_password_username_str_password_str]
