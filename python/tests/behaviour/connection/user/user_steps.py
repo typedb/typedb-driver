@@ -63,9 +63,9 @@ def step_impl(context: Context, username: str, password: str, may_error: MayErro
 
 
 @step(
-    "get user({username:NonSemicolon}) update password from '{password_old:NonSemicolon}' to '{password_new:NonSemicolon}'{may_error:MayError}")
-def step_impl(context: Context, username: str, password_old: str, password_new: str, may_error: MayError):
-    may_error.check(lambda: context.driver.users.get(username).update_password(password_old, password_new))
+    "get user({username:NonSemicolon}) update password to '{password_new:NonSemicolon}'{may_error:MayError}")
+def step_impl(context: Context, username: str, password_new: str, may_error: MayError):
+    may_error.check(lambda: context.driver.users.set_password(username, password_new))
 
 
 @step("delete user: {username:NonSemicolon}{may_error:MayError}")
