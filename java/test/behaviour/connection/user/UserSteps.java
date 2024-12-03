@@ -71,9 +71,9 @@ public class UserSteps {
         mayError.check(() -> driver.users().setPassword(username, passwordNew));
     }
 
-    @When("get user\\({non_semicolon}) update password from '{non_semicolon}' to '{non_semicolon}'{may_error}")
-    public void get_user_update_password(String username, String passwordOld, String passwordNew, Parameters.MayError mayError) {
-        mayError.check(() -> driver.users().get(username).updatePassword(passwordOld, passwordNew));
+    @When("get user\\({non_semicolon}) update password to '{non_semicolon}'{may_error}")
+    public void get_user_update_password(String username, String password, Parameters.MayError mayError) {
+        mayError.check(() -> driver.users().get(username).updatePassword(password));
     }
 
     @When("delete user: {non_semicolon}{may_error}")
