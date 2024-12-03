@@ -80,5 +80,5 @@ class _UserManager(UserManager):
             if user := users_get_current_user(self.native_driver):
                 return _User(user, self)
             return None
-    except TypeDBDriverExceptionNative as e:
+        except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
