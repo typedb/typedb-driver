@@ -55,4 +55,14 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
             throw new TypeDBDriverException(e);
         }
     }
+
+    @Override
+    public void delete() {
+        try {
+            user_delete(nativeObject.released());
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
 }

@@ -61,15 +61,6 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void delete(String username) {
-        try {
-            users_delete(nativeDriver, username);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
     public User get(String username) {
         try {
             com.typedb.driver.jni.User user = users_get(nativeDriver, username);

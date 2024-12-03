@@ -45,4 +45,15 @@ public interface User {
      * @param passwordNew The new password
      */
     void updatePassword(String password);
+
+    /**
+     * Deletes a user with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users().delete(username);
+     * </pre>
+     *
+     */
+    void delete();
 }

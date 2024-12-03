@@ -53,18 +53,6 @@ public interface UserManager {
     void create(String username, String password);
 
     /**
-     * Deletes a user with the given name.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().delete(username);
-     * </pre>
-     *
-     * @param username The name of the user to be deleted
-     */
-    void delete(String username);
-
-    /**
      * Retrieves a user with the given name.
      *
      * <h3>Examples</h3>
