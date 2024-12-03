@@ -19,10 +19,10 @@ from typing import Optional
 
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import connection_settings_new, ConnectionSettings as NativeConnectionSettings
+from typedb.native_driver_wrapper import driver_options_new, DriverOptions as NativeDriverOptions
 
 
-class ConnectionSettings(NativeWrapper[NativeConnectionSettings]):
+class DriverOptions(NativeWrapper[NativeDriverOptions]):
     """
     User credentials and TLS encryption settings for connecting to TypeDB Server. Arguments:
     1) is_tls_enabled: Specify whether the connection to TypeDB Cloud must be done over TLS.
@@ -32,11 +32,11 @@ class ConnectionSettings(NativeWrapper[NativeConnectionSettings]):
     --------
     ::
 
-        connection_settings = ConnectionSettings(tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+        driver_options = DriverOptions(tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
     """
 
     def __init__(self, is_tls_enabled: bool = False, tls_root_ca_path: Optional[str] = None):
-        super().__init__(connection_settings_new(is_tls_enabled, tls_root_ca_path))
+        super().__init__(driver_options_new(is_tls_enabled, tls_root_ca_path))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

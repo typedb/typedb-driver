@@ -19,7 +19,7 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
@@ -41,7 +41,7 @@ public abstract class ConnectionStepsBase {
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "password";
     public static final Credentials DEFAULT_CREDENTIALS = new Credentials(ADMIN_USERNAME, ADMIN_PASSWORD);
-    public static final ConnectionSettings DEFAULT_CONNECTION_SETTINGS = new ConnectionSettings(false, null);
+    public static final DriverOptions DEFAULT_CONNECTION_SETTINGS = new DriverOptions(false, null);
     public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -106,7 +106,7 @@ public abstract class ConnectionStepsBase {
         transactionsParallel.clear();
     }
 
-    abstract Driver createTypeDBDriver(String address, Credentials credentials, ConnectionSettings connectionSettings);
+    abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
 
     abstract Driver createDefaultTypeDBDriver();
 

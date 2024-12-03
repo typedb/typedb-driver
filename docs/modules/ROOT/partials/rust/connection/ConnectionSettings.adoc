@@ -1,5 +1,5 @@
-[#_struct_ConnectionSettings]
-=== ConnectionSettings
+[#_struct_DriverOptions]
+=== DriverOptions
 
 *Implements traits:*
 
@@ -9,7 +9,7 @@
 User connection settings for connecting to TypeDB.
 
 // tag::methods[]
-[#_struct_ConnectionSettings_is_tls_enabled_]
+[#_struct_DriverOptions_is_tls_enabled_]
 ==== is_tls_enabled
 
 [source,rust]
@@ -26,7 +26,7 @@ Retrieves whether TLS is enabled for the connection.
 bool
 ----
 
-[#_struct_ConnectionSettings_new_is_tls_enabled_bool_tls_root_ca_Option_Path_]
+[#_struct_DriverOptions_new_is_tls_enabled_bool_tls_root_ca_Option_Path_]
 ==== new
 
 [source,rust]
@@ -57,7 +57,7 @@ Result<Self>
 .Code examples
 [source,rust]
 ----
-ConnectionSettings::new(true, Some(&path_to_ca));
+DriverOptions::new(true, Some(&path_to_ca));
 ----
 
 // end::methods[]

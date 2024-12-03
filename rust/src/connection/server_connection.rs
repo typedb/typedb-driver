@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    ConnectionSettings, Credentials, Options, TransactionType, User,
+    DriverOptions, Credentials, Options, TransactionType, User,
 };
 
 #[derive(Clone)]
@@ -59,13 +59,13 @@ impl ServerConnection {
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credentials: Credentials,
-        connection_settings: ConnectionSettings,
+        driver_options: DriverOptions,
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
         let username = credentials.username().to_string();
         let request_transmitter =
-            Arc::new(RPCTransmitter::start(address, credentials, connection_settings, &background_runtime)?);
+            Arc::new(RPCTransmitter::start(address, credentials, driver_options, &background_runtime)?);
         let (connection_id, latency, database_info) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
         let latency_tracker = LatencyTracker::new(latency);

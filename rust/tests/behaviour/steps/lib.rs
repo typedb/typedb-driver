@@ -38,7 +38,7 @@ use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    BoxStream, ConnectionSettings, Credentials, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
+    BoxStream, DriverOptions, Credentials, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -379,7 +379,7 @@ impl Context {
     async fn create_core_driver(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cloud);
         let credentials = Credentials::new(username, password);
-        let conn_settings = ConnectionSettings::new(false, None)?;
+        let conn_settings = DriverOptions::new(false, None)?;
         TypeDBDriver::new_core(address, credentials, conn_settings).await
     }
 
@@ -391,7 +391,7 @@ impl Context {
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
         let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
-        TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), ConnectionSettings::new(false, None)?)
+        TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), DriverOptions::new(false, None)?)
             .await
     }
 

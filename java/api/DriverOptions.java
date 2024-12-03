@@ -24,28 +24,28 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.Nullable;
 
-import static com.typedb.driver.jni.typedb_driver.connection_settings_new;
+import static com.typedb.driver.jni.typedb_driver.driver_options_new;
 
 /**
  * User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
  *
  * <h3>Examples</h3>
  * <pre>
- * ConnectionSettings connectionSettings = new ConnectionSettings(true, Path.of("path/to/ca-certificate.pem"));
+ * DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
  * </pre>
  */
-public class ConnectionSettings extends NativeObject<com.typedb.driver.jni.ConnectionSettings> {
+public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOptions> {
     /**
      * @param isTlsEnabled  Specify whether the connection to TypeDB Server must be done over TLS.
      * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
      */
-    public ConnectionSettings(boolean isTlsEnabled, String tlsRootCAPath) { // TODO: Maybe Optional<String>? Optional.of(Path.of(..))?..
+    public DriverOptions(boolean isTlsEnabled, String tlsRootCAPath) { // TODO: Maybe Optional<String>? Optional.of(Path.of(..))?..
         super(newNative(isTlsEnabled, tlsRootCAPath));
     }
 
-    private static com.typedb.driver.jni.ConnectionSettings newNative(boolean isTlsEnabled, @Nullable String tlsRootCAPath) {
+    private static com.typedb.driver.jni.DriverOptions newNative(boolean isTlsEnabled, @Nullable String tlsRootCAPath) {
         try {
-            return connection_settings_new(isTlsEnabled, tlsRootCAPath);
+            return driver_options_new(isTlsEnabled, tlsRootCAPath);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }

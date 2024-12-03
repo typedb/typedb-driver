@@ -29,14 +29,14 @@ public TypeDB()
 .Returns
 `public`
 
-[#_TypeDB_cloudDriver_java_lang_String_Credential_ConnectionSettings]
+[#_TypeDB_cloudDriver_java_lang_String_Credential_DriverOptions]
 ==== cloudDriver
 
 [source,java]
 ----
 public static Driver cloudDriver​(java.lang.String address,
                                  Credentials credentials,
-                                 ConnectionSettings connectionSettings)
+                                 DriverOptions driverOptions)
 ----
 
 Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credentials.
@@ -50,7 +50,7 @@ Open a TypeDB Driver to a TypeDB Cloud server available at the provided address,
 |Name |Description |Type
 a| `address` a| The address of the TypeDB server a| `java.lang.String`
 a| `credentials` a| The credentials to connect with a| `Credentials`
-a| `connectionSettings` a| The connection settings to connect with a| `ConnectionSettings`
+a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -64,14 +64,14 @@ a| `connectionSettings` a| The connection settings to connect with a| `Connectio
 TypeDB.cloudDriver(address, credentials);
 ----
 
-[#_TypeDB_cloudDriver_java_util_Set_java_lang_String_Credential_ConnectionSettings]
+[#_TypeDB_cloudDriver_java_util_Set_java_lang_String_Credential_DriverOptions]
 ==== cloudDriver
 
 [source,java]
 ----
 public static Driver cloudDriver​(java.util.Set<java.lang.String> addresses,
                                  Credentials credentials,
-                                 ConnectionSettings connectionSettings)
+                                 DriverOptions driverOptions)
 ----
 
 Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credentials.
@@ -85,7 +85,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 |Name |Description |Type
 a| `addresses` a| The address(es) of the TypeDB server(s) a| `java.util.Set<java.lang.String>`
 a| `credentials` a| The credentials to connect with a| `Credentials`
-a| `connectionSettings` a| The connection settings to connect with a| `ConnectionSettings`
+a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -99,14 +99,14 @@ a| `connectionSettings` a| The connection settings to connect with a| `Connectio
 TypeDB.cloudDriver(addresses, credentials);
 ----
 
-[#_TypeDB_cloudDriver_java_util_Map_java_lang_String_​java_lang_String_Credential_ConnectionSettings]
+[#_TypeDB_cloudDriver_java_util_Map_java_lang_String_​java_lang_String_Credential_DriverOptions]
 ==== cloudDriver
 
 [source,java]
 ----
 public static Driver cloudDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
                                  Credentials credentials,
-                                 ConnectionSettings connectionSettings)
+                                 DriverOptions driverOptions)
 ----
 
 Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credentials.
@@ -120,7 +120,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translati
 |Name |Description |Type
 a| `addressTranslation` a| Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `java.util.Map<java.lang.String,​java.lang.String>`
 a| `credentials` a| The credentials to connect with a| `Credentials`
-a| `connectionSettings` a| The connection settings to connect with a| `ConnectionSettings`
+a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -134,14 +134,14 @@ a| `connectionSettings` a| The connection settings to connect with a| `Connectio
 TypeDB.cloudDriver(addressTranslation, credentials);
 ----
 
-[#_TypeDB_coreDriver_java_lang_String_Credential_ConnectionSettings]
+[#_TypeDB_coreDriver_java_lang_String_Credential_DriverOptions]
 ==== coreDriver
 
 [source,java]
 ----
 public static Driver coreDriver​(java.lang.String address,
                                 Credentials credentials,
-                                ConnectionSettings connectionSettings)
+                                DriverOptions driverOptions)
 ----
 
 Open a TypeDB Driver to a TypeDB Core server available at the provided address. 
@@ -155,7 +155,7 @@ Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 |Name |Description |Type
 a| `address` a| The address of the TypeDB server a| `java.lang.String`
 a| `credentials` a| The credentials to connect with a| `Credentials`
-a| `connectionSettings` a| The connection settings to connect with a| `ConnectionSettings`
+a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 |===
 
 [caption=""]

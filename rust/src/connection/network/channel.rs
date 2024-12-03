@@ -32,7 +32,7 @@ use tonic::{
 
 use crate::{
     common::{address::Address, Result, StdResult},
-    ConnectionSettings, Credentials,
+    DriverOptions, Credentials,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
@@ -49,12 +49,12 @@ impl GRPCChannel for CallCredChannel {}
 pub(super) fn open_callcred_channel(
     address: Address,
     credentials: Credentials,
-    connection_settings: ConnectionSettings,
+    driver_options: DriverOptions,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
     let mut builder = Channel::builder(address.into_uri());
-    if connection_settings.is_tls_enabled() {
+    if driver_options.is_tls_enabled() {
         let tls_config =
-            connection_settings.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
+            driver_options.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
         builder = builder.tls_config(tls_config)?;
     }
     let channel = builder.connect_lazy();

@@ -28,7 +28,7 @@ from typedb.driver import *
 class TestExample(TestCase):
 
     def setUp(self):
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
 
@@ -36,7 +36,7 @@ class TestExample(TestCase):
 
     def test_example(self):
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")

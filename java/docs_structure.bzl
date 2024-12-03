@@ -26,7 +26,7 @@ dir_mapping = {
     "Promise_T_.adoc": "answer",
     "Concept.adoc": "concept",
     "TypeDB.adoc": "connection",
-    "ConnectionSettings.adoc": "connection",
+    "DriverOptions.adoc": "connection",
     "Credentials.adoc": "connection",
     "Driver.adoc": "connection",
     "User.adoc": "connection",

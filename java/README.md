@@ -62,7 +62,7 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
 ```java
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
@@ -85,7 +85,7 @@ import java.util.stream.Collectors;
 public class TypeDBExample {
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new ConnectionSettings(false, null))) {
+        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");

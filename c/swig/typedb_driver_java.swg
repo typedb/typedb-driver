@@ -230,7 +230,7 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
-%nojavaexception ~ConnectionSettings;
+%nojavaexception ~DriverOptions;
 %nojavaexception ~Credentials;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;

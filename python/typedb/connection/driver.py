@@ -30,7 +30,7 @@ from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, dr
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
-    from typedb.connection.connection_settings import ConnectionSettings
+    from typedb.connection.driver_options import DriverOptions
     from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import TransactionType
     from typedb.api.user.user import UserManager
@@ -39,7 +39,7 @@ if TYPE_CHECKING:
 class _Driver(Driver, NativeWrapper[NativeDriver]):
 
     def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credentials: Credentials,
-                 connection_settings: ConnectionSettings):
+                 driver_options: DriverOptions):
         try:
             if is_cloud:
                 if isinstance(addresses, list):
@@ -51,19 +51,19 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
                         public_addresses, private_addresses, credentials.native_object)
             else:
                 native_driver = driver_open_core(addresses[0], credentials.native_object,
-                                                 connection_settings.native_object,
+                                                 driver_options.native_object,
                                                  Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)
 
     @classmethod
-    def core(cls, address: str, credentials: Credentials, connection_settings: ConnectionSettings):
-        return cls(is_cloud=False, addresses=[address], credentials=credentials, connection_settings=connection_settings)
+    def core(cls, address: str, credentials: Credentials, driver_options: DriverOptions):
+        return cls(is_cloud=False, addresses=[address], credentials=credentials, driver_options=driver_options)
 
     @classmethod
-    def cloud(cls, addresses: list[str] | dict[str], credentials: Credentials, connection_settings: ConnectionSettings):
-        return cls(is_cloud=True, addresses=addresses, credentials=credentials, connection_settings=connection_settings)
+    def cloud(cls, addresses: list[str] | dict[str], credentials: Credentials, driver_options: DriverOptions):
+        return cls(is_cloud=True, addresses=addresses, credentials=credentials, driver_options=driver_options)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

@@ -20,7 +20,7 @@
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.ConnectionSettings;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.test.behaviour.config.Parameters;
@@ -46,8 +46,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    Driver createTypeDBDriver(String address, Credentials credentials, ConnectionSettings connectionSettings) {
-        return TypeDB.coreDriver(address, credentials, connectionSettings);
+    Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+        return TypeDB.coreDriver(address, credentials, driverOptions);
     }
 
     @Override

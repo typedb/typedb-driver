@@ -1,5 +1,5 @@
-[#_ConnectionSettings]
-=== ConnectionSettings
+[#_DriverOptions]
+=== DriverOptions
 
 *Package*: `com.typedb.driver.api`
 
@@ -10,16 +10,16 @@ User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
 .Examples
 [source,java]
 ----
-ConnectionSettings connectionSettings = new ConnectionSettings(true, Path.of("path/to/ca-certificate.pem"));
+DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
 ----
 
 // tag::methods[]
-[#_ConnectionSettings_ConnectionSettings_boolean_java_lang_String]
-==== ConnectionSettings
+[#_DriverOptions_DriverOptions_boolean_java_lang_String]
+==== DriverOptions
 
 [source,java]
 ----
-public ConnectionSettings​(boolean isTlsEnabled,
+public DriverOptions​(boolean isTlsEnabled,
                           java.lang.String tlsRootCAPath)
 ----
 

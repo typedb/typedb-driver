@@ -33,7 +33,7 @@ dir_mapping = {
     "TypeDBDriver.adoc": "connection",
     "Database.adoc": "connection",
     "DatabaseManager.adoc": "connection",
-    "ConnectionSettings.adoc": "connection",
+    "DriverOptions.adoc": "connection",
     "Credentials.adoc": "connection",
     "Kind.adoc": "concept",
     "ReplicaInfo.adoc": "connection",

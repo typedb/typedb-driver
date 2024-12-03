@@ -18,9 +18,9 @@
  */
 
 pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{connection_settings::ConnectionSettings, credentials::Credentials};
+pub use self::{driver_options::DriverOptions, credentials::Credentials};
 
-mod connection_settings;
+mod driver_options;
 mod credentials;
 mod message;
 mod network;
