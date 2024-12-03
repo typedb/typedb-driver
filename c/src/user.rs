@@ -20,11 +20,12 @@
 use std::ffi::c_char;
 
 use typedb_driver::{Database, TypeDBDriver, User, UserManager};
-use crate::memory::{take_arc, take_ownership};
+
 use super::{
     error::unwrap_void,
     memory::{borrow, free, release_string, string_view},
 };
+use crate::memory::{take_arc, take_ownership};
 
 /// Frees the native rust <code>User</code> object.
 #[no_mangle]
@@ -51,13 +52,8 @@ pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
 /// @param password_old The current password of this user
 /// @param password_new The new password
 #[no_mangle]
-pub extern "C" fn user_update_password(
-    user: *mut User,
-    password: *const c_char,
-) {
-    unwrap_void(borrow(user).update_password(
-        string_view(password),
-    ));
+pub extern "C" fn user_update_password(user: *mut User, password: *const c_char) {
+    unwrap_void(borrow(user).update_password(string_view(password)));
 }
 
 /// Deletes this database.
