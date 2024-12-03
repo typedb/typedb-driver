@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    DriverOptions, Credentials, Options, TransactionType, User,
+    Credentials, DriverOptions, Options, TransactionType, User,
 };
 
 #[derive(Clone)]

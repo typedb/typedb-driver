@@ -38,7 +38,7 @@ use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    BoxStream, DriverOptions, Credentials, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
+    BoxStream, Credentials, DriverOptions, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;

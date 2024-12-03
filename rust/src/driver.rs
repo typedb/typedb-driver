@@ -32,7 +32,7 @@ use crate::{
         Result,
     },
     connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
-    DriverOptions, Credentials, DatabaseManager, Options, Transaction, TransactionType, UserManager,
+    Credentials, DatabaseManager, DriverOptions, Options, Transaction, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.

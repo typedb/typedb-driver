@@ -39,7 +39,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
-    DriverOptions, Credentials, Error,
+    Credentials, DriverOptions, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {

@@ -20,7 +20,7 @@
 use std::{ffi::c_char, path::Path};
 
 use itertools::Itertools;
-use typedb_driver::{DriverOptions, Credentials, TypeDBDriver};
+use typedb_driver::{Credentials, DriverOptions, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},

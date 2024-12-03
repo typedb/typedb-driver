@@ -28,7 +28,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    DriverOptions, Credential, Error, TransactionType, TypeDBDriver,
+    Credential, DriverOptions, Error, TransactionType, TypeDBDriver,
 };
 
 // EXAMPLE END MARKER

@@ -32,7 +32,7 @@ use tonic::{
 
 use crate::{
     common::{address::Address, Result, StdResult},
-    DriverOptions, Credentials,
+    Credentials, DriverOptions,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
