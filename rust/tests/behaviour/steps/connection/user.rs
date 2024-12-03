@@ -20,9 +20,10 @@
 use std::collections::HashSet;
 
 use cucumber::{gherkin::Step, given, then, when};
+use futures::TryFutureExt;
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::Result as TypeDBResult;
+use typedb_driver::{Database, Result as TypeDBResult, TypeDBDriver, User};
 
 use crate::{assert_err, assert_with_timeout, generic_step, params, util::iter_table, Context};
 
@@ -77,13 +78,23 @@ async fn get_user_update_password(
     password: String,
     may_error: params::MayError,
 ) {
-    may_error.check(context.driver.as_ref().unwrap().users().update_password(username, password).await);
+    let driver = context.driver.as_ref().unwrap();
+    let get_user_result = driver.users().get(username);
+    let update_password_result = get_user_result
+        .and_then(|user_opt| async move {
+            let user = user_opt.unwrap();
+            user.update_password(password).await
+        })
+        .await;
+    may_error.check(update_password_result);
 }
 
 #[apply(generic_step)]
 #[step(expr = "delete user: {word}{may_error}")]
 async fn delete_user(context: &mut Context, username: String, may_error: params::MayError) {
-    may_error.check(context.driver.as_ref().unwrap().users().delete(username).await);
+    may_error.check(
+        context.driver.as_ref().unwrap().users().get(username).and_then(|user_opt| user_opt.unwrap().delete()).await,
+    );
 }
 
 #[apply(generic_step)]

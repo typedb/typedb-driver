@@ -33,6 +33,7 @@ use crate::{
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
+    info::UserInfo,
     user::User,
     Options, TransactionType,
 };
@@ -57,8 +58,8 @@ pub(super) enum Request {
     UsersAll,
     UsersGet { name: String },
     UsersContains { name: String },
-    UsersCreate { user: User },
-    UsersUpdate { username: String, user: User },
+    UsersCreate { user: UserInfo },
+    UsersUpdate { username: String, user: UserInfo },
     UsersDelete { name: String },
 }
 
@@ -105,7 +106,7 @@ pub(super) enum Response {
     },
 
     UsersAll {
-        users: Vec<User>,
+        users: Vec<UserInfo>,
     },
     UsersContain {
         contains: bool,
@@ -114,7 +115,7 @@ pub(super) enum Response {
     UsersUpdate,
     UsersDelete,
     UsersGet {
-        user: Option<User>,
+        user: Option<UserInfo>,
     },
 }
 

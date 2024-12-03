@@ -31,9 +31,7 @@ import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
 import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
-import static com.typedb.driver.jni.typedb_driver.users_delete;
 import static com.typedb.driver.jni.typedb_driver.users_get;
-import static com.typedb.driver.jni.typedb_driver.users_set_password;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
@@ -41,29 +39,11 @@ public class UserManagerImpl implements UserManager {
     public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
     }
-
+    
     @Override
     public boolean contains(String username) {
         try {
             return users_contains(nativeDriver, username);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void create(String username, String password) {
-        try {
-            users_create(nativeDriver, username, password);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void delete(String username) {
-        try {
-            users_delete(nativeDriver, username);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -101,9 +81,9 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void setPassword(String username, String password) {
+    public void create(String username, String password) {
         try {
-            users_set_password(nativeDriver, username, password);
+            users_create(nativeDriver, username, password);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

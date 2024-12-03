@@ -87,7 +87,13 @@ impl UserManager {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.get_user(uname.clone()).await {
-                Ok(res) => return Ok(res),
+                Ok(res) => {
+                    return Ok(res.map(|u_info| User {
+                        name: u_info.name,
+                        password: u_info.password,
+                        server_connections: self.server_connections.clone(),
+                    }))
+                }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
@@ -106,7 +112,16 @@ impl UserManager {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.all_users().await {
-                Ok(res) => return Ok(res),
+                Ok(res) => {
+                    return Ok(res
+                        .iter()
+                        .map(|u_info| User {
+                            name: u_info.name.clone(),
+                            password: u_info.password.clone(),
+                            server_connections: self.server_connections.clone(),
+                        })
+                        .collect())
+                }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
@@ -132,56 +147,6 @@ impl UserManager {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.create_user(uname.clone(), passwd.clone()).await {
-                Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
-    }
-
-    /// Update the user's password.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user
-    /// * `password` — The new password
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.update_password(username, password).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn update_password(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let username = username.into();
-        let password = password.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.update_password(username.clone(), password.clone()).await {
-                Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
-    }
-
-    /// Deletes a user with the given name.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user to be deleted
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.delete(username).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn delete(&self, username: impl Into<String>) -> Result {
-        let uname = username.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.delete_user(uname.clone()).await {
                 Ok(res) => return Ok(res),
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
