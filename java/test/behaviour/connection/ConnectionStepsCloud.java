@@ -25,7 +25,7 @@ package com.typedb.driver.test.behaviour.connection;
 //import com.typedb.cloud.tool.runner.TypeDBCloudRunner;
 //import com.typedb.driver.TypeDB;
 //import com.typedb.driver.api.TypeDBDriver;
-//import com.typedb.driver.api.Credential;
+//import com.typedb.driver.api.Credentials;
 //import com.typedb.driver.api.Options;
 //import com.typedb.driver.api.database.Database;
 //import io.cucumber.java.After;
@@ -86,8 +86,8 @@ package com.typedb.driver.test.behaviour.connection;
 //
 //@When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
 //public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
-//    Credential credential = new Credential(username, password);
-//    mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credential, DEFAULT_CONNECTION_SETTINGS)); // TODO: Probably requires connection settings with tls enabled by default
+//    Credential credentials = new Credential(username, password);
+//    mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, DEFAULT_CONNECTION_SETTINGS)); // TODO: Probably requires connection settings with tls enabled by default
 //}
 //
 //

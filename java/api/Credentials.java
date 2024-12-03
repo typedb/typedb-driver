@@ -22,28 +22,28 @@ package com.typedb.driver.api;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.typedb.driver.jni.typedb_driver.credential_new;
+import static com.typedb.driver.jni.typedb_driver.credentials_new;
 
 /**
  * User credentials for connecting to TypeDB Server.
  *
  * <h3>Examples</h3>
  * <pre>
- * Credential credential = new Credential(username, password);
+ * Credential credentials = new Credential(username, password);
  * </pre>
  */
-public class Credential extends NativeObject<com.typedb.driver.jni.Credential> {
+public class Credentials extends NativeObject<com.typedb.driver.jni.Credentials> {
     /**
      * @param username The name of the user to connect as
      * @param password The password for the user
      */
-    public Credential(String username, String password) {
+    public Credentials(String username, String password) {
         super(newNative(username, password));
     }
 
-    private static com.typedb.driver.jni.Credential newNative(String username, String password) {
+    private static com.typedb.driver.jni.Credentials newNative(String username, String password) {
         try {
-            return credential_new(username, password);
+            return credentials_new(username, password);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }

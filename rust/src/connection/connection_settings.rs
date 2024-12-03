@@ -29,7 +29,7 @@ pub struct ConnectionSettings {
 }
 
 impl ConnectionSettings {
-    /// Creates a credential with username and password. Specifies the connection must use TLS
+    /// Creates a credentials with username and password. Specifies the connection must use TLS
     ///
     /// # Arguments
     ///

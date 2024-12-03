@@ -34,7 +34,7 @@ SCHEMA = TransactionType.SCHEMA
 class TestValues(TestCase):
 
     def setUp(self):
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credential("admin", "password"), ConnectionSettings()) as driver:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver:
             if driver.databases.contains(TYPEDB):
                 driver.databases.get(TYPEDB).delete()
             driver.databases.create(TYPEDB)
@@ -67,7 +67,7 @@ class TestValues(TestCase):
             "expiration": "P1Y10M7DT15H44M5.00394892S"
         }
 
-        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credential("admin", "password"), ConnectionSettings()) as driver):
+        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:
@@ -184,7 +184,7 @@ class TestValues(TestCase):
         Datetime.fromstring("2024-09-21", tz_name="Asia/Calcutta", datetime_fmt="%Y-%m-%d")
         Datetime.fromstring("21/09/24 18:34", tz_name="Africa/Cairo", datetime_fmt="%d/%m/%y %H:%M")
 
-        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credential("admin", "password"), ConnectionSettings()) as driver):
+        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:
@@ -374,7 +374,7 @@ class TestValues(TestCase):
         Duration.fromstring("P1Y10M7DT15H44M5.00394892S")
         Duration.fromstring("P55W")
 
-        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credential("admin", "password"), ConnectionSettings()) as driver):
+        with (TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), ConnectionSettings()) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:

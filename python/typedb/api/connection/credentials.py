@@ -17,10 +17,10 @@
 
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
+from typedb.native_driver_wrapper import credentials_new, Credentials as NativeCredentials
 
 
-class Credential(NativeWrapper[NativeCredential]):
+class Credentials(NativeWrapper[NativeCredentials]):
     """
     User credentials and TLS encryption settings for connecting to TypeDB Server.
 
@@ -28,11 +28,11 @@ class Credential(NativeWrapper[NativeCredential]):
     --------
     ::
 
-        credential = Credential(username, password)
+        credentials = Credentials(username, password)
     """
 
     def __init__(self, username: str, password: str):
-        super().__init__(credential_new(username, password))
+        super().__init__(credentials_new(username, password))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

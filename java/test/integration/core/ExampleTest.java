@@ -23,7 +23,7 @@ package com.typedb.driver.test.integration.core;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.ConnectionSettings;
-import com.typedb.driver.api.Credential;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
@@ -63,7 +63,7 @@ public class ExampleTest {
     // EXAMPLE END MARKER
     @BeforeClass
     public static void setUpClass() {
-        Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credential("admin", "password"), new ConnectionSettings(false, null));
+        Driver typedbDriver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new ConnectionSettings(false, null));
         if (typedbDriver.databases().contains("typedb")) {
             typedbDriver.databases().get("typedb").delete();
         }
@@ -74,7 +74,7 @@ public class ExampleTest {
     // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credential("admin", "password"), new ConnectionSettings(false, null))) {
+        try (Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new ConnectionSettings(false, null))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");

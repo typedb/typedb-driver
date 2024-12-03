@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    ConnectionSettings, Credential, Options, TransactionType, User,
+    ConnectionSettings, Credentials, Options, TransactionType, User,
 };
 
 #[derive(Clone)]
@@ -58,14 +58,14 @@ impl ServerConnection {
     pub(crate) async fn new_core(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
-        credential: Credential,
+        credentials: Credentials,
         connection_settings: ConnectionSettings,
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
-        let username = credential.username().to_string();
+        let username = credentials.username().to_string();
         let request_transmitter =
-            Arc::new(RPCTransmitter::start(address, credential, connection_settings, &background_runtime)?);
+            Arc::new(RPCTransmitter::start(address, credentials, connection_settings, &background_runtime)?);
         let (connection_id, latency, database_info) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
         let latency_tracker = LatencyTracker::new(latency);
@@ -83,10 +83,10 @@ impl ServerConnection {
     pub(crate) fn new_cloud(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
-        credential: Credential,
+        credentials: Credentials,
     ) -> crate::Result<Self> {
         todo!()
-        // let request_transmitter = Arc::new(RPCTransmitter::start(address, credential, &background_runtime)?);
+        // let request_transmitter = Arc::new(RPCTransmitter::start(address, credentials, &background_runtime)?);
         // Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 

@@ -20,7 +20,7 @@
 use std::{ffi::c_char, path::Path};
 
 use itertools::Itertools;
-use typedb_driver::{ConnectionSettings, Credential, TypeDBDriver};
+use typedb_driver::{ConnectionSettings, Credentials, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -31,20 +31,20 @@ use crate::memory::{release, string_array_view};
 /// Open a TypeDB Driver to a TypeDB Core server available at the provided address.
 ///
 /// @param address The address (host:port) on which the TypeDB Server is running
-/// @param credential The <code>Credential</code> to connect with
+/// @param credentials The <code>Credentials</code> to connect with
 /// @param connection_settings The <code>ConnectionSettings</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
 pub extern "C" fn driver_open_core(
     address: *const c_char,
-    credential: *const Credential,
+    credentials: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
     try_release(TypeDBDriver::new_core_with_description(
         string_view(address),
-        borrow(credential).clone(),
+        borrow(credentials).clone(),
         borrow(connection_settings).clone(),
         string_view(driver_lang),
     ))
@@ -53,13 +53,13 @@ pub extern "C" fn driver_open_core(
 /// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses.
 ///
 /// @param addresses a null-terminated array holding the address(es) of the TypeDB server(s)
-/// @param credential The <code>Credential</code> to connect with
+/// @param credentials The <code>Credentials</code> to connect with
 /// @param connection_settings The <code>ConnectionSettings</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
 pub extern "C" fn driver_open_cloud(
     addresses: *const *const c_char,
-    credential: *const Credential,
+    credentials: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
@@ -67,7 +67,7 @@ pub extern "C" fn driver_open_cloud(
     let addresses: Vec<&str> = string_array_view(addresses).collect();
     try_release(TypeDBDriver::new_cloud_with_description(
         &addresses,
-        borrow(credential).clone(),
+        borrow(credentials).clone(),
         borrow(connection_settings).clone(),
         string_view(driver_lang),
     ))
@@ -79,14 +79,14 @@ pub extern "C" fn driver_open_cloud(
 /// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
 /// @param private_addresses A null-terminated array holding the address(es) the TypeDB server(s)
 /// are configured to advertise
-/// @param credential The <code>Credential</code> to connect with
+/// @param credentials The <code>Credentials</code> to connect with
 /// @param connection_settings The <code>ConnectionSettings</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
 pub extern "C" fn driver_open_cloud_translated(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
-    credential: *const Credential,
+    credentials: *const Credentials,
     connection_settings: *const ConnectionSettings,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
@@ -94,7 +94,7 @@ pub extern "C" fn driver_open_cloud_translated(
     let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
     try_release(TypeDBDriver::new_cloud_with_translation_with_description(
         addresses,
-        borrow(credential).clone(),
+        borrow(credentials).clone(),
         borrow(connection_settings).clone(),
         string_view(driver_lang),
     ))
@@ -119,19 +119,19 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
 
-// Creates a new <code>Credential</code> for connecting to TypeDB Server.
+// Creates a new <code>Credentials</code> for connecting to TypeDB Server.
 //
 // @param username The name of the user to connect as
 // @param password The password for the user
 #[no_mangle]
-pub extern "C" fn credential_new(username: *const c_char, password: *const c_char) -> *mut Credential {
-    release(Credential::new(string_view(username), string_view(password)))
+pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
+    release(Credentials::new(string_view(username), string_view(password)))
 }
 
-// Frees the native rust <code>Credential</code> object
+// Frees the native rust <code>Credentials</code> object
 #[no_mangle]
-pub extern "C" fn credential_drop(credential: *mut Credential) {
-    free(credential);
+pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
+    free(credentials);
 }
 
 // Creates a new <code>ConnectionSettings</code> for connecting to TypeDB Server.

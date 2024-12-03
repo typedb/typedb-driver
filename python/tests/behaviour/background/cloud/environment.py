@@ -23,7 +23,7 @@ from typedb.driver import *
 #
 # def before_all(context: Context):
 #     environment_base.before_all(context)
-#     context.credential_root_ca_path = os.environ["ROOT_CA"]
+#     context.credentials_root_ca_path = os.environ["ROOT_CA"]
 #     context.setup_context_driver_fn = lambda username="admin", password="password": \
 #         setup_context_driver(context, user, password)
 #
@@ -37,9 +37,9 @@ from typedb.driver import *
 #
 #
 # def setup_context_driver(context, username, password):
-#     credential = Credential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
+#     credentials = Credentials(username, password, tls_enabled=True, tls_root_ca_path=context.credentials_root_ca_path)
 #     context.driver = TypeDB.cloud_driver(addresses=["localhost:" + context.config.userdata["port"]],
-#                                               credential=credential)
+#                                               credentials=credentials)
 #     context.transaction_options = Options()
 #
 #

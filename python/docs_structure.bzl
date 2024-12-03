@@ -32,7 +32,7 @@ dir_mapping = {
     ".DS_Store": "concept",
     "TypeDB.adoc": "connection",
     "ConnectionSettings.adoc": "connection",
-    "Credential.adoc": "connection",
+    "Credentials.adoc": "connection",
     "Driver.adoc": "connection",
     "User.adoc": "connection",
     "UserManager.adoc": "connection",

@@ -34,7 +34,7 @@ bool
 pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> Result<Self>
 ----
 
-Creates a credential with username and password. Specifies the connection must use TLS
+Creates a credentials with username and password. Specifies the connection must use TLS
 
 [caption=""]
 .Input parameters

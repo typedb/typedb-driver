@@ -315,7 +315,7 @@
 %noexception ~ConceptMapGroupIterator;
 %noexception ~ConceptMapIterator;
 %noexception ~Connection;
-%noexception ~Credential;
+%noexception ~Credentials;
 %noexception ~Database;
 %noexception ~DatabaseIterator;
 %noexception ~DatabaseManager;

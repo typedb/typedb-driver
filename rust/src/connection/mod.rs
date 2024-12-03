@@ -18,10 +18,10 @@
  */
 
 pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{connection_settings::ConnectionSettings, credential::Credential};
+pub use self::{connection_settings::ConnectionSettings, credentials::Credentials};
 
 mod connection_settings;
-mod credential;
+mod credentials;
 mod message;
 mod network;
 pub(crate) mod runtime;

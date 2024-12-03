@@ -34,7 +34,7 @@ dir_mapping = {
     "Database.adoc": "connection",
     "DatabaseManager.adoc": "connection",
     "ConnectionSettings.adoc": "connection",
-    "Credential.adoc": "connection",
+    "Credentials.adoc": "connection",
     "Kind.adoc": "concept",
     "ReplicaInfo.adoc": "connection",
     "User.adoc": "connection",

@@ -55,7 +55,7 @@ struct Type {};
 %dropproxy(Error, error)
 
 %dropproxy(ConnectionSettings, connection_settings)
-%dropproxy(Credential, credential)
+%dropproxy(Credentials, credentials)
 //%dropproxy(Options, options)
 
 #define typedb_driver_drop driver_close
@@ -174,7 +174,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject driver_open_cloud_translated;
 
 %newobject connection_settings_new;
-%newobject credential_new;
+%newobject credentials_new;
 
 %newobject database_get_name;
 %newobject database_schema;

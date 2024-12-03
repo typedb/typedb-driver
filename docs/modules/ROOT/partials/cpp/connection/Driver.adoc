@@ -44,17 +44,17 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_static_Driver_TypeDBDrivercloudDriver_const_stdvector_stdstring_addresses_const_Credential_credential_]
+[#_static_Driver_TypeDBDrivercloudDriver_const_stdvector_stdstring_addresses_const_Credential_credentials_]
 ==== cloudDriver
 
 [source,cpp]
 ----
-static Driver TypeDB::Driver::cloudDriver(const std::vector< std::string >& addresses, const Credential& credential)
+static Driver TypeDB::Driver::cloudDriver(const std::vector< std::string >& addresses, const Credential& credentials)
 ----
 
 
 
-Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credentials.
 
 
 [caption=""]
@@ -64,7 +64,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 |===
 |Name |Description |Type
 a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `const std::vector< std::string >&`
-a| `credential` a| The Credential to connect with a| `const Credential&`
+a| `credentials` a| The Credential to connect with a| `const Credential&`
 |===
 
 [caption=""]
@@ -75,7 +75,7 @@ a| `credential` a| The Credential to connect with a| `const Credential&`
 .Code examples
 [source,cpp]
 ----
-Driver::cloudDriver(addresses, credential);
+Driver::cloudDriver(addresses, credentials);
 ----
 
 [#_static_Driver_TypeDBDrivercoreDriver_const_stdstring_address_]

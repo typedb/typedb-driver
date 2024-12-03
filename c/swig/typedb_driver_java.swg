@@ -231,7 +231,7 @@
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
 %nojavaexception ~ConnectionSettings;
-%nojavaexception ~Credential;
+%nojavaexception ~Credentials;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
 %nojavaexception ~DatetimeAndTimeZone;

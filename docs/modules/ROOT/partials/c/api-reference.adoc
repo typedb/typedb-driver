@@ -4,7 +4,7 @@
 
 include::api-ref::partial$c/connection/connection.adoc[]
 
-include::api-ref::partial$c/connection/credential.adoc[]
+include::api-ref::partial$c/connection/credentials.adoc[]
 
 include::api-ref::partial$c/connection/database.adoc[]
 

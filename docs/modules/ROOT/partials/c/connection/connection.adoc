@@ -61,12 +61,12 @@ Checks whether this connection is presently open.
 
 [source,cpp]
 ----
-struct Connection* connection_open_cloud(const char*const* addresses, const struct Credential* credential)
+struct Connection* connection_open_cloud(const char*const* addresses, const struct Credentials* credentials)
 ----
 
 
 
-Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credentials.
 
 
 [caption=""]
@@ -76,7 +76,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 |===
 |Name |Description |Type
 a| `addresses` a| a null-terminated array holding the address(es) of the TypeDB server(s) a| `const char*const*`
-a| `credential` a| The ``Credential`` to connect with a| `const struct Credential*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 |===
 
 [caption=""]
@@ -88,12 +88,12 @@ a| `credential` a| The ``Credential`` to connect with a| `const struct Credentia
 
 [source,cpp]
 ----
-struct Connection* connection_open_cloud_translated(const char*const* public_addresses, const char*const* private_addresses, const struct Credential* credential)
+struct Connection* connection_open_cloud_translated(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials)
 ----
 
 
 
-Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credential.
+Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credentials.
 
 
 [caption=""]
@@ -104,7 +104,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translati
 |Name |Description |Type
 a| `public_addresses` a| A null-terminated array holding the address(es) of the TypeDB server(s) the driver will connect to. This array _must_ have the same length as ``advertised_addresses`` a| `const char*const*`
 a| `private_addresses` a| A null-terminated array holding the address(es) the TypeDB server(s) are configured to advertise a| `const char*const*`
-a| `credential` a| The ``Credential`` to connect with a| `const struct Credential*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 |===
 
 [caption=""]
