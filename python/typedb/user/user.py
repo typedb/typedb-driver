@@ -57,6 +57,6 @@ class _User(User, NativeWrapper[NativeUser]):
 
     def delete(self) -> None:
         try:
-            user_delete(self.native_driver, username)
+            user_delete(self.native_object)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

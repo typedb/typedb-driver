@@ -43,7 +43,7 @@ class User(ABC):
     #     pass
 
     @abstractmethod
-    def update_password(self, password_old: str, password_new: str) -> None:
+    def update_password(self, password: str) -> None:
         """
         Updates the password for this user.
 
@@ -53,6 +53,21 @@ class User(ABC):
         """
         pass
 
+    @abstractmethod
+    def delete(self) -> None:
+        """
+        Deletes a user with the given name.
+
+        :param username: The name of the user to be deleted
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+           driver.users.delete(username)
+        """
+        pass
 
 class UserManager(ABC):
     """
@@ -89,22 +104,6 @@ class UserManager(ABC):
         ::
 
            driver.users.create(username, password)
-        """
-        pass
-
-    @abstractmethod
-    def delete(self, username: str) -> None:
-        """
-        Deletes a user with the given name.
-
-        :param username: The name of the user to be deleted
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.delete(username)
         """
         pass
 
@@ -152,22 +151,5 @@ class UserManager(ABC):
 
            driver.users.all()
 
-        """
-        pass
-
-    @abstractmethod
-    def set_password(self, username: str, password: str) -> None:
-        """
-        Sets a new password for a user. This operation can only be performed by administrators.
-
-        :param username: The name of the user to set the password of
-        :param password: The new password
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.set_password(username, password)
         """
         pass
