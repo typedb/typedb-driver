@@ -207,7 +207,8 @@ impl TryIntoProto<user::update::Req> for Request {
     fn try_into_proto(self) -> Result<user::update::Req> {
         match self {
             Self::UsersUpdate { username, user } => Ok(user::update::Req {
-                name: username, user:  Some(typedb_protocol::User { name: user.name, password: user.password })
+                name: username,
+                user: Some(typedb_protocol::User { name: user.name, password: user.password }),
             }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }

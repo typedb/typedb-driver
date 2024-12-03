@@ -88,6 +88,5 @@ pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char
 /// @param password The new password
 #[no_mangle]
 pub extern "C" fn users_set_password(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
-    todo!("User update functions")
-    // unwrap_void(borrow(driver).users().set_password(string_view(username), string_view(password)));
+    unwrap_void(borrow(driver).users().update_password(string_view(username), string_view(password)));
 }
