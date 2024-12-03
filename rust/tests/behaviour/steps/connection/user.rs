@@ -78,7 +78,14 @@ async fn get_user_update_password(
     password: String,
     may_error: params::MayError,
 ) {
-    may_error.check(context.driver.as_ref().unwrap().users().update_password(username, password).await);
+    let driver = context.driver.as_ref().unwrap();
+    let get_user_result = driver.users().get(username);
+    let update_password_result = get_user_result
+        .and_then(|user_opt| {
+            let user = user_opt.unwrap();
+            user.update_password(password)
+        }).await;
+    may_error.check(update_password_result);
 }
 
 #[apply(generic_step)]

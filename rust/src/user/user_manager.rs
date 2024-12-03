@@ -141,30 +141,4 @@ impl UserManager {
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
-
-    /// Update the user's password.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user
-    /// * `password` — The new password
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.users.update_password(username, password).await;
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn update_password(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let username = username.into();
-        let password = password.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.update_password(username.clone(), password.clone()).await {
-                Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
-    }
 }
