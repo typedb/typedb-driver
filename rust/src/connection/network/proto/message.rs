@@ -30,6 +30,7 @@ use crate::{
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},
+    info::UserInfo,
     user::User,
 };
 
@@ -380,13 +381,13 @@ impl FromProto<typedb_protocol::Error> for QueryResponse {
 
 impl FromProto<user_manager::all::Res> for Response {
     fn from_proto(proto: user_manager::all::Res) -> Self {
-        Self::UsersAll { users: proto.users.into_iter().map(User::from_proto).collect() }
+        Self::UsersAll { users: proto.users.into_iter().map(UserInfo::from_proto).collect() }
     }
 }
 
 impl FromProto<user_manager::get::Res> for Response {
     fn from_proto(proto: user_manager::get::Res) -> Self {
-        Self::UsersGet { user: proto.user.map(User::from_proto) }
+        Self::UsersGet { user: proto.user.map(UserInfo::from_proto) }
     }
 }
 

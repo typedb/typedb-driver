@@ -222,7 +222,7 @@ impl Context {
                 .unwrap()
                 .into_iter()
                 .filter(|user| user.name != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.as_ref().unwrap().users().delete(user.name)),
+                .map(|user| user.delete()),
         )
         .await
         .expect("Expected users cleanup");

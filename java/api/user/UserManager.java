@@ -40,31 +40,6 @@ public interface UserManager {
     boolean contains(String username);
 
     /**
-     * Creates a user with the given name &amp; password.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().create(username, password);
-     * </pre>
-     *
-     * @param username The name of the user to be created
-     * @param password The password of the user to be created
-     */
-    void create(String username, String password);
-
-    /**
-     * Deletes a user with the given name.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().delete(username);
-     * </pre>
-     *
-     * @param username The name of the user to be deleted
-     */
-    void delete(String username);
-
-    /**
      * Retrieves a user with the given name.
      *
      * <h3>Examples</h3>
@@ -101,15 +76,15 @@ public interface UserManager {
     Set<User> all();
 
     /**
-     * Sets a new password for a user. This operation can only be performed by administrators.
+     * Creates a user with the given name &amp; password.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().setPassword(username, password);
+     * driver.users().create(username, password);
      * </pre>
      *
-     * @param username The name of the user to set the password of
-     * @param password The new password
+     * @param username The name of the user to be created
+     * @param password The password of the user to be created
      */
-    void setPassword(String username, String password); // TODO: Why is it not in user?
+    void create(String username, String password);
 }

@@ -65,7 +65,7 @@ def after_scenario(context: Context, scenario):
     for user in context.driver.users.all():
         if user.name == "admin":
             continue
-        context.driver.users.delete(user.name)
+        context.driver.users.get(user.name).delete()
     context.driver.close()
 
 
