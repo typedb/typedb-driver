@@ -43,18 +43,18 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public boolean contains(String username) {
-        try {
-            return users_contains(nativeDriver, username);
+    public String getCurrentUsername() {
+        try { // TODO: Make noexcept if we leave it returning just a String
+            return users_current_username(nativeDriver);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void create(String username, String password) {
+    public boolean contains(String username) {
         try {
-            users_create(nativeDriver, username, password);
+            return users_contains(nativeDriver, username);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -72,15 +72,6 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public String getCurrentUsername() {
-        try { // TODO: Make noexcept if we leave it returning just a String
-            return users_current_username(nativeDriver);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
     public Set<User> all() {
         try {
             return new NativeIterator<>(users_all(nativeDriver)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
@@ -90,9 +81,9 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void setPassword(String username, String password) {
+    public void create(String username, String password) {
         try {
-            users_set_password(nativeDriver, username, password);
+            users_create(nativeDriver, username, password);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

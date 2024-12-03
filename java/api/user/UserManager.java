@@ -27,6 +27,17 @@ import java.util.Set;
  */
 public interface UserManager {
     /**
+     * Retrieves the name of the user who opened the current connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users().getCurrentUsername();
+     * </pre>
+     */
+    @CheckReturnValue
+    String getCurrentUsername();
+
+    /**
      * Checks if a user with the given name exists.
      *
      * <h3>Examples</h3>
@@ -38,19 +49,6 @@ public interface UserManager {
      */
     @CheckReturnValue
     boolean contains(String username);
-
-    /**
-     * Creates a user with the given name &amp; password.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().create(username, password);
-     * </pre>
-     *
-     * @param username The name of the user to be created
-     * @param password The password of the user to be created
-     */
-    void create(String username, String password);
 
     /**
      * Retrieves a user with the given name.
@@ -68,17 +66,6 @@ public interface UserManager {
     // TODO: I don't like this, leaving this way for now. Use driver.users().get(username)
 
     /**
-     * Retrieves the name of the user who opened the current connection.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().getCurrentUsername();
-     * </pre>
-     */
-    @CheckReturnValue
-    String getCurrentUsername();
-
-    /**
      * Retrieves all users which exist on the TypeDB server.
      *
      * <h3>Examples</h3>
@@ -89,15 +76,15 @@ public interface UserManager {
     Set<User> all();
 
     /**
-     * Sets a new password for a user. This operation can only be performed by administrators.
+     * Creates a user with the given name &amp; password.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().setPassword(username, password);
+     * driver.users().create(username, password);
      * </pre>
      *
-     * @param username The name of the user to set the password of
-     * @param password The new password
+     * @param username The name of the user to be created
+     * @param password The password of the user to be created
      */
-    void setPassword(String username, String password); // TODO: Why is it not in user?
+    void create(String username, String password);
 }

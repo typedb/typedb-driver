@@ -68,25 +68,8 @@ pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_c
     unwrap_void(borrow(driver).users().create(string_view(username), string_view(password)));
 }
 
-/// Deletes the user with the given username.
-#[no_mangle]
-pub extern "C" fn users_delete(driver: *const TypeDBDriver, username: *const c_char) {
-    todo!("User delete functions")
-}
-
 /// Retrieves a user with the given name.
 #[no_mangle]
 pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char) -> *mut User {
     try_release_optional(borrow(driver).users().get(string_view(username)).transpose())
-}
-
-/// Sets a new password for a user. This operation can only be performed by administrators.
-///
-/// @param user_manager The </code>UserManager</code> object to be used.
-///                     This must be on a connection opened by an administrator.
-/// @param username The name of the user to set the password of
-/// @param password The new password
-#[no_mangle]
-pub extern "C" fn users_set_password(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
-    todo!("User delete functions")
 }

@@ -211,5 +211,6 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject users_get;
 
 %newobject user_get_name;
+%delobject user_delete;
 
 %include "typedb_driver.h"
