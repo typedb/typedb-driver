@@ -30,9 +30,9 @@ use crate::{
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},
+    info::UserInfo,
     user::User,
 };
-use crate::info::UserInfo;
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {

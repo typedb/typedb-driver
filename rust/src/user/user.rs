@@ -16,12 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::collections::HashMap;
-use std::sync::Arc;
-use crate::common::address::Address;
-use crate::connection::server_connection::ServerConnection;
-use crate::common::Result;
-use crate::error::ConnectionError;
+use std::{collections::HashMap, sync::Arc};
+
+use crate::{
+    common::{address::Address, Result},
+    connection::server_connection::ServerConnection,
+    error::ConnectionError,
+};
 
 #[derive(Clone, Debug)]
 pub struct User {
@@ -31,8 +32,6 @@ pub struct User {
 }
 
 impl User {
-
-
     /// Update the user's password.
     ///
     /// # Arguments

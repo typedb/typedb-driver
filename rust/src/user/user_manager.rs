@@ -86,9 +86,13 @@ impl UserManager {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.get_user(uname.clone()).await {
-                Ok(res) => return Ok(
-                    res.map(|u_info| User { name: u_info.name, password: u_info.password, server_connections: self.server_connections.clone() }))
-                ,
+                Ok(res) => {
+                    return Ok(res.map(|u_info| User {
+                        name: u_info.name,
+                        password: u_info.password,
+                        server_connections: self.server_connections.clone(),
+                    }))
+                }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
@@ -107,9 +111,16 @@ impl UserManager {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.all_users().await {
-                Ok(res) => return Ok(
-                    res.iter().map(|u_info| User { name: u_info.name.clone(), password: u_info.password.clone(), server_connections: self.server_connections.clone() }).collect()
-                ),
+                Ok(res) => {
+                    return Ok(res
+                        .iter()
+                        .map(|u_info| User {
+                            name: u_info.name.clone(),
+                            password: u_info.password.clone(),
+                            server_connections: self.server_connections.clone(),
+                        })
+                        .collect())
+                }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }

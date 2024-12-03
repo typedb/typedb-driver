@@ -33,10 +33,10 @@ use crate::{
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
+    info::UserInfo,
     user::User,
     Options, TransactionType,
 };
-use crate::info::UserInfo;
 
 #[derive(Debug)]
 pub(super) enum Request {
