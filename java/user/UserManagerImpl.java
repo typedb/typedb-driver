@@ -39,7 +39,7 @@ public class UserManagerImpl implements UserManager {
     public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
     }
-
+    
     @Override
     public boolean contains(String username) {
         try {
