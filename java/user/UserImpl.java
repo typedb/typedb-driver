@@ -48,9 +48,9 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
 //    }
 
     @Override
-    public void updatePassword(String passwordOld, String passwordNew) {
+    public void updatePassword(String password) {
         try {
-            user_update_password(nativeObject, users.nativeDriver, passwordOld, passwordNew);
+            user_update_password(nativeObject, users.nativeDriver, password);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

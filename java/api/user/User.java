@@ -44,5 +44,5 @@ public interface User {
      * @param passwordOld The current password of this user
      * @param passwordNew The new password
      */
-    void updatePassword(String passwordOld, String passwordNew);
+    void updatePassword(String password);
 }
