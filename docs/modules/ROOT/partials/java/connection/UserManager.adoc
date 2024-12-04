@@ -93,37 +93,6 @@ a| `password` a| The password of the user to be created a| `java.lang.String`
 driver.users().create(username, password);
 ----
 
-[#_UserManager_delete_java_lang_String]
-==== delete
-
-[source,java]
-----
-void delete​(java.lang.String username)
-----
-
-Deletes a user with the given name. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `username` a| The name of the user to be deleted a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.users().delete(username);
-----
-
 [#_UserManager_get_java_lang_String]
 ==== get
 
@@ -156,13 +125,13 @@ a| `username` a| The name of the user to retrieve a| `java.lang.String`
 driver.users().get(username);
 ----
 
-[#_UserManager_getCurrentUsername_]
-==== getCurrentUsername
+[#_UserManager_getCurrentUser_]
+==== getCurrentUser
 
 [source,java]
 ----
 @CheckReturnValue
-java.lang.String getCurrentUsername()
+User getCurrentUser()
 ----
 
 Retrieves the name of the user who opened the current connection. 
@@ -170,46 +139,13 @@ Retrieves the name of the user who opened the current connection.
 
 [caption=""]
 .Returns
-`java.lang.String`
+`User`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
 driver.users().getCurrentUsername();
-----
-
-[#_UserManager_setPassword_java_lang_String_java_lang_String]
-==== setPassword
-
-[source,java]
-----
-void setPassword​(java.lang.String username,
-                 java.lang.String password)
-----
-
-Sets a new password for a user. This operation can only be performed by administrators. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `username` a| The name of the user to set the password of a| `java.lang.String`
-a| `password` a| The new password a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.users().setPassword(username, password);
 ----
 
 // end::methods[]

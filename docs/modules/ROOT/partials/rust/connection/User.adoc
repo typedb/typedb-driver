@@ -15,6 +15,153 @@
 |Name |Type |Description
 a| `name` a| `String` a| 
 a| `password` a| `Option<String>` a| 
+a| `server_connections` a| `HashMap<Address, ServerConnection>` a| 
 |===
 // end::properties[]
+
+// tag::methods[]
+[#_struct_User_delete_username]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete(self) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete(self) -> Result
+----
+
+--
+====
+
+Deletes this user
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The name of the user to be deleted a| 
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.delete().await;
+user.delete(username).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.delete();
+user.delete(username).await;
+----
+
+--
+====
+
+[#_struct_User_update_password_username_password_impl_Into_String_-_Result_]
+==== update_password
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn update_password(&self, password: impl Into<String>) -> Result<()>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn update_password(&self, password: impl Into<String>) -> Result<()>
+----
+
+--
+====
+
+Update the user’s password.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The name of the user a| 
+a| `password` a|  — The new password a| `impl Into<String>) -> Result<(`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<()>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.update_password(username, password).await;
+user.update_password(username, password).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.update_password(username, password);
+user.update_password(username, password).await;
+----
+
+--
+====
+
+// end::methods[]
 

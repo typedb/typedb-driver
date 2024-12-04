@@ -86,36 +86,6 @@ a| `password` a| The password of the user to be created a| `str` a|
 driver.users.create(username, password)
 ----
 
-[#_UserManager_delete_username_str]
-==== delete
-
-[source,python]
-----
-delete(username: str) -> None
-----
-
-Deletes a user with the given name.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `username` a| The name of the user to be deleted a| `str` a| 
-|===
-
-[caption=""]
-.Returns
-`None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.users.delete(username)
-----
-
 [#_UserManager_get_username_str]
 ==== get
 
@@ -151,51 +121,20 @@ driver.users.get(username)
 
 [source,python]
 ----
-get_current_user() -> Optional[User]
+get_current_user() -> User | None
 ----
 
 Retrieve the name of the user who opened the current connection.
 
 [caption=""]
 .Returns
-`str`
+`User | None`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
 driver.users.get_current_user()
-----
-
-[#_UserManager_set_password_username_str_password_str]
-==== set_password
-
-[source,python]
-----
-set_password(username: str, password: str) -> None
-----
-
-Sets a new password for a user. This operation can only be performed by administrators.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `username` a| The name of the user to set the password of a| `str` a| 
-a| `password` a| The new password a| `str` a| 
-|===
-
-[caption=""]
-.Returns
-`None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.users.set_password(username, password)
 ----
 
 // end::methods[]

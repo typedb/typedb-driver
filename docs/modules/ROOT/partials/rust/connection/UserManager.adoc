@@ -161,57 +161,6 @@ Result
 driver.users.create(username, password).await;
 ----
 
-[#_struct_UserManager_delete_username_impl_Into_String_]
-==== delete
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn delete(&self, username: impl Into<String>) -> Result
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn delete(&self, username: impl Into<String>) -> Result
-----
-
---
-====
-
-Deletes a user with the given name.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `username` a|  — The name of the user to be deleted a| `impl Into<String>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-driver.users.delete(username).await;
-----
-
 [#_struct_UserManager_get_username_impl_Into_String_]
 ==== get
 

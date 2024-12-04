@@ -6,6 +6,28 @@
 TypeDB user information
 
 // tag::methods[]
+[#_User_delete_]
+==== delete
+
+[source,java]
+----
+void delete()
+----
+
+Deletes a user with the given name. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().delete(username);
+----
+
 [#_User_name_]
 ==== name
 
@@ -21,13 +43,12 @@ Returns the name of this user.
 .Returns
 `java.lang.String`
 
-[#_User_updatePassword_java_lang_String_java_lang_String]
+[#_User_updatePassword_java_lang_String]
 ==== updatePassword
 
 [source,java]
 ----
-void updatePassword​(java.lang.String passwordOld,
-                    java.lang.String passwordNew)
+void updatePassword​(java.lang.String password)
 ----
 
 Updates the password for this user.
@@ -38,8 +59,8 @@ Updates the password for this user.
 [options="header"]
 |===
 |Name |Description |Type
-a| `passwordOld` a| The current password of this user a| `java.lang.String`
-a| `passwordNew` a| The new password a| `java.lang.String`
+a| `passwordOld` a| The current password of this user a| 
+a| `passwordNew` a| The new password a| 
 |===
 
 [caption=""]
