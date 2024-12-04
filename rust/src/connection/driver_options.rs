@@ -45,7 +45,7 @@ impl DriverOptions {
         let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
             ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
         } else {
-            ClientTlsConfig::new()
+            ClientTlsConfig::new().with_native_roots()
         });
 
         Ok(Self { is_tls_enabled, tls_config })
