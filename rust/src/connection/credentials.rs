@@ -21,14 +21,14 @@ use std::fmt;
 
 /// User credentials for connecting to TypeDB
 #[derive(Clone)]
-pub struct Credential {
+pub struct Credentials {
     username: String,
     password: String,
 }
 
 /// User credentials for connecting to TypeDB
-impl Credential {
-    /// Creates a credential with username and password.
+impl Credentials {
+    /// Creates a credentials with username and password.
     ///
     /// # Arguments
     ///
@@ -38,7 +38,7 @@ impl Credential {
     /// # Examples
     ///
     /// ```rust
-    /// Credential::new(username, password);
+    /// Credentials::new(username, password);
     ///```
     pub fn new(username: &str, password: &str) -> Self {
         Self { username: username.to_owned(), password: password.to_owned() }
@@ -55,8 +55,8 @@ impl Credential {
     }
 }
 
-impl fmt::Debug for Credential {
+impl fmt::Debug for Credentials {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Credential").field("username", &self.username).finish()
+        f.debug_struct("Credentials").field("username", &self.username).finish()
     }
 }

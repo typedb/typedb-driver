@@ -80,7 +80,7 @@ bool
 connection.is_open()
 ----
 
-[#_struct_TypeDBDriver_new_cloud_init_addresses_Vec_T_credential_Credential_connection_settings_ConnectionSettings]
+[#_struct_TypeDBDriver_new_cloud_init_addresses_Vec_T_credentials_Credential_driver_options_DriverOptions]
 ==== new_cloud
 
 [tabs]
@@ -92,8 +92,8 @@ async::
 ----
 pub async fn new_cloud<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>
 ----
 
@@ -106,8 +106,8 @@ sync::
 ----
 pub fn new_cloud<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>
 ----
 
@@ -123,8 +123,8 @@ Creates a new TypeDB Cloud connection.
 |===
 |Name |Description |Type
 a| `init_addresses` a|  — Addresses (host:port) on which TypeDB Cloud nodes are running a| `&Vec<T>`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -141,7 +141,7 @@ Result<Self>
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_description_init_addresses_Vec_T_credential_Credential_connection_settings_ConnectionSettings_driver_lang_impl_AsRef_str_]
+[#_struct_TypeDBDriver_new_cloud_with_description_init_addresses_Vec_T_credentials_Credential_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
 ==== new_cloud_with_description
 
 [tabs]
@@ -153,8 +153,8 @@ async::
 ----
 pub async fn new_cloud_with_description<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>
 ----
@@ -168,8 +168,8 @@ sync::
 ----
 pub fn new_cloud_with_description<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>
 ----
@@ -186,8 +186,8 @@ Creates a new TypeDB Cloud connection.
 |===
 |Name |Description |Type
 a| `init_addresses` a|  — Addresses (host:port) on which TypeDB Cloud nodes are running a| `&Vec<T>`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 a| `driver_lang` a|  — The language of the driver connecting to the server a| `impl AsRef<str>`
 |===
 
@@ -205,7 +205,7 @@ Result<Self>
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_translation_address_translation_HashMap_T_credential_Credential_connection_settings_ConnectionSettings]
+[#_struct_TypeDBDriver_new_cloud_with_translation_address_translation_HashMap_T_credentials_Credential_driver_options_DriverOptions]
 ==== new_cloud_with_translation
 
 [tabs]
@@ -217,8 +217,8 @@ async::
 ----
 pub async fn new_cloud_with_translation<T, U>(
     address_translation: HashMap<T, U>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>where
     T: AsRef<str> + Sync,
     U: AsRef<str> + Sync,
@@ -233,8 +233,8 @@ sync::
 ----
 pub fn new_cloud_with_translation<T, U>(
     address_translation: HashMap<T, U>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>where
     T: AsRef<str> + Sync,
     U: AsRef<str> + Sync,
@@ -252,8 +252,8 @@ Creates a new TypeDB Cloud connection.
 |===
 |Name |Description |Type
 a| `address_translation` a|  — Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `HashMap<T`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -272,7 +272,7 @@ Result<Self>where
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_translation_with_description_address_translation_HashMap_T_credential_Credential_connection_settings_ConnectionSettings_driver_lang_impl_AsRef_str_]
+[#_struct_TypeDBDriver_new_cloud_with_translation_with_description_address_translation_HashMap_T_credentials_Credential_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
 ==== new_cloud_with_translation_with_description
 
 [tabs]
@@ -284,8 +284,8 @@ async::
 ----
 pub async fn new_cloud_with_translation_with_description<T, U>(
     address_translation: HashMap<T, U>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>where
     T: AsRef<str> + Sync,
@@ -301,8 +301,8 @@ sync::
 ----
 pub fn new_cloud_with_translation_with_description<T, U>(
     address_translation: HashMap<T, U>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>where
     T: AsRef<str> + Sync,
@@ -321,8 +321,8 @@ Creates a new TypeDB Cloud connection.
 |===
 |Name |Description |Type
 a| `address_translation` a|  — Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `HashMap<T`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 a| `driver_lang` a|  — The language of the driver connecting to the server a| `impl AsRef<str>`
 |===
 
@@ -342,7 +342,7 @@ Result<Self>where
 
 ----
 
-[#_struct_TypeDBDriver_new_core_address_impl_AsRef_str_credential_Credential_connection_settings_ConnectionSettings]
+[#_struct_TypeDBDriver_new_core_address_impl_AsRef_str_credentials_Credential_driver_options_DriverOptions]
 ==== new_core
 
 [tabs]
@@ -354,8 +354,8 @@ async::
 ----
 pub async fn new_core(
     address: impl AsRef<str>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>
 ----
 
@@ -368,8 +368,8 @@ sync::
 ----
 pub fn new_core(
     address: impl AsRef<str>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
 ) -> Result<Self>
 ----
 
@@ -385,8 +385,8 @@ Creates a new TypeDB Server connection.
 |===
 |Name |Description |Type
 a| `address` a|  — The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -421,7 +421,7 @@ Connection::new_core("127.0.0.1:1729")
 --
 ====
 
-[#_struct_TypeDBDriver_new_core_with_description_address_impl_AsRef_str_credential_Credential_connection_settings_ConnectionSettings_driver_lang_impl_AsRef_str_]
+[#_struct_TypeDBDriver_new_core_with_description_address_impl_AsRef_str_credentials_Credential_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
 ==== new_core_with_description
 
 [tabs]
@@ -433,8 +433,8 @@ async::
 ----
 pub async fn new_core_with_description(
     address: impl AsRef<str>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>
 ----
@@ -448,8 +448,8 @@ sync::
 ----
 pub fn new_core_with_description(
     address: impl AsRef<str>,
-    credential: Credential,
-    connection_settings: ConnectionSettings,
+    credentials: Credential,
+    driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
 ) -> Result<Self>
 ----
@@ -466,8 +466,8 @@ Creates a new TypeDB Server connection with a description.
 |===
 |Name |Description |Type
 a| `address` a|  — The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
-a| `credential` a|  — The Credential to connect with a| `Credential`
-a| `connection_settings` a|  — The ConnectionSettings to connect with a| `ConnectionSettings`
+a| `credentials` a|  — The Credential to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 a| `driver_lang` a|  — The language of the driver connecting to the server a| `impl AsRef<str>`
 |===
 

@@ -34,8 +34,8 @@ from typedb.api.concept.type.relation_type import *  # noqa # pylint: disable=un
 from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.connection_settings import *
-from typedb.api.connection.credential import *
+from typedb.api.connection.driver_options import *
+from typedb.api.connection.credentials import *
 from typedb.api.connection.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.driver import *
 # from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
@@ -54,31 +54,31 @@ class TypeDB:
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod
-    def core_driver(address: str, credential: Credential, connection_settings: ConnectionSettings) -> Driver:
+    def core_driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver:
         """
         Creates a connection to TypeDB.
 
         :param address: Address of the TypeDB server.
-        :param credential: The credential to connect with.
-        :param connection_settings: The connection settings to connect with.
+        :param credentials: The credentials to connect with.
+        :param driver_options: The connection settings to connect with.
         :return:
         """
-        return _Driver.core(address, credential, connection_settings)
+        return _Driver.core(address, credentials, driver_options)
 
     @staticmethod
-    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credential: Credential,
-                     connection_settings: ConnectionSettings) -> Driver:
+    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credentials: Credentials,
+                     driver_options: DriverOptions) -> Driver:
         """
         Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
 
         :param addresses: TypeDB server addresses as a single string, a list of strings, or as an address translation mapping.
-        :param credential: The credential to connect with.
-        :param connection_settings: The connection settings to connect with.
+        :param credentials: The credentials to connect with.
+        :param driver_options: The connection settings to connect with.
         :return:
         """
         if isinstance(addresses, str):
-            return _Driver.cloud([addresses], credential, credential, connection_settings)
+            return _Driver.cloud([addresses], credentials, credentials, driver_options)
         elif isinstance(addresses, ABCMapping):
-            return _Driver.cloud(dict(addresses), credential, credential, connection_settings)
+            return _Driver.cloud(dict(addresses), credentials, credentials, driver_options)
         else:
-            return _Driver.cloud(list(addresses), credential, credential, connection_settings)
+            return _Driver.cloud(list(addresses), credentials, credentials, driver_options)

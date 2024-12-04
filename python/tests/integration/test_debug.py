@@ -29,7 +29,7 @@ SCHEMA = TransactionType.SCHEMA
 class TestDebug(TestCase):
 
     def setUp(self):
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credential("admin", "password"), ConnectionSettings()) as driver:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             if TYPEDB not in [db.name for db in driver.databases.all()]:
                 driver.databases.create(TYPEDB)
 

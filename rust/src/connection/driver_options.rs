@@ -23,13 +23,13 @@ use tonic::transport::{Certificate, ClientTlsConfig};
 
 /// User connection settings for connecting to TypeDB.
 #[derive(Debug, Clone)]
-pub struct ConnectionSettings {
+pub struct DriverOptions {
     is_tls_enabled: bool,
     tls_config: Option<ClientTlsConfig>,
 }
 
-impl ConnectionSettings {
-    /// Creates a credential with username and password. Specifies the connection must use TLS
+impl DriverOptions {
+    /// Creates a credentials with username and password. Specifies the connection must use TLS
     ///
     /// # Arguments
     ///
@@ -39,7 +39,7 @@ impl ConnectionSettings {
     /// # Examples
     ///
     /// ```rust
-    /// ConnectionSettings::new(true, Some(&path_to_ca));
+    /// DriverOptions::new(true, Some(&path_to_ca));
     ///```
     pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
         let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {

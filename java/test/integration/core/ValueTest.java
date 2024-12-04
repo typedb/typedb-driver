@@ -20,8 +20,8 @@
 package com.typedb.driver.test.integration.core;
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.ConnectionSettings;
-import com.typedb.driver.api.Credential;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -63,7 +63,7 @@ public class ValueTest {
 
     @BeforeClass
     public static void setUpClass() {
-        typedbDriver = TypeDB.coreDriver(ADDRESS, new Credential("admin", "password"), new ConnectionSettings(false, null));
+        typedbDriver = TypeDB.coreDriver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
         if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
         typedbDriver.databases().create(DB_NAME);
     }

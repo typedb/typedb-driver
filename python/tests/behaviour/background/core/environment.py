@@ -51,8 +51,8 @@ def create_driver(context, host="localhost", port=None, username=None, password=
         username = "admin"
     if password is None:
         password = "password"
-    credential = Credential(username, password)
-    return TypeDB.core_driver(address=f"{host}:{port}", credential=credential, connection_settings=ConnectionSettings())
+    credentials = Credentials(username, password)
+    return TypeDB.core_driver(address=f"{host}:{port}", credentials=credentials, driver_options=DriverOptions())
 
 
 def after_scenario(context: Context, scenario):

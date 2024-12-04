@@ -4,17 +4,17 @@
 *Package*: `TypeDB.Driver`
 
 // tag::methods[]
-[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_string_address_TypeDBCredential_credential_]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_string_address_TypeDBCredential_credentials_]
 ==== CloudDriver
 
 [source,cs]
 ----
-static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
+static ITypeDBDriver CloudDriver(string address, TypeDBCredential credentials)
 ----
 
 
 
-Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential.
+Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credentials.
 
 
 [caption=""]
@@ -24,7 +24,7 @@ Open a TypeDB Driver to a TypeDB Cloud server available at the provided address,
 |===
 |Name |Description |Type
 a| `address` a| The address of the TypeDB server a| `string`
-a| `credential` a| The credential to connect with a| `TypeDBCredential`
+a| `credentials` a| The credentials to connect with a| `TypeDBCredential`
 |===
 
 [caption=""]
@@ -35,20 +35,20 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 .Code examples
 [source,cs]
 ----
-Drivers.CloudDriver(address, credential);
+Drivers.CloudDriver(address, credentials);
 ----
 
-[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_ICollection_string_addresses_TypeDBCredential_credential_]
+[#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CloudDriver_ICollection_string_addresses_TypeDBCredential_credentials_]
 ==== CloudDriver
 
 [source,cs]
 ----
-static ITypeDBDriver CloudDriver(ICollection< string > addresses, TypeDBCredential credential)
+static ITypeDBDriver CloudDriver(ICollection< string > addresses, TypeDBCredential credentials)
 ----
 
 
 
-Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credentials.
 
 
 [caption=""]
@@ -58,7 +58,7 @@ Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided address
 |===
 |Name |Description |Type
 a| `addresses` a| The address(es) of the TypeDB server(s) or translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) a| `ICollection< string >`
-a| `credential` a| The credential to connect with a| `TypeDBCredential`
+a| `credentials` a| The credentials to connect with a| `TypeDBCredential`
 |===
 
 [caption=""]
@@ -69,7 +69,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 .Code examples
 [source,cs]
 ----
-Drivers.CloudDriver(addresses, credential);
+Drivers.CloudDriver(addresses, credentials);
 ----
 
 [#_static_ITypeDBDriver_TypeDB_Driver_Drivers_CoreDriver_string_address_]

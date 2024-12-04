@@ -19,8 +19,8 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.ConnectionSettings;
-import com.typedb.driver.api.Credential;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.DatabaseManager;
@@ -42,39 +42,39 @@ import static com.typedb.driver.jni.typedb_driver.driver_open_core;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 
-    public DriverImpl(String address, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
-        this(openCore(address, credential, connectionSettings));
+    public DriverImpl(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        this(openCore(address, credentials, driverOptions));
     }
 
-    public DriverImpl(Set<String> initAddresses, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
-        this(openCloud(initAddresses, credential, connectionSettings));
+    public DriverImpl(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        this(openCloud(initAddresses, credentials, driverOptions));
     }
 
-    public DriverImpl(Map<String, String> addressTranslation, Credential credential, ConnectionSettings connectionSettings) throws TypeDBDriverException {
-        this(openCloud(addressTranslation, credential, connectionSettings));
+    public DriverImpl(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        this(openCloud(addressTranslation, credentials, driverOptions));
     }
 
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
         super(connection);
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCore(String address, Credential credential, ConnectionSettings connectionSettings) {
+    private static com.typedb.driver.jni.TypeDBDriver openCore(String address, Credentials credentials, DriverOptions driverOptions) {
         try {
-            return driver_open_core(address, credential.nativeObject, connectionSettings.nativeObject, LANGUAGE);
+            return driver_open_core(address, credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credential credential, ConnectionSettings connectionSettings) {
+    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) {
         try {
-            return driver_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject, connectionSettings.nativeObject, LANGUAGE);
+            return driver_open_cloud(initAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credential credential, ConnectionSettings connectionSettings) {
+    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
         try {
             List<String> publicAddresses = new ArrayList();
             List<String> privateAddresses = new ArrayList();
@@ -85,8 +85,8 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
             return driver_open_cloud_translated(
                     publicAddresses.toArray(new String[0]),
                     privateAddresses.toArray(new String[0]),
-                    credential.nativeObject,
-                    connectionSettings.nativeObject,
+                    credentials.nativeObject,
+                    driverOptions.nativeObject,
                     LANGUAGE
             );
         } catch (com.typedb.driver.jni.Error e) {

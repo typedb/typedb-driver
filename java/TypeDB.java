@@ -19,8 +19,8 @@
 
 package com.typedb.driver;
 
-import com.typedb.driver.api.ConnectionSettings;
-import com.typedb.driver.api.Credential;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.connection.DriverImpl;
 
@@ -41,11 +41,11 @@ public class TypeDB {
      * </pre>
      *
      * @param address The address of the TypeDB server
-     * @param credential The credential to connect with
-     * @param connectionSettings The connection settings to connect with
+     * @param credentials The credentials to connect with
+     * @param driverOptions The connection settings to connect with
      */
-    public static Driver coreDriver(String address, Credential credential, ConnectionSettings connectionSettings) {
-        return new DriverImpl(address, credential, connectionSettings);
+    public static Driver coreDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+        return new DriverImpl(address, credentials, driverOptions);
     }
 
     /**
@@ -58,11 +58,11 @@ public class TypeDB {
      * </pre>
      *
      * @param address The address of the TypeDB server
-     * @param credential The credential to connect with
-     * @param connectionSettings The connection settings to connect with
+     * @param credentials The credential to connect with
+     * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(String address, Credential credential, ConnectionSettings connectionSettings) {
-        return cloudDriver(set(address), credential, connectionSettings);
+    public static Driver cloudDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+        return cloudDriver(set(address), credentials, driverOptions);
     }
 
     /**
@@ -75,11 +75,11 @@ public class TypeDB {
      * </pre>
      *
      * @param addresses The address(es) of the TypeDB server(s)
-     * @param credential The credential to connect with
-     * @param connectionSettings The connection settings to connect with
+     * @param credentials The credential to connect with
+     * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Set<String> addresses, Credential credential, ConnectionSettings connectionSettings) {
-        return new DriverImpl(addresses, credential, connectionSettings);
+    public static Driver cloudDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) {
+        return new DriverImpl(addresses, credentials, driverOptions);
     }
 
     /**
@@ -93,10 +93,10 @@ public class TypeDB {
      *
      * @param addressTranslation Translation map from addresses to be used by the driver for connection
      * to addresses received from the TypeDB server(s)
-     * @param credential The credential to connect with
-     * @param connectionSettings The connection settings to connect with
+     * @param credentials The credential to connect with
+     * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Map<String, String> addressTranslation, Credential credential, ConnectionSettings connectionSettings) {
-        return new DriverImpl(addressTranslation, credential, connectionSettings);
+    public static Driver cloudDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
+        return new DriverImpl(addressTranslation, credentials, driverOptions);
     }
 }

@@ -28,7 +28,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    ConnectionSettings, Credential, Error, TransactionType, TypeDBDriver,
+    Credentials, DriverOptions, Error, TransactionType, TypeDBDriver,
 };
 
 // EXAMPLE END MARKER
@@ -36,8 +36,8 @@ use typedb_driver::{
 async fn cleanup() {
     let driver = TypeDBDriver::new_core(
         TypeDBDriver::DEFAULT_ADDRESS,
-        Credential::new("admin", "password"),
-        ConnectionSettings::new(false, None).unwrap(),
+        Credentials::new("admin", "password"),
+        DriverOptions::new(false, None).unwrap(),
     )
     .await
     .unwrap();
@@ -57,8 +57,8 @@ fn example() {
         // Open a driver connection
         let driver = TypeDBDriver::new_core(
             TypeDBDriver::DEFAULT_ADDRESS,
-            Credential::new("admin", "password"),
-            ConnectionSettings::new(false, None).unwrap(),
+            Credentials::new("admin", "password"),
+            DriverOptions::new(false, None).unwrap(),
         )
         .await
         .unwrap();

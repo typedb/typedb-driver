@@ -15,28 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import Optional
-
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import connection_settings_new, ConnectionSettings as NativeConnectionSettings
+from typedb.native_driver_wrapper import credentials_new, Credentials as NativeCredentials
 
 
-class ConnectionSettings(NativeWrapper[NativeConnectionSettings]):
+class Credentials(NativeWrapper[NativeCredentials]):
     """
-    User credentials and TLS encryption settings for connecting to TypeDB Server. Arguments:
-    1) is_tls_enabled: Specify whether the connection to TypeDB Cloud must be done over TLS.
-    2) tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
+    User credentials and TLS encryption settings for connecting to TypeDB Server.
 
     Examples:
     --------
     ::
 
-        connection_settings = ConnectionSettings(tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+        credentials = Credentials(username, password)
     """
 
-    def __init__(self, is_tls_enabled: bool = False, tls_root_ca_path: Optional[str] = None):
-        super().__init__(connection_settings_new(is_tls_enabled, tls_root_ca_path))
+    def __init__(self, username: str, password: str):
+        super().__init__(credentials_new(username, password))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

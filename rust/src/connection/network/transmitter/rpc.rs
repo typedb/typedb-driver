@@ -39,7 +39,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
-    ConnectionSettings, Credential, Error,
+    Credentials, DriverOptions, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {
@@ -50,14 +50,14 @@ pub(in crate::connection) struct RPCTransmitter {
 impl RPCTransmitter {
     pub(in crate::connection) fn start(
         address: Address,
-        credential: Credential,
-        connection_settings: ConnectionSettings,
+        credentials: Credentials,
+        driver_options: DriverOptions,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
-            let (channel, call_cred) = open_callcred_channel(address, credential, connection_settings)?;
+            let (channel, call_cred) = open_callcred_channel(address, credentials, driver_options)?;
             let rpc = RPCStub::new(channel, Some(call_cred)).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())

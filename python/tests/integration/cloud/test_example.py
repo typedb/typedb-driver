@@ -28,7 +28,7 @@
 # TYPEDB = "typedb"
 # DATA = SessionType.DATA
 # WRITE = TransactionType.WRITE
-# CREDENTIAL = Credential("admin", "password", tls_enabled=True, tls_root_ca_path=os.environ["ROOT_CA"])
+# CREDENTIAL = Credentials("admin", "password", tls_enabled=True, tls_root_ca_path=os.environ["ROOT_CA"])
 #
 #
 # class TestExample(TestCase):
