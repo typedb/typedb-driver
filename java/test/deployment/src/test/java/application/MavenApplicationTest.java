@@ -20,7 +20,9 @@
 package application;
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
 import org.junit.Test;
 
@@ -32,7 +34,11 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        Driver driver = TypeDB.coreDriver(TypeDB.DEFAULT_ADDRESS);
+        Driver driver = TypeDB.coreDriver(
+                TypeDB.DEFAULT_ADDRESS,
+                new Credentials("admin", "password"),
+                new DriverOptions(false, null)
+        );
         if (driver.databases().contains(DB_NAME)) {
             driver.databases().get(DB_NAME).delete();
         }
