@@ -33,6 +33,7 @@ use crate::{
     common::{address::Address, info::DatabaseInfo, RequestID},
     concept::Concept,
     error::ServerError,
+    info::UserInfo,
     user::User,
     Options, TransactionType,
 };
@@ -43,25 +44,23 @@ pub(super) enum Request {
 
     ServersAll,
 
+    DatabasesAll,
+    DatabaseGet { database_name: String },
     DatabasesContains { database_name: String },
     DatabaseCreate { database_name: String },
-    DatabaseGet { database_name: String },
-    DatabasesAll,
 
+    DatabaseDelete { database_name: String },
     DatabaseSchema { database_name: String },
     DatabaseTypeSchema { database_name: String },
-    DatabaseDelete { database_name: String },
 
     Transaction(TransactionRequest),
 
     UsersAll,
-    UsersContain { username: String },
-    UsersCreate { username: String, password: String },
-    UsersDelete { username: String },
-    UsersGet { username: String },
-    UsersPasswordSet { username: String, password: String },
-
-    UserPasswordUpdate { username: String, password_old: String, password_new: String },
+    UsersGet { name: String },
+    UsersContains { name: String },
+    UsersCreate { user: UserInfo },
+    UsersUpdate { username: String, user: UserInfo },
+    UsersDelete { name: String },
 }
 
 #[derive(Debug)]
@@ -107,19 +106,17 @@ pub(super) enum Response {
     },
 
     UsersAll {
-        users: Vec<User>,
+        users: Vec<UserInfo>,
     },
     UsersContain {
         contains: bool,
     },
     UsersCreate,
+    UsersUpdate,
     UsersDelete,
     UsersGet {
-        user: Option<User>,
+        user: Option<UserInfo>,
     },
-    UsersPasswordSet,
-
-    UserPasswordUpdate,
 }
 
 #[derive(Debug)]

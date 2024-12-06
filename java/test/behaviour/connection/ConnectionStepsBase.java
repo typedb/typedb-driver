@@ -19,10 +19,11 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
-import com.typedb.driver.api.database.Database;
+import com.typedb.driver.test.behaviour.config.Parameters;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +38,10 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 
 public abstract class ConnectionStepsBase {
+    public static final String ADMIN_USERNAME = "admin";
+    public static final String ADMIN_PASSWORD = "password";
+    public static final Credentials DEFAULT_CREDENTIALS = new Credentials(ADMIN_USERNAME, ADMIN_PASSWORD);
+    public static final DriverOptions DEFAULT_CONNECTION_SETTINGS = new DriverOptions(false, null);
     public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -48,7 +53,7 @@ public abstract class ConnectionStepsBase {
     //    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
 //            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
 //    );
-    //    public static Options transactionOptions;
+//    public static Options transactionOptions;
     static boolean isBeforeAllRan = false;
 
     public static Transaction tx() {
@@ -81,8 +86,9 @@ public abstract class ConnectionStepsBase {
     void after() {
         cleanupTransactions();
 
-        driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
-        driver.databases().all().forEach(Database::delete);
+        driver = createDefaultTypeDBDriver();
+        driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
+        // TODO: Set admin password to default
         driver.close();
         backgroundDriver.close();
     }
@@ -100,13 +106,15 @@ public abstract class ConnectionStepsBase {
         transactionsParallel.clear();
     }
 
-    abstract Driver createTypeDBDriver(String address);
+    abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
 
     abstract Driver createDefaultTypeDBDriver();
 
 //    abstract Options createOptions();
 
     abstract void connection_opens_with_default_authentication();
+
+    abstract void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError);
 
     void connection_closes() {
         cleanupTransactions();
@@ -119,5 +127,9 @@ public abstract class ConnectionStepsBase {
 
     void connection_has_count_databases(int count) {
         assertEquals(count, driver.databases().all().size());
+    }
+
+    void connection_has_count_users(int count) {
+        assertEquals(count, driver.users().all().size());
     }
 }

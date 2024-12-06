@@ -26,14 +26,11 @@ use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{
-        concept_document::{ConceptDocument, ConceptDocumentHeader},
-        concept_row::ConceptRowHeader,
-        QueryType,
-    },
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},
+    info::UserInfo,
     user::User,
 };
 
@@ -57,19 +54,10 @@ impl TryIntoProto<server_manager::all::Req> for Request {
     }
 }
 
-impl TryIntoProto<database_manager::contains::Req> for Request {
-    fn try_into_proto(self) -> Result<database_manager::contains::Req> {
+impl TryIntoProto<database_manager::all::Req> for Request {
+    fn try_into_proto(self) -> Result<database_manager::all::Req> {
         match self {
-            Self::DatabasesContains { database_name } => Ok(database_manager::contains::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<database_manager::create::Req> for Request {
-    fn try_into_proto(self) -> Result<database_manager::create::Req> {
-        match self {
-            Self::DatabaseCreate { database_name } => Ok(database_manager::create::Req { name: database_name }),
+            Self::DatabasesAll => Ok(database_manager::all::Req {}),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -84,10 +72,19 @@ impl TryIntoProto<database_manager::get::Req> for Request {
     }
 }
 
-impl TryIntoProto<database_manager::all::Req> for Request {
-    fn try_into_proto(self) -> Result<database_manager::all::Req> {
+impl TryIntoProto<database_manager::contains::Req> for Request {
+    fn try_into_proto(self) -> Result<database_manager::contains::Req> {
         match self {
-            Self::DatabasesAll => Ok(database_manager::all::Req {}),
+            Self::DatabasesContains { database_name } => Ok(database_manager::contains::Req { name: database_name }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<database_manager::create::Req> for Request {
+    fn try_into_proto(self) -> Result<database_manager::create::Req> {
+        match self {
+            Self::DatabaseCreate { database_name } => Ok(database_manager::create::Req { name: database_name }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -129,140 +126,6 @@ impl TryIntoProto<transaction::Client> for Request {
     }
 }
 
-impl TryIntoProto<user_manager::all::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::all::Req> {
-        match self {
-            Self::UsersAll => Ok(user_manager::all::Req {}),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::contains::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::contains::Req> {
-        match self {
-            Self::UsersContain { username } => Ok(user_manager::contains::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::create::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::create::Req> {
-        match self {
-            Self::UsersCreate { username, password } => Ok(user_manager::create::Req { username, password }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::delete::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::delete::Req> {
-        match self {
-            Self::UsersDelete { username } => Ok(user_manager::delete::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::get::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::get::Req> {
-        match self {
-            Self::UsersGet { username } => Ok(user_manager::get::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user_manager::password_set::Req> for Request {
-    fn try_into_proto(self) -> Result<user_manager::password_set::Req> {
-        match self {
-            Self::UsersPasswordSet { username, password } => Ok(user_manager::password_set::Req { username, password }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<user::password_update::Req> for Request {
-    fn try_into_proto(self) -> Result<user::password_update::Req> {
-        match self {
-            Self::UserPasswordUpdate { username, password_old, password_new } => {
-                Ok(user::password_update::Req { username, password_old, password_new })
-            }
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryFromProto<connection::open::Res> for Response {
-    fn try_from_proto(proto: connection::open::Res) -> Result<Self> {
-        let mut database_infos = Vec::new();
-        for database_info_proto in proto.databases_all.unwrap().databases {
-            database_infos.push(DatabaseInfo::try_from_proto(database_info_proto)?);
-        }
-        Ok(Self::ConnectionOpen {
-            connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap(),
-            server_duration_millis: proto.server_duration_millis,
-            databases: database_infos,
-        })
-    }
-}
-
-impl TryFromProto<server_manager::all::Res> for Response {
-    fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
-        let server_manager::all::Res { servers } = proto;
-        let servers = servers.into_iter().map(|server| server.address.parse()).try_collect()?;
-        Ok(Self::ServersAll { servers })
-    }
-}
-
-impl FromProto<database_manager::contains::Res> for Response {
-    fn from_proto(proto: database_manager::contains::Res) -> Self {
-        Self::DatabasesContains { contains: proto.contains }
-    }
-}
-
-impl TryFromProto<database_manager::create::Res> for Response {
-    fn try_from_proto(proto: database_manager::create::Res) -> Result<Self> {
-        Ok(Self::DatabaseCreate { database: DatabaseInfo::try_from_proto(proto.database.unwrap())? })
-    }
-}
-
-impl TryFromProto<database_manager::get::Res> for Response {
-    fn try_from_proto(proto: database_manager::get::Res) -> Result<Self> {
-        Ok(Self::DatabaseGet {
-            database: DatabaseInfo::try_from_proto(
-                proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
-            )?,
-        })
-    }
-}
-
-impl TryFromProto<database_manager::all::Res> for Response {
-    fn try_from_proto(proto: database_manager::all::Res) -> Result<Self> {
-        let database_manager::all::Res { databases } = proto;
-        Ok(Self::DatabasesAll { databases: databases.into_iter().map(DatabaseInfo::try_from_proto).try_collect()? })
-    }
-}
-
-impl FromProto<database::delete::Res> for Response {
-    fn from_proto(_proto: database::delete::Res) -> Self {
-        Self::DatabaseDelete
-    }
-}
-
-impl FromProto<database::schema::Res> for Response {
-    fn from_proto(proto: database::schema::Res) -> Self {
-        Self::DatabaseSchema { schema: proto.schema }
-    }
-}
-
-impl FromProto<database::type_schema::Res> for Response {
-    fn from_proto(proto: database::type_schema::Res) -> Self {
-        Self::DatabaseTypeSchema { schema: proto.schema }
-    }
-}
-
 impl IntoProto<transaction::Req> for TransactionRequest {
     fn into_proto(self) -> transaction::Req {
         let mut request_id = None;
@@ -293,6 +156,144 @@ impl IntoProto<transaction::Req> for TransactionRequest {
     }
 }
 
+impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
+    fn into_proto(self) -> typedb_protocol::query::Req {
+        match self {
+            QueryRequest::Query { query, options } => {
+                typedb_protocol::query::Req { query, options: Some(options.into_proto()) }
+            }
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::all::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::all::Req> {
+        match self {
+            Self::UsersAll => Ok(user_manager::all::Req {}),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::get::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::get::Req> {
+        match self {
+            Self::UsersGet { name } => Ok(user_manager::get::Req { name }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::contains::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::contains::Req> {
+        match self {
+            Self::UsersContains { name } => Ok(user_manager::contains::Req { name }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::create::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::create::Req> {
+        match self {
+            Self::UsersCreate { user } => Ok(user_manager::create::Req {
+                user: Some(typedb_protocol::User { name: user.name, password: user.password }),
+            }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<user::update::Req> for Request {
+    fn try_into_proto(self) -> Result<user::update::Req> {
+        match self {
+            Self::UsersUpdate { username, user } => Ok(user::update::Req {
+                name: username,
+                user: Some(typedb_protocol::User { name: user.name, password: user.password }),
+            }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<user::delete::Req> for Request {
+    fn try_into_proto(self) -> Result<user::delete::Req> {
+        match self {
+            Self::UsersDelete { name } => Ok(user::delete::Req { name }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryFromProto<connection::open::Res> for Response {
+    fn try_from_proto(proto: connection::open::Res) -> Result<Self> {
+        let mut database_infos = Vec::new();
+        for database_info_proto in proto.databases_all.unwrap().databases {
+            database_infos.push(DatabaseInfo::try_from_proto(database_info_proto)?);
+        }
+        Ok(Self::ConnectionOpen {
+            connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap(),
+            server_duration_millis: proto.server_duration_millis,
+            databases: database_infos,
+        })
+    }
+}
+
+impl TryFromProto<server_manager::all::Res> for Response {
+    fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
+        let server_manager::all::Res { servers } = proto;
+        let servers = servers.into_iter().map(|server| server.address.parse()).try_collect()?;
+        Ok(Self::ServersAll { servers })
+    }
+}
+
+impl TryFromProto<database_manager::all::Res> for Response {
+    fn try_from_proto(proto: database_manager::all::Res) -> Result<Self> {
+        let database_manager::all::Res { databases } = proto;
+        Ok(Self::DatabasesAll { databases: databases.into_iter().map(DatabaseInfo::try_from_proto).try_collect()? })
+    }
+}
+
+impl TryFromProto<database_manager::get::Res> for Response {
+    fn try_from_proto(proto: database_manager::get::Res) -> Result<Self> {
+        Ok(Self::DatabaseGet {
+            database: DatabaseInfo::try_from_proto(
+                proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
+            )?,
+        })
+    }
+}
+
+impl FromProto<database_manager::contains::Res> for Response {
+    fn from_proto(proto: database_manager::contains::Res) -> Self {
+        Self::DatabasesContains { contains: proto.contains }
+    }
+}
+
+impl TryFromProto<database_manager::create::Res> for Response {
+    fn try_from_proto(proto: database_manager::create::Res) -> Result<Self> {
+        Ok(Self::DatabaseCreate { database: DatabaseInfo::try_from_proto(proto.database.unwrap())? })
+    }
+}
+
+impl FromProto<database::delete::Res> for Response {
+    fn from_proto(_proto: database::delete::Res) -> Self {
+        Self::DatabaseDelete
+    }
+}
+
+impl FromProto<database::schema::Res> for Response {
+    fn from_proto(proto: database::schema::Res) -> Self {
+        Self::DatabaseSchema { schema: proto.schema }
+    }
+}
+
+impl FromProto<database::type_schema::Res> for Response {
+    fn from_proto(proto: database::type_schema::Res) -> Self {
+        Self::DatabaseTypeSchema { schema: proto.schema }
+    }
+}
+
 impl TryFromProto<transaction::Res> for TransactionResponse {
     fn try_from_proto(proto: transaction::Res) -> Result<Self> {
         match proto.res {
@@ -317,6 +318,27 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                 }
             },
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
+        }
+    }
+}
+
+impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
+    fn try_from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Result<Self> {
+        match proto {
+            typedb_protocol::query::initial_res::ok::Ok::Done(done_header) => {
+                Ok(QueryResponse::Ok(QueryType::try_from_proto(done_header.query_type)?))
+            }
+            typedb_protocol::query::initial_res::ok::Ok::ConceptDocumentStream(document_stream_header) => {
+                Ok(QueryResponse::ConceptDocumentsHeader(ConceptDocumentHeader {
+                    query_type: QueryType::try_from_proto(document_stream_header.query_type)?,
+                }))
+            }
+            typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(row_stream_header) => {
+                Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
+                    column_names: row_stream_header.column_variable_names,
+                    query_type: QueryType::try_from_proto(row_stream_header.query_type)?,
+                }))
+            }
         }
     }
 }
@@ -351,27 +373,6 @@ impl TryFromProto<typedb_protocol::query::res_part::Res> for QueryResponse {
     }
 }
 
-impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse {
-    fn try_from_proto(proto: typedb_protocol::query::initial_res::ok::Ok) -> Result<Self> {
-        match proto {
-            typedb_protocol::query::initial_res::ok::Ok::Done(done_header) => {
-                Ok(QueryResponse::Ok(QueryType::try_from_proto(done_header.query_type)?))
-            }
-            typedb_protocol::query::initial_res::ok::Ok::ConceptDocumentStream(document_stream_header) => {
-                Ok(QueryResponse::ConceptDocumentsHeader(ConceptDocumentHeader {
-                    query_type: QueryType::try_from_proto(document_stream_header.query_type)?,
-                }))
-            }
-            typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(row_stream_header) => {
-                Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
-                    column_names: row_stream_header.column_variable_names,
-                    query_type: QueryType::try_from_proto(row_stream_header.query_type)?,
-                }))
-            }
-        }
-    }
-}
-
 impl FromProto<typedb_protocol::Error> for QueryResponse {
     fn from_proto(proto: typedb_protocol::Error) -> Self {
         QueryResponse::Error(ServerError::new(proto.error_code, proto.domain, String::new(), proto.stack_trace))
@@ -380,7 +381,13 @@ impl FromProto<typedb_protocol::Error> for QueryResponse {
 
 impl FromProto<user_manager::all::Res> for Response {
     fn from_proto(proto: user_manager::all::Res) -> Self {
-        Self::UsersAll { users: proto.users.into_iter().map(User::from_proto).collect() }
+        Self::UsersAll { users: proto.users.into_iter().map(UserInfo::from_proto).collect() }
+    }
+}
+
+impl FromProto<user_manager::get::Res> for Response {
+    fn from_proto(proto: user_manager::get::Res) -> Self {
+        Self::UsersGet { user: proto.user.map(UserInfo::from_proto) }
     }
 }
 
@@ -396,36 +403,14 @@ impl FromProto<user_manager::create::Res> for Response {
     }
 }
 
-impl FromProto<user_manager::delete::Res> for Response {
-    fn from_proto(_proto: user_manager::delete::Res) -> Self {
+impl FromProto<user::update::Res> for Response {
+    fn from_proto(_proto: user::update::Res) -> Self {
+        Self::UsersUpdate
+    }
+}
+
+impl FromProto<user::delete::Res> for Response {
+    fn from_proto(_proto: user::delete::Res) -> Self {
         Self::UsersDelete
-    }
-}
-
-impl FromProto<user_manager::get::Res> for Response {
-    fn from_proto(proto: user_manager::get::Res) -> Self {
-        Self::UsersGet { user: proto.user.map(User::from_proto) }
-    }
-}
-
-impl FromProto<user_manager::password_set::Res> for Response {
-    fn from_proto(_proto: user_manager::password_set::Res) -> Self {
-        Self::UsersPasswordSet
-    }
-}
-
-impl FromProto<user::password_update::Res> for Response {
-    fn from_proto(_proto: user::password_update::Res) -> Self {
-        Self::UserPasswordUpdate
-    }
-}
-
-impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
-    fn into_proto(self) -> typedb_protocol::query::Req {
-        match self {
-            QueryRequest::Query { query, options } => {
-                typedb_protocol::query::Req { query, options: Some(options.into_proto()) }
-            }
-        }
     }
 }

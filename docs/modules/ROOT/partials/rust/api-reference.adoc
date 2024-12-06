@@ -4,7 +4,7 @@
 
 include::api-ref::partial$rust/connection/Connection.adoc[]
 
-include::api-ref::partial$rust/connection/Credential.adoc[]
+include::api-ref::partial$rust/connection/Credentials.adoc[]
 
 include::api-ref::partial$rust/connection/DatabaseManager.adoc[]
 

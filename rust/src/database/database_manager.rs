@@ -53,76 +53,6 @@ impl DatabaseManager {
         Ok(Self { server_connections, databases_cache: RwLock::new(databases) })
     }
 
-    /// Retrieve the database with the given name.
-    ///
-    /// # Arguments
-    ///
-    /// * `name` -- The name of the database to retrieve
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().get(name);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().get(name).await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>> {
-        let name = name.as_ref();
-
-        if !self.contains(name.to_owned()).await? {
-            self.databases_cache.write().unwrap().remove(name);
-            return Err(ConnectionError::DatabaseNotFound { name: name.to_owned() }.into());
-        }
-
-        if let Some(cached_database) = self.try_get_cached(name) {
-            return Ok(cached_database);
-        }
-
-        self.cache_insert(Database::get(name.to_owned(), self.server_connections.clone()).await?);
-        Ok(self.try_get_cached(name).unwrap())
-    }
-
-    /// Checks if a database with the given name exists
-    ///
-    /// # Arguments
-    ///
-    /// * `name` -- The database name to be checked
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().contains(name);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().contains(name).await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
-        let name = name.into();
-        self.run_failsafe(name, |server_connection, name| async move { server_connection.database_exists(name).await })
-            .await
-    }
-
-    /// Create a database with the given name
-    ///
-    /// # Arguments
-    ///
-    /// * `name` -- The name of the database to be created
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().create(name);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().create(name).await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn create(&self, name: impl Into<String>) -> Result {
-        let name = name.into();
-        let database_info = self
-            .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await }) // TODO: run_failsafe produces additiona Connection error if the database name is incorrect. Is it ok?
-            .await?;
-        self.cache_insert(Database::new(database_info, self.server_connections.clone())?);
-        Ok(())
-    }
-
     /// Retrieves all databases present on the TypeDB server
     ///
     /// # Examples
@@ -151,6 +81,79 @@ impl DatabaseManager {
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+    }
+
+    /// Retrieve the database with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The name of the database to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().get(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().get(name).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get(&self, name: impl AsRef<str>) -> Result<Arc<Database>> {
+        let name = name.as_ref();
+
+        if !self.contains(name.to_owned()).await? {
+            self.databases_cache.write().unwrap().remove(name);
+            return Err(ConnectionError::DatabaseNotFound { name: name.to_owned() }.into());
+        }
+
+        if let Some(cached_database) = self.try_get_cached(name) {
+            return Ok(cached_database);
+        }
+
+        self.cache_insert(Database::get(name.to_owned(), self.server_connections.clone()).await?);
+        Ok(self.try_get_cached(name).unwrap())
+    }
+
+    /// Checks if a database with the given name exists
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The database name to be checked
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().contains(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().contains(name).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
+        let name = name.into();
+        self.run_failsafe(
+            name,
+            |server_connection, name| async move { server_connection.contains_database(name).await },
+        )
+        .await
+    }
+
+    /// Create a database with the given name
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The name of the database to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().create(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().create(name).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn create(&self, name: impl Into<String>) -> Result {
+        let name = name.into();
+        let database_info = self
+            .run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await }) // TODO: run_failsafe produces additiona Connection error if the database name is incorrect. Is it ok?
+            .await?;
+        self.cache_insert(Database::new(database_info, self.server_connections.clone())?);
+        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

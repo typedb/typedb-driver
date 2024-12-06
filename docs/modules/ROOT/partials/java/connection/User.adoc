@@ -1,0 +1,71 @@
+[#_User]
+=== User
+
+*Package*: `com.typedb.driver.api.user`
+
+TypeDB user information
+
+// tag::methods[]
+[#_User_delete_]
+==== delete
+
+[source,java]
+----
+void delete()
+----
+
+Deletes a user with the given name. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().delete(username);
+----
+
+[#_User_name_]
+==== name
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String name()
+----
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_User_updatePassword_java_lang_String]
+==== updatePassword
+
+[source,java]
+----
+void updatePassword​(java.lang.String password)
+----
+
+Updates the password for this user.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `passwordOld` a| The current password of this user a| 
+a| `passwordNew` a| The new password a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

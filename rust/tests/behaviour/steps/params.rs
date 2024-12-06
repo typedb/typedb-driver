@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
+use std::{borrow::Borrow, convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
@@ -295,7 +295,7 @@ macro_rules! check_boolean {
 pub(crate) use check_boolean;
 use typedb_driver::concept::{
     value::{Decimal, TimeZone},
-    Concept, ConceptCategory,
+    Concept,
 };
 
 impl FromStr for Boolean {
@@ -317,19 +317,16 @@ pub(crate) enum MayError {
 }
 
 impl MayError {
-    pub fn check<T: fmt::Debug, E: fmt::Debug + ToString>(&self, res: Result<T, E>) -> Option<E> {
+    pub fn check<T: fmt::Debug, E: fmt::Debug + ToString>(&self, res: Result<T, E>) -> Option<T> {
         match self {
-            MayError::False => {
-                res.unwrap();
-                None
-            }
-            MayError::True(None) => Some(res.unwrap_err()),
+            MayError::False => Some(res.unwrap()),
+            MayError::True(None) => None,
             MayError::True(Some(expected_message)) => {
                 let actual_error = res.unwrap_err();
                 let actual_message = actual_error.to_string();
 
                 if actual_message.contains(expected_message) {
-                    Some(actual_error)
+                    None
                 } else {
                     panic!(
                         "Expected error message containing: '{}', but got error message: '{}'",

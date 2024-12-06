@@ -33,13 +33,13 @@ use crate::{
     connection::{
         message::{Request, Response, TransactionResponse},
         network::{
-            channel::{open_callcred_channel, open_plaintext_channel, GRPCChannel},
+            channel::{open_callcred_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },
         runtime::BackgroundRuntime,
     },
-    Credential, Error,
+    Credentials, DriverOptions, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {
@@ -48,28 +48,17 @@ pub(in crate::connection) struct RPCTransmitter {
 }
 
 impl RPCTransmitter {
-    pub(in crate::connection) fn start_core(address: Address, runtime: &BackgroundRuntime) -> Result<Self> {
-        let (request_sink, request_source) = unbounded_async();
-        let (shutdown_sink, shutdown_source) = unbounded_async();
-        runtime.run_blocking(async move {
-            let channel = open_plaintext_channel(address);
-            let rpc = RPCStub::new(channel, None).await;
-            tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
-            Ok::<(), Error>(())
-        })?;
-        Ok(Self { request_sink, shutdown_sink })
-    }
-
-    pub(in crate::connection) fn start_cloud(
+    pub(in crate::connection) fn start(
         address: Address,
-        credential: Credential,
+        credentials: Credentials,
+        driver_options: DriverOptions,
         runtime: &BackgroundRuntime,
     ) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
-            let (channel, call_credentials) = open_callcred_channel(address, credential)?;
-            let rpc = RPCStub::new(channel, Some(call_credentials)).await;
+            let (channel, call_cred) = open_callcred_channel(address, credentials, driver_options)?;
+            let rpc = RPCStub::new(channel, Some(call_cred)).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())
         })?;
@@ -180,19 +169,13 @@ impl RPCTransmitter {
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::UsersContain { .. } => {
-                rpc.users_contain(request.try_into_proto()?).await.map(Response::from_proto)
+            Request::UsersContains { .. } => {
+                rpc.users_contains(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::UsersCreate { .. } => rpc.users_create(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::UsersUpdate { .. } => rpc.users_update(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersDelete { .. } => rpc.users_delete(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersGet { .. } => rpc.users_get(request.try_into_proto()?).await.map(Response::from_proto),
-            Request::UsersPasswordSet { .. } => {
-                rpc.users_password_set(request.try_into_proto()?).await.map(Response::from_proto)
-            }
-
-            Request::UserPasswordUpdate { .. } => {
-                rpc.user_password_update(request.try_into_proto()?).await.map(Response::from_proto)
-            }
         }
     }
 }

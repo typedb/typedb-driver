@@ -20,7 +20,7 @@
 use cucumber::{given, then, when};
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Credential, TypeDBDriver};
+use typedb_driver::{Credentials, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
@@ -35,13 +35,20 @@ async fn typedb_starts(_: &mut Context) {}
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
 async fn connection_opens_with_default_authentication(context: &mut Context) {
-    context.set_driver(context.create_default_driver(None, None).await.unwrap());
+    context.set_driver(context.create_default_driver().await.unwrap());
 }
 
 #[apply(generic_step)]
-#[step(expr = "connection opens with authentication: {word}, {word}")]
-async fn connection_opens_with_authentication(context: &mut Context, username: String, password: String) {
-    context.set_driver(context.create_default_driver(Some(&username), Some(&password)).await.unwrap())
+#[step(expr = "connection opens with username '{word}', password '{word}'{may_error}")]
+async fn connection_opens_with_authentication(
+    context: &mut Context,
+    username: String,
+    password: String,
+    may_error: params::MayError,
+) {
+    if let Some(driver) = may_error.check(context.create_driver(Some(&username), Some(&password)).await) {
+        context.set_driver(driver)
+    }
 }
 
 fn change_host(address: &str, new_host: &str) -> String {
@@ -64,16 +71,14 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
             context
                 .create_core_driver(
                     &change_host(Context::DEFAULT_CORE_ADDRESS, "surely-not-localhost"),
-                    Some(Context::ADMIN_USERNAME),
-                    Some(Context::ADMIN_PASSWORD),
+                    Context::ADMIN_USERNAME,
+                    Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
             let updated_address = change_host(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
-            context
-                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
-                .await
+            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }
@@ -86,16 +91,14 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
             context
                 .create_core_driver(
                     &change_port(Context::DEFAULT_CORE_ADDRESS, "0"),
-                    Some(Context::ADMIN_USERNAME),
-                    Some(Context::ADMIN_PASSWORD),
+                    Context::ADMIN_USERNAME,
+                    Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
             let updated_address = change_port(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "0");
-            context
-                .create_cloud_driver(&[&updated_address], Some(Context::ADMIN_USERNAME), Some(Context::ADMIN_PASSWORD))
-                .await
+            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }
@@ -110,6 +113,12 @@ async fn connection_has_been_opened(context: &mut Context, is_open: params::Bool
 #[step(expr = r"connection has {int} database(s)")]
 async fn connection_has_count_databases(context: &mut Context, count: usize) {
     assert_eq!(context.driver.as_ref().unwrap().databases().all().await.unwrap().len(), count);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection has {int} user(s)")]
+async fn connection_has_count_users(context: &mut Context, count: usize) {
+    assert_eq!(context.driver.as_ref().unwrap().users().all().await.unwrap().len(), count);
 }
 
 #[apply(generic_step)]

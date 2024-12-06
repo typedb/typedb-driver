@@ -113,5 +113,28 @@ a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA) a| `
 driver.transaction(database, sessionType);
 ----
 
+[#_Driver_users_]
+==== users
+
+[source,java]
+----
+@CheckReturnValue
+UserManager users()
+----
+
+The ``UserManager`` instance for this connection, providing access to user management methods. 
+
+
+[caption=""]
+.Returns
+`UserManager`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users();
+----
+
 // end::methods[]
 

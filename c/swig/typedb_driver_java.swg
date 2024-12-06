@@ -121,8 +121,8 @@
 
 %nojavaexception transaction_is_open;
 
-//%nojavaexception user_get_username;
-//%nojavaexception user_get_password_expiry_seconds;
+%nojavaexception user_get_name;
+%nojavaexception user_get_password_expiry_seconds;
 
 //%nojavaexception replica_info_get_server;
 //%nojavaexception replica_info_is_primary;
@@ -230,10 +230,10 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
-//%nojavaexception ~Credential;
+%nojavaexception ~DriverOptions;
+%nojavaexception ~Credentials;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
-%nojavaexception ~DatabaseManager;
 %nojavaexception ~DatetimeAndTimeZone;
 %nojavaexception ~DatetimeInNanos;
 %nojavaexception ~Decimal;
@@ -249,9 +249,8 @@
 %nojavaexception ~TypeDBDriver;
 %nojavaexception ~QueryAnswer;
 %nojavaexception ~ValueType;
-//%nojavaexception ~User;
-//%nojavaexception ~UserIterator;
-//%nojavaexception ~UserManager;
+%nojavaexception ~User;
+%nojavaexception ~UserIterator;
 %nojavaexception ~Value;
 
 %nojavaexception transaction_commit;
@@ -397,7 +396,7 @@
 %iterator(ConceptRow, concept_row)
 %iterator(String, string)
 %iterator(StringAndOptValue, string_and_opt_value)
-//%iterator(User, user)
+%iterator(User, user)
 %iterator(Database, database)
 //%iterator(ReplicaInfo, replica_info)
 

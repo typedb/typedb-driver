@@ -2,12 +2,37 @@
 === TypeDB
 
 // tag::methods[]
-[#_TypeDB_core_driver_address_str]
+[#_TypeDB_cloud_driver_addresses_Mapping_str_str_Iterable_str_str_credentials_Credentials_driver_options_DriverOptions]
+==== cloud_driver
+
+[source,python]
+----
+static cloud_driver(addresses: Mapping[str, str] | Iterable[str] | str, credentials: Credentials, driver_options: DriverOptions) -> Driver
+----
+
+Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `addresses` a| TypeDB server addresses as a single string, a list of strings, or as an address translation mapping. a| `Mapping[str, str] \| Iterable[str] \| str` a| 
+a| `credentials` a| The credentials to connect with. a| `Credentials` a| 
+a| `driver_options` a| The connection settings to connect with. a| `DriverOptions` a| 
+|===
+
+[caption=""]
+.Returns
+`Driver`
+
+[#_TypeDB_core_driver_address_str_credentials_Credentials_driver_options_DriverOptions]
 ==== core_driver
 
 [source,python]
 ----
-static core_driver(address: str) -> Driver
+static core_driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver
 ----
 
 Creates a connection to TypeDB.
@@ -19,6 +44,8 @@ Creates a connection to TypeDB.
 |===
 |Name |Description |Type |Default Value
 a| `address` a| Address of the TypeDB server. a| `str` a| 
+a| `credentials` a| The credentials to connect with. a| `Credentials` a| 
+a| `driver_options` a| The connection settings to connect with. a| `DriverOptions` a| 
 |===
 
 [caption=""]

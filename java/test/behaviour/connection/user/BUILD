@@ -18,59 +18,26 @@
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
-#java_library(
-#    name = "steps",
-#    srcs = [
-#        "UserSteps.java",
-#    ],
-#    visibility = ["//visibility:public"],
-#    deps = [
-#        # Internal Package Dependencies
-#        "//java/api",
-#        "//java/test/behaviour/connection:steps-base",
-#        "//java/test/behaviour/util",
-#
-#        # External Maven Dependencies
-#        "@maven//:junit_junit",
-#        "@maven//:io_cucumber_cucumber_java",
-#    ],
-#)
-#
-#typedb_java_test(
-#    name = "test-cloud",
-#    size = "large",
-#    srcs = [
-#        "UserTestCloud.java",
-#    ],
-#    data = [
-#        "@typedb_behaviour//connection:user.feature",
-#    ],
-#    server_artifacts = {
-#        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_cloud_artifact_linux-arm64//file",
-#        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_cloud_artifact_linux-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_cloud_artifact_mac-arm64//file",
-#        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_cloud_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_cloud_artifact_windows-x86_64//file",
-#    },
-#    test_class = "com.typedb.driver.test.behaviour.connection.user.UserTestCloud",
-#    runtime_deps = [
-#        ":steps",
-#        "//java/test/behaviour/config:parameters",
-#        "//java/test/behaviour/connection:steps-cloud",
-#        "//java/test/behaviour/connection/transaction:steps",
-#        "//java/test/behaviour/query:steps",
-#        "//java/test/behaviour/util:steps",
-#    ],
-#    deps = [
-#        # Internal Package Dependencies
-#        "//java/test/behaviour",
-#
-#        # External dependencies from Maven
-#        "@maven//:io_cucumber_cucumber_junit",
-#    ],
-#)
+java_library(
+    name = "steps",
+    srcs = [
+        "UserSteps.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        # Internal Package Dependencies
+        "//java/api",
+        "//java/common",
+        "//java/test/behaviour/config:parameters",
+        "//java/test/behaviour/connection:steps-base",
+        "//java/test/behaviour/util",
+
+        # External Maven Dependencies
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ],
+)
 
 checkstyle_test(
     name = "checkstyle",

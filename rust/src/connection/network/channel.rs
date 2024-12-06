@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
 
 use tonic::{
     body::BoxBody,
@@ -32,12 +32,11 @@ use tonic::{
 
 use crate::{
     common::{address::Address, Result, StdResult},
-    Credential,
+    Credentials, DriverOptions,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
 
-pub(super) type PlainTextChannel = InterceptedService<Channel, PlainTextFacade>;
 pub(super) type CallCredChannel = InterceptedService<Channel, CredentialInjector>;
 
 pub(super) trait GRPCChannel:
@@ -45,65 +44,41 @@ pub(super) trait GRPCChannel:
 {
 }
 
-impl GRPCChannel for PlainTextChannel {}
-
 impl GRPCChannel for CallCredChannel {}
-
-pub(super) fn open_plaintext_channel(address: Address) -> PlainTextChannel {
-    PlainTextChannel::new(Channel::builder(address.into_uri()).connect_lazy(), PlainTextFacade)
-}
-
-#[derive(Clone, Debug)]
-pub(super) struct PlainTextFacade;
-
-impl Interceptor for PlainTextFacade {
-    fn call(&mut self, request: Request<()>) -> StdResult<Request<()>, Status> {
-        Ok(request)
-    }
-}
 
 pub(super) fn open_callcred_channel(
     address: Address,
-    credential: Credential,
+    credentials: Credentials,
+    driver_options: DriverOptions,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
     let mut builder = Channel::builder(address.into_uri());
-    if credential.is_tls_enabled() {
-        builder = builder.tls_config(credential.tls_config().clone().unwrap())?;
+    if driver_options.is_tls_enabled() {
+        let tls_config =
+            driver_options.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
+        builder = builder.tls_config(tls_config)?;
     }
     let channel = builder.connect_lazy();
-    let call_credentials = Arc::new(CallCredentials::new(credential));
+    let call_credentials = Arc::new(CallCredentials::new(credentials));
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))
 }
 
 #[derive(Debug)]
 pub(super) struct CallCredentials {
-    credential: Credential,
-    token: RwLock<Option<String>>,
+    credentials: Credentials,
 }
 
 impl CallCredentials {
-    pub(super) fn new(credential: Credential) -> Self {
-        Self { credential, token: RwLock::new(None) }
+    pub(super) fn new(credentials: Credentials) -> Self {
+        Self { credentials }
     }
 
     pub(super) fn username(&self) -> &str {
-        self.credential.username()
-    }
-
-    pub(super) fn set_token(&self, token: String) {
-        *self.token.write().unwrap() = Some(token);
-    }
-
-    pub(super) fn reset_token(&self) {
-        *self.token.write().unwrap() = None;
+        self.credentials.username()
     }
 
     pub(super) fn inject(&self, mut request: Request<()>) -> Request<()> {
-        request.metadata_mut().insert("username", self.credential.username().try_into().unwrap());
-        match &*self.token.read().unwrap() {
-            Some(token) => request.metadata_mut().insert("token", token.try_into().unwrap()),
-            None => request.metadata_mut().insert("password", self.credential.password().try_into().unwrap()),
-        };
+        request.metadata_mut().insert("username", self.credentials.username().try_into().unwrap());
+        request.metadata_mut().insert("password", self.credentials.password().try_into().unwrap());
         request
     }
 }

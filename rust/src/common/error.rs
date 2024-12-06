@@ -19,7 +19,6 @@
 
 use std::{collections::HashSet, error::Error as StdError, fmt};
 
-use chrono::{MappedLocalTime, NaiveDateTime};
 use itertools::Itertools;
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
@@ -154,13 +153,13 @@ error_messages! { ConnectionError
     CloudAllNodesFailed { errors: String } =
         17: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
     CloudTokenCredentialInvalid =
-        18: "Invalid token credential.",
+        18: "Invalid token credentials.",
     CloudEncryptionSettingsMismatch =
         19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
         20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credentials.",
     ConnectionFailed =
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =

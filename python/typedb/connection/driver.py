@@ -25,38 +25,45 @@ from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_open_core, driver_is_open, driver_force_close, \
-    TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
-
-# from typedb.user.user_manager import _UserManager
+from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
+    driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
-    # from typedb.api.connection.credential import Credential
+    from typedb.connection.driver_options import DriverOptions
+    from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import TransactionType
-    # from typedb.api.user.user import UserManager, User
+    from typedb.api.user.user import UserManager
 
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):
 
-    def __init__(self, addresses: list[str] | dict[str]):  # , credential: Optional[Credential] = None
-        # if credential:
-        #     try:
-        #         if isinstance(addresses, list):
-        #             native_connection = driver_open_cloud(addresses, credential.native_object)
-        #         else:
-        #             public_addresses = list(addresses.keys())
-        #             private_addresses = [addresses[public] for public in public_addresses]
-        #             native_connection = driver_open_cloud_translated(
-        #                     public_addresses, private_addresses, credential.native_object)
-        #     except TypeDBDriverExceptionNative as e:
-        #         raise TypeDBDriverException.of(e) from None
-        # else:
+    def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credentials: Credentials,
+                 driver_options: DriverOptions):
         try:
-            native_driver = driver_open_core(addresses[0], Driver.LANGUAGE)
+            if is_cloud:
+                if isinstance(addresses, list):
+                    native_driver = driver_open_cloud(addresses, credentials.native_object)
+                else:
+                    public_addresses = list(addresses.keys())
+                    private_addresses = [addresses[public] for public in public_addresses]
+                    native_driver = driver_open_cloud_translated(
+                        public_addresses, private_addresses, credentials.native_object)
+            else:
+                native_driver = driver_open_core(addresses[0], credentials.native_object,
+                                                 driver_options.native_object,
+                                                 Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)
-        # self._user_manager = _UserManager(native_connection)
+
+    @classmethod
+    def core(cls, address: str, credentials: Credentials, driver_options: DriverOptions):
+        return cls(is_cloud=False, addresses=[address], credentials=credentials, driver_options=driver_options)
+
+    @classmethod
+    def cloud(cls, addresses: list[str] | dict[str], credentials: Credentials, driver_options: DriverOptions):
+        return cls(is_cloud=True, addresses=addresses, credentials=credentials, driver_options=driver_options)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -77,12 +84,9 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def databases(self) -> _DatabaseManager:
         return _DatabaseManager(self._native_driver)
 
-    # @property
-    # def users(self) -> UserManager:
-    #     return self._user_manager
-    #
-    # def user(self) -> User:
-    #     return self._user_manager.get_current_user()
+    @property
+    def users(self) -> UserManager:
+        return _UserManager(self._native_driver)
 
     def __enter__(self):
         return self

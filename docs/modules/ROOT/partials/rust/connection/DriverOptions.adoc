@@ -1,0 +1,64 @@
+[#_struct_DriverOptions]
+=== DriverOptions
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+User connection settings for connecting to TypeDB.
+
+// tag::methods[]
+[#_struct_DriverOptions_is_tls_enabled_]
+==== is_tls_enabled
+
+[source,rust]
+----
+pub fn is_tls_enabled(&self) -> bool
+----
+
+Retrieves whether TLS is enabled for the connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_DriverOptions_new_is_tls_enabled_bool_tls_root_ca_Option_Path_]
+==== new
+
+[source,rust]
+----
+pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> Result<Self>
+----
+
+Creates a credentials with username and password. Specifies the connection must use TLS
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `is_tls_enabled` a|  — Specify whether the connection to TypeDB Server must be done over TLS. a| `bool`
+a| `tls_root_ca` a|  — Path to the CA certificate to use for authenticating server certificates. a| `Option<&Path>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+DriverOptions::new(true, Some(&path_to_ca));
+----
+
+// end::methods[]
+

@@ -21,8 +21,7 @@
 #![deny(elided_lifetimes_in_paths)]
 
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    env::VarError,
+    collections::{HashSet, VecDeque},
     error::Error,
     fmt,
     fmt::Formatter,
@@ -38,10 +37,8 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType, JSON},
-    concept::Value,
-    BoxStream, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
-    UserManager,
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
+    BoxStream, Credentials, DriverOptions, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -164,7 +161,10 @@ impl Context {
                     context.unwrap().after_scenario().await.unwrap();
                 })
             })
-            .filter_run(glob, |_, _, sc| !sc.tags.iter().any(Self::is_ignore_tag))
+            .filter_run(glob, |_, _, sc| {
+                sc.name.contains(std::env::var("SCENARIO_FILTER").as_deref().unwrap_or(""))
+                    && !sc.tags.iter().any(Self::is_ignore_tag)
+            })
             .await
             .execution_has_failed()
     }
@@ -176,9 +176,10 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.transaction_options = Options::new();
+        self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
-        // self.cleanup_users().await;
+        self.cleanup_users().await;
         self.cleanup_answers().await;
         self.cleanup_concurrent_answers().await;
         self.reset_driver();
@@ -199,12 +200,6 @@ impl Context {
     }
 
     pub async fn cleanup_databases(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            self.set_driver(
-                self.create_default_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await.unwrap(),
-            );
-        }
-
         try_join_all(self.driver.as_ref().unwrap().databases().all().await.unwrap().into_iter().map(|db| db.delete()))
             .await
             .unwrap();
@@ -217,10 +212,6 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
-        if self.driver.is_none() || !self.driver.as_ref().unwrap().is_open() {
-            return;
-        }
-
         try_join_all(
             self.driver
                 .as_ref()
@@ -230,11 +221,14 @@ impl Context {
                 .await
                 .unwrap()
                 .into_iter()
-                .filter(|user| user.username != Context::ADMIN_USERNAME)
-                .map(|user| self.driver.as_ref().unwrap().users().delete(user.username)),
+                .filter(|user| user.name != Context::ADMIN_USERNAME)
+                .map(|user| user.delete()),
         )
         .await
-        .ok();
+        .expect("Expected users cleanup");
+
+        // TODO: Return
+        // self.driver.as_ref().unwrap().users().set_password(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await.unwrap();
     }
 
     pub async fn cleanup_answers(&mut self) {
@@ -369,43 +363,36 @@ impl Context {
         self.try_get_concurrent_rows_streams().await.unwrap()
     }
 
-    async fn create_default_driver(
-        &self,
-        username: Option<&str>,
-        password: Option<&str>,
-    ) -> TypeDBResult<TypeDBDriver> {
+    async fn create_default_driver(&self) -> TypeDBResult<TypeDBDriver> {
+        self.create_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await
+    }
+
+    async fn create_driver(&self, username: Option<&str>, password: Option<&str>) -> TypeDBResult<TypeDBDriver> {
+        let username = username.unwrap_or(Self::ADMIN_USERNAME);
+        let password = password.unwrap_or(Self::ADMIN_USERNAME);
         match self.is_cloud {
             false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
             true => self.create_cloud_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
         }
     }
 
-    async fn create_core_driver(
-        &self,
-        address: &str,
-        _username: Option<&str>,
-        _password: Option<&str>,
-    ) -> TypeDBResult<TypeDBDriver> {
+    async fn create_core_driver(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cloud);
-        TypeDBDriver::new_core(address).await
+        let credentials = Credentials::new(username, password);
+        let conn_settings = DriverOptions::new(false, None)?;
+        TypeDBDriver::new_core(address, credentials, conn_settings).await
     }
 
     async fn create_cloud_driver(
         &self,
         addresses: &[&str],
-        username: Option<&str>,
-        password: Option<&str>,
+        username: &str,
+        password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(self.is_cloud);
-        TypeDBDriver::new_cloud(
-            addresses,
-            Credential::with_tls(
-                username.expect("Username is required for cloud connection"),
-                password.expect("Password is required for cloud connection"),
-                Some(&self.tls_root_ca),
-            )
-            .unwrap(),
-        )
+        assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
+        let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
+        TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), DriverOptions::new(false, None)?)
+            .await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {
@@ -446,7 +433,7 @@ impl Default for Context {
 
 macro_rules! in_background {
     ($context:ident, |$background:ident| $expr:expr) => {
-        let $background = $context.create_default_driver(None, None).await.unwrap();
+        let $background = $context.create_default_driver().await.unwrap();
         $expr
         $background.force_close().unwrap();
     };
