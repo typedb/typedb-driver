@@ -22,7 +22,7 @@ use std::fmt::{Debug, Display, Formatter};
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 
 pub use self::{
-    thing::{Attribute, Entity, Relation},
+    instance::{Attribute, Entity, Relation},
     type_::{AttributeType, EntityType, RelationType, RoleType},
     value::{Value, ValueType},
 };
@@ -31,7 +31,7 @@ use crate::{
     IID,
 };
 
-pub mod thing;
+pub mod instance;
 pub mod type_;
 pub mod value;
 
