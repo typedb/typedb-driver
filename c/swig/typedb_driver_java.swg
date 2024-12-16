@@ -167,7 +167,7 @@
 %nojavaexception concept_is_decimal;
 %nojavaexception concept_is_double;
 %nojavaexception concept_is_duration;
-%nojavaexception concept_is_long;
+%nojavaexception concept_is_integer;
 %nojavaexception concept_is_string;
 %nojavaexception concept_is_struct;
 
@@ -179,7 +179,7 @@
 %nojavaexception concept_get_decimal;
 %nojavaexception concept_get_double;
 %nojavaexception concept_get_duration;
-%nojavaexception concept_get_long;
+%nojavaexception concept_get_integer;
 %nojavaexception concept_get_string;
 %nojavaexception concept_get_struct;
 

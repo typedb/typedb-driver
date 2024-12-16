@@ -209,11 +209,11 @@ pub extern "C" fn concept_is_boolean(concept: *const Concept) -> bool {
     borrow(concept).is_boolean()
 }
 
-/// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>long</code>.
+/// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>integer</code>.
 /// Otherwise, returns <code>false</code>.
 #[no_mangle]
-pub extern "C" fn concept_is_long(concept: *const Concept) -> bool {
-    borrow(concept).is_long()
+pub extern "C" fn concept_is_integer(concept: *const Concept) -> bool {
+    borrow(concept).is_integer()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>double</code>.
@@ -282,13 +282,13 @@ pub extern "C" fn concept_get_boolean(concept: *const Concept) -> bool {
     }
 }
 
-/// Returns the <code>long</code> value of this value concept.
+/// Returns the <code>integer</code> value of this value concept.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn concept_get_long(concept: *const Concept) -> i64 {
-    match borrow(concept).try_get_long() {
+pub extern "C" fn concept_get_integer(concept: *const Concept) -> i64 {
+    match borrow(concept).try_get_integer() {
         Some(value) => value,
-        None => unreachable!("Attempting to unwrap a non-long {:?} as long", borrow(concept)),
+        None => unreachable!("Attempting to unwrap a non-integer {:?} as integer", borrow(concept)),
     }
 }
 
