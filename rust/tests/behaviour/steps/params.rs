@@ -97,7 +97,7 @@ impl Value {
     pub fn into_typedb(self, value_type: TypeDBValueType) -> TypeDBValue {
         match value_type {
             TypeDBValueType::Boolean => TypeDBValue::Boolean(self.raw_value.parse().unwrap()),
-            TypeDBValueType::Long => TypeDBValue::Long(self.raw_value.parse().unwrap()),
+            TypeDBValueType::Integer => TypeDBValue::Integer(self.raw_value.parse().unwrap()),
             TypeDBValueType::Double => TypeDBValue::Double(self.raw_value.parse().unwrap()),
             TypeDBValueType::Decimal => {
                 let (integer, fractional) = if let Some(split) = self.raw_value.split_once(".") {
@@ -200,7 +200,7 @@ impl FromStr for Value {
 }
 
 #[derive(Clone, Debug, Parameter)]
-#[param(name = "value_type", regex = r"boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")]
+#[param(name = "value_type", regex = r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct")]
 pub struct ValueType {
     pub value_type: TypeDBValueType,
 }
@@ -211,7 +211,7 @@ impl FromStr for ValueType {
     fn from_str(type_: &str) -> Result<Self, Self::Err> {
         Ok(match type_ {
             "boolean" => Self { value_type: TypeDBValueType::Boolean },
-            "long" => Self { value_type: TypeDBValueType::Long },
+            "integer" => Self { value_type: TypeDBValueType::Integer },
             "double" => Self { value_type: TypeDBValueType::Double },
             "decimal" => Self { value_type: TypeDBValueType::Decimal },
             "string" => Self { value_type: TypeDBValueType::String },

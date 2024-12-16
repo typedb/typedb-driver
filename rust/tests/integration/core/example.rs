@@ -95,7 +95,7 @@ fn example() {
         define
           entity person, owns name, owns age;
           attribute name, value string;
-          attribute age, value long;
+          attribute age, value integer;
         "#;
         let answer = transaction.query(define_query).await.unwrap();
 
@@ -161,14 +161,14 @@ fn example() {
             let concept_by_name = row.get(column_name).unwrap();
             assert!(concept_by_name.is_attribute_type());
             assert!(concept_by_name.is_type());
-            assert!(concept_by_name.is_long() || concept_by_name.is_string());
+            assert!(concept_by_name.is_integer() || concept_by_name.is_string());
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
                 let label = concept_by_name.get_label();
                 let value_type = concept_by_name.try_get_value_type().unwrap();
                 println!("Defined attribute type's label: '{label}', value type: '{value_type}'");
-                assert!(value_type == ValueType::Long || value_type == ValueType::String);
+                assert!(value_type == ValueType::Integer || value_type == ValueType::String);
                 assert!(label == "age" || label == "name");
                 assert_ne!(concept_by_name.get_label(), "person");
                 assert_ne!(concept_by_name.get_label(), "person:age");

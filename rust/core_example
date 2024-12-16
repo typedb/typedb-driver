@@ -52,7 +52,7 @@ fn typedb_example() {
         define
           entity person, owns name, owns age;
           attribute name, value string;
-          attribute age, value long;
+          attribute age, value integer;
         "#;
         let answer = transaction.query(define_query).await.unwrap();
 
