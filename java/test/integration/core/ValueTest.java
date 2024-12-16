@@ -161,8 +161,8 @@ public class ValueTest {
                     String attributeName = attribute.getType().getLabel();
                     Value value = attribute.getValue();
                     assertEquals(value.getType(), attributeValueTypes.get(attributeName));
-                    if (value.isLong()) {
-                        assertEquals(Long.parseLong(attributeValues.get(attributeName)), value.getLong());
+                    if (value.isInteger()) {
+                        assertEquals(Long.parseLong(attributeValues.get(attributeName)), value.getInteger());
                         checked.incrementAndGet();
                     } else if (value.isString()) {
                         assertEquals(attributeValues.get(attributeName).substring(1, attributeValues.get(attributeName).length() - 1), value.getString());

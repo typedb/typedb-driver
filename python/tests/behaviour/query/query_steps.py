@@ -504,10 +504,10 @@ def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_ind
 
 
 @step(
-    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is long: {is_long:Bool}")
-def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_long: bool):
-    result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_long()
-    assert_that(result, is_(is_long))
+    "answer get row({row_index:Int}) get {kind:ConceptKind}{is_by_var_index:IsByVarIndex}({var:Var}) is integer: {is_integer:Bool}")
+def step_impl(context: Context, row_index: int, kind: ConceptKind, is_by_var_index: bool, var: str, is_integer: bool):
+    result = get_row_get_concept_of_kind(context, row_index, var, is_by_var_index, kind).is_integer()
+    assert_that(result, is_(is_integer))
 
 
 @step(
@@ -593,7 +593,7 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
 
     if value_type == ValueType.BOOLEAN:
         return parse_bool(value)
-    elif value_type == ValueType.LONG:
+    elif value_type == ValueType.INTEGER:
         return int(value)
     elif value_type == ValueType.DOUBLE:
         return float(value)
@@ -629,8 +629,8 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
 def get_by_value_type(concept, value_type: ValueType) -> Concept.VALUE:
     if value_type == ValueType.BOOLEAN:
         return concept.get_boolean()
-    elif value_type == ValueType.LONG:
-        return concept.get_long()
+    elif value_type == ValueType.INTEGER:
+        return concept.get_integer()
     elif value_type == ValueType.DOUBLE:
         return concept.get_double()
     elif value_type == ValueType.DECIMAL:
@@ -654,8 +654,8 @@ def get_by_value_type(concept, value_type: ValueType) -> Concept.VALUE:
 def try_get_by_value_type(concept, value_type: ValueType) -> Optional[Concept.VALUE]:
     if value_type == ValueType.BOOLEAN:
         return concept.try_get_boolean()
-    elif value_type == ValueType.LONG:
-        return concept.try_get_long()
+    elif value_type == ValueType.INTEGER:
+        return concept.try_get_integer()
     elif value_type == ValueType.DOUBLE:
         return concept.try_get_double()
     elif value_type == ValueType.DECIMAL:

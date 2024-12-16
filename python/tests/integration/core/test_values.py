@@ -42,7 +42,7 @@ class TestValues(TestCase):
     def test_values(self):
         attribute_value_types = {
             "root": "none",
-            "age": "long",
+            "age": "integer",
             "name": "string",
             "is-new": "boolean",
             "success": "double",
@@ -121,7 +121,7 @@ class TestValues(TestCase):
                     value = attribute.get_value()
                     expected = attribute_values[attribute_name]
 
-                    if attribute.is_long():
+                    if attribute.is_integer():
                         assert_that(value, is_(int(expected)))
                         checked += 1
                     elif attribute.is_string():

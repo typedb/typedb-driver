@@ -102,9 +102,9 @@ class Attribute(Instance, ABC):
         pass
 
     @abstractmethod
-    def get_long(self) -> int:
+    def get_integer(self) -> int:
         """
-        Returns a ``long`` value of the value concept that this attribute holds. If the value has
+        Returns a ``integer`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
         :return:
@@ -113,7 +113,7 @@ class Attribute(Instance, ABC):
         --------
         ::
 
-            attribute.get_long()
+            attribute.get_integer()
         """
         pass
 

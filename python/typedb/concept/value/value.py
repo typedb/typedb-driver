@@ -38,8 +38,8 @@ class _Value(Value, _Concept):
     def get(self) -> Concept.VALUE:
         if self.is_boolean():
             return self.get_boolean()
-        elif self.is_long():
-            return self.get_long()
+        elif self.is_integer():
+            return self.get_integer()
         elif self.is_double():
             return self.get_double()
         elif self.is_decimal():
@@ -64,9 +64,9 @@ class _Value(Value, _Concept):
             raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "boolean")
         return value
 
-    def get_long(self) -> int:
-        if (value := self.try_get_long()) is None:
-            raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "long")
+    def get_integer(self) -> int:
+        if (value := self.try_get_integer()) is None:
+            raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "integer")
         return value
 
     def get_double(self) -> float:

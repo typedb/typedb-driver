@@ -311,17 +311,17 @@ public interface Concept {
     boolean isBoolean();
 
     /**
-     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>long</code>
-     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>long</code>.
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>integer</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>integer</code>.
      * Otherwise, returns <code>false</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.isLong();
+     * concept.isInteger();
      * </pre>
      */
     @CheckReturnValue
-    boolean isLong();
+    boolean isInteger();
 
     /**
      * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>double</code>
@@ -441,15 +441,15 @@ public interface Concept {
     Optional<Boolean> tryGetBoolean();
 
     /**
-     * Returns a <code>long</code> value of this <code>Concept</code>.
+     * Returns a <code>integer</code> value of this <code>Concept</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * concept.tryGetLong();
+     * concept.tryGetInteger();
      * </pre>
      */
-    Optional<Long> tryGetLong();
+    Optional<Long> tryGetInteger();
 
     /**
      * Returns a <code>double</code> value of this <code>Concept</code>.

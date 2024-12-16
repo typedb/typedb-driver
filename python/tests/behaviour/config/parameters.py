@@ -115,7 +115,7 @@ register_type(ConceptKind=parse_concept_kind)
 
 class ValueType(Enum):
     BOOLEAN = 0,
-    LONG = 1,
+    INTEGER = 1,
     DOUBLE = 2,
     DECIMAL = 3,
     STRING = 4,
@@ -126,7 +126,7 @@ class ValueType(Enum):
     STRUCT = 9,
 
 
-@parse.with_pattern(r"boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")
+@parse.with_pattern(r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct")
 def parse_value_type(text: str) -> ValueType:
     value_type_opt = try_parse_value_type(text)
     if value_type_opt is None:
@@ -137,8 +137,8 @@ def parse_value_type(text: str) -> ValueType:
 def try_parse_value_type(text: str) -> Optional[ValueType]:
     if text == "boolean":
         return ValueType.BOOLEAN
-    elif text == "long":
-        return ValueType.LONG
+    elif text == "integer":
+        return ValueType.INTEGER
     elif text == "double":
         return ValueType.DOUBLE
     elif text == "decimal":
