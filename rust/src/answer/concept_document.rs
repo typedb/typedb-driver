@@ -136,7 +136,7 @@ fn json_attribute_type(label: Cow<'static, str>, value_type: Option<ValueType>) 
 fn json_value_type(value_type: Option<ValueType>) -> JSON {
     const NONE: Cow<'static, str> = Cow::Borrowed(ValueType::NONE_STR);
     const BOOLEAN: Cow<'static, str> = Cow::Borrowed(ValueType::BOOLEAN_STR);
-    const LONG: Cow<'static, str> = Cow::Borrowed(ValueType::LONG_STR);
+    const INTEGER: Cow<'static, str> = Cow::Borrowed(ValueType::INTEGER_STR);
     const DOUBLE: Cow<'static, str> = Cow::Borrowed(ValueType::DOUBLE_STR);
     const DECIMAL: Cow<'static, str> = Cow::Borrowed(ValueType::DECIMAL_STR);
     const STRING: Cow<'static, str> = Cow::Borrowed(ValueType::STRING_STR);
@@ -148,7 +148,7 @@ fn json_value_type(value_type: Option<ValueType>) -> JSON {
     JSON::String(match value_type {
         None => NONE,
         Some(ValueType::Boolean) => BOOLEAN,
-        Some(ValueType::Long) => LONG,
+        Some(ValueType::Integer) => INTEGER,
         Some(ValueType::Double) => DOUBLE,
         Some(ValueType::Decimal) => DECIMAL,
         Some(ValueType::String) => STRING,
@@ -163,7 +163,7 @@ fn json_value_type(value_type: Option<ValueType>) -> JSON {
 fn json_value(value: Value) -> JSON {
     match value {
         Value::Boolean(bool) => JSON::Boolean(bool),
-        Value::Long(long) => JSON::Number(long as f64),
+        Value::Integer(integer) => JSON::Number(integer as f64),
         Value::Double(double) => JSON::Number(double),
         Value::String(string) => JSON::String(Cow::Owned(string)),
 

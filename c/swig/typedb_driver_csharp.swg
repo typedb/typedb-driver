@@ -242,17 +242,17 @@
 %noexception value_get_boolean;
 %noexception value_get_date_time_as_millis;
 %noexception value_get_double;
-%noexception value_get_long;
+%noexception value_get_integer;
 %noexception value_get_string;
 %noexception value_is_boolean;
 %noexception value_is_date_time;
 %noexception value_is_double;
-%noexception value_is_long;
+%noexception value_is_integer;
 %noexception value_is_string;
 %noexception value_new_boolean;
 %noexception value_new_date_time_from_millis;
 %noexception value_new_double;
-%noexception value_new_long;
+%noexception value_new_integer;
 %noexception value_new_string;
 
 %noexception role_player_get_role_type;
