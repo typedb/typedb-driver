@@ -103,7 +103,7 @@ public class ExampleTest {
                 String defineQuery = "define " +
                         "entity person, owns name, owns age; " +
                         "attribute name, value string;\n" +
-                        "attribute age, value long;";
+                        "attribute age, value integer;";
 
                 QueryAnswer answer = transaction.query(defineQuery).resolve();
                 assertTrue(answer.isOk());
@@ -178,8 +178,8 @@ public class ExampleTest {
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
                         System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.tryGetValueType().get());
-                        assertTrue(attributeType.isLong() || attributeType.isString());
-                        assertTrue(Objects.equals(attributeType.tryGetValueType().get(), "long") || Objects.equals(attributeType.tryGetValueType().get(), "string"));
+                        assertTrue(attributeType.isInteger() || attributeType.isString());
+                        assertTrue(Objects.equals(attributeType.tryGetValueType().get(), "integer") || Objects.equals(attributeType.tryGetValueType().get(), "string"));
                         assertTrue(Objects.equals(attributeType.getLabel(), "age") || Objects.equals(attributeType.getLabel(), "name"));
                         assertNotEquals(attributeType.getLabel(), "person");
                         assertNotEquals(attributeType.getLabel(), "person:age");

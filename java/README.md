@@ -113,7 +113,7 @@ public class TypeDBExample {
                 String defineQuery = "define " +
                         "entity person, owns name, owns age; " +
                         "attribute name, value string;\n" +
-                        "attribute age, value long;";
+                        "attribute age, value integer;";
 
                 QueryAnswer answer = transaction.query(defineQuery).resolve();
 

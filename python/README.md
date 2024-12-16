@@ -67,7 +67,7 @@ from typedb.driver import *
                 define 
                   entity person, owns name, owns age; 
                   attribute name, value string;
-                  attribute age, value long;
+                  attribute age, value integer;
                 """
                 answer = tx.query(define_query).resolve()
                 if answer.is_ok():

@@ -61,8 +61,8 @@ public class AttributeImpl extends InstanceImpl implements Attribute {
     }
 
     @Override
-    public long getLong() {
-        return getValue().getLong();
+    public long getInteger() {
+        return getValue().getInteger();
     }
 
     @Override

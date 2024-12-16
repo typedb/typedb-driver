@@ -47,8 +47,8 @@ class _Attribute(Attribute, _Instance):
     def get_boolean(self) -> bool:
         return self._get_value_concept().get_boolean()
 
-    def get_long(self) -> int:
-        return self._get_value_concept().get_long()
+    def get_integer(self) -> int:
+        return self._get_value_concept().get_integer()
 
     def get_double(self) -> float:
         return self._get_value_concept().get_double()

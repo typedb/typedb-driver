@@ -51,7 +51,7 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public Object get() {
         if (isBoolean()) return getBoolean();
-        else if (isLong()) return getLong();
+        else if (isInteger()) return getInteger();
         else if (isDouble()) return getDouble();
         else if (isDecimal()) return getDecimal();
         else if (isString()) return getString();
@@ -69,8 +69,8 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     @Override
-    public long getLong() {
-        return tryGetLong().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "long"));
+    public long getInteger() {
+        return tryGetInteger().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "long"));
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ValueImpl extends ConceptImpl implements Value {
     @Override
     public String toString() {
         if (isBoolean()) return Boolean.toString(getBoolean());
-        else if (isLong()) return Long.toString(getLong());
+        else if (isInteger()) return Long.toString(getInteger());
         else if (isDouble()) return Double.toString(getDouble());
         else if (isDecimal()) return getDecimal().toString();
         else if (isString()) return getString();

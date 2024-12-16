@@ -100,15 +100,15 @@ public interface Attribute extends Instance {
     boolean getBoolean();
 
     /**
-     * Returns a <code>long</code> value of the value concept that this attribute holds.
+     * Returns a <code>integer</code> value of the value concept that this attribute holds.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
-     * attribute.getLong();
+     * attribute.getInteger();
      * </pre>
      */
-    long getLong();
+    long getInteger();
 
     /**
      * Returns a <code>double</code> value of the value concept that this attribute holds.

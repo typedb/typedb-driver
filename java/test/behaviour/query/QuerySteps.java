@@ -683,7 +683,7 @@ public class QuerySteps {
             case BOOLEAN:
                 return concept.isBoolean();
             case LONG:
-                return concept.isLong();
+                return concept.isInteger();
             case DOUBLE:
                 return concept.isDouble();
             case DECIMAL:
@@ -747,7 +747,7 @@ public class QuerySteps {
             case BOOLEAN:
                 return value.getBoolean();
             case LONG:
-                return value.getLong();
+                return value.getInteger();
             case DOUBLE:
                 return value.getDouble();
             case DECIMAL:
@@ -814,7 +814,7 @@ public class QuerySteps {
             case BOOLEAN:
                 return castedConcept.tryGetBoolean();
             case LONG:
-                return castedConcept.tryGetLong();
+                return castedConcept.tryGetInteger();
             case DOUBLE:
                 return castedConcept.tryGetDouble();
             case DECIMAL:

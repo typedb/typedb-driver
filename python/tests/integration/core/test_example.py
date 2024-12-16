@@ -65,7 +65,7 @@ class TestExample(TestCase):
                 define 
                   entity person, owns name, owns age; 
                   attribute name, value string;
-                  attribute age, value long;
+                  attribute age, value integer;
                 """
                 answer = tx.query(define_query).resolve()
                 if answer.is_ok():
@@ -140,8 +140,8 @@ class TestExample(TestCase):
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
                               f"value type: '{attribute_type.try_get_value_type()}'")
 
-                        assert_that(attribute_type.is_long() or attribute_type.is_string(), is_(True))
-                        assert_that(attribute_type.try_get_value_type(), is_in(["long", "string"]))
+                        assert_that(attribute_type.is_integer() or attribute_type.is_string(), is_(True))
+                        assert_that(attribute_type.try_get_value_type(), is_in(["integer", "string"]))
                         assert_that(attribute_type.get_label(), is_in(["age", "name"]))
                         assert_that(attribute_type.get_label(), is_not("person"))
                         assert_that(attribute_type.get_label(), is_not("person:age"))
