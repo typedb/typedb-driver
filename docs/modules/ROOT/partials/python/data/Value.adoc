@@ -195,15 +195,15 @@ Returns a timezone naive ``duration`` value of this value concept. If the value 
 value.get_duration()
 ----
 
-[#_Value_get_long_]
-==== get_long
+[#_Value_get_integer_]
+==== get_integer
 
 [source,python]
 ----
-get_long() -> int
+get_integer() -> int
 ----
 
-Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
+Returns a ``integer`` value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -213,7 +213,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 .Code examples
 [source,python]
 ----
-value.get_long()
+value.get_integer()
 ----
 
 [#_Value_get_string_]

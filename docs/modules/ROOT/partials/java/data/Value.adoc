@@ -404,6 +404,28 @@ Returns a ``duration`` value of this value concept. If the value has another typ
 value.getDuration();
 ----
 
+[#_Value_getInteger_]
+==== getInteger
+
+[source,java]
+----
+long getInteger()
+----
+
+Returns a ``integer`` value of this value concept. If the value has another type, raises an exception. 
+
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.getInteger();
+----
+
 [#_Value_getLabel_]
 ==== getLabel
 
@@ -425,28 +447,6 @@ Retrieves the unique label of the concept. If this is an ``Instance``, return th
 [source,java]
 ----
 concept.getLabel();
-----
-
-[#_Value_getLong_]
-==== getLong
-
-[source,java]
-----
-long getLong()
-----
-
-Returns a ``long`` value of this value concept. If the value has another type, raises an exception. 
-
-
-[caption=""]
-.Returns
-`long`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-value.getLong();
 ----
 
 [#_Value_getString_]
@@ -791,16 +791,16 @@ Checks if the concept is an ``Instance``.
 concept.isInstance();
 ----
 
-[#_Value_isLong_]
-==== isLong
+[#_Value_isInteger_]
+==== isInteger
 
 [source,java]
 ----
 @CheckReturnValue
-boolean isLong()
+boolean isInteger()
 ----
 
-Returns ``true`` if the value which this ``Concept`` holds is of type ``long`` or if this ``Concept`` is an ``AttributeType`` of type ``long``. Otherwise, returns ``false``. 
+Returns ``true`` if the value which this ``Concept`` holds is of type ``integer`` or if this ``Concept`` is an ``AttributeType`` of type ``integer``. Otherwise, returns ``false``. 
 
 
 [caption=""]
@@ -811,7 +811,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``long`` o
 .Code examples
 [source,java]
 ----
-concept.isLong();
+concept.isInteger();
 ----
 
 [#_Value_isRelation_]
@@ -1151,6 +1151,28 @@ Retrieves the unique id of the ``Concept``. Returns ``null`` if absent.
 concept.tryGetIID();
 ----
 
+[#_Value_tryGetInteger_]
+==== tryGetInteger
+
+[source,java]
+----
+java.util.Optional<java.lang.Long> tryGetInteger()
+----
+
+Returns a ``integer`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Long>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetInteger();
+----
+
 [#_Value_tryGetLabel_]
 ==== tryGetLabel
 
@@ -1172,28 +1194,6 @@ Retrieves the unique label of the concept. If this is an ``Instance``, return th
 [source,java]
 ----
 concept.tryGetLabel();
-----
-
-[#_Value_tryGetLong_]
-==== tryGetLong
-
-[source,java]
-----
-java.util.Optional<java.lang.Long> tryGetLong()
-----
-
-Returns a ``long`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
-
-
-[caption=""]
-.Returns
-`java.util.Optional<java.lang.Long>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.tryGetLong();
 ----
 
 [#_Value_tryGetString_]

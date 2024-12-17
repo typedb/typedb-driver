@@ -269,15 +269,15 @@ bool
 concept.is_entity() || concept.is_relation() ||  concept.is_attribute()
 ----
 
-[#_enum_Concept_is_long_]
-==== is_long
+[#_enum_Concept_is_integer_]
+==== is_integer
 
 [source,rust]
 ----
-pub fn is_long(&self) -> bool
+pub fn is_integer(&self) -> bool
 ----
 
-Check if this Concept holds a long as an AttributeType, an Attribute, or a Value
+Check if this Concept holds an integer as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -550,6 +550,23 @@ Retrieves the unique id (IID) of this Concept. If this is an Entity or Relation 
 Option<&IID>
 ----
 
+[#_enum_Concept_try_get_integer_]
+==== try_get_integer
+
+[source,rust]
+----
+pub fn try_get_integer(&self) -> Option<i64>
+----
+
+Retrieves the integer value of this Concept, if it exists. If this is an integer-valued Attribute Instance, returns the integer value of this instance. If this an integer-valued Value, returns the integer value. Otherwise, returns None.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<i64>
+----
+
 [#_enum_Concept_try_get_label_]
 ==== try_get_label
 
@@ -565,23 +582,6 @@ Retrieves the optional label of the concept. If this is an Instance, returns the
 [source,rust]
 ----
 Option<&str>
-----
-
-[#_enum_Concept_try_get_long_]
-==== try_get_long
-
-[source,rust]
-----
-pub fn try_get_long(&self) -> Option<i64>
-----
-
-Retrieves the long value of this Concept, if it exists. If this is a long-valued Attribute Instance, returns the long value of this instance. If this a long-valued Value, returns the long value. Otherwise, returns None.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Option<i64>
 ----
 
 [#_enum_Concept_try_get_string_]
