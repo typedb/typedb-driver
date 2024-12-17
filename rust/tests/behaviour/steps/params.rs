@@ -200,7 +200,10 @@ impl FromStr for Value {
 }
 
 #[derive(Clone, Debug, Parameter)]
-#[param(name = "value_type", regex = r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct")]
+#[param(
+    name = "value_type",
+    regex = r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct"
+)]
 pub struct ValueType {
     pub value_type: TypeDBValueType,
 }
