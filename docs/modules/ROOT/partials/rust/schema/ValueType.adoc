@@ -17,7 +17,7 @@ a| `DatetimeTZ`
 a| `Decimal`
 a| `Double`
 a| `Duration`
-a| `Long`
+a| `Integer`
 a| `String`
 a| `Struct(String)`
 |===

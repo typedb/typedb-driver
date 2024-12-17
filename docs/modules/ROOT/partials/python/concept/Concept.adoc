@@ -485,15 +485,15 @@ Checks if the concept is a ``Instance``.
 concept.is_instance()
 ----
 
-[#_Concept_is_long_]
-==== is_long
+[#_Concept_is_integer_]
+==== is_integer
 
 [source,python]
 ----
-is_long() -> bool
+is_integer() -> bool
 ----
 
-Returns ``True`` if the value which this ``Concept`` holds is of type ``long`` or if this ``Concept`` is an ``AttributeType`` of type ``long``. Otherwise, returns ``False``.
+Returns ``True`` if the value which this ``Concept`` holds is of type ``integer`` or if this ``Concept`` is an ``AttributeType`` of type ``integer``. Otherwise, returns ``False``.
 
 [caption=""]
 .Returns
@@ -503,7 +503,7 @@ Returns ``True`` if the value which this ``Concept`` holds is of type ``long`` o
 .Code examples
 [source,python]
 ----
-concept.is_long()
+concept.is_integer()
 ----
 
 [#_Concept_is_relation_]
@@ -821,6 +821,27 @@ Retrieves the unique id of the ``Concept``. Returns ``None`` if absent.
 concept.try_get_iid()
 ----
 
+[#_Concept_try_get_integer_]
+==== try_get_integer
+
+[source,python]
+----
+try_get_integer() -> int | None
+----
+
+Returns a ``integer`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
+
+[caption=""]
+.Returns
+`int | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_integer()
+----
+
 [#_Concept_try_get_label_]
 ==== try_get_label
 
@@ -840,27 +861,6 @@ Get the label of the concept. If this is an ``Instance``, return the label of th
 [source,python]
 ----
 concept.try_get_label()
-----
-
-[#_Concept_try_get_long_]
-==== try_get_long
-
-[source,python]
-----
-try_get_long() -> int | None
-----
-
-Returns a ``long`` value of this ``Concept``. If it’s not a ``Value`` or it has another type, raises an exception.
-
-[caption=""]
-.Returns
-`int | None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.try_get_long()
 ----
 
 [#_Concept_try_get_string_]
