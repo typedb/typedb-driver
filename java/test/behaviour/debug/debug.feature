@@ -18,9 +18,11 @@
 Feature: Debugging Space
 
   Background:
-    Given connection has been opened
-    Given connection delete all databases
-    Given the integrity is validated
+    Given typedb starts
+    Given connection is open: false
+    Given connection opens with default authentication
+    Given connection is open: true
 
-  # Paste any scenarios below for debugging.
   # Do not commit any changes to this file.
+
+  Scenario: Paste your scenario here

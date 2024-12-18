@@ -88,6 +88,7 @@ public abstract class ConnectionStepsBase {
 
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
+        driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         // TODO: Set admin password to default
         driver.close();
         backgroundDriver.close();

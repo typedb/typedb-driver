@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.typedb.driver.test.behaviour",
-        features = "test/behaviour/debug/debug.feature"
+        features = "java/test/behaviour/debug/debug.feature"
 )
 public class DebugTest extends BehaviourTest {
     // ATTENTION:
@@ -41,8 +41,8 @@ public class DebugTest extends BehaviourTest {
     // 3) Select 'Bazel test DebugTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    // 1) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    // 2) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
+    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
+    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'
@@ -53,5 +53,5 @@ public class DebugTest extends BehaviourTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static TypeDBCoreRunner runner;
 }

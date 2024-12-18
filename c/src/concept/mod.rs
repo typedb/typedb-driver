@@ -26,7 +26,7 @@ use super::{iterator::iterator_try_next, memory::free};
 use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
 
 mod concept;
-mod thing;
+mod instance;
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.

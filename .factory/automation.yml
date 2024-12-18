@@ -188,6 +188,7 @@ build:
           .factory/test-core.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
 
 #    test-java-behaviour-cloud:
 #      image: typedb-ubuntu-22.04
