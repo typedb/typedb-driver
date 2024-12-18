@@ -22,9 +22,9 @@ use std::{
     future::Future,
     pin::Pin,
     sync::{Arc, RwLock},
+    thread::sleep,
     time::Duration,
 };
-use std::thread::sleep;
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
@@ -243,13 +243,9 @@ impl TransactionTransmitter {
             callback_handler_sink,
         };
         let cloned_collector = collector.clone();
-        tokio::task::spawn_blocking(move || Self::dispatch_loop(
-            queue_source,
-            request_sink,
-            cloned_collector,
-            on_close_callback_source,
-            shutdown_signal,
-        ));
+        tokio::task::spawn_blocking(move || {
+            Self::dispatch_loop(queue_source, request_sink, cloned_collector, on_close_callback_source, shutdown_signal)
+        });
         tokio::spawn(Self::listen_loop(response_source, collector, shutdown_sink));
     }
 
@@ -265,7 +261,7 @@ impl TransactionTransmitter {
 
         let mut request_buffer = TransactionRequestBuffer::default();
         loop {
-            if let Ok(_) =  shutdown_signal.try_recv() {
+            if let Ok(_) = shutdown_signal.try_recv() {
                 if !request_buffer.is_empty() {
                     request_sink.send(request_buffer.take()).unwrap();
                 }
