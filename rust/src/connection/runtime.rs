@@ -47,7 +47,7 @@ impl BackgroundRuntime {
     pub(crate) fn new() -> Result<Self> {
         let is_open = AtomicCell::new(true);
         let (shutdown_sink, mut shutdown_source) = unbounded_async();
-        let async_runtime = runtime::Builder::new_current_thread().enable_time().enable_io().build()?;
+        let async_runtime = runtime::Builder::new_multi_thread().enable_time().enable_io().build()?;
         let async_runtime_handle = async_runtime.handle().clone();
         thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
             async_runtime.block_on(async move {
