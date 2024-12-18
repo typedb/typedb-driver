@@ -59,7 +59,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_get_decimal;
 import static com.typedb.driver.jni.typedb_driver.concept_get_double;
 import static com.typedb.driver.jni.typedb_driver.concept_get_duration;
 import static com.typedb.driver.jni.typedb_driver.concept_get_label;
-import static com.typedb.driver.jni.typedb_driver.concept_get_long;
+import static com.typedb.driver.jni.typedb_driver.concept_get_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_get_string;
 import static com.typedb.driver.jni.typedb_driver.concept_get_struct;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
@@ -73,7 +73,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_is_double;
 import static com.typedb.driver.jni.typedb_driver.concept_is_duration;
 import static com.typedb.driver.jni.typedb_driver.concept_is_entity;
 import static com.typedb.driver.jni.typedb_driver.concept_is_entity_type;
-import static com.typedb.driver.jni.typedb_driver.concept_is_long;
+import static com.typedb.driver.jni.typedb_driver.concept_is_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_is_relation;
 import static com.typedb.driver.jni.typedb_driver.concept_is_relation_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_role_type;
@@ -135,8 +135,8 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
     }
 
     @Override
-    public boolean isLong() {
-        return concept_is_long(nativeObject);
+    public boolean isInteger() {
+        return concept_is_integer(nativeObject);
     }
 
     @Override
@@ -186,9 +186,9 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
     }
 
     @Override
-    public Optional<Long> tryGetLong() {
-        if (isType() || !isLong()) return Optional.empty();
-        return Optional.of(concept_get_long(nativeObject));
+    public Optional<Long> tryGetInteger() {
+        if (isType() || !isInteger()) return Optional.empty();
+        return Optional.of(concept_get_integer(nativeObject));
     }
 
     @Override

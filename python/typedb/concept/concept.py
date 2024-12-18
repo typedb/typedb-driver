@@ -32,11 +32,11 @@ from typedb.concept.concept_factory import wrap_concept
 from typedb.concept.concept_factory import wrap_value
 from typedb.native_driver_wrapper import (concept_try_get_iid, concept_to_string, concept_equals, concept_get_label,
                                           concept_try_get_label, concept_try_get_value_type, concept_try_get_value,
-                                          concept_is_boolean, concept_is_long, concept_is_double, concept_is_decimal,
+                                          concept_is_boolean, concept_is_integer, concept_is_double, concept_is_decimal,
                                           concept_is_string, concept_is_date,
                                           concept_is_datetime, concept_is_datetime_tz, concept_is_duration,
                                           concept_is_struct,
-                                          concept_get_boolean, concept_get_long, concept_get_double,
+                                          concept_get_boolean, concept_get_integer, concept_get_double,
                                           concept_get_decimal, concept_get_string,
                                           concept_get_date_as_seconds, concept_get_datetime, concept_get_datetime_tz,
                                           concept_get_duration, concept_get_struct,
@@ -72,8 +72,8 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
     def is_boolean(self) -> bool:
         return concept_is_boolean(self.native_object)
 
-    def is_long(self) -> bool:
-        return concept_is_long(self.native_object)
+    def is_integer(self) -> bool:
+        return concept_is_integer(self.native_object)
 
     def is_double(self) -> bool:
         return concept_is_double(self.native_object)
@@ -104,10 +104,10 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
             return None
         return concept_get_boolean(self.native_object)
 
-    def try_get_long(self) -> Optional[int]:
-        if self.is_type() or not self.is_long():
+    def try_get_integer(self) -> Optional[int]:
+        if self.is_type() or not self.is_integer():
             return None
-        return concept_get_long(self.native_object)
+        return concept_get_integer(self.native_object)
 
     def try_get_double(self) -> Optional[float]:
         if self.is_type() or not self.is_double():

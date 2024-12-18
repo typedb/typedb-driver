@@ -624,7 +624,7 @@ pub async fn answer_get_row_get_variable_get_value_of_type(
     let type_name = value_type.value_type.name().to_string();
     may_error.check(match value_type.value_type {
         ValueType::Boolean => concept.try_get_boolean().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
-        ValueType::Long => concept.try_get_long().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
+        ValueType::Integer => concept.try_get_integer().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Double => concept.try_get_double().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Decimal => concept.try_get_decimal().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::String => concept.try_get_string().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
@@ -683,10 +683,10 @@ pub async fn answer_get_row_get_variable_get_specific_value(
                 _ => is_or_not.check(false),
             }
         }
-        ValueType::Long => {
-            let actual_long = concept.try_get_long().unwrap();
+        ValueType::Integer => {
+            let actual_integer = concept.try_get_integer().unwrap();
             match expected_value {
-                Value::Long(expected_long) => is_or_not.compare(actual_long, expected_long),
+                Value::Integer(expected_integer) => is_or_not.compare(actual_integer, expected_integer),
                 _ => is_or_not.check(false),
             }
         }
@@ -766,18 +766,18 @@ pub async fn answer_get_row_get_variable_is_boolean(
 }
 
 #[apply(generic_step)]
-#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) is long: {boolean}")]
-pub async fn answer_get_row_get_variable_is_long(
+#[step(expr = r"answer get row\({int}\) get {concept_kind}{is_by_var_index}\({var}\) is integer: {boolean}")]
+pub async fn answer_get_row_get_variable_is_integer(
     context: &mut Context,
     index: usize,
     var_kind: params::ConceptKind,
     is_by_var_index: params::IsByVarIndex,
     var: params::Var,
-    is_long: params::Boolean,
+    is_integer: params::Boolean,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    check_boolean!(is_long, concept.is_long());
+    check_boolean!(is_integer, concept.is_integer());
 }
 
 #[apply(generic_step)]

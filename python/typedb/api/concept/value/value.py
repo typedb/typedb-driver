@@ -102,9 +102,9 @@ class Value(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_long(self) -> int:
+    def get_integer(self) -> int:
         """
-        Returns a ``long`` value of this value concept. If the value has
+        Returns a ``integer`` value of this value concept. If the value has
         another type, raises an exception.
 
         :return:
@@ -113,7 +113,7 @@ class Value(Concept, ABC):
         --------
         ::
 
-            value.get_long()
+            value.get_integer()
         """
         pass
 

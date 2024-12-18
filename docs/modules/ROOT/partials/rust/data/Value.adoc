@@ -15,7 +15,7 @@ a| `DatetimeTZ(DateTime<TimeZone>)`
 a| `Decimal(Decimal)`
 a| `Double(f64)`
 a| `Duration(Duration)`
-a| `Long(i64)`
+a| `Integer(i64)`
 a| `String(String)`
 a| `Struct(Struct, String)`
 |===

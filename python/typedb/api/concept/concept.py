@@ -341,10 +341,10 @@ class Concept(ABC):
         pass
 
     @abstractmethod
-    def is_long(self) -> bool:
+    def is_integer(self) -> bool:
         """
-        Returns ``True`` if the value which this ``Concept`` holds is of type ``long``
-        or if this ``Concept`` is an ``AttributeType`` of type ``long``.
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``integer``
+        or if this ``Concept`` is an ``AttributeType`` of type ``integer``.
         Otherwise, returns ``False``.
 
         :return:
@@ -353,7 +353,7 @@ class Concept(ABC):
         --------
         ::
 
-            concept.is_long()
+            concept.is_integer()
         """
         pass
 
@@ -512,9 +512,9 @@ class Concept(ABC):
         pass
 
     @abstractmethod
-    def try_get_long(self) -> Optional[int]:
+    def try_get_integer(self) -> Optional[int]:
         """
-        Returns a ``long`` value of this ``Concept``.
+        Returns a ``integer`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
         :return:
@@ -523,7 +523,7 @@ class Concept(ABC):
         --------
         ::
 
-            value.try_get_long()
+            value.try_get_integer()
         """
         pass
 

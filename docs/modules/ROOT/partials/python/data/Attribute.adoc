@@ -178,15 +178,15 @@ Returns a timezone naive ``duration`` value of the value concept that this attri
 attribute.get_duration()
 ----
 
-[#_Attribute_get_long_]
-==== get_long
+[#_Attribute_get_integer_]
+==== get_integer
 
 [source,python]
 ----
-get_long() -> int
+get_integer() -> int
 ----
 
-Returns a ``long`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
+Returns a ``integer`` value of the value concept that this attribute holds. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
@@ -196,7 +196,7 @@ Returns a ``long`` value of the value concept that this attribute holds. If the 
 .Code examples
 [source,python]
 ----
-attribute.get_long()
+attribute.get_integer()
 ----
 
 [#_Attribute_get_string_]
