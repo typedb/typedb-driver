@@ -24,6 +24,7 @@ use std::{
     sync::{Arc, RwLock},
     time::Duration,
 };
+use std::thread::sleep;
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
@@ -241,17 +242,18 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
-        tokio::spawn(Self::dispatch_loop(
+        let cloned_collector = collector.clone();
+        tokio::task::spawn_blocking(move || Self::dispatch_loop(
             queue_source,
             request_sink,
-            collector.clone(),
+            cloned_collector,
             on_close_callback_source,
             shutdown_signal,
         ));
         tokio::spawn(Self::listen_loop(response_source, collector, shutdown_sink));
     }
 
-    async fn dispatch_loop(
+    fn dispatch_loop(
         mut request_source: UnboundedReceiver<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
         request_sink: UnboundedSender<transaction::Client>,
         mut collector: ResponseCollector,
@@ -259,42 +261,31 @@ impl TransactionTransmitter {
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
-        const DISPATCH_INTERVAL: Duration = Duration::from_millis(3);
+        const DISPATCH_INTERVAL: Duration = Duration::from_micros(10);
 
         let mut request_buffer = TransactionRequestBuffer::default();
-        let mut next_dispatch = Instant::now() + DISPATCH_INTERVAL;
         loop {
-            select! { biased;
-                _ = shutdown_signal.recv() => {
-                    if !request_buffer.is_empty() {
-                        request_sink.send(request_buffer.take()).unwrap();
-                    }
-                    break;
+            if let Ok(_) =  shutdown_signal.try_recv() {
+                if !request_buffer.is_empty() {
+                    request_sink.send(request_buffer.take()).unwrap();
                 }
-                _ = sleep_until(next_dispatch) => {
-                    if !request_buffer.is_empty() {
-                        request_sink.send(request_buffer.take()).unwrap();
-                    }
-                    next_dispatch = Instant::now() + DISPATCH_INTERVAL;
+                break;
+            } else if let Ok(recv) = request_source.try_recv() {
+                let (request, callback) = recv;
+                let request = request.into_proto();
+                if let Some(callback) = callback {
+                    collector.register(request.req_id.clone().into(), callback);
                 }
-                callback = on_close_callback_source.recv() => {
-                    if let Some(callback) = callback {
-                        collector.on_close.write().unwrap().push(callback)
-                    }
+                if request_buffer.len() + request.encoded_len() > MAX_GRPC_MESSAGE_LEN {
+                    request_sink.send(request_buffer.take()).unwrap();
                 }
-                recv = request_source.recv() => {
-                    if let Some((request, callback)) = recv {
-                        let request = request.into_proto();
-                        if let Some(callback) = callback {
-                            collector.register(request.req_id.clone().into(), callback);
-                        }
-                        if request_buffer.len() + request.encoded_len() > MAX_GRPC_MESSAGE_LEN {
-                            request_sink.send(request_buffer.take()).unwrap();
-                        }
-                        request_buffer.push(request);
-                    } else {
-                        break;
-                    }
+                request_buffer.push(request);
+            } else if let Ok(callback) = on_close_callback_source.try_recv() {
+                collector.on_close.write().unwrap().push(callback)
+            } else {
+                sleep(DISPATCH_INTERVAL);
+                if !request_buffer.is_empty() {
+                    request_sink.send(request_buffer.take()).unwrap();
                 }
             }
         }
