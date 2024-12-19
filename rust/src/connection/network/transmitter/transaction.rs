@@ -242,9 +242,11 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
-        let cloned_collector = collector.clone();
-        tokio::task::spawn_blocking(move || {
-            Self::dispatch_loop(queue_source, request_sink, cloned_collector, on_close_callback_source, shutdown_signal)
+        tokio::task::spawn_blocking({
+            let collector = collector.clone();
+            move || {
+                Self::dispatch_loop(queue_source, request_sink, collector, on_close_callback_source, shutdown_signal)
+            }
         });
         tokio::spawn(Self::listen_loop(response_source, collector, shutdown_sink));
     }
@@ -258,6 +260,8 @@ impl TransactionTransmitter {
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
         const DISPATCH_INTERVAL: Duration = Duration::from_micros(10);
+        const SLEEP_INTERVAL: Duration = Duration::from_micros(1);
+        let mut next_dispatch = Instant::now() + DISPATCH_INTERVAL;
 
         let mut request_buffer = TransactionRequestBuffer::default();
         loop {
@@ -266,7 +270,8 @@ impl TransactionTransmitter {
                     request_sink.send(request_buffer.take()).unwrap();
                 }
                 break;
-            } else if let Ok(recv) = request_source.try_recv() {
+            }
+            if let Ok(recv) = request_source.try_recv() {
                 let (request, callback) = recv;
                 let request = request.into_proto();
                 if let Some(callback) = callback {
@@ -276,13 +281,14 @@ impl TransactionTransmitter {
                     request_sink.send(request_buffer.take()).unwrap();
                 }
                 request_buffer.push(request);
-            } else if let Ok(callback) = on_close_callback_source.try_recv() {
+            }
+            if let Ok(callback) = on_close_callback_source.try_recv() {
                 collector.on_close.write().unwrap().push(callback)
-            } else {
-                sleep(DISPATCH_INTERVAL);
-                if !request_buffer.is_empty() {
-                    request_sink.send(request_buffer.take()).unwrap();
-                }
+            }
+            sleep(SLEEP_INTERVAL);
+            if Instant::now() > next_dispatch && !request_buffer.is_empty() {
+                request_sink.send(request_buffer.take()).unwrap();
+                next_dispatch = Instant::now() + DISPATCH_INTERVAL;
             }
         }
     }
