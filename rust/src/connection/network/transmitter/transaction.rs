@@ -260,8 +260,6 @@ impl TransactionTransmitter {
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
         const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
-        const SLEEP_INTERVAL: Duration = Duration::from_micros(10);
-        let mut next_dispatch = Instant::now() + DISPATCH_INTERVAL;
 
         let mut request_buffer = TransactionRequestBuffer::default();
         loop {
@@ -271,7 +269,12 @@ impl TransactionTransmitter {
                 }
                 break;
             }
-            if let Ok(recv) = request_source.try_recv() {
+            if let Ok(callback) = on_close_callback_source.try_recv() {
+                collector.on_close.write().unwrap().push(callback)
+            }
+            // sleep, then take all messages off the request queue and dispatch them
+            sleep(DISPATCH_INTERVAL);
+            while let Ok(recv) = request_source.try_recv() {
                 let (request, callback) = recv;
                 let request = request.into_proto();
                 if let Some(callback) = callback {
@@ -282,19 +285,12 @@ impl TransactionTransmitter {
                 }
                 request_buffer.push(request);
             }
-            if let Ok(callback) = on_close_callback_source.try_recv() {
-                collector.on_close.write().unwrap().push(callback)
-            }
-            sleep(SLEEP_INTERVAL);
-            if Instant::now() > next_dispatch && !request_buffer.is_empty() {
+            if !request_buffer.is_empty() {
                 request_sink.send(request_buffer.take()).unwrap();
-                next_dispatch = Instant::now() + DISPATCH_INTERVAL;
             }
         }
     }
-
-    async fn listen_loop(
-        mut grpc_source: Streaming<transaction::Server>,
+async fn listen_loop( mut grpc_source: Streaming<transaction::Server>,
         collector: ResponseCollector,
         shutdown_sink: UnboundedSender<()>,
     ) {
