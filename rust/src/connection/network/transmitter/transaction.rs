@@ -260,7 +260,7 @@ impl TransactionTransmitter {
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
         const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
-        const SLEEP_INTERVAL: Duration = Duration::from_micros(1);
+        const SLEEP_INTERVAL: Duration = Duration::from_micros(10);
         let mut next_dispatch = Instant::now() + DISPATCH_INTERVAL;
 
         let mut request_buffer = TransactionRequestBuffer::default();
