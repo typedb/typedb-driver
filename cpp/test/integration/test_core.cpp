@@ -80,7 +80,7 @@ TEST(TestExplanations, TestExplainableOwnership) {
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
 
-        auto res = tx.query.insert("insert $o " + std::to_string(attrValue) + " isa attr;", options);
+        auto res = tx.query.insert("insert $o isa attr " + std::to_string(attrValue) + ";", options);
         for (auto& it : res)
             ;
         tx.commit();
