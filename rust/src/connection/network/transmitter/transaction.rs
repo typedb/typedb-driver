@@ -290,7 +290,8 @@ impl TransactionTransmitter {
             }
         }
     }
-async fn listen_loop( mut grpc_source: Streaming<transaction::Server>,
+    async fn listen_loop(
+        mut grpc_source: Streaming<transaction::Server>,
         collector: ResponseCollector,
         shutdown_sink: UnboundedSender<()>,
     ) {
