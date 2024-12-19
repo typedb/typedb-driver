@@ -256,7 +256,7 @@ class TestValues(TestCase):
                             is_not(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 0001-01-01T00:00:00.000000001 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 0001-01-01T00:00:00.000000001;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("0001-01-01T00:00:00.000000001"))
@@ -277,7 +277,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromstring("0001-01-01T00:00:00.000000001"), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 1970-01-01T00:00:00 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 1970-01-01T00:00:00;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("1970-01-01T00:00:00.000000000"))
@@ -300,7 +300,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromtimestamp(timestamp_seconds=0, subsec_nanos=0), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 9999-12-31T23:59:59.999999999 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 9999-12-31T23:59:59.999999999;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("9999-12-31T23:59:59.999999999"))
@@ -322,7 +322,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromstring("9999-12-31T23:59:59.999999999"), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta isa dtz;").resolve()
+                answer = tx.query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dtz").as_attribute().get_datetime_tz()
 
                 assert_that(f"{typedb_datetime}", is_("2024-10-09T13:07:38.123456789+05:30"))
