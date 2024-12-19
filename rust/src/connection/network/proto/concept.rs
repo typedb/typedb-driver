@@ -207,7 +207,7 @@ impl FromProto<ValueTypeProto> for ValueType {
     fn from_proto(proto: ValueTypeProto) -> Self {
         match proto {
             ValueTypeProto::Boolean(_) => Self::Boolean,
-            ValueTypeProto::Long(_) => Self::Long,
+            ValueTypeProto::Integer(_) => Self::Integer,
             ValueTypeProto::Double(_) => Self::Double,
             ValueTypeProto::String(_) => Self::String,
             ValueTypeProto::Decimal(_) => Self::Decimal,
@@ -260,7 +260,7 @@ impl TryFromProto<ValueProto> for Value {
     fn try_from_proto(proto: ValueProto) -> Result<Self> {
         match proto.value {
             Some(ValueProtoInner::Boolean(boolean)) => Ok(Self::Boolean(boolean)),
-            Some(ValueProtoInner::Long(long)) => Ok(Self::Long(long)),
+            Some(ValueProtoInner::Integer(integer)) => Ok(Self::Integer(integer)),
             Some(ValueProtoInner::Double(double)) => Ok(Self::Double(double)),
             Some(ValueProtoInner::String(string)) => Ok(Self::String(string)),
             Some(ValueProtoInner::Decimal(decimal)) => {

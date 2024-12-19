@@ -115,7 +115,7 @@ public class Parameters {
     }
 
 
-    @ParameterType("boolean|long|double|decimal|string|date|datetime|datetime-tz|duration|struct")
+    @ParameterType("boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct")
     public ValueType value_type(String value) {
         return ValueType.of(value);
     }
@@ -226,7 +226,7 @@ public class Parameters {
 
     public enum ValueType {
         BOOLEAN("boolean"),
-        LONG("long"),
+        INTEGER("integer"),
         DOUBLE("double"),
         DECIMAL("decimal"),
         STRING("string"),

@@ -176,12 +176,12 @@ impl Concept {
         self.try_get_value().map(|value| value.get_boolean()).flatten()
     }
 
-    /// Retrieves the long value of this Concept, if it exists.
-    /// If this is a long-valued Attribute Instance, returns the long value of this instance.
-    /// If this a long-valued Value, returns the long value.
+    /// Retrieves the integer value of this Concept, if it exists.
+    /// If this is an integer-valued Attribute Instance, returns the integer value of this instance.
+    /// If this an integer-valued Value, returns the integer value.
     /// Otherwise, returns None.
-    pub fn try_get_long(&self) -> Option<i64> {
-        self.try_get_value().map(|value| value.get_long()).flatten()
+    pub fn try_get_integer(&self) -> Option<i64> {
+        self.try_get_value().map(|value| value.get_integer()).flatten()
     }
 
     /// Retrieves the double value of this Concept, if it exists.
@@ -335,9 +335,9 @@ impl Concept {
         matches!(self.try_get_value_type(), Some(ValueType::Boolean))
     }
 
-    /// Check if this Concept holds a long as an AttributeType, an Attribute, or a Value
-    pub fn is_long(&self) -> bool {
-        matches!(self.try_get_value_type(), Some(ValueType::Long))
+    /// Check if this Concept holds an integer as an AttributeType, an Attribute, or a Value
+    pub fn is_integer(&self) -> bool {
+        matches!(self.try_get_value_type(), Some(ValueType::Integer))
     }
 
     /// Check if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value

@@ -42,7 +42,7 @@ class TestValues(TestCase):
     def test_values(self):
         attribute_value_types = {
             "root": "none",
-            "age": "long",
+            "age": "integer",
             "name": "string",
             "is-new": "boolean",
             "success": "double",
@@ -121,7 +121,7 @@ class TestValues(TestCase):
                     value = attribute.get_value()
                     expected = attribute_values[attribute_name]
 
-                    if attribute.is_long():
+                    if attribute.is_integer():
                         assert_that(value, is_(int(expected)))
                         checked += 1
                     elif attribute.is_string():
@@ -192,7 +192,7 @@ class TestValues(TestCase):
                 tx.commit()
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 2024-10-09T13:07:38.123456789 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt  2024-10-09T13:07:38.123456789;").resolve()
                 # answer = tx.query("match $dt isa dt;").resolve() # TODO: Looks like it doesn't work...
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
@@ -256,7 +256,7 @@ class TestValues(TestCase):
                             is_not(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 0001-01-01T00:00:00.000000001 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 0001-01-01T00:00:00.000000001;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("0001-01-01T00:00:00.000000001"))
@@ -277,7 +277,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromstring("0001-01-01T00:00:00.000000001"), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 1970-01-01T00:00:00 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 1970-01-01T00:00:00;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("1970-01-01T00:00:00.000000000"))
@@ -300,7 +300,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromtimestamp(timestamp_seconds=0, subsec_nanos=0), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 9999-12-31T23:59:59.999999999 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt 9999-12-31T23:59:59.999999999;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
                 assert_that(f"{typedb_datetime}", is_("9999-12-31T23:59:59.999999999"))
@@ -322,7 +322,7 @@ class TestValues(TestCase):
                 assert_that(Datetime.utcfromstring("9999-12-31T23:59:59.999999999"), is_(typedb_datetime))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta isa dtz;").resolve()
+                answer = tx.query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta;").resolve()
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dtz").as_attribute().get_datetime_tz()
 
                 assert_that(f"{typedb_datetime}", is_("2024-10-09T13:07:38.123456789+05:30"))
@@ -382,7 +382,7 @@ class TestValues(TestCase):
                 tx.commit()
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P1Y isa d;").resolve()
+                answer = tx.query("insert $d isa d P1Y;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 12, days: 0, nanos: 0"))
@@ -394,7 +394,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y1M0DT0H0M0S"), is_not(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P1M isa d;").resolve()
+                answer = tx.query("insert $d isa d P1M;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 1, days: 0, nanos: 0"))
@@ -408,7 +408,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M28DT0H0M0S"), is_not(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P1D isa d;").resolve()
+                answer = tx.query("insert $d isa d P1D;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 1, nanos: 0"))
@@ -418,7 +418,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M1DT0H0M0S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P0DT1H isa d;").resolve()
+                answer = tx.query("insert $d isa d P0DT1H;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 0, nanos: 3600000000000"))
@@ -428,7 +428,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M0DT1H0M0S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P0DT1S isa d;").resolve()
+                answer = tx.query("insert $d isa d P0DT1S;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 0, nanos: 1000000000"))
@@ -438,7 +438,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M0DT0H0M1S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P0DT0.000000001S isa d;").resolve()
+                answer = tx.query("insert $d isa d P0DT0.000000001S;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 0, nanos: 1"))
@@ -448,7 +448,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M0DT0H0M0.000000001S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P0DT0.0000001S isa d;").resolve()
+                answer = tx.query("insert $d isa d P0DT0.0000001S;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 0, nanos: 100"))
@@ -458,7 +458,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M0DT0H0M0.0000001S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P0DT0S isa d;").resolve()
+                answer = tx.query("insert $d isa d P0DT0S;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 0, nanos: 0"))
@@ -469,7 +469,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0W"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P7W isa d;").resolve()
+                answer = tx.query("insert $d isa d P7W;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 0, days: 49, nanos: 0"))
@@ -480,7 +480,7 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P0Y0M49DT0H0M0S"), is_(typedb_duration))
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $d P999Y12M31DT24H59M59.999999999S isa d;").resolve()
+                answer = tx.query("insert $d isa d P999Y12M31DT24H59M59.999999999S;").resolve()
                 typedb_duration = list(answer.as_concept_rows())[0].get("d").as_attribute().get_duration()
 
                 assert_that(f"{typedb_duration}", is_("months: 12000, days: 31, nanos: 89999999999999"))

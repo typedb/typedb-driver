@@ -79,14 +79,14 @@ public interface Value extends Concept {
     boolean getBoolean();
 
     /**
-     * Returns a <code>long</code> value of this value concept. If the value has another type, raises an exception.
+     * Returns a <code>integer</code> value of this value concept. If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
-     * value.getLong();
+     * value.getInteger();
      * </pre>
      */
-    long getLong();
+    long getInteger();
 
     /**
      * Returns a <code>double</code> value of this value concept.

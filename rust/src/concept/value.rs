@@ -33,7 +33,7 @@ use crate::Error;
 #[derive(Clone, PartialEq, Eq)]
 pub enum ValueType {
     Boolean,
-    Long,
+    Integer,
     Double,
     Decimal,
     String,
@@ -47,7 +47,7 @@ pub enum ValueType {
 impl ValueType {
     pub(crate) const NONE_STR: &'static str = "none";
     pub(crate) const BOOLEAN_STR: &'static str = "boolean";
-    pub(crate) const LONG_STR: &'static str = "long";
+    pub(crate) const INTEGER_STR: &'static str = "integer";
     pub(crate) const DOUBLE_STR: &'static str = "double";
     pub(crate) const DECIMAL_STR: &'static str = "decimal";
     pub(crate) const STRING_STR: &'static str = "string";
@@ -59,7 +59,7 @@ impl ValueType {
     pub fn name(&self) -> &str {
         match self {
             Self::Boolean => Self::BOOLEAN_STR,
-            Self::Long => Self::LONG_STR,
+            Self::Integer => Self::INTEGER_STR,
             Self::Double => Self::DOUBLE_STR,
             Self::Decimal => Self::DECIMAL_STR,
             Self::String => Self::STRING_STR,
@@ -87,7 +87,7 @@ impl fmt::Debug for ValueType {
 #[derive(Clone, PartialEq)]
 pub enum Value {
     Boolean(bool),
-    Long(i64),
+    Integer(i64),
     Double(f64),
     Decimal(Decimal),
     String(String),
@@ -109,7 +109,7 @@ impl Value {
     pub fn get_type(&self) -> ValueType {
         match self {
             Self::Boolean(_) => ValueType::Boolean,
-            Self::Long(_) => ValueType::Long,
+            Self::Integer(_) => ValueType::Integer,
             Self::Double(_) => ValueType::Double,
             Self::String(_) => ValueType::String,
             Self::Decimal(_) => ValueType::Decimal,
@@ -131,7 +131,7 @@ impl Value {
     pub fn get_type_name(&self) -> &str {
         match self {
             Self::Boolean(_) => ValueType::Boolean.name(),
-            Self::Long(_) => ValueType::Long.name(),
+            Self::Integer(_) => ValueType::Integer.name(),
             Self::Double(_) => ValueType::Double.name(),
             Self::String(_) => ValueType::String.name(),
             Self::Decimal(_) => ValueType::Decimal.name(),
@@ -151,9 +151,9 @@ impl Value {
         }
     }
 
-    pub fn get_long(&self) -> Option<i64> {
-        if let Value::Long(long) = self {
-            Some(*long)
+    pub fn get_integer(&self) -> Option<i64> {
+        if let Value::Integer(integer) = self {
+            Some(*integer)
         } else {
             None
         }
@@ -228,7 +228,7 @@ impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Boolean(bool) => write!(f, "{}", bool),
-            Self::Long(long) => write!(f, "{}", long),
+            Self::Integer(integer) => write!(f, "{}", integer),
             Self::Double(double) => write!(f, "{}", double),
             Self::String(string) => write!(f, "\"{}\"", string),
             Self::Decimal(decimal) => write!(f, "{}", decimal),
@@ -249,7 +249,7 @@ impl fmt::Debug for Value {
         write!(f, "{}: ", self.get_type_name())?;
         match self {
             Value::Boolean(bool) => write!(f, "{}", bool),
-            Value::Long(long) => write!(f, "{}", long),
+            Value::Integer(integer) => write!(f, "{}", integer),
             Value::Double(double) => write!(f, "{}", double),
             Value::Decimal(decimal) => write!(f, "{}", decimal),
             Value::String(string) => write!(f, "\"{}\"", string),
