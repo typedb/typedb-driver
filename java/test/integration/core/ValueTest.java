@@ -81,7 +81,7 @@ public class ValueTest {
 
         Map<String, String> attributeValueTypes = Map.ofEntries(
                 Map.entry("root", "none"),
-                Map.entry("age", "long"),
+                Map.entry("age", "integer"),
                 Map.entry("name", "string"),
                 Map.entry("is-new", "boolean"),
                 Map.entry("success", "double"),

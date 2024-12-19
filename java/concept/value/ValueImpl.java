@@ -70,7 +70,7 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     @Override
     public long getInteger() {
-        return tryGetInteger().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "long"));
+        return tryGetInteger().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "integer"));
     }
 
     @Override

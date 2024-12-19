@@ -192,7 +192,7 @@ class TestValues(TestCase):
                 tx.commit()
 
             with driver.transaction(database.name, WRITE) as tx:
-                answer = tx.query("insert $dt 2024-10-09T13:07:38.123456789 isa dt;").resolve()
+                answer = tx.query("insert $dt isa dt  2024-10-09T13:07:38.123456789;").resolve()
                 # answer = tx.query("match $dt isa dt;").resolve() # TODO: Looks like it doesn't work...
                 typedb_datetime = list(answer.as_concept_rows())[0].get("dt").as_attribute().get_datetime()
 
