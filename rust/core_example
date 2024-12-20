@@ -7,7 +7,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    DriverOptions, Credentials, Error, TransactionType, TypeDBDriver,
+    Credentials, DriverOptions, Error, TransactionType, TypeDBDriver,
 };
 
 fn typedb_example() {
@@ -15,7 +15,7 @@ fn typedb_example() {
         // Open a driver connection
         let driver = TypeDBDriver::new_core(
             TypeDBDriver::DEFAULT_ADDRESS,
-            Credential::new("admin", "password"),
+            Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),
         )
         .await

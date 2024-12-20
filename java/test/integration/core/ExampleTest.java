@@ -36,6 +36,7 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+
 // EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
