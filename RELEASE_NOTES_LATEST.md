@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.0-alpha-9
+cargo add typedb-driver@3.0.0
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.0-alpha-9</version>
+        <version>3.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,17 +42,44 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.0.0-alpha-9
+pip install typedb-driver==3.0.0
 ```
 
 ## New Features
 
+- **Introduce 3.0 Rust, Java, and Python drivers**
+
+  We introduce the updated Rust, Java, and Python drivers compatible with TypeDB 3.0.
+  These updates bring significant opportunities and UX improvements, including:
+  - **Simplified querying workflow**: The `Concept API` has been removed, offering a single `tx.query()` entry point.
+  - **Streamlined transactions**: Sessions and transactions are now consolidated into standalone transactions.
+  - **Expanded attribute value types**: Added support for `decimal`, `date`, `datetime-tz`, and `duration`.
+  - **Unified authentication**: The updated authentication mechanism is shared across all drivers.
+  - **New query result formats**: Introducing `Concept Row`s for table-like outputs and `Concept Document`s for structured outputs used in `fetch` queries.
+
+  Some features are currently disabled due to limitations on the TypeDB Server side:
+  - Options.
+  - Replicas information.
+
+  For examples and usage of the new drivers, see the `README` files in their respective language packages. Explore all the exciting features of TypeDB 3.0 [here](https://github.com/typedb/typedb/releases).
+
+
+- **Add Python 3.13 support**
+
+  We introduce support for Python 3.13. With this update, support for Python 3.8 has been discontinued, as it reached end-of-life ([details](https://devguide.python.org/versions/)). This change ensures consistent implementation of the `datetime-tz` value type introduced in TypeDB 3.0 across all supported Python versions.
+
 
 ## Bugs Fixed
+- **Optimise driver dispatch loop**
+  
+  We optimise the driver dispatch loop: previously, we could dispatch at most 1000 serial messages per second, though in practice tokio would sometimes sleep longer than expected and the query and transaction latencies increased. This stems from Tokio's approximately millisecond resolution. By moving the collect-dispatch loop to a dedicated thread, we can now dispatch messages after microseconds of batching, improving overall driver performance significantly.
 
 
 ## Code Refactors
-
+- **Rename long to integer**
+  Renamed the TypeQL `long` value tpe to `integer`
+  
+  
 
 ## Other Improvements
 - **Speed up transaction opening and fix parallel**
@@ -111,4 +138,29 @@ pip install typedb-driver==3.0.0-alpha-9
 
 - **Unify transaction cleanup in driver BDDs when opening new transactions**
   
+- **Add handler for initial TransactionOpen response instead of erroring**
+
+- **Fix CircleCI jobs for Maven installation and python builds**
+  We fix two CircleCI issues:
+  * `brew install maven` [has been failing](https://app.circleci.com/pipelines/github/typedb/typedb-driver/911/workflows/9571978a-e2c7-40cc-afd6-372356f267f7/jobs/7072) for Rosetta configuration;
+  * python installation for Linux machines required a different process after we updated from `python3.8` to `python3.9` as a minimal version.
+
+- **Bumped API version in antora config**
+
+- **Rename maven groupId "com.vaticle" -> "com.typedb". Return a part of Java driver's CI tests**
+  We completely clean `com.vaticle` mentions in the `typedb-driver` repo:
+  * generated `pom` files for the Java driver now contain `com.typedb` instead of `com.vaticle.typedb`;
+  * docs for the Java driver are regenerated so it doesn't reference outdated `com.vaticle.typedb` package (other issues in these docs will be addressed in the following prs).
+  
+- **Fix native object ownership checks in python driver**
+  Fixes native object ownership checks in python driver
+
+  
+- **Rename Java package com.vaticle.typedb to com.typedb and remove typeql dependencies.**
+  We rename the Java driver's package from `com.vaticle.typedb` to `com.typedb`.
+  We remove dependencies on `typeql` as it's no more needed. 
+
+- **Add typedb 3 roadmap link to the release notes**
+
+- **Apply fix that allows connecting to servers listening on 0.0.0.0**
     
