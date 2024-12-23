@@ -109,7 +109,7 @@ public class TransactionSteps {
 
     @Then("transaction rollbacks{may_error}")
     public void transaction_rollbacks(Parameters.MayError mayError) {
-        mayError.check(() -> txPop().rollback());
+        mayError.check(() -> tx().rollback());
     }
 
     @When("connection open transactions in parallel for database: {non_semicolon}, of type:")
