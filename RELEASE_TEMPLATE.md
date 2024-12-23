@@ -15,7 +15,7 @@ cargo add typedb-driver@{version}
 
 ### Java driver
 
-Available through https://repo.typedb.com
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/{version}/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
