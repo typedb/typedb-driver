@@ -77,8 +77,8 @@ class TypeDB:
         :return:
         """
         if isinstance(addresses, str):
-            return _Driver.cloud([addresses], credentials, credentials, driver_options)
+            return _Driver.cloud([addresses], credentials, driver_options)
         elif isinstance(addresses, ABCMapping):
-            return _Driver.cloud(dict(addresses), credentials, credentials, driver_options)
+            return _Driver.cloud(dict(addresses), credentials, driver_options)
         else:
-            return _Driver.cloud(list(addresses), credentials, credentials, driver_options)
+            return _Driver.cloud(list(addresses), credentials, driver_options)
