@@ -257,7 +257,6 @@ impl ServerConnection {
     pub(crate) async fn contains_user(&self, name: String) -> crate::Result<bool> {
         match self.request(Request::UsersContains { name }).await? {
             Response::UsersContain { contains } => {
-                println!("server_connection::contains_user");
                 Ok(contains)
             }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
