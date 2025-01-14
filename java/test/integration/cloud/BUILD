@@ -28,7 +28,7 @@ typedb_java_test(
         "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
 #        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
     },
-    test_class = "com.typedb.driver.test.integration.core.ExampleTest",
+    test_class = "com.typedb.driver.test.integration.cloud.ExampleTest",
     deps = [
         # Internal dependencies
         "//java:driver-java",
