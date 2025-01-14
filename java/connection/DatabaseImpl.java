@@ -41,7 +41,7 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public String schema() {
+    public String schema() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             return database_schema(nativeObject);
@@ -51,7 +51,7 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public String typeSchema() {
+    public String typeSchema() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             return database_type_schema(nativeObject);
@@ -61,7 +61,7 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public void delete() {
+    public void delete() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side

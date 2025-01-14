@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.typedb.driver.common.collection.Collections.set;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
@@ -44,7 +45,7 @@ public class TypeDB {
      * @param credentials The credentials to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver coreDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+    public static Driver coreDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(address, credentials, driverOptions);
     }
 
@@ -61,7 +62,7 @@ public class TypeDB {
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+    public static Driver cloudDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return cloudDriver(set(address), credentials, driverOptions);
     }
 
@@ -78,7 +79,7 @@ public class TypeDB {
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) {
+    public static Driver cloudDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addresses, credentials, driverOptions);
     }
 
@@ -96,7 +97,7 @@ public class TypeDB {
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
+    public static Driver cloudDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addressTranslation, credentials, driverOptions);
     }
 }

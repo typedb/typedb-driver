@@ -22,6 +22,8 @@ package com.typedb.driver.api;
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.user.UserManager;
 
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
 import javax.annotation.CheckReturnValue;
 
 public interface Driver extends AutoCloseable {
@@ -56,7 +58,7 @@ public interface Driver extends AutoCloseable {
      * @param type     The type of transaction to be created (READ, WRITE, or SCHEMA)
      */
     @CheckReturnValue
-    Transaction transaction(String database, Transaction.Type type);
+    Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException ;
 
 //    @CheckReturnValue
 //    Transaction transaction(String database, Transaction.Type type, Options options);

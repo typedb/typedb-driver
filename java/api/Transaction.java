@@ -65,7 +65,7 @@ public interface Transaction extends AutoCloseable {
      * @param query The query to execute.
      */
     @CheckReturnValue
-    Promise<? extends QueryAnswer> query(String query);
+    Promise<? extends QueryAnswer> query(String query) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Registers a callback function which will be executed when this transaction is closed.
@@ -87,7 +87,7 @@ public interface Transaction extends AutoCloseable {
      * transaction.commit()
      * </pre>
      */
-    void commit();
+    void commit()  throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Rolls back the uncommitted changes made via this transaction.
@@ -97,7 +97,7 @@ public interface Transaction extends AutoCloseable {
      * transaction.rollback()
      * </pre>
      */
-    void rollback();
+    void rollback() throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Closes the transaction.
@@ -107,7 +107,7 @@ public interface Transaction extends AutoCloseable {
      * transaction.close()
      * </pre>
      */
-    void close();
+    void close() throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Used to specify the type of transaction.

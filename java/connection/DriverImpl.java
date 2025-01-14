@@ -110,7 +110,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public Transaction transaction(String database, Transaction.Type type) {
+    public Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException {
         return new TransactionImpl(this, database, type/*, options*/);
     }
 

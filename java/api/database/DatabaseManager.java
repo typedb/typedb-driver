@@ -19,6 +19,8 @@
 
 package com.typedb.driver.api.database;
 
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
 import javax.annotation.CheckReturnValue;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public interface DatabaseManager {
      * @param name The name of the database to retrieve
      */
     @CheckReturnValue
-    Database get(String name);
+    Database get(String name) throws TypeDBDriverException;
 
     /**
      * Checks if a database with the given name exists
@@ -51,7 +53,7 @@ public interface DatabaseManager {
      * @param name The database name to be checked
      */
     @CheckReturnValue
-    boolean contains(String name);
+    boolean contains(String name) throws TypeDBDriverException;
 
     /**
      * Create a database with the given name
@@ -64,7 +66,7 @@ public interface DatabaseManager {
      * @param name The name of the database to be created
      */
     // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cloud
-    void create(String name);
+    void create(String name) throws TypeDBDriverException;
 
     /**
      * Retrieves all databases present on the TypeDB server
@@ -75,5 +77,5 @@ public interface DatabaseManager {
      * </pre>
      */
     @CheckReturnValue
-    List<Database> all();
+    List<Database> all() throws TypeDBDriverException;
 }

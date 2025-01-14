@@ -47,7 +47,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
 
     private final List<TransactionOnClose> callbacks;
 
-    TransactionImpl(Driver driver, String database, Type type/*, Options options*/) {
+    TransactionImpl(Driver driver, String database, Type type/*, Options options*/) throws TypeDBDriverException {
         super(newNative(driver, database, type/*, options*/));
         this.type = type;
 //        this.options = options;
@@ -80,7 +80,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public Promise<? extends QueryAnswer> query(String query) {
+    public Promise<? extends QueryAnswer> query(String query) throws TypeDBDriverException {
         if (query == null || query.isBlank()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
             return Promise.map(transaction_query(nativeObject, query/*, options.nativeObject*/), QueryAnswerImpl::of);
@@ -90,7 +90,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public void onClose(Consumer<Throwable> function) {
+    public void onClose(Consumer<Throwable> function) throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             TransactionOnClose callback = new TransactionOnClose(function);
@@ -102,7 +102,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public void commit() {
+    public void commit() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
@@ -113,7 +113,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public void rollback() {
+    public void rollback() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             transaction_rollback(nativeObject).get();
@@ -123,7 +123,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public void close() {
+    public void close() throws TypeDBDriverException {
         if (nativeObject.isOwned()) {
             try {
                 transaction_force_close(nativeObject);

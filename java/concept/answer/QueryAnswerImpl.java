@@ -36,7 +36,7 @@ public abstract class QueryAnswerImpl implements QueryAnswer {
         queryType = QueryType.of(query_answer_get_query_type(answer));
     }
 
-    public static QueryAnswerImpl of(com.typedb.driver.jni.QueryAnswer concept) {
+    public static QueryAnswerImpl of(com.typedb.driver.jni.QueryAnswer concept) throws TypeDBDriverException  {
         if (query_answer_is_ok(concept)) return new OkQueryAnswerImpl(concept);
         else if (query_answer_is_concept_row_stream(concept)) return new ConceptRowIteratorImpl(concept);
         else if (query_answer_is_concept_document_stream(concept)) return new ConceptDocumentIteratorImpl(concept);

@@ -21,6 +21,7 @@ package com.typedb.driver.api.user;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Set;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 
 /**
  * Provides access to all user management methods.
@@ -37,7 +38,7 @@ public interface UserManager {
      * @param username The user name to be checked
      */
     @CheckReturnValue
-    boolean contains(String username);
+    boolean contains(String username) throws TypeDBDriverException;
 
     /**
      * Retrieves a user with the given name.
@@ -50,7 +51,7 @@ public interface UserManager {
      * @param username The name of the user to retrieve
      */
     @CheckReturnValue
-    User get(String username);
+    User get(String username) throws TypeDBDriverException;
 
     // TODO: I don't like this, leaving this way for now. Use driver.users().get(username)
 
@@ -63,7 +64,7 @@ public interface UserManager {
      * </pre>
      */
     @CheckReturnValue
-    User getCurrentUser();
+    User getCurrentUser() throws TypeDBDriverException;
 
     /**
      * Retrieves all users which exist on the TypeDB server.
@@ -73,7 +74,7 @@ public interface UserManager {
      * driver.users().all();
      * </pre>
      */
-    Set<User> all();
+    Set<User> all() throws TypeDBDriverException;
 
     /**
      * Creates a user with the given name &amp; password.
@@ -86,5 +87,5 @@ public interface UserManager {
      * @param username The name of the user to be created
      * @param password The password of the user to be created
      */
-    void create(String username, String password);
+    void create(String username, String password) throws TypeDBDriverException;
 }

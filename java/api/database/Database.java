@@ -19,6 +19,8 @@
 
 package com.typedb.driver.api.database;
 
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
 import javax.annotation.CheckReturnValue;
 
 public interface Database {
@@ -38,7 +40,7 @@ public interface Database {
      * </pre>
      */
     @CheckReturnValue
-    String schema();
+    String schema() throws TypeDBDriverException;
 
     /**
      * The types in the schema as a valid TypeQL define query string.
@@ -49,7 +51,7 @@ public interface Database {
      * </pre>
      */
     @CheckReturnValue
-    String typeSchema();
+    String typeSchema() throws TypeDBDriverException;
 
     /**
      * Deletes this database.
@@ -59,7 +61,7 @@ public interface Database {
      * database.delete()
      * </pre>
      */
-    void delete();
+    void delete() throws TypeDBDriverException;
 
 //    /**
 //     * Set of <code>Replica</code> instances for this database.

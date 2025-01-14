@@ -40,7 +40,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public Database get(String name) throws Error {
+    public Database get(String name) throws TypeDBDriverException {
         try {
             return new DatabaseImpl(databases_get(nativeDriver, name));
         } catch (com.typedb.driver.jni.Error e) {
@@ -49,7 +49,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public boolean contains(String name) throws Error {
+    public boolean contains(String name) throws TypeDBDriverException {
         try {
             return databases_contains(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {
@@ -58,7 +58,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public void create(String name) throws Error {
+    public void create(String name) throws TypeDBDriverException {
         try {
             databases_create(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {
@@ -67,7 +67,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public List<Database> all() {
+    public List<Database> all()  throws TypeDBDriverException {
         try {
             return new NativeIterator<>(databases_all(nativeDriver)).stream().map(DatabaseImpl::new).collect(toList());
         } catch (com.typedb.driver.jni.Error e) {
