@@ -60,11 +60,10 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
+        "//java/test/behaviour/config:parameters",
         "//java:driver-java",
         "//java/api",
-        "//java/test/behaviour/util",
 #        "@maven//:com_typedb_typedb_runner",
-#        "@maven//:com_typedb_typedb_cloud_runner",
         "@maven//:io_cucumber_cucumber_java",
     ],
 )

@@ -130,7 +130,8 @@ impl fmt::Debug for Context {
 
 impl Context {
     const DEFAULT_CORE_ADDRESS: &'static str = "127.0.0.1:1729";
-    const DEFAULT_CLOUD_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
+    // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
+    const DEFAULT_CLOUD_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
     const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
@@ -391,6 +392,7 @@ impl Context {
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
         let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
+                                                        // TODO: Add encryption to cloud tests
         TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), DriverOptions::new(false, None)?)
             .await
     }
