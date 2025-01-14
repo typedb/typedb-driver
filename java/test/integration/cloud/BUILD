@@ -16,6 +16,7 @@
 # under the License.
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 typedb_java_test(
     name = "test-example",
