@@ -32,10 +32,9 @@ use typedb_driver::{
 };
 
 // EXAMPLE END MARKER
-
 async fn cleanup() {
     let driver = TypeDBDriver::new_cloud(
-        TypeDBDriver::DEFAULT_ADDRESS,
+        &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
         Credentials::new("admin", "password"),
         DriverOptions::new(false, None).unwrap(),
     )
@@ -55,8 +54,9 @@ fn example() {
         cleanup().await;
         // EXAMPLE START MARKER
         // Open a driver connection
+
         let driver = TypeDBDriver::new_cloud(
-            TypeDBDriver::DEFAULT_ADDRESS,
+            &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
             Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),
         )
