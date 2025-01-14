@@ -43,7 +43,7 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         try:
             if is_cloud:
                 if isinstance(addresses, list):
-                    native_driver = driver_open_cloud(addresses, credentials.native_object)
+                    native_driver = driver_open_cloud(addresses, credentials.native_object, Driver.LANGUAGE)
                 else:
                     public_addresses = list(addresses.keys())
                     private_addresses = [addresses[public] for public in public_addresses]
