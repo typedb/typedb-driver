@@ -14,6 +14,7 @@
 [source,java]
 ----
 void close()
+    throws TypeDBDriverException
 ----
 
 Closes the transaction. 
@@ -36,6 +37,7 @@ transaction.close()
 [source,java]
 ----
 void commit()
+     throws TypeDBDriverException
 ----
 
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call. 
@@ -136,6 +138,7 @@ transaction.onClose(function);
 ----
 @CheckReturnValue
 Promise<? extends QueryAnswer> query​(java.lang.String query)
+                              throws TypeDBDriverException
 ----
 
 Execute a TypeQL query in this transaction. 
@@ -168,6 +171,7 @@ a| `query` a| The query to execute. a| `java.lang.String`
 [source,java]
 ----
 void rollback()
+       throws TypeDBDriverException
 ----
 
 Rolls back the uncommitted changes made via this transaction. 

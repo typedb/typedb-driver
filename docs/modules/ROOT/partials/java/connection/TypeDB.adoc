@@ -37,6 +37,7 @@ public TypeDB()
 public static Driver cloudDriver​(java.lang.String address,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
+                          throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential. 
@@ -72,6 +73,7 @@ TypeDB.cloudDriver(address, credential);
 public static Driver cloudDriver​(java.util.Set<java.lang.String> addresses,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
+                          throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential. 
@@ -107,6 +109,7 @@ TypeDB.cloudDriver(addresses, credential);
 public static Driver cloudDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
+                          throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with the provided credential. 
@@ -142,6 +145,7 @@ TypeDB.cloudDriver(addressTranslation, credential);
 public static Driver coreDriver​(java.lang.String address,
                                 Credentials credentials,
                                 DriverOptions driverOptions)
+                         throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to a TypeDB Core server available at the provided address. 

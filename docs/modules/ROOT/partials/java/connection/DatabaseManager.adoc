@@ -13,6 +13,7 @@ Provides access to all database management methods.
 ----
 @CheckReturnValue
 java.util.List<Database> all()
+                      throws TypeDBDriverException
 ----
 
 Retrieves all databases present on the TypeDB server 
@@ -36,6 +37,7 @@ driver.databases().all()
 ----
 @CheckReturnValue
 boolean contains​(java.lang.String name)
+          throws TypeDBDriverException
 ----
 
 Checks if a database with the given name exists 
@@ -67,6 +69,7 @@ driver.databases().contains(name)
 [source,java]
 ----
 void create​(java.lang.String name)
+     throws TypeDBDriverException
 ----
 
 Create a database with the given name 
@@ -99,6 +102,7 @@ driver.databases().create(name)
 ----
 @CheckReturnValue
 Database get​(java.lang.String name)
+      throws TypeDBDriverException
 ----
 
 Retrieve the database with the given name. 

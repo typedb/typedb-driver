@@ -10,6 +10,7 @@
 [source,java]
 ----
 void delete()
+     throws TypeDBDriverException
 ----
 
 Deletes this database. 
@@ -48,6 +49,7 @@ The database name as a string.
 ----
 @CheckReturnValue
 java.lang.String schema()
+                 throws TypeDBDriverException
 ----
 
 A full schema text as a valid TypeQL define query string. 
@@ -71,6 +73,7 @@ database.schema()
 ----
 @CheckReturnValue
 java.lang.String typeSchema()
+                     throws TypeDBDriverException
 ----
 
 The types in the schema as a valid TypeQL define query string. 

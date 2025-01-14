@@ -12,6 +12,7 @@ Provides access to all user management methods.
 [source,java]
 ----
 java.util.Set<User> all()
+                 throws TypeDBDriverException
 ----
 
 Retrieves all users which exist on the TypeDB server. 
@@ -35,6 +36,7 @@ driver.users().all();
 ----
 @CheckReturnValue
 boolean contains​(java.lang.String username)
+          throws TypeDBDriverException
 ----
 
 Checks if a user with the given name exists. 
@@ -67,6 +69,7 @@ driver.users().contains(username);
 ----
 void create​(java.lang.String username,
             java.lang.String password)
+     throws TypeDBDriverException
 ----
 
 Creates a user with the given name &amp; password. 
@@ -100,6 +103,7 @@ driver.users().create(username, password);
 ----
 @CheckReturnValue
 User get​(java.lang.String username)
+  throws TypeDBDriverException
 ----
 
 Retrieves a user with the given name. 
@@ -132,6 +136,7 @@ driver.users().get(username);
 ----
 @CheckReturnValue
 User getCurrentUser()
+             throws TypeDBDriverException
 ----
 
 Retrieves the name of the user who opened the current connection. 

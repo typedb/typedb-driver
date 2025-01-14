@@ -87,6 +87,7 @@ driver.isOpen();
 @CheckReturnValue
 Transaction transaction​(java.lang.String database,
                         Transaction.Type type)
+                 throws TypeDBDriverException
 ----
 
 Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
