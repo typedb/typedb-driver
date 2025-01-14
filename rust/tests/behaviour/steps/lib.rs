@@ -391,7 +391,7 @@ impl Context {
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
         let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
-        // TODO: Add encryption to cloud tests
+                                                        // TODO: Add encryption to cloud tests
         TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), DriverOptions::new(false, None)?)
             .await
     }
