@@ -43,12 +43,14 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         try:
             if is_cloud:
                 if isinstance(addresses, list):
-                    native_driver = driver_open_cloud(addresses, credentials.native_object, Driver.LANGUAGE)
+                    native_driver = driver_open_cloud(addresses, credentials.native_object,
+                                                      driver_options.native_object, Driver.LANGUAGE)
                 else:
                     public_addresses = list(addresses.keys())
                     private_addresses = [addresses[public] for public in public_addresses]
                     native_driver = driver_open_cloud_translated(
-                        public_addresses, private_addresses, credentials.native_object)
+                        public_addresses, private_addresses, credentials.native_object, driver_options.native_object,
+                        Driver.LANGUAGE)
             else:
                 native_driver = driver_open_core(addresses[0], credentials.native_object,
                                                  driver_options.native_object,

@@ -97,12 +97,13 @@ build:
           export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
-
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests/integration/cloud/... --test_output=streamed &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
-#        tool/test/stop-cloud-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+        
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          bazel test //rust/tests/integration/cloud/... --test_output=streamed --test_arg=--nocapture &&
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-core:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -120,22 +121,22 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-#    test-rust-behaviour-cloud:
-#      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-#
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //rust/tests/behaviour/... --//rust/tests/behaviour/config:mode=cloud \
-#            --test_output=streamed --test_env=ROOT_CA=$ROOT_CA &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
+    test-rust-behaviour-cloud:
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          bazel test //rust/tests/behaviour/...  --//rust/tests/behaviour:mode=cloud --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
 
 #    test-c-integration:
 #      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -168,11 +169,12 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          .factory/test-cloud.sh //java/test/integration/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          .factory/test-cloud.sh //java/test/integration/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
 
     test-java-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -190,21 +192,22 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-#    test-java-behaviour-cloud:
-#      image: typedb-ubuntu-22.04
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-#
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          .factory/test-cloud.sh //java/test/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
+    test-java-behaviour-cloud:
+      image: typedb-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          .factory/test-cloud.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
 
     test-python-integration:
       image: typedb-ubuntu-22.04
@@ -224,11 +227,12 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          bazel test //python/tests/integration/cloud/... --test_output=streamed --jobs=1 &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
-#        tool/test/stop-cloud-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          bazel test //python/tests/integration/cloud/... --test_output=streamed --jobs=1 &&
+          export CLOUD_FAILED= || export CLOUD_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
 
     test-python-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -248,24 +252,25 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-#    test-python-behaviour-cloud:
-#      image: typedb-ubuntu-22.04
-#      dependencies:
-#        - build
-#      type: foreground
-#      command: |
-#        export PATH="$HOME/.local/bin:$PATH"
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-#
-#        source tool/test/start-cloud-servers.sh 3 && # use source to receive export vars
-#          .factory/test-cloud.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-cloud-servers.sh
-#        exit $TEST_SUCCESS
-#
+    test-python-behaviour-cloud:
+      image: typedb-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+
+        # TODO: Use cloud server artifact with 3 nodes when available
+        tool/test/start-core-server.sh &&
+          .factory/test-cloud.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
 #    test-nodejs-integration:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
