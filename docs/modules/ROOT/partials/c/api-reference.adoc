@@ -2,85 +2,85 @@
 [#_connection_header]
 == Connection
 
-include::{page-component-version}@api-ref::partial$c/connection/connection.adoc[]
+include::{page-version}@api-ref::partial$c/connection/connection.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/connection/credential.adoc[]
+include::{page-version}@api-ref::partial$c/connection/credential.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/connection/database.adoc[]
+include::{page-version}@api-ref::partial$c/connection/database.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/connection/replica.adoc[]
+include::{page-version}@api-ref::partial$c/connection/replica.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/connection/user.adoc[]
+include::{page-version}@api-ref::partial$c/connection/user.adoc[]
 
 [#_session_header]
 == Session
 
-include::{page-component-version}@api-ref::partial$c/session/session.adoc[]
+include::{page-version}@api-ref::partial$c/session/session.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/session/options.adoc[]
+include::{page-version}@api-ref::partial$c/session/options.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-component-version}@api-ref::partial$c/transaction/transaction.adoc[]
+include::{page-version}@api-ref::partial$c/transaction/transaction.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/transaction/query.adoc[]
+include::{page-version}@api-ref::partial$c/transaction/query.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-component-version}@api-ref::partial$c/answer/conceptmap.adoc[]
+include::{page-version}@api-ref::partial$c/answer/conceptmap.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/answer/valuegroup.adoc[]
+include::{page-version}@api-ref::partial$c/answer/valuegroup.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/answer/primitives.adoc[]
+include::{page-version}@api-ref::partial$c/answer/primitives.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/answer/explanation.adoc[]
+include::{page-version}@api-ref::partial$c/answer/explanation.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-component-version}@api-ref::partial$c/concept/concept.adoc[]
+include::{page-version}@api-ref::partial$c/concept/concept.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/thing.adoc[]
+include::{page-version}@api-ref::partial$c/concept/thing.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/entity.adoc[]
+include::{page-version}@api-ref::partial$c/concept/entity.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/attribute.adoc[]
+include::{page-version}@api-ref::partial$c/concept/attribute.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/relation.adoc[]
+include::{page-version}@api-ref::partial$c/concept/relation.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/roleplayer.adoc[]
+include::{page-version}@api-ref::partial$c/concept/roleplayer.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/concept/value.adoc[]
+include::{page-version}@api-ref::partial$c/concept/value.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-component-version}@api-ref::partial$c/schema/entitytype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/entitytype.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/attributetype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/attributetype.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/relationtype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/relationtype.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/roletype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/roletype.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/annotation.adoc[]
+include::{page-version}@api-ref::partial$c/schema/annotation.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/transitivity.adoc[]
+include::{page-version}@api-ref::partial$c/schema/transitivity.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/schema/valuetype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/valuetype.adoc[]
 
 [#_logic_header]
 == Logic
 
-include::{page-component-version}@api-ref::partial$c/logic/logic.adoc[]
+include::{page-version}@api-ref::partial$c/logic/logic.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/logic/rule.adoc[]
+include::{page-version}@api-ref::partial$c/logic/rule.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-component-version}@api-ref::partial$c/errors/error.adoc[]
+include::{page-version}@api-ref::partial$c/errors/error.adoc[]
 
-include::{page-component-version}@api-ref::partial$c/errors/schemaexception.adoc[]
+include::{page-version}@api-ref::partial$c/errors/schemaexception.adoc[]
