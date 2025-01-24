@@ -717,7 +717,7 @@ public class QuerySteps {
             case DOUBLE:
                 return Double.parseDouble(value);
             case DECIMAL:
-                return new BigDecimal(value).setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY);
+                return new BigDecimal(value.replace("dec", "")).setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY);
             case STRING:
                 return value.substring(1, value.length() - 1).replace("\\\"", "\"");
             case DATE:

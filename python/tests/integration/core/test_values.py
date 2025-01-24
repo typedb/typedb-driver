@@ -59,7 +59,7 @@ class TestValues(TestCase):
             "name": "\"John\"",
             "is-new": "true",
             "success": "66.6",
-            "balance": "1234567890.0001234567890",
+            "balance": "1234567890.0001234567890dec",
             "birth-date": "2024-09-20",
             "birth-time": "1999-02-26T12:15:05",
             "current-time": "2024-09-20T16:40:05 Europe/Belfast",
@@ -134,7 +134,7 @@ class TestValues(TestCase):
                         assert_that(value, is_(float(expected)))
                         checked += 1
                     elif attribute.is_decimal():
-                        assert_that(value, is_(Decimal(expected)))
+                        assert_that(value, is_(Decimal(expected.rstrip("dec"))))
                         checked += 1
                     elif attribute.is_date():
                         date_format = "%Y-%m-%d"
