@@ -598,7 +598,7 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
     elif value_type == ValueType.DOUBLE:
         return float(value)
     elif value_type == ValueType.DECIMAL:
-        return Decimal(value)
+        return Decimal(value.rstrip("dec"))
     elif value_type == ValueType.STRING:
         return value[1:-1].replace('\\"', '"')
     elif value_type == ValueType.DATE:

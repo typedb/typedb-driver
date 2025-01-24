@@ -356,7 +356,7 @@ impl fmt::Debug for Decimal {
             }
 
             let fractional_width = Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - tail_0s;
-            write!(f, "{}.{:0width$}", self.integer_part(), fractional, width = fractional_width as usize)?;
+            write!(f, "{}.{:0width$}dec", self.integer_part(), fractional, width = fractional_width as usize)?;
         }
         Ok(())
     }

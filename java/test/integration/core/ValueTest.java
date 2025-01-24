@@ -98,7 +98,7 @@ public class ValueTest {
                 Map.entry("name", "\"John\""),
                 Map.entry("is-new", "true"),
                 Map.entry("success", "66.6"),
-                Map.entry("balance", "1234567890.0001234567890"),
+                Map.entry("balance", "1234567890.0001234567890dec"),
                 Map.entry("birth-date", "2024-09-20"),
                 Map.entry("birth-time", "1999-02-26T12:15:05"),
                 Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
@@ -175,7 +175,7 @@ public class ValueTest {
                         checked.incrementAndGet();
                     } else if (value.isDecimal()) {
                         BigDecimal valueAsDecimal = value.getDecimal();
-                        assertEquals(new BigDecimal(attributeValues.get(attributeName)).setScale(valueAsDecimal.scale(), RoundingMode.UNNECESSARY), valueAsDecimal);
+                        assertEquals(new BigDecimal(attributeValues.get(attributeName).replace("dec", "")).setScale(valueAsDecimal.scale(), RoundingMode.UNNECESSARY), valueAsDecimal);
                         checked.incrementAndGet();
                     } else if (value.isDate()) {
                         assertEquals(LocalDate.parse(attributeValues.get(attributeName)), value.getDate());
