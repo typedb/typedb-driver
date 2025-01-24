@@ -105,11 +105,8 @@ impl Value {
                 } else {
                     self.raw_value.as_str()
                 };
-                let (integer, fractional) = if let Some(split) = stripped.split_once(".") {
-                    split
-                } else {
-                    (stripped, "0")
-                };
+                let (integer, fractional) =
+                    if let Some(split) = stripped.split_once(".") { split } else { (stripped, "0") };
 
                 let integer_parsed: i64 = integer.trim().parse().unwrap();
                 let integer_parsed_abs = integer_parsed.abs();
