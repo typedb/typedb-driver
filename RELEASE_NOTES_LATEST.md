@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.2
+cargo add typedb-driver@3.0.4
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.0.2/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.0.4/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.2</version>
+        <version>3.0.4</version>
     </dependency>
 </dependencies>
 ```
@@ -42,40 +42,49 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.0.2
+pip install typedb-driver==3.0.4
 ```
 
-## New Features
+### NodeJS driver
 
+NPM package: https://www.npmjs.com/package/typedb-driver
+Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
-## Bugs Fixed
-- **Introduce 3.0 cloud driver tests**
-  We fix cloud drivers creation interfaces and introduce integration and behavior tests to cover these public methods.
+```
+npm install typedb-driver@3.0.4
+```
 
-- **BUGFIX python-3.0.0: remove extra argument in call to internal _Driver.cloud**
+### C# driver
 
+NuGet package: https://www.nuget.org/packages/TypeDB.Driver
+Documentation: https://typedb.com/docs/drivers/csharp/overview
+
+```xml
+<ItemGroup>
+    <PackageReference Include="TypeDB.Driver" Version="3.0.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.0.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.0.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.0.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.0.4" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.0.4" />
+</ItemGroup>
+```
+
+### C++ driver
+
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:3.0.4
+Documentation: https://typedb.com/docs/drivers/cpp/overview
+
+### C driver
+
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.0.4
 
 ## Code Refactors
-- **Add version filter for maven packages for Java release notes**
-  Add version filter for maven packages for Java release notes.
-
-- **Update Java APIs with marker throwing runtime TypeDBDriverExceptions**
+- **Add 'dec' suffix to notation of 'Decimal' type**
+  Add 'dec' suffix to notation of 'Decimal' type
   
 
 ## Other Improvements
-- **Regenerate docs**
-
-- **Fix rust format**
-
-- **Update logback to a non-vulnerable version**
-
-- **Remove debug println**
-
-- **Update typedb behavior dependency and typedb server artifact to test the unblocked server features**
-  Update typedb behavior dependency and typedb server artifact to test the unblocked server features of rollback and write query fetches.
-
-- **Remove transaction pop from java tests on rollback**
-
-- **Update examples to fix their build**
+- **Update 3.0 drivers api references**
 
     
