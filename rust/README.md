@@ -60,8 +60,93 @@ Quickstart"_ section above.
 
 ## Example usage
 
-### TypeDB Core
+### TypeDB Cloud / Enterprise (Cloud driver)
 
+<!-- CLOUD_EXAMPLE_START_MARKER -->
+
+```rust
+use futures::{StreamExt, TryStreamExt};
+use typedb_driver::{
+    answer::{
+        concept_document::{Leaf, Node},
+        ConceptRow, QueryAnswer,
+    },
+    concept::{Concept, ValueType},
+    Credentials, DriverOptions, Error, TransactionType, TypeDBDriver,
+};
+
+fn typedb_example() {
+    async_std::task::block_on(async {
+        // Open a driver connection
+
+        let driver = TypeDBDriver::new_cloud(
+            &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
+            Credentials::new("admin", "password"),
+            DriverOptions::new(false, None).unwrap(),
+        )
+        .await
+        .unwrap();
+
+        // Create a database
+        driver.databases().create("typedb").await.unwrap();
+        let database = driver.databases().get("typedb").await.unwrap();
+
+        // Open a schema transaction to make schema changes
+        let transaction = driver.transaction(database.name(), TransactionType::Schema).await.unwrap();
+        let define_query = r#"
+        define
+          entity person, owns name, owns age;
+          attribute name, value string;
+          attribute age, value integer;
+        "#;
+        let answer = transaction.query(define_query).await.unwrap();
+
+        // Work with the driver's enums in a classic way or using helper methods
+        if answer.is_ok() && matches!(answer, QueryAnswer::Ok(_)) {
+            println!("OK results do not give any extra interesting information, but they mean that the query is successfully executed!");
+        }
+
+        // Commit automatically closes the transaction (don't forget to await the result!)
+        transaction.commit().await.unwrap();
+
+        // Open a read transaction to safely read anything without database modifications
+        let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
+        let answer = transaction.query("match entity $x;").await.unwrap();
+
+        // Collect concept rows that represent the answer as a table
+        let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
+        let row = rows.get(0).unwrap();
+
+        // Retrieve column names to get concepts by index if the variable names are lost
+        let column_names = row.get_column_names();
+
+        let column_name = column_names.get(0).unwrap();
+
+        // Get concept by the variable name (column name)
+        let concept_by_name = row.get(column_name).unwrap().unwrap();
+
+        // Get concept by the header's index
+        let concept_by_index = row.get_index(0).unwrap().unwrap();
+
+        // Check if it's an entity type
+        if concept_by_name.is_entity_type() {
+            print!("Getting concepts by variable names and indexes is equally correct. ");
+            println!(
+                "Both represent the defined entity type: '{}' (in case of a doubt: '{}')",
+                concept_by_name.get_label(),
+                concept_by_index.get_label()
+            );
+        }
+        println!("Check the Core example, the API reference and the documentation for more.\nWelcome to TypeDB!");
+    })
+}
+```
+
+<!-- CLOUD_EXAMPLE_END_MARKER -->
+
+### TypeDB CE (Core driver)
+
+<!-- TODO: Don't we want to make collapsible? -->
 <!-- CORE_EXAMPLE_START_MARKER -->
 
 ```rust
@@ -143,10 +228,10 @@ fn typedb_example() {
         let column_name = column_names.get(0).unwrap();
 
         // Get concept by the variable name (column name)
-        let concept_by_name = row.get(column_name).unwrap();
+        let concept_by_name = row.get(column_name).unwrap().unwrap();
 
         // Get concept by the header's index
-        let concept_by_index = row.get_index(0).unwrap();
+        let concept_by_index = row.get_index(0).unwrap().unwrap();
 
         // Check if it's an entity type
         if concept_by_name.is_entity_type() {
@@ -167,7 +252,7 @@ fn typedb_example() {
             let mut column_names_iter = row.get_column_names().into_iter();
             let column_name = column_names_iter.next().unwrap();
 
-            let concept_by_name = row.get(column_name).unwrap();
+            let concept_by_name = row.get(column_name).unwrap().unwrap();
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
@@ -195,7 +280,7 @@ fn typedb_example() {
         let row = rows.get(0).unwrap();
 
         for column_name in row.get_column_names() {
-            let inserted_concept = row.get(column_name).unwrap();
+            let inserted_concept = row.get(column_name).unwrap().unwrap();
             println!("Successfully inserted ${}: {}", column_name, inserted_concept);
             if inserted_concept.is_entity() {
                 println!("This time, it's an entity, not a type!");
@@ -205,7 +290,7 @@ fn typedb_example() {
         // It is possible to ask for the column names again
         let column_names = row.get_column_names();
 
-        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap();
+        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap().unwrap();
         if let Some(iid) = x.try_get_iid() {
             println!("Each entity receives a unique IID. It can be retrieved directly: {}", iid);
         }
@@ -250,7 +335,7 @@ fn typedb_example() {
         let mut count = 0;
         let mut stream = answer.into_rows().map(|result| result.unwrap());
         while let Some(row) = stream.next().await {
-            let x = row.get(var).unwrap();
+            let x = row.get(var).unwrap().unwrap();
             match x {
                 Concept::Entity(x_entity) => {
                     let x_type = x_entity.type_().unwrap();

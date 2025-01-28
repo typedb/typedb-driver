@@ -20,7 +20,6 @@
 package com.typedb.driver.test.integration.cloud;
 
 // EXAMPLE START MARKER
-
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
