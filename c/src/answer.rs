@@ -31,7 +31,12 @@ use super::{
     iterator::CIterator,
     memory::{borrow, free, release, release_optional, release_string, string_view},
 };
-use crate::{common::StringIterator, concept::ConceptRowIterator, error::try_release, memory::take_ownership};
+use crate::{
+    common::StringIterator,
+    concept::ConceptRowIterator,
+    error::{try_release, try_release_optional},
+    memory::take_ownership,
+};
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
@@ -131,14 +136,14 @@ pub extern "C" fn concept_row_get_concepts(concept_row: *const ConceptRow) -> *m
 ///
 #[no_mangle]
 pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *const c_char) -> *mut Concept {
-    release_optional(borrow(concept_row).get(string_view(column_name)).cloned())
+    try_release_optional(borrow(concept_row).get(string_view(column_name)).map(|concept| concept.cloned()).transpose())
 }
 
 /// Retrieves a concept for a given column index.
 ///
 #[no_mangle]
 pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
-    release_optional(borrow(concept_row).get_index(column_index).cloned())
+    try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())
 }
 
 /// Checks whether the provided <code>ConceptRow</code> objects are equal

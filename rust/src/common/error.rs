@@ -180,6 +180,14 @@ error_messages! { ConnectionError
         30: "Connection closed unexpectedly.",
 }
 
+error_messages! { ConceptError
+    code: "CPT", type: "Concept Error",
+    UnavailableRowVariable { variable: String } =
+        1: "Cannot get concept from a concept row by variable '{variable}'.",
+    UnavailableRowIndex { index: usize } =
+        2: "Cannot get concept from a concept row by index '{index}'.",
+}
+
 error_messages! { InternalError
     code: "INT", type: "Internal Error",
     RecvError =
@@ -242,6 +250,7 @@ impl fmt::Debug for ServerError {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Error {
     Connection(ConnectionError),
+    Concept(ConceptError),
     Internal(InternalError),
     Server(ServerError),
     Other(String),
@@ -251,6 +260,7 @@ impl Error {
     pub fn code(&self) -> String {
         match self {
             Self::Connection(error) => error.format_code(),
+            Self::Concept(error) => error.format_code(),
             Self::Internal(error) => error.format_code(),
             Self::Server(error) => error.format_code().to_owned(),
             Self::Other(_error) => String::new(),
@@ -260,6 +270,7 @@ impl Error {
     pub fn message(&self) -> String {
         match self {
             Self::Connection(error) => error.message(),
+            Self::Concept(error) => error.message(),
             Self::Internal(error) => error.message(),
             Self::Server(error) => error.message(),
             Self::Other(error) => error.clone(),
@@ -267,16 +278,8 @@ impl Error {
     }
 
     fn from_message(message: &str) -> Self {
-        match message.split_ascii_whitespace().next() {
-            Some("[RPL01]") => Self::Connection(ConnectionError::CloudReplicaNotPrimary),
-            // TODO: CLS and ENT are synonyms which we can simplify on protocol change
-            Some("[CLS08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
-            Some("[ENT08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
-            Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseNotFound {
-                name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
-            }),
-            _ => Self::Other(message.to_owned()),
-        }
+        // TODO: Consider converting some of the messages to connection errors
+        Self::Other(message.to_owned())
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
@@ -298,6 +301,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Connection(error) => write!(f, "{error}"),
+            Self::Concept(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
             Self::Server(error) => write!(f, "{error}"),
             Self::Other(message) => write!(f, "{message}"),
@@ -309,6 +313,7 @@ impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
             Self::Connection(error) => Some(error),
+            Self::Concept(error) => Some(error),
             Self::Internal(error) => Some(error),
             Self::Server(_) => None,
             Self::Other(_) => None,
@@ -319,6 +324,12 @@ impl StdError for Error {
 impl From<ConnectionError> for Error {
     fn from(error: ConnectionError) -> Self {
         Self::Connection(error)
+    }
+}
+
+impl From<ConceptError> for Error {
+    fn from(error: ConceptError) -> Self {
+        Self::Concept(error)
     }
 }
 

@@ -20,8 +20,9 @@ package(default_visibility = ["//visibility:public"])
 load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
+# A different name is required by the Cargo sync tool
 rust_test(
-    name = "test_example",
+    name = "test_example_cloud",
     srcs = glob(["example.rs"]),
     deps = [
         "//rust:typedb_driver",
