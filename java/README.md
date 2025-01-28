@@ -60,6 +60,8 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
 <!-- CLOUD_EXAMPLE_START_MARKER -->
 
 ```java
+package com.typedb.driver;
+
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
@@ -283,6 +285,8 @@ public class TypeDBCloudExample {
 <!-- CORE_EXAMPLE_START_MARKER -->
 
 ```java
+package com.typedb.driver;
+
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;

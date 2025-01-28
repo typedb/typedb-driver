@@ -17,9 +17,9 @@
  * under the License.
  */
 
+// EXAMPLE START MARKER
 package com.typedb.driver.test.integration.core;
 
-// EXAMPLE START MARKER
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;

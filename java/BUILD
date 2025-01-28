@@ -138,6 +138,7 @@ test_to_example(
     output = "java/TypeDBCoreExample.java",
     removed_lines = ["assert", "fail(", "todo"],
     changed_words = {
+        "com.typedb.driver.test.integration.core": "com.typedb.driver",
         "ExampleTest": "TypeDBCoreExample",
     },
     header_comment_sign = "//",
@@ -149,6 +150,7 @@ test_to_example(
     output = "java/TypeDBCloudExample.java",
     removed_lines = ["assert", "fail(", "todo"],
     changed_words = {
+        "com.typedb.driver.test.integration.cloud": "com.typedb.driver",
         "ExampleTest": "TypeDBCloudExample",
     },
     header_comment_sign = "//",
