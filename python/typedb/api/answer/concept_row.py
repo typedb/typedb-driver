@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterator, TYPE_CHECKING
+from typing import Iterator, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typedb.api.answer.query_type import QueryType
@@ -64,9 +64,10 @@ class ConceptRow(ABC):
         pass
 
     @abstractmethod
-    def get(self, column_name: str) -> Concept:
+    def get(self, column_name: str) -> Optional[Concept]:
         """
-        Retrieves a concept for a given column name (variable).
+        Retrieves a concept for a given column name (variable). Returns ``None`` if the variable has an empty answer.
+        Throws an error if the variable is not present.
 
         :param column_name: The string representation of a variable (column name from ``column_names``)
         :return:
@@ -80,9 +81,10 @@ class ConceptRow(ABC):
         pass
 
     @abstractmethod
-    def get_index(self, column_index: int) -> Concept:
+    def get_index(self, column_index: int) -> Optional[Concept]:
         """
-        Retrieves a concept for a given index of the header (''column_names'').
+        Retrieves a concept for a given index of the header (''column_names''). Returns ``None`` if the index points to
+        an empty answer. Throws an error if the index is not in the row's range.
 
         :param column_index: The column index
         :return:

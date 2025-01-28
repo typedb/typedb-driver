@@ -95,8 +95,8 @@ impl ConceptRow {
         self.get_index(index)
     }
 
-    /// Retrieves a concept for a given column index. Returns an empty optional if
-    /// the position has an empty answer. Returns an error if the index is not range for the row.
+    /// Retrieves a concept for a given column index. Returns an empty optional if the index
+    /// points to an empty answer. Returns an error if the index is not in the row's range.
     ///
     /// # Arguments
     ///
