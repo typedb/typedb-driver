@@ -22,6 +22,7 @@ from typing import TYPE_CHECKING
 from typedb.api.connection.database import DatabaseManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
+from typedb.common.validation import require_non_null
 from typedb.connection.database import _Database
 from typedb.native_driver_wrapper import databases_contains, databases_create, databases_get, \
     databases_all, database_iterator_next, TypeDBDriverExceptionNative
@@ -36,18 +37,21 @@ class _DatabaseManager(DatabaseManager):
         self.native_driver = native_driver
 
     def get(self, name: str) -> _Database:
+        require_non_null(name, "name")
         try:
             return _Database(databases_get(self.native_driver, name))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def contains(self, name: str) -> bool:
+        require_non_null(name, "name")
         try:
             return databases_contains(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def create(self, name: str) -> None:
+        require_non_null(name, "name")
         try:
             databases_create(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:

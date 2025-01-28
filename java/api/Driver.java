@@ -58,7 +58,7 @@ public interface Driver extends AutoCloseable {
      * @param type     The type of transaction to be created (READ, WRITE, or SCHEMA)
      */
     @CheckReturnValue
-    Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException ;
+    Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException;
 
 //    @CheckReturnValue
 //    Transaction transaction(String database, Transaction.Type type, Options options);

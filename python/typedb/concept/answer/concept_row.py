@@ -21,10 +21,10 @@ from typing import Iterator, Optional, TYPE_CHECKING
 
 from typedb.api.answer.concept_row import ConceptRow
 from typedb.api.answer.query_type import QueryType
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, NULL_NATIVE_OBJECT, \
-    NON_NEGATIVE_VALUE_REQUIRED
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_null, require_non_negative
 from typedb.concept import concept_factory
 from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
                                           concept_row_get_index, concept_row_to_string, concept_row_equals,
@@ -34,12 +34,6 @@ from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
-
-
-def _not_blank_var(var: str) -> str:
-    if var is None:
-        raise TypeDBDriverException(MISSING_VARIABLE)
-    return var
 
 
 class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
@@ -65,15 +59,15 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
                                                                  concept_iterator_next))
 
     def get(self, column_name: str) -> Optional[Concept]:
+        require_non_null(column_name, "column_name")
         try:
-            concept = concept_row_get(self.native_object, _not_blank_var(column_name))
+            concept = concept_row_get(self.native_object, column_name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         return concept_factory.wrap_concept(concept) if concept else None
 
     def get_index(self, column_index: int) -> Optional[Concept]:
-        if column_index < 0:
-            raise TypeDBDriverException(NON_NEGATIVE_VALUE_REQUIRED, column_index)
+        require_non_negative(column_index, "column_index")
         try:
             concept = concept_row_get_index(self.native_object, column_index)
         except TypeDBDriverExceptionNative as e:

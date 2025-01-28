@@ -21,6 +21,7 @@ package com.typedb.driver.user;
 
 import com.typedb.driver.api.user.User;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.jni.typedb_driver.user_get_name;
@@ -50,6 +51,7 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
 
     @Override
     public void updatePassword(String password) {
+        Validator.requireNonNull(password, "password");
         try {
             user_update_password(nativeObject, password);
         } catch (com.typedb.driver.jni.Error e) {

@@ -80,11 +80,13 @@ public abstract class ErrorMessage {
         public static final Driver DATABASE_DELETED =
                 new Driver(7, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(8, "Value should be positive, was: '%d'.");
+                new Driver(8, "Value of '%s' should be positive, was: '%d'.");
         public static final Driver NON_NEGATIVE_VALUE_REQUIRED =
-                new Driver(9, "Value should be non negative, was: '%d'.");
+                new Driver(9, "Value of '%s' should be non-negative, was: '%d'.");
+        public static final Driver NON_NULL_VALUE_REQUIRED =
+                new Driver(10, "Value of '%s' should not be null.");
         public static final Driver UNIMPLEMENTED =
-                new Driver(10, "This operation is not implemented yet.");
+                new Driver(11, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
@@ -106,18 +108,6 @@ public abstract class ErrorMessage {
         private static final String messagePrefix = "Concept Error";
 
         Concept(int number, String message) {
-            super(codePrefix, number, messagePrefix, message);
-        }
-    }
-
-    public static class Query extends ErrorMessage {
-        public static final Query MISSING_QUERY =
-                new Query(1, "Query cannot be null or blank.");
-
-        private static final String codePrefix = "JQR";
-        private static final String messagePrefix = "Query Error";
-
-        Query(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

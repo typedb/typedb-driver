@@ -24,6 +24,7 @@ import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
 
@@ -57,7 +58,8 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     @Override
-    public Optional<Concept> get(String columnName) {
+    public Optional<Concept> get(String columnName) throws TypeDBDriverException {
+        Validator.requireNonNull(columnName, "columnName");
         try {
             com.typedb.driver.jni.Concept concept = concept_row_get(nativeObject, columnName);
             if (concept != null) {
@@ -70,9 +72,8 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     @Override
-    public Optional<Concept> getIndex(long columnIndex) {
-        if (columnIndex < 0) throw new TypeDBDriverException(NON_NEGATIVE_VALUE_REQUIRED, columnIndex);
-
+    public Optional<Concept> getIndex(long columnIndex) throws TypeDBDriverException {
+        Validator.requireNonNegative(columnIndex, "columnIndex");
         try {
             com.typedb.driver.jni.Concept concept = concept_row_get_index(nativeObject, columnIndex);
             if (concept != null) {

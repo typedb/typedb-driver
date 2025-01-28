@@ -22,6 +22,7 @@ from typing import TYPE_CHECKING, Optional
 from typedb.api.user.user import UserManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
+from typedb.common.validation import require_non_null
 from typedb.native_driver_wrapper import users_contains, users_create, users_all, users_get, \
     users_get_current_user, user_iterator_next, TypeDBDriverExceptionNative
 from typedb.user.user import _User
@@ -37,12 +38,15 @@ class _UserManager(UserManager):
         self.native_driver = native_driver
 
     def contains(self, username: str) -> bool:
+        require_non_null(username, "username")
         try:
             return users_contains(self.native_driver, username)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
     def create(self, username: str, password: str) -> None:
+        require_non_null(username, "username")
+        require_non_null(password, "password")
         try:
             users_create(self.native_driver, username, password)
         except TypeDBDriverExceptionNative as e:
@@ -55,6 +59,7 @@ class _UserManager(UserManager):
             raise TypeDBDriverException.of(e) from None
 
     def get(self, username: str) -> Optional[User]:
+        require_non_null(username, "username")
         try:
             if user := users_get(self.native_driver, username):
                 return _User(user, self)
@@ -63,8 +68,7 @@ class _UserManager(UserManager):
             raise TypeDBDriverException.of(e) from None
 
     def get_current_user(self) -> Optional[User]:
-        try:  # TODO: remove try if we leave it as str
-            # return users_get_current_user(self.native_driver)
+        try:
             if user := users_get_current_user(self.native_driver):
                 return _User(user, self)
             return None
