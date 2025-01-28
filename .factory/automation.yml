@@ -73,6 +73,7 @@ build:
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        
         # TODO: Temporarily update only 3.0 drivers
         DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python")
         find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;

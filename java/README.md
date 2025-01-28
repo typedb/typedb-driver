@@ -135,10 +135,10 @@ public class TypeDBCloudExample {
                 String columnName = entityHeader.get(0);
 
                 // Get concept by the variable name (column name)
-                Concept conceptByName = entityRow.get(columnName);
+                Concept conceptByName = entityRow.get(columnName).get();
 
                 // Get concept by the header's index
-                Concept conceptByIndex = entityRow.getIndex(0);
+                Concept conceptByIndex = entityRow.getIndex(0).get();
 
                 System.out.printf("Getting concepts by variable names (%s) and indexes (%s) is equally correct. ",
                         conceptByName.getLabel(),
@@ -164,7 +164,7 @@ public class TypeDBCloudExample {
                     Iterator<String> columnNameIterator = attributeRow.columnNames().iterator();
                     columnName = columnNameIterator.next();
 
-                    conceptByName = attributeRow.get(columnName);
+                    conceptByName = attributeRow.get(columnName).get();
 
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
@@ -185,7 +185,7 @@ public class TypeDBCloudExample {
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
                 ConceptRow row = rows.get(0);
                 row.columnNames().iterator().forEachRemaining(columnName -> {
-                    Concept insertedConcept = row.get(columnName);
+                    Concept insertedConcept = row.get(columnName).get();
                     System.out.printf("Successfully inserted $%s: %s%n", columnName, insertedConcept);
                     if (insertedConcept.isEntity()) {
                         System.out.println("This time, it's an entity, not a type!");
@@ -195,7 +195,7 @@ public class TypeDBCloudExample {
                 // It is possible to ask for the column names again
                 List<String> header = row.columnNames().collect(Collectors.toList());
 
-                Concept x = row.getIndex(header.indexOf("x"));
+                Concept x = row.getIndex(header.indexOf("x")).get();
                 System.out.printf("As we expect an entity instance, we can try to get its IID (unique identification): %s. ", x.tryGetIID());
                 if (x.isEntity()) {
                     System.out.println("It can also be retrieved directly and safely after a cast: " + x.asEntity().getIID());
@@ -241,7 +241,7 @@ public class TypeDBCloudExample {
                 // Simple match queries always return concept rows
                 AtomicInteger matchCount = new AtomicInteger(0);
                 matchAnswer.asConceptRows().stream().forEach(row -> {
-                    Concept x = row.get(var);
+                    Concept x = row.get(var).get();
                     EntityType xType = x.asEntity().getType().asEntityType();
                     matchCount.incrementAndGet();
                     System.out.printf("Found a person %s of type %s%n", x, xType);
@@ -359,10 +359,10 @@ public class TypeDBCoreExample {
                 String columnName = entityHeader.get(0);
 
                 // Get concept by the variable name (column name)
-                Concept conceptByName = entityRow.get(columnName);
+                Concept conceptByName = entityRow.get(columnName).get();
 
                 // Get concept by the header's index
-                Concept conceptByIndex = entityRow.getIndex(0);
+                Concept conceptByIndex = entityRow.getIndex(0).get();
 
                 System.out.printf("Getting concepts by variable names (%s) and indexes (%s) is equally correct. ",
                         conceptByName.getLabel(),
@@ -388,7 +388,7 @@ public class TypeDBCoreExample {
                     Iterator<String> columnNameIterator = attributeRow.columnNames().iterator();
                     columnName = columnNameIterator.next();
 
-                    conceptByName = attributeRow.get(columnName);
+                    conceptByName = attributeRow.get(columnName).get();
 
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
@@ -409,7 +409,7 @@ public class TypeDBCoreExample {
                 List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
                 ConceptRow row = rows.get(0);
                 row.columnNames().iterator().forEachRemaining(columnName -> {
-                    Concept insertedConcept = row.get(columnName);
+                    Concept insertedConcept = row.get(columnName).get();
                     System.out.printf("Successfully inserted $%s: %s%n", columnName, insertedConcept);
                     if (insertedConcept.isEntity()) {
                         System.out.println("This time, it's an entity, not a type!");
@@ -419,7 +419,7 @@ public class TypeDBCoreExample {
                 // It is possible to ask for the column names again
                 List<String> header = row.columnNames().collect(Collectors.toList());
 
-                Concept x = row.getIndex(header.indexOf("x"));
+                Concept x = row.getIndex(header.indexOf("x")).get();
                 System.out.printf("As we expect an entity instance, we can try to get its IID (unique identification): %s. ", x.tryGetIID());
                 if (x.isEntity()) {
                     System.out.println("It can also be retrieved directly and safely after a cast: " + x.asEntity().getIID());
@@ -465,7 +465,7 @@ public class TypeDBCoreExample {
                 // Simple match queries always return concept rows
                 AtomicInteger matchCount = new AtomicInteger(0);
                 matchAnswer.asConceptRows().stream().forEach(row -> {
-                    Concept x = row.get(var);
+                    Concept x = row.get(var).get();
                     EntityType xType = x.asEntity().getType().asEntityType();
                     matchCount.incrementAndGet();
                     System.out.printf("Found a person %s of type %s%n", x, xType);

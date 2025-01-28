@@ -154,9 +154,6 @@ test_to_example(
     header_comment_sign = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //java:example_core; bazel run //java:readme_example_core
-# 2. Enjoy your updated README.md!
 update_markdown_example(
     name = "readme_example_core",
     input = ":TypeDBCoreExample.java",
@@ -167,9 +164,6 @@ update_markdown_example(
     removed_header = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //java:example_cloud; bazel run //java:readme_example_cloud
-# 2. Enjoy your updated README.md!
 update_markdown_example(
     name = "readme_example_cloud",
     input = ":TypeDBCloudExample.java",

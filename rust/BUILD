@@ -133,9 +133,6 @@ test_to_example(
     header_comment_sign = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //rust:example_core; bazel run //rust:readme_example_core
-# 2. Enjoy your updated README.md!
 update_markdown_example(
     name = "readme_example_core",
     input = ":core_example.rs",
@@ -146,9 +143,6 @@ update_markdown_example(
     removed_header = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //rust:example_cloud; bazel run //rust:readme_example_cloud
-# 2. Enjoy your updated README.md!
 update_markdown_example(
     name = "readme_example_cloud",
     input = ":cloud_example.rs",
