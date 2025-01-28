@@ -67,7 +67,7 @@ class ConceptRow(ABC):
     def get(self, column_name: str) -> Optional[Concept]:
         """
         Retrieves a concept for a given column name (variable). Returns ``None`` if the variable has an empty answer.
-        Throws an error if the variable is not present.
+        Throws an exception if the variable is not present.
 
         :param column_name: The string representation of a variable (column name from ``column_names``)
         :return:
@@ -84,7 +84,7 @@ class ConceptRow(ABC):
     def get_index(self, column_index: int) -> Optional[Concept]:
         """
         Retrieves a concept for a given index of the header (''column_names''). Returns ``None`` if the index points to
-        an empty answer. Throws an error if the index is not in the row's range.
+        an empty answer. Throws an exception if the index is not in the row's range.
 
         :param column_index: The column index
         :return:

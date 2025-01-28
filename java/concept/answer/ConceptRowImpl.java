@@ -27,10 +27,10 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
-import static com.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.NON_NEGATIVE_VALUE_REQUIRED;
 import static com.typedb.driver.jni.typedb_driver.concept_row_equals;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_column_names;
@@ -57,20 +57,31 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     @Override
-    public Concept get(String columnName) {
-        if (columnName == null || columnName.isEmpty())
-            throw new TypeDBDriverException(MISSING_VARIABLE); // TODO: Revisit errors
-        com.typedb.driver.jni.Concept concept = concept_row_get(nativeObject, columnName);
-        if (concept == null) throw new TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, columnName);
-        return ConceptImpl.of(concept);
+    public Optional<Concept> get(String columnName) {
+        try {
+            com.typedb.driver.jni.Concept concept = concept_row_get(nativeObject, columnName);
+            if (concept != null) {
+                return Optional.of(ConceptImpl.of(concept));
+            }
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Concept getIndex(long columnIndex) {
-        if (columnIndex < 0) throw new TypeDBDriverException(MISSING_VARIABLE); // TODO: Revisit errors
-        com.typedb.driver.jni.Concept concept = concept_row_get_index(nativeObject, columnIndex);
-        if (concept == null) throw new TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, columnIndex);
-        return ConceptImpl.of(concept);
+    public Optional<Concept> getIndex(long columnIndex) {
+        if (columnIndex < 0) throw new TypeDBDriverException(NON_NEGATIVE_VALUE_REQUIRED, columnIndex);
+
+        try {
+            com.typedb.driver.jni.Concept concept = concept_row_get_index(nativeObject, columnIndex);
+            if (concept != null) {
+                return Optional.of(ConceptImpl.of(concept));
+            }
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+        return Optional.empty();
     }
 
     @Override

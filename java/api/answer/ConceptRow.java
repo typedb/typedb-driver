@@ -23,6 +23,7 @@ import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -55,6 +56,8 @@ public interface ConceptRow {
 
     /**
      * Retrieves a concept for a given column name (variable).
+     * Returns an empty <code>Optional</code> if the variable has an empty answer.
+     * Throws an exception if the variable is not present.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -64,10 +67,12 @@ public interface ConceptRow {
      * @param columnName the variable (column name from ``column_names``)
      */
     @CheckReturnValue
-    Concept get(String columnName);
+    Optional<Concept> get(String columnName);
 
     /**
      * Retrieves a concept for a given index of the header (<code>columnNames</code>).
+     * Returns an empty <>Optional</> if the index points to an empty answer.
+     * Throws an exception if the index is not in the row's range.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -77,7 +82,7 @@ public interface ConceptRow {
      * @param columnIndex the column index
      */
     @CheckReturnValue
-    Concept getIndex(long columnIndex);
+    Optional<Concept> getIndex(long columnIndex);
 
     /**
      * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.

@@ -80,9 +80,11 @@ public abstract class ErrorMessage {
         public static final Driver DATABASE_DELETED =
                 new Driver(7, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(8, "Value cannot be less than 1, was: '%d'.");
+                new Driver(8, "Value should be positive, was: '%d'.");
+        public static final Driver NON_NEGATIVE_VALUE_REQUIRED =
+                new Driver(9, "Value should be non negative, was: '%d'.");
         public static final Driver UNIMPLEMENTED =
-                new Driver(9, "This operation is not implemented yet.");
+                new Driver(10, "This operation is not implemented yet.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";
@@ -97,10 +99,8 @@ public abstract class ErrorMessage {
                 new Concept(1, "Invalid concept conversion from '%s' to '%s'.");
         public static final Concept INVALID_QUERY_ANSWER_CASTING =
                 new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
-        public static final Concept MISSING_VARIABLE =
-                new Concept(3, "Variable name cannot be null or empty.");
         public static final Concept INVALID_VALUE_RETRIEVAL =
-                new Concept(4, "Could not retrieve a '%s' value.");
+                new Concept(3, "Could not retrieve a '%s' value.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
@@ -111,10 +111,8 @@ public abstract class ErrorMessage {
     }
 
     public static class Query extends ErrorMessage {
-        public static final Query VARIABLE_DOES_NOT_EXIST =
-                new Query(1, "The variable '%s' does not exist.");
         public static final Query MISSING_QUERY =
-                new Query(2, "Query cannot be null or blank.");
+                new Query(1, "Query cannot be null or blank.");
 
         private static final String codePrefix = "JQR";
         private static final String messagePrefix = "Query Error";

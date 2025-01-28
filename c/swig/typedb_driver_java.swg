@@ -188,11 +188,9 @@
 %nojavaexception attribute_get_type;
 
 %nojavaexception concept_row_equals;
-%nojavaexception concept_row_get;
 %nojavaexception concept_row_get_column_names;
-%nojavaexception concept_row_get_query_type;
 %nojavaexception concept_row_get_concepts;
-%nojavaexception concept_row_get_index;
+%nojavaexception concept_row_get_query_type;
 %nojavaexception concept_row_to_string;
 
 %nojavaexception query_answer_get_query_type;
