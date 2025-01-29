@@ -965,11 +965,24 @@ public class QuerySteps {
         mayError.check(() -> getRowGetConcept(rowIndex, isByVarIndex, var));
     }
 
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) {is_or_not} empty")
+    public void answer_get_row_get_variable_is_empty(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        isOrNot.compare(getRowGetConcept(rowIndex, isByVarIndex, var), Optional.empty());
+    }
+
     @Then("answer get row\\({integer}) get variable by index\\({integer}){may_error}")
     public void answer_get_row_get_variable_by_index(int rowIndex, int varIndex, Parameters.MayError mayError) {
         collectRowsAnswerIfNeeded();
         ConceptRow row = collectedRows.get(rowIndex);
         mayError.check(() -> row.getIndex(varIndex));
+    }
+
+    @Then("answer get row\\({integer}) get variable by index\\({integer}) {is_or_not} empty")
+    public void answer_get_row_get_variable_by_index_is_empty(int rowIndex, int varIndex, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        ConceptRow row = collectedRows.get(rowIndex);
+        isOrNot.compare(row.getIndex(varIndex), Optional.empty());
     }
 
     @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}{may_error}")

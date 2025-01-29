@@ -286,11 +286,24 @@ def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str,
     may_error.check(lambda: get_row_get_concept(context, row_index, var, is_by_var_index))
 
 
+@step("answer get row({row_index:Int}) get variable{is_by_var_index:IsByVarIndex}({var:Var}) {is_or_not:IsOrNot} empty")
+def step_impl(context: Context, row_index: int, is_by_var_index: bool, var: str, is_or_not: bool):
+    concept = get_row_get_concept(context, row_index, var, is_by_var_index)
+    assert_that(concept is None, is_(is_or_not), is_or_not_reason(is_or_not, real=concept, expected=None))
+
+
 @step("answer get row({row_index:Int}) get variable by index({var_index:Int}){may_error:MayError}")
 def step_impl(context: Context, row_index: int, var_index: int, may_error: MayError):
     collect_answer_if_needed(context)
     row = context.collected_answer[row_index]
     may_error.check(lambda: row.get_index(var_index))
+
+
+@step("answer get row({row_index:Int}) get variable by index({var_index:Int}) {is_or_not:IsOrNot} empty")
+def step_impl(context: Context, row_index: int, var_index: int, is_or_not: bool):
+    collect_answer_if_needed(context)
+    concept = context.collected_answer[row_index].get_index(var_index)
+    assert_that(concept is None, is_(is_or_not), is_or_not_reason(is_or_not, real=concept, expected=None))
 
 
 @step(

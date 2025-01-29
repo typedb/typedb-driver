@@ -336,6 +336,18 @@ pub async fn answer_get_row_get_variable(
 }
 
 #[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get variable{is_by_var_index}\({var}\) {is_or_not} empty")]
+pub async fn answer_get_row_get_variable_is_empty(
+    context: &mut Context,
+    index: usize,
+    is_by_var_index: params::IsByVarIndex,
+    var: params::Var,
+    is_or_not: params::IsOrNot,
+) {
+    is_or_not.compare(get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap(), None);
+}
+
+#[apply(generic_step)]
 #[step(expr = r"answer get row\({int}\) get variable by index\({int}\){may_error}")]
 pub async fn answer_get_row_get_variable_by_index(
     context: &mut Context,
@@ -345,6 +357,18 @@ pub async fn answer_get_row_get_variable_by_index(
 ) {
     let concept_row = context.get_collected_answer_row_index(index).await;
     may_error.check(concept_row.get_index(variable_index));
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answer get row\({int}\) get variable by index\({int}\) {is_or_not} empty")]
+pub async fn answer_get_row_get_variable_by_index_is_empty(
+    context: &mut Context,
+    index: usize,
+    variable_index: usize,
+    is_or_not: params::IsOrNot,
+) {
+    let concept_row = context.get_collected_answer_row_index(index).await;
+    is_or_not.compare(concept_row.get_index(variable_index).unwrap(), None);
 }
 
 #[apply(generic_step)]
