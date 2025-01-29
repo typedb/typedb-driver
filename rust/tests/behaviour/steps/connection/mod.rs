@@ -77,7 +77,8 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
                 .await
         }
         true => {
-            let updated_address = change_host(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
+            let updated_address =
+                change_host(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
             context.create_cluster_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
