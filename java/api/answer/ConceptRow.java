@@ -72,7 +72,7 @@ public interface ConceptRow {
 
     /**
      * Retrieves a concept for a given index of the header (<code>columnNames</code>).
-     * Returns an empty <>Optional</> if the index points to an empty answer.
+     * Returns an empty <code>Optional</code> if the index points to an empty answer.
      * Throws an exception if the index is not in the row's range.
      *
      * <h3>Examples</h3>
