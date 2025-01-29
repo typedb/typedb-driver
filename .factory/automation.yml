@@ -121,7 +121,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-rust-behaviour-cloud:
+    test-rust-behaviour-cluster:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
         - build
@@ -192,7 +192,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-java-behaviour-cloud:
+    test-java-behaviour-cluster:
       image: typedb-ubuntu-22.04
       dependencies:
         - build
@@ -252,7 +252,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-cloud:
+    test-python-behaviour-cluster:
       image: typedb-ubuntu-22.04
       dependencies:
         - build
@@ -316,7 +316,7 @@ build:
 #        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
-#    test-nodejs-behaviour-cloud:
+#    test-nodejs-behaviour-cluster:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -383,7 +383,7 @@ build:
 #        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
-#    test-cpp-behaviour-cloud:
+#    test-cpp-behaviour-cluster:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -454,7 +454,7 @@ build:
 #        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
-#    test-csharp-behaviour-cloud:
+#    test-csharp-behaviour-cluster:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -488,23 +488,23 @@ build:
 #        - build-docs
 #        - test-rust-unit-integration
 #        - test-rust-behaviour-core
-#        - test-rust-behaviour-cloud
+#        - test-rust-behaviour-cluster
 #        - test-c-integration
 #        - test-java-integration
 #        - test-java-behaviour-core
-#        - test-java-behaviour-cloud
+#        - test-java-behaviour-cluster
 #        - test-python-behaviour-core
-#        - test-python-behaviour-cloud
+#        - test-python-behaviour-cluster
 #        - test-python-integration
 #        - test-nodejs-integration
 #        - test-nodejs-behaviour-core
-#        - test-nodejs-behaviour-cloud
+#        - test-nodejs-behaviour-cluster
 #        - test-cpp-integration
 #        - test-cpp-behaviour-core
-#        - test-cpp-behaviour-cloud
+#        - test-cpp-behaviour-cluster
 #        - test-csharp-integration
 #        - test-csharp-behaviour-core
-#        - test-csharp-behaviour-cloud
+#        - test-csharp-behaviour-cluster
 #      command: |
 #        sudo add-apt-repository -y ppa:deadsnakes/ppa
 #        sudo apt update && sudo apt install -y python3.9 python3.9-distutils python3-pip
