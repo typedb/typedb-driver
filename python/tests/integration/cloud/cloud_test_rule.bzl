@@ -29,7 +29,7 @@ def _rule_implementation(ctx):
     cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cluster_distro
     cmd += """
             function server_start() {
-              ./${1}/typedb cloud \
+              ./${1}/typedb cluster \
                 --storage.data=server/data \
                 --server.address=localhost:${1}1729 \
                 --server.internal-address.zeromq=localhost:${1}1730 \
