@@ -30,7 +30,7 @@ typedb_behaviour_java_test(
         "@typedb_behaviour//driver:user.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
-    connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
+    connection_steps_cloud = "//java/test/behaviour/connection:steps-cluster",
     steps = [
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/connection/user:steps",

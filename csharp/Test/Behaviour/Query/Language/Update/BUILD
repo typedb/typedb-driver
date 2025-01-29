@@ -46,7 +46,7 @@ csharp_behaviour_test(
 )
 
 csharp_behaviour_test(
-    name = "test-cloud",
+    name = "test-cluster",
     test_files = ["UpdateTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Util:steps",
@@ -54,7 +54,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cloud",
+        "//csharp/Test/Behaviour/Connection:steps-cluster",
     ],
     features = ["@typedb_behaviour//query/language:update.feature"],
     deps = [

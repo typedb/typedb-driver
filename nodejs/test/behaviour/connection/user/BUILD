@@ -41,8 +41,8 @@ ts_project(
 )
 
 node_cucumber_test(
-    name = "test-cloud",
-    steps = "@//nodejs/test/behaviour/connection:steps-cloud",
+    name = "test-cluster",
+    steps = "@//nodejs/test/behaviour/connection:steps-cluster",
     features = ["@typedb_behaviour//connection:user.feature"],
     data = [
         ":steps",

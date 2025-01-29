@@ -57,7 +57,7 @@ csharp_behaviour_test(
 )
 
 csharp_behaviour_test(
-    name = "test-cloud",
+    name = "test-cluster",
     test_files = ["RelationTest.cs"],
     steps_files = [
         ":steps",
@@ -71,7 +71,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cloud",
+        "//csharp/Test/Behaviour/Connection:steps-cluster",
     ],
     features = ["@typedb_behaviour//concept/thing:relation.feature"],
     deps = [

@@ -57,7 +57,7 @@ ts_project(
 )
 
 ts_project(
-    name = "steps-cloud",
+    name = "steps-cluster",
     srcs = ["ConnectionStepsCloud.ts"],
     tsconfig = behaviour_test_ts_config(),
     declaration = True,

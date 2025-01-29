@@ -32,7 +32,7 @@ csharp_integration_test(
 )
 
 csharp_integration_test(
-    name = "test-cloud",
+    name = "test-cluster",
     srcs = ["CloudExamplesTest.cs"],
     deps = [
         "//csharp:driver-csharp",

@@ -52,7 +52,7 @@ java_library(
 )
 
 java_library(
-    name = "steps-cloud",
+    name = "steps-cluster",
     srcs = [
         "ConnectionStepsCloud.java",
     ],

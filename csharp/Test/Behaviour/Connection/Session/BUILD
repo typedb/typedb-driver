@@ -50,14 +50,14 @@ csharp_behaviour_test(
 )
 
 csharp_behaviour_test(
-    name = "test-cloud",
+    name = "test-cluster",
     test_files = ["SessionTest.cs"],
     steps_files = [
         ":steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cloud",
+        "//csharp/Test/Behaviour/Connection:steps-cluster",
     ],
     features = ["@typedb_behaviour//connection:session.feature"],
     deps = [

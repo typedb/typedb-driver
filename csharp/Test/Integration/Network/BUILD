@@ -20,7 +20,7 @@ load("//csharp/Test:rules.bzl", "csharp_integration_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_integration_test(
-    name = "address-translation-cloud",
+    name = "address-translation-cluster",
     srcs = ["AddressTranslationTest.cs"],
     deps = [
         "//csharp:driver-csharp",

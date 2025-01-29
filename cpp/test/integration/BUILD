@@ -35,7 +35,7 @@ cc_test(
 )
 
 cc_test(
-    name = "test-cpp-driver-cloud",
+    name = "test-cpp-driver-cluster",
     srcs = ["test_cloud.cpp"],
     deps = [
         "//cpp:typedb-driver-cpp-import",

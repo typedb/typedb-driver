@@ -54,7 +54,7 @@ def typedb_behaviour_py_test_core(name, **kwargs):
 
 def typedb_behaviour_py_test_cloud(name, **kwargs):
     py_behave_test(
-        name = name + "-cloud",
+        name = name + "-cluster",
         background = "@//python/tests/behaviour/background:cloud",
         native_typedb_artifact = "@//tool/test:native-typedb-artifact", # TODO: Change to cloud artifact when available
         toolchains = ["@rules_python//python:current_py_toolchain"],

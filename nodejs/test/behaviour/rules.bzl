@@ -54,7 +54,7 @@ def typedb_behaviour_node_test(name, **kwargs):
     )
 
     node_cucumber_test(
-        name = name + "-cloud",
-        steps = "//nodejs/test/behaviour/connection:steps-cloud",
+        name = name + "-cluster",
+        steps = "//nodejs/test/behaviour/connection:steps-cluster",
         **kwargs,
     )
