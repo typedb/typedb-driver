@@ -17,16 +17,16 @@
 
 def _rule_implementation(ctx):
     """
-    Implementation of the rule typedb_cloud_py_test.
+    Implementation of the rule typedb_cluster_py_test.
     """
 
     # Store the path of the test source file. It is recommended to only have one source file.
     test_src = ctx.files.srcs[0].path
 
-    typedb_cloud_distro = str(ctx.files.native_typedb_cloud_artifact[0].short_path)
+    typedb_cluster_distro = str(ctx.files.native_typedb_cluster_artifact[0].short_path)
 
     # TODO: This code is, mostly, copied from our TypeDB behave test
-    cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cloud_distro
+    cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cluster_distro
     cmd += """
             function server_start() {
               ./${1}/typedb cloud \
@@ -124,7 +124,7 @@ def _rule_implementation(ctx):
     # https://bazel.build/versions/master/docs/skylark/rules.html#runfiles
     return [DefaultInfo(
         # The shell executable - the output of this rule - can use these files at runtime.
-        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cloud_artifact)
+        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cluster_artifact)
     )]
 
 """
@@ -142,13 +142,13 @@ Args:
   deps:
     System to test.
 """
-typedb_cloud_py_test = rule(
+typedb_cluster_py_test = rule(
     implementation=_rule_implementation,
     attrs={
         "srcs": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
         "deps": attr.label_list(mandatory=True,allow_empty=False),
         "data": attr.label_list(),
-        "native_typedb_cloud_artifact": attr.label(mandatory=True)
+        "native_typedb_cluster_artifact": attr.label(mandatory=True)
     },
     test=True,
 )

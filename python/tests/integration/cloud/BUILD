@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load(":cloud_test_rule.bzl", "typedb_cloud_py_test")
+load(":cloud_test_rule.bzl", "typedb_cluster_py_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_driver_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_test")
@@ -31,7 +31,7 @@ py_test(
     python_version = "PY3"
 )
 
-#typedb_cloud_py_test(
+#typedb_cluster_py_test(
 #    name = "test_failover",
 #    srcs = ["test_failover.py"],
 #    deps = [
@@ -39,7 +39,7 @@ py_test(
 #    ],
 #    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
 #    size = "medium",
-#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cluster-artifact",
+#    native_typedb_cluster_artifact = "//tool/test:native-typedb-cluster-artifact",
 #)
 
 checkstyle_test(

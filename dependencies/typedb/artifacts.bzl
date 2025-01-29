@@ -28,9 +28,9 @@ def typedb_artifact():
         commit = "b80b2a70a48bf6808712502509ab0d5526e0218a"
     )
 
-#def typedb_cloud_artifact():
+#def typedb_cluster_artifact():
 #    native_artifact_files(
-#        name = "typedb_cloud_artifact",
+#        name = "typedb_cluster_artifact",
 #        group_name = "typedb-cluster-server-{platform}",
 #        artifact_name = "typedb-cluster-server-{platform}-{version}.{ext}",
 #        tag_source = deployment_private["artifact"]["release"]["download"],

@@ -49,11 +49,11 @@ native_typedb_artifact(
 #native_typedb_artifact(
 #    name = "native-typedb-cluster-artifact",
 #    native_artifacts = {
-#        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_cloud_artifact_linux-arm64//file"],
-#        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_cloud_artifact_linux-x86_64//file"],
-#        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_cloud_artifact_mac-arm64//file"],
-#        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_cloud_artifact_mac-x86_64//file"],
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_cloud_artifact_windows-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_cluster_artifact_linux-arm64//file"],
+#        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_cluster_artifact_linux-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_cluster_artifact_mac-arm64//file"],
+#        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_cluster_artifact_mac-x86_64//file"],
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_cluster_artifact_windows-x86_64//file"],
 #    },
 #    output = "typedb-cluster-artifact.tar.gz",
 #    visibility = ["//visibility:public"],
