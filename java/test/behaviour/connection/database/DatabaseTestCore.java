@@ -43,7 +43,7 @@ public class DatabaseTestCore extends BehaviourTest {
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
+    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cluster
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'

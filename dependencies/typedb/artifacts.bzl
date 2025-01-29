@@ -31,8 +31,8 @@ def typedb_artifact():
 #def typedb_cloud_artifact():
 #    native_artifact_files(
 #        name = "typedb_cloud_artifact",
-#        group_name = "typedb-cloud-server-{platform}",
-#        artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
+#        group_name = "typedb-cluster-server-{platform}",
+#        artifact_name = "typedb-cluster-server-{platform}-{version}.{ext}",
 #        tag_source = deployment_private["artifact"]["release"]["download"],
 #        commit_source = deployment_private["artifact"]["snapshot"]["download"],
 #        tag = "e4e4fee9d488e2a6e89e29716b98e3213d228809",
@@ -40,5 +40,5 @@ def typedb_artifact():
 
 #maven_artifacts = {
 #    'com.typedb:typedb-runner': '2.28.3',
-#    'com.typedb:typedb-cloud-runner': '2.28.3',
+#    'com.typedb:typedb-cluster-runner': '2.28.3',
 #}

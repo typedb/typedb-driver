@@ -39,7 +39,7 @@ py_test(
 #    ],
 #    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
 #    size = "medium",
-#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cloud-artifact",
+#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cluster-artifact",
 #)
 
 checkstyle_test(

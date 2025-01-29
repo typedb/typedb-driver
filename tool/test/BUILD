@@ -47,7 +47,7 @@ native_typedb_artifact(
 )
 
 #native_typedb_artifact(
-#    name = "native-typedb-cloud-artifact",
+#    name = "native-typedb-cluster-artifact",
 #    native_artifacts = {
 #        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_cloud_artifact_linux-arm64//file"],
 #        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_cloud_artifact_linux-x86_64//file"],
@@ -55,7 +55,7 @@ native_typedb_artifact(
 #        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_cloud_artifact_mac-x86_64//file"],
 #        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_cloud_artifact_windows-x86_64//file"],
 #    },
-#    output = "typedb-cloud-artifact.tar.gz",
+#    output = "typedb-cluster-artifact.tar.gz",
 #    visibility = ["//visibility:public"],
 #)
 
@@ -65,6 +65,6 @@ artifact_extractor(
 )
 
 artifact_extractor(
-    name = "typedb-cloud-extractor",
-    artifact = ":native-typedb-cloud-artifact",
+    name = "typedb-cluster-extractor",
+    artifact = ":native-typedb-cluster-artifact",
 )

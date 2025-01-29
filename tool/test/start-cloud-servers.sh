@@ -49,12 +49,12 @@ function server_start() {
     --development-mode.enable=true
 }
 
-rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
+rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
-bazel run //tool/test:typedb-cloud-extractor -- typedb-cloud-all
+bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
 echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-cloud-all $i || exit 1
+  cp -r typedb-cluster-all $i || exit 1
 done
 echo Starting a cloud consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
