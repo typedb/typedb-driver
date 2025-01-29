@@ -35,9 +35,9 @@ config_setting(
 )
 
 config_setting(
-    name = "cloud",
+    name = "cluster",
     flag_values = {
-        ":mode": "cloud",
+        ":mode": "cluster",
     },
 )
 
@@ -46,7 +46,7 @@ rust_library(
     srcs = [":lib.rs"],
     crate_features = select({
         ":core": crate_features_common,
-        ":cloud": crate_features_common + ["cloud"],
+        ":cluster": crate_features_common + ["cluster"],
     }),
 )
 

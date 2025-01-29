@@ -32,12 +32,12 @@ Result
 connection.force_close()
 ----
 
-[#_struct_TypeDBDriver_is_cloud_]
-==== is_cloud
+[#_struct_TypeDBDriver_is_cluster_]
+==== is_cluster
 
 [source,rust]
 ----
-pub fn is_cloud(&self) -> bool
+pub fn is_cluster(&self) -> bool
 ----
 
 Check if the connection is to an Cloud server.
@@ -53,7 +53,7 @@ bool
 .Code examples
 [source,rust]
 ----
-connection.is_cloud()
+connection.is_cluster()
 ----
 
 [#_struct_TypeDBDriver_is_open_]
@@ -80,8 +80,8 @@ bool
 connection.is_open()
 ----
 
-[#_struct_TypeDBDriver_new_cloud_init_addresses_Vec_T_credentials_Credentials_driver_options_DriverOptions]
-==== new_cloud
+[#_struct_TypeDBDriver_new_cluster_init_addresses_Vec_T_credentials_Credentials_driver_options_DriverOptions]
+==== new_cluster
 
 [tabs]
 ====
@@ -90,7 +90,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn new_cloud<T: AsRef<str> + Sync>(
+pub async fn new_cluster<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
     credentials: Credentials,
     driver_options: DriverOptions,
@@ -104,7 +104,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn new_cloud<T: AsRef<str> + Sync>(
+pub fn new_cluster<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
     credentials: Credentials,
     driver_options: DriverOptions,
@@ -141,8 +141,8 @@ Result<Self>
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_description_init_addresses_Vec_T_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
-==== new_cloud_with_description
+[#_struct_TypeDBDriver_new_cluster_with_description_init_addresses_Vec_T_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
+==== new_cluster_with_description
 
 [tabs]
 ====
@@ -151,7 +151,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn new_cloud_with_description<T: AsRef<str> + Sync>(
+pub async fn new_cluster_with_description<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
     credentials: Credentials,
     driver_options: DriverOptions,
@@ -166,7 +166,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn new_cloud_with_description<T: AsRef<str> + Sync>(
+pub fn new_cluster_with_description<T: AsRef<str> + Sync>(
     init_addresses: &Vec<T>,
     credentials: Credentials,
     driver_options: DriverOptions,
@@ -205,8 +205,8 @@ Result<Self>
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_translation_address_translation_HashMap_T_credential_Credentials_driver_options_DriverOptions]
-==== new_cloud_with_translation
+[#_struct_TypeDBDriver_new_cluster_with_translation_address_translation_HashMap_T_credential_Credentials_driver_options_DriverOptions]
+==== new_cluster_with_translation
 
 [tabs]
 ====
@@ -215,7 +215,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn new_cloud_with_translation<T, U>(
+pub async fn new_cluster_with_translation<T, U>(
     address_translation: HashMap<T, U>,
     credential: Credentials,
     driver_options: DriverOptions,
@@ -231,7 +231,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn new_cloud_with_translation<T, U>(
+pub fn new_cluster_with_translation<T, U>(
     address_translation: HashMap<T, U>,
     credential: Credentials,
     driver_options: DriverOptions,
@@ -272,8 +272,8 @@ Result<Self>where
 
 ----
 
-[#_struct_TypeDBDriver_new_cloud_with_translation_with_description_address_translation_HashMap_T_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
-==== new_cloud_with_translation_with_description
+[#_struct_TypeDBDriver_new_cluster_with_translation_with_description_address_translation_HashMap_T_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
+==== new_cluster_with_translation_with_description
 
 [tabs]
 ====
@@ -282,7 +282,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn new_cloud_with_translation_with_description<T, U>(
+pub async fn new_cluster_with_translation_with_description<T, U>(
     address_translation: HashMap<T, U>,
     credentials: Credentials,
     driver_options: DriverOptions,
@@ -299,7 +299,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn new_cloud_with_translation_with_description<T, U>(
+pub fn new_cluster_with_translation_with_description<T, U>(
     address_translation: HashMap<T, U>,
     credentials: Credentials,
     driver_options: DriverOptions,

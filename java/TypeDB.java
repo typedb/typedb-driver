@@ -55,15 +55,15 @@ public class TypeDB {
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.cloudDriver(address, credential);
+     * TypeDB.clusterDriver(address, credential);
      * </pre>
      *
      * @param address The address of the TypeDB server
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        return cloudDriver(set(address), credentials, driverOptions);
+    public static Driver clusterDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        return clusterDriver(set(address), credentials, driverOptions);
     }
 
     /**
@@ -72,14 +72,14 @@ public class TypeDB {
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.cloudDriver(addresses, credential);
+     * TypeDB.clusterDriver(addresses, credential);
      * </pre>
      *
      * @param addresses The address(es) of the TypeDB server(s)
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+    public static Driver clusterDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addresses, credentials, driverOptions);
     }
 
@@ -89,7 +89,7 @@ public class TypeDB {
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.cloudDriver(addressTranslation, credential);
+     * TypeDB.clusterDriver(addressTranslation, credential);
      * </pre>
      *
      * @param addressTranslation Translation map from addresses to be used by the driver for connection
@@ -97,7 +97,7 @@ public class TypeDB {
      * @param credentials The credential to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver cloudDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+    public static Driver clusterDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addressTranslation, credentials, driverOptions);
     }
 }

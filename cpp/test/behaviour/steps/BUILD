@@ -40,7 +40,7 @@ cc_library(
 )
 
 cc_library(
-    name = "cloud-steps",
+    name = "cluster-steps",
     deps = [
         "//cpp:typedb-driver-cpp-import",
         "//cpp/test/cucumber:cucumber-cpp",
@@ -51,7 +51,7 @@ cc_library(
         "@gtest//:gtest_main",
     ],
     copts = ["-g -Iexternal/gherkin_cpp/include -std=c++17"],
-    srcs = glob(["main.cpp", "cloud_steps.cpp", "common/**/*.cpp"]),
+    srcs = glob(["main.cpp", "cluster_steps.cpp", "common/**/*.cpp"]),
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",
     visibility = ["//cpp/test/behaviour:__subpackages__"],

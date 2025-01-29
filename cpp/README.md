@@ -166,13 +166,13 @@ Functions returning concepts are exceptional in that they return `std::unique_pt
 ```
 
 ### TypeDB Cluster 
-Connect to TypeDB Cluster instances using `TypeDB::Driver::cloudDriver`
+Connect to TypeDB Cluster instances using `TypeDB::Driver::clusterDriver`
 ```cpp
-    std::string dbName = "cloud-database";
+    std::string dbName = "cluster-database";
     // Since we're using a self-signed certificate for encryption, we pass the path to the root-ca through an environment variable
     TypeDB::Credential creds("admin", "password", true, std::getenv("PATH_TO_ROOT_CA"));
-    TypeDB::Driver driver = TypeDB::Driver::cloudDriver({"localhost:11729"}, creds);
-    // You can also specify all node addresses TypeDB::Driver::cloudDriver({"localhost:11729, localhost:21729, localhost:31729"}, creds);
+    TypeDB::Driver driver = TypeDB::Driver::clusterDriver({"localhost:11729"}, creds);
+    // You can also specify all node addresses TypeDB::Driver::clusterDriver({"localhost:11729, localhost:21729, localhost:31729"}, creds);
 
     driver.databases.create(dbName);
     TypeDB::Database db = driver.databases.get(dbName);

@@ -57,7 +57,7 @@ pub extern "C" fn driver_open_core(
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn driver_open_cloud(
+pub extern "C" fn driver_open_cluster(
     addresses: *const *const c_char,
     credentials: *const Credentials,
     driver_options: *const DriverOptions,
@@ -65,7 +65,7 @@ pub extern "C" fn driver_open_cloud(
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(TypeDBDriver::new_cloud_with_description(
+    try_release(TypeDBDriver::new_cluster_with_description(
         &addresses,
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
@@ -83,7 +83,7 @@ pub extern "C" fn driver_open_cloud(
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn driver_open_cloud_translated(
+pub extern "C" fn driver_open_cluster_translated(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
     credentials: *const Credentials,
@@ -92,7 +92,7 @@ pub extern "C" fn driver_open_cloud_translated(
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
     let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
-    try_release(TypeDBDriver::new_cloud_with_translation_with_description(
+    try_release(TypeDBDriver::new_cluster_with_translation_with_description(
         addresses,
         borrow(credentials).clone(),
         borrow(driver_options).clone(),

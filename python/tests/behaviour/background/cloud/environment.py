@@ -25,7 +25,7 @@ IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 def before_all(context: Context):
     environment_base.before_all(context)
-    # context.credentials_root_ca_path = os.environ["ROOT_CA"] # TODO: test root ca with cloud
+    # context.credentials_root_ca_path = os.environ["ROOT_CA"] # TODO: test root ca with cluster
     context.create_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
         create_driver(context, host, port, user, password)
     context.setup_context_driver_fn = lambda host="localhost", port=None, username=None, password=None: \

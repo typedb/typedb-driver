@@ -36,17 +36,17 @@ Driver Driver::coreDriver(const std::string& address) {
     return Driver(p);
 }
 
-Driver Driver::cloudDriver(const std::vector<std::string>& addresses, const Credential& credential) {
+Driver Driver::clusterDriver(const std::vector<std::string>& addresses, const Credential& credential) {
     std::vector<const char*> addressesNative;
     for (auto& addr : addresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
-    auto p = _native::connection_open_cloud(addressesNative.data(), credential.getNative());
+    auto p = _native::connection_open_cluster(addressesNative.data(), credential.getNative());
     DriverException::check_and_throw();
     return Driver(p);
 }
 
-Driver Driver::cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential) {
+Driver Driver::clusterDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential) {
     std::vector<const char*> publicAddressesNative;
     std::vector<const char*> privateAddressesNative;
     for (auto& [publicAddress, privateAddress] : addressTranslation) {
@@ -55,7 +55,7 @@ Driver Driver::cloudDriver(const std::unordered_map<std::string, std::string>& a
     }
     publicAddressesNative.push_back(nullptr);
     privateAddressesNative.push_back(nullptr);
-    auto p = _native::connection_open_cloud_translated(
+    auto p = _native::connection_open_cluster_translated(
         publicAddressesNative.data(),
         privateAddressesNative.data(),
         credential.getNative()

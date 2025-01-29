@@ -22,7 +22,7 @@ const assert = require("assert");
 
 async function run() {
     try {
-        const driver = await TypeDB.cloudDriver(
+        const driver = await TypeDB.clusterDriver(
             {
                 "localhost:11729": "localhost:11729",
                 "localhost:21729": "localhost:21729",

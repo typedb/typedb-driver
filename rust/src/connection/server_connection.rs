@@ -80,7 +80,7 @@ impl ServerConnection {
         Ok((server_connection, database_info))
     }
 
-    pub(crate) fn new_cloud(
+    pub(crate) fn new_cluster(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credentials: Credentials,

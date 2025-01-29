@@ -20,7 +20,7 @@ load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 cc_test(
     name = "user-test-cluster",
-    deps = ["//cpp/test/behaviour/steps:cloud-steps"],
+    deps = ["//cpp/test/behaviour/steps:cluster-steps"],
     data = ["@typedb_behaviour//connection:user.feature", "//tool/test/resources:certificates"],
     env = {"ROOT_CA": "tool/test/resources/encryption/ext-grpc-root-ca.pem"},
     args = ["$(location @typedb_behaviour//connection:user.feature)"]

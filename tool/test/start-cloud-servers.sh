@@ -56,7 +56,7 @@ echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
   cp -r typedb-cluster-all $i || exit 1
 done
-echo Starting a cloud consisting of $NODE_COUNT servers...
+echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done

@@ -17,5 +17,5 @@
  * under the License.
  */
 
-mod cloud;
+mod cluster;
 mod core;

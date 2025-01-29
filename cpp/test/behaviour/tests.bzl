@@ -35,7 +35,7 @@ def typedb_behaviour_cpp_test(
     
     native.cc_test(
         name = name + "-cluster",
-        deps = ["//cpp/test/behaviour/steps:cloud-steps"] + deps,
+        deps = ["//cpp/test/behaviour/steps:cluster-steps"] + deps,
         data = [feature, "//tool/test/resources:certificates"] + data,
         args = ["$(location " + feature + ")"] + args,
         **kwargs,

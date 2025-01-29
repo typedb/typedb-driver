@@ -20,7 +20,7 @@ load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 def typedb_behaviour_java_test(
         name,
         connection_steps_core,
-        connection_steps_cloud,
+        connection_steps_cluster,
         steps,
         runtime_deps = [],
         **kwargs):
@@ -40,13 +40,13 @@ def typedb_behaviour_java_test(
 
     typedb_java_test(
         name = name + "-cluster",
-        server_artifacts = { # TODO: Use cloud artifacts
+        server_artifacts = { # TODO: Use cluster artifacts
             "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
             "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
             "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
             "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
 #            "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
         },
-        runtime_deps = runtime_deps + [connection_steps_cloud] + steps,
+        runtime_deps = runtime_deps + [connection_steps_cluster] + steps,
         **kwargs,
     )

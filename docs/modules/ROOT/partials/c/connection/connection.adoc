@@ -56,12 +56,12 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
-[#_connection_open_cloud]
-==== connection_open_cloud
+[#_connection_open_cluster]
+==== connection_open_cluster
 
 [source,cpp]
 ----
-struct Connection* connection_open_cloud(const char*const* addresses, const struct Credentials* credentials)
+struct Connection* connection_open_cluster(const char*const* addresses, const struct Credentials* credentials)
 ----
 
 
@@ -83,12 +83,12 @@ a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credent
 .Returns
 `struct Connection*`
 
-[#_connection_open_cloud_translated]
-==== connection_open_cloud_translated
+[#_connection_open_cluster_translated]
+==== connection_open_cluster_translated
 
 [source,cpp]
 ----
-struct Connection* connection_open_cloud_translated(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials)
+struct Connection* connection_open_cluster_translated(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials)
 ----
 
 

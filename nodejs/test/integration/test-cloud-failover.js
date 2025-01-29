@@ -86,7 +86,7 @@ function serverStart(idx) {
 
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
-    const driver = await TypeDB.cloudDriver(
+    const driver = await TypeDB.clusterDriver(
         ["localhost:11729", "localhost:21729", "localhost:31729"],
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
@@ -109,7 +109,7 @@ async function run() {
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
-            const driver = await TypeDB.cloudDriver(
+            const driver = await TypeDB.clusterDriver(
                 ["localhost:11729", "localhost:21729", "localhost:31729"],
                 new TypeDBCredential("admin", "password", process.env.ROOT_CA)
             );

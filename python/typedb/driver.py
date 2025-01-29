@@ -66,7 +66,7 @@ class TypeDB:
         return _Driver.core(address, credentials, driver_options)
 
     @staticmethod
-    def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credentials: Credentials,
+    def cluster_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credentials: Credentials,
                      driver_options: DriverOptions) -> Driver:
         """
         Creates a connection to TypeDB Cluster, authenticating with the provided credentials.
@@ -77,8 +77,8 @@ class TypeDB:
         :return:
         """
         if isinstance(addresses, str):
-            return _Driver.cloud([addresses], credentials, driver_options)
+            return _Driver.cluster([addresses], credentials, driver_options)
         elif isinstance(addresses, ABCMapping):
-            return _Driver.cloud(dict(addresses), credentials, driver_options)
+            return _Driver.cluster(dict(addresses), credentials, driver_options)
         else:
-            return _Driver.cloud(list(addresses), credentials, driver_options)
+            return _Driver.cluster(list(addresses), credentials, driver_options)

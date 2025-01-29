@@ -149,7 +149,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 const members = res.servers.map(x => x.address);
                 return members;
             } catch (e) {
-                console.error(`Fetching cloud servers from ${address} failed.`, e);
+                console.error(`Fetching cluster servers from ${address} failed.`, e);
             }
         }
         throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(initPrivateAddresses.join(",")));

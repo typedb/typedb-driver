@@ -59,11 +59,11 @@ void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Con
 const TestHooks testHooks;
 
 TypeDB::Driver CoreOrCloudConnection::defaultConnection() {
-    return TypeDB::Driver::cloudDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(DEFAULT_CLOUD_USER, DEFAULT_CLOUD_PASSWORD, true, std::getenv("ROOT_CA")));
+    return TypeDB::Driver::clusterDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(DEFAULT_CLOUD_USER, DEFAULT_CLOUD_PASSWORD, true, std::getenv("ROOT_CA")));
 }
 
 TypeDB::Driver CoreOrCloudConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
-    return TypeDB::Driver::cloudDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
+    return TypeDB::Driver::clusterDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
 }
 
 }  // namespace TypeDB::BDD

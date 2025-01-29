@@ -82,15 +82,15 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * Driver::cloudDriver(addresses, credential);
+     * Driver::clusterDriver(addresses, credential);
      * </pre>
      *
      * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses to be used
      * by the driver for connection to addresses received from the TypeDB server(s) 
      * @param credential The Credential to connect with
      */
-    static Driver cloudDriver(const std::vector<std::string>& addresses, const Credential& credential);
-    static Driver cloudDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential);
+    static Driver clusterDriver(const std::vector<std::string>& addresses, const Credential& credential);
+    static Driver clusterDriver(const std::unordered_map<std::string, std::string>& addressTranslation, const Credential& credential);
 
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;

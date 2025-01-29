@@ -35,7 +35,7 @@ TEST(TestConnection, TestAddressTranslation) {
         {"localhost:31729", "localhost:31729"},
     };
     auto credential = TypeDB::Credential("admin", "password", true, std::getenv("ROOT_CA"));
-    TypeDB::Driver driver = TypeDB::Driver::cloudDriver(addressTranslation, credential);
+    TypeDB::Driver driver = TypeDB::Driver::clusterDriver(addressTranslation, credential);
 
     delete_if_exists(driver, dbName);
     driver.databases.create(dbName);

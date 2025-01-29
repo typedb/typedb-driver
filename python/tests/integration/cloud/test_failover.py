@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# TODO: When cloud is implemented, rewrite this test in BDDs for all the drivers. Remove this file.
+# TODO: When cluster is implemented, rewrite this test in BDDs for all the drivers. Remove this file.
 
 # import os
 # import subprocess
@@ -36,7 +36,7 @@
 #         root_ca_path = os.environ["ROOT_CA"]
 #         credentials = Credentials("admin", "password", tls_root_ca_path=root_ca_path)
 #         print("SetUp", flush=True)
-#         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
+#         with TypeDB.cluster_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
 #             if driver.databases.contains("typedb"):
 #                 driver.databases.get("typedb").delete()
 #             driver.databases.create("typedb")
@@ -44,7 +44,7 @@
 #     @staticmethod
 #     def server_start(index):
 #         subprocess.Popen([
-#             "../%s/typedb" % index, "cloud",
+#             "../%s/typedb" % index, "cluster",
 #             "--storage.data", "server/data",
 #             "--server.address", "localhost:%s1729" % index,
 #             "--server.internal-address.zeromq", "localhost:%s1730" % index,
@@ -81,7 +81,7 @@
 #     def test_put_entity_type_to_crashed_primary_replica(self):
 #         root_ca_path = os.environ["ROOT_CA"]
 #         credential = Credentials("admin", "password", tls_root_ca_path=root_ca_path)
-#         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
+#         with TypeDB.cluster_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
 #             assert driver.databases.contains("typedb")
 #             primary_replica = self.get_primary_replica(driver.databases)
 #             print("Performing operations against the primary replica " + str(primary_replica))

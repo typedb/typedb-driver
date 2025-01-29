@@ -25,7 +25,7 @@ from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
+from typedb.native_driver_wrapper import driver_open_core, driver_open_cluster, driver_open_cluster_translated, \
     driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
@@ -38,17 +38,17 @@ if TYPE_CHECKING:
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):
 
-    def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credentials: Credentials,
+    def __init__(self, is_cluster: bool, addresses: list[str] | dict[str], credentials: Credentials,
                  driver_options: DriverOptions):
         try:
-            if is_cloud:
+            if is_cluster:
                 if isinstance(addresses, list):
-                    native_driver = driver_open_cloud(addresses, credentials.native_object,
+                    native_driver = driver_open_cluster(addresses, credentials.native_object,
                                                       driver_options.native_object, Driver.LANGUAGE)
                 else:
                     public_addresses = list(addresses.keys())
                     private_addresses = [addresses[public] for public in public_addresses]
-                    native_driver = driver_open_cloud_translated(
+                    native_driver = driver_open_cluster_translated(
                         public_addresses, private_addresses, credentials.native_object, driver_options.native_object,
                         Driver.LANGUAGE)
             else:
@@ -61,11 +61,11 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
 
     @classmethod
     def core(cls, address: str, credentials: Credentials, driver_options: DriverOptions):
-        return cls(is_cloud=False, addresses=[address], credentials=credentials, driver_options=driver_options)
+        return cls(is_cluster=False, addresses=[address], credentials=credentials, driver_options=driver_options)
 
     @classmethod
-    def cloud(cls, addresses: list[str] | dict[str], credentials: Credentials, driver_options: DriverOptions):
-        return cls(is_cloud=True, addresses=addresses, credentials=credentials, driver_options=driver_options)
+    def cluster(cls, addresses: list[str] | dict[str], credentials: Credentials, driver_options: DriverOptions):
+        return cls(is_cluster=True, addresses=addresses, credentials=credentials, driver_options=driver_options)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

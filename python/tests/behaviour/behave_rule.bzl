@@ -52,16 +52,16 @@ def typedb_behaviour_py_test_core(name, **kwargs):
         **kwargs,
     )
 
-def typedb_behaviour_py_test_cloud(name, **kwargs):
+def typedb_behaviour_py_test_cluster(name, **kwargs):
     py_behave_test(
         name = name + "-cluster",
-        background = "@//python/tests/behaviour/background:cloud",
-        native_typedb_artifact = "@//tool/test:native-typedb-artifact", # TODO: Change to cloud artifact when available
+        background = "@//python/tests/behaviour/background:cluster",
+        native_typedb_artifact = "@//tool/test:native-typedb-artifact", # TODO: Change to cluster artifact when available
         toolchains = ["@rules_python//python:current_py_toolchain"],
-        typedb_port = "1729", # TODO: Might want to change back to 11729 when cloud has multiple nodes
+        typedb_port = "1729", # TODO: Might want to change back to 11729 when cluster has multiple nodes
         **kwargs,
     )
 
 def typedb_behaviour_py_test(name, **kwargs):
     typedb_behaviour_py_test_core(name, **kwargs)
-    typedb_behaviour_py_test_cloud(name, **kwargs)
+    typedb_behaviour_py_test_cluster(name, **kwargs)

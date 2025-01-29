@@ -29,7 +29,7 @@ rustfmt_test(
         "//rust/tests/behaviour/driver:test_driver",
 
         "//rust/tests/integration/core:test_example",
-#        "//rust/tests/integration/cloud:test_example",
+#        "//rust/tests/integration/cluster:test_example",
     ],
     size = "small",
 )

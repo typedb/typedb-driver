@@ -49,10 +49,10 @@ export namespace TypeDB {
      * ### Examples
      *
      * ```ts
-     * const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+     * const driver = TypeDB.clusterDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
      * ```
      */
-    export function cloudDriver(addresses: string | string[] | Record<string, string>, credential: TypeDBCredential): Promise<TypeDBDriver> {
+    export function clusterDriver(addresses: string | string[] | Record<string, string>, credential: TypeDBCredential): Promise<TypeDBDriver> {
         if (typeof addresses === 'string') addresses = [addresses];
         return new TypeDBDriverImpl(addresses, credential).open();
     }

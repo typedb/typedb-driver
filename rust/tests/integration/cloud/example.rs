@@ -33,7 +33,7 @@ use typedb_driver::{
 
 // EXAMPLE END MARKER
 async fn cleanup() {
-    let driver = TypeDBDriver::new_cloud(
+    let driver = TypeDBDriver::new_cluster(
         &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
         Credentials::new("admin", "password"),
         DriverOptions::new(false, None).unwrap(),
@@ -55,7 +55,7 @@ fn example() {
         // EXAMPLE START MARKER
         // Open a driver connection
 
-        let driver = TypeDBDriver::new_cloud(
+        let driver = TypeDBDriver::new_cluster(
             &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
             Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),

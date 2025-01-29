@@ -44,12 +44,12 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_static_Driver_TypeDBDrivercloudDriver_const_stdvector_stdstring_addresses_const_Credential_credentials_]
-==== cloudDriver
+[#_static_Driver_TypeDBDriverclusterDriver_const_stdvector_stdstring_addresses_const_Credential_credentials_]
+==== clusterDriver
 
 [source,cpp]
 ----
-static Driver TypeDB::Driver::cloudDriver(const std::vector< std::string >& addresses, const Credential& credentials)
+static Driver TypeDB::Driver::clusterDriver(const std::vector< std::string >& addresses, const Credential& credentials)
 ----
 
 
@@ -75,7 +75,7 @@ a| `credentials` a| The Credential to connect with a| `const Credential&`
 .Code examples
 [source,cpp]
 ----
-Driver::cloudDriver(addresses, credentials);
+Driver::clusterDriver(addresses, credentials);
 ----
 
 [#_static_Driver_TypeDBDrivercoreDriver_const_stdstring_address_]

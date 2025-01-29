@@ -13,12 +13,12 @@ a| `DEFAULT_ADDRESS`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDB_cloudDriver_addresses_string_string_Record_string_string_credentials_TypeDBCredential]
-==== cloudDriver
+[#_TypeDB_clusterDriver_addresses_string_string_Record_string_string_credentials_TypeDBCredential]
+==== clusterDriver
 
 [source,nodejs]
 ----
-cloudDriver(addresses, credentials): Promise<TypeDBDriver>
+clusterDriver(addresses, credentials): Promise<TypeDBDriver>
 ----
 
 Creates a connection to TypeDB Cluster, authenticating with the provided credentials.
@@ -32,7 +32,7 @@ Creates a connection to TypeDB Cluster, authenticating with the provided credent
 a| `addresses` a| List of addresses of the individual TypeDB Cluster servers. As long one specified address is provided, the driver will discover the other addresses from that server. Alternatively, a translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) may be provided. a| `string \| string[] \| Record<string, string>`
 a| `credentials` a| The credentials to log in, and encryption settings. See ``TypeDBCredential``
 Examples
-``const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+``const driver = TypeDB.clusterDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
 ``Copy a| `TypeDBCredential`
 |===
 

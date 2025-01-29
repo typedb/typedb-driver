@@ -42,7 +42,7 @@ pub struct TypeDBDriver {
     user_manager: UserManager,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
-    is_cloud: bool,
+    is_cluster: bool,
 }
 
 impl TypeDBDriver {
@@ -131,7 +131,7 @@ impl TypeDBDriver {
             user_manager,
             background_runtime,
             username: None,
-            is_cloud: false,
+            is_cluster: false,
         })
     }
 
@@ -145,13 +145,13 @@ impl TypeDBDriver {
     /// * `driver_options` — The DriverOptions to connect with
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud<T: AsRef<str> + Sync>(
+    pub async fn new_cluster<T: AsRef<str> + Sync>(
         // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
         init_addresses: &Vec<T>,
         credentials: Credentials,
         driver_options: DriverOptions,
     ) -> Result<Self> {
-        Self::new_cloud_with_description(init_addresses, credentials, driver_options, Self::DRIVER_LANG).await
+        Self::new_cluster_with_description(init_addresses, credentials, driver_options, Self::DRIVER_LANG).await
     }
 
     // TODO: Add examples
@@ -165,7 +165,7 @@ impl TypeDBDriver {
     /// * `driver_lang` — The language of the driver connecting to the server
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_description<T: AsRef<str> + Sync>(
+    pub async fn new_cluster_with_description<T: AsRef<str> + Sync>(
         // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
         init_addresses: &Vec<T>,
         credentials: Credentials,
@@ -180,7 +180,7 @@ impl TypeDBDriver {
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credentials.clone())?;
         // let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
-        // Self::new_cloud_impl(server_to_address, background_runtime, credential)
+        // Self::new_cluster_impl(server_to_address, background_runtime, credential)
     }
 
     // TODO: Add examples
@@ -194,7 +194,7 @@ impl TypeDBDriver {
     /// * `driver_options` — The DriverOptions to connect with
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_translation<T, U>(
+    pub async fn new_cluster_with_translation<T, U>(
         // TODO: Find a better name
         address_translation: HashMap<T, U>,
         credential: Credentials,
@@ -204,7 +204,7 @@ impl TypeDBDriver {
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,
     {
-        Self::new_cloud_with_translation_with_description(
+        Self::new_cluster_with_translation_with_description(
             address_translation,
             credential,
             driver_options,
@@ -225,7 +225,7 @@ impl TypeDBDriver {
     /// * `driver_lang` — The language of the driver connecting to the server
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_translation_with_description<T, U>(
+    pub async fn new_cluster_with_translation_with_description<T, U>(
         address_translation: HashMap<T, U>,
         credentials: Credentials,
         driver_options: DriverOptions,
@@ -255,10 +255,10 @@ impl TypeDBDriver {
         //
         // debug_assert_eq!(fetched, provided);
         //
-        // Self::new_cloud_impl(address_to_server, background_runtime, credential)
+        // Self::new_cluster_impl(address_to_server, background_runtime, credential)
     }
 
-    fn new_cloud_impl(
+    fn new_cluster_impl(
         address_to_server: HashMap<Address, Address>,
         background_runtime: Arc<BackgroundRuntime>,
         credentials: Credentials,
@@ -267,7 +267,7 @@ impl TypeDBDriver {
         // let server_connections: HashMap<Address, ServerConnection> = address_to_server
         //     .into_iter()
         //     .map(|(public, private)| {
-        //         ServerConnection::new_cloud(background_runtime.clone(), public, credential.clone())
+        //         ServerConnection::new_cluster(background_runtime.clone(), public, credential.clone())
         //             .map(|server_connection| (private, server_connection))
         //     })
         //     .try_collect()?;
@@ -282,7 +282,7 @@ impl TypeDBDriver {
         //         server_connections,
         //         background_runtime,
         //         username: Some(credential.username().to_owned()),
-        //         is_cloud: true,
+        //         is_cluster: true,
         //     })
         // }
         todo!()
@@ -297,7 +297,7 @@ impl TypeDBDriver {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {
             let server_connection =
-                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credentials.clone());
+                ServerConnection::new_cluster(background_runtime.clone(), address.clone(), credentials.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -331,10 +331,10 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// connection.is_cloud()
+    /// connection.is_cluster()
     /// ```
-    pub fn is_cloud(&self) -> bool {
-        self.is_cloud
+    pub fn is_cluster(&self) -> bool {
+        self.is_cluster
     }
 
     pub fn databases(&self) -> &DatabaseManager {

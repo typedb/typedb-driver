@@ -29,12 +29,12 @@ public TypeDB()
 .Returns
 `public`
 
-[#_TypeDB_cloudDriver_java_lang_String_Credentials_DriverOptions]
-==== cloudDriver
+[#_TypeDB_clusterDriver_java_lang_String_Credentials_DriverOptions]
+==== clusterDriver
 
 [source,java]
 ----
-public static Driver cloudDriver​(java.lang.String address,
+public static Driver clusterDriver​(java.lang.String address,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
                           throws TypeDBDriverException
@@ -62,15 +62,15 @@ a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 .Code examples
 [source,java]
 ----
-TypeDB.cloudDriver(address, credential);
+TypeDB.clusterDriver(address, credential);
 ----
 
-[#_TypeDB_cloudDriver_java_util_Set_java_lang_String_Credentials_DriverOptions]
-==== cloudDriver
+[#_TypeDB_clusterDriver_java_util_Set_java_lang_String_Credentials_DriverOptions]
+==== clusterDriver
 
 [source,java]
 ----
-public static Driver cloudDriver​(java.util.Set<java.lang.String> addresses,
+public static Driver clusterDriver​(java.util.Set<java.lang.String> addresses,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
                           throws TypeDBDriverException
@@ -98,15 +98,15 @@ a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 .Code examples
 [source,java]
 ----
-TypeDB.cloudDriver(addresses, credential);
+TypeDB.clusterDriver(addresses, credential);
 ----
 
-[#_TypeDB_cloudDriver_java_util_Map_java_lang_String_​java_lang_String_Credentials_DriverOptions]
-==== cloudDriver
+[#_TypeDB_clusterDriver_java_util_Map_java_lang_String_​java_lang_String_Credentials_DriverOptions]
+==== clusterDriver
 
 [source,java]
 ----
-public static Driver cloudDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
+public static Driver clusterDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
                                  Credentials credentials,
                                  DriverOptions driverOptions)
                           throws TypeDBDriverException
@@ -134,7 +134,7 @@ a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 .Code examples
 [source,java]
 ----
-TypeDB.cloudDriver(addressTranslation, credential);
+TypeDB.clusterDriver(addressTranslation, credential);
 ----
 
 [#_TypeDB_coreDriver_java_lang_String_Credentials_DriverOptions]

@@ -68,7 +68,7 @@ namespace TypeDB.Driver.Connection
         {
             try
             {
-                return Pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
+                return Pinvoke.typedb_driver.connection_open_cluster(initAddresses.ToArray(), credential.NativeObject);
             }
             catch (Pinvoke.Error e)
             {
@@ -89,7 +89,7 @@ namespace TypeDB.Driver.Connection
                     privateAddresses[index] = translation.Value;
                     index++;
                 }
-                return Pinvoke.typedb_driver.connection_open_cloud_translated(publicAddresses, privateAddresses, credential.NativeObject);
+                return Pinvoke.typedb_driver.connection_open_cluster_translated(publicAddresses, privateAddresses, credential.NativeObject);
             }
             catch (Pinvoke.Error e)
             {

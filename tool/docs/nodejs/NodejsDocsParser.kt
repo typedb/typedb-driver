@@ -68,7 +68,7 @@ class NodejsDocParser : Callable<Unit> {
         val namespaceFunctions: HashMap<String, MutableList<Method>> = hashMapOf()
 
         // special case for namespace functions that we should parse
-        val namespaceFunctionsFilter = Regex(".*/functions/.*(coreDriver|cloudDriver).*")
+        val namespaceFunctionsFilter = Regex(".*/functions/.*(coreDriver|clusterDriver).*")
         File(inputDirectoryName).walkTopDown().filter {
             (it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
                     || it.toString().contains("/modules/") || namespaceFunctionsFilter.matches(it.toString()))

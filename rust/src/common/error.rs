@@ -159,7 +159,7 @@ error_messages! { ConnectionError
     CloudSSLCertificateNotValidated =
         20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credentials.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credentials.",
     ConnectionFailed =
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =

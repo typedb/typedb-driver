@@ -36,8 +36,8 @@ import java.util.Set;
 
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
-import static com.typedb.driver.jni.typedb_driver.driver_open_cloud;
-import static com.typedb.driver.jni.typedb_driver.driver_open_cloud_translated;
+import static com.typedb.driver.jni.typedb_driver.driver_open_cluster;
+import static com.typedb.driver.jni.typedb_driver.driver_open_cluster_translated;
 import static com.typedb.driver.jni.typedb_driver.driver_open_core;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
@@ -68,7 +68,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) {
         try {
-            return driver_open_cloud(initAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            return driver_open_cluster(initAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -82,7 +82,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
                 publicAddresses.add(entry.getKey());
                 privateAddresses.add(entry.getValue());
             }
-            return driver_open_cloud_translated(
+            return driver_open_cluster_translated(
                     publicAddresses.toArray(new String[0]),
                     privateAddresses.toArray(new String[0]),
                     credentials.nativeObject,
