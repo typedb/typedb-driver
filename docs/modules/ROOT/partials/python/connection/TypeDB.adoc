@@ -10,7 +10,7 @@
 static cloud_driver(addresses: Mapping[str, str] | Iterable[str] | str, credentials: Credentials, driver_options: DriverOptions) -> Driver
 ----
 
-Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+Creates a connection to TypeDB Cluster, authenticating with the provided credentials.
 
 [caption=""]
 .Input parameters

@@ -58,7 +58,7 @@ std::optional< ReplicaInfo > TypeDB::Database::preferredReplica()
 
 
 
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cluster_
 
 
 [caption=""]
@@ -82,7 +82,7 @@ std::optional< ReplicaInfo > TypeDB::Database::primaryReplica()
 
 
 
-Returns the primary replica for this database. _Only works in TypeDB Cloud_
+Returns the primary replica for this database. _Only works in TypeDB Cluster_
 
 
 [caption=""]
@@ -106,7 +106,7 @@ ReplicaInfoIterable TypeDB::Database::replicas()
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Set of ``Replica`` instances for this database. Only works in TypeDB Cluster
 
 
 [caption=""]

@@ -136,11 +136,11 @@ impl TypeDBDriver {
     }
 
     // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
+    /// Creates a new TypeDB Cluster connection.
     ///
     /// # Arguments
     ///
-    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
+    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cluster nodes are running
     /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     /// ```
@@ -155,11 +155,11 @@ impl TypeDBDriver {
     }
 
     // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
+    /// Creates a new TypeDB Cluster connection.
     ///
     /// # Arguments
     ///
-    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
+    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cluster nodes are running
     /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     /// * `driver_lang` — The language of the driver connecting to the server
@@ -175,7 +175,7 @@ impl TypeDBDriver {
         if let Some(single_address) = init_addresses.iter().next() {
             Self::new_core_with_description(single_address, credentials, driver_options, driver_lang).await
         } else {
-            todo!("Only a single address is accepted for TypeDB Cloud 3.0")
+            todo!("Only a single address is accepted for TypeDB Cluster 3.0")
         }
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credentials.clone())?;
@@ -184,7 +184,7 @@ impl TypeDBDriver {
     }
 
     // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
+    /// Creates a new TypeDB Cluster connection.
     ///
     /// # Arguments
     ///
@@ -214,7 +214,7 @@ impl TypeDBDriver {
     }
 
     // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
+    /// Creates a new TypeDB Cluster connection.
     ///
     /// # Arguments
     ///
@@ -235,7 +235,7 @@ impl TypeDBDriver {
         T: AsRef<str> + Sync,
         U: AsRef<str> + Sync,
     {
-        todo!("No address translation is available and only a single server is accepted for TypeDB Cloud 3.0")
+        todo!("No address translation is available and only a single server is accepted for TypeDB Cluster 3.0")
         // let background_runtime = Arc::new(BackgroundRuntime::new()?);
         //
         // let fetched =

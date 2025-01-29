@@ -38,7 +38,7 @@ ISet< IReplica > GetReplicas()
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Set of ``Replica`` instances for this database. Only works in TypeDB Cluster
 
 
 [caption=""]
@@ -158,7 +158,7 @@ IReplica? TypeDB.Driver.Api.IDatabase.PreferredReplica
 
 
 
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cluster_
 
 
 [caption=""]
@@ -182,7 +182,7 @@ IReplica? TypeDB.Driver.Api.IDatabase.PrimaryReplica
 
 
 
-Returns the primary replica for this database. _Only works in TypeDB Cloud_
+Returns the primary replica for this database. _Only works in TypeDB Cluster_
 
 
 [caption=""]

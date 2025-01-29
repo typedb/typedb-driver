@@ -80,7 +80,7 @@ def _rule_implementation(ctx):
             while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
              RETRY_NUM=$(($RETRY_NUM + 1))
              if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-               echo Waiting for TypeDB Cloud servers to start \\($(($RETRY_NUM / 2))s\\)...
+               echo Waiting for TypeDB Cluster servers to start \\($(($RETRY_NUM / 2))s\\)...
              fi
              lsof -i :11729 && STARTED1=1 || STARTED1=0
              lsof -i :21729 && STARTED2=1 || STARTED2=0
@@ -91,10 +91,10 @@ def _rule_implementation(ctx):
              sleep $POLL_INTERVAL_SECS
             done
             if [[ $STARTED1 -eq 0 || $STARTED2 -eq 0 || $STARTED3 -eq 0 ]]; then
-             echo Failed to start one or more TypeDB Cloud servers
+             echo Failed to start one or more TypeDB Cluster servers
              exit 1
             fi
-            echo 3 TypeDB Cloud database servers started
+            echo 3 TypeDB Cluster database servers started
 
            """
 

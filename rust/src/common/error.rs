@@ -147,17 +147,17 @@ error_messages! { ConnectionError
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     UserManagementCloudOnly =
-        15: "User management is only available in TypeDB Cloud servers.",
+        15: "User management is only available in TypeDB Cluster servers.",
     CloudReplicaNotPrimary =
         16: "The replica is not the primary replica.",
     CloudAllNodesFailed { errors: String } =
-        17: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
+        17: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
     CloudTokenCredentialInvalid =
         18: "Invalid token credentials.",
     CloudEncryptionSettingsMismatch =
-        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
+        19: "Unable to connect to TypeDB Cluster: possible encryption settings mismatch.",
     CloudSSLCertificateNotValidated =
-        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
+        20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credentials.",
     ConnectionFailed =

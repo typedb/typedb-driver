@@ -25,7 +25,7 @@ from typedb.native_driver_wrapper import driver_options_new, DriverOptions as Na
 class DriverOptions(NativeWrapper[NativeDriverOptions]):
     """
     User credentials and TLS encryption settings for connecting to TypeDB Server. Arguments:
-    1) is_tls_enabled: Specify whether the connection to TypeDB Cloud must be done over TLS.
+    1) is_tls_enabled: Specify whether the connection to TypeDB Cluster must be done over TLS.
     2) tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
 
     Examples:

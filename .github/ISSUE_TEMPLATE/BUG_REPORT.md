@@ -14,7 +14,7 @@ assignees: ''
 
 1. TypeDB distribution: Core/Cloud
 2. TypeDB version: 
-3. Environment: Linux/Mac/Windows/TypeDB Cloud/Google Cloud/AWS/Azure
+3. Environment: Linux/Mac/Windows/TypeDB Cluster/Google Cloud/AWS/Azure
 4. Studio version: 
 5. Other details:
 

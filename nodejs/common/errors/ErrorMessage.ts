@@ -93,10 +93,10 @@ export namespace ErrorMessage {
         export const MISSING_RESPONSE = new Driver(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
         export const UNKNOWN_REQUEST_ID = new Driver(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
         export const CLOUD_NO_PRIMARY_REPLICA_YET = new Driver(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const CLOUD_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Cloud. Attempted connecting to the cloud nodes, but none are available: '${args[1]}'.`);
+        export const CLOUD_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Cluster. Attempted connecting to the cloud nodes, but none are available: '${args[1]}'.`);
         export const CLOUD_REPLICA_NOT_PRIMARY = new Driver(16, () => `The replica is not the primary replica.`);
         export const CLOUD_ALL_NODES_FAILED = new Driver(17, (args: Stringable[]) => `Attempted connecting to all cloud nodes, but the following errors occurred: \n'${args[0]}'`);
-        export const USER_MANAGEMENT_CLOUD_ONLY = new Driver(18, () => `User management is only available in TypeDB Cloud servers.`);
+        export const USER_MANAGEMENT_CLOUD_ONLY = new Driver(18, () => `User management is only available in TypeDB Cluster servers.`);
         export const CLOUD_USER_DOES_NOT_EXIST = new Driver(19, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
         export const CLOUD_TOKEN_CREDENTIAL_INVALID = new Driver(20, (args: Stringable[]) => `Invalid token credential.`);
         export const CLOUD_INVALID_ROOT_CA_PATH = new Driver(21, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);

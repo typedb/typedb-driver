@@ -45,7 +45,7 @@ namespace TypeDB.Driver
         }
 
         /**
-         * Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using
+         * Open a TypeDB Driver to a TypeDB Cluster server available at the provided address, using
          * the provided credential.
          *
          * <h3>Examples</h3>
@@ -62,7 +62,7 @@ namespace TypeDB.Driver
         }
 
         /**
-         * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+         * Open a TypeDB Driver to TypeDB Cluster server(s) available at the provided addresses, using
          * the provided credential.
          *
          * <h3>Examples</h3>

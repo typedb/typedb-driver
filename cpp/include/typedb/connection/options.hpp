@@ -291,7 +291,7 @@ public:
     /**
      * Explicitly enables or disables reading data from any replica.
      * If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput.
-     * Only settable in TypeDB Cloud.
+     * Only settable in TypeDB Cluster.
      *
      * <h3>Examples</h3>
      * <pre>

@@ -91,7 +91,7 @@ class Driver(ABC):
     def users(self) -> UserManager:
         """
         The ``UserManager`` instance for this connection, providing access to user management methods.
-        Only for TypeDB Cloud.
+        Only for TypeDB Cluster.
         """
         pass
 

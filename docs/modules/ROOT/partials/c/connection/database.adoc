@@ -80,7 +80,7 @@ struct ReplicaInfo* database_get_preferred_replica_info(const struct Database* d
 
 
 
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cluster_
 
 [caption=""]
 .Returns
@@ -96,7 +96,7 @@ struct ReplicaInfo* database_get_primary_replica_info(const struct Database* dat
 
 
 
-Returns the primary replica for this database. _Only works in TypeDB Cloud_
+Returns the primary replica for this database. _Only works in TypeDB Cluster_
 
 [caption=""]
 .Returns
@@ -112,7 +112,7 @@ struct ReplicaInfoIterator* database_get_replicas_info(const struct Database* da
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Set of ``Replica`` instances for this database. Only works in TypeDB Cluster
 
 [caption=""]
 .Returns

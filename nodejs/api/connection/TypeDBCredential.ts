@@ -23,7 +23,7 @@ import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import CLOUD_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.CLOUD_INVALID_ROOT_CA_PATH;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+ * User credentials and TLS encryption settings for connecting to TypeDB Cluster.
  *
  * ### Examples
  *

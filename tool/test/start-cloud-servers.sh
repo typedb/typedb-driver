@@ -70,7 +70,7 @@ RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Cloud servers to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB Cluster servers to start \($(($RETRY_NUM / 2))s\)...
   fi
   ALL_STARTED=1
   for i in $(seq 1 $NODE_COUNT); do
@@ -82,7 +82,7 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   sleep $POLL_INTERVAL_SECS
 done
 if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Cloud servers
+  echo Failed to start one or more TypeDB Cluster servers
   exit 1
 fi
-echo $NODE_COUNT TypeDB Cloud database servers started
+echo $NODE_COUNT TypeDB Cluster database servers started

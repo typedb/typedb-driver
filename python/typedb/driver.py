@@ -69,7 +69,7 @@ class TypeDB:
     def cloud_driver(addresses: Union[Mapping[str, str], Iterable[str], str], credentials: Credentials,
                      driver_options: DriverOptions) -> Driver:
         """
-        Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+        Creates a connection to TypeDB Cluster, authenticating with the provided credentials.
 
         :param addresses: TypeDB server addresses as a single string, a list of strings, or as an address translation mapping.
         :param credentials: The credentials to connect with.

@@ -15,7 +15,7 @@ A connection to a TypeDB server which serves as the starting point for all inter
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager TypeDB::Driver` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
-a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cluster.
 |===
 // end::properties[]
 
@@ -54,7 +54,7 @@ static Driver TypeDB::Driver::cloudDriver(const std::vector< std::string >& addr
 
 
 
-Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credentials.
+Open a TypeDB Driver to TypeDB Cluster server(s) available at the provided addresses, using the provided credentials.
 
 
 [caption=""]
@@ -204,7 +204,7 @@ User TypeDB::Driver::user()
 
 
 
-Returns the logged-in user for the connection. Only for TypeDB Cloud.
+Returns the logged-in user for the connection. Only for TypeDB Cluster.
 
 
 [caption=""]

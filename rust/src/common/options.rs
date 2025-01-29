@@ -40,7 +40,7 @@ pub struct Options {
     pub transaction_timeout: Option<Duration>,
     /// If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
     pub schema_lock_acquire_timeout: Option<Duration>,
-    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cluster.
     pub read_any_replica: Option<bool>,
 }
 
@@ -74,7 +74,7 @@ impl Options {
         Self { schema_lock_acquire_timeout: Some(timeout), ..self }
     }
 
-    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cluster.
     pub fn read_any_replica(self, read_any_replica: bool) -> Self {
         Self { read_any_replica: Some(read_any_replica), ..self }
     }

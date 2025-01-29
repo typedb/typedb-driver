@@ -62,7 +62,7 @@ IUser GetCurrentUser()
 
 
 
-Returns the logged-in user for the connection. Only for TypeDB Cloud.
+Returns the logged-in user for the connection. Only for TypeDB Cluster.
 
 
 [caption=""]
@@ -172,7 +172,7 @@ IUserManager TypeDB.Driver.Api.ITypeDBDriver.Users
 
 
 
-The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cluster.
 
 
 [caption=""]

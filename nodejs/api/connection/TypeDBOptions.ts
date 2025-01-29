@@ -42,7 +42,7 @@ export interface Opts {
     transactionTimeoutMillis?: number;
     /** If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock. */
     schemaLockAcquireTimeoutMillis?: number;
-    /** If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud. */
+    /** If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cluster. */
     readAnyReplica?: boolean;
 }
 

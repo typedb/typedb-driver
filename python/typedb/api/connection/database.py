@@ -79,7 +79,7 @@ class Database(ABC):
     # def replicas(self) -> Set[Replica]:
     #     """
     #     Set of ``Replica`` instances for this database.
-    #     *Only works in TypeDB Cloud*
+    #     *Only works in TypeDB Cluster*
     #
     #     :return:
     #
@@ -95,7 +95,7 @@ class Database(ABC):
     # def primary_replica(self) -> Optional[Replica]:
     #     """
     #     Returns the primary replica for this database.
-    #     *Only works in TypeDB Cloud*
+    #     *Only works in TypeDB Cluster*
     #
     #     :return:
     #
@@ -112,7 +112,7 @@ class Database(ABC):
     #     """
     #     Returns the preferred replica for this database.
     #     Operations which can be run on any replica will prefer to use this replica.
-    #     *Only works in TypeDB Cloud*
+    #     *Only works in TypeDB Cluster*
     #
     #     :return:
     #

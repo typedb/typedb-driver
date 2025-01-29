@@ -21,7 +21,7 @@ a| `DEFAULT_ADDRESS`
 cloudDriver(addresses, credentials): Promise<TypeDBDriver>
 ----
 
-Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+Creates a connection to TypeDB Cluster, authenticating with the provided credentials.
 
 [caption=""]
 .Input parameters
@@ -29,7 +29,7 @@ Creates a connection to TypeDB Cloud, authenticating with the provided credentia
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| List of addresses of the individual TypeDB Cloud servers. As long one specified address is provided, the driver will discover the other addresses from that server. Alternatively, a translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) may be provided. a| `string \| string[] \| Record<string, string>`
+a| `addresses` a| List of addresses of the individual TypeDB Cluster servers. As long one specified address is provided, the driver will discover the other addresses from that server. Alternatively, a translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s) may be provided. a| `string \| string[] \| Record<string, string>`
 a| `credentials` a| The credentials to log in, and encryption settings. See ``TypeDBCredential``
 Examples
 ``const driver = TypeDB.cloudDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));

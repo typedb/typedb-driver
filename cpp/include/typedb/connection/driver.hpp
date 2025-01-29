@@ -50,7 +50,7 @@ public:
 
     /**
      * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-     * Only for TypeDB Cloud.
+     * Only for TypeDB Cluster.
      */
     UserManager users;
 
@@ -77,7 +77,7 @@ public:
     static Driver coreDriver(const std::string& address);
 
     /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+     * Open a TypeDB Driver to TypeDB Cluster server(s) available at the provided addresses, using
      * the provided credential.
      *
      * <h3>Examples</h3>
@@ -135,7 +135,7 @@ public:
     Session session(const std::string& database, SessionType sessionType, const Options& options = Options());
 
     /**
-     * Returns the logged-in user for the connection. Only for TypeDB Cloud.
+     * Returns the logged-in user for the connection. Only for TypeDB Cluster.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -149,7 +149,7 @@ private:
 };
 
 /**
- * \brief User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+ * \brief User credentials and TLS encryption settings for connecting to TypeDB Cluster.
  *
  * <h3>Examples</h3>
  * <pre>
@@ -169,7 +169,7 @@ public:
      *
      * @param username The name of the user to connect as
      * @param password The password for the user
-     * @param withTLS Specify whether the connection to TypeDB Cloud must be done over TLS
+     * @param withTLS Specify whether the connection to TypeDB Cluster must be done over TLS
      * @param customRootCAPath Optional, Path to a custom CA certificate to use for authenticating server certificates.
      */
     Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAPath = "");

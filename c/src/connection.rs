@@ -50,7 +50,7 @@ pub extern "C" fn driver_open_core(
     ))
 }
 
-/// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses.
+/// Open a TypeDB Driver to TypeDB Cluster server(s) available at the provided addresses.
 ///
 /// @param addresses a null-terminated array holding the address(es) of the TypeDB server(s)
 /// @param credentials The <code>Credentials</code> to connect with
@@ -73,7 +73,7 @@ pub extern "C" fn driver_open_cloud(
     ))
 }
 
-/// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation.
+/// Open a TypeDB Driver to TypeDB Cluster server(s), using provided address translation.
 ///
 /// @param public_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
 /// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
@@ -137,7 +137,7 @@ pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
 // Creates a new <code>DriverOptions</code> for connecting to TypeDB Server.
 //
 // @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
-// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
+// @param with_tls Specify whether the connection to TypeDB Cluster must be done over TLS
 #[no_mangle]
 pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };

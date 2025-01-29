@@ -58,7 +58,7 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
     try_release_string(take_arc(database).type_schema())
 }
 
-// /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB Cloud database.
+// /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB Cluster database.
 // pub struct ReplicaInfoIterator(CIterator<ReplicaInfo>);
 //
 // /// Forwards the <code>ReplicaInfoIterator</code> and returns the next <code>ReplicaInfo</code> if it exists,
@@ -75,14 +75,14 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 // }
 //
 // /// Set of <code>Replica</code> instances for this database.
-// /// <b>Only works in TypeDB Cloud</b>
+// /// <b>Only works in TypeDB Cluster</b>
 // #[no_mangle]
 // pub extern "C" fn database_get_replicas_info(database: *const Database) -> *mut ReplicaInfoIterator {
 //     release(ReplicaInfoIterator(CIterator(box_stream(borrow(database).replicas_info().into_iter()))))
 // }
 //
 // /// Returns the primary replica for this database.
-// /// _Only works in TypeDB Cloud_
+// /// _Only works in TypeDB Cluster_
 // #[no_mangle]
 // pub extern "C" fn database_get_primary_replica_info(database: *const Database) -> *mut ReplicaInfo {
 //     release_optional(borrow(database).primary_replica_info())
@@ -90,7 +90,7 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 //
 // /// Returns the preferred replica for this database.
 // /// Operations which can be run on any replica will prefer to use this replica.
-// /// _Only works in TypeDB Cloud_
+// /// _Only works in TypeDB Cluster_
 // #[no_mangle]
 // pub extern "C" fn database_get_preferred_replica_info(database: *const Database) -> *mut ReplicaInfo {
 //     release_optional(borrow(database).preferred_replica_info())

@@ -133,8 +133,8 @@ class WelcomeToTypeDB
 }
 ```
 
-### TypeDB Cloud
-Connect to TypeDB Cloud instances using `Drivers.CloudDriver`:
+### TypeDB Cluster
+Connect to TypeDB Cluster instances using `Drivers.CloudDriver`:
 ```cs
 using TypeDB.Driver;
 using TypeDB.Driver.Api;

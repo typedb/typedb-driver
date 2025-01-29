@@ -46,7 +46,7 @@ namespace TypeDB.Driver.Api
         IDatabaseManager Databases { get; }
 
         /**
-         * Returns the logged-in user for the connection. Only for TypeDB Cloud.
+         * Returns the logged-in user for the connection. Only for TypeDB Cluster.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -57,7 +57,7 @@ namespace TypeDB.Driver.Api
 
         /**
          * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-         * Only for TypeDB Cloud.
+         * Only for TypeDB Cluster.
          *
          * <h3>Examples</h3>
          * <pre>

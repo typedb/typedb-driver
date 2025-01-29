@@ -82,7 +82,7 @@ impl Database {
     }
 
     /// Returns the `Replica` instances for this database.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cluster_
     ///
     /// # Examples
     ///
@@ -94,7 +94,7 @@ impl Database {
     }
 
     /// Returns the primary replica for this database.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cluster_
     ///
     /// # Examples
     ///
@@ -107,7 +107,7 @@ impl Database {
 
     /// Returns the preferred replica for this database.
     /// Operations which can be run on any replica will prefer to use this replica.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cluster_
     ///
     /// # Examples
     ///

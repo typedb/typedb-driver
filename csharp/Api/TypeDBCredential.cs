@@ -26,7 +26,7 @@ using TypeDB.Driver.Common;
 namespace TypeDB.Driver.Api
 {
     /**
-     * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+     * User credentials and TLS encryption settings for connecting to TypeDB Cluster.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -43,7 +43,7 @@ namespace TypeDB.Driver.Api
          *
          * @param username The name of the user to connect as
          * @param password The password for the user
-         * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
+         * @param tlsEnabled Specify whether the connection to TypeDB Cluster must be done over TLS
          */
         public TypeDBCredential(string username, string password, bool tlsEnabled)
             : this(username, password, null, tlsEnabled)

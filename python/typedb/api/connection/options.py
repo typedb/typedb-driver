@@ -191,7 +191,7 @@
 #     def read_any_replica(self) -> Optional[bool]:
 #         """
 #         If set to ``True``, enables reading data from any replica, potentially boosting
-#         read throughput. Only settable in TypeDB Cloud.
+#         read throughput. Only settable in TypeDB Cluster.
 #         """
 #         return options_get_read_any_replica(self.native_object) if options_has_read_any_replica(self.native_object) \
 #             else None

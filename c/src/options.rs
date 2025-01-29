@@ -108,7 +108,7 @@ use super::memory::{borrow, borrow_mut, free, release};
 //
 // /// Explicitly enables or disables reading data from any replica.
 // /// If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput.
-// /// Only settable in TypeDB Cloud.
+// /// Only settable in TypeDB Cluster.
 // #[no_mangle]
 // pub extern "C" fn options_set_read_any_replica(options: *mut Options, read_any_replica: bool) {
 //     borrow_mut(options).read_any_replica = Some(read_any_replica);
