@@ -28,7 +28,7 @@ using TypeDB.Driver.Common;
 namespace TypeDB.Driver.Test.Integration
 {
     [TestFixture]
-    public class CloudExamplesTestFixture
+    public class ClusterExamplesTestFixture
     {
         [Test]
         public void DocExample()
@@ -45,7 +45,7 @@ namespace TypeDB.Driver.Test.Integration
                     "password",
                     Environment.GetEnvironmentVariable("ROOT_CA")!);
 
-                using (ITypeDBDriver driver = Drivers.CloudDriver(serverAddrs, connectCredential))
+                using (ITypeDBDriver driver = Drivers.ClusterDriver(serverAddrs, connectCredential))
                 {
                     driver.Databases.Create(dbName);
                     IDatabase database = driver.Databases.Get(dbName);

@@ -40,7 +40,7 @@ connection.force_close()
 pub fn is_cluster(&self) -> bool
 ----
 
-Check if the connection is to an Cloud server.
+Check if the connection is to an Cluster server.
 
 [caption=""]
 .Returns

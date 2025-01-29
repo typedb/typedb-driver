@@ -41,7 +41,7 @@ import ADDRESS_TRANSLATION_MISMATCH = ErrorMessage.Driver.ADDRESS_TRANSLATION_MI
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
-    private readonly _isCloud: boolean;
+    private readonly _isCluster: boolean;
 
     private readonly _initAddresses: string[] | Record<string, string>;
     private readonly _credential: TypeDBCredential;
@@ -65,7 +65,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         this._credential = credential;
 
         this._isOpen = false;
-        this._isCloud = credential != null;
+        this._isCluster = credential != null;
         this._serverDrivers = new Map([]);
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
@@ -73,7 +73,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     async open(): Promise<TypeDBDriver> {
-        if (this._isCloud) return this.openCloud()
+        if (this._isCluster) return this.openCluster()
         else return this.openCore()
     }
 
@@ -87,8 +87,8 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         return this;
     }
 
-    private async openCloud(): Promise<TypeDBDriver> {
-        const serverAddresses = await this.fetchCloudServerAddresses();
+    private async openCluster(): Promise<TypeDBDriver> {
+        const serverAddresses = await this.fetchClusterServerAddresses();
         const openReqs: Promise<void>[] = []
 
         let addressTranslation: Record<string, string>;
@@ -134,7 +134,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         return this;
     }
 
-    private async fetchCloudServerAddresses(): Promise<string[]> {
+    private async fetchClusterServerAddresses(): Promise<string[]> {
         let initPrivateAddresses: string[];
         if (Array.isArray(this._initAddresses)) {
             initPrivateAddresses = this._initAddresses;
@@ -159,8 +159,8 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         return this._isOpen;
     }
 
-    isCloud(): boolean {
-        return this._isCloud;
+    isCluster(): boolean {
+        return this._isCluster;
     }
 
     async session(databaseName: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {

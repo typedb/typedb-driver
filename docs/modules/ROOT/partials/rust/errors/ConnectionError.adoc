@@ -10,11 +10,11 @@
 |Variant
 a| `AddressTranslationMismatch`
 a| `BrokenPipe`
-a| `CloudAllNodesFailed`
-a| `CloudEncryptionSettingsMismatch`
-a| `CloudReplicaNotPrimary`
-a| `CloudSSLCertificateNotValidated`
-a| `CloudTokenCredentialInvalid`
+a| `ClusterAllNodesFailed`
+a| `ClusterEncryptionSettingsMismatch`
+a| `ClusterReplicaNotPrimary`
+a| `ClusterSSLCertificateNotValidated`
+a| `ClusterTokenCredentialInvalid`
 a| `ConnectionFailed`
 a| `DatabaseNotFound`
 a| `InvalidResponseField`
@@ -34,7 +34,7 @@ a| `UnexpectedKind`
 a| `UnexpectedQueryType`
 a| `UnexpectedResponse`
 a| `UnknownRequestId`
-a| `UserManagementCloudOnly`
+a| `UserManagementClusterOnly`
 a| `ValueStructNotImplemented`
 a| `ValueTimeZoneNameNotRecognised`
 a| `ValueTimeZoneOffsetNotRecognised`

@@ -134,7 +134,7 @@ class WelcomeToTypeDB
 ```
 
 ### TypeDB Cluster
-Connect to TypeDB Cluster instances using `Drivers.CloudDriver`:
+Connect to TypeDB Cluster instances using `Drivers.ClusterDriver`:
 ```cs
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -156,7 +156,7 @@ class WelcomeToTypeDB
                 "password",
                 Environment.GetEnvironmentVariable("ROOT_CA")!);
 
-            using (ITypeDBDriver driver = Drivers.CloudDriver(serverAddrs, connectCredential))
+            using (ITypeDBDriver driver = Drivers.ClusterDriver(serverAddrs, connectCredential))
             {
                 driver.Databases.Create(dbName);
                 IDatabase database = driver.Databases.Get(dbName);

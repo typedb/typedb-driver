@@ -108,7 +108,7 @@ class TestHooks : public cucumber_bdd::TestHooks<Context> {
 };
 extern const TestHooks testHooks;
 
-struct CoreOrCloudConnection {
+struct CoreOrClusterConnection {
     static TypeDB::Driver defaultConnection();
     static TypeDB::Driver connectWithAuthentication(const std::string& username, const std::string& password);
 };

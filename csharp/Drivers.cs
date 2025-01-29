@@ -50,15 +50,15 @@ namespace TypeDB.Driver
          *
          * <h3>Examples</h3>
          * <pre>
-         * Drivers.CloudDriver(address, credential);
+         * Drivers.ClusterDriver(address, credential);
          * </pre>
          *
          * @param address The address of the TypeDB server
          * @param credential The credential to connect with
          */
-        public static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
+        public static ITypeDBDriver ClusterDriver(string address, TypeDBCredential credential)
         {
-            return CloudDriver(new string[]{address}, credential);
+            return ClusterDriver(new string[]{address}, credential);
         }
 
         /**
@@ -67,19 +67,19 @@ namespace TypeDB.Driver
          *
          * <h3>Examples</h3>
          * <pre>
-         * Drivers.CloudDriver(addresses, credential);
+         * Drivers.ClusterDriver(addresses, credential);
          * </pre>
          *
          * @param addresses The address(es) of the TypeDB server(s) or translation map from addresses
          * to be used by the driver for connection to addresses received from the TypeDB server(s)
          * @param credential The credential to connect with
          */
-        public static ITypeDBDriver CloudDriver(ICollection<string> addresses, TypeDBCredential credential)
+        public static ITypeDBDriver ClusterDriver(ICollection<string> addresses, TypeDBCredential credential)
         {
             return new TypeDBDriver(addresses, credential);
         }
 
-        public static ITypeDBDriver CloudDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+        public static ITypeDBDriver ClusterDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
         {
             return new TypeDBDriver(addressTranslation, credential);
         }

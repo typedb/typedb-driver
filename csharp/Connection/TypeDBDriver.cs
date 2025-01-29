@@ -38,11 +38,11 @@ namespace TypeDB.Driver.Connection
         {}
 
         public TypeDBDriver(ICollection<string> initAddresses, TypeDBCredential credential)
-            : this(OpenCloud(initAddresses, credential))
+            : this(OpenCluster(initAddresses, credential))
         {}
 
         public TypeDBDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
-            : this(OpenCloud(addressTranslation, credential))
+            : this(OpenCluster(addressTranslation, credential))
         {}
 
         private TypeDBDriver(Pinvoke.Connection connection)
@@ -64,7 +64,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        private static Pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
+        private static Pinvoke.Connection OpenCluster(ICollection<string> initAddresses, TypeDBCredential credential)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        private static Pinvoke.Connection OpenCloud(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
+        private static Pinvoke.Connection OpenCluster(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
         {
             try
             {

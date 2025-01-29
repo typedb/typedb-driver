@@ -77,9 +77,9 @@ typedb_java_test(
 #typedb_java_test(
 #    name = "test-cluster",
 #    srcs = [
-#        "DatabaseTestCloud.java",
+#        "DatabaseTestCluster.java",
 #    ],
-#    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
+#    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCluster",
 #    data = [
 #        "@typedb_behaviour//connection:database.feature",
 #    ],

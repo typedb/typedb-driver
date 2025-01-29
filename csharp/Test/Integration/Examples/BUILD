@@ -33,7 +33,7 @@ csharp_integration_test(
 
 csharp_integration_test(
     name = "test-cluster",
-    srcs = ["CloudExamplesTest.cs"],
+    srcs = ["ClusterExamplesTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",

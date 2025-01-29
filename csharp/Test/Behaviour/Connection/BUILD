@@ -29,7 +29,7 @@ filegroup(
 
 filegroup(
     name = "steps-cluster",
-    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCloud.cs"],
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCluster.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 

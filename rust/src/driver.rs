@@ -274,7 +274,7 @@ impl TypeDBDriver {
         //
         // let errors = server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect_vec();
         // if errors.len() == server_connections.len() {
-        //     Err(ConnectionError::CloudAllNodesFailed {
+        //     Err(ConnectionError::ClusterAllNodesFailed {
         //         errors: errors.into_iter().map(|err| err.to_string()).join("\n"),
         //     })?
         // } else {
@@ -326,7 +326,7 @@ impl TypeDBDriver {
         self.background_runtime.is_open()
     }
 
-    /// Check if the connection is to an Cloud server.
+    /// Check if the connection is to an Cluster server.
     ///
     /// # Examples
     ///

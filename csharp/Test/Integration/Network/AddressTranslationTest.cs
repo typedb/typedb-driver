@@ -34,7 +34,7 @@ namespace TypeDB.Driver.Test.Integration
     public class AddressTranslationTestFixture
     {
         [Test]
-        public void TestCloudConnectionWithTranslation()
+        public void TestClusterConnectionWithTranslation()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace TypeDB.Driver.Test.Integration
                     "password",
                     Environment.GetEnvironmentVariable("ROOT_CA")!);
 
-                using (ITypeDBDriver driver = Drivers.CloudDriver(addressTranslation, connectCredential))
+                using (ITypeDBDriver driver = Drivers.ClusterDriver(addressTranslation, connectCredential))
                 {
                     driver.Databases.Create("typedb");
                     using (ITypeDBSession session = driver.Session("typedb", SessionType.Data))

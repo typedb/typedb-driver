@@ -74,7 +74,7 @@ export class UserManagerImpl implements UserManager {
     }
 
     async runFailsafe<T>(task: (driver: ServerDriver) => Promise<T>): Promise<T> {
-        if (!this._driver.isCloud()) throw new TypeDBDriverError(USER_MANAGEMENT_CLUSTER_ONLY);
+        if (!this._driver.isCluster()) throw new TypeDBDriverError(USER_MANAGEMENT_CLUSTER_ONLY);
         return await (await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._driver)).runOnPrimaryReplica(task);
     }
 }

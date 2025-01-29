@@ -47,11 +47,11 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     public DriverImpl(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        this(openCloud(initAddresses, credentials, driverOptions));
+        this(openCluster(initAddresses, credentials, driverOptions));
     }
 
     public DriverImpl(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        this(openCloud(addressTranslation, credentials, driverOptions));
+        this(openCluster(addressTranslation, credentials, driverOptions));
     }
 
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
@@ -66,7 +66,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         }
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCloud(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) {
+    private static com.typedb.driver.jni.TypeDBDriver openCluster(Set<String> initAddresses, Credentials credentials, DriverOptions driverOptions) {
         try {
             return driver_open_cluster(initAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
@@ -74,7 +74,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         }
     }
 
-    private static com.typedb.driver.jni.TypeDBDriver openCloud(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
+    private static com.typedb.driver.jni.TypeDBDriver openCluster(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
         try {
             List<String> publicAddresses = new ArrayList();
             List<String> privateAddresses = new ArrayList();

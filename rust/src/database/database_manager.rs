@@ -184,7 +184,7 @@ impl DatabaseManager {
                 Ok(res) => return Ok(res),
                 // TODO: database manager should never encounter NOT PRIMARY errors since we are failing over server connections, not replicas
 
-                // Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
+                // Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
                 //     return Database::get(name, self.connection.clone())
                 //         .await?
                 //         .run_on_primary_replica(|database| {

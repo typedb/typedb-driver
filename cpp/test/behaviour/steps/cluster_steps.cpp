@@ -47,22 +47,22 @@ bool TestHooks::skipScenario(const cucumber::messages::pickle& scenario) const {
 }
 
 void TestHooks::beforeAll() const {
-    wipeDatabases(CoreOrCloudConnection::connectWithAuthentication("admin", "password"));
+    wipeDatabases(CoreOrClusterConnection::connectWithAuthentication("admin", "password"));
 }
 
 void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Context>* scenario) const {
     DriverException::check_and_throw();
     context.driver->close();
-    wipeDatabases(CoreOrCloudConnection::connectWithAuthentication("admin", "password"));
+    wipeDatabases(CoreOrClusterConnection::connectWithAuthentication("admin", "password"));
 }
 
 const TestHooks testHooks;
 
-TypeDB::Driver CoreOrCloudConnection::defaultConnection() {
+TypeDB::Driver CoreOrClusterConnection::defaultConnection() {
     return TypeDB::Driver::clusterDriver(DEFAULT_CLUSTER_ADDRESSES, TypeDB::Credential(DEFAULT_CLUSTER_USER, DEFAULT_CLUSTER_PASSWORD, true, std::getenv("ROOT_CA")));
 }
 
-TypeDB::Driver CoreOrCloudConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
+TypeDB::Driver CoreOrClusterConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
     return TypeDB::Driver::clusterDriver(DEFAULT_CLUSTER_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
 }
 

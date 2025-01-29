@@ -30,7 +30,7 @@
 # READ = TransactionType.READ
 #
 #
-# class TestCloudFailover(TestCase):
+# class TestClusterFailover(TestCase):
 #
 #     def setUp(self):
 #         root_ca_path = os.environ["ROOT_CA"]

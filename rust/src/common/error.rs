@@ -146,22 +146,22 @@ error_messages! { ConnectionError
         13: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
-    UserManagementCloudOnly =
+    UserManagementClusterOnly =
         15: "User management is only available in TypeDB Cluster servers.",
-    CloudReplicaNotPrimary =
+    ClusterReplicaNotPrimary =
         16: "The replica is not the primary replica.",
-    CloudAllNodesFailed { errors: String } =
+    ClusterAllNodesFailed { errors: String } =
         17: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
-    CloudTokenCredentialInvalid =
+    ClusterTokenCredentialInvalid =
         18: "Invalid token credentials.",
-    CloudEncryptionSettingsMismatch =
+    ClusterEncryptionSettingsMismatch =
         19: "Unable to connect to TypeDB Cluster: possible encryption settings mismatch.",
-    CloudSSLCertificateNotValidated =
+    ClusterSSLCertificateNotValidated =
         20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credentials.",
     ConnectionFailed =
-        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cluster endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         23: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
@@ -268,10 +268,10 @@ impl Error {
 
     fn from_message(message: &str) -> Self {
         match message.split_ascii_whitespace().next() {
-            Some("[RPL01]") => Self::Connection(ConnectionError::CloudReplicaNotPrimary),
+            Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary),
             // TODO: CLS and ENT are synonyms which we can simplify on protocol change
-            Some("[CLS08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
-            Some("[ENT08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
+            Some("[CLS08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid),
+            Some("[ENT08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid),
             Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseNotFound {
                 name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
             }),
@@ -283,9 +283,9 @@ impl Error {
         if status_message == "broken pipe" {
             Error::Connection(ConnectionError::BrokenPipe)
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::CloudEncryptionSettingsMismatch)
+            Error::Connection(ConnectionError::ClusterEncryptionSettingsMismatch)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::CloudSSLCertificateNotValidated)
+            Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionFailed)
         } else {

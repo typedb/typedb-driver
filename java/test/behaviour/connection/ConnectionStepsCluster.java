@@ -28,7 +28,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
-public class ConnectionStepsCloud extends ConnectionStepsBase {
+public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();

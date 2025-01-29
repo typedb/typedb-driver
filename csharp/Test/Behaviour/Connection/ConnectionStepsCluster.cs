@@ -65,7 +65,7 @@ namespace TypeDB.Driver.Test.Behaviour
             string? password = null,
             string? certificatesPath = null)
         {
-            return Drivers.CloudDriver(
+            return Drivers.ClusterDriver(
                 addresses ?? DEFAULT_ADDRESSES,
                 new TypeDBCredential(
                     username ?? DEFAULT_USERNAME,
