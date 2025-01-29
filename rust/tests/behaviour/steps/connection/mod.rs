@@ -77,7 +77,7 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
                 .await
         }
         true => {
-            let updated_address = change_host(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
+            let updated_address = change_host(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
             context.create_cluster_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
@@ -97,7 +97,7 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
                 .await
         }
         true => {
-            let updated_address = change_port(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "0");
+            let updated_address = change_port(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "0");
             context.create_cluster_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });

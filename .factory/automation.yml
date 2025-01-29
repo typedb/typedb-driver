@@ -101,7 +101,7 @@ build:
         # TODO: Use cluster server artifact with 3 nodes when available
         tool/test/start-core-server.sh &&
           bazel test //rust/tests/integration/cluster/... --test_output=streamed --test_arg=--nocapture &&
-          export CLOUD_FAILED= || export CLOUD_FAILED=1
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
@@ -230,9 +230,9 @@ build:
         # TODO: Use cluster server artifact with 3 nodes when available
         tool/test/start-core-server.sh &&
           bazel test //python/tests/integration/cluster/... --test_output=streamed --jobs=1 &&
-          export CLOUD_FAILED= || export CLOUD_FAILED=1
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         tool/test/stop-core-server.sh
-        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-python-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -293,9 +293,9 @@ build:
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          node nodejs/test/integration/test-connection-cluster.js &&
 #          node nodejs/test/integration/test-cluster-failover.js &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
+#          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+#        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
 #    test-nodejs-behaviour-core:
 #      image: typedb-ubuntu-22.04
@@ -356,9 +356,9 @@ build:
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          bazel test //cpp/test/integration:test-cpp-driver-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
+#          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+#        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
 #    test-cpp-behaviour-core:
 #      image: typedb-ubuntu-22.04
@@ -427,9 +427,9 @@ build:
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          bazel test //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cluster.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          export CLOUD_FAILED= || export CLOUD_FAILED=1
+#          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
-#        if [[ -n "$CLOUD_FAILED" ]]; then exit 1; fi
+#        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
 #    test-csharp-behaviour-core:
 #      image: typedb-ubuntu-22.04

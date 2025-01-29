@@ -20,8 +20,8 @@
 import {ServiceError} from "@grpc/grpc-js";
 import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
-import CLOUD_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.CLOUD_REPLICA_NOT_PRIMARY;
-import CLOUD_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.CLOUD_TOKEN_CREDENTIAL_INVALID;
+import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.CLUSTER_REPLICA_NOT_PRIMARY;
+import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import RPC_METHOD_UNAVAILABLE = ErrorMessage.Driver.RPC_METHOD_UNAVAILABLE;
 
@@ -57,11 +57,11 @@ export class TypeDBDriverError extends Error {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
-                super(CLOUD_REPLICA_NOT_PRIMARY.message());
-                this._messageTemplate = CLOUD_REPLICA_NOT_PRIMARY;
+                super(CLUSTER_REPLICA_NOT_PRIMARY.message());
+                this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
             } else if (isTokenCredentialInvalidError(error)) {
-                super(CLOUD_TOKEN_CREDENTIAL_INVALID.message());
-                this._messageTemplate = CLOUD_TOKEN_CREDENTIAL_INVALID;
+                super(CLUSTER_TOKEN_CREDENTIAL_INVALID.message());
+                this._messageTemplate = CLUSTER_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
         } else super(error.toString());

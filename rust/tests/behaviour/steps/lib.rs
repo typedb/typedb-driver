@@ -131,7 +131,7 @@ impl fmt::Debug for Context {
 impl Context {
     const DEFAULT_CORE_ADDRESS: &'static str = "127.0.0.1:1729";
     // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
-    const DEFAULT_CLOUD_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
+    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
     const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
@@ -373,7 +373,7 @@ impl Context {
         let password = password.unwrap_or(Self::ADMIN_USERNAME);
         match self.is_cluster {
             false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
-            true => self.create_cluster_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
+            true => self.create_cluster_driver(&Self::DEFAULT_CLUSTER_ADDRESSES, username, password).await,
         }
     }
 

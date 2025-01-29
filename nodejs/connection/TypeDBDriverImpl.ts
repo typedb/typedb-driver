@@ -33,7 +33,7 @@ import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
-import CLOUD_UNABLE_TO_CONNECT = ErrorMessage.Driver.CLOUD_UNABLE_TO_CONNECT;
+import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Driver.CLUSTER_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import MISSING_PORT = ErrorMessage.Driver.MISSING_PORT;
@@ -127,7 +127,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         try {
             await Promise.any(openReqs);
         } catch (e) {
-            throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(e));
+            throw new TypeDBDriverError(CLUSTER_UNABLE_TO_CONNECT.message(e));
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
@@ -152,7 +152,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 console.error(`Fetching cluster servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(initPrivateAddresses.join(",")));
+        throw new TypeDBDriverError(CLUSTER_UNABLE_TO_CONNECT.message(initPrivateAddresses.join(",")));
     }
 
     isOpen(): boolean {

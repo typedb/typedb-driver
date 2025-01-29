@@ -25,9 +25,9 @@
 
 namespace TypeDB::BDD {
 
-const std::vector<std::string> DEFAULT_CLOUD_ADDRESSES = {"localhost:11729", "localhost:21729", "localhost:31729"};
-const std::string DEFAULT_CLOUD_USER = "admin";
-const std::string DEFAULT_CLOUD_PASSWORD = "password";
+const std::vector<std::string> DEFAULT_CLUSTER_ADDRESSES = {"localhost:11729", "localhost:21729", "localhost:31729"};
+const std::string DEFAULT_CLUSTER_USER = "admin";
+const std::string DEFAULT_CLUSTER_PASSWORD = "password";
 
 void wipeDatabases(const TypeDB::Driver& driver) {
     DatabaseIterable dbIterable = driver.databases.all();
@@ -59,11 +59,11 @@ void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Con
 const TestHooks testHooks;
 
 TypeDB::Driver CoreOrCloudConnection::defaultConnection() {
-    return TypeDB::Driver::clusterDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(DEFAULT_CLOUD_USER, DEFAULT_CLOUD_PASSWORD, true, std::getenv("ROOT_CA")));
+    return TypeDB::Driver::clusterDriver(DEFAULT_CLUSTER_ADDRESSES, TypeDB::Credential(DEFAULT_CLUSTER_USER, DEFAULT_CLUSTER_PASSWORD, true, std::getenv("ROOT_CA")));
 }
 
 TypeDB::Driver CoreOrCloudConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
-    return TypeDB::Driver::clusterDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
+    return TypeDB::Driver::clusterDriver(DEFAULT_CLUSTER_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
 }
 
 }  // namespace TypeDB::BDD

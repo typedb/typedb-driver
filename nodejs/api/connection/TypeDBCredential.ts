@@ -20,7 +20,7 @@
 import * as fs from "fs";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
-import CLOUD_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.CLOUD_INVALID_ROOT_CA_PATH;
+import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.CLUSTER_INVALID_ROOT_CA_PATH;
 
 /**
  * User credentials and TLS encryption settings for connecting to TypeDB Cluster.
@@ -46,7 +46,7 @@ export class TypeDBCredential {
         this._password = password;
 
         if (tlsRootCAPath != null && !fs.existsSync(tlsRootCAPath)) {
-            throw new TypeDBDriverError(CLOUD_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
+            throw new TypeDBDriverError(CLUSTER_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
         }
         this._tlsRootCAPath = tlsRootCAPath;
     }

@@ -89,7 +89,7 @@ DRIVER_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further
 TRANSACTION_CLOSED = DriverErrorMessage(2, "The transaction has been closed and no further operation is allowed.")
 DATABASE_DELETED = DriverErrorMessage(3, "The database '%s' has been deleted and no further operation is allowed.")
 POSITIVE_VALUE_REQUIRED = DriverErrorMessage(4, "Value should be positive, was: '%d'.")
-CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(5, "TLS disabled but the Root CA path provided.")
+CLUSTER_CREDENTIAL_INCONSISTENT = DriverErrorMessage(5, "TLS disabled but the Root CA path provided.")
 UNIMPLEMENTED = DriverErrorMessage(6, "This operation is not implemented yet.")
 
 
