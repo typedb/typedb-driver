@@ -58,7 +58,7 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
     try_release_string(take_arc(database).type_schema())
 }
 
-// /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.
+// /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB Cloud database.
 // pub struct ReplicaInfoIterator(CIterator<ReplicaInfo>);
 //
 // /// Forwards the <code>ReplicaInfoIterator</code> and returns the next <code>ReplicaInfo</code> if it exists,

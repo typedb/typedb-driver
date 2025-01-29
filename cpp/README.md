@@ -166,7 +166,7 @@ Functions returning concepts are exceptional in that they return `std::unique_pt
 ```
 
 ### TypeDB Cloud 
-Connect to TypeDB cloud instances using `TypeDB::Driver::cloudDriver`
+Connect to TypeDB Cloud instances using `TypeDB::Driver::cloudDriver`
 ```cpp
     std::string dbName = "cloud-database";
     // Since we're using a self-signed certificate for encryption, we pass the path to the root-ca through an environment variable
