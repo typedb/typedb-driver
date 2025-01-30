@@ -35,9 +35,9 @@ public TypeDB()
 [source,java]
 ----
 public static Driver clusterDriver​(java.lang.String address,
-                                 Credentials credentials,
-                                 DriverOptions driverOptions)
-                          throws TypeDBDriverException
+                                   Credentials credentials,
+                                   DriverOptions driverOptions)
+                            throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to a TypeDB Cluster server available at the provided address, using the provided credential. 
@@ -71,9 +71,9 @@ TypeDB.clusterDriver(address, credential);
 [source,java]
 ----
 public static Driver clusterDriver​(java.util.Set<java.lang.String> addresses,
-                                 Credentials credentials,
-                                 DriverOptions driverOptions)
-                          throws TypeDBDriverException
+                                   Credentials credentials,
+                                   DriverOptions driverOptions)
+                            throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to TypeDB Cluster server(s) available at the provided addresses, using the provided credential. 
@@ -107,9 +107,9 @@ TypeDB.clusterDriver(addresses, credential);
 [source,java]
 ----
 public static Driver clusterDriver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
-                                 Credentials credentials,
-                                 DriverOptions driverOptions)
-                          throws TypeDBDriverException
+                                   Credentials credentials,
+                                   DriverOptions driverOptions)
+                            throws TypeDBDriverException
 ----
 
 Open a TypeDB Driver to TypeDB Cluster server(s), using provided address translation, with the provided credential. 
