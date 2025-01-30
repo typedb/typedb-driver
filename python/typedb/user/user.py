@@ -22,6 +22,7 @@ from typing import TYPE_CHECKING
 from typedb.api.user.user import User
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_null
 from typedb.native_driver_wrapper import user_get_name, user_update_password, user_delete, User as NativeUser, \
     TypeDBDriverExceptionNative
 
@@ -50,6 +51,7 @@ class _User(User, NativeWrapper[NativeUser]):
     #     return None
 
     def update_password(self, password: str) -> None:
+        require_non_null(password, "password")
         try:
             user_update_password(self.native_object, password)
         except TypeDBDriverExceptionNative as e:

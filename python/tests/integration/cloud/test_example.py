@@ -22,10 +22,9 @@ from hamcrest import *
 # EXAMPLE START MARKER
 from typedb.driver import *
 
-# EXAMPLE END MARKER
-
 
 class TestExample(TestCase):
+    # EXAMPLE END MARKER
 
     def setUp(self):
         with TypeDB.cloud_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:

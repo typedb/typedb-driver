@@ -13,8 +13,9 @@ use typedb_driver::{
 fn typedb_example() {
     async_std::task::block_on(async {
         // Open a driver connection
-        let driver = TypeDBDriver::new_core(
-            TypeDBDriver::DEFAULT_ADDRESS,
+
+        let driver = TypeDBDriver::new_cloud(
+            &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
             Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),
         )
@@ -78,10 +79,10 @@ fn typedb_example() {
         let column_name = column_names.get(0).unwrap();
 
         // Get concept by the variable name (column name)
-        let concept_by_name = row.get(column_name).unwrap();
+        let concept_by_name = row.get(column_name).unwrap().unwrap();
 
         // Get concept by the header's index
-        let concept_by_index = row.get_index(0).unwrap();
+        let concept_by_index = row.get_index(0).unwrap().unwrap();
 
         // Check if it's an entity type
         if concept_by_name.is_entity_type() {
@@ -102,7 +103,7 @@ fn typedb_example() {
             let mut column_names_iter = row.get_column_names().into_iter();
             let column_name = column_names_iter.next().unwrap();
 
-            let concept_by_name = row.get(column_name).unwrap();
+            let concept_by_name = row.get(column_name).unwrap().unwrap();
 
             // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
@@ -130,7 +131,7 @@ fn typedb_example() {
         let row = rows.get(0).unwrap();
 
         for column_name in row.get_column_names() {
-            let inserted_concept = row.get(column_name).unwrap();
+            let inserted_concept = row.get(column_name).unwrap().unwrap();
             println!("Successfully inserted ${}: {}", column_name, inserted_concept);
             if inserted_concept.is_entity() {
                 println!("This time, it's an entity, not a type!");
@@ -140,7 +141,7 @@ fn typedb_example() {
         // It is possible to ask for the column names again
         let column_names = row.get_column_names();
 
-        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap();
+        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap().unwrap();
         if let Some(iid) = x.try_get_iid() {
             println!("Each entity receives a unique IID. It can be retrieved directly: {}", iid);
         }
@@ -185,7 +186,7 @@ fn typedb_example() {
         let mut count = 0;
         let mut stream = answer.into_rows().map(|result| result.unwrap());
         while let Some(row) = stream.next().await {
-            let x = row.get(var).unwrap();
+            let x = row.get(var).unwrap().unwrap();
             match x {
                 Concept::Entity(x_entity) => {
                     let x_type = x_entity.type_().unwrap();

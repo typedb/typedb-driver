@@ -87,7 +87,7 @@ public interface Transaction extends AutoCloseable {
      * transaction.commit()
      * </pre>
      */
-    void commit()  throws com.typedb.driver.common.exception.TypeDBDriverException;
+    void commit() throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Rolls back the uncommitted changes made via this transaction.

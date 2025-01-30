@@ -135,24 +135,43 @@ javadoc_to_adoc(
 test_to_example(
     name = "example_core",
     input = "//java/test/integration/core:ExampleTest.java",
-    output = "java/core_example",
+    output = "java/TypeDBCoreExample.java",
     removed_lines = ["assert", "fail(", "todo"],
     changed_words = {
-        "ExampleTest": "TypeDBExample",
+        "com.typedb.driver.test.integration.core": "com.typedb.driver",
+        "ExampleTest": "TypeDBCoreExample",
     },
     header_comment_sign = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //java:example_core; bazel run //java:readme_example_core
-# 2. Enjoy your updated README.md!
+test_to_example(
+    name = "example_cloud",
+    input = "//java/test/integration/cloud:ExampleTest.java",
+    output = "java/TypeDBCloudExample.java",
+    removed_lines = ["assert", "fail(", "todo"],
+    changed_words = {
+        "com.typedb.driver.test.integration.cloud": "com.typedb.driver",
+        "ExampleTest": "TypeDBCloudExample",
+    },
+    header_comment_sign = "//",
+)
+
 update_markdown_example(
     name = "readme_example_core",
-    # TODO: Use ":example_core" as a rule with a single output instead
-    input = ":core_example",
+    input = ":TypeDBCoreExample.java",
     output = ":README.md",
     start_marker = "CORE_EXAMPLE_START_MARKER",
     end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "java",
+    removed_header = "//",
+)
+
+update_markdown_example(
+    name = "readme_example_cloud",
+    input = ":TypeDBCloudExample.java",
+    output = ":README.md",
+    start_marker = "CLOUD_EXAMPLE_START_MARKER",
+    end_marker = "CLOUD_EXAMPLE_END_MARKER",
     language_tag = "java",
     removed_header = "//",
 )
@@ -164,7 +183,8 @@ checkstyle_test(
     exclude = glob([
         "README.md",
         "docs/**/*.adoc",
-        "core_example",
+        "TypeDBCoreExample.java",
+        "TypeDBCloudExample.java",
     ]),
     license_type = "apache-header",
 )

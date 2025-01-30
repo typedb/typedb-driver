@@ -447,7 +447,6 @@ pub(crate) use in_background;
 // at least verifying that the same error is produced by the same actions.
 #[derive(Debug, Clone)]
 pub enum BehaviourTestOptionalError {
-    VariableDoesNotExist(String),
     InvalidConceptConversion,
     InvalidValueRetrieval(String),
 }
@@ -455,7 +454,6 @@ pub enum BehaviourTestOptionalError {
 impl fmt::Display for BehaviourTestOptionalError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::VariableDoesNotExist(var) => write!(f, "The variable '{}' does not exist.", var),
             Self::InvalidConceptConversion => write!(f, "Invalid concept conversion."),
             Self::InvalidValueRetrieval(type_) => write!(f, "Could not retrieve a '{}' value.", type_),
         }
@@ -465,7 +463,6 @@ impl fmt::Display for BehaviourTestOptionalError {
 impl Error for BehaviourTestOptionalError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            Self::VariableDoesNotExist(_) => None,
             Self::InvalidConceptConversion => None,
             Self::InvalidValueRetrieval(_) => None,
         }

@@ -10,6 +10,7 @@ Represents errors encountered during operation.
 [options="header"]
 |===
 |Variant
+a| `Concept(ConceptError)`
 a| `Connection(ConnectionError)`
 a| `Internal(InternalError)`
 a| `Other(String)`

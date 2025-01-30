@@ -114,7 +114,7 @@ rustdoc_to_adoc(
 test_to_example(
     name = "example_core",
     input = "//rust/tests/integration/core:example.rs",
-    output = "rust/core_example",
+    output = "rust/core_example.rs",
     removed_lines = ["assert", "todo"],
     changed_words = {
         "example()": "typedb_example()",
@@ -122,16 +122,33 @@ test_to_example(
     header_comment_sign = "//",
 )
 
-# Temporary manual usage:
-# 1. Run: bazel run //rust:example_core; bazel run //rust:readme_example_core
-# 2. Enjoy your updated README.md!
+test_to_example(
+    name = "example_cloud",
+    input = "//rust/tests/integration/cloud:example.rs",
+    output = "rust/cloud_example.rs",
+    removed_lines = ["assert", "todo"],
+    changed_words = {
+        "example()": "typedb_example()",
+    },
+    header_comment_sign = "//",
+)
+
 update_markdown_example(
     name = "readme_example_core",
-    # TODO: Use ":example_core" as a rule with a single output instead
-    input = ":core_example",
+    input = ":core_example.rs",
     output = ":README.md",
     start_marker = "CORE_EXAMPLE_START_MARKER",
     end_marker = "CORE_EXAMPLE_END_MARKER",
+    language_tag = "rust",
+    removed_header = "//",
+)
+
+update_markdown_example(
+    name = "readme_example_cloud",
+    input = ":cloud_example.rs",
+    output = ":README.md",
+    start_marker = "CLOUD_EXAMPLE_START_MARKER",
+    end_marker = "CLOUD_EXAMPLE_END_MARKER",
     language_tag = "rust",
     removed_header = "//",
 )
@@ -148,7 +165,8 @@ checkstyle_test(
         "**/Cargo.toml",
         "**/Cargo.lock",
         "docs/**/*.adoc",
-        "core_example",
+        "core_example.rs",
+        "cloud_example.rs",
     ]),
     license_type = "apache-header",
 )

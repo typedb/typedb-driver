@@ -68,7 +68,7 @@ public class Parameters {
         return ConceptKind.of(type);
     }
 
-    @ParameterType("([a-zA-Z0-9]*)")
+    @ParameterType(".*")
     public String var(String variable) {
         return variable;
     }

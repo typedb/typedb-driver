@@ -3,6 +3,8 @@
 from typedb.driver import *
 
 
+class TypeDBExample:
+
     def typedb_example():
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:

@@ -125,7 +125,7 @@ public class ValueTest {
 
             AtomicInteger count = new AtomicInteger(0);
             answer.asConceptRows().stream().forEach(row -> {
-                Concept a = row.get("a");
+                Concept a = row.get("a").get();
                 assertTrue(a.isAttributeType());
                 AttributeType type = a.asAttributeType();
                 assertEquals(type.tryGetValueType().orElseGet(() -> "none"), attributeValueTypes.get(type.getLabel()));
@@ -144,7 +144,7 @@ public class ValueTest {
                 ConceptRow row = rows.get(0);
                 List<String> header = row.columnNames().collect(Collectors.toList());
                 assertEquals(header.size(), 1);
-                assertTrue(row.getIndex(header.indexOf("a")).isEntity());
+                assertTrue(row.getIndex(header.indexOf("a")).get().isEntity());
             }
             tx.commit();
         }, Transaction.Type.WRITE);
@@ -157,7 +157,7 @@ public class ValueTest {
                 assertEquals(rows.size(), attributeValues.size());
                 AtomicInteger checked = new AtomicInteger(0);
                 rows.forEach(row -> {
-                    Attribute attribute = row.get("a").asAttribute();
+                    Attribute attribute = row.get("a").get().asAttribute();
                     String attributeName = attribute.getType().getLabel();
                     Value value = attribute.getValue();
                     assertEquals(value.getType(), attributeValueTypes.get(attributeName));
@@ -218,7 +218,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P1Y;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P12M PT0S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(12, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -231,7 +231,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P1M;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P1M PT0S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(1, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -246,7 +246,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P1D;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P1D PT0S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(1, typedbDuration.getDays());
@@ -257,7 +257,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P0DT1H;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P0D PT1H", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -268,7 +268,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P0DT1S;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P0D PT1S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -279,7 +279,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P0DT0.000000001S;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P0D PT0.000000001S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -290,7 +290,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P0DT0.0000001S;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P0D PT0.0000001S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -301,7 +301,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P0DT0S;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P0D PT0S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(0, typedbDuration.getDays());
@@ -313,7 +313,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P7W;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P49D PT0S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(0, typedbDuration.getMonths());
             assertEquals(49, typedbDuration.getDays());
@@ -325,7 +325,7 @@ public class ValueTest {
 
         localhostTypeDBTX(tx -> {
             QueryAnswer answer = tx.query("insert $d isa d P999Y12M31DT24H59M59.999999999S;").resolve();
-            Duration typedbDuration = answer.asConceptRows().next().get("d").asAttribute().getDuration();
+            Duration typedbDuration = answer.asConceptRows().next().get("d").get().asAttribute().getDuration();
             assertEquals("P12000M31D PT24H59M59.999999999S", typedbDuration.toString()); // we just reuse the java's classes
             assertEquals(12000, typedbDuration.getMonths());
             assertEquals(31, typedbDuration.getDays());

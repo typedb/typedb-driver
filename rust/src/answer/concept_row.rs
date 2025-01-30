@@ -25,7 +25,7 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::{answer::QueryType, concept::Concept};
+use crate::{answer::QueryType, common::Result, concept::Concept, error::ConceptError};
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptRowHeader {
@@ -76,7 +76,7 @@ impl ConceptRow {
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if
-    /// the variable name has an empty answer, or if the variable name is not present.
+    /// the variable name has an empty answer. Returns an error if the variable name is not present.
     ///
     /// # Arguments
     ///
@@ -87,12 +87,16 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.get(var_name)
     /// ```
-    pub fn get(&self, column_name: &str) -> Option<&Concept> {
-        self.header.get_index(column_name).map(|index| self.get_index(index)).flatten()
+    pub fn get(&self, column_name: &str) -> Result<Option<&Concept>> {
+        let index = self
+            .header
+            .get_index(column_name)
+            .ok_or(ConceptError::UnavailableRowVariable { variable: column_name.to_string() })?;
+        self.get_index(index)
     }
 
-    /// Retrieves a concept for a given column index. Returns an empty optional if
-    /// the position has an empty answer, or if the index is not range for the row.
+    /// Retrieves a concept for a given column index. Returns an empty optional if the index
+    /// points to an empty answer. Returns an error if the index is not in the row's range.
     ///
     /// # Arguments
     ///
@@ -103,8 +107,9 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.get_position(column_index)
     /// ```
-    pub fn get_index(&self, column_index: usize) -> Option<&Concept> {
-        self.row.get(column_index).map(|inner| inner.as_ref()).flatten()
+    pub fn get_index(&self, column_index: usize) -> Result<Option<&Concept>> {
+        let concept = self.row.get(column_index).ok_or(ConceptError::UnavailableRowIndex { index: column_index })?;
+        Ok(concept.as_ref())
     }
 
     /// Produces an iterator over all concepts in this `ConceptRow`, skipping empty results

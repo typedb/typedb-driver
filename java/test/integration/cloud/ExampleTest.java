@@ -17,9 +17,8 @@
  * under the License.
  */
 
-package com.typedb.driver.test.integration.cloud;
-
 // EXAMPLE START MARKER
+package com.typedb.driver.test.integration.cloud;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
@@ -36,15 +35,20 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+// EXAMPLE END MARKER
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+// EXAMPLE START MARKER
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+// EXAMPLE END MARKER
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -129,10 +133,10 @@ public class ExampleTest {
                 assertEquals(columnName, "x");
 
                 // Get concept by the variable name (column name)
-                Concept conceptByName = entityRow.get(columnName);
+                Concept conceptByName = entityRow.get(columnName).get();
 
                 // Get concept by the header's index
-                Concept conceptByIndex = entityRow.getIndex(0);
+                Concept conceptByIndex = entityRow.getIndex(0).get();
                 assertEquals(conceptByName, conceptByIndex);
 
                 System.out.printf("Getting concepts by variable names (%s) and indexes (%s) is equally correct. ",
@@ -168,7 +172,7 @@ public class ExampleTest {
                     columnName = columnNameIterator.next();
                     assertFalse(columnNameIterator.hasNext());
 
-                    conceptByName = attributeRow.get(columnName);
+                    conceptByName = attributeRow.get(columnName).get();
 
                     // Check if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
@@ -199,7 +203,7 @@ public class ExampleTest {
                 assertEquals(rows.size(), 1);
                 ConceptRow row = rows.get(0);
                 row.columnNames().iterator().forEachRemaining(columnName -> {
-                    Concept insertedConcept = row.get(columnName);
+                    Concept insertedConcept = row.get(columnName).get();
                     System.out.printf("Successfully inserted $%s: %s%n", columnName, insertedConcept);
                     if (insertedConcept.isEntity()) {
                         System.out.println("This time, it's an entity, not a type!");
@@ -212,7 +216,7 @@ public class ExampleTest {
                 assertTrue(header.contains("x"));
                 assertTrue(header.contains("z"));
 
-                Concept x = row.getIndex(header.indexOf("x"));
+                Concept x = row.getIndex(header.indexOf("x")).get();
                 System.out.printf("As we expect an entity instance, we can try to get its IID (unique identification): %s. ", x.tryGetIID());
                 if (x.isEntity()) {
                     System.out.println("It can also be retrieved directly and safely after a cast: " + x.asEntity().getIID());
@@ -262,7 +266,7 @@ public class ExampleTest {
                 AtomicInteger matchCount = new AtomicInteger(0);
                 matchAnswer.asConceptRows().stream().forEach(row -> {
                     assertEquals(QueryType.READ, row.getQueryType());
-                    Concept x = row.get(var);
+                    Concept x = row.get(var).get();
                     assertTrue(x.isEntity());
                     assertFalse(x.isEntityType());
                     assertFalse(x.isAttribute());

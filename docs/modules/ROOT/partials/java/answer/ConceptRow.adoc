@@ -58,10 +58,11 @@ conceptRow.concepts();
 [source,java]
 ----
 @CheckReturnValue
-Concept get​(java.lang.String columnName)
+java.util.Optional<Concept> get​(java.lang.String columnName)
+                         throws TypeDBDriverException
 ----
 
-Retrieves a concept for a given column name (variable). 
+Retrieves a concept for a given column name (variable). Returns an empty ``Optional`` if the variable has an empty answer. Throws an exception if the variable is not present. 
 
 
 [caption=""]
@@ -75,7 +76,7 @@ a| `columnName` a| the variable (column name from ``column_names``) a| `java.lan
 
 [caption=""]
 .Returns
-`Concept`
+`java.util.Optional<Concept>`
 
 [caption=""]
 .Code examples
@@ -90,10 +91,11 @@ conceptRow.get(columnName);
 [source,java]
 ----
 @CheckReturnValue
-Concept getIndex​(long columnIndex)
+java.util.Optional<Concept> getIndex​(long columnIndex)
+                              throws TypeDBDriverException
 ----
 
-Retrieves a concept for a given index of the header (``columnNames``). 
+Retrieves a concept for a given index of the header (``columnNames``). Returns an empty ``Optional`` if the index points to an empty answer. Throws an exception if the index is not in the row's range. 
 
 
 [caption=""]
@@ -107,7 +109,7 @@ a| `columnIndex` a| the column index a| `long`
 
 [caption=""]
 .Returns
-`Concept`
+`java.util.Optional<Concept>`
 
 [caption=""]
 .Code examples

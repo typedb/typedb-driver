@@ -24,6 +24,7 @@ import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Promise;
+import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.answer.QueryAnswerImpl;
 
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.typedb.driver.common.exception.ErrorMessage.Query.MISSING_QUERY;
 import static com.typedb.driver.jni.typedb_driver.transaction_commit;
 import static com.typedb.driver.jni.typedb_driver.transaction_force_close;
 import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
@@ -81,7 +81,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
 
     @Override
     public Promise<? extends QueryAnswer> query(String query) throws TypeDBDriverException {
-        if (query == null || query.isBlank()) throw new TypeDBDriverException(MISSING_QUERY);
+        Validator.requireNonNull(query, "query");
         try {
             return Promise.map(transaction_query(nativeObject, query/*, options.nativeObject*/), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {

@@ -162,7 +162,7 @@ def try_parse_value_type(text: str) -> Optional[ValueType]:
 register_type(ValueType=parse_value_type)
 
 
-@parse.with_pattern(r"([a-zA-Z0-9]*)")
+@parse.with_pattern(r".*")
 def parse_var(text: str):
     return text
 

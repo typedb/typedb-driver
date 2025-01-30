@@ -21,9 +21,10 @@ from typing import TYPE_CHECKING
 
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.transaction import Transaction
-from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, MISSING_QUERY, TypeDBException
+from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
+from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
     transaction_commit, \
@@ -63,9 +64,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
     #     return self._options
 
     def query(self, query: str) -> Promise[QueryAnswer]:
-        if not query or query.isspace():
-            raise TypeDBDriverException(MISSING_QUERY)
-
+        require_non_null(query, "query")
         promise = transaction_query(self.native_object, query)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 

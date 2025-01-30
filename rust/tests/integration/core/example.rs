@@ -126,10 +126,10 @@ fn example() {
         assert_eq!(column_name.as_str(), "x");
 
         // Get concept by the variable name (column name)
-        let concept_by_name = row.get(column_name).unwrap();
+        let concept_by_name = row.get(column_name).unwrap().unwrap();
 
         // Get concept by the header's index
-        let concept_by_index = row.get_index(0).unwrap();
+        let concept_by_index = row.get_index(0).unwrap().unwrap();
         assert_eq!(concept_by_name, concept_by_index);
 
         // Check if it's an entity type
@@ -158,7 +158,7 @@ fn example() {
             let column_name = column_names_iter.next().unwrap();
             assert_eq!(column_names_iter.next(), None);
 
-            let concept_by_name = row.get(column_name).unwrap();
+            let concept_by_name = row.get(column_name).unwrap().unwrap();
             assert!(concept_by_name.is_attribute_type());
             assert!(concept_by_name.is_type());
             assert!(concept_by_name.is_integer() || concept_by_name.is_string());
@@ -195,7 +195,7 @@ fn example() {
         let row = rows.get(0).unwrap();
 
         for column_name in row.get_column_names() {
-            let inserted_concept = row.get(column_name).unwrap();
+            let inserted_concept = row.get(column_name).unwrap().unwrap();
             println!("Successfully inserted ${}: {}", column_name, inserted_concept);
             if inserted_concept.is_entity() {
                 println!("This time, it's an entity, not a type!");
@@ -208,7 +208,7 @@ fn example() {
         assert!(column_names.contains(&"x".to_owned()));
         assert!(column_names.contains(&"z".to_owned()));
 
-        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap();
+        let x = row.get_index(column_names.iter().position(|r| r == "x").unwrap()).unwrap().unwrap();
         if let Some(iid) = x.try_get_iid() {
             println!("Each entity receives a unique IID. It can be retrieved directly: {}", iid);
         }
@@ -254,7 +254,7 @@ fn example() {
         let mut count = 0;
         let mut stream = answer.into_rows().map(|result| result.unwrap());
         while let Some(row) = stream.next().await {
-            let x = row.get(var).unwrap();
+            let x = row.get(var).unwrap().unwrap();
             assert!(x.is_entity());
             assert!(!x.is_entity_type());
             assert!(!x.is_attribute());

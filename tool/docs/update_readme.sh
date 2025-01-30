@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,33 +16,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//visibility:public"])
+languages=("rust" "java" "python")
 
-load("@rules_rust//rust:defs.bzl", "rust_test")
-load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-# A different name is required by the Cargo sync tool
-rust_test(
-    name = "test_example_cloud",
-    srcs = glob(["example.rs"]),
-    deps = [
-        "//rust:typedb_driver",
-        "@crates//:async-std",
-        "@crates//:chrono",
-        "@crates//:futures",
-        "@crates//:itertools",
-        "@crates//:regex",
-        "@crates//:serde_json",
-        "@crates//:serial_test",
-        "@crates//:smol",
-        "@crates//:tokio",
-        "@crates//:uuid",
-    ],
+base_targets=(
+    "//{language}:example_core"
+    "//{language}:readme_example_core"
+    "//{language}:example_cloud"
+    "//{language}:readme_example_cloud"
 )
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
-)
+for lang in "${languages[@]}"; do
+    echo "Updating README for $lang"
+
+    for target in "${base_targets[@]}"; do
+        substituted_target="${target//\{language\}/$lang}"
+        echo "Running: bazel run $substituted_target"
+        bazel run "$substituted_target"
+
+        if [ $? -ne 0 ]; then
+            echo "Error running: bazel run $substituted_target"
+            exit 1
+        fi
+    done
+done
+
+echo "All README files updated successfully."

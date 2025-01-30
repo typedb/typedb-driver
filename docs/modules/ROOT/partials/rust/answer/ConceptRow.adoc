@@ -28,10 +28,10 @@ a| `row` a| `Vec<Option<Concept>>` a|
 
 [source,rust]
 ----
-pub fn get(&self, column_name: &str) -> Option<&Concept>
+pub fn get(&self, column_name: &str) -> Result<Option<&Concept>>
 ----
 
-Retrieves a concept for a given variable. Returns an empty optional if the variable name has an empty answer, or if the variable name is not present.
+Retrieves a concept for a given variable. Returns an empty optional if the variable name has an empty answer. Returns an error if the variable name is not present.
 
 [caption=""]
 .Input parameters
@@ -46,7 +46,7 @@ a| `var_name` a|  — The variable name in the row to retrieve a|
 .Returns
 [source,rust]
 ----
-Option<&Concept>
+Result<Option<&Concept>>
 ----
 
 [caption=""]
@@ -109,10 +109,10 @@ concept_row.concepts()
 
 [source,rust]
 ----
-pub fn get_index(&self, column_index: usize) -> Option<&Concept>
+pub fn get_index(&self, column_index: usize) -> Result<Option<&Concept>>
 ----
 
-Retrieves a concept for a given column index. Returns an empty optional if the position has an empty answer, or if the index is not range for the row.
+Retrieves a concept for a given column index. Returns an empty optional if the index points to an empty answer. Returns an error if the index is not in the row’s range.
 
 [caption=""]
 .Input parameters
@@ -127,7 +127,7 @@ a| `column_index` a|  — The position in the row to retrieve a| `usize`
 .Returns
 [source,rust]
 ----
-Option<&Concept>
+Result<Option<&Concept>>
 ----
 
 [caption=""]

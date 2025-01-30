@@ -45,6 +45,7 @@ dir_mapping = {
     "Value.adoc": "data",
     "Instance.adoc": "data",
     "Error.adoc": "errors",
+    "ConceptError.adoc": "errors",
     "ConnectionError.adoc": "errors",
     "InternalError.adoc": "errors",
     "ServerError.adoc": "errors",

@@ -111,7 +111,7 @@ public class QuerySteps {
         return row.concepts().collect(Collectors.toList());
     }
 
-    public Concept getRowGetConcept(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var) {
+    public Optional<Concept> getRowGetConcept(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var) {
         ConceptRow row = collectedRows.get(rowIndex);
         switch (isByVarIndex) {
             case IS:
@@ -124,7 +124,7 @@ public class QuerySteps {
     }
 
     public Value getRowGetValue(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var) {
-        Concept concept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept concept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         switch (varKind) {
             case ATTRIBUTE:
                 return concept.asAttribute().getValue();
@@ -960,29 +960,49 @@ public class QuerySteps {
     }
 
     @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}){may_error}")
-    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.MayError mayError) {
+    public void answer_get_row_get_variable(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.MayError mayError) {
         collectRowsAnswerIfNeeded();
         mayError.check(() -> getRowGetConcept(rowIndex, isByVarIndex, var));
     }
 
-    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}{may_error}")
-    public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind varKind, Parameters.MayError mayError) {
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) {is_or_not} empty")
+    public void answer_get_row_get_variable_is_empty(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        isOrNot.compare(getRowGetConcept(rowIndex, isByVarIndex, var), Optional.empty());
+    }
+
+    @Then("answer get row\\({integer}) get variable by index\\({integer}){may_error}")
+    public void answer_get_row_get_variable_by_index(int rowIndex, int varIndex, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        ConceptRow row = collectedRows.get(rowIndex);
+        mayError.check(() -> row.getIndex(varIndex));
+    }
+
+    @Then("answer get row\\({integer}) get variable by index\\({integer}) {is_or_not} empty")
+    public void answer_get_row_get_variable_by_index_is_empty(int rowIndex, int varIndex, Parameters.IsOrNot isOrNot) {
+        collectRowsAnswerIfNeeded();
+        ConceptRow row = collectedRows.get(rowIndex);
+        isOrNot.compare(row.getIndex(varIndex), Optional.empty());
+    }
+
+    @Then("answer get row\\({integer}) get variable{by_index_of_var}\\({var}) as {concept_kind}{may_error}")
+    public void answer_get_row_get_variable_as_kind(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind varKind, Parameters.MayError mayError) {
+        collectRowsAnswerIfNeeded();
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         mayError.check(() -> unwrapConceptAs(varConcept, varKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {concept_kind}: {bool}")
     public void answer_get_row_get_variable_is_kind(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind checkedKind, boolean isCheckedKind) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         assertEquals(isCheckedKind, isUnwrappedConceptKind(varConcept, varKind, checkedKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type is {concept_kind}: {bool}")
     public void answer_get_row_get_variable_get_type_is_kind(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ConceptKind checkedKind, boolean isCheckedKind) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         boolean isTypeKind;
         switch (varKind) {
             case INSTANCE:
@@ -1006,35 +1026,35 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get label: {non_semicolon}")
     public void answer_get_row_get_variable_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         assertEquals(label, getLabelOfUnwrappedConcept(varConcept, varKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get label: {non_semicolon}")
     public void answer_get_row_get_variable_try_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         assertEquals(label, tryGetLabelOfUnwrappedConcept(varConcept, varKind).get());
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get label {is_or_not} none")
     public void answer_get_row_get_variable_try_get_label_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         isOrNot.checkNone(tryGetLabelOfUnwrappedConcept(varConcept, varKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get label: {non_semicolon}")
     public void answer_get_row_get_variable_get_type_get_label(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String label) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         assertEquals(label, getLabelOfUnwrappedConceptsType(varConcept, varKind));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get value type: {non_semicolon}")
     public void answer_get_row_get_variable_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
 
         String varValueType;
         switch (varKind) {
@@ -1054,7 +1074,7 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value type: {non_semicolon}")
     public void answer_get_row_get_variable_try_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         String varValueType = tryGetValueTypeOfUnwrappedConcept(varConcept, varKind).get();
         assertEquals(valueType, varValueType);
     }
@@ -1062,7 +1082,7 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value type {is_or_not} none")
     public void answer_get_row_get_variable_try_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         Optional<String> varValueType = tryGetValueTypeOfUnwrappedConcept(varConcept, varKind);
         isOrNot.checkNone(varValueType);
     }
@@ -1070,7 +1090,7 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) get type get value type: {non_semicolon}")
     public void answer_get_row_get_variable_get_type_get_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, String valueType) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
 
         String varValueType;
         switch (varKind) {
@@ -1087,14 +1107,14 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) is {value_type}: {bool}")
     public void answer_get_row_get_variable_is_value_type(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, boolean isValueType) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         assertEquals(isValueType, isConceptValueType(varConcept, varKind, valueType));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) {contains_or_doesnt} iid")
     public void answer_get_row_get_variable_get_iid_exists(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ContainsOrDoesnt containsOrDoesnt) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         String iid;
         switch (varKind) {
             case ENTITY:
@@ -1112,7 +1132,7 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get iid {is_or_not} none")
     public void answer_get_row_get_variable_try_get_iid_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Optional<String> iid = tryGetIIDOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind);
+        Optional<String> iid = tryGetIIDOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var).get(), varKind);
         isOrNot.checkNone(iid);
     }
 
@@ -1142,21 +1162,21 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get {value_type} {is_or_not}: {non_semicolon}")
     public void answer_get_row_get_variable_try_get_value_type_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot, String value) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         isOrNot.compare(Optional.of(parseExpectedValue(value, Optional.of(valueType))), tryGetAsValueType(varConcept, varKind, valueType));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get {value_type} {is_or_not} none")
     public void answer_get_row_get_variable_try_get_value_type_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.ValueType valueType, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var);
+        Concept varConcept = getRowGetConcept(rowIndex, isByVarIndex, var).get();
         isOrNot.checkNone(tryGetAsValueType(varConcept, varKind, valueType));
     }
 
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value {is_or_not}: {non_semicolon}")
     public void answer_get_row_get_variable_try_get_value_is(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
         collectRowsAnswerIfNeeded();
-        Value varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind).get();
+        Value varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var).get(), varKind).get();
         Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
         isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.get());
     }
@@ -1164,14 +1184,14 @@ public class QuerySteps {
     @Then("answer get row\\({integer}) get {concept_kind}{by_index_of_var}\\({var}) try get value {is_or_not} none")
     public void answer_get_row_get_variable_try_get_value_is_none(int rowIndex, Parameters.ConceptKind varKind, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot) {
         collectRowsAnswerIfNeeded();
-        Optional<Value> varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var), varKind);
+        Optional<Value> varValue = tryGetValueOfUnwrappedConcept(getRowGetConcept(rowIndex, isByVarIndex, var).get(), varKind);
         isOrNot.checkNone(varValue);
     }
 
     @Then("answer get row\\({integer}) get value{by_index_of_var}\\({var}) get {is_or_not}: {non_semicolon}")
     public void answer_get_row_get_value_get_is(int rowIndex, Parameters.IsByVarIndex isByVarIndex, String var, Parameters.IsOrNot isOrNot, String value) {
         collectRowsAnswerIfNeeded();
-        Value varValue = getRowGetConcept(rowIndex, isByVarIndex, var).asValue();
+        Value varValue = getRowGetConcept(rowIndex, isByVarIndex, var).get().asValue();
         Parameters.ValueType valueType = Parameters.ValueType.of(varValue.getType());
         isOrNot.compare(parseExpectedValue(value, valueType == null ? Optional.empty() : Optional.of(valueType)), varValue.get());
     }

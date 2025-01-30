@@ -17,28 +17,23 @@
 
 from __future__ import annotations
 
-from typing import Iterator, TYPE_CHECKING
+from typing import Iterator, Optional, TYPE_CHECKING
 
 from typedb.api.answer.concept_row import ConceptRow
 from typedb.api.answer.query_type import QueryType
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, \
-    NULL_NATIVE_OBJECT, VARIABLE_DOES_NOT_EXIST
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_null, require_non_negative
 from typedb.concept import concept_factory
 from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
                                           concept_row_get_index, concept_row_to_string, concept_row_equals,
                                           concept_row_get_column_names, concept_row_get_query_type,
-                                          concept_row_get_concepts, ConceptRow as NativeConceptRow)
+                                          concept_row_get_concepts, ConceptRow as NativeConceptRow,
+                                          TypeDBDriverExceptionNative)
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
-
-
-def _not_blank_var(var: str) -> str:
-    if not var or var.isspace():
-        raise TypeDBDriverException(MISSING_VARIABLE)
-    return var
 
 
 class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
@@ -63,17 +58,21 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
         return map(concept_factory.wrap_concept, IteratorWrapper(concept_row_get_concepts(self.native_object),
                                                                  concept_iterator_next))
 
-    def get(self, column_name: str) -> Concept:
-        concept = concept_row_get(self.native_object, _not_blank_var(column_name))
-        if not concept:
-            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_name)
-        return concept_factory.wrap_concept(concept)
+    def get(self, column_name: str) -> Optional[Concept]:
+        require_non_null(column_name, "column_name")
+        try:
+            concept = concept_row_get(self.native_object, column_name)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+        return concept_factory.wrap_concept(concept) if concept else None
 
-    def get_index(self, column_index: int) -> Concept:
-        concept = concept_row_get_index(self.native_object, column_index)
-        if not concept:
-            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, column_index)
-        return concept_factory.wrap_concept(concept)
+    def get_index(self, column_index: int) -> Optional[Concept]:
+        require_non_negative(column_index, "column_index")
+        try:
+            concept = concept_row_get_index(self.native_object, column_index)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+        return concept_factory.wrap_concept(concept) if concept else None
 
     def __repr__(self):
         return concept_row_to_string(self.native_object)

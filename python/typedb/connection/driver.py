@@ -23,6 +23,7 @@ from typedb.api.connection.driver import Driver
 # from typedb.api.connection.options import Options
 from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_null
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
@@ -40,6 +41,9 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
 
     def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credentials: Credentials,
                  driver_options: DriverOptions):
+        require_non_null(addresses, "addresses")
+        require_non_null(credentials, "credentials")
+        require_non_null(driver_options, "driver_options")
         try:
             if is_cloud:
                 if isinstance(addresses, list):
@@ -77,6 +81,8 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
 
     def transaction(self, database_name: str,
                     transaction_type: TransactionType) -> Transaction:  # , options: Options = None
+        require_non_null(database_name, "database_name")
+        require_non_null(transaction_type, "transaction_type")
         return _Transaction(self, database_name, transaction_type)  # , options if options else Options()
 
     def is_open(self) -> bool:

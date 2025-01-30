@@ -88,9 +88,10 @@ class DriverErrorMessage(ErrorMessage):
 DRIVER_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
 TRANSACTION_CLOSED = DriverErrorMessage(2, "The transaction has been closed and no further operation is allowed.")
 DATABASE_DELETED = DriverErrorMessage(3, "The database '%s' has been deleted and no further operation is allowed.")
-POSITIVE_VALUE_REQUIRED = DriverErrorMessage(4, "Value should be positive, was: '%d'.")
-CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(5, "TLS disabled but the Root CA path provided.")
-UNIMPLEMENTED = DriverErrorMessage(6, "This operation is not implemented yet.")
+POSITIVE_VALUE_REQUIRED = DriverErrorMessage(4, "Value of '%s' should be positive, was: '%d'.")
+NON_NEGATIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value of '%s' should be non-negative, was: '%d'.")
+NON_NULL_VALUE_REQUIRED = DriverErrorMessage(6, "Value of '%s' should not be null.")
+UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
 
 
 class ConceptErrorMessage(ErrorMessage):
@@ -106,22 +107,6 @@ class ConceptErrorMessage(ErrorMessage):
 INVALID_CONCEPT_CASTING = ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.")
 INVALID_QUERY_ANSWER_CASTING = ConceptErrorMessage(2, "Invalid query answer conversion from '%s' to '%s'.")
 INVALID_VALUE_RETRIEVAL = ConceptErrorMessage(3, "Could not retrieve a '%s' value.")
-MISSING_VARIABLE = ConceptErrorMessage(4, "Variable name cannot be null or empty.")
-
-
-class QueryErrorMessage(ErrorMessage):
-    """
-    :meta private:
-    """
-
-    def __init__(self, code: int, message: str):
-        super(QueryErrorMessage, self).__init__(code_prefix="PQR", code_number=code,
-                                                message_prefix="Query Error", message_body=message)
-
-
-VARIABLE_DOES_NOT_EXIST = QueryErrorMessage(1, "The variable '%s' does not exist.")
-# TODO: Move this validation to server and remove the error message from all the drivers
-MISSING_QUERY = QueryErrorMessage(2, "Query cannot be null or empty.")
 
 
 class InternalErrorMessage(ErrorMessage):
