@@ -155,7 +155,10 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject value_get_string;
 %newobject value_get_datetime_tz;
 
-%newobject query_answer_get_rows;
+%newobject query_answer_into_rows;
+%newobject query_answer_into_documents;
+%delobject query_answer_into_rows;
+%delobject query_answer_into_documents;
 
 %newobject concept_to_string;
 
