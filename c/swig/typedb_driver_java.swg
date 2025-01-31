@@ -194,7 +194,8 @@
 %nojavaexception concept_row_to_string;
 
 %nojavaexception query_answer_get_query_type;
-%nojavaexception query_answer_get_rows;
+%nojavaexception query_answer_into_rows;
+%nojavaexception query_answer_into_documents;
 %nojavaexception query_answer_is_ok;
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
@@ -413,20 +414,12 @@
 
     public ConceptRowIterator intoRows() {
         swigCMemOwn = false;
-        try {
-            return typedb_driver.query_answer_into_rows(this);
-        } catch (Error e) {
-            throw new Error.Unchecked(e);
-        }
+        return typedb_driver.query_answer_into_rows(this);
     }
 
     public StringIterator intoDocuments() {
         swigCMemOwn = false;
-        try {
-            return typedb_driver.query_answer_into_documents(this);
-        } catch (Error e) {
-            throw new Error.Unchecked(e);
-        }
+        return typedb_driver.query_answer_into_documents(this);
     }
 %}
 
