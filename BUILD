@@ -42,6 +42,7 @@ checkstyle_test(
         "LICENSE",
         "VERSION",
         "docs/**/*",
+        "Cargo.*",
     ]),
     license_type = "apache-header",
 )
