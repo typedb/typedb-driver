@@ -41,7 +41,6 @@ pub struct TypeDBDriver {
     database_manager: DatabaseManager,
     user_manager: UserManager,
     background_runtime: Arc<BackgroundRuntime>,
-    username: Option<String>,
     is_cloud: bool,
 }
 
@@ -130,7 +129,6 @@ impl TypeDBDriver {
             database_manager,
             user_manager,
             background_runtime,
-            username: None,
             is_cloud: false,
         })
     }
@@ -281,7 +279,6 @@ impl TypeDBDriver {
         //     Ok(Connection {
         //         server_connections,
         //         background_runtime,
-        //         username: Some(credential.username().to_owned()),
         //         is_cloud: true,
         //     })
         // }
@@ -402,10 +399,6 @@ impl TypeDBDriver {
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
         self.server_connections.iter()
-    }
-
-    pub(crate) fn username(&self) -> Option<&str> {
-        self.username.as_deref()
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
