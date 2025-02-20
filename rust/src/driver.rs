@@ -124,13 +124,7 @@ impl TypeDBDriver {
         let database_manager = DatabaseManager::new(server_connections.clone(), database_info)?;
         let user_manager = UserManager::new(server_connections.clone());
 
-        Ok(Self {
-            server_connections,
-            database_manager,
-            user_manager,
-            background_runtime,
-            is_cloud: false,
-        })
+        Ok(Self { server_connections, database_manager, user_manager, background_runtime, is_cloud: false })
     }
 
     // TODO: Add examples
