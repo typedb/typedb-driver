@@ -162,7 +162,6 @@ checkstyle_test(
         "README.md",
         "docs/**/*.adoc",
         "TypeDBExample.java",
-        "TypeDBCloudExample.java",
     ]),
     license_type = "apache-header",
 )

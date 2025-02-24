@@ -65,7 +65,7 @@ public interface DatabaseManager {
      *
      * @param name The name of the database to be created
      */
-    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cloud
+    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
     void create(String name) throws TypeDBDriverException;
 
     /**

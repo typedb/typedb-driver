@@ -40,7 +40,7 @@ def typedb_behaviour_java_test(
 
     typedb_java_test(
         name = name + "-cluster",
-        server_artifacts = { # TODO: Use cloud artifacts
+        server_artifacts = { # TODO: Use cluster artifacts
             "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
             "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
             "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
