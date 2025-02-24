@@ -24,9 +24,6 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.connection.DriverImpl;
 
-import java.util.Map;
-import java.util.Set;
-
 import static com.typedb.driver.common.collection.Collections.set;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
@@ -34,70 +31,18 @@ public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
     /**
-     * Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+     * Open a TypeDB Driver to a TypeDB server available at the provided address.
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.coreDriver(address);
+     * TypeDB.driver(address);
      * </pre>
      *
      * @param address The address of the TypeDB server
      * @param credentials The credentials to connect with
      * @param driverOptions The connection settings to connect with
      */
-    public static Driver coreDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+    public static Driver driver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(address, credentials, driverOptions);
-    }
-
-    /**
-     * Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(address, credential);
-     * </pre>
-     *
-     * @param address The address of the TypeDB server
-     * @param credentials The credential to connect with
-     * @param driverOptions The connection settings to connect with
-     */
-    public static Driver cloudDriver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        return cloudDriver(set(address), credentials, driverOptions);
-    }
-
-    /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(addresses, credential);
-     * </pre>
-     *
-     * @param addresses The address(es) of the TypeDB server(s)
-     * @param credentials The credential to connect with
-     * @param driverOptions The connection settings to connect with
-     */
-    public static Driver cloudDriver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        return new DriverImpl(addresses, credentials, driverOptions);
-    }
-
-    /**
-     * Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation, with
-     * the provided credential.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * TypeDB.cloudDriver(addressTranslation, credential);
-     * </pre>
-     *
-     * @param addressTranslation Translation map from addresses to be used by the driver for connection
-     * to addresses received from the TypeDB server(s)
-     * @param credentials The credential to connect with
-     * @param driverOptions The connection settings to connect with
-     */
-    public static Driver cloudDriver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
-        return new DriverImpl(addressTranslation, credentials, driverOptions);
     }
 }

@@ -106,6 +106,7 @@ fn example() {
         assert!(answer.is_ok());
 
         // Commit automatically closes the transaction (don't forget to await the result!)
+        // CAUTION: Committing or closing a transaction will invalidate all its uncollected answer streams
         transaction.commit().await.unwrap();
 
         // Open a read transaction to safely read anything without database modifications

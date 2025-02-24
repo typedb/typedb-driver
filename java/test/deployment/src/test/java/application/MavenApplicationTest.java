@@ -34,7 +34,7 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        Driver driver = TypeDB.coreDriver(
+        Driver driver = TypeDB.driver(
                 TypeDB.DEFAULT_ADDRESS,
                 new Credentials("admin", "password"),
                 new DriverOptions(false, null)

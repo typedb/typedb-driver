@@ -7,7 +7,7 @@ class TypeDBExample:
 
     def typedb_example():
         # Open a driver connection. The connection will be automatically closed on the "with" block exit
-        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")
@@ -113,12 +113,14 @@ class TypeDBExample:
                 header = [name for name in row.column_names()]
 
                 x = row.get_index(header.index("x"))
-                print(
-                    "As we expect an entity instance, we can try to get its IID (unique identification): {x.try_get_iid()}. ")
+                print("As we expect an entity instance, we can try to get its IID (unique identification): "
+                      "{x.try_get_iid()}. ")
                 if x.is_entity():
                     print(f"It can also be retrieved directly and safely after a cast: {x.as_entity().get_iid()}")
 
                 # Do not forget to commit if the changes should be persisted
+                print('CAUTION: Committing or closing (including leaving the "with" block) a transaction will '
+                      'invalidate all its uncollected answer iterators')
                 tx.commit()
 
             # Open another write transaction to try inserting even more data

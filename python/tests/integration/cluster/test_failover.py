@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# TODO: When cloud is implemented, rewrite this test in BDDs for all the drivers. Remove this file.
+# TODO: When multiple notes for cluster are implemented, rewrite this test in BDDs for all the drivers and remove this
 
 # import os
 # import subprocess

@@ -47,7 +47,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
-        return TypeDB.coreDriver(address, credentials, driverOptions);
+        return TypeDB.driver(address, credentials, driverOptions);
     }
 
     @Override

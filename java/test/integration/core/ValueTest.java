@@ -63,7 +63,7 @@ public class ValueTest {
 
     @BeforeClass
     public static void setUpClass() {
-        typedbDriver = TypeDB.coreDriver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
         if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
         typedbDriver.databases().create(DB_NAME);
     }

@@ -17,4 +17,4 @@
 # under the License.
 
 set -ex
-bazel test $(bazel query "filter('^.*cloud.*$', kind(.*_test, $1))") "${@:2}"
+bazel test $(bazel query "filter('^.*cluster.*$', kind(.*_test, $1))") "${@:2}"

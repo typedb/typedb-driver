@@ -109,7 +109,7 @@ pub struct Context {
 impl fmt::Debug for Context {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("Context")
-            .field("is_cloud", &self.is_cluster)
+            .field("is_cluster", &self.is_cluster)
             .field("tls_root_ca", &self.tls_root_ca)
             .field("transaction_options", &self.transaction_options)
             .field("driver", &self.driver)

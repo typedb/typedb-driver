@@ -27,15 +27,16 @@ class TestExample(TestCase):
     # EXAMPLE END MARKER
 
     def setUp(self):
-        with TypeDB.cloud_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
 
     # EXAMPLE START MARKER
 
     def test_example(self):
-        # Open a driver connection. The connection will be automatically closed on the "with" block exit
-        with TypeDB.cloud_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
+        # Open a driver connection. Specify your parameters if needed
+        # The connection will be automatically closed on the "with" block exit
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")
@@ -174,12 +175,14 @@ class TestExample(TestCase):
                 assert_that("z" in header, is_(True))
 
                 x = row.get_index(header.index("x"))
-                print(
-                    "As we expect an entity instance, we can try to get its IID (unique identification): {x.try_get_iid()}. ")
+                print("As we expect an entity instance, we can try to get its IID (unique identification): "
+                      "{x.try_get_iid()}. ")
                 if x.is_entity():
                     print(f"It can also be retrieved directly and safely after a cast: {x.as_entity().get_iid()}")
 
                 # Do not forget to commit if the changes should be persisted
+                print('CAUTION: Committing or closing (including leaving the "with" block) a transaction will '
+                      'invalidate all its uncollected answer iterators')
                 tx.commit()
 
             # Open another write transaction to try inserting even more data

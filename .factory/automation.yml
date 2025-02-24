@@ -169,14 +169,14 @@ build:
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-community-server.sh &&
-          .factory/test-core.sh //java/test/integration:all --test_output=errors --jobs=1 &&
+          .factory/test-community.sh //java/test/integration:all --test_output=errors --jobs=1 &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
         # tool/test/start-cluster-servers.sh 3 &&
-        #   .factory/test-cloud.sh //java/test/integration:all --test_output=errors --jobs=1 &&
+        #   .factory/test-cluster.sh //java/test/integration:all --test_output=errors --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "CLUSTER_FAILED" ]]; then exit 1; fi
@@ -192,7 +192,7 @@ build:
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         
         tool/test/start-community-server.sh &&
-          .factory/test-core.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+          .factory/test-community.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
@@ -209,7 +209,7 @@ build:
     #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cloud.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+    #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
     #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS
@@ -252,7 +252,7 @@ build:
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-community-server.sh &&
-          .factory/test-core.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          .factory/test-community.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
@@ -271,7 +271,7 @@ build:
     #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cloud.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
+    #       .factory/test-cluster.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
     #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS
@@ -311,12 +311,12 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
-#          .factory/test-core.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-community-server.sh
 #        exit $TEST_SUCCESS
@@ -330,13 +330,13 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
-#          .factory/test-cloud.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //nodejs/test/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //nodejs/test/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cluster-servers.sh
 #        exit $TEST_SUCCESS
@@ -378,12 +378,12 @@ build:
 #        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
-#          .factory/test-core.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
-#          .factory/test-core.sh //cpp/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
+#          .factory/test-community.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
+#          .factory/test-community.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
+#          .factory/test-community.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
+#          .factory/test-community.sh //cpp/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-community-server.sh
 #        exit $TEST_SUCCESS
@@ -399,13 +399,13 @@ build:
 #        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-#          .factory/test-cloud.sh //cpp/test/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+#          .factory/test-cluster.sh //cpp/test/behaviour/query/language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cluster-servers.sh
 #        exit $TEST_SUCCESS
@@ -424,14 +424,14 @@ build:
 #        tool/test/start-community-server.sh &&
 #          bazel test //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
 #          bazel test //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
 #          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
 #        tool/test/stop-community-server.sh
 #        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          bazel test //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
 #        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
@@ -448,13 +448,13 @@ build:
 #        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/... --test_output=errors --jobs=1 &&
-#          .factory/test-core.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Query/Language/... --test_output=errors --jobs=1 &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-community-server.sh
 #        exit $TEST_SUCCESS
@@ -470,14 +470,14 @@ build:
 #        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Connection/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-#          .factory/test-cloud.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Query/Language/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
 #        tool/test/stop-cluster-servers.sh
 #        exit $TEST_SUCCESS

@@ -26,8 +26,8 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_open_core, driver_open_cloud, driver_open_cloud_translated, \
-    driver_is_open, driver_force_close, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import driver_open_with_description, driver_is_open, driver_force_close, \
+    TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
@@ -39,37 +39,16 @@ if TYPE_CHECKING:
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):
 
-    def __init__(self, is_cloud: bool, addresses: list[str] | dict[str], credentials: Credentials,
-                 driver_options: DriverOptions):
-        require_non_null(addresses, "addresses")
+    def __init__(self, address: str, credentials: Credentials, driver_options: DriverOptions):
+        require_non_null(address, "address")
         require_non_null(credentials, "credentials")
         require_non_null(driver_options, "driver_options")
         try:
-            if is_cloud:
-                if isinstance(addresses, list):
-                    native_driver = driver_open_cloud(addresses, credentials.native_object,
-                                                      driver_options.native_object, Driver.LANGUAGE)
-                else:
-                    public_addresses = list(addresses.keys())
-                    private_addresses = [addresses[public] for public in public_addresses]
-                    native_driver = driver_open_cloud_translated(
-                        public_addresses, private_addresses, credentials.native_object, driver_options.native_object,
-                        Driver.LANGUAGE)
-            else:
-                native_driver = driver_open_core(addresses[0], credentials.native_object,
-                                                 driver_options.native_object,
-                                                 Driver.LANGUAGE)
+            native_driver = driver_open_with_description(address, credentials.native_object,
+                                                         driver_options.native_object, Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)
-
-    @classmethod
-    def core(cls, address: str, credentials: Credentials, driver_options: DriverOptions):
-        return cls(is_cloud=False, addresses=[address], credentials=credentials, driver_options=driver_options)
-
-    @classmethod
-    def cloud(cls, addresses: list[str] | dict[str], credentials: Credentials, driver_options: DriverOptions):
-        return cls(is_cloud=True, addresses=addresses, credentials=credentials, driver_options=driver_options)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

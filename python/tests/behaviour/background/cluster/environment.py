@@ -19,11 +19,13 @@ from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 from typedb.driver import *
 
+# TODO: Reuse code from the community environment when needed, update for multiple clusters
 IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 
 def before_all(context: Context):
     environment_base.before_all(context)
+    # context.credentials_root_ca_path = os.environ["ROOT_CA"] # TODO: test root ca with cluster
     context.create_driver_fn = lambda host="localhost", port=None, user=None, password=None: \
         create_driver(context, host, port, user, password)
     context.setup_context_driver_fn = lambda host="localhost", port=None, username=None, password=None: \
@@ -40,6 +42,7 @@ def before_scenario(context: Context, scenario):
 
 
 def setup_context_driver(context, host="localhost", port=None, username=None, password=None):
+    # TODO: Use root_ca_path in connection
     context.driver = create_driver(context, host, port, username, password)
     # context.transaction_options = Options(infer=True)
 
@@ -52,7 +55,7 @@ def create_driver(context, host="localhost", port=None, username=None, password=
     if password is None:
         password = "password"
     credentials = Credentials(username, password)
-    return TypeDB.core_driver(address=f"{host}:{port}", credentials=credentials, driver_options=DriverOptions())
+    return TypeDB.driver(address=f"{host}:{port}", credentials=credentials, driver_options=DriverOptions())
 
 
 def after_scenario(context: Context, scenario):

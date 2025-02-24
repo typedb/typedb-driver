@@ -26,14 +26,14 @@ py_library(
 )
 
 py_library(
-    name = "core",
-    srcs = ["core/environment.py"],
+    name = "community",
+    srcs = ["community/environment.py"],
     deps = [],
 )
 
 py_library(
-    name = "cloud",
-    srcs = ["cloud/environment.py"],
+    name = "cluster",
+    srcs = ["cluster/environment.py"],
     deps = [],
 )
 
