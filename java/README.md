@@ -58,11 +58,12 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
 <!-- EXAMPLE_START_MARKER -->
 
 ```java
-package com.typedb.driver;
 
-import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
@@ -77,10 +78,13 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class TypeDBCoreExample {
+
+@SuppressWarnings("Duplicates")
+public class TypeDBExample {
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
         try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
@@ -200,6 +204,7 @@ public class TypeDBCoreExample {
                 }
 
                 // Do not forget to commit if the changes should be persisted
+                System.out.println("CAUTION: Committing or closing (including leaving the try-with-resources block) a transaction will invalidate all its uncollected answer iterators");
                 transaction.commit();
             }
 

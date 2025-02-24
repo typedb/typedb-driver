@@ -6,7 +6,8 @@ from typedb.driver import *
 class TypeDBExample:
 
     def typedb_example():
-        # Open a driver connection. The connection will be automatically closed on the "with" block exit
+        # Open a driver connection. Specify your parameters if needed
+        # The connection will be automatically closed on the "with" block exit
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             # Create a database
             driver.databases.create("typedb")
@@ -90,6 +91,7 @@ class TypeDBExample:
                         attribute_type = concept_by_name.as_attribute_type()
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
                               f"value type: '{attribute_type.try_get_value_type()}'")
+
 
                     print(f"It is also possible to just print the concept itself: '{concept_by_name}'")
 
