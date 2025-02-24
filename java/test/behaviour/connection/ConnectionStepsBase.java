@@ -19,9 +19,9 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.test.behaviour.config.Parameters;
 

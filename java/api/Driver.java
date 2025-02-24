@@ -21,7 +21,6 @@ package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.user.UserManager;
-
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;

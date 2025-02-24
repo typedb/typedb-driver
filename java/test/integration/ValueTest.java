@@ -20,9 +20,9 @@
 package com.typedb.driver.test.integration;
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;

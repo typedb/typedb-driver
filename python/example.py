@@ -91,7 +91,6 @@ class TypeDBExample:
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "
                               f"value type: '{attribute_type.try_get_value_type()}'")
 
-
                     print(f"It is also possible to just print the concept itself: '{concept_by_name}'")
 
             # Open a write transaction to insert data
@@ -183,5 +182,3 @@ class TypeDBExample:
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
-
-

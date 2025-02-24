@@ -377,7 +377,12 @@ impl Context {
         }
     }
 
-    async fn create_driver_community(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
+    async fn create_driver_community(
+        &self,
+        address: &str,
+        username: &str,
+        password: &str,
+    ) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cluster);
         let credentials = Credentials::new(username, password);
         let conn_settings = DriverOptions::new(false, None)?;

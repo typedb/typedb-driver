@@ -19,9 +19,10 @@
 
 package com.typedb.driver.api.user;
 
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
 import javax.annotation.CheckReturnValue;
 import java.util.Set;
-import com.typedb.driver.common.exception.TypeDBDriverException;
 
 /**
  * Provides access to all user management methods.

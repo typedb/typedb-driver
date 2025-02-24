@@ -24,9 +24,9 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
+import static com.typedb.driver.jni.typedb_driver.user_delete;
 import static com.typedb.driver.jni.typedb_driver.user_get_name;
 import static com.typedb.driver.jni.typedb_driver.user_update_password;
-import static com.typedb.driver.jni.typedb_driver.user_delete;
 
 public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
     private final UserManagerImpl users;

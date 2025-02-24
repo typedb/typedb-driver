@@ -15,9 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from collections.abc import Mapping as ABCMapping
-from typing import Iterable, Mapping, Union
-
 from typedb.api.answer.concept_document_iterator import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row_iterator import *  # noqa # pylint: disable=unused-import
@@ -34,10 +31,10 @@ from typedb.api.concept.type.relation_type import *  # noqa # pylint: disable=un
 from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.driver_options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.credentials import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.driver import *  # noqa # pylint: disable=unused-import
+from typedb.api.connection.driver_options import *  # noqa # pylint: disable=unused-import
 # from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
 from typedb.api.user.user import *  # noqa # pylint: disable=unused-import

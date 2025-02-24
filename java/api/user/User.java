@@ -53,7 +53,6 @@ public interface User {
      * <pre>
      * driver.users().delete(username);
      * </pre>
-     *
      */
     void delete();
 }

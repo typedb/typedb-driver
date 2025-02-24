@@ -69,6 +69,7 @@ class User(ABC):
         """
         pass
 
+
 class UserManager(ABC):
     """
     Provides access to all user management methods.

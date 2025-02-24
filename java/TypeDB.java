@@ -19,13 +19,11 @@
 
 package com.typedb.driver;
 
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
-import com.typedb.driver.connection.DriverImpl;
-
-import static com.typedb.driver.common.collection.Collections.set;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.connection.DriverImpl;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
@@ -38,8 +36,8 @@ public class TypeDB {
      * TypeDB.driver(address);
      * </pre>
      *
-     * @param address The address of the TypeDB server
-     * @param credentials The credentials to connect with
+     * @param address       The address of the TypeDB server
+     * @param credentials   The credentials to connect with
      * @param driverOptions The connection settings to connect with
      */
     public static Driver driver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {

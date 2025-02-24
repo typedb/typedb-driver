@@ -2,9 +2,9 @@
 // It is not intended for manual editing.
 package com.typedb.driver;
 
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;

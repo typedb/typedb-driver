@@ -20,9 +20,9 @@
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;

@@ -137,8 +137,15 @@ impl TypeDBDriver {
     ) -> Result<HashSet<Address>> {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {
-            let server_connection =
-                ServerConnection::new(background_runtime.clone(), address.clone(), credentials.clone(), driver_options.clone(), Self::DRIVER_LANG, Self::VERSION).await;
+            let server_connection = ServerConnection::new(
+                background_runtime.clone(),
+                address.clone(),
+                credentials.clone(),
+                driver_options.clone(),
+                Self::DRIVER_LANG,
+                Self::VERSION,
+            )
+            .await;
             match server_connection {
                 Ok((server_connection, _)) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
