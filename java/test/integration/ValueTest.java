@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.typedb.driver.test.integration.core;
+package com.typedb.driver.test.integration;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.DriverOptions;

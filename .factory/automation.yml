@@ -169,14 +169,14 @@ build:
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-community-server.sh &&
-          .factory/test-community.sh //java/test/integration:all --test_output=errors --jobs=1 &&
+          bazel test //java/test/integration:all --test_output=streamed --jobs=1 &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
         # tool/test/start-cluster-servers.sh 3 &&
-        #   .factory/test-cluster.sh //java/test/integration:all --test_output=errors --jobs=1 &&
+        #   bazel test //java/test/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "CLUSTER_FAILED" ]]; then exit 1; fi
@@ -192,7 +192,7 @@ build:
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         
         tool/test/start-community-server.sh &&
-          .factory/test-community.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+          .factory/test-community.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
@@ -209,7 +209,7 @@ build:
     #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=errors --jobs=1 &&
+    #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
     #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS

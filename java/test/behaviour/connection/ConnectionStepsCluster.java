@@ -28,7 +28,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
-public class ConnectionStepsCloud extends ConnectionStepsBase {
+public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
@@ -46,12 +46,12 @@ public class ConnectionStepsCloud extends ConnectionStepsBase {
 
     @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
-        return TypeDB.cloudDriver(address, credentials, driverOptions);
+        return TypeDB.driver(address, credentials, driverOptions);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        // TODO: Add encryption to cloud tests
+        // TODO: Add encryption to cluster tests
         return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
     }
 

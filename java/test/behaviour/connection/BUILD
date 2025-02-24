@@ -35,9 +35,9 @@ java_library(
 )
 
 java_library(
-    name = "steps-core",
+    name = "steps-community",
     srcs = [
-        "ConnectionStepsCore.java",
+        "ConnectionStepsCommunity.java",
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -52,9 +52,9 @@ java_library(
 )
 
 java_library(
-    name = "steps-cloud",
+    name = "steps-cluster",
     srcs = [
-        "ConnectionStepsCloud.java",
+        "ConnectionStepsCluster.java",
     ],
     visibility = ["//visibility:public"],
     deps = [

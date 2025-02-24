@@ -41,6 +41,8 @@ extern "C" {
 
 %nodefaultctor;
 
+%ignore driver_open; // use `driver_open_with_description`
+
 %define %dropproxy(Type, function_prefix)
 struct Type {};
 %ignore function_prefix ## _drop;

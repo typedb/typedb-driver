@@ -29,7 +29,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
-public class ConnectionStepsCore extends ConnectionStepsBase {
+public class ConnectionStepsCommunity extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();

@@ -42,8 +42,8 @@ public class DriverTest extends BehaviourTest {
     // 3) Select 'Bazel test DefineTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
+    //    a) Use '//<this>/<package>/<name>:test-community' to test against typedb (TypeDB Community Edition)
+    //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster (TypeDB Cloud / Enterprise)
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'
@@ -54,5 +54,5 @@ public class DriverTest extends BehaviourTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static TypeDBCoreRunner runner;
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 }

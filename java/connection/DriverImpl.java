@@ -33,7 +33,6 @@ import com.typedb.driver.user.UserManagerImpl;
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
 import static com.typedb.driver.jni.typedb_driver.driver_open_with_description;
-import static com.typedb.driver.jni.typedb_driver.driver_open; // TODO: This should not compile! Remove it from swig!!
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 

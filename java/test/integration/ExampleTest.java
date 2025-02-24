@@ -18,12 +18,12 @@
  */
 
 // EXAMPLE START MARKER
-package com.typedb.driver.test.integration.cloud;
+package com.typedb.driver.test.integration;
 
 import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -35,8 +35,8 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-// EXAMPLE END MARKER
 
+// EXAMPLE END MARKER
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,7 +63,7 @@ public class ExampleTest {
     // EXAMPLE END MARKER
     @BeforeClass
     public static void setUpClass() {
-        Driver typedbDriver = TypeDB.cloudDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+        Driver typedbDriver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
         if (typedbDriver.databases().contains("typedb")) {
             typedbDriver.databases().get("typedb").delete();
         }
@@ -74,7 +74,7 @@ public class ExampleTest {
     // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.cloudDriver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
+        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");
@@ -223,6 +223,7 @@ public class ExampleTest {
                 }
 
                 // Do not forget to commit if the changes should be persisted
+                System.out.println("CAUTION: Committing or closing (including leaving the try-with-resources block) a transaction will invalidate all its uncollected answer iterators");
                 transaction.commit();
             }
 

@@ -42,8 +42,8 @@ public class DatabaseTestCloud extends BehaviourTest {
     // 3) Select 'Bazel test DatabaseTestCloud'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
+    //    a) Use '//<this>/<package>/<name>:test-community' to test against typedb (TypeDB Community Edition)
+    //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster (TypeDB Cloud / Enterprise)
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'

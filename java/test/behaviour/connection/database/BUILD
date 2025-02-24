@@ -40,7 +40,7 @@ java_library(
 )
 
 typedb_java_test(
-    name = "test-core",
+    name = "test-community",
     srcs = [
         "DatabaseTestCore.java",
     ],
@@ -56,7 +56,7 @@ typedb_java_test(
 #        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
     },
     runtime_deps = [
-        "//java/test/behaviour/connection:steps-core",
+        "//java/test/behaviour/connection:steps-community",
 
         ":steps",
         "//java/test/behaviour/connection/transaction:steps",
@@ -75,7 +75,7 @@ typedb_java_test(
 )
 
 #typedb_java_test(
-#    name = "test-cloud",
+#    name = "test-cluster",
 #    srcs = [
 #        "DatabaseTestCloud.java",
 #    ],
