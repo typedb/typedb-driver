@@ -42,7 +42,7 @@ pub extern "C" fn driver_open_core(
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     // TODO: Add a separate entry point for C with a provided "c" driver_lang!
-    try_release(TypeDBDriver::new_core_with_description(
+    try_release(TypeDBDriver::new_with_description(
         string_view(address),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),

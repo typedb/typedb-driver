@@ -34,7 +34,8 @@ class TestExample(TestCase):
     # EXAMPLE START MARKER
 
     def test_example(self):
-        # Open a driver connection. The connection will be automatically closed on the "with" block exit
+        # Open a driver connection. Specify your parameters if needed
+        # The connection will be automatically closed on the "with" block exit
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
             # Create a database
             driver.databases.create("typedb")

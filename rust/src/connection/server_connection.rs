@@ -55,7 +55,7 @@ pub(crate) struct ServerConnection {
 
 impl ServerConnection {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn new_core(
+    pub(crate) async fn new(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credentials: Credentials,
@@ -78,16 +78,6 @@ impl ServerConnection {
             latency_tracker,
         };
         Ok((server_connection, database_info))
-    }
-
-    pub(crate) fn new_cloud(
-        background_runtime: Arc<BackgroundRuntime>,
-        address: Address,
-        credentials: Credentials,
-    ) -> crate::Result<Self> {
-        todo!()
-        // let request_transmitter = Arc::new(RPCTransmitter::start(address, credentials, &background_runtime)?);
-        // Ok(Self { background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

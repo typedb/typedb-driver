@@ -41,7 +41,6 @@ pub struct TypeDBDriver {
     database_manager: DatabaseManager,
     user_manager: UserManager,
     background_runtime: Arc<BackgroundRuntime>,
-    is_cloud: bool,
 }
 
 impl TypeDBDriver {
@@ -58,41 +57,43 @@ impl TypeDBDriver {
     /// # Arguments
     ///
     /// * `address` — The address (host:port) on which the TypeDB Server is running
-    /// * `Credentials` — The Credentials to connect with
+    /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "Connection::new_core(\"127.0.0.1:1729\")")]
-    #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\").await")]
+    #[cfg_attr(feature = "sync", doc = "TypeDBDriver::new(\"127.0.0.1:1729\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "TypeDBDriver::new(\"127.0.0.1:1729\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core(
+    pub async fn new(
         address: impl AsRef<str>,
         credentials: Credentials,
         driver_options: DriverOptions,
     ) -> Result<Self> {
-        Self::new_core_with_description(address, credentials, driver_options, Self::DRIVER_LANG).await
+        Self::new_with_description(address, credentials, driver_options, Self::DRIVER_LANG).await
     }
 
     /// Creates a new TypeDB Server connection with a description.
+    /// This method is generally used by TypeDB drivers built on top of the Rust driver.
+    /// In other cases, use [`Self::new`] instead.
     ///
     /// # Arguments
     ///
     /// * `address` — The address (host:port) on which the TypeDB Server is running
-    /// * `Credentials` — The Credentials to connect with
+    /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     /// * `driver_lang` — The language of the driver connecting to the server
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\")")]
-    #[cfg_attr(not(feature = "sync"), doc = "Connection::new_core(\"127.0.0.1:1729\", \"rust\").await")]
+    #[cfg_attr(feature = "sync", doc = "TypeDBDriver::new_with_description(\"127.0.0.1:1729\", \"rust\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "TypeDBDriver::new_with_description(\"127.0.0.1:1729\", \"rust\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_core_with_description(
+    pub async fn new_with_description(
         address: impl AsRef<str>,
         credentials: Credentials,
         driver_options: DriverOptions,
@@ -102,13 +103,13 @@ impl TypeDBDriver {
         let address: Address = id.parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
-        let (server_connection, database_info) = ServerConnection::new_core(
+        let (server_connection, database_info) = ServerConnection::new(
             background_runtime.clone(),
             address.clone(),
             credentials,
             driver_options,
             driver_lang.as_ref(),
-            TypeDBDriver::VERSION,
+            Self::VERSION,
         )
         .await?;
 
@@ -124,162 +125,11 @@ impl TypeDBDriver {
         let database_manager = DatabaseManager::new(server_connections.clone(), database_info)?;
         let user_manager = UserManager::new(server_connections.clone());
 
-        Ok(Self { server_connections, database_manager, user_manager, background_runtime, is_cloud: false })
+        Ok(Self { server_connections, database_manager, user_manager, background_runtime })
     }
 
-    // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
-    /// * `credentials` — The Credentials to connect with
-    /// * `driver_options` — The DriverOptions to connect with
-    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud<T: AsRef<str> + Sync>(
-        // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
-        init_addresses: &Vec<T>,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-    ) -> Result<Self> {
-        Self::new_cloud_with_description(init_addresses, credentials, driver_options, Self::DRIVER_LANG).await
-    }
-
-    // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `init_addresses` — Addresses (host:port) on which TypeDB Cloud nodes are running
-    /// * `credentials` — The Credentials to connect with
-    /// * `driver_options` — The DriverOptions to connect with
-    /// * `driver_lang` — The language of the driver connecting to the server
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_description<T: AsRef<str> + Sync>(
-        // init_addresses: &[T], // TODO: return the slice version when we don't need to check the size
-        init_addresses: &Vec<T>,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-        driver_lang: impl AsRef<str>,
-    ) -> Result<Self> {
-        if let Some(single_address) = init_addresses.iter().next() {
-            Self::new_core_with_description(single_address, credentials, driver_options, driver_lang).await
-        } else {
-            todo!("Only a single address is accepted for TypeDB Cloud 3.0")
-        }
-        // let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        // let servers = Self::fetch_server_list(background_runtime.clone(), init_addresses, credentials.clone())?;
-        // let server_to_address = servers.into_iter().map(|address| (address.clone(), address)).collect();
-        // Self::new_cloud_impl(server_to_address, background_runtime, credential)
-    }
-
-    // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `address_translation` — Translation map from addresses to be used by the driver for connection
-    ///    to addresses received from the TypeDB server(s)
-    /// * `credential` — The Credentials to connect with
-    /// * `driver_options` — The DriverOptions to connect with
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_translation<T, U>(
-        // TODO: Find a better name
-        address_translation: HashMap<T, U>,
-        credential: Credentials,
-        driver_options: DriverOptions,
-    ) -> Result<Self>
-    where
-        T: AsRef<str> + Sync,
-        U: AsRef<str> + Sync,
-    {
-        Self::new_cloud_with_translation_with_description(
-            address_translation,
-            credential,
-            driver_options,
-            Self::DRIVER_LANG,
-        )
-        .await
-    }
-
-    // TODO: Add examples
-    /// Creates a new TypeDB Cloud connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `address_translation` — Translation map from addresses to be used by the driver for connection
-    ///    to addresses received from the TypeDB server(s)
-    /// * `credentials` — The Credentials to connect with
-    /// * `driver_options` — The DriverOptions to connect with
-    /// * `driver_lang` — The language of the driver connecting to the server
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new_cloud_with_translation_with_description<T, U>(
-        address_translation: HashMap<T, U>,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-        driver_lang: impl AsRef<str>,
-    ) -> Result<Self>
-    where
-        T: AsRef<str> + Sync,
-        U: AsRef<str> + Sync,
-    {
-        todo!("No address translation is available and only a single server is accepted for TypeDB Cloud 3.0")
-        // let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        //
-        // let fetched =
-        //     Self::fetch_server_list(background_runtime.clone(), address_translation.keys(), credential.clone())?;
-        //
-        // let address_to_server: HashMap<Address, Address> = address_translation
-        //     .into_iter()
-        //     .map(|(public, private)| -> Result<_> { Ok((public.as_ref().parse()?, private.as_ref().parse()?)) })
-        //     .try_collect()?;
-        //
-        // let provided: HashSet<Address> = address_to_server.values().cloned().collect();
-        // let unknown = &provided - &fetched;
-        // let unmapped = &fetched - &provided;
-        // if !unknown.is_empty() || !unmapped.is_empty() {
-        //     return Err(ConnectionError::AddressTranslationMismatch { unknown, unmapped }.into());
-        // }
-        //
-        // debug_assert_eq!(fetched, provided);
-        //
-        // Self::new_cloud_impl(address_to_server, background_runtime, credential)
-    }
-
-    fn new_cloud_impl(
-        address_to_server: HashMap<Address, Address>,
-        background_runtime: Arc<BackgroundRuntime>,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-    ) -> Result<TypeDBDriver> {
-        // let server_connections: HashMap<Address, ServerConnection> = address_to_server
-        //     .into_iter()
-        //     .map(|(public, private)| {
-        //         ServerConnection::new_cloud(background_runtime.clone(), public, credential.clone())
-        //             .map(|server_connection| (private, server_connection))
-        //     })
-        //     .try_collect()?;
-        //
-        // let errors = server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect_vec();
-        // if errors.len() == server_connections.len() {
-        //     Err(ConnectionError::CloudAllNodesFailed {
-        //         errors: errors.into_iter().map(|err| err.to_string()).join("\n"),
-        //     })?
-        // } else {
-        //     Ok(Connection {
-        //         server_connections,
-        //         background_runtime,
-        //         is_cloud: true,
-        //     })
-        // }
-        todo!()
-    }
-
-    fn fetch_server_list(
+    async fn fetch_server_list(
         background_runtime: Arc<BackgroundRuntime>,
         addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
         credentials: Credentials,
@@ -288,9 +138,9 @@ impl TypeDBDriver {
         let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         for address in &addresses {
             let server_connection =
-                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credentials.clone());
+                ServerConnection::new(background_runtime.clone(), address.clone(), credentials.clone(), driver_options.clone(), Self::DRIVER_LANG, Self::VERSION).await;
             match server_connection {
-                Ok(server_connection) => match server_connection.servers_all() {
+                Ok((server_connection, _)) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
                         ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
@@ -311,21 +161,10 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// connection.is_open()
+    /// driver.is_open()
     /// ```
     pub fn is_open(&self) -> bool {
         self.background_runtime.is_open()
-    }
-
-    /// Check if the connection is to an Cloud server.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// connection.is_cloud()
-    /// ```
-    pub fn is_cloud(&self) -> bool {
-        self.is_cloud
     }
 
     pub fn databases(&self) -> &DatabaseManager {
@@ -367,7 +206,7 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// connection.force_close()
+    /// driver.force_close()
     /// ```
     pub fn force_close(&self) -> Result {
         if !self.is_open() {

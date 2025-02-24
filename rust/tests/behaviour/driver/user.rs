@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use config::is_cloud;
+use config::is_cluster;
 use serial_test::serial;
 use steps::Context;
 
@@ -33,5 +33,5 @@ async fn test() {
     #[cfg(not(feature = "bazel"))]
     let path = "../bazel-typedb-driver/external/typedb_behaviour/driver/user.feature";
 
-    assert!(Context::test(path, is_cloud()).await);
+    assert!(Context::test(path, is_cluster()).await);
 }

@@ -5,13 +5,13 @@
 dependencies = {}
 
 [features]
-    bazel = []
+	bazel = []
 
 [package]
-    name = "config"
-    edition = "2021"
-    version = "0.0.0"
+	name = "config"
+	edition = "2021"
+	version = "0.0.0"
 
 [lib]
-    path = "lib.rs"
+	path = "lib.rs"
 
