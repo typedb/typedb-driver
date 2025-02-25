@@ -136,7 +136,7 @@ test_to_example(
     name = "example",
     input = "//java/test/integration:ExampleTest.java",
     output = "java/TypeDBExample.java",
-    removed_lines = ["assert", "fail(", "todo", "junit"],
+    removed_lines = ["assert", "fail(", "todo", "junit", "SuppressWarnings"],
     changed_words = {
         "com.typedb.driver.test.integration": "com.typedb.driver",
         "ExampleTest": "TypeDBExample",

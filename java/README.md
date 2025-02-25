@@ -84,7 +84,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 
-@SuppressWarnings("Duplicates")
 public class TypeDBExample {
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
