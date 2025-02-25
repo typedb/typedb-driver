@@ -28,21 +28,42 @@ use super::{
 };
 use crate::memory::{release, string_array_view};
 
-/// Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+const DRIVER_LANG: &'static str = "c";
+
+/// Open a TypeDB C Driver to a TypeDB server available at the provided address.
+///
+/// @param address The address (host:port) on which the TypeDB Server is running
+/// @param credentials The <code>Credentials</code> to connect with
+/// @param driver_options The <code>DriverOptions</code> to connect with
+#[no_mangle]
+pub extern "C" fn driver_open(
+    address: *const c_char,
+    credentials: *const Credentials,
+    driver_options: *const DriverOptions,
+) -> *mut TypeDBDriver {
+    try_release(TypeDBDriver::new_with_description(
+        string_view(address),
+        borrow(credentials).clone(),
+        borrow(driver_options).clone(),
+        DRIVER_LANG,
+    ))
+}
+
+/// Open a TypeDB Driver to a TypeDB server available at the provided address.
+/// This method allows driver language specification for drivers built on top of the native C layer.
 ///
 /// @param address The address (host:port) on which the TypeDB Server is running
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
 #[no_mangle]
-pub extern "C" fn driver_open_core(
+pub extern "C" fn driver_open_with_description(
     address: *const c_char,
     credentials: *const Credentials,
     driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
-    // TODO: Add a separate entry point for C with a provided "c" driver_lang!
-    try_release(TypeDBDriver::new_core_with_description(
+    try_release(TypeDBDriver::new_with_description(
         string_view(address),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
@@ -50,58 +71,8 @@ pub extern "C" fn driver_open_core(
     ))
 }
 
-/// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses.
-///
-/// @param addresses a null-terminated array holding the address(es) of the TypeDB server(s)
-/// @param credentials The <code>Credentials</code> to connect with
-/// @param driver_options The <code>DriverOptions</code> to connect with
-/// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
-pub extern "C" fn driver_open_cloud(
-    addresses: *const *const c_char,
-    credentials: *const Credentials,
-    driver_options: *const DriverOptions,
-    driver_lang: *const c_char,
-) -> *mut TypeDBDriver {
-    // TODO: Add a separate entry point for C with a provided "c" driver_lang!
-    let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(TypeDBDriver::new_cloud_with_description(
-        &addresses,
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        string_view(driver_lang),
-    ))
-}
-
-/// Open a TypeDB Driver to TypeDB Cloud server(s), using provided address translation.
-///
-/// @param public_addresses A null-terminated array holding the address(es) of the TypeDB server(s)
-/// the driver will connect to. This array <i>must</i> have the same length as <code>advertised_addresses</code>
-/// @param private_addresses A null-terminated array holding the address(es) the TypeDB server(s)
-/// are configured to advertise
-/// @param credentials The <code>Credentials</code> to connect with
-/// @param driver_options The <code>DriverOptions</code> to connect with
-/// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
-pub extern "C" fn driver_open_cloud_translated(
-    public_addresses: *const *const c_char,
-    private_addresses: *const *const c_char,
-    credentials: *const Credentials,
-    driver_options: *const DriverOptions,
-    driver_lang: *const c_char,
-) -> *mut TypeDBDriver {
-    // TODO: Add a separate entry point for C with a provided "c" driver_lang!
-    let addresses = string_array_view(public_addresses).zip_eq(string_array_view(private_addresses)).collect();
-    try_release(TypeDBDriver::new_cloud_with_translation_with_description(
-        addresses,
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        string_view(driver_lang),
-    ))
-}
-
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
-/// Closing a connction frees the underlying rust object.
+/// Closing a driver frees the underlying Rust object.
 #[no_mangle]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);

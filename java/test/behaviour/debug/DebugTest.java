@@ -40,11 +40,7 @@ public class DebugTest extends BehaviourTest {
     // 2) Select 'Edit Configurations...'
     // 3) Select 'Bazel test DebugTest'
     //
-    // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
-    //
-    // 5) Update 'Bazel Flags':
+    // 4) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
@@ -53,5 +49,5 @@ public class DebugTest extends BehaviourTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static TypeDBCoreRunner runner;
+    // 5) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 }

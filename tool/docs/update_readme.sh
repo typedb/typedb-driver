@@ -19,10 +19,8 @@
 languages=("rust" "java" "python")
 
 base_targets=(
-    "//{language}:example_core"
-    "//{language}:readme_example_core"
-    "//{language}:example_cloud"
-    "//{language}:readme_example_cloud"
+    "//{language}:example"
+    "//{language}:readme_example"
 )
 
 for lang in "${languages[@]}"; do

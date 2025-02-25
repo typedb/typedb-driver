@@ -39,11 +39,11 @@ public class UserTest extends BehaviourTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DatabaseTestCloud'
+    // 3) Select 'Bazel test DatabaseTestCluster'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
+    //    a) Use '//<this>/<package>/<name>:test-community' to test against typedb (TypeDB Community Edition)
+    //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster (TypeDB Cloud / Enterprise)
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.typedb.driver.*'

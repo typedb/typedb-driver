@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
-import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
 import static com.typedb.driver.jni.typedb_driver.users_get;
+import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
@@ -40,7 +40,7 @@ public class UserManagerImpl implements UserManager {
     public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
     }
-    
+
     @Override
     public boolean contains(String username) throws TypeDBDriverException {
         Validator.requireNonNull(username, "username");

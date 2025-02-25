@@ -130,12 +130,8 @@
 		default-features = false
 
 [[test]]
-	path = "tests/integration/core/example.rs"
+	path = "tests/integration/example.rs"
 	name = "test_example"
-
-[[test]]
-	path = "tests/integration/cloud/example.rs"
-	name = "test_example_cloud"
 
 [[test]]
 	path = "tests/behaviour/connection/database.rs"

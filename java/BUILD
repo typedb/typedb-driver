@@ -133,45 +133,23 @@ javadoc_to_adoc(
 )
 
 test_to_example(
-    name = "example_core",
-    input = "//java/test/integration/core:ExampleTest.java",
-    output = "java/TypeDBCoreExample.java",
-    removed_lines = ["assert", "fail(", "todo"],
+    name = "example",
+    input = "//java/test/integration:ExampleTest.java",
+    output = "java/TypeDBExample.java",
+    removed_lines = ["assert", "fail(", "todo", "junit", "SuppressWarnings"],
     changed_words = {
-        "com.typedb.driver.test.integration.core": "com.typedb.driver",
-        "ExampleTest": "TypeDBCoreExample",
-    },
-    header_comment_sign = "//",
-)
-
-test_to_example(
-    name = "example_cloud",
-    input = "//java/test/integration/cloud:ExampleTest.java",
-    output = "java/TypeDBCloudExample.java",
-    removed_lines = ["assert", "fail(", "todo"],
-    changed_words = {
-        "com.typedb.driver.test.integration.cloud": "com.typedb.driver",
-        "ExampleTest": "TypeDBCloudExample",
+        "com.typedb.driver.test.integration": "com.typedb.driver",
+        "ExampleTest": "TypeDBExample",
     },
     header_comment_sign = "//",
 )
 
 update_markdown_example(
-    name = "readme_example_core",
-    input = ":TypeDBCoreExample.java",
+    name = "readme_example",
+    input = "TypeDBExample.java",
     output = ":README.md",
-    start_marker = "CORE_EXAMPLE_START_MARKER",
-    end_marker = "CORE_EXAMPLE_END_MARKER",
-    language_tag = "java",
-    removed_header = "//",
-)
-
-update_markdown_example(
-    name = "readme_example_cloud",
-    input = ":TypeDBCloudExample.java",
-    output = ":README.md",
-    start_marker = "CLOUD_EXAMPLE_START_MARKER",
-    end_marker = "CLOUD_EXAMPLE_END_MARKER",
+    start_marker = "EXAMPLE_START_MARKER",
+    end_marker = "EXAMPLE_END_MARKER",
     language_tag = "java",
     removed_header = "//",
 )
@@ -183,8 +161,7 @@ checkstyle_test(
     exclude = glob([
         "README.md",
         "docs/**/*.adoc",
-        "TypeDBCoreExample.java",
-        "TypeDBCloudExample.java",
+        "TypeDBExample.java",
     ]),
     license_type = "apache-header",
 )

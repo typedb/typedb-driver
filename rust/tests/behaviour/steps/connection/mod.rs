@@ -66,19 +66,20 @@ fn change_port(address: &str, new_port: &str) -> String {
 #[apply(generic_step)]
 #[step(expr = "connection opens with a wrong host{may_error}")]
 async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: params::MayError) {
-    may_error.check(match context.is_cloud {
+    may_error.check(match context.is_cluster {
         false => {
             context
-                .create_core_driver(
-                    &change_host(Context::DEFAULT_CORE_ADDRESS, "surely-not-localhost"),
+                .create_driver_community(
+                    &change_host(Context::DEFAULT_ADDRESS, "surely-not-localhost"),
                     Context::ADMIN_USERNAME,
                     Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
-            let updated_address = change_host(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
-            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
+            let updated_address =
+                change_host(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
+            context.create_driver_cluster(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }
@@ -86,19 +87,19 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
 #[apply(generic_step)]
 #[step(expr = "connection opens with a wrong port{may_error}")]
 async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: params::MayError) {
-    may_error.check(match context.is_cloud {
+    may_error.check(match context.is_cluster {
         false => {
             context
-                .create_core_driver(
-                    &change_port(Context::DEFAULT_CORE_ADDRESS, "0"),
+                .create_driver_community(
+                    &change_port(Context::DEFAULT_ADDRESS, "0"),
                     Context::ADMIN_USERNAME,
                     Context::ADMIN_PASSWORD,
                 )
                 .await
         }
         true => {
-            let updated_address = change_port(Context::DEFAULT_CLOUD_ADDRESSES.get(0).unwrap(), "0");
-            context.create_cloud_driver(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
+            let updated_address = change_port(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "0");
+            context.create_driver_cluster(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
 }

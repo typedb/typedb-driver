@@ -10,19 +10,19 @@
 |Variant
 a| `AddressTranslationMismatch`
 a| `BrokenPipe`
-a| `CloudAllNodesFailed`
-a| `CloudEncryptionSettingsMismatch`
-a| `CloudReplicaNotPrimary`
-a| `CloudSSLCertificateNotValidated`
-a| `CloudTokenCredentialInvalid`
+a| `ClusterAllNodesFailed`
+a| `ClusterReplicaNotPrimary`
+a| `ClusterTokenCredentialInvalid`
 a| `ConnectionFailed`
 a| `DatabaseNotFound`
+a| `EncryptionSettingsMismatch`
 a| `InvalidResponseField`
 a| `ListsNotImplemented`
 a| `MissingPort`
 a| `MissingResponseField`
 a| `QueryStreamNoResponse`
 a| `RPCMethodUnavailable`
+a| `SSLCertificateNotValidated`
 a| `ServerConnectionFailed`
 a| `ServerConnectionFailedStatusError`
 a| `ServerConnectionFailedWithError`
@@ -34,7 +34,6 @@ a| `UnexpectedKind`
 a| `UnexpectedQueryType`
 a| `UnexpectedResponse`
 a| `UnknownRequestId`
-a| `UserManagementCloudOnly`
 a| `ValueStructNotImplemented`
 a| `ValueTimeZoneNameNotRecognised`
 a| `ValueTimeZoneOffsetNotRecognised`

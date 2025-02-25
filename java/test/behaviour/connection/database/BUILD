@@ -18,7 +18,7 @@
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -39,75 +39,35 @@ java_library(
     ],
 )
 
-typedb_java_test(
-    name = "test-core",
+typedb_behaviour_java_test(
+    name = "test",
     srcs = [
-        "DatabaseTestCore.java",
+        "DatabaseTest.java",
     ],
-    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCore",
+    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTest",
     data = [
         "@typedb_behaviour//connection:database.feature",
     ],
-    server_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
-        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
-    },
-    runtime_deps = [
-        "//java/test/behaviour/connection:steps-core",
-
+    connection_steps_community = "//java/test/behaviour/connection:steps-community",
+    connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
+    steps = [
         ":steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/query:steps",
-
-        "//java/test/behaviour/config:parameters",
     ],
     deps = [
         # Internal Package Dependencies
+        "//java/api:api",
         "//java/test/behaviour:behaviour",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
+    runtime_deps = [
+        "//java/test/behaviour/config:parameters",
+    ],
     size = "large",
 )
-
-#typedb_java_test(
-#    name = "test-cloud",
-#    srcs = [
-#        "DatabaseTestCloud.java",
-#    ],
-#    test_class = "com.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
-#    data = [
-#        "@typedb_behaviour//connection:database.feature",
-#    ],
-#    server_artifacts = {
-#        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_cloud_artifact_linux-arm64//file",
-#        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_cloud_artifact_linux-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_cloud_artifact_mac-arm64//file",
-#        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_cloud_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_cloud_artifact_windows-x86_64//file",
-#    },
-#    runtime_deps = [
-#        "//java/test/behaviour/connection:steps-cloud",
-#
-#        ":steps",
-#        "//java/test/behaviour/connection/transaction:steps",
-#        "//java/test/behaviour/query:steps",
-#
-#        "//java/test/behaviour/config:parameters",
-#    ],
-#    deps = [
-#        # Internal Package Dependencies
-#        "//java/test/behaviour:behaviour",
-#
-#        # External dependencies from Maven
-#        "@maven//:io_cucumber_cucumber_junit",
-#    ],
-#    size = "large",
-#)
 
 checkstyle_test(
     name = "checkstyle",

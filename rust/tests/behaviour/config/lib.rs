@@ -17,13 +17,13 @@
  * under the License.
  */
 
-pub fn is_cloud() -> bool {
-    #[cfg(feature = "cloud")]
+pub fn is_cluster() -> bool {
+    #[cfg(feature = "cluster")]
     {
         true
     }
 
-    #[cfg(not(feature = "cloud"))]
+    #[cfg(not(feature = "cluster"))]
     {
         false
     }

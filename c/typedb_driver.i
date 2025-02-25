@@ -41,6 +41,8 @@ extern "C" {
 
 %nodefaultctor;
 
+%ignore driver_open; // use `driver_open_with_description`
+
 %define %dropproxy(Type, function_prefix)
 struct Type {};
 %ignore function_prefix ## _drop;
@@ -172,9 +174,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_try_get_value_type;
 %newobject concept_try_get_value;
 
-%newobject driver_open_core;
-%newobject driver_open_cloud;
-%newobject driver_open_cloud_translated;
+%newobject driver_open_with_description;
 
 %newobject driver_options_new;
 %newobject credentials_new;

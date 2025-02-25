@@ -63,21 +63,9 @@ sphinx_to_adoc(
 )
 
 test_to_example(
-    name = "example_core",
-    input = "//python/tests/integration/core:test_example.py",
-    output = "python/core_example.py",
-    removed_lines = ["assert_that", "todo"],
-    changed_words = {
-        "test_example(self)": "typedb_example()",
-        "TestExample(TestCase)": "TypeDBExample",
-    },
-    header_comment_sign = "#",
-)
-
-test_to_example(
-    name = "example_cloud",
-    input = "//python/tests/integration/cloud:test_example.py",
-    output = "python/cloud_example.py",
+    name = "example",
+    input = "//python/tests/integration:test_example.py",
+    output = "python/example.py",
     removed_lines = ["assert_that", "todo"],
     changed_words = {
         "test_example(self)": "typedb_example()",
@@ -87,21 +75,11 @@ test_to_example(
 )
 
 update_markdown_example(
-    name = "readme_example_core",
-    input = ":core_example.py",
+    name = "readme_example",
+    input = ":example.py",
     output = ":README.md",
-    start_marker = "CORE_EXAMPLE_START_MARKER",
-    end_marker = "CORE_EXAMPLE_END_MARKER",
-    language_tag = "py",
-    removed_header = "#",
-)
-
-update_markdown_example(
-    name = "readme_example_cloud",
-    input = ":cloud_example.py",
-    output = ":README.md",
-    start_marker = "CLOUD_EXAMPLE_START_MARKER",
-    end_marker = "CLOUD_EXAMPLE_END_MARKER",
+    start_marker = "EXAMPLE_START_MARKER",
+    end_marker = "EXAMPLE_END_MARKER",
     language_tag = "py",
     removed_header = "#",
 )
@@ -122,7 +100,7 @@ checkstyle_test(
         "conf.py",
         "index.rst",
         "docs/**/*.adoc",
-        "core_example.py",
+        "example.py",
         "cloud_example.py",
     ]),
     license_type = "apache-header",

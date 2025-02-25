@@ -15,33 +15,14 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//visibility:public"])
-
-load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
-# A different name is required by the Cargo sync tool
-rust_test(
-    name = "test_example_cloud",
-    srcs = glob(["example.rs"]),
-    deps = [
-        "//rust:typedb_driver",
-        "@crates//:async-std",
-        "@crates//:chrono",
-        "@crates//:futures",
-        "@crates//:itertools",
-        "@crates//:regex",
-        "@crates//:serde_json",
-        "@crates//:serial_test",
-        "@crates//:smol",
-        "@crates//:tokio",
-        "@crates//:uuid",
-    ],
-)
+# TODO: This package can contain cluster-specific integration tests. Tests available for running for both community
+# edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-    size = "small",
 )

@@ -20,7 +20,7 @@ TypeDB transaction options. ``TypeDBOptions`` object can be used to override the
 a| `parallel` a| `Option<bool>` a| If set to ``True``, the server uses parallel instead of single-threaded execution.
 a| `prefetch` a| `Option<bool>` a| If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 a| `prefetch_size` a| `Option<u64>` a| If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
-a| `read_any_replica` a| `Option<bool>` a| If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+a| `read_any_replica` a| `Option<bool>` a| If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud / Enterprise.
 a| `schema_lock_acquire_timeout` a| `Option<Duration>` a| If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
 a| `transaction_timeout` a| `Option<Duration>` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 |===
@@ -86,7 +86,7 @@ Self
 pub fn read_any_replica(self, read_any_replica: bool) -> Self
 ----
 
-If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud / Enterprise.
 
 [caption=""]
 .Returns

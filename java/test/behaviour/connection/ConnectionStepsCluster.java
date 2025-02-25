@@ -16,20 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.typedb.driver.test.behaviour.connection;
 
 import com.typedb.driver.TypeDB;
-import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
-public class ConnectionStepsCore extends ConnectionStepsBase {
+public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
@@ -47,11 +46,12 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
-        return TypeDB.coreDriver(address, credentials, driverOptions);
+        return TypeDB.driver(address, credentials, driverOptions);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
+        // TODO: Add encryption to cluster tests
         return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
     }
 

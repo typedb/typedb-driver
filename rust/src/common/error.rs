@@ -146,38 +146,36 @@ error_messages! { ConnectionError
         13: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
-    UserManagementCloudOnly =
-        15: "User management is only available in TypeDB Cloud servers.",
-    CloudReplicaNotPrimary =
-        16: "The replica is not the primary replica.",
-    CloudAllNodesFailed { errors: String } =
-        17: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
-    CloudTokenCredentialInvalid =
-        18: "Invalid token credentials.",
-    CloudEncryptionSettingsMismatch =
-        19: "Unable to connect to TypeDB Cloud: possible encryption settings mismatch.",
-    CloudSSLCertificateNotValidated =
-        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
+    ClusterReplicaNotPrimary =
+        15: "The replica is not the primary replica.",
+    ClusterAllNodesFailed { errors: String } =
+        16: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
+    ClusterTokenCredentialInvalid =
+        17: "Invalid token credentials.",
+    EncryptionSettingsMismatch =
+        18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
+    SSLCertificateNotValidated =
+        19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credentials.",
+        20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
     ConnectionFailed =
-        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
-        23: "Invalid URL '{address}': missing port.",
+        22: "Invalid URL '{address}': missing port.",
     AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        24: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
+        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
-        25: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
+        24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
-        26: "Time zone provided by the server has numerical offset '{offset}', which is not recognised as a valid value for offset in seconds.",
+        25: "Time zone provided by the server has numerical offset '{offset}', which is not recognised as a valid value for offset in seconds.",
     ValueStructNotImplemented =
-        27: "Struct valued responses are not yet supported by the driver.",
+        26: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        28: "Lists are not yet supported by the driver.",
+        27: "Lists are not yet supported by the driver.",
     UnexpectedKind { kind: i32 } =
-        29: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
+        28: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
     UnexpectedConnectionClose =
-        30: "Connection closed unexpectedly.",
+        29: "Connection closed unexpectedly.",
 }
 
 error_messages! { ConceptError
@@ -286,9 +284,9 @@ impl Error {
         if status_message == "broken pipe" {
             Error::Connection(ConnectionError::BrokenPipe)
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::CloudEncryptionSettingsMismatch)
+            Error::Connection(ConnectionError::EncryptionSettingsMismatch)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::CloudSSLCertificateNotValidated)
+            Error::Connection(ConnectionError::SSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionFailed)
         } else {

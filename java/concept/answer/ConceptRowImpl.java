@@ -31,7 +31,6 @@ import com.typedb.driver.concept.ConceptImpl;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Driver.NON_NEGATIVE_VALUE_REQUIRED;
 import static com.typedb.driver.jni.typedb_driver.concept_row_equals;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_column_names;

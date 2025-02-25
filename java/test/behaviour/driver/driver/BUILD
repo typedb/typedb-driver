@@ -28,8 +28,8 @@ typedb_behaviour_java_test(
     data = [
         "@typedb_behaviour//driver:driver.feature",
     ],
-    connection_steps_core = "//java/test/behaviour/connection:steps-core",
-    connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
+    connection_steps_community = "//java/test/behaviour/connection:steps-community",
+    connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
     steps = [
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",

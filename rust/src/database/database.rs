@@ -82,7 +82,7 @@ impl Database {
     }
 
     /// Returns the `Replica` instances for this database.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cloud / Enterprise_
     ///
     /// # Examples
     ///
@@ -94,7 +94,7 @@ impl Database {
     }
 
     /// Returns the primary replica for this database.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cloud / Enterprise_
     ///
     /// # Examples
     ///
@@ -107,7 +107,7 @@ impl Database {
 
     /// Returns the preferred replica for this database.
     /// Operations which can be run on any replica will prefer to use this replica.
-    /// _Only works in TypeDB Cloud_
+    /// _Only works in TypeDB Cloud / Enterprise_
     ///
     /// # Examples
     ///
@@ -164,7 +164,7 @@ impl Database {
         P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
-            Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
+            Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
                 debug!("Attempted to run on a non-primary replica, retrying on primary...");
                 self.run_on_primary_replica(&task).await
             }
@@ -204,7 +204,7 @@ impl Database {
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             match task(primary_replica.database.clone()).await {
                 Err(Error::Connection(
-                    ConnectionError::CloudReplicaNotPrimary
+                    ConnectionError::ClusterReplicaNotPrimary
                     | ConnectionError::ServerConnectionFailedStatusError { .. }
                     | ConnectionError::ConnectionFailed,
                 )) => {

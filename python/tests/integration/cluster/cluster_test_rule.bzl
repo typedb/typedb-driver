@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# TODO: This file contains a rule from TypeDB 2.x. It cannot be used for TypeDB 3.x without adjustments.
+# It might not be needed -> remove if it's true.
+
 def _rule_implementation(ctx):
     """
     Implementation of the rule typedb_cloud_py_test.

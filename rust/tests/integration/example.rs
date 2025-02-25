@@ -32,9 +32,10 @@ use typedb_driver::{
 };
 
 // EXAMPLE END MARKER
+
 async fn cleanup() {
-    let driver = TypeDBDriver::new_cloud(
-        &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
+    let driver = TypeDBDriver::new(
+        TypeDBDriver::DEFAULT_ADDRESS,
         Credentials::new("admin", "password"),
         DriverOptions::new(false, None).unwrap(),
     )
@@ -53,10 +54,9 @@ fn example() {
         // EXAMPLE END MARKER
         cleanup().await;
         // EXAMPLE START MARKER
-        // Open a driver connection
-
-        let driver = TypeDBDriver::new_cloud(
-            &Vec::from([TypeDBDriver::DEFAULT_ADDRESS]),
+        // Open a driver connection. Specify your parameters if needed
+        let driver = TypeDBDriver::new(
+            TypeDBDriver::DEFAULT_ADDRESS,
             Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),
         )
@@ -106,6 +106,7 @@ fn example() {
         assert!(answer.is_ok());
 
         // Commit automatically closes the transaction (don't forget to await the result!)
+        // CAUTION: Committing or closing a transaction will invalidate all its uncollected answer streams
         transaction.commit().await.unwrap();
 
         // Open a read transaction to safely read anything without database modifications

@@ -15,26 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load(":cloud_test_rule.bzl", "typedb_cloud_py_test")
+load(":cluster_test_rule.bzl", "typedb_cloud_py_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_driver_pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_test")
 
-exports_files(
-    ["test_example.py"],
-    visibility = ["//python:__subpackages__"],
-)
-
-py_test(
-    name = "test_example",
-    srcs = ["test_example.py"],
-    deps = [
-        "//python:driver_python",
-        requirement("PyHamcrest"),
-    ],
-    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    python_version = "PY3"
-)
+# TODO: This package can contain cluster-specific integration tests. Tests available for running for both community
+# edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
 
 #typedb_cloud_py_test(
 #    name = "test_failover",

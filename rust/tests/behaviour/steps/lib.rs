@@ -92,7 +92,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 
 #[derive(World)]
 pub struct Context {
-    pub is_cloud: bool,
+    pub is_cluster: bool,
     pub tls_root_ca: PathBuf,
     pub transaction_options: Options,
     pub driver: Option<TypeDBDriver>,
@@ -109,7 +109,7 @@ pub struct Context {
 impl fmt::Debug for Context {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("Context")
-            .field("is_cloud", &self.is_cloud)
+            .field("is_cluster", &self.is_cluster)
             .field("tls_root_ca", &self.tls_root_ca)
             .field("transaction_options", &self.transaction_options)
             .field("driver", &self.driver)
@@ -129,16 +129,16 @@ impl fmt::Debug for Context {
 }
 
 impl Context {
-    const DEFAULT_CORE_ADDRESS: &'static str = "127.0.0.1:1729";
+    const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
     // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
-    const DEFAULT_CLOUD_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
+    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
     const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
     const STEP_REATTEMPT_LIMIT: u32 = 20;
 
-    pub async fn test<I: AsRef<Path>>(glob: I, is_cloud: bool) -> bool {
+    pub async fn test<I: AsRef<Path>>(glob: I, is_cluster: bool) -> bool {
         let default_panic = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
             default_panic(info);
@@ -152,7 +152,7 @@ impl Context {
             .with_parser(SingletonParser::default())
             .with_default_cli()
             .before(move |_, _, _, context| {
-                context.is_cloud = is_cloud;
+                context.is_cluster = is_cluster;
                 // cucumber removes the default hook before each scenario and restores it after!
                 std::panic::set_hook(Box::new(move |info| println!("{}", info)));
                 Box::pin(async move {})
@@ -371,30 +371,38 @@ impl Context {
     async fn create_driver(&self, username: Option<&str>, password: Option<&str>) -> TypeDBResult<TypeDBDriver> {
         let username = username.unwrap_or(Self::ADMIN_USERNAME);
         let password = password.unwrap_or(Self::ADMIN_USERNAME);
-        match self.is_cloud {
-            false => self.create_core_driver(Self::DEFAULT_CORE_ADDRESS, username, password).await,
-            true => self.create_cloud_driver(&Self::DEFAULT_CLOUD_ADDRESSES, username, password).await,
+        match self.is_cluster {
+            false => self.create_driver_community(Self::DEFAULT_ADDRESS, username, password).await,
+            true => self.create_driver_cluster(&Self::DEFAULT_CLUSTER_ADDRESSES, username, password).await,
         }
     }
 
-    async fn create_core_driver(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
-        assert!(!self.is_cloud);
+    async fn create_driver_community(
+        &self,
+        address: &str,
+        username: &str,
+        password: &str,
+    ) -> TypeDBResult<TypeDBDriver> {
+        assert!(!self.is_cluster);
         let credentials = Credentials::new(username, password);
         let conn_settings = DriverOptions::new(false, None)?;
-        TypeDBDriver::new_core(address, credentials, conn_settings).await
+        TypeDBDriver::new(address, credentials, conn_settings).await
     }
 
-    async fn create_cloud_driver(
+    async fn create_driver_cluster(
         &self,
         addresses: &[&str],
         username: &str,
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(self.is_cloud); // TODO: Probably requires connection settings with tls enabled by default for cloud
-        let addresses = addresses.iter().collect_vec(); // TODO: Remove when new_cloud accepts a slice
-                                                        // TODO: Add encryption to cloud tests
-        TypeDBDriver::new_cloud(&addresses, Credentials::new(username, password), DriverOptions::new(false, None)?)
-            .await
+        assert!(self.is_cluster);
+        // TODO: Change when multiple addresses are introduced
+        let address = addresses.iter().next().expect("Expected at least one address");
+
+        // TODO: We probably want to add encryption to cluster tests
+        let credentials = Credentials::new(username, password);
+        let conn_settings = DriverOptions::new(false, None)?;
+        TypeDBDriver::new(address, credentials, conn_settings).await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {
@@ -417,7 +425,7 @@ impl Default for Context {
             Err(_) => PathBuf::new(),
         };
         Self {
-            is_cloud: false,
+            is_cluster: false,
             tls_root_ca,
             transaction_options,
             driver: None,
