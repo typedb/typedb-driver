@@ -18,9 +18,8 @@
  */
 
 // EXAMPLE START MARKER
-package com.typedb.driver.test.integration;
-
 // EXAMPLE START MARKER
+package com.typedb.driver.test.integration;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;

@@ -58,6 +58,7 @@ Further documentation: https://typedb.com/docs/drivers/java/overview
 <!-- EXAMPLE_START_MARKER -->
 
 ```java
+package com.typedb.driver;
 
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;

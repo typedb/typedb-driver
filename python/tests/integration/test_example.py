@@ -258,9 +258,8 @@ class TestExample(TestCase):
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
-
-
 # EXAMPLE END MARKER
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
