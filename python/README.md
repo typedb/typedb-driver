@@ -24,7 +24,7 @@ pip3 install typedb-driver
 ```py
 from typedb.driver import *
 
-driver = TypeDB.driver(address=TypeDB.DEFAULT_ADDRESS)
+driver = TypeDB.driver(address=TypeDB.DEFAULT_ADDRESS, ...)
 ```
 
 ## Example usage

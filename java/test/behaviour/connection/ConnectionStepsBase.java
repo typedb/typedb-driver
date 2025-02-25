@@ -55,6 +55,7 @@ public abstract class ConnectionStepsBase {
 //    );
 //    public static Options transactionOptions;
     static boolean isBeforeAllRan = false;
+    static final int BEFORE_TIMEOUT_MILLIS = 10;
 
     public static Transaction tx() {
         return transactions.get(0);
@@ -72,6 +73,15 @@ public abstract class ConnectionStepsBase {
     } // Can add "before all" setup steps here
 
     void before() {
+        try {
+            // Sleep between scenarios to let the driver close completely
+            // (`close` is not synced and can cause lock failures in CI)
+            // TODO: This might be a bug requiring an investigation. For some reason, it only happens in Java (even not in Python!)
+            Thread.sleep(BEFORE_TIMEOUT_MILLIS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Unexpected exception while sleeping in before:" + e);
+        }
+
         if (!isBeforeAllRan) {
             try {
                 beforeAll();

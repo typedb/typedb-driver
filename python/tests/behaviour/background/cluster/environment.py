@@ -30,7 +30,6 @@ def before_all(context: Context):
         create_driver(context, host, port, user, password)
     context.setup_context_driver_fn = lambda host="localhost", port=None, username=None, password=None: \
         setup_context_driver(context, host, port, username, password)
-    context.setup_context_driver_fn()
 
 
 def before_scenario(context: Context, scenario):
