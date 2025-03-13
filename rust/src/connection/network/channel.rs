@@ -22,6 +22,7 @@ use std::sync::{Arc, RwLock};
 use tonic::{
     body::BoxBody,
     client::GrpcService,
+    metadata::MetadataValue,
     service::{
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,
@@ -29,7 +30,7 @@ use tonic::{
     transport::{channel::ResponseFuture as ChannelResponseFuture, Channel, Error as TonicError},
     Request, Status,
 };
-use tonic::metadata::MetadataValue;
+
 use crate::{
     common::{address::Address, Result, StdResult},
     Credentials, DriverOptions,
@@ -87,7 +88,10 @@ impl CallCredentials {
 
     pub(super) fn inject(&self, mut request: Request<()>) -> Request<()> {
         if let Some(token) = &*self.token.read().expect("Expected token read lock acquisition on inject") {
-            request.metadata_mut().insert("authorization", format!("Bearer {}", token).try_into().expect("Expected authorization header formatting"));
+            request.metadata_mut().insert(
+                "authorization",
+                format!("Bearer {}", token).try_into().expect("Expected authorization header formatting"),
+            );
         }
         request
     }

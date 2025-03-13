@@ -25,13 +25,15 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    authentication, connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC, user,
-    user_manager,
+    authentication, connection, database, database_manager, server_manager, transaction,
+    type_db_client::TypeDbClient as GRPC, user, user_manager,
 };
 
 use super::channel::{CallCredentials, GRPCChannel};
-use crate::common::{error::ConnectionError, Error, Result, StdResult};
-use crate::connection::network::proto::TryIntoProto;
+use crate::{
+    common::{error::ConnectionError, Error, Result, StdResult},
+    connection::network::proto::TryIntoProto,
+};
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 
@@ -48,7 +50,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
     where
-            for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
+        for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
     {
         match call(self).await {
             Err(Error::Connection(ConnectionError::TokenCredentialInvalid)) => {
@@ -76,7 +78,8 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         let result = self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await;
         if let Ok(response) = &result {
             if let Some(call_credentials) = &self.call_credentials {
-                call_credentials.set_token(response.authentication.as_ref().expect("Expected authentication token").token.clone());
+                call_credentials
+                    .set_token(response.authentication.as_ref().expect("Expected authentication token").token.clone());
             }
         }
         result
@@ -177,8 +180,8 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn single<F, R>(&mut self, call: F) -> Result<R>
     where
-            for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
-            R: 'static,
+        for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
+        R: 'static,
     {
         self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
     }

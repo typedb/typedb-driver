@@ -22,6 +22,7 @@ rm -rf typedb-all
 
 bazel run //tool/test:typedb-extractor -- typedb-all
 BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
+# TODO: Can add `--server.authentication.token_ttl_seconds 15` to test token auto-renewal in BDDs!
 ./typedb-all/typedb server --development-mode.enabled &
 
 set +e
