@@ -150,7 +150,7 @@ error_messages! { ConnectionError
         15: "The replica is not the primary replica.",
     ClusterAllNodesFailed { errors: String } =
         16: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
-    ClusterTokenCredentialInvalid =
+    TokenCredentialInvalid =
         17: "Invalid token credentials.",
     EncryptionSettingsMismatch =
         18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
