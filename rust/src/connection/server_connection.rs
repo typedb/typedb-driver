@@ -87,8 +87,11 @@ impl ServerConnection {
         driver_version: &str,
         credentials: Credentials,
     ) -> crate::Result<(Uuid, Duration, Vec<DatabaseInfo>)> {
-        let message =
-            Request::ConnectionOpen { driver_lang: driver_lang.to_owned(), driver_version: driver_version.to_owned(), credentials };
+        let message = Request::ConnectionOpen {
+            driver_lang: driver_lang.to_owned(),
+            driver_version: driver_version.to_owned(),
+            credentials,
+        };
 
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
