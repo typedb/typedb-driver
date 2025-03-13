@@ -24,11 +24,19 @@ use tonic::Streaming;
 use typedb_protocol::transaction;
 use uuid::Uuid;
 
-use crate::{answer::{
-    concept_document::{ConceptDocumentHeader, Node},
-    concept_row::ConceptRowHeader,
-    QueryType,
-}, common::{address::Address, info::DatabaseInfo, RequestID}, concept::Concept, error::ServerError, info::UserInfo, user::User, Credentials, Options, TransactionType};
+use crate::{
+    answer::{
+        concept_document::{ConceptDocumentHeader, Node},
+        concept_row::ConceptRowHeader,
+        QueryType,
+    },
+    common::{address::Address, info::DatabaseInfo, RequestID},
+    concept::Concept,
+    error::ServerError,
+    info::UserInfo,
+    user::User,
+    Credentials, Options, TransactionType,
+};
 
 #[derive(Debug)]
 pub(super) enum Request {
