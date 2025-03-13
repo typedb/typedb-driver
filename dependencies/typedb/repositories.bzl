@@ -25,10 +25,11 @@ def typedb_dependencies():
     )
 
 def typedb_protocol():
+    # TODO: Temp, return typedb
     git_repository(
         name = "typedb_protocol",
         remote = "https://github.com/farost/typedb-protocol",
-        commit = "1ce9fc93c005b19d63fef835c1ee3a536ecf4c20",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
+        commit = "b4b7ee87b08c16831a21629f81974347f38cce5c",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
     )
 #    git_repository(
 #        name = "typedb_protocol",

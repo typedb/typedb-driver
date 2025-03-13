@@ -31,6 +31,7 @@ use typedb_protocol::{
 
 use super::channel::{CallCredentials, GRPCChannel};
 use crate::common::{error::ConnectionError, Error, Result, StdResult};
+use crate::connection::network::proto::TryIntoProto;
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 
@@ -42,11 +43,7 @@ pub(super) struct RPCStub<Channel: GRPCChannel> {
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
-        let mut this = Self { grpc: GRPC::new(channel), call_credentials };
-        if let Err(err) = this.renew_token().await {
-            warn!("{err:?}");
-        }
-        this
+        Self { grpc: GRPC::new(channel), call_credentials }
     }
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
@@ -67,9 +64,8 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         if let Some(call_credentials) = &self.call_credentials {
             trace!("Renewing token...");
             call_credentials.reset_token();
-            let req = authentication::sign_in::Req { credentials: Some(authentication::sign_in::req::Credentials::Password(authentication::sign_in::req::Password { username: call_credentials.credentials().username().to_owned(), password: call_credentials.credentials().password().to_owned() })) };
-            trace!("Sending token request...");
-            let token = self.grpc.sign_in(req).await?.into_inner().token;
+            let request = call_credentials.credentials().clone().try_into_proto()?;
+            let token = self.grpc.sign_in(request).await?.into_inner().token;
             call_credentials.set_token(token);
             trace!("Token renewed");
         }
@@ -77,10 +73,13 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     pub(super) async fn connection_open(&mut self, req: connection::open::Req) -> Result<connection::open::Res> {
-        let res = self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await?;
-        trace!("Connection opened");
-        self.renew_token().await?;
-        Ok(res)
+        let result = self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await;
+        if let Ok(response) = &result {
+            if let Some(call_credentials) = &self.call_credentials {
+                call_credentials.set_token(response.authentication.as_ref().expect("Expected authentication token").token.clone());
+            }
+        }
+        result
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
@@ -178,8 +177,8 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn single<F, R>(&mut self, call: F) -> Result<R>
     where
-        for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
-        R: 'static,
+            for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
+            R: 'static,
     {
         self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
     }
