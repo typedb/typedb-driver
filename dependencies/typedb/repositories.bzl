@@ -18,22 +18,25 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def typedb_dependencies():
+    # TODO: Return typedb
     git_repository(
         name = "typedb_dependencies",
-        remote = "https://github.com/typedb/typedb-dependencies",
-        commit = "cf9c1707c7896d61ff97bbf60b1880852ad42353",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_dependencies
+        remote = "https://github.com/farost/typedb-dependencies",
+        commit = "a86993d232a9f050d9fa63b93a1164f4ea31d549",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_dependencies
     )
 
 def typedb_protocol():
+    # TODO: Return typedb
     git_repository(
         name = "typedb_protocol",
-        remote = "https://github.com/typedb/typedb-protocol",
-        commit = "7c7e24c43a59ac3e3b2c4bb17566eb9478099c21",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
+        remote = "https://github.com/farost/typedb-protocol",
+        commit = "7df6a6bfbbbd29940558ae7940b2065e1e2ba0b1",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
     )
 
 def typedb_behaviour():
+    # TODO: Return typedb
     git_repository(
         name = "typedb_behaviour",
-        remote = "https://github.com/typedb/typedb-behaviour",
-        commit = "3e4fe8c38e5a01ea9b198ee23c31cc832e003086",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_behaviour
+        remote = "https://github.com/farost/typedb-behaviour",
+        commit = "9f5b1d33a1d3b64b0a57f17c2bae9d16fc0cd574",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_behaviour
     )

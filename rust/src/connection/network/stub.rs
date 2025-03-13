@@ -25,7 +25,7 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC, user,
+    authentication, connection, database, database_manager, server_manager, transaction, type_db_client::TypeDbClient as GRPC, user,
     user_manager,
 };
 
@@ -42,18 +42,45 @@ pub(super) struct RPCStub<Channel: GRPCChannel> {
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
-        Self { grpc: GRPC::new(channel), call_credentials }
+        let mut this = Self { grpc: GRPC::new(channel), call_credentials };
+        if let Err(err) = this.renew_token().await {
+            warn!("{err:?}");
+        }
+        this
     }
 
-    async fn call<F, R>(&mut self, call: F) -> Result<R>
+    async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
     where
-        for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
+            for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
     {
-        call(self).await
+        match call(self).await {
+            Err(Error::Connection(ConnectionError::TokenCredentialInvalid)) => {
+                debug!("Request rejected because token credential was invalid. Renewing token and trying again...");
+                self.renew_token().await?;
+                call(self).await
+            }
+            res => res,
+        }
+    }
+
+    async fn renew_token(&mut self) -> Result {
+        if let Some(call_credentials) = &self.call_credentials {
+            trace!("Renewing token...");
+            call_credentials.reset_token();
+            let req = authentication::sign_in::Req { credentials: Some(authentication::sign_in::req::Credentials::Password(authentication::sign_in::req::Password { username: call_credentials.credentials().username().to_owned(), password: call_credentials.credentials().password().to_owned() })) };
+            trace!("Sending token request...");
+            let token = self.grpc.sign_in(req).await?.into_inner().token;
+            call_credentials.set_token(token);
+            trace!("Token renewed");
+        }
+        Ok(())
     }
 
     pub(super) async fn connection_open(&mut self, req: connection::open::Req) -> Result<connection::open::Res> {
-        self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await
+        let res = self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await?;
+        trace!("Connection opened");
+        self.renew_token().await?;
+        Ok(res)
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
@@ -107,7 +134,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         &mut self,
         open_req: transaction::Req,
     ) -> Result<(UnboundedSender<transaction::Client>, Streaming<transaction::Server>)> {
-        self.call(|this| {
+        self.call_with_auto_renew_token(|this| {
             let transaction_req = transaction::Client { reqs: vec![open_req.clone()] };
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
@@ -154,6 +181,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
         R: 'static,
     {
-        self.call(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
+        self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
     }
 }
