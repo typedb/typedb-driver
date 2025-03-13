@@ -65,9 +65,9 @@ impl ServerConnection {
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
         let username = credentials.username().to_string();
         let request_transmitter =
-            Arc::new(RPCTransmitter::start(address, credentials, driver_options, &background_runtime)?);
+            Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
         let (connection_id, latency, database_info) =
-            Self::open_connection(&request_transmitter, driver_lang, driver_version).await?;
+            Self::open_connection(&request_transmitter, driver_lang, driver_version, credentials).await?;
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
             background_runtime,
@@ -85,9 +85,10 @@ impl ServerConnection {
         request_transmitter: &RPCTransmitter,
         driver_lang: &str,
         driver_version: &str,
+        credentials: Credentials,
     ) -> crate::Result<(Uuid, Duration, Vec<DatabaseInfo>)> {
         let message =
-            Request::ConnectionOpen { driver_lang: driver_lang.to_owned(), driver_version: driver_version.to_owned() };
+            Request::ConnectionOpen { driver_lang: driver_lang.to_owned(), driver_version: driver_version.to_owned(), credentials };
 
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
