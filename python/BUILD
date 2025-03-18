@@ -68,7 +68,7 @@ test_to_example(
     output = "python/example.py",
     removed_lines = ["assert_that", "todo"],
     changed_words = {
-        "test_example(self)": "typedb_example()",
+        "test_example(self)": "typedb_example(self)",
         "TestExample(TestCase)": "TypeDBExample",
     },
     header_comment_sign = "#",
