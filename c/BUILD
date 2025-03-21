@@ -48,6 +48,7 @@ rust_static_library(
         "@crates//:env_logger",
         "@crates//:log",
     ],
+    tags = ["crate-name=typedb_driver_clib"],
 )
 
 rust_cbindgen(
@@ -73,6 +74,7 @@ rust_shared_library(
         "@crates//:env_logger",
         "@crates//:log",
     ],
+    tags = ["crate-name=typedb_driver_clib"],
 )
 
 filegroup(
