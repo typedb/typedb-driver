@@ -27,52 +27,6 @@ use typedb_driver::{
     TransactionType as TypeDBTransactionType,
 };
 
-#[derive(Debug, Parameter)]
-#[param(name = "containment", regex = r"(?:do not )?contain")]
-pub struct ContainmentParam(bool);
-
-impl ContainmentParam {
-    pub fn assert<T, U>(&self, actuals: &[T], item: U)
-    where
-        T: Comparable<U> + fmt::Debug,
-        U: PartialEq + fmt::Debug,
-    {
-        if self.0 {
-            assert!(actuals.iter().any(|actual| actual.equals(&item)), "{item:?} not found in {actuals:?}")
-        } else {
-            assert!(actuals.iter().all(|actual| !actual.equals(&item)), "{item:?} found in {actuals:?}")
-        }
-    }
-}
-
-impl FromStr for ContainmentParam {
-    type Err = Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(s == "contain"))
-    }
-}
-
-pub trait Comparable<U: ?Sized> {
-    fn equals(&self, item: &U) -> bool;
-}
-
-impl<T: Borrow<U>, U: PartialEq + ?Sized> Comparable<&U> for T {
-    fn equals(&self, item: &&U) -> bool {
-        self.borrow() == *item
-    }
-}
-
-impl<'a, T1, T2, U1, U2> Comparable<(&'a U1, &'a U2)> for (T1, T2)
-where
-    T1: Comparable<&'a U1>,
-    T2: Comparable<&'a U2>,
-{
-    fn equals(&self, (first, second): &(&'a U1, &'a U2)) -> bool {
-        self.0.equals(first) && self.1.equals(second)
-    }
-}
-
 #[derive(Debug, Default, Parameter, Clone)]
 #[param(name = "value", regex = ".*?")]
 pub(crate) struct Value {
