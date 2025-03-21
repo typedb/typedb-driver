@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.0.5
+cargo add typedb-driver@3.1.0-rc0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.0.5/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.1.0-rc0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.0.5</version>
+        <version>3.1.0-rc0</version>
     </dependency>
 </dependencies>
 ```
@@ -41,42 +41,69 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
 
+[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.0.5
+pip install typedb-driver==3.1.0rc0
 ```
+
+[//]: # (TODO: Please remove the unreleased drivers manually. Commenting them out in Markdown looks scary)
+
 
 ## New Features
-- **Introduce optional concepts to Concept Rows**
 
-  `get()` and `get_index()` interfaces of Concept Rows always return optional Concepts (previously, the Java and Python drivers used to return non-optional `Concept` instances). If the requested variable name or index exists in the column names of a row, but the actual value for this variable is empty, an empty optional value is returned. This is a natural behavior for optionals (coming to TypeDB soon!) and is already useful for queries like (where the variable `$empty` won't have values):
-  ```
-  match not {$empty isa user;}; insert $u isa user, has username "Hi";
-  ```
-  
-  If the requested variable name or index does not exist in the column names of a row, an error is returned.
+- **Add Python 3.13 release jobs**
+  TypeDB Driver for Python 3.13 is now officially published.
 
-  
-  
+
+- **Introduce a single driver creation endpoint for all editions of TypeDB**
+  Introduce a single driver creation endpoint for all editions of TypeDB: all `new_core`, `new_cloud`, `TypeDB.core`, `TypeDB.cloud`, and other alternatives in TypeDB drivers now have a single `new` / `driver` method that accepts a single string as an address.
+
+  Use it for any edition of TypeDB 3.x (Community Edition, Cloud, Enterprise) the following way (check out `README` or driver documentation for full usage examples):
+  Rust:
+  ```rust
+  let driver = TypeDBDriver::new(
+      TypeDBDriver::DEFAULT_ADDRESS,
+      Credentials::new("admin", "password"),
+      DriverOptions::new(false, None).unwrap(),
+  )
+  .await
+  .unwrap();
+  ```
+
+  Python:
+  ```py
+  driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions())
+  ```
+
+  Java:
+  ```java
+  Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+  ```
+
+  Currently, TypeDB 3.x supports only a single server address, so the list-based method overloading is unnecessary. We plan to preserve the same simplified API after introducing multi-node servers, extending the accepted formats of the input address string instead. Stay tuned for details!
 
 ## Bugs Fixed
-- **Mark query answer accessors as allocating for SWIG to prevent memory leaks in the Python driver**
-  
-  We mark `query_answer_into_rows` and `query_answer_into_documents` as creating a new allocation that needs to be freed by SWIG. Previously, the iterators extracted from the `QueryAnswer` would have been ignored by SWIG and not deallocated when the wrapper is freed.
-  
-  
+
 
 ## Code Refactors
-
-- **Cleanup driver errors**
-
-  Query errors are dissolved in the Java and Python drivers.
-  All the arguments passed to the external interfaces are validated to be non-null and of the correct format (e.g., non-negative for `concept_row.get_index(column_index)`).
-
+  
+  
 
 ## Other Improvements
 
-- **Automate README examples updates**
+- **Fix python example build**
 
-  Cloud driver usage examples are added to all the available READMEs. Additionally, these examples are officially available in the repo as separate files.
+- **Update dependencies for the 3.0.1 release**
+  Update dependencies.
 
-  The process of README examples updating is automated by unifying all language updates in a single script. A new CI job is introduced to verify that the README examples are up to date.
+- **RustFmt**
+
+- **Clean up Driver field, update core artifact to 3.0.6**
+
+- **Fix checkstyle**
+
+- **Check in Cargo.toml files**
+
+- **Update Rust version to 1.81.0**
+
+    

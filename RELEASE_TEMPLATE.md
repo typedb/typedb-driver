@@ -41,9 +41,12 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
 
+[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
 pip install typedb-driver=={version}
 ```
+
+[//]: # (TODO: Please remove the unreleased drivers manually. Commenting them out in Markdown looks scary)
 
 ### NodeJS driver
 
