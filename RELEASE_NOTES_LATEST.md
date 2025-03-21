@@ -41,13 +41,9 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
 
-[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
 pip install typedb-driver==3.1.0rc0
 ```
-
-[//]: # (TODO: Please remove the unreleased drivers manually. Commenting them out in Markdown looks scary)
-
 
 ## New Features
 
