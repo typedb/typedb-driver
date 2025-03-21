@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.1.0rc0
+pip install typedb-driver==3.1.0rc1
 ```
 
 ## New Features
