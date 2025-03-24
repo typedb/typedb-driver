@@ -229,11 +229,11 @@ impl TryIntoProto<user::delete::Req> for Request {
     }
 }
 
-impl TryIntoProto<authentication::sign_in::Req> for Credentials {
-    fn try_into_proto(self) -> Result<authentication::sign_in::Req> {
-        Ok(authentication::sign_in::Req {
-            credentials: Some(authentication::sign_in::req::Credentials::Password(
-                authentication::sign_in::req::Password {
+impl TryIntoProto<authentication::token::create::Req> for Credentials {
+    fn try_into_proto(self) -> Result<authentication::token::create::Req> {
+        Ok(authentication::token::create::Req {
+            credentials: Some(authentication::token::create::req::Credentials::Password(
+                authentication::token::create::req::Password {
                     username: self.username().to_owned(),
                     password: self.password().to_owned(),
                 },
