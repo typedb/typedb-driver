@@ -67,7 +67,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
             trace!("Renewing token...");
             call_credentials.reset_token();
             let request = call_credentials.credentials().clone().try_into_proto()?;
-            let token = self.grpc.sign_in(request).await?.into_inner().token;
+            let token = self.grpc.authentication_token_create(request).await?.into_inner().token;
             call_credentials.set_token(token);
             trace!("Token renewed");
         }
