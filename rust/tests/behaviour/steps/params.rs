@@ -279,7 +279,10 @@ impl MayError {
     pub fn check<T: fmt::Debug, E: fmt::Debug + ToString>(&self, res: Result<T, E>) -> Option<T> {
         match self {
             MayError::False => Some(res.unwrap()),
-            MayError::True(None) => None,
+            MayError::True(None) => {
+                let _ = res.unwrap_err();
+                None
+            },
             MayError::True(Some(expected_message)) => {
                 let actual_error = res.unwrap_err();
                 let actual_message = actual_error.to_string();
