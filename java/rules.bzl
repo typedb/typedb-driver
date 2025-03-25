@@ -17,27 +17,28 @@
 
 load("@typedb_dependencies//builder/swig:java.bzl", "swig_java")
 
-def swig_native_java_library(name, platforms, maven_coordinates, tags=[], **kwargs):
-    swig_java(
-        name = "__" + name,
-        shared_lib_name = name,
-        tags = tags,
-        **kwargs,
-    )
-
+def swig_native_java_library(name, library_name_with_platform, platforms, maven_coordinates, tags=[], **kwargs):
     # generate identical libraries with different maven coordinate tags, since we can't 'select' tags
     for platform in platforms.values():
+        platform_specific_name = library_name_with_platform.replace("{platform}", platform)
+        swig_java(
+            name = "__" + platform_specific_name,
+            shared_lib_name = platform_specific_name,
+            tags = tags,
+            **kwargs,
+        )
+
         native.java_library(
-            name = name + "__native-as__" + platform + "__do_not_reference",
-            srcs = ["__" + name + "__swig"],
-            resources = ["lib" + name],
+            name = platform_specific_name + "__native-as__do_not_reference",
+            srcs = ["__" + platform_specific_name + "__swig"],
+            resources = ["lib" + platform_specific_name],
             tags = tags + ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
         )
 
     native.alias(
         name = name,
         actual = select({
-            config: name + "__native-as__" + platform + "__do_not_reference"
+            config: library_name_with_platform.replace("{platform}", platform) + "__native-as__do_not_reference"
             for config, platform in platforms.items()
         })
     )
