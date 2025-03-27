@@ -23,7 +23,8 @@ from typing import Callable, Optional
 
 import parse
 from behave import register_type
-from behave.model import Table
+from behave.model import Table, Row
+from behave.runner import Context
 from hamcrest import *
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
@@ -190,8 +191,10 @@ def parse_query_type(value: str) -> QueryType:
 register_type(QueryType=parse_query_type)
 
 
-def parse_list(table: Table) -> list[str]:
-    return [table.headings[0]] + list(map(lambda row: row[0], table.rows))
+def parse_list(context: Context) -> list[str]:
+    table: Table = context.table
+    first_element = substitute_if_example(table.headings[0], context.active_outline)
+    return [first_element] + list(map(lambda row: row[0], table.rows))
 
 
 def parse_dict(table: Table) -> dict[str, str]:
@@ -219,6 +222,14 @@ def parse_table(table: Table) -> list[list[tuple[str, str]]]:
         ]
     """
     return [[(table.headings[idx], row[idx]) for idx in range(len(row))] for row in table.rows]
+
+
+def substitute_if_example(text: str, outline: Row) -> str:
+    return outline[text[1:-1]] if is_example(text) else text
+
+
+def is_example(text: str) -> bool:
+    return text[0] == '<' and text[-1] == '>'
 
 
 class MayError:

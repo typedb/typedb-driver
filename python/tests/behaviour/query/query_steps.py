@@ -190,7 +190,7 @@ def step_impl(context: Context, count: int, may_error: MayError):
 def step_impl(context: Context):
     collect_answer_if_needed(context)
     column_names = context.collected_answer[0].column_names()
-    assert_that(sorted(list(column_names)), equal_to(sorted(parse_list(context.table))))
+    assert_that(sorted(list(column_names)), equal_to(sorted(parse_list(context))))
 
 
 def get_row_get_concepts(context: Context, row_index: int) -> [Concept]:

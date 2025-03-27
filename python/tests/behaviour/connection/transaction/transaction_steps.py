@@ -42,7 +42,7 @@ def step_impl(context: Context, transaction_type: TransactionType, database_name
 
 @step("connection open transactions for database: {database_name}, of type")
 def step_impl(context: Context, database_name: str):
-    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
+    transaction_types = list(map(parse_transaction_type, parse_list(context)))
     open_transactions_of_type(context, database_name, transaction_types)
 
 
@@ -89,7 +89,7 @@ def for_each_transaction_has_type(context: Context, transaction_types: list):
 
 @step("transactions have type")
 def step_impl(context: Context):
-    transaction_types = list(map(parse_transaction_type, parse_list(context.table)))
+    transaction_types = list(map(parse_transaction_type, parse_list(context)))
     for_each_transaction_has_type(context, transaction_types)
 
 
@@ -100,7 +100,7 @@ def step_impl(context: Context, transaction_type: TransactionType):
 
 @step("connection open transactions in parallel for database: {name}, of type")
 def step_impl(context: Context, name: str):
-    types = list(map(parse_transaction_type, parse_list(context.table)))
+    types = list(map(parse_transaction_type, parse_list(context)))
     assert_that(len(types), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
         context.transactions_parallel = []
@@ -121,7 +121,7 @@ def step_impl(context: Context, are_open: bool):
 
 @step("transactions in parallel have type")
 def step_impl(context: Context):
-    types = list(map(parse_transaction_type, parse_list(context.table)))
+    types = list(map(parse_transaction_type, parse_list(context)))
     future_transactions = context.transactions_parallel
     assert_that(future_transactions, has_length(len(types)))
     future_transactions_iter = iter(future_transactions)
