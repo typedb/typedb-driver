@@ -48,13 +48,13 @@ def step_impl(context: Context, may_error: MayError):
 
 @step("connection create databases")
 def step_impl(context: Context):
-    names = parse_list(context.table)
+    names = parse_list(context)
     create_databases(context.driver, names)
 
 
 @step("connection create databases in parallel")
 def step_impl(context: Context):
-    names = parse_list(context.table)
+    names = parse_list(context)
     assert_that(len(names), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
         for name in names:
@@ -75,12 +75,12 @@ def step_impl(context: Context, name: str, may_error: MayError):
 
 @step("connection delete databases")
 def step_impl(context: Context):
-    delete_databases(context.driver, names=parse_list(context.table))
+    delete_databases(context.driver, names=parse_list(context))
 
 
 @step("connection delete databases in parallel")
 def step_impl(context: Context):
-    names = parse_list(context.table)
+    names = parse_list(context)
     assert_that(len(names), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
         for name in names:
@@ -106,7 +106,7 @@ def step_impl(context: Context, name: str):
 
 @step("connection has databases")
 def step_impl(context: Context):
-    has_databases(context, names=parse_list(context.table))
+    has_databases(context, names=parse_list(context))
 
 
 def does_not_have_databases(context: Context, names: list[str]):
@@ -122,7 +122,7 @@ def step_impl(context: Context, name: str):
 
 @step("connection does not have databases")
 def step_impl(context: Context):
-    does_not_have_databases(context, names=parse_list(context.table))
+    does_not_have_databases(context, names=parse_list(context))
 
 
 @step("connection get database({name}) has schema")

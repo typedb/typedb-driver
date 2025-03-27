@@ -25,7 +25,7 @@ from typedb.driver import *
 
 @step("get all users")
 def step_impl(context: Context):
-    assert_collections_equal([db.name for db in context.driver.users.all()], parse_list(context.table))
+    assert_collections_equal([db.name for db in context.driver.users.all()], parse_list(context))
 
 
 @step("get all users{may_error:MayError}")
