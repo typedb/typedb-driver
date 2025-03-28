@@ -13,13 +13,13 @@ See the table below for links to README files, documentation, and source code.
 
 | Driver  | Readme                                                                               | Documentation                                                    | Driver location                                                               |
 |---------|--------------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Rust    | [README](https://github.com/typedb/typedb-driver/tree/development/rust/README.md)   | [Documentation](https://typedb.com/docs/drivers/rust/overview)   | [`rust/`](https://github.com/typedb/typedb-driver/tree/development/rust)     |
-| Python  | [README](https://github.com/typedb/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/drivers/python/overview) | [`python/`](https://github.com/typedb/typedb-driver/tree/development/python) |
-| Node.js | [README](https://github.com/typedb/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/nodejs/overview) | [`nodejs/`](https://github.com/typedb/typedb-driver/tree/development/nodejs) |
-| Java    | [README](https://github.com/typedb/typedb-driver/tree/development/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/typedb/typedb-driver/tree/development/java)     |
-| C       | [README](https://github.com/typedb/typedb-driver/tree/development/c/README.md)      | See C++                                                          | [`c/`](https://github.com/typedb/typedb-driver/tree/development/c)           |
-| C++     | [README](https://github.com/typedb/typedb-driver/tree/development/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/typedb/typedb-driver/tree/development/cpp)       |
-| C#      | [README](https://github.com/typedb/typedb-driver/tree/development/csharp/README.md) | [Documentation](https://typedb.com/docs/drivers/csharp/overview) | [`csharp/`](https://github.com/typedb/typedb-driver/tree/development/csharp) |
+| Rust    | [README](https://github.com/typedb/typedb-driver/tree/master/rust/README.md)   | [Documentation](https://typedb.com/docs/drivers/rust/overview)   | [`rust/`](https://github.com/typedb/typedb-driver/tree/master/rust)     |
+| Python  | [README](https://github.com/typedb/typedb-driver/tree/master/python/README.md) | [Documentation](https://typedb.com/docs/drivers/python/overview) | [`python/`](https://github.com/typedb/typedb-driver/tree/master/python) |
+| Node.js | [README](https://github.com/typedb/typedb-driver/tree/master/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/nodejs/overview) | [`nodejs/`](https://github.com/typedb/typedb-driver/tree/master/nodejs) |
+| Java    | [README](https://github.com/typedb/typedb-driver/tree/master/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/typedb/typedb-driver/tree/master/java)     |
+| C       | [README](https://github.com/typedb/typedb-driver/tree/master/c/README.md)      | See C++                                                          | [`c/`](https://github.com/typedb/typedb-driver/tree/master/c)           |
+| C++     | [README](https://github.com/typedb/typedb-driver/tree/master/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/typedb/typedb-driver/tree/master/cpp)       |
+| C#      | [README](https://github.com/typedb/typedb-driver/tree/master/csharp/README.md) | [Documentation](https://typedb.com/docs/drivers/csharp/overview) | [`csharp/`](https://github.com/typedb/typedb-driver/tree/master/csharp) |
 
 ### Package hosting
 

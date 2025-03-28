@@ -75,7 +75,7 @@ def native_driver_versioned(python_versions):
                 "Environment :: Console",
                 "Topic :: Database :: Front-Ends"
             ],
-            url = "https://github.com/typedb/typedb-driver-python/",
+            url = "https://github.com/typedb/typedb-driver",
             author = "TypeDB Community",
             author_email = "community@typedb.com",
             license = "Apache-2.0",
