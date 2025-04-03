@@ -2,110 +2,110 @@
 [#_connection_header]
 == Connection
 
-{page-version}@api-ref::partial$python/connection/TypeDB.adoc[]
+include::{page-version}@api-ref::partial$python/connection/TypeDB.adoc[]
 
-{page-version}@api-ref::partial$python/connection/TypeDBDriver.adoc[]
+include::{page-version}@api-ref::partial$python/connection/TypeDBDriver.adoc[]
 
-{page-version}@api-ref::partial$python/connection/TypeDBCredential.adoc[]
+include::{page-version}@api-ref::partial$python/connection/TypeDBCredential.adoc[]
 
-{page-version}@api-ref::partial$python/connection/DatabaseManager.adoc[]
+include::{page-version}@api-ref::partial$python/connection/DatabaseManager.adoc[]
 
-{page-version}@api-ref::partial$python/connection/Database.adoc[]
+include::{page-version}@api-ref::partial$python/connection/Database.adoc[]
 
-{page-version}@api-ref::partial$python/connection/Replica.adoc[]
+include::{page-version}@api-ref::partial$python/connection/Replica.adoc[]
 
-{page-version}@api-ref::partial$python/connection/UserManager.adoc[]
+include::{page-version}@api-ref::partial$python/connection/UserManager.adoc[]
 
-{page-version}@api-ref::partial$python/connection/User.adoc[]
+include::{page-version}@api-ref::partial$python/connection/User.adoc[]
 
 [#_session_header]
 == Session
 
-{page-version}@api-ref::partial$python/session/TypeDBSession.adoc[]
+include::{page-version}@api-ref::partial$python/session/TypeDBSession.adoc[]
 
-{page-version}@api-ref::partial$python/session/SessionType.adoc[]
+include::{page-version}@api-ref::partial$python/session/SessionType.adoc[]
 
-{page-version}@api-ref::partial$python/session/TypeDBOptions.adoc[]
+include::{page-version}@api-ref::partial$python/session/TypeDBOptions.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-{page-version}@api-ref::partial$python/transaction/TypeDBTransaction.adoc[]
+include::{page-version}@api-ref::partial$python/transaction/TypeDBTransaction.adoc[]
 
-{page-version}@api-ref::partial$python/transaction/TransactionType.adoc[]
+include::{page-version}@api-ref::partial$python/transaction/TransactionType.adoc[]
 
-{page-version}@api-ref::partial$python/transaction/QueryManager.adoc[]
+include::{page-version}@api-ref::partial$python/transaction/QueryManager.adoc[]
 
 [#_answer_header]
 == Answer
 
-{page-version}@api-ref::partial$python/answer/ConceptMapGroup.adoc[]
+include::{page-version}@api-ref::partial$python/answer/ConceptMapGroup.adoc[]
 
-{page-version}@api-ref::partial$python/answer/ConceptMap.adoc[]
+include::{page-version}@api-ref::partial$python/answer/ConceptMap.adoc[]
 
-{page-version}@api-ref::partial$python/answer/ValueGroup.adoc[]
+include::{page-version}@api-ref::partial$python/answer/ValueGroup.adoc[]
 
-{page-version}@api-ref::partial$python/answer/Promise.adoc[]
+include::{page-version}@api-ref::partial$python/answer/Promise.adoc[]
 
-{page-version}@api-ref::partial$python/answer/Explainables.adoc[]
+include::{page-version}@api-ref::partial$python/answer/Explainables.adoc[]
 
-{page-version}@api-ref::partial$python/answer/Explainable.adoc[]
+include::{page-version}@api-ref::partial$python/answer/Explainable.adoc[]
 
-{page-version}@api-ref::partial$python/answer/Explanation.adoc[]
+include::{page-version}@api-ref::partial$python/answer/Explanation.adoc[]
 
 [#_concept_header]
 == Concept
 
-{page-version}@api-ref::partial$python/concept/ConceptManager.adoc[]
+include::{page-version}@api-ref::partial$python/concept/ConceptManager.adoc[]
 
-{page-version}@api-ref::partial$python/concept/Concept.adoc[]
+include::{page-version}@api-ref::partial$python/concept/Concept.adoc[]
 
 [#_schema_header]
 == Schema
 
-{page-version}@api-ref::partial$python/schema/Type.adoc[]
+include::{page-version}@api-ref::partial$python/schema/Type.adoc[]
 
-{page-version}@api-ref::partial$python/schema/Label.adoc[]
+include::{page-version}@api-ref::partial$python/schema/Label.adoc[]
 
-{page-version}@api-ref::partial$python/schema/ThingType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/ThingType.adoc[]
 
-{page-version}@api-ref::partial$python/schema/EntityType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/EntityType.adoc[]
 
-{page-version}@api-ref::partial$python/schema/RelationType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/RelationType.adoc[]
 
-{page-version}@api-ref::partial$python/schema/RoleType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/RoleType.adoc[]
 
-{page-version}@api-ref::partial$python/schema/AttributeType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/AttributeType.adoc[]
 
-{page-version}@api-ref::partial$python/schema/Annotation.adoc[]
+include::{page-version}@api-ref::partial$python/schema/Annotation.adoc[]
 
-{page-version}@api-ref::partial$python/schema/Transitivity.adoc[]
+include::{page-version}@api-ref::partial$python/schema/Transitivity.adoc[]
 
-{page-version}@api-ref::partial$python/schema/ValueType.adoc[]
+include::{page-version}@api-ref::partial$python/schema/ValueType.adoc[]
 
 [#_data_header]
 == Data
 
-{page-version}@api-ref::partial$python/data/Thing.adoc[]
+include::{page-version}@api-ref::partial$python/data/Thing.adoc[]
 
-{page-version}@api-ref::partial$python/data/Entity.adoc[]
+include::{page-version}@api-ref::partial$python/data/Entity.adoc[]
 
-{page-version}@api-ref::partial$python/data/Relation.adoc[]
+include::{page-version}@api-ref::partial$python/data/Relation.adoc[]
 
-{page-version}@api-ref::partial$python/data/Attribute.adoc[]
+include::{page-version}@api-ref::partial$python/data/Attribute.adoc[]
 
-{page-version}@api-ref::partial$python/data/Value.adoc[]
+include::{page-version}@api-ref::partial$python/data/Value.adoc[]
 
 [#_logic_header]
 == Logic
 
-{page-version}@api-ref::partial$python/logic/LogicManager.adoc[]
+include::{page-version}@api-ref::partial$python/logic/LogicManager.adoc[]
 
-{page-version}@api-ref::partial$python/logic/Rule.adoc[]
+include::{page-version}@api-ref::partial$python/logic/Rule.adoc[]
 
 [#_errors_header]
 == Errors
 
-{page-version}@api-ref::partial$python/errors/TypeDBDriverException.adoc[]
+include::{page-version}@api-ref::partial$python/errors/TypeDBDriverException.adoc[]
 
-//{page-version}@api-ref::partial$python/errors/ErrorMessage.adoc[]
+//include::{page-version}@api-ref::partial$python/errors/ErrorMessage.adoc[]

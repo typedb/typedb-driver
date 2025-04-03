@@ -2,85 +2,85 @@
 [#_connection_header]
 == Connection
 
-{page-version}@api-ref::partial$c/connection/connection.adoc[]
+include::{page-version}@api-ref::partial$c/connection/connection.adoc[]
 
-{page-version}@api-ref::partial$c/connection/credential.adoc[]
+include::{page-version}@api-ref::partial$c/connection/credential.adoc[]
 
-{page-version}@api-ref::partial$c/connection/database.adoc[]
+include::{page-version}@api-ref::partial$c/connection/database.adoc[]
 
-{page-version}@api-ref::partial$c/connection/replica.adoc[]
+include::{page-version}@api-ref::partial$c/connection/replica.adoc[]
 
-{page-version}@api-ref::partial$c/connection/user.adoc[]
+include::{page-version}@api-ref::partial$c/connection/user.adoc[]
 
 [#_session_header]
 == Session
 
-{page-version}@api-ref::partial$c/session/session.adoc[]
+include::{page-version}@api-ref::partial$c/session/session.adoc[]
 
-{page-version}@api-ref::partial$c/session/options.adoc[]
+include::{page-version}@api-ref::partial$c/session/options.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-{page-version}@api-ref::partial$c/transaction/transaction.adoc[]
+include::{page-version}@api-ref::partial$c/transaction/transaction.adoc[]
 
-{page-version}@api-ref::partial$c/transaction/query.adoc[]
+include::{page-version}@api-ref::partial$c/transaction/query.adoc[]
 
 [#_answer_header]
 == Answer
 
-{page-version}@api-ref::partial$c/answer/conceptmap.adoc[]
+include::{page-version}@api-ref::partial$c/answer/conceptmap.adoc[]
 
-{page-version}@api-ref::partial$c/answer/valuegroup.adoc[]
+include::{page-version}@api-ref::partial$c/answer/valuegroup.adoc[]
 
-{page-version}@api-ref::partial$c/answer/primitives.adoc[]
+include::{page-version}@api-ref::partial$c/answer/primitives.adoc[]
 
-{page-version}@api-ref::partial$c/answer/explanation.adoc[]
+include::{page-version}@api-ref::partial$c/answer/explanation.adoc[]
 
 [#_concept_header]
 == Concept
 
-{page-version}@api-ref::partial$c/concept/concept.adoc[]
+include::{page-version}@api-ref::partial$c/concept/concept.adoc[]
 
-{page-version}@api-ref::partial$c/concept/thing.adoc[]
+include::{page-version}@api-ref::partial$c/concept/thing.adoc[]
 
-{page-version}@api-ref::partial$c/concept/entity.adoc[]
+include::{page-version}@api-ref::partial$c/concept/entity.adoc[]
 
-{page-version}@api-ref::partial$c/concept/attribute.adoc[]
+include::{page-version}@api-ref::partial$c/concept/attribute.adoc[]
 
-{page-version}@api-ref::partial$c/concept/relation.adoc[]
+include::{page-version}@api-ref::partial$c/concept/relation.adoc[]
 
-{page-version}@api-ref::partial$c/concept/roleplayer.adoc[]
+include::{page-version}@api-ref::partial$c/concept/roleplayer.adoc[]
 
-{page-version}@api-ref::partial$c/concept/value.adoc[]
+include::{page-version}@api-ref::partial$c/concept/value.adoc[]
 
 [#_schema_header]
 == Schema
 
-{page-version}@api-ref::partial$c/schema/entitytype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/entitytype.adoc[]
 
-{page-version}@api-ref::partial$c/schema/attributetype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/attributetype.adoc[]
 
-{page-version}@api-ref::partial$c/schema/relationtype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/relationtype.adoc[]
 
-{page-version}@api-ref::partial$c/schema/roletype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/roletype.adoc[]
 
-{page-version}@api-ref::partial$c/schema/annotation.adoc[]
+include::{page-version}@api-ref::partial$c/schema/annotation.adoc[]
 
-{page-version}@api-ref::partial$c/schema/transitivity.adoc[]
+include::{page-version}@api-ref::partial$c/schema/transitivity.adoc[]
 
-{page-version}@api-ref::partial$c/schema/valuetype.adoc[]
+include::{page-version}@api-ref::partial$c/schema/valuetype.adoc[]
 
 [#_logic_header]
 == Logic
 
-{page-version}@api-ref::partial$c/logic/logic.adoc[]
+include::{page-version}@api-ref::partial$c/logic/logic.adoc[]
 
-{page-version}@api-ref::partial$c/logic/rule.adoc[]
+include::{page-version}@api-ref::partial$c/logic/rule.adoc[]
 
 [#_errors_header]
 == Errors
 
-{page-version}@api-ref::partial$c/errors/error.adoc[]
+include::{page-version}@api-ref::partial$c/errors/error.adoc[]
 
-{page-version}@api-ref::partial$c/errors/schemaexception.adoc[]
+include::{page-version}@api-ref::partial$c/errors/schemaexception.adoc[]

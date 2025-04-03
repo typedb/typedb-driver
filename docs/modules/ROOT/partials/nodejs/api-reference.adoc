@@ -2,112 +2,112 @@
 [#_connection_header]
 == Connection
 
-{page-version}@api-ref::partial$nodejs/connection/TypeDB.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/TypeDB.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/TypeDBDriver.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/TypeDBDriver.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/TypeDBCredential.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/TypeDBCredential.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/DatabaseManager.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/DatabaseManager.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/Database.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/Database.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/Replica.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/Replica.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/UserManager.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/UserManager.adoc[]
 
-{page-version}@api-ref::partial$nodejs/connection/User.adoc[]
+include::{page-version}@api-ref::partial$nodejs/connection/User.adoc[]
 
 [#_session_header]
 == Session
 
-{page-version}@api-ref::partial$nodejs/session/TypeDBSession.adoc[]
+include::{page-version}@api-ref::partial$nodejs/session/TypeDBSession.adoc[]
 
-{page-version}@api-ref::partial$nodejs/session/SessionType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/session/SessionType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/session/TypeDBOptions.adoc[]
+include::{page-version}@api-ref::partial$nodejs/session/TypeDBOptions.adoc[]
 
-{page-version}@api-ref::partial$nodejs/session/Opts.adoc[]
+include::{page-version}@api-ref::partial$nodejs/session/Opts.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-{page-version}@api-ref::partial$nodejs/transaction/TypeDBTransaction.adoc[]
+include::{page-version}@api-ref::partial$nodejs/transaction/TypeDBTransaction.adoc[]
 
-{page-version}@api-ref::partial$nodejs/transaction/TransactionType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/transaction/TransactionType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/transaction/QueryManager.adoc[]
+include::{page-version}@api-ref::partial$nodejs/transaction/QueryManager.adoc[]
 
 [#_answer_header]
 == Answer
 
-{page-version}@api-ref::partial$nodejs/answer/ConceptMapGroup.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/ConceptMapGroup.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/ConceptMap.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/ConceptMap.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/Stream_T_.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/Stream_T_.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/ValueGroup.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/ValueGroup.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/Explainables.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/Explainables.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/Explainable.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/Explainable.adoc[]
 
-{page-version}@api-ref::partial$nodejs/answer/Explanation.adoc[]
+include::{page-version}@api-ref::partial$nodejs/answer/Explanation.adoc[]
 
 [#_concept_header]
 == Concept
 
-{page-version}@api-ref::partial$nodejs/concept/ConceptManager.adoc[]
+include::{page-version}@api-ref::partial$nodejs/concept/ConceptManager.adoc[]
 
-{page-version}@api-ref::partial$nodejs/concept/Concept.adoc[]
+include::{page-version}@api-ref::partial$nodejs/concept/Concept.adoc[]
 
 [#_schema_header]
 == Schema
 
-{page-version}@api-ref::partial$nodejs/schema/Type.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/Type.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/Label.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/Label.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/ThingType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/ThingType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/EntityType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/EntityType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/RelationType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/RelationType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/RoleType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/RoleType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/AttributeType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/AttributeType.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/Annotation.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/Annotation.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/Transitivity.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/Transitivity.adoc[]
 
-{page-version}@api-ref::partial$nodejs/schema/ValueType.adoc[]
+include::{page-version}@api-ref::partial$nodejs/schema/ValueType.adoc[]
 
 [#_data_header]
 == Data
 
-{page-version}@api-ref::partial$nodejs/data/Thing.adoc[]
+include::{page-version}@api-ref::partial$nodejs/data/Thing.adoc[]
 
-{page-version}@api-ref::partial$nodejs/data/Entity.adoc[]
+include::{page-version}@api-ref::partial$nodejs/data/Entity.adoc[]
 
-{page-version}@api-ref::partial$nodejs/data/Relation.adoc[]
+include::{page-version}@api-ref::partial$nodejs/data/Relation.adoc[]
 
-{page-version}@api-ref::partial$nodejs/data/Attribute.adoc[]
+include::{page-version}@api-ref::partial$nodejs/data/Attribute.adoc[]
 
-{page-version}@api-ref::partial$nodejs/data/Value.adoc[]
+include::{page-version}@api-ref::partial$nodejs/data/Value.adoc[]
 
 [#_logic_header]
 == Logic
 
-{page-version}@api-ref::partial$nodejs/logic/LogicManager.adoc[]
+include::{page-version}@api-ref::partial$nodejs/logic/LogicManager.adoc[]
 
-{page-version}@api-ref::partial$nodejs/logic/Rule.adoc[]
+include::{page-version}@api-ref::partial$nodejs/logic/Rule.adoc[]
 
 [#_errors_header]
 == Errors
 
-{page-version}@api-ref::partial$nodejs/errors/TypeDBDriverError.adoc[]
+include::{page-version}@api-ref::partial$nodejs/errors/TypeDBDriverError.adoc[]
 
-{page-version}@api-ref::partial$nodejs/errors/ErrorMessage.adoc[]
+include::{page-version}@api-ref::partial$nodejs/errors/ErrorMessage.adoc[]
