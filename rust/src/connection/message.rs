@@ -35,12 +35,12 @@ use crate::{
     error::ServerError,
     info::UserInfo,
     user::User,
-    Options, TransactionType,
+    Credentials, Options, TransactionType,
 };
 
 #[derive(Debug)]
 pub(super) enum Request {
-    ConnectionOpen { driver_lang: String, driver_version: String },
+    ConnectionOpen { driver_lang: String, driver_version: String, credentials: Credentials },
 
     ServersAll,
 

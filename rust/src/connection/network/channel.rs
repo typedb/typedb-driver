@@ -17,11 +17,12 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use tonic::{
     body::BoxBody,
     client::GrpcService,
+    metadata::MetadataValue,
     service::{
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,
@@ -65,20 +66,33 @@ pub(super) fn open_callcred_channel(
 #[derive(Debug)]
 pub(super) struct CallCredentials {
     credentials: Credentials,
+    token: RwLock<Option<String>>,
 }
 
 impl CallCredentials {
     pub(super) fn new(credentials: Credentials) -> Self {
-        Self { credentials }
+        Self { credentials, token: RwLock::new(None) }
     }
 
-    pub(super) fn username(&self) -> &str {
-        self.credentials.username()
+    pub(super) fn credentials(&self) -> &Credentials {
+        &self.credentials
+    }
+
+    pub(super) fn set_token(&self, token: String) {
+        *self.token.write().expect("Expected token write lock acquisition on set") = Some(token);
+    }
+
+    pub(super) fn reset_token(&self) {
+        *self.token.write().expect("Expected token write lock acquisition on reset") = None;
     }
 
     pub(super) fn inject(&self, mut request: Request<()>) -> Request<()> {
-        request.metadata_mut().insert("username", self.credentials.username().try_into().unwrap());
-        request.metadata_mut().insert("password", self.credentials.password().try_into().unwrap());
+        if let Some(token) = &*self.token.read().expect("Expected token read lock acquisition on inject") {
+            request.metadata_mut().insert(
+                "authorization",
+                format!("Bearer {}", token).try_into().expect("Expected authorization header formatting"),
+            );
+        }
         request
     }
 }
