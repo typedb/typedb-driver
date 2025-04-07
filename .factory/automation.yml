@@ -23,14 +23,15 @@ config:
     typedb-protocol: [build, release]
 
 build:
-  quality:
-    filter:
-      owner: typedb
-      branch: [master, development]
-    dependency-analysis:
-      image: typedb-ubuntu-22.04
-      command: |
-        bazel run @typedb_dependencies//factory/analysis:dependency-analysis
+# TODO: It is broken, while not being very beneficial. Check the deps manually. Consider returning this in the future
+#  quality:
+#    filter:
+#      owner: typedb
+#      branch: [master, development]
+#    dependency-analysis:
+#      image: typedb-ubuntu-22.04
+#      command: |
+#        bazel run @typedb_dependencies//factory/analysis:dependency-analysis
 
   correctness:
     build:

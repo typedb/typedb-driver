@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.1.0-rc1
+cargo add typedb-driver@3.1.0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.1.0-rc1/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.1.0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.1.0-rc1</version>
+        <version>3.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.1.0rc1
+pip install typedb-driver==3.1.0
 ```
 
 ## New Features
@@ -82,8 +82,8 @@ pip install typedb-driver==3.1.0rc1
 
 
 ## Code Refactors
-  
-  
+
+
 
 ## Other Improvements
 
@@ -102,4 +102,3 @@ pip install typedb-driver==3.1.0rc1
 
 - **Update Rust version to 1.81.0**
 
-    
