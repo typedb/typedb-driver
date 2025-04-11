@@ -280,7 +280,7 @@ impl Error {
         // ServerErrors. However, the most valuable information even for connection is inside
         // stacktraces now.
         match code {
-            "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
             _ => None,
         }
     }
