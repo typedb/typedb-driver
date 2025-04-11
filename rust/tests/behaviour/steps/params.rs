@@ -282,7 +282,7 @@ impl MayError {
             MayError::True(None) => {
                 let _ = res.unwrap_err();
                 None
-            },
+            }
             MayError::True(Some(expected_message)) => {
                 let actual_error = res.unwrap_err();
                 let actual_message = actual_error.to_string();
