@@ -21,7 +21,7 @@ features = {}
 
 	[dependencies.log]
 		features = ["kv", "kv_unstable", "std", "value-bag"]
-		version = "0.4.27"
+		version = "0.4.26"
 		default-features = false
 
 	[dependencies.typedb-driver]
