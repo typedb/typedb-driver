@@ -36,7 +36,7 @@ async fn all_user_names(context: &Context) -> HashSet<String> {
 async fn get_all_users(context: &mut Context, step: &Step) {
     let expected_users: HashSet<String> = iter_table(step).map(|name| name.to_owned()).collect();
     let users = all_user_names(context).await;
-    assert_with_timeout!(users == expected_users, "Expected users: {users:?}, got: {expected_users:?}");
+    assert_with_timeout!(users == expected_users, "Expected users: {expected_users:?}, got: {users:?}");
 }
 
 #[apply(generic_step)]

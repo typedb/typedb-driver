@@ -116,7 +116,7 @@ impl Leaf {
 
 const KIND: Cow<'static, str> = Cow::Borrowed("kind");
 const LABEL: Cow<'static, str> = Cow::Borrowed("label");
-const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
+const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("valueType");
 
 fn json_type(kind: Kind, label: Cow<'static, str>) -> JSON {
     JSON::Object([(KIND, json_kind(kind)), (LABEL, JSON::String(label))].into())

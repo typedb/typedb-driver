@@ -19,8 +19,8 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    connection, database, database_manager, query::initial_res::Res, server_manager, transaction, user, user_manager,
-    Version::Version,
+    authentication, connection, database, database_manager, query::initial_res::Res, server_manager, transaction, user,
+    user_manager, Version::Version,
 };
 use uuid::Uuid;
 
@@ -32,14 +32,18 @@ use crate::{
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
     user::User,
+    Credentials,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
         match self {
-            Self::ConnectionOpen { driver_lang, driver_version } => {
-                Ok(connection::open::Req { version: Version.into(), driver_lang, driver_version })
-            }
+            Self::ConnectionOpen { driver_lang, driver_version, credentials } => Ok(connection::open::Req {
+                version: Version.into(),
+                driver_lang,
+                driver_version,
+                authentication: Some(credentials.try_into_proto()?),
+            }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -225,14 +229,28 @@ impl TryIntoProto<user::delete::Req> for Request {
     }
 }
 
+impl TryIntoProto<authentication::token::create::Req> for Credentials {
+    fn try_into_proto(self) -> Result<authentication::token::create::Req> {
+        Ok(authentication::token::create::Req {
+            credentials: Some(authentication::token::create::req::Credentials::Password(
+                authentication::token::create::req::Password {
+                    username: self.username().to_owned(),
+                    password: self.password().to_owned(),
+                },
+            )),
+        })
+    }
+}
+
 impl TryFromProto<connection::open::Res> for Response {
     fn try_from_proto(proto: connection::open::Res) -> Result<Self> {
         let mut database_infos = Vec::new();
-        for database_info_proto in proto.databases_all.unwrap().databases {
+        for database_info_proto in proto.databases_all.expect("Expected databases data").databases {
             database_infos.push(DatabaseInfo::try_from_proto(database_info_proto)?);
         }
         Ok(Self::ConnectionOpen {
-            connection_id: Uuid::from_slice(proto.connection_id.unwrap().id.as_slice()).unwrap(),
+            connection_id: Uuid::from_slice(proto.connection_id.expect("Expected connection id").id.as_slice())
+                .unwrap(),
             server_duration_millis: proto.server_duration_millis,
             databases: database_infos,
         })

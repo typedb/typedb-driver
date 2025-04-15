@@ -21,7 +21,7 @@ use std::{collections::HashSet, error::Error as StdError, fmt};
 
 use itertools::Itertools;
 use tonic::{Code, Status};
-use tonic_types::StatusExt;
+use tonic_types::{ErrorDetails, ErrorInfo, StatusExt};
 
 use super::{address::Address, RequestID};
 
@@ -150,7 +150,7 @@ error_messages! { ConnectionError
         15: "The replica is not the primary replica.",
     ClusterAllNodesFailed { errors: String } =
         16: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
-    ClusterTokenCredentialInvalid =
+    TokenCredentialInvalid =
         17: "Invalid token credentials.",
     EncryptionSettingsMismatch =
         18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
@@ -275,6 +275,16 @@ impl Error {
         }
     }
 
+    fn try_extracting_connection_error(status: &Status, code: &str) -> Option<ConnectionError> {
+        // TODO: We should probably catch more connection errors instead of wrapping them into
+        // ServerErrors. However, the most valuable information even for connection is inside
+        // stacktraces now.
+        match code {
+            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            _ => None,
+        }
+    }
+
     fn from_message(message: &str) -> Self {
         // TODO: Consider converting some of the messages to connection errors
         Self::Other(message.to_owned())
@@ -352,9 +362,13 @@ impl From<Status> for Error {
                 })
             } else if let Some(error_info) = details.error_info() {
                 let code = error_info.reason.clone();
+                if let Some(connection_error) = Self::try_extracting_connection_error(&status, &code) {
+                    return Self::Connection(connection_error);
+                }
                 let domain = error_info.domain.clone();
                 let stack_trace =
                     if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
+
                 Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
                 Self::from_message(status.message())
@@ -364,7 +378,6 @@ impl From<Status> for Error {
                 Self::parse_unavailable(status.message())
             } else if status.code() == Code::Unknown
                 || is_rst_stream(&status)
-                || status.code() == Code::InvalidArgument
                 || status.code() == Code::FailedPrecondition
                 || status.code() == Code::AlreadyExists
             {
