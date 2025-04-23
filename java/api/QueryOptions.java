@@ -25,9 +25,9 @@ import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 import static com.typedb.driver.jni.typedb_driver.query_options_get_include_instance_types;
-import static com.typedb.driver.jni.typedb_driver.query_options_set_include_instance_types;
 import static com.typedb.driver.jni.typedb_driver.query_options_has_include_instance_types;
 import static com.typedb.driver.jni.typedb_driver.query_options_new;
+import static com.typedb.driver.jni.typedb_driver.query_options_set_include_instance_types;
 
 /**
  * TypeDB transaction options. <code>QueryOptions</code> object can be used to override

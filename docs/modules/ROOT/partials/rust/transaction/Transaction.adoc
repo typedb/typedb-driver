@@ -154,7 +154,7 @@ Performs a TypeQL query with default options. See <<#_struct_Transaction_method_
 impl Promise<'static, Result<QueryAnswer>>
 ----
 
-[#_struct_Transaction_query_with_options_query_impl_AsRef_str_options_Options]
+[#_struct_Transaction_query_with_options_query_impl_AsRef_str_options_QueryOptions]
 ==== query_with_options
 
 [source,rust]
@@ -162,7 +162,7 @@ impl Promise<'static, Result<QueryAnswer>>
 pub fn query_with_options(
     &self,
     query: impl AsRef<str>,
-    options: Options,
+    options: QueryOptions,
 ) -> impl Promise<'static, Result<QueryAnswer>>
 ----
 
@@ -175,7 +175,7 @@ Performs a TypeQL query in this transaction.
 |===
 |Name |Description |Type
 a| `query` a|  — The TypeQL query to be executed a| `impl AsRef<str>`
-a| `options` a|  — Query options a| `Options`
+a| `options` a|  — The QueryOptions to execute the query with a| `QueryOptions`
 |===
 
 [caption=""]

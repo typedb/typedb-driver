@@ -131,6 +131,21 @@ a| `function` a| The callback function. a| `java.util.function.Consumer<java.lan
 transaction.onClose(function);
 ----
 
+[#_Transaction_options_]
+==== options
+
+[source,java]
+----
+@CheckReturnValue
+TransactionOptions options()
+----
+
+The options for the transaction
+
+[caption=""]
+.Returns
+`TransactionOptions`
+
 [#_Transaction_query_java_lang_String]
 ==== query
 
@@ -161,8 +176,42 @@ a| `query` a| The query to execute. a| `java.lang.String`
 .Code examples
 [source,java]
 ----
-// TODO: Add more usage examples, how to unpack answers!
- transaction.query("define entity person;");
+transaction.query("define entity person;");
+----
+
+[#_Transaction_query_java_lang_String_QueryOptions]
+==== query
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     QueryOptions options)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query in this transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query("define entity person;");
 ----
 
 [#_Transaction_rollback_]

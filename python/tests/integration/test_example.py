@@ -265,6 +265,8 @@ class TestExample(TestCase):
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
+
+
 # EXAMPLE END MARKER
 
 

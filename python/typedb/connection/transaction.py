@@ -20,9 +20,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from typedb.api.answer.query_answer import QueryAnswer
+from typedb.api.connection.query_options import QueryOptions
 from typedb.api.connection.transaction import Transaction
 from typedb.api.connection.transaction_options import TransactionOptions
-from typedb.api.connection.query_options import QueryOptions
 from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise

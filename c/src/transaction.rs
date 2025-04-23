@@ -19,7 +19,9 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{DatabaseManager, Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
+use typedb_driver::{
+    DatabaseManager, Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver,
+};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -46,8 +48,14 @@ pub extern "C" fn transaction_new(
 /// @param query The query string.
 /// @param options <code>QueryOptions</code> to configure the executed query.
 #[no_mangle]
-pub extern "C" fn transaction_query(transaction: *mut Transaction, query: *const c_char, options: *const QueryOptions) -> *mut QueryAnswerPromise {
-    release(QueryAnswerPromise::new(Box::new(borrow(transaction).query_with_options(string_view(query), *borrow(options)))))
+pub extern "C" fn transaction_query(
+    transaction: *mut Transaction,
+    query: *const c_char,
+    options: *const QueryOptions,
+) -> *mut QueryAnswerPromise {
+    release(QueryAnswerPromise::new(Box::new(
+        borrow(transaction).query_with_options(string_view(query), *borrow(options)),
+    )))
 }
 
 /// Closes the transaction and frees the native rust object.

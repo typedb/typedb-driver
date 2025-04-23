@@ -18,7 +18,8 @@
 dir_mapping = {
     "TransactionType.adoc": "transaction",
     "Transaction.adoc": "transaction",
-#    "Options.adoc": "transaction",
+    "TransactionOptions.adoc": "transaction",
+    "QueryOptions.adoc": "transaction",
     "QueryAnswer.adoc": "answer",
     "QueryType.adoc": "answer",
     "OkQueryAnswer.adoc": "answer",

@@ -1,0 +1,86 @@
+[#_QueryOptions]
+=== QueryOptions
+
+*Package*: `com.typedb.driver.api`
+
+TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
+
+// tag::methods[]
+[#_QueryOptions_QueryOptions_]
+==== QueryOptions
+
+[source,java]
+----
+public QueryOptions()
+----
+
+Produces a new ``QueryOptions`` object. 
+
+
+[caption=""]
+.Returns
+`public`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+QueryOptions options = QueryOptions();
+----
+
+[#_QueryOptions_includeInstanceTypes_]
+==== includeInstanceTypes
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Boolean> includeInstanceTypes()
+----
+
+Returns the value set for the "include instance types" flag in this ``QueryOptions`` object. If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.includeInstanceTypes();
+----
+
+[#_QueryOptions_includeInstanceTypes_boolean]
+==== includeInstanceTypes
+
+[source,java]
+----
+public QueryOptions includeInstanceTypes​(boolean includeInstanceTypes)
+----
+
+Explicitly set the "include instance types" flag. If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `includeInstanceTypes` a| Whether to include instance types in ConceptRow answers. a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public QueryOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.includeInstanceTypes(includeInstanceTypes);
+----
+
+// end::methods[]
+

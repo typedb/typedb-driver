@@ -12,7 +12,6 @@ a| `AddressTranslationMismatch`
 a| `BrokenPipe`
 a| `ClusterAllNodesFailed`
 a| `ClusterReplicaNotPrimary`
-a| `ClusterTokenCredentialInvalid`
 a| `ConnectionFailed`
 a| `DatabaseNotFound`
 a| `EncryptionSettingsMismatch`
@@ -27,6 +26,7 @@ a| `ServerConnectionFailed`
 a| `ServerConnectionFailedStatusError`
 a| `ServerConnectionFailedWithError`
 a| `ServerConnectionIsClosed`
+a| `TokenCredentialInvalid`
 a| `TransactionIsClosed`
 a| `TransactionIsClosedWithErrors`
 a| `UnexpectedConnectionClose`

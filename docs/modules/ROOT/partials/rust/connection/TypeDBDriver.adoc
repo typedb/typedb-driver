@@ -217,5 +217,111 @@ TypeDBDriver::new_with_description("127.0.0.1:1729", "rust")
 --
 ====
 
+[#_struct_TypeDBDriver_transaction_]
+==== transaction
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn transaction(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> Result<Transaction>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn transaction(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> Result<Transaction>
+----
+
+--
+====
+
+Opens a transaction with default options. See <<#_struct_TypeDBDriver_method_transaction_with_options,`TypeDBDriver::transaction_with_options`>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Transaction>
+----
+
+[#_struct_TypeDBDriver_transaction_with_options_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
+==== transaction_with_options
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn transaction_with_options(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+    options: TransactionOptions,
+) -> Result<Transaction>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn transaction_with_options(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+    options: TransactionOptions,
+) -> Result<Transaction>
+----
+
+--
+====
+
+Performs a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database_name` a|  — The name of the database to connect to a| `impl AsRef<str>`
+a| `transaction_type` a|  — The TransactionType to open the transaction with a| `TransactionType`
+a| `options` a|  — The TransactionOptions to open the transaction with a| `TransactionOptions`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Transaction>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.transaction_with_options(database_name, transaction_type, options)
+----
+
 // end::methods[]
 

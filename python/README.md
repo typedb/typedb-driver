@@ -62,8 +62,11 @@ class TypeDBExample:
                 tx.close()
 
             # Open a schema transaction to make schema changes
+            # Transactions can be opened with configurable options. This option limits its lifetime
+            options = TransactionOptions(transaction_timeout_millis=10_000)
+
             # Use "with" blocks to forget about "close" operations (similarly to connections)
-            with driver.transaction(database.name, TransactionType.SCHEMA) as tx:
+            with driver.transaction(database.name, TransactionType.SCHEMA, options) as tx:
                 define_query = """
                 define 
                   entity person, owns name, owns age; 
@@ -181,9 +184,13 @@ class TypeDBExample:
 
             # Open a read transaction to verify that the previously inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
+                # Queries can also be executed with configurable options. This option forces the database
+                # to include types of instance concepts in ConceptRows answers
+                options = QueryOptions(include_instance_types=True)
+
                 # A match query can be used for concept row outputs
                 var = "x"
-                answer = tx.query(f"match ${var} isa person;").resolve()
+                answer = tx.query(f"match ${var} isa person;", options).resolve()
 
                 # Simple match queries always return concept rows
                 count = 0

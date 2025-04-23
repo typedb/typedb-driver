@@ -19,14 +19,13 @@ from __future__ import annotations
 
 from typing import Optional
 
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
+from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import transaction_options_new, \
     transaction_options_has_transaction_timeout_millis, transaction_options_get_transaction_timeout_millis, \
     transaction_options_set_transaction_timeout_millis, transaction_options_get_schema_lock_acquire_timeout_millis, \
     transaction_options_has_schema_lock_acquire_timeout_millis, \
     transaction_options_set_schema_lock_acquire_timeout_millis, TransactionOptions as NativeOptions
-
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
-from typedb.common.native_wrapper import NativeWrapper
 
 
 class TransactionOptions(NativeWrapper[NativeOptions]):
@@ -88,4 +87,5 @@ class TransactionOptions(NativeWrapper[NativeOptions]):
     def schema_lock_acquire_timeout_millis(self, schema_lock_acquire_timeout_millis: int):
         if schema_lock_acquire_timeout_millis < 1:
             raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, schema_lock_acquire_timeout_millis)
-        transaction_options_set_schema_lock_acquire_timeout_millis(self.native_object, schema_lock_acquire_timeout_millis)
+        transaction_options_set_schema_lock_acquire_timeout_millis(self.native_object,
+                                                                   schema_lock_acquire_timeout_millis)

@@ -56,12 +56,12 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
-[#_Driver_transaction_database_name_str_transaction_type_TransactionType]
+[#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]
 ==== transaction
 
 [source,python]
 ----
-transaction(database_name: str, transaction_type: TransactionType) -> Transaction
+transaction(database_name: str, transaction_type: TransactionType, options: TransactionOptions | None = None) -> Transaction
 ----
 
 Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
@@ -74,6 +74,7 @@ Opens a communication tunnel (transaction) to the given database on the running 
 |Name |Description |Type |Default Value
 a| `database_name` a| The name of the database with which the transaction connects a| `str` a| 
 a| `transaction_type` a| The type of transaction to be created (READ, WRITE, or SCHEMA) a| `TransactionType` a| 
+a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `TransactionOptions \| None` a| `None`
 |===
 
 [caption=""]
@@ -84,7 +85,7 @@ a| `transaction_type` a| The type of transaction to be created (READ, WRITE, or 
 .Code examples
 [source,python]
 ----
-driver.transaction(database, transaction_type)
+driver.transaction(database, transaction_type, options)
 ----
 
 // end::methods[]

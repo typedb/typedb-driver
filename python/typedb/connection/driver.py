@@ -58,7 +58,8 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def _native_driver(self) -> NativeDriver:
         return self.native_object
 
-    def transaction(self, database_name: str, transaction_type: TransactionType, options: Optional[TransactionOptions] = None) -> Transaction:
+    def transaction(self, database_name: str, transaction_type: TransactionType,
+                    options: Optional[TransactionOptions] = None) -> Transaction:
         require_non_null(database_name, "database_name")
         require_non_null(transaction_type, "transaction_type")
         return _Transaction(self, database_name, transaction_type, options if options else TransactionOptions())

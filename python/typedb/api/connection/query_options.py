@@ -19,12 +19,11 @@ from __future__ import annotations
 
 from typing import Optional
 
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
+from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import query_options_new, \
     query_options_has_include_instance_types, query_options_get_include_instance_types, \
     query_options_set_include_instance_types, QueryOptions as NativeOptions
-
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
-from typedb.common.native_wrapper import NativeWrapper
 
 
 class QueryOptions(NativeWrapper[NativeOptions]):

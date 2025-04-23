@@ -75,7 +75,7 @@ public interface Transaction extends AutoCloseable {
      * transaction.query("define entity person;");
      * </pre>
      *
-     * @param query The query to execute.
+     * @param query   The query to execute.
      * @param options The <code>QueryOptions</code> to execute the query with.
      */
     @CheckReturnValue

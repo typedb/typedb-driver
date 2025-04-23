@@ -54,7 +54,8 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def transaction(self, database_name: str, transaction_type: TransactionType, options: Optional[TransactionOptions] = None) -> Transaction:
+    def transaction(self, database_name: str, transaction_type: TransactionType,
+                    options: Optional[TransactionOptions] = None) -> Transaction:
         """
         Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
 
