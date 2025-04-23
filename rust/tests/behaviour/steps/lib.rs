@@ -38,7 +38,8 @@ use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    BoxStream, Credentials, DriverOptions, Result as TypeDBResult, Transaction, TransactionOptions, TypeDBDriver,
+    BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction, TransactionOptions,
+    TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -94,7 +95,8 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 pub struct Context {
     pub is_cluster: bool,
     pub tls_root_ca: PathBuf,
-    pub transaction_options: TransactionOptions,
+    pub transaction_options: Option<TransactionOptions>,
+    pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
@@ -112,6 +114,7 @@ impl fmt::Debug for Context {
             .field("is_cluster", &self.is_cluster)
             .field("tls_root_ca", &self.tls_root_ca)
             .field("transaction_options", &self.transaction_options)
+            .field("query_options", &self.query_options)
             .field("driver", &self.driver)
             .field("transactions", &self.transactions)
             .field("answer", &self.answer)
@@ -176,7 +179,8 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
-        self.transaction_options = TransactionOptions::new();
+        self.transaction_options = None;
+        self.query_options = None;
         self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
@@ -269,6 +273,18 @@ impl Context {
     pub async fn set_transactions(&mut self, transactions: VecDeque<Transaction>) {
         self.cleanup_transactions().await;
         self.transactions = transactions;
+    }
+
+    pub fn init_transaction_options_if_needed(&mut self) {
+        if self.transaction_options.is_none() {
+            self.transaction_options = Some(TransactionOptions::default());
+        }
+    }
+
+    pub fn init_query_options_if_needed(&mut self) {
+        if self.query_options.is_none() {
+            self.query_options = Some(QueryOptions::default());
+        }
     }
 
     pub fn set_answer(&mut self, answer: TypeDBResult<QueryAnswer>) -> TypeDBResult {
@@ -419,7 +435,6 @@ impl Context {
 
 impl Default for Context {
     fn default() -> Self {
-        let transaction_options = TransactionOptions::new();
         let tls_root_ca = match std::env::var("ROOT_CA") {
             Ok(root_ca) => PathBuf::from(root_ca),
             Err(_) => PathBuf::new(),
@@ -427,7 +442,8 @@ impl Default for Context {
         Self {
             is_cluster: false,
             tls_root_ca,
-            transaction_options,
+            transaction_options: None,
+            query_options: None,
             driver: None,
             transactions: VecDeque::new(),
             answer: None,

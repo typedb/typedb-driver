@@ -22,7 +22,7 @@ use std::{collections::VecDeque, time::Duration};
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::join_all, FutureExt};
 use macro_rules_attribute::apply;
-use typedb_driver::{Result as TypeDBResult, Transaction, TransactionType, TypeDBDriver};
+use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
 
@@ -30,8 +30,14 @@ async fn open_transaction_for_database(
     driver: &Option<TypeDBDriver>,
     database_name: impl AsRef<str>,
     transaction_type: TransactionType,
+    transaction_options: Option<TransactionOptions>,
 ) -> TypeDBResult<Transaction> {
-    driver.as_ref().unwrap().transaction(database_name, transaction_type).await
+    match transaction_options {
+        None => driver.as_ref().unwrap().transaction(database_name, transaction_type).await,
+        Some(options) => {
+            driver.as_ref().unwrap().transaction_with_options(database_name, transaction_type, options).await
+        }
+    }
 }
 
 #[apply(generic_step)]
@@ -43,9 +49,17 @@ pub async fn connection_open_transaction_for_database(
     may_error: params::MayError,
 ) {
     context.cleanup_transactions().await;
-    may_error.check(context.push_transaction(
-        open_transaction_for_database(&context.driver, &database_name, type_.transaction_type).await,
-    ));
+    may_error.check(
+        context.push_transaction(
+            open_transaction_for_database(
+                &context.driver,
+                &database_name,
+                type_.transaction_type,
+                context.transaction_options,
+            )
+            .await,
+        ),
+    );
 }
 
 #[apply(generic_step)]
@@ -54,7 +68,15 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
     for type_ in iter_table(step) {
         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
         context
-            .push_transaction(open_transaction_for_database(&context.driver, &database_name, transaction_type).await)
+            .push_transaction(
+                open_transaction_for_database(
+                    &context.driver,
+                    &database_name,
+                    transaction_type,
+                    context.transaction_options,
+                )
+                .await,
+            )
             .unwrap();
     }
 }
@@ -64,7 +86,7 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
 pub async fn connection_open_transactions_in_parallel(context: &mut Context, database_name: String, step: &Step) {
     let transactions: VecDeque<Transaction> = join_all(iter_table(step).map(|type_| {
         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-        open_transaction_for_database(&context.driver, &database_name, transaction_type)
+        open_transaction_for_database(&context.driver, &database_name, transaction_type, context.transaction_options)
     }))
     .await
     .into_iter()
@@ -113,4 +135,18 @@ pub async fn transaction_closes(context: &mut Context) {
 #[step(expr = "transaction rollbacks{may_error}")]
 pub async fn transaction_rollbacks(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.transaction().rollback().await);
+}
+
+#[apply(generic_step)]
+#[step(expr = "set transaction option transaction_timeout_millis to: {int}")]
+pub async fn set_transaction_option_transaction_timeout_millis(context: &mut Context, value: u64) {
+    context.init_transaction_options_if_needed();
+    context.transaction_options.as_mut().unwrap().transaction_timeout = Some(Duration::from_millis(value));
+}
+
+#[apply(generic_step)]
+#[step(expr = "set transaction option schema_lock_acquire_timeout_millis to: {int}")]
+pub async fn set_transaction_option_schema_lock_acquire_timeout_millis(context: &mut Context, value: u64) {
+    context.init_transaction_options_if_needed();
+    context.transaction_options.as_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
 }
