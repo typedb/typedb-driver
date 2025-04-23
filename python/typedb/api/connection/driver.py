@@ -18,11 +18,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from typedb.api.connection.database import DatabaseManager
-    # from typedb.api.connection.options import Options
+    from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
     from typedb.api.user.user import UserManager
 
@@ -54,20 +54,20 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def transaction(self, database_name: str,
-                    transaction_type: TransactionType) -> Transaction:  # , options: Optional[Options] = None
+    def transaction(self, database_name: str, transaction_type: TransactionType, options: Optional[TransactionOptions] = None) -> Transaction:
         """
         Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
 
         :param database_name: The name of the database with which the transaction connects
         :param transaction_type: The type of transaction to be created (READ, WRITE, or SCHEMA)
+        :param options: ``TransactionOptions`` to configure the opened transaction
         :return:
 
         Examples:
         ---------
         ::
 
-            driver.transaction(database, transaction_type)
+            driver.transaction(database, transaction_type, options)
         """
         pass
 

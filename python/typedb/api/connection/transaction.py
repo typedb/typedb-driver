@@ -20,11 +20,11 @@ from __future__ import annotations
 import enum
 from abc import ABC, abstractmethod
 
+from typing import TYPE_CHECKING, Optional
 
-# from typing import TYPE_CHECKING
-#
-# if TYPE_CHECKING:
-# from typedb.api.connection.options import Options
+if TYPE_CHECKING:
+    from typedb.api.connection.transaction_options import TransactionOptions
+    from typedb.api.connection.query_options import QueryOptions
 
 
 class TransactionType(enum.Enum):
@@ -76,27 +76,28 @@ class Transaction(ABC):
         """
         pass
 
-    # @property
-    # @abstractmethod
-    # def options(self) -> Options:
-    #     """
-    #     The options for the transaction
-    #     """
-    #     pass
+    @property
+    @abstractmethod
+    def options(self) -> TransactionOptions:
+        """
+        The options for the transaction
+        """
+        pass
 
     @abstractmethod
-    def query(self, query: str) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
         """
         Execute a TypeQL query in this transaction.
 
         :param query: The query to execute.
+        :param options: The ``QueryOptions`` to execute the query with..
         :return:
 
         Examples:
         ---------
         ::
 
-            transaction.query("define entity person;")
+            transaction.query("define entity person;", options).resolve()
         """
         pass
 

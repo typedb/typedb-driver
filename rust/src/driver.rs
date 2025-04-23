@@ -32,7 +32,7 @@ use crate::{
         Result,
     },
     connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
-    Credentials, DatabaseManager, DriverOptions, Options, Transaction, TransactionType, UserManager,
+    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -182,21 +182,36 @@ impl TypeDBDriver {
         &self.user_manager
     }
 
+    /// Opens a transaction with default options.
+    /// See [`TypeDBDriver::transaction_with_options`]
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction(
         &self,
         database_name: impl AsRef<str>,
         transaction_type: TransactionType,
     ) -> Result<Transaction> {
-        self.transaction_with_options(database_name, transaction_type, Options::new()).await
+        self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `database_name` — The name of the database to connect to
+    /// * `transaction_type` — The TransactionType to open the transaction with
+    /// * `options` — The TransactionOptions to open the transaction with
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.transaction_with_options(database_name, transaction_type, options)
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction_with_options(
         &self,
         database_name: impl AsRef<str>,
         transaction_type: TransactionType,
-        options: Options,
+        options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;

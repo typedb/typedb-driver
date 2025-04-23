@@ -43,7 +43,7 @@ use crate::{
     connection::server_connection::ServerConnection,
     driver::TypeDBDriver,
     error::InternalError,
-    Options, Transaction, TransactionType,
+    Transaction, TransactionOptions, TransactionType,
 };
 
 /// A TypeDB database

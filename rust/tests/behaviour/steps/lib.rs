@@ -38,7 +38,7 @@ use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    BoxStream, Credentials, DriverOptions, Options, Result as TypeDBResult, Transaction, TypeDBDriver,
+    BoxStream, Credentials, DriverOptions, Result as TypeDBResult, Transaction, TransactionOptions, TypeDBDriver,
 };
 
 use crate::params::QueryAnswerType;
@@ -94,7 +94,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 pub struct Context {
     pub is_cluster: bool,
     pub tls_root_ca: PathBuf,
-    pub transaction_options: Options,
+    pub transaction_options: TransactionOptions,
     pub driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
@@ -176,7 +176,7 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
-        self.transaction_options = Options::new();
+        self.transaction_options = TransactionOptions::new();
         self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
         self.cleanup_databases().await;
@@ -419,7 +419,7 @@ impl Context {
 
 impl Default for Context {
     fn default() -> Self {
-        let transaction_options = Options::new();
+        let transaction_options = TransactionOptions::new();
         let tls_root_ca = match std::env::var("ROOT_CA") {
             Ok(root_ca) => PathBuf::from(root_ca),
             Err(_) => PathBuf::new(),

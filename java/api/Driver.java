@@ -59,8 +59,20 @@ public interface Driver extends AutoCloseable {
     @CheckReturnValue
     Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException;
 
-//    @CheckReturnValue
-//    Transaction transaction(String database, Transaction.Type type, Options options);
+    /**
+     * Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.transaction(database, sessionType);
+     * </pre>
+     *
+     * @param database The name of the database with which the transaction connects
+     * @param type     The type of transaction to be created (READ, WRITE, or SCHEMA)
+     * @param options  <code>TransactionOptions</code> to configure the opened transaction
+     */
+    @CheckReturnValue
+    Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
      * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.

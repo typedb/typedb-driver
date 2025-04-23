@@ -81,38 +81,21 @@
 
 %nojavaexception init_logging;
 
-/* simple getters do not throw */
-// %nojavaexception options_new;
-// %nojavaexception options_get_infer;
-// %nojavaexception options_get_trace_inference;
-// %nojavaexception options_get_explain;
-// %nojavaexception options_get_parallel;
-// %nojavaexception options_get_prefetch;
-// %nojavaexception options_get_prefetch_size;
-// %nojavaexception options_get_session_idle_timeout_millis;
-// %nojavaexception options_get_transaction_timeout_millis;
-// %nojavaexception options_get_schema_lock_acquire_timeout_millis;
-// %nojavaexception options_get_read_any_replica;
-// %nojavaexception options_set_infer;
-// %nojavaexception options_set_trace_inference;
-// %nojavaexception options_set_explain;
-// %nojavaexception options_set_parallel;
-// %nojavaexception options_set_prefetch;
-// %nojavaexception options_set_prefetch_size;
-// %nojavaexception options_set_session_idle_timeout_millis;
-// %nojavaexception options_set_transaction_timeout_millis;
-// %nojavaexception options_set_schema_lock_acquire_timeout_millis;
-// %nojavaexception options_set_read_any_replica;
-// %nojavaexception options_has_infer;
-// %nojavaexception options_has_trace_inference;
-// %nojavaexception options_has_explain;
-// %nojavaexception options_has_parallel;
-// %nojavaexception options_has_prefetch;
-// %nojavaexception options_has_prefetch_size;
-// %nojavaexception options_has_session_idle_timeout_millis;
-// %nojavaexception options_has_transaction_timeout_millis;
-// %nojavaexception options_has_schema_lock_acquire_timeout_millis;
-// %nojavaexception options_has_read_any_replica;
+%nojavaexception transaction_options_new;
+%nojavaexception transaction_options_get_transaction_timeout_millis;
+%nojavaexception transaction_options_set_transaction_timeout_millis;
+%nojavaexception transaction_options_has_transaction_timeout_millis;
+%nojavaexception transaction_options_get_schema_lock_acquire_timeout_millis;
+%nojavaexception transaction_options_set_schema_lock_acquire_timeout_millis;
+%nojavaexception transaction_options_has_schema_lock_acquire_timeout_millis;
+%nojavaexception transaction_options_get_parallel;
+%nojavaexception transaction_options_set_parallel;
+%nojavaexception transaction_options_has_parallel;
+
+%nojavaexception query_options_new;
+%nojavaexception query_options_get_include_instance_types;
+%nojavaexception query_options_set_include_instance_types;
+%nojavaexception query_options_has_include_instance_types;
 
 %nojavaexception error_code;
 %nojavaexception error_message;
@@ -238,15 +221,16 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-//%nojavaexception ~Options;
 //%nojavaexception ~ReplicaInfo;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
 %nojavaexception ~StringAndOptValueIterator;
 %nojavaexception ~Transaction;
 %nojavaexception ~TransactionCallbackDirector;
+%nojavaexception ~TransactionOptions;
 %nojavaexception ~TypeDBDriver;
 %nojavaexception ~QueryAnswer;
+%nojavaexception ~QueryOptions;
 %nojavaexception ~ValueType;
 %nojavaexception ~User;
 %nojavaexception ~UserIterator;

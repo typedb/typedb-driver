@@ -17,10 +17,13 @@
  * under the License.
  */
 
-use typedb_protocol::{transaction, Options as OptionsProto};
+use typedb_protocol::{
+    options::{Query as QueryOptionsProto, Transaction as TransactionOptionsProto},
+    transaction, Options,
+};
 
 use super::{IntoProto, TryFromProto};
-use crate::{answer::QueryType, error::ConnectionError, Options, Result, TransactionType};
+use crate::{answer::QueryType, error::ConnectionError, QueryOptions, Result, TransactionOptions, TransactionType};
 
 impl IntoProto<i32> for TransactionType {
     fn into_proto(self) -> i32 {
@@ -43,15 +46,18 @@ impl TryFromProto<i32> for QueryType {
     }
 }
 
-impl IntoProto<OptionsProto> for Options {
-    fn into_proto(self) -> OptionsProto {
-        OptionsProto {
-            parallel: self.parallel,
-            prefetch_size: self.prefetch_size,
-            prefetch: self.prefetch,
+impl IntoProto<TransactionOptionsProto> for TransactionOptions {
+    fn into_proto(self) -> TransactionOptionsProto {
+        TransactionOptionsProto {
+            parallel: None,
             transaction_timeout_millis: self.transaction_timeout.map(|val| val.as_millis() as u64),
             schema_lock_acquire_timeout_millis: self.schema_lock_acquire_timeout.map(|val| val.as_millis() as u64),
-            read_any_replica: self.read_any_replica,
         }
+    }
+}
+
+impl IntoProto<QueryOptionsProto> for QueryOptions {
+    fn into_proto(self) -> QueryOptionsProto {
+        QueryOptionsProto { include_instance_types: self.include_instance_types }
     }
 }

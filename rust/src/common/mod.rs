@@ -19,22 +19,24 @@
 
 pub use self::{
     error::Error,
-    options::Options,
     promise::{box_promise, BoxPromise, Promise},
+    query_options::QueryOptions,
     stream::{box_stream, BoxStream},
+    transaction_options::TransactionOptions,
 };
 
 pub(crate) mod address;
 pub mod error;
 mod id;
 pub mod info;
-mod options;
 #[cfg_attr(not(feature = "sync"), path = "promise_async.rs")]
 #[cfg_attr(feature = "sync", path = "promise_sync.rs")]
 mod promise;
+mod query_options;
 #[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
 #[cfg_attr(feature = "sync", path = "stream_sync.rs")]
 pub mod stream;
+mod transaction_options;
 
 pub(crate) type Callback = Box<dyn FnOnce() + Send>;
 

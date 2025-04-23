@@ -56,9 +56,10 @@ struct Type {};
 
 %dropproxy(Error, error)
 
-%dropproxy(DriverOptions, driver_options)
 %dropproxy(Credentials, credentials)
-//%dropproxy(Options, options)
+%dropproxy(DriverOptions, driver_options)
+%dropproxy(TransactionOptions, transaction_options)
+%dropproxy(QueryOptions, query_options)
 
 #define typedb_driver_drop driver_close
 #define transaction_drop transaction_close
@@ -173,11 +174,10 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_try_get_iid;
 %newobject concept_try_get_value_type;
 %newobject concept_try_get_value;
+%newobject credentials_new;
 
 %newobject driver_open_with_description;
-
 %newobject driver_options_new;
-%newobject credentials_new;
 
 %newobject database_get_name;
 %newobject database_schema;
@@ -197,7 +197,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject error_code;
 %newobject error_message;
 
-//%newobject options_new;
+%newobject transaction_options_new;
+%newobject query_options_new;
 
 %newobject concept_iterator_next;
 %newobject concept_row_iterator_next;

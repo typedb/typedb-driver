@@ -17,10 +17,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.transaction import Transaction
+from typedb.api.connection.transaction_options import TransactionOptions
+from typedb.api.connection.query_options import QueryOptions
 from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
@@ -40,14 +42,14 @@ if TYPE_CHECKING:
 class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
     def __init__(self, driver: Driver, database_name: str,
-                 transaction_type: TransactionType):  # , options: Options = None
-        # if not options:
-        #     options = Options()
+                 transaction_type: TransactionType, options: TransactionOptions = None):
+        if not options:
+            options = TransactionOptions()
         self._type = transaction_type
-        # self._options = options
+        self._options = options
         try:
             super().__init__(
-                transaction_new(driver.native_object, database_name, transaction_type.value))  # , options.native_object
+                transaction_new(driver.native_object, database_name, transaction_type.value, options.native_object))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
@@ -59,13 +61,15 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
     def type(self) -> TransactionType:
         return self._type
 
-    # @property
-    # def options(self) -> Options:
-    #     return self._options
+    @property
+    def options(self) -> TransactionOptions:
+        return self._options
 
-    def query(self, query: str) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
-        promise = transaction_query(self.native_object, query)
+        if not options:
+            options = QueryOptions()
+        promise = transaction_query(self.native_object, query, options.native_object)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
