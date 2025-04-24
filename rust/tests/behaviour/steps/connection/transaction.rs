@@ -18,24 +18,23 @@
  */
 
 use std::{collections::VecDeque, time::Duration};
-
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::join_all, FutureExt};
 use macro_rules_attribute::apply;
 use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
-use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
+use crate::{generic_step, in_background, in_oneshot_background, params, params::check_boolean, util::iter_table, Context};
 
 async fn open_transaction_for_database(
-    driver: &Option<TypeDBDriver>,
+    driver: &TypeDBDriver,
     database_name: impl AsRef<str>,
     transaction_type: TransactionType,
     transaction_options: Option<TransactionOptions>,
 ) -> TypeDBResult<Transaction> {
     match transaction_options {
-        None => driver.as_ref().unwrap().transaction(database_name, transaction_type).await,
+        None => driver.transaction(database_name, transaction_type).await,
         Some(options) => {
-            driver.as_ref().unwrap().transaction_with_options(database_name, transaction_type, options).await
+            driver.transaction_with_options(database_name, transaction_type, options).await
         }
     }
 }
@@ -52,7 +51,7 @@ pub async fn connection_open_transaction_for_database(
     may_error.check(
         context.push_transaction(
             open_transaction_for_database(
-                &context.driver,
+                context.driver.as_ref().unwrap(),
                 &database_name,
                 type_.transaction_type,
                 context.transaction_options,
@@ -70,7 +69,7 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
         context
             .push_transaction(
                 open_transaction_for_database(
-                    &context.driver,
+                    context.driver.as_ref().unwrap(),
                     &database_name,
                     transaction_type,
                     context.transaction_options,
@@ -86,13 +85,36 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
 pub async fn connection_open_transactions_in_parallel(context: &mut Context, database_name: String, step: &Step) {
     let transactions: VecDeque<Transaction> = join_all(iter_table(step).map(|type_| {
         let transaction_type = type_.parse::<params::TransactionType>().unwrap().transaction_type;
-        open_transaction_for_database(&context.driver, &database_name, transaction_type, context.transaction_options)
+        open_transaction_for_database(context.driver.as_ref().unwrap(), &database_name, transaction_type, context.transaction_options)
     }))
     .await
     .into_iter()
     .map(|result| result.unwrap())
     .collect();
     context.set_transactions(transactions).await;
+}
+
+#[apply(generic_step)]
+#[step(expr = "in background, connection open {transaction_type} transaction for database: {word}{may_error}")]
+pub async fn in_background_connection_open_transaction_for_database(
+    context: &mut Context,
+    type_: params::TransactionType,
+    database_name: String,
+    may_error: params::MayError,
+) {
+    in_background!(context, |background| {
+        may_error.check(
+            context.push_background_transaction(
+                open_transaction_for_database(
+                    &background,
+                    &database_name,
+                    type_.transaction_type,
+                    context.transaction_options,
+                )
+                    .await,
+            ),
+        );
+    });
 }
 
 #[apply(generic_step)]

@@ -98,7 +98,9 @@ pub struct Context {
     pub transaction_options: Option<TransactionOptions>,
     pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
+    pub background_driver: Option<TypeDBDriver>,
     pub transactions: VecDeque<Transaction>,
+    pub background_transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
     pub answer_type: Option<QueryAnswerType>,
     pub answer_query_type: Option<QueryType>,
@@ -116,7 +118,9 @@ impl fmt::Debug for Context {
             .field("transaction_options", &self.transaction_options)
             .field("query_options", &self.query_options)
             .field("driver", &self.driver)
+            .field("background_driver", &self.background_driver)
             .field("transactions", &self.transactions)
+            .field("background_transactions", &self.background_transactions)
             .field("answer", &self.answer)
             .field("answer_type", &self.answer_type)
             .field("answer_query_type", &self.answer_query_type)
@@ -183,11 +187,13 @@ impl Context {
         self.query_options = None;
         self.set_driver(self.create_default_driver().await.unwrap());
         self.cleanup_transactions().await;
+        self.cleanup_background_transactions().await;
         self.cleanup_databases().await;
         self.cleanup_users().await;
         self.cleanup_answers().await;
         self.cleanup_concurrent_answers().await;
-        self.reset_driver();
+        Self::reset_driver(self.background_driver.take());
+        Self::reset_driver(self.driver.take());
         Ok(())
     }
 
@@ -213,6 +219,12 @@ impl Context {
     pub async fn cleanup_transactions(&mut self) {
         while let Some(transaction) = self.try_take_transaction() {
             transaction.force_close();
+        }
+    }
+
+    pub async fn cleanup_background_transactions(&mut self) {
+        while let Some(background_transaction) = self.try_take_background_transaction() {
+            background_transaction.force_close();
         }
     }
 
@@ -265,8 +277,17 @@ impl Context {
         self.transactions.pop_front()
     }
 
+    pub fn try_take_background_transaction(&mut self) -> Option<Transaction> {
+        self.background_transactions.pop_front()
+    }
+
     pub fn push_transaction(&mut self, transaction: TypeDBResult<Transaction>) -> TypeDBResult {
         self.transactions.push_back(transaction?);
+        Ok(())
+    }
+
+    pub fn push_background_transaction(&mut self, transaction: TypeDBResult<Transaction>) -> TypeDBResult {
+        self.background_transactions.push_back(transaction?);
         Ok(())
     }
 
@@ -425,11 +446,10 @@ impl Context {
         self.driver = Some(driver);
     }
 
-    pub fn reset_driver(&mut self) {
-        if let Some(driver) = self.driver.as_ref() {
+    pub fn reset_driver(driver: Option<TypeDBDriver>) {
+        if let Some(driver) = driver {
             driver.force_close().unwrap()
         }
-        self.driver = None
     }
 }
 
@@ -445,7 +465,9 @@ impl Default for Context {
             transaction_options: None,
             query_options: None,
             driver: None,
+            background_driver: None,
             transactions: VecDeque::new(),
+            background_transactions: VecDeque::new(),
             answer: None,
             answer_type: None,
             answer_query_type: None,
@@ -457,14 +479,26 @@ impl Default for Context {
     }
 }
 
-macro_rules! in_background {
+macro_rules! in_oneshot_background {
     ($context:ident, |$background:ident| $expr:expr) => {
         let $background = $context.create_default_driver().await.unwrap();
         $expr
         $background.force_close().unwrap();
     };
 }
+pub(crate) use in_oneshot_background;
+
+macro_rules! in_background {
+    ($context:ident, |$background:ident| $expr:expr) => {
+        if $context.background_driver.is_none() {
+            $context.background_driver = Some($context.create_default_driver().await.unwrap());
+        }
+        let $background = $context.background_driver.as_ref().unwrap();
+        $expr
+    };
+}
 pub(crate) use in_background;
+
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,

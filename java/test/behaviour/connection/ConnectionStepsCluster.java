@@ -55,11 +55,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
     }
 
-//    @Override
-//    Options createOptions() {
-//        return new Options();
-//    }
-
     @When("typedb starts")
     public void typedb_starts() {
     }

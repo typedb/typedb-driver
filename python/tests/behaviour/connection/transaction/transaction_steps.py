@@ -27,23 +27,26 @@ from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
 
 
-def open_transactions_of_type(context: Context, database_name: str, transaction_types: list[TransactionType]):
-    context.transactions = []
+def open_transactions_of_type(out_transactions: list[Transaction], driver: Driver, transaction_options: Optional[TransactionOptions], database_name: str, transaction_types: list[TransactionType]):
+    out_transactions.clear()
     for transaction_type in transaction_types:
-        transaction = context.driver.transaction(database_name, transaction_type)  # , context.transaction_options
-        context.transactions.append(transaction)
+        if transaction_options:
+            transaction = driver.transaction(database_name, transaction_type, transaction_options)
+        else:
+            transaction = driver.transaction(database_name, transaction_type)
+        out_transactions.append(transaction)
 
 
 @step(
     "connection open {transaction_type:TransactionType} transaction for database: {database_name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
-    may_error.check(lambda: open_transactions_of_type(context, database_name, [transaction_type]))
+    may_error.check(lambda: open_transactions_of_type(context.transactions, context.driver, context.transaction_options, database_name, [transaction_type]))
 
 
 @step("connection open transactions for database: {database_name}, of type")
 def step_impl(context: Context, database_name: str):
     transaction_types = list(map(parse_transaction_type, parse_list(context)))
-    open_transactions_of_type(context, database_name, transaction_types)
+    open_transactions_of_type(context.transactions, context.driver, context.transaction_options, database_name, transaction_types)
 
 
 def for_each_transaction_is(context: Context, assertion: Callable[[Transaction], None]):
@@ -53,6 +56,13 @@ def for_each_transaction_is(context: Context, assertion: Callable[[Transaction],
 
 def assert_transaction_open(transaction: Optional[Transaction], is_open: bool):
     assert_that(transaction is not None and transaction.is_open(), is_(is_open))
+
+
+@step(
+    "in background, connection open {transaction_type:TransactionType} transaction for database: {database_name:NonSemicolon}{may_error:MayError}")
+def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
+    context.background_driver = context.create_driver_fn()
+    may_error.check(lambda: open_transactions_of_type(context.background_transactions, context.background_driver, context.transaction_options, database_name, [transaction_type]))
 
 
 @step("transaction is open: {is_open:Bool}")
@@ -129,11 +139,16 @@ def step_impl(context: Context):
         assert_that(next(future_transactions_iter).result().type, is_(type_))
 
 
-@step("set transaction option {option} to: {value:Int}")
-def step_impl(context: Context, option: str, value: int):
-    if option not in context.option_setters:
-        raise Exception("Unrecognised option: " + option)
-    context.option_setters[option](context.transaction_options, value)
+@step("set transaction option transaction_timeout_millis to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.init_transaction_options_if_needed_fn()
+    context.transaction_options.transaction_timeout_millis = value
+
+
+@step("set transaction option schema_lock_acquire_timeout_millis to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.init_transaction_options_if_needed_fn()
+    context.transaction_options.schema_lock_acquire_timeout_millis = value
 
 
 @step("schedule database creation on transaction close: {database_name:Words}")

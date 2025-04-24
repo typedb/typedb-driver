@@ -44,12 +44,19 @@ from typedb.common.duration import Duration
 from typedb.driver import *
 
 
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions]) -> 'Promise[QueryAnswer]':
+    if options:
+        return transaction.query(query=query, options=options)
+    else:
+        return transaction.query(query=query)
+
+
 @step("typeql write query{may_error:MayError}")
 @step("typeql read query{may_error:MayError}")
 @step("typeql schema query{may_error:MayError}")
 def step_impl(context: Context, may_error: MayError):
     context.clear_answers()
-    may_error.check(lambda: context.tx().query(query=context.text).resolve())
+    may_error.check(lambda: query(context.tx(), context.text, context.query_options).resolve())
 
 
 @step("get answers of typeql write query")
@@ -57,7 +64,7 @@ def step_impl(context: Context, may_error: MayError):
 @step("get answers of typeql schema query")
 def step_impl(context: Context):
     context.clear_answers()
-    context.answer = context.tx().query(query=context.text).resolve()
+    context.answer = query(context.tx(), context.text, context.query_options).resolve()
 
 
 @step("concurrently get answers of typeql write query {count:Int} times")
@@ -70,8 +77,13 @@ def step_impl(context: Context, count: int):
         context.concurrent_answers = []
         for i in range(count):
             context.concurrent_answers.append(
-                executor.submit(partial(lambda: context.tx().query(query=context.text).resolve())))
+                executor.submit(partial(lambda: query(context.tx(), context.text, context.query_options).resolve())))
 
+
+@step("set query option include_instance_types to: {value:Bool}")
+def step_impl(context: Context, value: bool):
+    context.init_query_options_if_needed_fn()
+    context.query_options.include_instance_types = value
 
 @step("answer type {is_or_not:IsOrNot}: {answer_type}")
 def step_impl(context: Context, is_or_not: bool, answer_type: str):

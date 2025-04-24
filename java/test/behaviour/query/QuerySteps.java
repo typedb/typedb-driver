@@ -19,7 +19,9 @@
 
 package com.typedb.driver.test.behaviour.query;
 
+import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
@@ -38,9 +40,11 @@ import com.typedb.driver.api.concept.type.RoleType;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.Duration;
+import com.typedb.driver.common.Promise;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -59,6 +63,8 @@ import java.util.stream.Collectors;
 
 import static com.typedb.driver.api.concept.Concept.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.initQueryOptionsIfNeeded;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.queryOptions;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
@@ -70,6 +76,11 @@ public class QuerySteps {
     private static List<ConceptRow> collectedRows;
     private static List<JSON> collectedDocuments;
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
+
+    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options) {
+        if (options.isPresent()) return transaction.query(query, options.get());
+        else return transaction.query(query);
+    }
 
     private void clearAnswers() {
         queryAnswer = null;
@@ -842,7 +853,7 @@ public class QuerySteps {
     @Given("typeql schema query{may_error}")
     public void typeql_query(Parameters.MayError mayError, String query) {
         clearAnswers();
-        mayError.check(() -> tx().query(query).resolve());
+        mayError.check(() -> query(tx(), query, queryOptions).resolve());
     }
 
     @Given("get answers of typeql write query{may_error}")
@@ -850,7 +861,7 @@ public class QuerySteps {
     @Given("get answers of typeql schema query{may_error}")
     public void get_answers_of_typeql_query(Parameters.MayError mayError, String query) {
         clearAnswers();
-        mayError.check(() -> queryAnswer = tx().query(query).resolve());
+        mayError.check(() -> queryAnswer = query(tx(), query, queryOptions).resolve());
     }
 
     @Given("concurrently get answers of typeql write query {integer} times")
@@ -861,8 +872,14 @@ public class QuerySteps {
         queryAnswersParallel = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            queryAnswersParallel.add(CompletableFuture.supplyAsync(() -> tx().query(query).resolve(), threadPool));
+            queryAnswersParallel.add(CompletableFuture.supplyAsync(() -> query(tx(), query, queryOptions).resolve(), threadPool));
         }
+    }
+
+    @When("set query option include_instance_types to: {bool}")
+    public void set_query_option_include_instance_types_to(boolean value) {
+        initQueryOptionsIfNeeded();
+        queryOptions.get().includeInstanceTypes(value);
     }
 
     @Then("answer type {is_or_not}: {query_answer_type}")

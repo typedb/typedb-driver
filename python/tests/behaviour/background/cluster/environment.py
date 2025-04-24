@@ -43,7 +43,6 @@ def before_scenario(context: Context, scenario):
 def setup_context_driver(context, host="localhost", port=None, username=None, password=None):
     # TODO: Use root_ca_path in connection
     context.driver = create_driver(context, host, port, username, password)
-    # context.transaction_options = Options(infer=True)
 
 
 def create_driver(context, host="localhost", port=None, username=None, password=None) -> Driver:

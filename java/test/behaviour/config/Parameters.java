@@ -306,8 +306,8 @@ public class Parameters {
         }
 
         public void checkNone(Object object) {
-            if (is) assertEquals("expected none", object, Optional.empty());
-            else assertNotEquals("expected not none", object, Optional.empty());
+            if (is) assertEquals("None check,", Optional.empty(), object);
+            else assertNotEquals("Not None check,", Optional.empty(), object);
         }
     }
 
