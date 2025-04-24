@@ -499,7 +499,6 @@ macro_rules! in_background {
 }
 pub(crate) use in_background;
 
-
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,
 // at least verifying that the same error is produced by the same actions.

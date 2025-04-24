@@ -27,7 +27,9 @@ from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
 
 
-def open_transactions_of_type(out_transactions: list[Transaction], driver: Driver, transaction_options: Optional[TransactionOptions], database_name: str, transaction_types: list[TransactionType]):
+def open_transactions_of_type(out_transactions: list[Transaction], driver: Driver,
+                              transaction_options: Optional[TransactionOptions], database_name: str,
+                              transaction_types: list[TransactionType]):
     out_transactions.clear()
     for transaction_type in transaction_types:
         if transaction_options:
@@ -40,13 +42,15 @@ def open_transactions_of_type(out_transactions: list[Transaction], driver: Drive
 @step(
     "connection open {transaction_type:TransactionType} transaction for database: {database_name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
-    may_error.check(lambda: open_transactions_of_type(context.transactions, context.driver, context.transaction_options, database_name, [transaction_type]))
+    may_error.check(lambda: open_transactions_of_type(context.transactions, context.driver, context.transaction_options,
+                                                      database_name, [transaction_type]))
 
 
 @step("connection open transactions for database: {database_name}, of type")
 def step_impl(context: Context, database_name: str):
     transaction_types = list(map(parse_transaction_type, parse_list(context)))
-    open_transactions_of_type(context.transactions, context.driver, context.transaction_options, database_name, transaction_types)
+    open_transactions_of_type(context.transactions, context.driver, context.transaction_options, database_name,
+                              transaction_types)
 
 
 def for_each_transaction_is(context: Context, assertion: Callable[[Transaction], None]):
@@ -62,7 +66,8 @@ def assert_transaction_open(transaction: Optional[Transaction], is_open: bool):
     "in background, connection open {transaction_type:TransactionType} transaction for database: {database_name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, transaction_type: TransactionType, database_name: str, may_error: MayError):
     context.background_driver = context.create_driver_fn()
-    may_error.check(lambda: open_transactions_of_type(context.background_transactions, context.background_driver, context.transaction_options, database_name, [transaction_type]))
+    may_error.check(lambda: open_transactions_of_type(context.background_transactions, context.background_driver,
+                                                      context.transaction_options, database_name, [transaction_type]))
 
 
 @step("transaction is open: {is_open:Bool}")
