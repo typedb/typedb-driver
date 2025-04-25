@@ -32,19 +32,19 @@ use crate::{
     },
     connection::message::{QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
-    promisify, resolve, Error, Options, TransactionType,
+    promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
 pub(crate) struct TransactionStream {
     type_: TransactionType,
-    options: Options,
+    options: TransactionOptions,
     transaction_transmitter: TransactionTransmitter,
 }
 
 impl TransactionStream {
     pub(super) fn new(
         type_: TransactionType,
-        options: Options,
+        options: TransactionOptions,
         transaction_transmitter: TransactionTransmitter,
     ) -> Self {
         Self { type_, options, transaction_transmitter }
@@ -62,7 +62,7 @@ impl TransactionStream {
         self.type_
     }
 
-    pub(crate) fn options(&self) -> Options {
+    pub(crate) fn options(&self) -> TransactionOptions {
         self.options
     }
 
@@ -87,7 +87,7 @@ impl TransactionStream {
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn query(&self, query: &str, options: Options) -> impl Promise<'static, Result<QueryAnswer>> {
+    pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
             let mut stream = stream?;

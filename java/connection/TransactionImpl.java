@@ -20,7 +20,9 @@
 package com.typedb.driver.connection;
 
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Promise;
@@ -43,21 +45,21 @@ import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
 
 public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {
     private final Transaction.Type type;
-//    private final Options options;
+    private final TransactionOptions options;
 
     private final List<TransactionOnClose> callbacks;
 
-    TransactionImpl(Driver driver, String database, Type type/*, Options options*/) throws TypeDBDriverException {
-        super(newNative(driver, database, type/*, options*/));
+    TransactionImpl(Driver driver, String database, Type type, TransactionOptions options) throws TypeDBDriverException {
+        super(newNative(driver, database, type, options));
         this.type = type;
-//        this.options = options;
+        this.options = options;
 
         callbacks = new ArrayList<>();
     }
 
-    private static com.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type/*, Options options*/) {
+    private static com.typedb.driver.jni.Transaction newNative(Driver driver, String database, Type type, TransactionOptions options) {
         try {
-            return transaction_new(((DriverImpl) driver).nativeObject, database, type.nativeObject/*, options.nativeObject*/);
+            return transaction_new(((DriverImpl) driver).nativeObject, database, type.nativeObject, options.nativeObject);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -68,10 +70,10 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         return type;
     }
 
-//    @Override
-//    public Options options() {
-//        return options;
-//    }
+    @Override
+    public TransactionOptions options() {
+        return options;
+    }
 
     @Override
     public boolean isOpen() {
@@ -81,9 +83,14 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
 
     @Override
     public Promise<? extends QueryAnswer> query(String query) throws TypeDBDriverException {
+        return query(query, new QueryOptions());
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
-            return Promise.map(transaction_query(nativeObject, query/*, options.nativeObject*/), QueryAnswerImpl::of);
+            return Promise.map(transaction_query(nativeObject, query, options.nativeObject), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

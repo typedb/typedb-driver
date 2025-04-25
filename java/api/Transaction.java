@@ -48,17 +48,17 @@ public interface Transaction extends AutoCloseable {
     @CheckReturnValue
     Type getType();
 
-//    /**
-//     * The options for the transaction
-//     */
-//    @CheckReturnValue
-//    Options options();
+    /**
+     * The options for the transaction
+     */
+    @CheckReturnValue
+    TransactionOptions options();
 
     /**
      * Execute a TypeQL query in this transaction.
      *
      * <h3>Examples</h3>
-     * <pre> // TODO: Add more usage examples, how to unpack answers!
+     * <pre>
      * transaction.query("define entity person;");
      * </pre>
      *
@@ -66,6 +66,20 @@ public interface Transaction extends AutoCloseable {
      */
     @CheckReturnValue
     Promise<? extends QueryAnswer> query(String query) throws com.typedb.driver.common.exception.TypeDBDriverException;
+
+    /**
+     * Execute a TypeQL query in this transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.query("define entity person;");
+     * </pre>
+     *
+     * @param query   The query to execute.
+     * @param options The <code>QueryOptions</code> to execute the query with.
+     */
+    @CheckReturnValue
+    Promise<? extends QueryAnswer> query(String query, QueryOptions options) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Registers a callback function which will be executed when this transaction is closed.

@@ -40,7 +40,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, Options, TransactionType, User,
+    Credentials, DriverOptions, TransactionOptions, TransactionType, User,
 };
 
 #[derive(Clone)]
@@ -196,7 +196,7 @@ impl ServerConnection {
         &self,
         database_name: &str,
         transaction_type: TransactionType,
-        options: Options,
+        options: TransactionOptions,
     ) -> crate::Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
         let open_request_start = Instant::now();

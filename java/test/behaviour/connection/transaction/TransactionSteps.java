@@ -19,7 +19,9 @@
 
 package com.typedb.driver.test.behaviour.connection.transaction;
 
+import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -31,8 +33,12 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.backgroundDriver;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.backgroundTransactions;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.initTransactionOptionsIfNeeded;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactions;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactionsParallel;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
@@ -44,6 +50,11 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("CheckReturnValue")
 public class TransactionSteps {
+
+    public Transaction openTransaction(Driver driver, String databaseName, Transaction.Type type, Optional<TransactionOptions> options) {
+        if (options.isPresent()) return driver.transaction(databaseName, type, options.get());
+        else return driver.transaction(databaseName, type);
+    }
 
     void assertTransactionIsOpen(Optional<Transaction> transaction, boolean isOpen) {
         assertEquals(isOpen, transaction.isPresent() && transaction.get().isOpen());
@@ -57,7 +68,7 @@ public class TransactionSteps {
     public void connection_open_transaction_for_database(Transaction.Type type, String databaseName, Parameters.MayError mayError) {
         transactions.clear();
         mayError.check(() -> {
-            Transaction transaction = driver.transaction(databaseName, type);
+            Transaction transaction = openTransaction(driver, databaseName, type, transactionOptions);
             transactions.add(transaction);
         });
     }
@@ -65,9 +76,17 @@ public class TransactionSteps {
     @When("connection open transaction(s) for database: {non_semicolon}, of type:")
     public void connection_open_transactions_for_database_of_type(String databaseName, List<Transaction.Type> types) {
         for (Transaction.Type type : types) {
-            Transaction transaction = driver.transaction(databaseName, type);
+            Transaction transaction = openTransaction(driver, databaseName, type, transactionOptions);
             transactions.add(transaction);
         }
+    }
+
+    @When("in background, connection open {transaction_type} transaction for database: {non_semicolon}{may_error}")
+    public void in_background_connection_open_transaction_for_database(Transaction.Type type, String databaseName, Parameters.MayError mayError) {
+        mayError.check(() -> {
+            Transaction transaction = openTransaction(backgroundDriver, databaseName, type, transactionOptions);
+            backgroundTransactions.add(transaction);
+        });
     }
 
     @Then("transaction is open: {bool}")
@@ -151,11 +170,15 @@ public class TransactionSteps {
         assertFalse("types list is longer than saved transactions", typeIterator.hasNext());
     }
 
-//    @Given("set transaction option {word} to: {word}")
-//    public void set_transaction_option_to(String option, String value) {
-//        if (!optionSetters.containsKey(option)) {
-//            throw new RuntimeException("Unrecognised option: " + option);
-//        }
-//        optionSetters.get(option).accept(transactionOptions, value);
-//    }
+    @When("set transaction option transaction_timeout_millis to: {integer}")
+    public void set_transaction_option_transaction_timeout_millis_to(int value) {
+        initTransactionOptionsIfNeeded();
+        transactionOptions.get().transactionTimeoutMillis(value);
+    }
+
+    @When("set transaction option schema_lock_acquire_timeout_millis to: {integer}")
+    public void set_transaction_option_schema_lock_acquire_timeout_millis_to(int value) {
+        initTransactionOptionsIfNeeded();
+        transactionOptions.get().schemaLockAcquireTimeoutMillis(value);
+    }
 }

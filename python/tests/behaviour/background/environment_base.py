@@ -22,24 +22,27 @@ from typedb.driver import *
 
 def before_all(context: Context):
     context.THREAD_POOL_SIZE = 32
+    context.init_transaction_options_if_needed_fn = lambda: init_transaction_options_if_needed(context)
+    context.init_query_options_if_needed_fn = lambda: init_query_options_if_needed(context)
 
 
 def before_scenario(context: Context):
     # setup context state
-    context.transactions = {}
+    context.background_driver = None
+    context.transactions = []
     context.transactions_parallel = []
+    context.background_transactions = []
     context.answer = None  # QueryAnswer
     context.unwrapped_answer = None  # OkQueryAnswer / ConceptRowIterator / ConceptDocumentIterator
-    context.collected_answer = None  # [ConceptRow] / ... ?
+    context.collected_answer = None  # [ConceptRow] / [dict]
     context.concurrent_answers = None
     context.unwrapped_concurrent_answers = None
     # setup context functions
     context.tx = lambda: next(iter(context.transactions), None)
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.clear_concurrent_answers = lambda: _clear_concurrent_answers_impl(context)
-    context.option_setters = {
-        # "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
-    }
+    context.transaction_options = None
+    context.query_options = None
 
 
 def _clear_answers_impl(context: Context):
@@ -58,6 +61,18 @@ def after_scenario(context: Context, scenario):
         return
     if context.driver.is_open():
         context.driver.close()
+    if context.background_driver and context.background_driver.is_open():
+        context.background_driver.close()
+
+
+def init_transaction_options_if_needed(context: Context):
+    if not context.transaction_options:
+        context.transaction_options = TransactionOptions()
+
+
+def init_query_options_if_needed(context: Context):
+    if not context.query_options:
+        context.query_options = QueryOptions()
 
 
 def after_all(_: Context):

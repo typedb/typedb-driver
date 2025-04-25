@@ -34,8 +34,7 @@ use crate::{
     concept::Concept,
     error::ServerError,
     info::UserInfo,
-    user::User,
-    Credentials, Options, TransactionType,
+    Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
 
 #[derive(Debug)]
@@ -121,7 +120,7 @@ pub(super) enum Response {
 
 #[derive(Debug)]
 pub(super) enum TransactionRequest {
-    Open { database: String, transaction_type: TransactionType, options: Options, network_latency: Duration },
+    Open { database: String, transaction_type: TransactionType, options: TransactionOptions, network_latency: Duration },
     Commit,
     Rollback,
     Query(QueryRequest),
@@ -139,7 +138,7 @@ pub(super) enum TransactionResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: Options },
+    Query { query: String, options: QueryOptions },
 }
 
 #[derive(Debug)]

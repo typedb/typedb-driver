@@ -47,7 +47,8 @@ dir_mapping = {
     "Type.adoc": "schema",
     "Transaction.adoc": "transaction",
     "Transaction.Type.adoc": "transaction",
-#    "Options.adoc": "transaction",
+    "TransactionOptions.adoc": "transaction",
+    "QueryOptions.adoc": "transaction",
     "Duration.adoc": "value",
     "TypeDBDriverException.adoc": "errors",
 }

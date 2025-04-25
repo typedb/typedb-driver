@@ -8,6 +8,7 @@
 [options="header"]
 |===
 |Name |Type |Description
+a| `options` a| `TransactionOptions` a| The options for the transaction
 a| `type` a| `TransactionType` a| The transaction’s type (READ, WRITE, or SCHEMA)
 |===
 // end::properties[]
@@ -106,12 +107,12 @@ a| `function` a| The callback function. a| `callable` a|
 transaction.on_close(function)
 ----
 
-[#_Transaction_query_query_str]
+[#_Transaction_query_query_str_options_QueryOptions_None]
 ==== query
 
 [source,python]
 ----
-query(query: str) -> Promise[QueryAnswer]
+query(query: str, options: QueryOptions | None = None) -> Promise[QueryAnswer]
 ----
 
 Execute a TypeQL query in this transaction.
@@ -123,6 +124,7 @@ Execute a TypeQL query in this transaction.
 |===
 |Name |Description |Type |Default Value
 a| `query` a| The query to execute. a| `str` a| 
+a| `options` a| The ``QueryOptions`` to execute the query with.. a| `QueryOptions \| None` a| `None`
 |===
 
 [caption=""]
@@ -133,7 +135,7 @@ a| `query` a| The query to execute. a| `str` a|
 .Code examples
 [source,python]
 ----
-transaction.query("define entity person;")
+transaction.query("define entity person;", options).resolve()
 ----
 
 [#_Transaction_rollback_]

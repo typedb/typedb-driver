@@ -1,0 +1,26 @@
+[#_QueryOptions]
+=== QueryOptions
+
+TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
+
+Options could be specified either as constructor arguments or using properties assignment.
+
+[caption=""]
+.Examples
+[source,python]
+----
+query_options = QueryOptions(include_instance_types=True)
+query_options.include_instance_types = False
+----
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `include_instance_types` a| `bool \| None` a| If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
+|===
+// end::properties[]
+

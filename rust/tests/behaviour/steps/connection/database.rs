@@ -28,7 +28,7 @@ use macro_rules_attribute::apply;
 use tokio::time::sleep;
 use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TypeDBDriver};
 
-use crate::{assert_with_timeout, generic_step, in_background, params, util::iter_table, Context};
+use crate::{assert_with_timeout, generic_step, in_oneshot_background, params, util::iter_table, Context};
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
     may_error.check(driver.databases().create(name).await);
@@ -75,7 +75,7 @@ pub async fn in_background_connection_create_database(
     name: String,
     may_error: params::MayError,
 ) {
-    in_background!(context, |background| {
+    in_oneshot_background!(context, |background| {
         create_database(&background, name, may_error).await;
     });
 }
@@ -111,7 +111,7 @@ pub async fn in_background_connection_delete_database(
     name: String,
     may_error: params::MayError,
 ) {
-    in_background!(context, |background| {
+    in_oneshot_background!(context, |background| {
         delete_database(&background, &name, may_error).await;
     });
 }

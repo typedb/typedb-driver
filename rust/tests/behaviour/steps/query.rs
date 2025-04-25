@@ -27,7 +27,7 @@ use typedb_driver::{
     answer::{ConceptRow, QueryAnswer, JSON},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
-    Result as TypeDBResult, Transaction,
+    QueryOptions, Result as TypeDBResult, Transaction,
 };
 
 use crate::{
@@ -38,8 +38,15 @@ use crate::{
     BehaviourTestOptionalError, Context,
 };
 
-async fn run_query(transaction: &Transaction, query: impl AsRef<str>) -> TypeDBResult<QueryAnswer> {
-    transaction.query(query).await
+async fn run_query(
+    transaction: &Transaction,
+    query: impl AsRef<str>,
+    query_options: Option<QueryOptions>,
+) -> TypeDBResult<QueryAnswer> {
+    match query_options {
+        None => transaction.query(query).await,
+        Some(options) => transaction.query_with_options(query, options).await,
+    }
 }
 
 fn get_collected_column_names(concept_row: &ConceptRow) -> Vec<String> {
@@ -173,7 +180,7 @@ fn concept_get_type(concept: &Concept) -> Concept {
 #[step(expr = "typeql read query{may_error}")]
 pub async fn typeql_query(context: &mut Context, may_error: params::MayError, step: &Step) {
     context.cleanup_answers().await;
-    may_error.check(run_query(context.transaction(), step.docstring().unwrap()).await);
+    may_error.check(run_query(context.transaction(), step.docstring().unwrap(), context.query_options).await);
 }
 
 #[apply(generic_step)]
@@ -182,7 +189,9 @@ pub async fn typeql_query(context: &mut Context, may_error: params::MayError, st
 #[step(expr = "get answers of typeql read query")]
 pub async fn get_answers_of_typeql_query(context: &mut Context, step: &Step) {
     context.cleanup_answers().await;
-    context.set_answer(run_query(context.transaction(), step.docstring().unwrap()).await).unwrap();
+    context
+        .set_answer(run_query(context.transaction(), step.docstring().unwrap(), context.query_options).await)
+        .unwrap();
 }
 
 #[apply(generic_step)]
@@ -193,13 +202,28 @@ pub async fn concurrently_get_answers_of_typeql_query_times(context: &mut Contex
     context.cleanup_concurrent_answers().await;
 
     let queries = vec![step.docstring().unwrap(); count];
-    let answers: Vec<QueryAnswer> = join_all(queries.into_iter().map(|query| run_query(context.transaction(), query)))
-        .await
-        .into_iter()
-        .map(|result| result.unwrap())
-        .collect();
+    let answers: Vec<QueryAnswer> =
+        join_all(queries.into_iter().map(|query| run_query(context.transaction(), query, context.query_options)))
+            .await
+            .into_iter()
+            .map(|result| result.unwrap())
+            .collect();
 
     context.set_concurrent_answers(answers);
+}
+
+#[apply(generic_step)]
+#[step(expr = "set query option include_instance_types to: {boolean}")]
+pub async fn set_query_option_include_instance_types(context: &mut Context, value: params::Boolean) {
+    context.init_query_options_if_needed();
+    context.query_options.as_mut().unwrap().include_instance_types = Some(value.to_bool());
+}
+
+#[apply(generic_step)]
+#[step(expr = "set query option prefetch_size to: {int}")]
+pub async fn set_query_option_prefetch_size(context: &mut Context, value: u64) {
+    context.init_query_options_if_needed();
+    context.query_options.as_mut().unwrap().prefetch_size = Some(value);
 }
 
 #[apply(generic_step)]

@@ -23,6 +23,7 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.NativeObject;
@@ -72,9 +73,14 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     @Override
     public Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException {
+        return transaction(database, type, new TransactionOptions());
+    }
+
+    @Override
+    public Transaction transaction(String database, Transaction.Type type, TransactionOptions options) throws TypeDBDriverException {
         Validator.requireNonNull(database, "database");
         Validator.requireNonNull(type, "type");
-        return new TransactionImpl(this, database, type/*, options*/);
+        return new TransactionImpl(this, database, type, options);
     }
 
     @Override

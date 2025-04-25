@@ -22,7 +22,9 @@ package com.typedb.driver.test.behaviour.connection;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 
 import java.util.ArrayList;
@@ -48,12 +50,11 @@ public abstract class ConnectionStepsBase {
     public static Driver driver;
     public static Driver backgroundDriver;
     public static List<Transaction> transactions = new ArrayList<>();
+    public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-//    public static final Map<String, BiConsumer<Options, String>> optionSetters = map(
-//            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
-//    );
-//    public static Options transactionOptions;
+    public static Optional<TransactionOptions> transactionOptions = Optional.empty();
+    public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
     static final int BEFORE_TIMEOUT_MILLIS = 10;
 
@@ -95,6 +96,9 @@ public abstract class ConnectionStepsBase {
 
     void after() {
         cleanupTransactions();
+        cleanupBackgroundTransactions();
+        transactionOptions = Optional.empty();
+        queryOptions = Optional.empty();
 
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
@@ -117,11 +121,26 @@ public abstract class ConnectionStepsBase {
         transactionsParallel.clear();
     }
 
+    void cleanupBackgroundTransactions() {
+        backgroundTransactions.parallelStream().forEach(Transaction::close);
+        backgroundTransactions.clear();
+    }
+
     abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
 
     abstract Driver createDefaultTypeDBDriver();
 
-//    abstract Options createOptions();
+    public static void initTransactionOptionsIfNeeded() { // TODO: Implement steps
+        if (transactionOptions.isEmpty()) {
+            transactionOptions = Optional.of(new TransactionOptions());
+        }
+    }
+
+    public static void initQueryOptionsIfNeeded() {
+        if (queryOptions.isEmpty()) {
+            queryOptions = Optional.of(new QueryOptions());
+        }
+    }
 
     abstract void connection_opens_with_default_authentication();
 

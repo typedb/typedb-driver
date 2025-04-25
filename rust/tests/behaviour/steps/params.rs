@@ -243,6 +243,15 @@ pub(crate) enum Boolean {
     True,
 }
 
+impl Boolean {
+    pub fn to_bool(&self) -> bool {
+        match self {
+            Boolean::False => false,
+            Boolean::True => true,
+        }
+    }
+}
+
 macro_rules! check_boolean {
     ($boolean:ident, $expr:expr) => {
         match $boolean {

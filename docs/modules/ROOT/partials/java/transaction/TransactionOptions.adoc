@@ -1,0 +1,139 @@
+[#_TransactionOptions]
+=== TransactionOptions
+
+*Package*: `com.typedb.driver.api`
+
+TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.
+
+// tag::methods[]
+[#_TransactionOptions_TransactionOptions_]
+==== TransactionOptions
+
+[source,java]
+----
+public TransactionOptions()
+----
+
+Produces a new ``TransactionOptions`` object. 
+
+
+[caption=""]
+.Returns
+`public`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TransactionOptions options = TransactionOptions();
+----
+
+[#_TransactionOptions_schemaLockAcquireTimeoutMillis_]
+==== schemaLockAcquireTimeoutMillis
+
+[source,java]
+----
+public java.util.Optional<java.lang.Integer> schemaLockAcquireTimeoutMillis()
+----
+
+Returns the value set for the schema lock acquire timeout in this ``TransactionOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Integer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.schemaLockAcquireTimeoutMillis();
+----
+
+[#_TransactionOptions_schemaLockAcquireTimeoutMillis_int]
+==== schemaLockAcquireTimeoutMillis
+
+[source,java]
+----
+public TransactionOptions schemaLockAcquireTimeoutMillis​(int schemaLockAcquireTimeoutMillis)
+----
+
+Explicitly sets schema lock acquire timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a transaction is blocked by a schema write lock a| `int`
+|===
+
+[caption=""]
+.Returns
+`public TransactionOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
+[#_TransactionOptions_transactionTimeoutMillis_]
+==== transactionTimeoutMillis
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Integer> transactionTimeoutMillis()
+----
+
+Returns the value set for the transaction timeout in this ``TransactionOptions`` object. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Integer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.transactionTimeoutMillis();
+----
+
+[#_TransactionOptions_transactionTimeoutMillis_int]
+==== transactionTimeoutMillis
+
+[source,java]
+----
+public TransactionOptions transactionTimeoutMillis​(int transactionTimeoutMillis)
+----
+
+Explicitly set a transaction timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| `int`
+|===
+
+[caption=""]
+.Returns
+`public TransactionOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.transactionTimeoutMillis(transactionTimeoutMillis);
+----
+
+// end::methods[]
+

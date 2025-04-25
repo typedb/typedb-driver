@@ -114,6 +114,42 @@ a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA) a| `
 driver.transaction(database, sessionType);
 ----
 
+[#_Driver_transaction_java_lang_String_Transaction_Type_TransactionOptions]
+==== transaction
+
+[source,java]
+----
+@CheckReturnValue
+Transaction transaction​(java.lang.String database,
+                        Transaction.Type type,
+                        TransactionOptions options)
+----
+
+Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database with which the transaction connects a| `java.lang.String`
+a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA) a| `Transaction.Type`
+a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `TransactionOptions`
+|===
+
+[caption=""]
+.Returns
+`Transaction`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.transaction(database, sessionType);
+----
+
 [#_Driver_users_]
 ==== users
 

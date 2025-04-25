@@ -6,8 +6,10 @@ import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
 import com.typedb.driver.api.answer.QueryAnswer;
@@ -52,8 +54,11 @@ public class TypeDBExample {
             }
 
             // Open a schema transaction to make schema changes
+            // Transactions can be opened with configurable options. This option limits its lifetime
+            TransactionOptions transactionOptions = new TransactionOptions().transactionTimeoutMillis(10_000);
+
             // Use try-with-resources blocks to forget about "close" operations (similarly to connections)
-            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA)) {
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA, transactionOptions)) {
                 String defineQuery = "define " +
                         "entity person, owns name, owns age; " +
                         "attribute name, value string;\n" +
@@ -179,9 +184,12 @@ public class TypeDBExample {
 
             // Open a read transaction to verify that the inserted data is saved
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
+                // Queries can also be executed with configurable options. This option forces the database
+                // to include types of instance concepts in ConceptRows answers
+                QueryOptions queryOptions = new QueryOptions().includeInstanceTypes(true);
                 // A match query can be used for concept row outputs
                 String var = "x";
-                QueryAnswer matchAnswer = transaction.query(String.format("match $%s isa person;", var)).resolve();
+                QueryAnswer matchAnswer = transaction.query(String.format("match $%s isa person;", var), queryOptions).resolve();
 
                 // Simple match queries always return concept rows
                 AtomicInteger matchCount = new AtomicInteger(0);

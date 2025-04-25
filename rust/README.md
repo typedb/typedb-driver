@@ -63,6 +63,8 @@ Quickstart"_ section above.
 <!-- EXAMPLE_START_MARKER -->
 
 ```rust
+use std::time::Duration;
+
 use futures::{StreamExt, TryStreamExt};
 use typedb_driver::{
     answer::{
@@ -70,7 +72,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, TransactionType, TypeDBDriver,
+    Credentials, DriverOptions, Error, TransactionOptions, TransactionType, TypeDBDriver, QueryOptions,
 };
 
 fn typedb_example() {
@@ -110,7 +112,10 @@ fn typedb_example() {
         }
 
         // Open a schema transaction to make schema changes
-        let transaction = driver.transaction(database.name(), TransactionType::Schema).await.unwrap();
+        // Transactions can be opened with configurable options. This option limits its lifetime
+        let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(10));
+        let transaction =
+            driver.transaction_with_options(database.name(), TransactionType::Schema, options).await.unwrap();
         let define_query = r#"
         define
           entity person, owns name, owns age;
@@ -242,8 +247,11 @@ fn typedb_example() {
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
 
         // A match query can be used for concept row outputs
+        // Queries can also be executed with configurable options. This option forces the database
+        // to include types of instance concepts in ConceptRows answers
+        let options = QueryOptions::new().include_instance_types(true);
         let var = "x";
-        let answer = transaction.query(format!("match ${} isa person;", var)).await.unwrap();
+        let answer = transaction.query_with_options(format!("match ${} isa person;", var), options).await.unwrap();
 
         // Simple match queries always return concept rows
         let mut count = 0;

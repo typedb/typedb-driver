@@ -31,7 +31,6 @@ use crate::{
     connection::message::{QueryRequest, QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    user::User,
     Credentials,
 };
 

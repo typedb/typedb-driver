@@ -20,48 +20,25 @@
 use std::time::Duration;
 
 /// TypeDB transaction options.
-/// `TypeDBOptions` object can be used to override the default server behaviour.
-/// Options are specified using properties assignment.
+/// `TransactionOptions` object can be used to override the default server behaviour for opened
+/// transactions.
 ///
 /// # Examples
 ///
 /// ```rust
-/// let options = Options::new().explain(true);
+/// let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(60));
 /// ```
 #[derive(Clone, Copy, Debug, Default)]
-pub struct Options {
-    /// If set to `True`, the server uses parallel instead of single-threaded execution.
-    pub parallel: Option<bool>,
-    /// If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
-    pub prefetch: Option<bool>,
-    /// If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
-    pub prefetch_size: Option<u64>,
+pub struct TransactionOptions {
     /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
     pub transaction_timeout: Option<Duration>,
     /// If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
     pub schema_lock_acquire_timeout: Option<Duration>,
-    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud / Enterprise.
-    pub read_any_replica: Option<bool>,
 }
 
-impl Options {
+impl TransactionOptions {
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// If set to `True`, the server uses parallel instead of single-threaded execution.
-    pub fn parallel(self, parallel: bool) -> Self {
-        Self { parallel: Some(parallel), ..self }
-    }
-
-    /// If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
-    pub fn prefetch(self, prefetch: bool) -> Self {
-        Self { prefetch: Some(prefetch), ..self }
-    }
-
-    /// If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
-    pub fn prefetch_size(self, prefetch_size: u64) -> Self {
-        Self { prefetch_size: Some(prefetch_size), ..self }
     }
 
     /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
@@ -72,10 +49,5 @@ impl Options {
     /// If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
     pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self {
         Self { schema_lock_acquire_timeout: Some(timeout), ..self }
-    }
-
-    /// If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud / Enterprise.
-    pub fn read_any_replica(self, read_any_replica: bool) -> Self {
-        Self { read_any_replica: Some(read_any_replica), ..self }
     }
 }

@@ -19,7 +19,9 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{DatabaseManager, Error, Transaction, TransactionType, TypeDBDriver};
+use typedb_driver::{
+    DatabaseManager, Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver,
+};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -29,19 +31,31 @@ use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view,
 /// @param databases The <code>DatabaseManager</code> object on this connection.
 /// @param database_name The name of the database with which the transaction connects.
 /// @param type_ The type of transaction to be created (Write / Read / Schema).
+/// @param options <code>TransactionOptions</code> to configure the opened transaction.
 #[no_mangle]
 pub extern "C" fn transaction_new(
     driver: *mut TypeDBDriver,
     database_name: *const c_char,
     type_: TransactionType,
+    options: *const TransactionOptions,
 ) -> *mut Transaction {
-    try_release(borrow(driver).transaction(string_view(database_name), type_))
+    try_release(borrow(driver).transaction_with_options(string_view(database_name), type_, *borrow(options)))
 }
 
 /// Performs a TypeQL query in the transaction.
+///
+/// @param transaction The <code>Transaction</code> to execute the query within.
+/// @param query The query string.
+/// @param options <code>QueryOptions</code> to configure the executed query.
 #[no_mangle]
-pub extern "C" fn transaction_query(transaction: *mut Transaction, query: *const c_char) -> *mut QueryAnswerPromise {
-    release(QueryAnswerPromise::new(Box::new(borrow(transaction).query(string_view(query)))))
+pub extern "C" fn transaction_query(
+    transaction: *mut Transaction,
+    query: *const c_char,
+    options: *const QueryOptions,
+) -> *mut QueryAnswerPromise {
+    release(QueryAnswerPromise::new(Box::new(
+        borrow(transaction).query_with_options(string_view(query), *borrow(options)),
+    )))
 }
 
 /// Closes the transaction and frees the native rust object.

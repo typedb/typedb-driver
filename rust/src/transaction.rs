@@ -23,7 +23,7 @@ use crate::{
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
-    Error, Options,
+    Error, QueryOptions, TransactionOptions,
 };
 
 /// A transaction with a TypeDB database.
@@ -31,7 +31,7 @@ pub struct Transaction {
     /// The transaction’s type (READ or WRITE)
     type_: TransactionType,
     /// The options for the transaction
-    options: Options,
+    options: TransactionOptions,
     transaction_stream: Pin<Box<TransactionStream>>,
 }
 
@@ -55,7 +55,7 @@ impl Transaction {
     /// Performs a TypeQL query with default options.
     /// See [`Transaction::query_with_options`]
     pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
-        self.query_with_options(query, Options::new())
+        self.query_with_options(query, QueryOptions::new())
     }
 
     /// Performs a TypeQL query in this transaction.
@@ -63,7 +63,7 @@ impl Transaction {
     /// # Arguments
     ///
     /// * `query` — The TypeQL query to be executed
-    /// * `options` — Query options
+    /// * `options` — The QueryOptions to execute the query with
     ///
     /// # Examples
     ///
@@ -73,7 +73,7 @@ impl Transaction {
     pub fn query_with_options(
         &self,
         query: impl AsRef<str>,
-        options: Options,
+        options: QueryOptions,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         self.transaction_stream.query(query, options)

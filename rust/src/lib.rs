@@ -21,7 +21,10 @@
 #![deny(unused_must_use)]
 
 pub use self::{
-    common::{box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, TransactionType, IID},
+    common::{
+        box_stream, error, info, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result, TransactionOptions,
+        TransactionType, IID,
+    },
     connection::{Credentials, DriverOptions},
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,
