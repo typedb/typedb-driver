@@ -882,6 +882,12 @@ public class QuerySteps {
         queryOptions.get().includeInstanceTypes(value);
     }
 
+    @When("set query option prefetch_size to: {integer}")
+    public void set_query_option_prefetch_size_to(int value) {
+        initQueryOptionsIfNeeded();
+        queryOptions.get().prefetchSize(value);
+    }
+
     @Then("answer type {is_or_not}: {query_answer_type}")
     public void answer_type_is(Parameters.IsOrNot isOrNot, Parameters.QueryAnswerType queryAnswerType) {
         switch (queryAnswerType) {

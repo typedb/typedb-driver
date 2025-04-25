@@ -86,6 +86,12 @@ def step_impl(context: Context, value: bool):
     context.query_options.include_instance_types = value
 
 
+@step("set query option prefetch_size to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.init_query_options_if_needed_fn()
+    context.query_options.prefetch_size = value
+
+
 @step("answer type {is_or_not:IsOrNot}: {answer_type}")
 def step_impl(context: Context, is_or_not: bool, answer_type: str):
     if answer_type == "ok":

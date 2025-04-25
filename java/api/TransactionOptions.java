@@ -20,6 +20,7 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -80,9 +81,7 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
      * @param transactionTimeoutMillis Timeout for killing transactions automatically
      */
     public TransactionOptions transactionTimeoutMillis(int transactionTimeoutMillis) {
-        if (transactionTimeoutMillis < 1) {
-            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
-        }
+        Validator.requirePositive(transactionTimeoutMillis, "transactionTimeoutMillis");
         transaction_options_set_transaction_timeout_millis(nativeObject, transactionTimeoutMillis);
         return this;
     }
@@ -115,9 +114,7 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
      *                                       is blocked by a schema write lock
      */
     public TransactionOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
-        if (schemaLockAcquireTimeoutMillis < 1) {
-            throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
-        }
+        Validator.requirePositive(schemaLockAcquireTimeoutMillis, "schemaLockAcquireTimeoutMillis");
         transaction_options_set_schema_lock_acquire_timeout_millis(nativeObject, schemaLockAcquireTimeoutMillis);
         return this;
     }

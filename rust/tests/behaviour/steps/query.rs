@@ -220,6 +220,13 @@ pub async fn set_query_option_include_instance_types(context: &mut Context, valu
 }
 
 #[apply(generic_step)]
+#[step(expr = "set query option prefetch_size to: {int}")]
+pub async fn set_query_option_prefetch_size(context: &mut Context, value: u64) {
+    context.init_query_options_if_needed();
+    context.query_options.as_mut().unwrap().prefetch_size = Some(value);
+}
+
+#[apply(generic_step)]
 #[step(expr = "answer type {is_or_not}: {query_answer_type}")]
 pub async fn answer_type_is(
     context: &mut Context,

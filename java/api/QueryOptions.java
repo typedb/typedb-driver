@@ -20,14 +20,18 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 import static com.typedb.driver.jni.typedb_driver.query_options_get_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_get_prefetch_size;
 import static com.typedb.driver.jni.typedb_driver.query_options_has_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_has_prefetch_size;
 import static com.typedb.driver.jni.typedb_driver.query_options_new;
 import static com.typedb.driver.jni.typedb_driver.query_options_set_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_set_prefetch_size;
 
 /**
  * TypeDB transaction options. <code>QueryOptions</code> object can be used to override
@@ -77,6 +81,44 @@ public class QueryOptions extends NativeObject<com.typedb.driver.jni.QueryOption
      */
     public QueryOptions includeInstanceTypes(boolean includeInstanceTypes) {
         query_options_set_include_instance_types(nativeObject, includeInstanceTypes);
+        return this;
+    }
+
+    /**
+     * Returns the value set for the prefetch size in this <code>QueryOptions</code> object.
+     * If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
+     * Increasing this may increase performance for queries with a huge number of answers, as it can
+     * reduce the number of network round-trips at the cost of more resources on the server side.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.prefetchSize();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Optional<Integer> prefetchSize() {
+        if (query_options_has_prefetch_size(nativeObject))
+            return Optional.of((int) query_options_get_prefetch_size(nativeObject));
+        return Optional.empty();
+    }
+
+    /**
+     * Explicitly set the prefetch size.
+     * If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
+     * Increasing this may increase performance for queries with a huge number of answers, as it can
+     * reduce the number of network round-trips at the cost of more resources on the server side.
+     * Minimal value: 1.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.prefetchSize(prefetchSize);
+     * </pre>
+     *
+     * @param prefetchSize Whether to include instance types in ConceptRow answers.
+     */
+    public QueryOptions prefetchSize(int prefetchSize) {
+        Validator.requireNonNegative(prefetchSize, "prefetchSize");
+        query_options_set_prefetch_size(nativeObject, prefetchSize);
         return this;
     }
 }

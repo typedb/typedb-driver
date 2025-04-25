@@ -21,9 +21,11 @@ from typing import Optional
 
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_negative
 from typedb.native_driver_wrapper import query_options_new, \
     query_options_has_include_instance_types, query_options_get_include_instance_types, \
-    query_options_set_include_instance_types, QueryOptions as NativeOptions
+    query_options_set_include_instance_types, query_options_has_prefetch_size, \
+    query_options_get_prefetch_size, query_options_set_prefetch_size, QueryOptions as NativeOptions
 
 
 class QueryOptions(NativeWrapper[NativeOptions]):
@@ -40,15 +42,18 @@ class QueryOptions(NativeWrapper[NativeOptions]):
     ::
 
       query_options = QueryOptions(include_instance_types=True)
-      query_options.include_instance_types = False
+      query_options.prefetch_size = 10
     """
 
     def __init__(self, *,
                  include_instance_types: Optional[bool] = None,
+                 prefetch_size: Optional[int] = None,
                  ):
         super().__init__(query_options_new())
         if include_instance_types is not None:
             self.include_instance_types = include_instance_types
+        if prefetch_size is not None:
+            self.prefetch_size = prefetch_size
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -66,3 +71,19 @@ class QueryOptions(NativeWrapper[NativeOptions]):
     @include_instance_types.setter
     def include_instance_types(self, include_instance_types: bool):
         query_options_set_include_instance_types(self.native_object, include_instance_types)
+
+    @property
+    def prefetch_size(self) -> Optional[int]:
+        """
+        If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
+        Increasing this may increase performance for queries with a huge number of answers, as it can
+        reduce the number of network round-trips at the cost of more resources on the server side.
+        Minimal value: 1.
+        """
+        return query_options_get_prefetch_size(self.native_object) \
+            if query_options_has_prefetch_size(self.native_object) else None
+
+    @prefetch_size.setter
+    def prefetch_size(self, prefetch_size: int):
+        require_non_negative(prefetch_size, "prefetch_size")
+        query_options_set_prefetch_size(self.native_object, prefetch_size)

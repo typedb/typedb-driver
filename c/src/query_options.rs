@@ -54,3 +54,29 @@ pub extern "C" fn query_options_get_include_instance_types(options: *const Query
 pub extern "C" fn query_options_has_include_instance_types(options: *const QueryOptions) -> bool {
     borrow(options).include_instance_types.is_some()
 }
+
+/// Explicitly set the prefetch size.
+/// If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
+/// Increasing this may increase performance for queries with a huge number of answers, as it can
+/// reduce the number of network round-trips at the cost of more resources on the server side.
+/// Minimal value: 1.
+#[no_mangle]
+pub extern "C" fn query_options_set_prefetch_size(options: *mut QueryOptions, prefetch_size: i64) {
+    borrow_mut(options).prefetch_size = Some(prefetch_size as u64);
+}
+
+/// Returns the value set for the prefetch size in this <code>QueryOptions</code> object.
+/// If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
+/// Increasing this may increase performance for queries with a huge number of answers, as it can
+/// reduce the number of network round-trips at the cost of more resources on the server side.
+/// Minimal value: 1.
+#[no_mangle]
+pub extern "C" fn query_options_get_prefetch_size(options: *const QueryOptions) -> i64 {
+    borrow(options).prefetch_size.unwrap() as i64
+}
+
+/// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
+#[no_mangle]
+pub extern "C" fn query_options_has_prefetch_size(options: *const QueryOptions) -> bool {
+    borrow(options).prefetch_size.is_some()
+}

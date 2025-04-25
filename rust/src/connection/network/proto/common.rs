@@ -58,6 +58,6 @@ impl IntoProto<TransactionOptionsProto> for TransactionOptions {
 
 impl IntoProto<QueryOptionsProto> for QueryOptions {
     fn into_proto(self) -> QueryOptionsProto {
-        QueryOptionsProto { include_instance_types: self.include_instance_types }
+        QueryOptionsProto { include_instance_types: self.include_instance_types, prefetch_size: self.prefetch_size }
     }
 }
