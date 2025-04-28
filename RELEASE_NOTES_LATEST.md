@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.2.0-rc0
+cargo add typedb-driver@3.2.0-rc2
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.2.0-rc0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.2.0-rc2/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.2.0-rc0</version>
+        <version>3.2.0-rc2</version>
     </dependency>
 </dependencies>
 ```
@@ -42,17 +42,55 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.2.0rc0
+pip install typedb-driver==3.2.0rc2
 ```
 
-
 ## New Features
-- **Introduce Rust driver token-based authentication**
-  We update the protocol version and introduce token-based authentication for all the available drivers. Now, instead of sending usernames and passwords for authentication purposes, authorization tokens are implicitly added to every network request to a TypeDB server. It enhances the authentication speed and security. 
+- **Introduce transaction and query options**
+  **Introduce transaction options:**
+  * `transaction_timeout`: If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions,
+  * `schema_lock_acquire_timeout`: If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
   
-  These tokens are acquired as a result of driver instantiation and are renewed automatically. This feature does not require any user-side changes.
+  Rust examples:
+  ```rust
+  let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(10));
+  let transaction =
+      driver.transaction_with_options(database.name(), TransactionType::Schema, options).await.unwrap();
+  ```
   
-  Additionally, as a part of the HTTP client introduction work, we rename Concept Documents key style from snake_case to camelCase, which is a common convention for JSONs (it affects only value types: `value_type` -> `valueType`).
+  Python example:
+  ```py
+  options = TransactionOptions(transaction_timeout_millis=10_000)
+  tx = driver.transaction(database.name, TransactionType.SCHEMA, options)
+  ```
+  
+  Java example:
+  ```java
+  TransactionOptions transactionOptions = new TransactionOptions().transactionTimeoutMillis(10_000);
+  Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA, transactionOptions);
+  ```
+  
+  **Introduce query options:**
+  * `include_instance_types`: If set, specifies if types should be included in instance structs returned in ConceptRow answers,
+  * `prefetch_size`: If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side.
+  
+  Rust examples:
+  ```rust
+  let options = QueryOptions::new().include_instance_types(true);
+  let answer = transaction.query_with_options("match $x isa person;", options).await.unwrap();
+  ```
+  
+  Python example:
+  ```py
+  options = QueryOptions(include_instance_types=True)
+  answer = tx.query("match $x isa person;").resolve()
+  ```
+  
+  Java example:
+  ```java
+  QueryOptions queryOptions = new QueryOptions().includeInstanceTypes(true);                
+  QueryAnswer matchAnswer = transaction.query("match $x isa person;", queryOptions).resolve();                
+  ```
   
   
 
@@ -63,14 +101,5 @@ pip install typedb-driver==3.2.0rc0
 
 
 ## Other Improvements
-- **Update dependencies**
-  After a recent update of the crates, rustls added aws-lc-rs as a default dependency. This caused runtime issues during loading of the shared library where the dynamic linker could not find some symbols from aws-lc: 
-  
-  ```
-  ImportError: dlopen(.../native_driver_python.so, 0x0002): symbol not found in flat namespace '_aws_lc_0_28_0_EVP_aead_aes_128_gcm'
-  ```
-  
-  We decided to force the use of ring as the cryptographic provider for rustls instead.
-  
-  
+
     
