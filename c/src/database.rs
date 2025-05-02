@@ -49,13 +49,13 @@ pub extern "C" fn database_delete(database: *const Database) {
 /// A full schema text as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
-    try_release_string(take_arc(database).schema())
+    try_release_string(borrow(database).schema())
 }
 
 /// The types in the schema as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
-    try_release_string(take_arc(database).type_schema())
+    try_release_string(borrow(database).type_schema())
 }
 
 // /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.

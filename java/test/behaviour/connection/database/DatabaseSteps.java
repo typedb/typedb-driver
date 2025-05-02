@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour.connection.database;
 
 import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
@@ -51,6 +52,15 @@ public class DatabaseSteps {
         for (String databaseName : names) {
             driver.databases().get(databaseName).delete();
         }
+    }
+
+    public String createTemporaryDatabaseWithSchema(Driver driver, String schemaQuery) {
+        String name = "temp-" + (int) (Math.random() * 10000);
+        createDatabases(driver, list(name));
+        Transaction transaction = driver.transaction(name, Transaction.Type.SCHEMA);
+        transaction.query(schemaQuery).resolve();
+        transaction.commit();
+        return name;
     }
 
     @When("connection create database: {non_semicolon}{may_error}")
@@ -132,5 +142,35 @@ public class DatabaseSteps {
         for (String databaseName : names) {
             assertFalse(databases.contains(databaseName));
         }
+    }
+
+    @Then("connection get database\\({word}) has schema:")
+    public void connection_get_database_has_schema(String name, String schema) {
+        String expectedSchema = schema.strip();
+        String expectedSchemaRetrieved;
+        if (expectedSchema.isEmpty()) {
+            expectedSchemaRetrieved = "";
+        } else {
+            String tempDatabaseName = createTemporaryDatabaseWithSchema(driver, expectedSchema);
+            expectedSchemaRetrieved = driver.databases().get(tempDatabaseName).schema();
+        }
+
+        String realSchema = driver.databases().get(name).schema();
+        assertEquals(expectedSchemaRetrieved, realSchema);
+    }
+
+    @Then("connection get database\\({word}) has type schema:")
+    public void connection_get_database_has_type_schema(String name, String schema) {
+        String expectedSchema = schema.strip();
+        String expectedSchemaRetrieved;
+        if (expectedSchema.isEmpty()) {
+            expectedSchemaRetrieved = "";
+        } else {
+            String tempDatabaseName = createTemporaryDatabaseWithSchema(driver, expectedSchema);
+            expectedSchemaRetrieved = driver.databases().get(tempDatabaseName).typeSchema();
+        }
+
+        String realSchema = driver.databases().get(name).typeSchema();
+        assertEquals(expectedSchemaRetrieved, realSchema);
     }
 }

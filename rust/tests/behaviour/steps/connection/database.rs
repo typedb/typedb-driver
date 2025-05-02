@@ -26,9 +26,13 @@ use futures::{
 };
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TypeDBDriver};
+use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TransactionType, TypeDBDriver};
+use uuid::Uuid;
 
-use crate::{assert_with_timeout, generic_step, in_oneshot_background, params, util::iter_table, Context};
+use crate::{
+    assert_with_timeout, connection::transaction::open_transaction_for_database, generic_step, in_oneshot_background,
+    params, query::run_query, util::iter_table, Context,
+};
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
     may_error.check(driver.databases().create(name).await);
@@ -36,6 +40,14 @@ async fn create_database(driver: &TypeDBDriver, name: String, may_error: params:
 
 async fn delete_database(driver: &TypeDBDriver, name: &str, may_error: params::MayError) {
     may_error.check(driver.databases().get(name).and_then(Database::delete).await);
+}
+
+async fn database_schema(driver: &TypeDBDriver, name: &str) -> String {
+    driver.databases().get(name).await.expect("Expected database").schema().await.expect("Expected schema")
+}
+
+async fn database_type_schema(driver: &TypeDBDriver, name: &str) -> String {
+    driver.databases().get(name).await.expect("Expected database").type_schema().await.expect("Expected type schema")
 }
 
 async fn has_database(driver: &TypeDBDriver, name: &str) -> bool {
@@ -154,4 +166,45 @@ async fn connection_does_not_have_databases(context: &mut Context, step: &Step) 
             "Connection doesn't contain at least one of the databases.",
         );
     }
+}
+
+async fn create_temporary_database_with_schema(driver: &TypeDBDriver, schema_query: String) -> String {
+    let name = format!("temp-{}", Uuid::new_v4());
+    create_database(driver, name.clone(), params::MayError::False).await;
+    let transaction = open_transaction_for_database(driver, &name, TransactionType::Schema, None)
+        .await
+        .expect("Expected transaction");
+    run_query(&transaction, &schema_query, None).await.expect("Expected successful query");
+    transaction.commit().await.expect("Expected successful commit");
+    name
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection get database\({word}\) has schema:")]
+async fn connection_get_database_has_schema(context: &mut Context, name: String, step: &Step) {
+    let expected_schema = step.docstring.as_ref().unwrap().trim().to_string();
+    let driver = context.driver.as_ref().unwrap();
+    let expected_schema_retrieved = if expected_schema.is_empty() {
+        String::new()
+    } else {
+        let temp_database_name = create_temporary_database_with_schema(driver, expected_schema).await;
+        database_schema(driver, &temp_database_name).await
+    };
+    let schema = database_schema(driver, &name).await;
+    assert_eq!(expected_schema_retrieved, schema);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection get database\({word}\) has type schema:")]
+async fn connection_get_database_has_type_schema(context: &mut Context, name: String, step: &Step) {
+    let expected_type_schema = step.docstring.as_ref().unwrap().trim().to_string();
+    let driver = context.driver.as_ref().unwrap();
+    let expected_type_schema_retrieved = if expected_type_schema.is_empty() {
+        String::new()
+    } else {
+        let temp_database_name = create_temporary_database_with_schema(driver, expected_type_schema).await;
+        database_type_schema(driver, &temp_database_name).await
+    };
+    let type_schema = database_type_schema(driver, &name).await;
+    assert_eq!(expected_type_schema_retrieved, type_schema);
 }
