@@ -72,7 +72,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, TransactionOptions, TransactionType, TypeDBDriver, QueryOptions,
+    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 fn typedb_example() {
