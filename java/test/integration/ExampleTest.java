@@ -19,6 +19,7 @@
 
 // EXAMPLE START MARKER
 // EXAMPLE START MARKER
+// EXAMPLE START MARKER
 package com.typedb.driver.test.integration;
 
 import com.typedb.driver.TypeDB;
@@ -48,6 +49,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+
+// EXAMPLE END MARKER
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -56,6 +59,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
+// EXAMPLE START MARKER
 public class ExampleTest {
     // EXAMPLE END MARKER
     @BeforeClass

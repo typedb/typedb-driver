@@ -28,7 +28,7 @@ use crate::{
     generic_step, in_background, in_oneshot_background, params, params::check_boolean, util::iter_table, Context,
 };
 
-async fn open_transaction_for_database(
+pub(crate) async fn open_transaction_for_database(
     driver: &TypeDBDriver,
     database_name: impl AsRef<str>,
     transaction_type: TransactionType,

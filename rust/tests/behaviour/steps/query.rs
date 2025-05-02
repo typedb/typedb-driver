@@ -38,7 +38,7 @@ use crate::{
     BehaviourTestOptionalError, Context,
 };
 
-async fn run_query(
+pub(crate) async fn run_query(
     transaction: &Transaction,
     query: impl AsRef<str>,
     query_options: Option<QueryOptions>,

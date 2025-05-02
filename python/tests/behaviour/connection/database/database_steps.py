@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import random
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
 
@@ -23,6 +24,7 @@ from hamcrest import *
 from tests.behaviour.config.parameters import MayError, parse_list
 from tests.behaviour.context import Context
 from tests.behaviour.util.util import assert_collections_equal
+from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
 
 
@@ -125,15 +127,34 @@ def step_impl(context: Context):
     does_not_have_databases(context, names=parse_list(context))
 
 
+def create_temporary_database_with_schema(context: Context, schema_query: str) -> str:
+    name = "temp-" + str(random.randint(0, 100000))
+    create_databases(context.driver, [name])
+    transaction = context.driver.transaction(name, TransactionType.SCHEMA)
+    transaction.query(schema_query).resolve()
+    transaction.commit()
+    return name
+
+
 @step("connection get database({name}) has schema")
 def step_impl(context: Context, name: str):
-    expected_schema = context.text
+    expected_schema = context.text.strip()
+    if expected_schema:
+        temp_database_name = create_temporary_database_with_schema(context, expected_schema)
+        expected_schema_retrieved = context.driver.databases.get(temp_database_name).schema()
+    else:
+        expected_schema_retrieved = ""
     real_schema = context.driver.databases.get(name).schema()
-    assert_that(real_schema, is_(expected_schema))
+    assert_that(real_schema, is_(expected_schema_retrieved))
 
 
 @step("connection get database({name}) has type schema")
 def step_impl(context: Context, name: str):
-    expected_schema = context.text
-    real_schema = context.driver.databases.get(name).type_schema()
-    assert_that(real_schema, is_(expected_schema))
+    expected_type_schema = context.text.strip()
+    if expected_type_schema:
+        temp_database_name = create_temporary_database_with_schema(context, expected_type_schema)
+        expected_type_schema_retrieved = context.driver.databases.get(temp_database_name).type_schema()
+    else:
+        expected_type_schema_retrieved = ""
+    real_type_schema = context.driver.databases.get(name).type_schema()
+    assert_that(real_type_schema, is_(expected_type_schema_retrieved))

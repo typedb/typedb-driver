@@ -28,6 +28,8 @@ typedb_java_test(
     deps = [
         # Internal package dependencies
         "//java/test/behaviour:behaviour",
+        "//java/test/behaviour/query:steps",
+        "//java/test/behaviour/util:steps",
 
         # TODO: Add your addition debugging dependencies here
         # e.g. "//java/test/behaviour/connection/steps:connection-database",
