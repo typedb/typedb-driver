@@ -23,7 +23,11 @@ use std::{
     collections::HashMap,
     sync::{Arc, RwLock},
 };
-
+use std::fs::File;
+use std::io::{BufReader, Read};
+use std::path::Path;
+use prost::bytes::Bytes;
+use prost::Message;
 use super::Database;
 use crate::{
     common::{address::Address, error::ConnectionError, Result},
@@ -31,6 +35,7 @@ use crate::{
     info::DatabaseInfo,
     Error,
 };
+use typedb_protocol::Item;
 
 /// Provides access to all database management methods.
 #[derive(Debug)]
@@ -156,6 +161,26 @@ impl DatabaseManager {
         Ok(())
     }
 
+    /// TODO
+    ///
+    /// # Arguments
+    ///
+    /// * `import_file` — The file to import data from
+    /// * `name` — The name of the database to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import(name).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn import(&self, import_file_path: impl AsRef<Path>, name: impl Into<String>) -> Result {
+        let name = name.into();
+        Self::read_and_print_items(import_file_path)?;
+        Ok(())
+    }
+
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
         match self.try_get_cached(name) {
@@ -198,5 +223,46 @@ impl DatabaseManager {
             }
         }
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+    }
+
+    fn read_and_print_items(path: impl AsRef<Path>) -> Result {
+        let file = File::open(path).expect("Expcted file"); // TODO: Convert to error
+        let mut reader = BufReader::new(file);
+
+        loop {
+            // Read length prefix as varint32
+            let length = match Self::decode_varint32(&mut reader) {
+                Ok(len) => len,
+                Err(e) if e.kind() == std::io::ErrorKind::UnexpectedEof => break,
+                // Err(e) => return Err(Box::new(e)),
+                Err(e) => panic!("Flkaflkawlkfawlkflk {e:?}"),
+            };
+
+            let mut buffer = vec![0u8; length as usize];
+            reader.read_exact(&mut buffer)?;
+
+            let bytes = Bytes::from(buffer);
+            let item = Item::decode_length_delimited(bytes).expect("awkfaklflk");
+
+            println!("{:#?}", item);
+        }
+        println!("END!");
+        Ok(())
+    }
+
+    fn decode_varint32<R: Read>(reader: &mut R) -> std::io::Result<u32> {
+        let mut result = 0u32;
+        let mut shift = 0;
+        for _ in 0..5 {
+            let mut byte = [0u8];
+            reader.read_exact(&mut byte)?;
+            let b = byte[0];
+            result |= ((b & 0x7F) as u32) << shift;
+            if b & 0x80 == 0 {
+                return Ok(result);
+            }
+            shift += 7;
+        }
+        Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "Varint too long"))
     }
 }
