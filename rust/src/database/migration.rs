@@ -27,7 +27,7 @@ use prost::{
     bytes::{Buf, Bytes},
     Message,
 };
-use typedb_protocol::MigrationItem;
+use typedb_protocol::migration;
 
 use crate::{error::ConceptError, Error, Result};
 
@@ -48,7 +48,7 @@ pub(crate) fn read_and_print_import_file(path: impl AsRef<Path>) -> Result {
     Ok(())
 }
 
-pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result<Vec<MigrationItem>> {
+pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result<Vec<migration::Item>> {
     let file = File::open(path)?;
     let mut reader = BufReader::new(file);
     let mut buffer = Vec::new();
@@ -58,7 +58,7 @@ pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result
 
     let mut cursor = std::io::Cursor::new(buffer);
     while cursor.has_remaining() {
-        let item = MigrationItem::decode_length_delimited(&mut cursor)
+        let item = migration::Item::decode_length_delimited(&mut cursor)
             .map_err(|_| Error::Concept(ConceptError::CannotDecodeImportedConcept))?;
         println!("{:#?}", item);
         items.push(item);
@@ -67,7 +67,7 @@ pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result
     Ok(items)
 }
 
-pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[MigrationItem]) -> Result {
+pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[migration::Item]) -> Result {
     let file = OpenOptions::new().write(true).create_new(true).open(path.as_ref()).map_err(|_| {
         Error::Other(format!(
             "Cannot create export file '{}' as it already exists",
