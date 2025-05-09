@@ -184,6 +184,10 @@ error_messages! { ConceptError
         1: "Cannot get concept from a concept row by variable '{variable}'.",
     UnavailableRowIndex { index: usize } =
         2: "Cannot get concept from a concept row by index '{index}'.",
+    CannotDecodeImportedConcept =
+        3: "Cannot decode a concept from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
+    CannotEncodeExportedConcept =
+        4: "Cannot encode a concept for export. It's either a version compatibility error or a bug."
 }
 
 error_messages! { InternalError
