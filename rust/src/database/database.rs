@@ -22,6 +22,7 @@ use std::future::Future;
 use std::{
     collections::HashMap,
     fmt,
+    path::Path,
     sync::{
         atomic::{AtomicU64, Ordering},
         Arc, RwLock,
@@ -41,6 +42,7 @@ use crate::{
         Error, Result,
     },
     connection::server_connection::ServerConnection,
+    database::migration::{read_and_print_import_file, write_export_file},
     driver::TypeDBDriver,
     error::InternalError,
     Transaction, TransactionOptions, TransactionType,
@@ -155,6 +157,25 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
         self.run_failsafe(|database| async move { database.type_schema().await }).await
+    }
+
+    /// Export a database into a .tql schema definition and a .typedb data file
+    ///
+    /// # Arguments
+    ///
+    /// * `schema_file_path` — The path to the .tql schema definition file to be created
+    /// * `data_file_path` — The path to the .typedb data file to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.export(schema_path, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.export(schema_path, data_path).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn export(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+        // write_export_file(data_file_path)?;
+        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

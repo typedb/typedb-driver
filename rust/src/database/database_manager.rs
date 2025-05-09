@@ -158,23 +158,24 @@ impl DatabaseManager {
         Ok(())
     }
 
-    /// TODO
+    /// Create a database with the given name based on previously exported another database's data
     ///
     /// # Arguments
     ///
-    /// * `import_file` — The file to import data from
     /// * `name` — The name of the database to be created
+    /// * `schema` — The schema definition query string for the database
+    /// * `data_file_path` — The exported database file to import the data from
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().import(name);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import(name).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import(name, schema, path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import(name, schema, path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn import(&self, import_file_path: impl AsRef<Path>, name: impl Into<String>) -> Result {
+    pub async fn import(&self, name: impl Into<String>, schema: String, data_file_path: impl AsRef<Path>) -> Result {
         let name = name.into();
-        read_and_print_import_file(import_file_path)?;
+        read_and_print_import_file(data_file_path)?;
         Ok(())
     }
 
