@@ -21,18 +21,18 @@
 use std::future::Future;
 use std::{
     collections::HashMap,
+    io::{BufReader, BufWriter, Cursor, Read},
     path::Path,
     sync::{Arc, RwLock},
 };
 
+use prost::{bytes::Buf, Message};
+use typedb_protocol::migration::Item;
+
 use super::Database;
-use crate::{
-    common::{address::Address, error::ConnectionError, Result},
-    connection::server_connection::ServerConnection,
-    database::migration::read_and_print_import_file,
-    info::DatabaseInfo,
-    Error,
-};
+use crate::{common::{address::Address, error::ConnectionError, Result}, connection::server_connection::ServerConnection, database::migration::{
+    read_and_print_import_file, try_creating_export_file, try_opening_import_file, DatabaseExportAnswer,
+}, error::MigrationError, info::DatabaseInfo, resolve, Error};
 
 /// Provides access to all database management methods.
 #[derive(Debug)]
@@ -175,8 +175,31 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn import(&self, name: impl Into<String>, schema: String, data_file_path: impl AsRef<Path>) -> Result {
         let name = name.into();
-        read_and_print_import_file(data_file_path)?;
-        Ok(())
+        let schema = schema.as_str();
+        let data_file_path = data_file_path.as_ref();
+        self.run_failsafe(name, |server_connection, name| async move {
+            let data_file = try_opening_import_file(data_file_path)?;
+            let mut data_reader = BufReader::new(data_file);
+            let mut data_buffer = Vec::new();
+            data_reader.read_to_end(&mut data_buffer)?; // TODO: Read only a part
+
+            // TODO: Don't clone schema......
+            let import_stream = server_connection.import_database(name, schema.to_string()).await?;
+            let mut items = Vec::new();
+
+            let mut cursor = Cursor::new(data_buffer);
+            while cursor.has_remaining() {
+                let item = Item::decode_length_delimited(&mut cursor)
+                    .map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept))?;
+                items.push(item);
+            }
+            println!("Collected import items: {items:?}");
+            resolve!(import_stream.items(items))?; // TODO: Do it in parts
+
+            resolve!(import_stream.done())?;
+            Ok(())
+        })
+        .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

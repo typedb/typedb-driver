@@ -25,13 +25,14 @@ use tokio::{
         oneshot::channel as oneshot_async,
     },
 };
-use typedb_protocol::{transaction, transaction::server::Server};
+use tonic::Status;
+use typedb_protocol::{database, database_manager, migration, transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
     common::{address::Address, error::ConnectionError, RequestID, Result},
     connection::{
-        message::{Request, Response, TransactionResponse},
+        message::{DatabaseExportResponse, Request, Response, TransactionResponse},
         network::{
             channel::{open_callcred_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
@@ -39,6 +40,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
+    database::migration::DatabaseExportAnswer,
     Credentials, DriverOptions, Error,
 };
 
@@ -116,17 +118,21 @@ impl RPCTransmitter {
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
 
+            Request::DatabasesAll => {
+                rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
+            Request::DatabaseGet { .. } => {
+                rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
             Request::DatabasesContains { .. } => {
                 rpc.databases_contains(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseCreate { .. } => {
                 rpc.databases_create(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
-            Request::DatabaseGet { .. } => {
-                rpc.databases_get(request.try_into_proto()?).await.and_then(Response::try_from_proto)
-            }
-            Request::DatabasesAll => {
-                rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            Request::DatabaseImport(import_request) => {
+                let (request_sink, _res) = rpc.databases_import(import_request.into_proto()).await?;
+                Ok(Response::DatabaseImport { request_sink })
             }
 
             Request::DatabaseDelete { .. } => {
@@ -137,6 +143,10 @@ impl RPCTransmitter {
             }
             Request::DatabaseTypeSchema { .. } => {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
+            }
+            Request::DatabaseExport { .. } => {
+                let mut response_source = rpc.database_export(request.try_into_proto()?).await?;
+                Ok(Response::DatabaseExportStream { response_source })
             }
 
             Request::Transaction(transaction_request) => {

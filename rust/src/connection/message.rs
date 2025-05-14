@@ -21,7 +21,7 @@ use std::time::Duration;
 
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
-use typedb_protocol::transaction;
+use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
 
 use crate::{
@@ -47,10 +47,12 @@ pub(super) enum Request {
     DatabaseGet { database_name: String },
     DatabasesContains { database_name: String },
     DatabaseCreate { database_name: String },
+    DatabaseImport(DatabaseImportRequest),
 
     DatabaseDelete { database_name: String },
     DatabaseSchema { database_name: String },
     DatabaseTypeSchema { database_name: String },
+    DatabaseExport { database_name: String },
 
     Transaction(TransactionRequest),
 
@@ -80,6 +82,9 @@ pub(super) enum Response {
     DatabaseCreate {
         database: DatabaseInfo,
     },
+    DatabaseImport {
+        request_sink: UnboundedSender<database_manager::import::Client>,
+    },
     DatabaseGet {
         database: DatabaseInfo,
     },
@@ -94,9 +99,13 @@ pub(super) enum Response {
     DatabaseTypeSchema {
         schema: String,
     },
-    DatabaseRuleSchema {
-        schema: String,
+    DatabaseExportStream {
+        response_source: Streaming<database::export::Server>,
     },
+    DatabaseExportAnswer {
+        response_source: Streaming<database::export::Server>,
+    },
+
     TransactionStream {
         open_request_id: RequestID,
         request_sink: UnboundedSender<transaction::Client>,
@@ -116,6 +125,21 @@ pub(super) enum Response {
     UsersGet {
         user: Option<UserInfo>,
     },
+}
+
+#[derive(Debug)]
+pub(super) enum DatabaseImportRequest {
+    Initial { name: String, schema: String },
+    ItemPart { items: Vec<Item> },
+    Done,
+}
+
+#[derive(Debug)]
+pub(super) enum DatabaseExportResponse {
+    Schema(String),
+    Items(Vec<Item>),
+    Done,
+    Error(ServerError),
 }
 
 #[derive(Debug)]
@@ -149,17 +173,4 @@ pub(super) enum QueryResponse {
     StreamConceptRows(Vec<Vec<Option<Concept>>>),
     StreamConceptDocuments(Vec<Option<Node>>),
     Error(ServerError),
-    // Define,
-    // Undefine,
-    // Delete,
-    //
-    // Get { answers: Vec<ConceptMap> },
-    // Insert { answers: Vec<ConceptMap> },
-    // Update { answers: Vec<ConceptMap> },
-    //
-    // GetAggregate { answer: Option<Value> },
-    //
-    // GetGroup { answers: Vec<ConceptMapGroup> },
-    //
-    // Fetch { answers: Vec<readable_concept::Tree> },
 }

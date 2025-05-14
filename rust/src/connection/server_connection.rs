@@ -18,7 +18,7 @@
  */
 
 use std::{
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fmt,
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -33,8 +33,11 @@ use uuid::Uuid;
 use crate::{
     common::{address::Address, RequestID},
     connection::{
-        message::{Request, Response, TransactionRequest, TransactionResponse},
-        network::transmitter::{RPCTransmitter, TransactionTransmitter},
+        database::{export_stream::DatabaseExportStream, import_stream::DatabaseImportStream},
+        message::{DatabaseImportRequest, Request, Response, TransactionRequest, TransactionResponse},
+        network::transmitter::{
+            DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
+        },
         runtime::BackgroundRuntime,
         TransactionStream,
     },
@@ -49,7 +52,7 @@ pub(crate) struct ServerConnection {
     username: String,
     connection_id: Uuid,
     request_transmitter: Arc<RPCTransmitter>,
-    transaction_shutdown_senders: Arc<Mutex<HashMap<RequestID, UnboundedSender<()>>>>,
+    shutdown_senders: Arc<Mutex<Vec<UnboundedSender<()>>>>,
     latency_tracker: LatencyTracker,
 }
 
@@ -74,7 +77,7 @@ impl ServerConnection {
             username,
             connection_id,
             request_transmitter,
-            transaction_shutdown_senders: Default::default(),
+            shutdown_senders: Default::default(),
             latency_tracker,
         };
         Ok((server_connection, database_info))
@@ -124,7 +127,7 @@ impl ServerConnection {
     }
 
     pub(crate) fn force_close(&self) -> crate::Result {
-        for (id, sender) in self.transaction_shutdown_senders.lock().unwrap().drain() {
+        for sender in self.shutdown_senders.lock().unwrap().drain(..) {
             let _ = sender.send(());
         }
         self.request_transmitter.force_close()
@@ -170,6 +173,29 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn import_database(
+        &self,
+        database_name: String,
+        schema: String,
+    ) -> crate::Result<DatabaseImportStream> {
+        match self
+            .request(Request::DatabaseImport(DatabaseImportRequest::Initial { name: database_name, schema }))
+            .await?
+        {
+            Response::DatabaseImport { request_sink } => {
+                let transmitter = DatabaseImportTransmitter::new(self.background_runtime.clone(), request_sink);
+                let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
+                let import_stream = DatabaseImportStream::new(transmitter);
+
+                // TODO: Is it needed?
+                self.shutdown_senders.lock().unwrap().push(transmitter_shutdown_sink);
+                Ok(import_stream)
+            }
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn delete_database(&self, database_name: String) -> crate::Result {
         self.request(Request::DatabaseDelete { database_name }).await?;
         Ok(())
@@ -187,6 +213,20 @@ impl ServerConnection {
     pub(crate) async fn database_type_schema(&self, database_name: String) -> crate::Result<String> {
         match self.request(Request::DatabaseTypeSchema { database_name }).await? {
             Response::DatabaseTypeSchema { schema } => Ok(schema),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn database_export(&self, database_name: String) -> crate::Result<DatabaseExportStream> {
+        match self.request(Request::DatabaseExport { database_name }).await? {
+            Response::DatabaseExportStream { response_source } => {
+                let transmitter = DatabaseExportTransmitter::new(self.background_runtime.clone(), response_source);
+                let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
+                let export_stream = DatabaseExportStream::new(transmitter);
+                self.shutdown_senders.lock().unwrap().push(transmitter_shutdown_sink);
+                Ok(export_stream)
+            }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
@@ -224,7 +264,7 @@ impl ServerConnection {
                     TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
-                self.transaction_shutdown_senders.lock().unwrap().insert(request_id, transmitter_shutdown_sink);
+                self.shutdown_senders.lock().unwrap().push(transmitter_shutdown_sink);
                 Ok(transaction_stream)
             }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),

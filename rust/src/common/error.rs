@@ -176,6 +176,12 @@ error_messages! { ConnectionError
         28: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
     UnexpectedConnectionClose =
         29: "Connection closed unexpectedly.",
+    DatabaseImportChannelIsClosed =
+        30: "The database import channel is closed and no further operation is allowed.",
+    DatabaseExportChannelIsClosed =
+        31: "The database export channel is closed and no further operation is allowed.",
+    DatabaseExportStreamNoResponse =
+        32: "Didn't receive any server responses for the database export command.",
 }
 
 error_messages! { ConceptError
@@ -184,6 +190,14 @@ error_messages! { ConceptError
         1: "Cannot get concept from a concept row by variable '{variable}'.",
     UnavailableRowIndex { index: usize } =
         2: "Cannot get concept from a concept row by index '{index}'.",
+}
+
+error_messages! { MigrationError
+    code: "MGT", type: "Migration Error",
+    CannotOpenImportFile { path: String, reason: String } =
+        1: "Cannot open import file '{path}': {reason}",
+    CannotCreateExportFile { path: String, reason: String } =
+        2: "Cannot create export file '{path}': {reason}",
     CannotDecodeImportedConcept =
         3: "Cannot decode a concept from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
     CannotEncodeExportedConcept =
@@ -253,6 +267,7 @@ impl fmt::Debug for ServerError {
 pub enum Error {
     Connection(ConnectionError),
     Concept(ConceptError),
+    Migration(MigrationError),
     Internal(InternalError),
     Server(ServerError),
     Other(String),
@@ -263,6 +278,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.format_code(),
             Self::Concept(error) => error.format_code(),
+            Self::Migration(error) => error.format_code(),
             Self::Internal(error) => error.format_code(),
             Self::Server(error) => error.format_code().to_owned(),
             Self::Other(_error) => String::new(),
@@ -273,6 +289,7 @@ impl Error {
         match self {
             Self::Connection(error) => error.message(),
             Self::Concept(error) => error.message(),
+            Self::Migration(error) => error.message(),
             Self::Internal(error) => error.message(),
             Self::Server(error) => error.message(),
             Self::Other(error) => error.clone(),
@@ -314,6 +331,7 @@ impl fmt::Display for Error {
         match self {
             Self::Connection(error) => write!(f, "{error}"),
             Self::Concept(error) => write!(f, "{error}"),
+            Self::Migration(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
             Self::Server(error) => write!(f, "{error}"),
             Self::Other(message) => write!(f, "{message}"),
@@ -326,6 +344,7 @@ impl StdError for Error {
         match self {
             Self::Connection(error) => Some(error),
             Self::Concept(error) => Some(error),
+            Self::Migration(error) => Some(error),
             Self::Internal(error) => Some(error),
             Self::Server(_) => None,
             Self::Other(_) => None,

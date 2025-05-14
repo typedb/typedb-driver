@@ -27,9 +27,19 @@ use prost::{
     bytes::{Buf, Bytes},
     Message,
 };
-use typedb_protocol::migration;
+use typedb_protocol::{migration, migration::Item};
 
-use crate::{error::ConceptError, Error, Result};
+use crate::{
+    error::{ConceptError, MigrationError, ServerError},
+    Error, Result,
+};
+
+#[derive(Debug)]
+pub(crate) enum DatabaseExportAnswer {
+    Schema(String),
+    Items(Vec<Item>),
+    Done,
+}
 
 pub(crate) fn read_and_print_import_file(path: impl AsRef<Path>) -> Result {
     let items = read_and_print_import_file_inner(path.as_ref())?;
@@ -49,7 +59,7 @@ pub(crate) fn read_and_print_import_file(path: impl AsRef<Path>) -> Result {
 }
 
 pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result<Vec<migration::Item>> {
-    let file = File::open(path)?;
+    let file = try_opening_import_file(path)?;
     let mut reader = BufReader::new(file);
     let mut buffer = Vec::new();
     reader.read_to_end(&mut buffer)?;
@@ -59,7 +69,7 @@ pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result
     let mut cursor = std::io::Cursor::new(buffer);
     while cursor.has_remaining() {
         let item = migration::Item::decode_length_delimited(&mut cursor)
-            .map_err(|_| Error::Concept(ConceptError::CannotDecodeImportedConcept))?;
+            .map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept))?;
         println!("{:#?}", item);
         items.push(item);
     }
@@ -68,23 +78,36 @@ pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result
 }
 
 pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[migration::Item]) -> Result {
-    let file = OpenOptions::new().write(true).create_new(true).open(path.as_ref()).map_err(|_| {
-        Error::Other(format!(
-            "Cannot create export file '{}' as it already exists",
-            path.as_ref().to_str().unwrap_or("")
-        ))
-    })?;
+    let file = try_creating_export_file(path)?;
     let mut writer = BufWriter::new(file);
 
     for item in items {
         let mut buf = Vec::new();
         item.encode_length_delimited(&mut buf)
-            .map_err(|_| Error::Concept(ConceptError::CannotEncodeExportedConcept))?;
+            .map_err(|_| Error::Migration(MigrationError::CannotEncodeExportedConcept))?;
         writer.write_all(&buf)?;
     }
 
     writer.flush()?;
     Ok(())
+}
+
+pub(crate) fn try_creating_export_file(path: impl AsRef<Path>) -> Result<File> {
+    OpenOptions::new().write(true).create_new(true).open(path.as_ref()).map_err(|source| {
+        Error::Migration(MigrationError::CannotCreateExportFile {
+            path: path.as_ref().to_str().unwrap_or("").to_string(),
+            reason: source.to_string(),
+        })
+    })
+}
+
+pub(crate) fn try_opening_import_file(path: impl AsRef<Path>) -> Result<File> {
+    File::open(path.as_ref()).map_err(|source| {
+        Error::Migration(MigrationError::CannotOpenImportFile {
+            path: path.as_ref().to_str().unwrap_or("").to_string(),
+            reason: source.to_string(),
+        })
+    })
 }
 
 fn temp_path_from(path: impl AsRef<Path>) -> Result<PathBuf> {
