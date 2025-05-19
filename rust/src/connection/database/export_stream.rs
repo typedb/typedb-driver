@@ -47,16 +47,14 @@ impl DatabaseExportStream {
             #[cfg(not(feature = "sync"))]
             let response: Option<Result<DatabaseExportResponse>> = stream.next().await;
 
-            let response = match response {
-                None => return Err(ConnectionError::QueryStreamNoResponse.into()),
-                Some(Err(err)) => return Err(err),
-                Some(Ok(response)) => response,
-            };
             match response {
-                DatabaseExportResponse::Schema(schema) => Ok(DatabaseExportAnswer::Schema(schema)),
-                DatabaseExportResponse::Items(items) => Ok(DatabaseExportAnswer::Items(items)),
-                DatabaseExportResponse::Done => Ok(DatabaseExportAnswer::Done),
-                DatabaseExportResponse::Error(error) => Err(Error::Server(error)),
+                None => return Err(ConnectionError::DatabaseExportStreamNoResponse.into()),
+                Some(Err(err)) => return Err(err),
+                Some(Ok(response)) => match response {
+                    DatabaseExportResponse::Schema(schema) => Ok(DatabaseExportAnswer::Schema(schema)),
+                    DatabaseExportResponse::Items(items) => Ok(DatabaseExportAnswer::Items(items)),
+                    DatabaseExportResponse::Done => Ok(DatabaseExportAnswer::Done),
+                }
             }
         }
     }

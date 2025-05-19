@@ -131,8 +131,8 @@ impl RPCTransmitter {
                 rpc.databases_create(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
             Request::DatabaseImport(import_request) => {
-                let (request_sink, _res) = rpc.databases_import(import_request.into_proto()).await?;
-                Ok(Response::DatabaseImport { request_sink })
+                let (request_sink, response_source) = rpc.databases_import(import_request.into_proto()).await?;
+                Ok(Response::DatabaseImport { request_sink, response_source })
             }
 
             Request::DatabaseDelete { .. } => {

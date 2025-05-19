@@ -22,6 +22,7 @@ use std::future::Future;
 use std::{
     collections::HashMap,
     fmt,
+    fs::File,
     io::{BufWriter, Write},
     path::Path,
     sync::{
@@ -36,14 +37,21 @@ use itertools::Itertools;
 use log::{debug, error};
 use prost::Message;
 
-use crate::{common::{
-    address::Address,
-    error::ConnectionError,
-    info::{DatabaseInfo, ReplicaInfo},
-    Error, Result,
-}, connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection}, database::migration::{
-    read_and_print_import_file, try_creating_export_file, write_export_file, DatabaseExportAnswer,
-}, driver::TypeDBDriver, error::{InternalError, MigrationError}, resolve, Transaction, TransactionOptions, TransactionType};
+use crate::{
+    common::{
+        address::Address,
+        error::ConnectionError,
+        info::{DatabaseInfo, ReplicaInfo},
+        Error, Result,
+    },
+    connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
+    database::migration::{
+        read_and_print_import_file, try_creating_export_file, write_export_file, DatabaseExportAnswer,
+    },
+    driver::TypeDBDriver,
+    error::{InternalError, MigrationError},
+    resolve, Transaction, TransactionOptions, TransactionType,
+};
 
 /// A TypeDB database
 pub struct Database {
@@ -173,10 +181,20 @@ impl Database {
     pub async fn export(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
-        self.run_failsafe(|database| async move {
-            database.export(schema_file_path, data_file_path).await
-        })
-        .await
+
+        let result = self
+            .run_failsafe(|database| async move {
+                let schema_file = try_creating_export_file(schema_file_path)?;
+                let data_file = try_creating_export_file(data_file_path)?;
+                database.export(schema_file, data_file).await
+            })
+            .await;
+
+        if result.is_err() {
+            let _ = std::fs::remove_file(schema_file_path);
+            let _ = std::fs::remove_file(data_file_path);
+        }
+        result
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -419,9 +437,7 @@ impl ServerDatabase {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn export(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
-        let mut schema_file = try_creating_export_file(schema_file_path)?;
-        let data_file = try_creating_export_file(data_file_path)?;
+    async fn export(&self, mut schema_file: File, data_file: File) -> Result {
         let mut export_stream = self.connection.database_export(self.name.clone()).await?;
         let mut data_writer = BufWriter::new(data_file);
 

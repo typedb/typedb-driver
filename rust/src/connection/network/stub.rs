@@ -119,11 +119,10 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     pub(super) async fn databases_import(
         &mut self,
-        req: migration::import::Req,
-    ) -> Result<(UnboundedSender<database_manager::import::Client>, database_manager::import::Res)> {
+        client: migration::import::Client,
+    ) -> Result<(UnboundedSender<database_manager::import::Client>, Streaming<database_manager::import::Server>)> {
         self.call_with_auto_renew_token(|this| {
-            let import_req =
-                database_manager::import::Client { client: Some(migration::import::Client { req: Some(req.clone()) }) };
+            let import_req = database_manager::import::Client { client: Some(client.clone()) };
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
                 sender.send(import_req)?;

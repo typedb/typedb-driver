@@ -19,11 +19,8 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration,
-    migration::export::{initial_res, res_part::stream_signal_res_part::State, server::Server},
-    query::initial_res::Res,
-    server_manager, transaction, user, user_manager,
-    Version::Version,
+    authentication, connection, database, database_manager, migration, query::initial_res::Res, server_manager,
+    transaction, user, user_manager, Version::Version,
 };
 use uuid::Uuid;
 
@@ -102,26 +99,28 @@ impl TryIntoProto<database_manager::create::Req> for Request {
 impl TryIntoProto<database_manager::import::Client> for Request {
     fn try_into_proto(self) -> Result<database_manager::import::Client> {
         match self {
-            Self::DatabaseImport(import_request) => Ok(database_manager::import::Client {
-                client: Some(migration::import::Client { req: Some(import_request.into_proto()) }),
-            }),
+            Self::DatabaseImport(import_request) => {
+                Ok(database_manager::import::Client { client: Some(import_request.into_proto()) })
+            }
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
 
-impl IntoProto<migration::import::Req> for DatabaseImportRequest {
-    fn into_proto(self) -> migration::import::Req {
+impl IntoProto<migration::import::Client> for DatabaseImportRequest {
+    fn into_proto(self) -> migration::import::Client {
         let req = match self {
             DatabaseImportRequest::Initial { name, schema } => {
-                migration::import::req::Req::InitialReq(migration::import::req::InitialReq { name, schema })
+                migration::import::client::Client::InitialReq(migration::import::client::InitialReq { name, schema })
             }
             DatabaseImportRequest::ItemPart { items } => {
-                migration::import::req::Req::ItemReqPart(migration::import::req::ItemReqPart { items })
+                migration::import::client::Client::ReqPart(migration::import::client::ReqPart { items })
             }
-            DatabaseImportRequest::Done {} => migration::import::req::Req::DoneReq(migration::import::req::DoneReq {}),
+            DatabaseImportRequest::Done {} => {
+                migration::import::client::Client::Done(migration::import::client::Done {})
+            }
         };
-        migration::import::Req { req: Some(req) }
+        migration::import::Client { client: Some(req) }
     }
 }
 
@@ -356,10 +355,12 @@ impl FromProto<database::type_schema::Res> for Response {
 
 impl TryFromProto<database::export::Server> for DatabaseExportResponse {
     fn try_from_proto(proto: database::export::Server) -> Result<Self> {
+        use migration::export::{server::Server, Done, InitialRes, ResPart};
         match proto.server {
             Some(server) => match server.server {
-                Some(Server::InitialRes(initial_res)) => Self::try_from_proto(initial_res),
-                Some(Server::ResPart(res_part)) => Self::try_from_proto(res_part),
+                Some(Server::InitialRes(InitialRes { schema })) => Ok(Self::Schema(schema)),
+                Some(Server::ResPart(ResPart { items })) => Ok(Self::Items(items)),
+                Some(Server::Done(Done {})) => Ok(Self::Done),
                 None => Err(ConnectionError::MissingResponseField { field: "server" }.into()),
             },
             None => Err(ConnectionError::MissingResponseField { field: "server" }.into()),
@@ -367,45 +368,9 @@ impl TryFromProto<database::export::Server> for DatabaseExportResponse {
     }
 }
 
-impl TryFromProto<migration::export::InitialRes> for DatabaseExportResponse {
-    fn try_from_proto(proto: migration::export::InitialRes) -> Result<Self> {
-        match proto.res {
-            Some(initial_res::Res::Ok(initial_res::Ok { schema })) => Ok(Self::Schema(schema)),
-            Some(initial_res::Res::Error(error)) => Ok(Self::Error(ServerError::from_proto(error))),
-            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
-        }
-    }
-}
-
-impl TryFromProto<migration::export::ResPart> for DatabaseExportResponse {
-    fn try_from_proto(proto: migration::export::ResPart) -> Result<Self> {
-        match proto.res_part {
-            Some(migration::export::res_part::ResPart::ItemRes(
-                migration::export::res_part::MigrationItemResPart { items },
-            )) => Ok(Self::Items(items)),
-            Some(migration::export::res_part::ResPart::StreamRes(
-                migration::export::res_part::StreamSignalResPart { state },
-            )) => match state {
-                Some(state) => match state {
-                    State::Done(_) => Ok(Self::Done),
-                    State::Error(error) => Ok(Self::Error(ServerError::from_proto(error))),
-                },
-                None => Err(ConnectionError::MissingResponseField { field: "state" }.into()),
-            },
-            None => Err(ConnectionError::MissingResponseField { field: "res_part" }.into()),
-        }
-    }
-}
-
 impl FromProto<typedb_protocol::Error> for ServerError {
     fn from_proto(proto: typedb_protocol::Error) -> Self {
         ServerError::new(proto.error_code, proto.domain, String::new(), proto.stack_trace)
-    }
-}
-
-impl FromProto<typedb_protocol::Error> for DatabaseExportResponse {
-    fn from_proto(proto: typedb_protocol::Error) -> Self {
-        DatabaseExportResponse::Error(ServerError::from_proto(proto))
     }
 }
 

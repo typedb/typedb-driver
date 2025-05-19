@@ -29,6 +29,7 @@ use crate::{
         message::{DatabaseImportRequest, TransactionResponse},
         network::transmitter::DatabaseImportTransmitter,
     },
+    database::migration::DatabaseExportAnswer,
     promisify, resolve,
 };
 
@@ -41,21 +42,13 @@ impl DatabaseImportStream {
         Self { import_transmitter }
     }
 
-    pub(crate) fn items(&self, items: Vec<migration::Item>) -> impl Promise<'static, Result> {
-        let promise = self.single(DatabaseImportRequest::ItemPart { items });
-        promisify! { resolve!(promise) }
+    pub(crate) fn items(&mut self, items: Vec<migration::Item>) -> Result {
+        self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 
-    pub(crate) fn done(self) -> impl Promise<'static, Result> {
-        let promise = self.single(DatabaseImportRequest::Done);
-        promisify! {
-            let _this = self; // move into the promise so the stream isn't dropped until the promise is resolved
-            resolve!(promise)
-        }
-    }
-
-    fn single(&self, req: DatabaseImportRequest) -> impl Promise<'static, Result> {
-        self.import_transmitter.single(req)
+    pub(crate) fn done(mut self) -> Result {
+        self.import_transmitter.single(DatabaseImportRequest::Done)?;
+        self.import_transmitter.wait_until_done()
     }
 }
 
