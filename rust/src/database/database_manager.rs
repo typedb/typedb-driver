@@ -30,9 +30,16 @@ use prost::{bytes::Buf, Message};
 use typedb_protocol::migration::Item;
 
 use super::Database;
-use crate::{common::{address::Address, error::ConnectionError, Result}, connection::server_connection::ServerConnection, database::migration::{
-    read_and_print_import_file, try_creating_export_file, try_opening_import_file, DatabaseExportAnswer,
-}, error::MigrationError, info::DatabaseInfo, resolve, Error};
+use crate::{
+    common::{address::Address, error::ConnectionError, Result},
+    connection::server_connection::ServerConnection,
+    database::migration::{
+        read_and_print_import_file, try_creating_export_file, try_opening_import_file, DatabaseExportAnswer,
+    },
+    error::MigrationError,
+    info::DatabaseInfo,
+    resolve, Error,
+};
 
 /// Provides access to all database management methods.
 #[derive(Debug)]
@@ -184,7 +191,7 @@ impl DatabaseManager {
             data_reader.read_to_end(&mut data_buffer)?; // TODO: Read only a part
 
             // TODO: Don't clone schema......
-            let import_stream = server_connection.import_database(name, schema.to_string()).await?;
+            let mut import_stream = server_connection.import_database(name, schema.to_string()).await?;
             let mut items = Vec::new();
 
             let mut cursor = Cursor::new(data_buffer);
@@ -194,9 +201,9 @@ impl DatabaseManager {
                 items.push(item);
             }
             println!("Collected import items: {items:?}");
-            resolve!(import_stream.items(items))?; // TODO: Do it in parts
+            import_stream.items(items)?; // TODO: Do it in parts
 
-            resolve!(import_stream.done())?;
+            import_stream.done()?;
             Ok(())
         })
         .await

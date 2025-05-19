@@ -30,7 +30,6 @@ use crate::{
         Result,
     },
     connection::{message::DatabaseExportResponse, network::proto::TryFromProto, runtime::BackgroundRuntime},
-    Error,
 };
 
 pub(in crate::connection) struct DatabaseExportTransmitter {
@@ -65,7 +64,7 @@ impl DatabaseExportTransmitter {
         response_sender: UnboundedSender<Result<DatabaseExportResponse>>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
-        tokio::task::spawn_blocking({ move || Self::listen_loop(response_source, response_sender, shutdown_signal) });
+        tokio::spawn(Self::listen_loop(response_source, response_sender, shutdown_signal));
     }
 
     async fn listen_loop(
@@ -74,21 +73,18 @@ impl DatabaseExportTransmitter {
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
         loop {
-            println!("Listen loop export");
             if let Ok(_) = shutdown_signal.try_recv() {
                 break;
             }
             match grpc_source.next().await {
-                Some(Ok(message)) => {
-                    response_sender.send(DatabaseExportResponse::try_from_proto(message)).unwrap()
-                    // TODO: cover
-                    // TODO: Close if error?
-                }
+                Some(Ok(message)) => response_sender
+                    .send(DatabaseExportResponse::try_from_proto(message))
+                    .expect("Expected export channel to be open. It is a bug."),
                 Some(Err(status)) => {
                     response_sender.send(Err(status.into())).unwrap();
                     break;
                 }
-                None => todo!("Unexpected NONE, cover? Replace to just close or panic?"), // TODO
+                None => break,
             }
         }
     }

@@ -84,6 +84,7 @@ pub(super) enum Response {
     },
     DatabaseImport {
         request_sink: UnboundedSender<database_manager::import::Client>,
+        response_source: Streaming<database_manager::import::Server>,
     },
     DatabaseGet {
         database: DatabaseInfo,
@@ -139,7 +140,6 @@ pub(super) enum DatabaseExportResponse {
     Schema(String),
     Items(Vec<Item>),
     Done,
-    Error(ServerError),
 }
 
 #[derive(Debug)]

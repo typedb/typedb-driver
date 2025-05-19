@@ -182,8 +182,9 @@ impl ServerConnection {
             .request(Request::DatabaseImport(DatabaseImportRequest::Initial { name: database_name, schema }))
             .await?
         {
-            Response::DatabaseImport { request_sink } => {
-                let transmitter = DatabaseImportTransmitter::new(self.background_runtime.clone(), request_sink);
+            Response::DatabaseImport { request_sink, response_source } => {
+                let transmitter =
+                    DatabaseImportTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let import_stream = DatabaseImportStream::new(transmitter);
 
