@@ -35,7 +35,7 @@ use crate::{
     connection::server_connection::ServerConnection,
     database::migration::{try_opening_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
-    Error,
+    resolve, Error,
 };
 
 /// Provides access to all database management methods.
@@ -194,9 +194,9 @@ impl DatabaseManager {
 
             let file = try_opening_import_file(data_file_path)?;
             let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
-            let mut item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
+            let mut read_item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
 
-            while let Some(item) = item_iterator.next() {
+            while let Some(item) = read_item_iterator.next() {
                 let item = item?;
                 item_buffer.push(item);
                 if item_buffer.len() >= ITEM_BATCH_SIZE {
@@ -208,7 +208,7 @@ impl DatabaseManager {
                 import_stream.items(item_buffer)?;
             }
 
-            import_stream.done()
+            resolve! { import_stream.done() }
         })
         .await
     }

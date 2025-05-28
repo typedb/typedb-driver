@@ -178,10 +178,12 @@ error_messages! { ConnectionError
         29: "Connection closed unexpectedly.",
     DatabaseImportChannelIsClosed =
         30: "The database import channel is closed and no further operation is allowed.",
+    DatabaseImportStreamUnexpectedResponse =
+        31: "The database import stream received an unexpected response in the process. It is either a version compatibility issue or a bug.",
     DatabaseExportChannelIsClosed =
-        31: "The database export channel is closed and no further operation is allowed.",
+        32: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
-        32: "Didn't receive any server responses for the database export command.",
+        33: "Didn't receive any server responses for the database export command.",
 }
 
 error_messages! { ConceptError
