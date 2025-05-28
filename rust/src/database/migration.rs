@@ -114,21 +114,6 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
     }
 }
 
-pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[MigrationItemProto]) -> Result {
-    let file = try_creating_export_file(path)?;
-    let mut writer = BufWriter::new(file);
-
-    for item in items {
-        let mut buf = Vec::new();
-        item.encode_length_delimited(&mut buf)
-            .map_err(|_| Error::Migration(MigrationError::CannotEncodeExportedConcept))?;
-        writer.write_all(&buf)?;
-    }
-
-    writer.flush()?;
-    Ok(())
-}
-
 pub(crate) fn try_creating_export_file(path: impl AsRef<Path>) -> Result<File> {
     OpenOptions::new().write(true).create_new(true).open(path.as_ref()).map_err(|source| {
         Error::Migration(MigrationError::CannotCreateExportFile {

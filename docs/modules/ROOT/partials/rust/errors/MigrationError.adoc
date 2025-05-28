@@ -10,7 +10,7 @@
 |Variant
 a| `CannotCreateExportFile`
 a| `CannotDecodeImportedConcept`
-a| `CannotDecodeImportedConceptLenh`
+a| `CannotDecodeImportedConceptLength`
 a| `CannotEncodeExportedConcept`
 a| `CannotOpenImportFile`
 |===

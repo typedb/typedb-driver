@@ -78,7 +78,7 @@ impl DatabaseImportTransmitter {
     }
 
     pub(in crate::connection) fn single(&mut self, req: DatabaseImportRequest) -> Result {
-        self.check_interrupt_result()?;
+        self.check_early_result()?;
         let send_result = self.request_sink.send(req);
         send_result.map_err(|_| ConnectionError::DatabaseImportChannelIsClosed.into())
     }
@@ -102,7 +102,7 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    fn check_interrupt_result(&mut self) -> Result {
+    fn check_early_result(&mut self) -> Result {
         match self.result_source.try_recv() {
             Ok(result) => match result {
                 Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
@@ -114,7 +114,7 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    fn check_interrupt_result(&mut self) -> Result {
+    fn check_early_result(&mut self) -> Result {
         match self.result_source.try_recv() {
             Ok(result) => match result {
                 Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
@@ -148,7 +148,6 @@ impl DatabaseImportTransmitter {
             if let Ok(_) = shutdown_signal.try_recv() {
                 break;
             }
-
             sleep(DISPATCH_INTERVAL);
             if let Ok(request) = request_source.try_recv() {
                 let client_req = database_manager::import::Client { client: Some(request.into_proto()) };

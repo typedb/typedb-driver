@@ -81,7 +81,7 @@ impl DatabaseExportTransmitter {
                     .send(DatabaseExportResponse::try_from_proto(message))
                     .expect("Expected export channel to be open. It is a bug."),
                 Some(Err(status)) => {
-                    response_sender.send(Err(status.into())).unwrap();
+                    response_sender.send(Err(status.into())).expect("Expected export channel to be open. It is a bug.");
                     break;
                 }
                 None => break,
