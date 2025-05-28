@@ -18,66 +18,108 @@
  */
 
 use std::{
+    cmp::max,
+    collections::VecDeque,
     fs::{File, OpenOptions},
-    io::{BufReader, BufWriter, Read, Write},
-    path::{Path, PathBuf},
+    io::{BufRead, BufWriter, Read, Write},
+    marker::PhantomData,
+    path::{Path},
 };
 
 use prost::{
-    bytes::{Buf, Bytes},
     Message,
 };
-use typedb_protocol::{migration, migration::Item};
+use typedb_protocol::migration::Item as MigrationItemProto;
 
 use crate::{
-    error::{ConceptError, MigrationError, ServerError},
+    error::{MigrationError},
     Error, Result,
 };
 
 #[derive(Debug)]
 pub(crate) enum DatabaseExportAnswer {
     Schema(String),
-    Items(Vec<Item>),
+    Items(Vec<MigrationItemProto>),
     Done,
 }
 
-pub(crate) fn read_and_print_import_file(path: impl AsRef<Path>) -> Result {
-    let items = read_and_print_import_file_inner(path.as_ref())?;
-
-    // Temporary: test reverse-import
-    let temp_path = temp_path_from(path)?;
-    write_export_file(&temp_path, &items)?;
-    let reimport_items = read_and_print_import_file_inner(&temp_path)?;
-
-    if items == reimport_items {
-        println!("All is good!");
-    } else {
-        println!("ITEMS AND REIMPORT ITEMS ARE DIFFERENT: '{items:?}' VS '{reimport_items:?}'");
-    }
-
-    Ok(())
+pub struct ProtoMessageIterator<M: Message + Default, R: BufRead> {
+    reader: R,
+    buffer: VecDeque<u8>,
+    _phantom_data: PhantomData<M>,
 }
 
-pub(crate) fn read_and_print_import_file_inner(path: impl AsRef<Path>) -> Result<Vec<migration::Item>> {
-    let file = try_opening_import_file(path)?;
-    let mut reader = BufReader::new(file);
-    let mut buffer = Vec::new();
-    reader.read_to_end(&mut buffer)?;
+impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
+    const BUF_CAPACITY: usize = 1024;
+    // prost's length delimiters take up to 10 bytes
+    const MAX_LENGTH_DELIMITER_LEN: usize = 10;
 
-    let mut items = Vec::new();
-
-    let mut cursor = std::io::Cursor::new(buffer);
-    while cursor.has_remaining() {
-        let item = migration::Item::decode_length_delimited(&mut cursor)
-            .map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept))?;
-        println!("{:#?}", item);
-        items.push(item);
+    pub fn new(reader: R) -> Self {
+        Self { reader, buffer: VecDeque::with_capacity(Self::BUF_CAPACITY), _phantom_data: PhantomData }
     }
 
-    Ok(items)
+    fn try_read_more(&mut self, bytes_to_read: usize) -> std::io::Result<usize> {
+        let mut addition = vec![0; bytes_to_read];
+        let bytes_read = self.reader.read(&mut addition)?;
+        self.buffer.extend(&addition[..bytes_read]);
+        Ok(bytes_read)
+    }
+
+    fn try_get_next_message_len(&mut self) -> Result<Option<usize>> {
+        loop {
+            if let Ok(len) = prost::decode_length_delimiter(&mut self.buffer) {
+                return Ok(Some(len));
+            } else {
+                if self.buffer.len() < Self::MAX_LENGTH_DELIMITER_LEN {
+                    assert!(Self::MAX_LENGTH_DELIMITER_LEN < Self::BUF_CAPACITY);
+                    let to_read = max(Self::MAX_LENGTH_DELIMITER_LEN, Self::BUF_CAPACITY - self.buffer.len());
+                    match self.try_read_more(to_read) {
+                        Ok(bytes_read) if bytes_read == 0 => {
+                            return if self.buffer.is_empty() {
+                                Ok(None)
+                            } else {
+                                Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength))
+                            };
+                        }
+                        Err(_) => return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength)),
+                        Ok(_) => continue,
+                    }
+                } else {
+                    return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength));
+                }
+            }
+        }
+    }
+
+    fn get_message_buf(&mut self, len: usize) -> VecDeque<u8> {
+        let message_buf = self.buffer.split_off(len);
+        std::mem::replace(&mut self.buffer, message_buf)
+    }
 }
 
-pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[migration::Item]) -> Result {
+impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
+    type Item = Result<M>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let message_len = match self.try_get_next_message_len() {
+            Ok(Some(len)) => len,
+            Ok(None) => return None,
+            Err(err) => return Some(Err(err)),
+        };
+
+        if self.buffer.len() < message_len {
+            let to_read = max(message_len - self.buffer.len(), Self::BUF_CAPACITY);
+            if let Err(_) = self.try_read_more(to_read) {
+                return Some(Err(Error::Migration(MigrationError::CannotDecodeImportedConcept)));
+            }
+        }
+
+        let mut message_buf = self.get_message_buf(message_len);
+        Some(M::decode(&mut message_buf).map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept)))
+    }
+}
+
+pub(crate) fn write_export_file(path: impl AsRef<Path>, items: &[MigrationItemProto]) -> Result {
     let file = try_creating_export_file(path)?;
     let mut writer = BufWriter::new(file);
 
@@ -108,25 +150,4 @@ pub(crate) fn try_opening_import_file(path: impl AsRef<Path>) -> Result<File> {
             reason: source.to_string(),
         })
     })
-}
-
-fn temp_path_from(path: impl AsRef<Path>) -> Result<PathBuf> {
-    let path = path.as_ref();
-
-    let mut temp_path = match path.file_name() {
-        Some(name) => {
-            let mut name_os = name.to_os_string();
-            name_os.push(".temp");
-            path.with_file_name(name_os)
-        }
-        None => {
-            // Fallback: if there's no file name (e.g. just a directory), append ".temp"
-            let mut path_buf = path.to_path_buf();
-            path_buf.set_extension("temp");
-            path_buf
-        }
-    };
-
-    std::fs::remove_file(&temp_path)?;
-    Ok(temp_path)
 }
