@@ -211,7 +211,7 @@ impl DatabaseManager {
                 import_stream.items(item_buffer)?;
             }
 
-            resolve! { import_stream.done() }
+            resolve!(import_stream.done())
         })
         .await
     }

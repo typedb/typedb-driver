@@ -45,7 +45,7 @@ use crate::{
         Error, Result,
     },
     connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
-    database::migration::{try_creating_export_file, write_export_file, DatabaseExportAnswer},
+    database::migration::{try_creating_export_file, DatabaseExportAnswer},
     driver::TypeDBDriver,
     error::{InternalError, MigrationError},
     resolve, Transaction, TransactionOptions, TransactionType,

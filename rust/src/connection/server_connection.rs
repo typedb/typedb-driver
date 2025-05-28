@@ -188,7 +188,6 @@ impl ServerConnection {
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let import_stream = DatabaseImportStream::new(transmitter);
 
-                // TODO: Is it needed?
                 self.shutdown_senders.lock().unwrap().push(transmitter_shutdown_sink);
                 Ok(import_stream)
             }
