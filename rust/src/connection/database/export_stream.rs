@@ -20,14 +20,14 @@
 use std::fmt;
 
 #[cfg(not(feature = "sync"))]
-use futures::{stream, StreamExt};
+use futures::StreamExt;
 
 use crate::{
     common::{stream::Stream, Promise, Result},
     connection::{message::DatabaseExportResponse, network::transmitter::DatabaseExportTransmitter},
     database::migration::DatabaseExportAnswer,
     error::ConnectionError,
-    promisify, Error,
+    promisify,
 };
 
 pub(crate) struct DatabaseExportStream {
