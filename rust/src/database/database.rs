@@ -163,11 +163,12 @@ impl Database {
     }
 
     /// Export a database into a schema definition and a data files saved to the disk.
+    /// This is a blocking operation and may take a significant amount of time depending on the database size.
     ///
     /// # Arguments
     ///
-    /// * `schema_file_path` — The path to the .tql schema definition file to be created
-    /// * `data_file_path` — The path to the .typedb data file to be created
+    /// * `schema_file_path` — The path to the schema definition file to be created
+    /// * `data_file_path` — The path to the data file to be created
     ///
     /// # Examples
     ///

@@ -48,6 +48,7 @@ dir_mapping = {
     "ConceptError.adoc": "errors",
     "ConnectionError.adoc": "errors",
     "InternalError.adoc": "errors",
+    "MigrationError.adoc": "errors",
     "ServerError.adoc": "errors",
     "DurationParseError.adoc": "errors",
     "RelationType.adoc": "schema",
