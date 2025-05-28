@@ -25,11 +25,7 @@ use typedb_protocol::migration;
 
 use crate::{
     common::{stream::Stream, Promise, Result},
-    connection::{
-        message::{DatabaseImportRequest, TransactionResponse},
-        network::transmitter::DatabaseImportTransmitter,
-    },
-    database::migration::DatabaseExportAnswer,
+    connection::{message::DatabaseImportRequest, network::transmitter::DatabaseImportTransmitter},
     promisify, resolve,
 };
 
@@ -46,9 +42,12 @@ impl DatabaseImportStream {
         self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 
-    pub(crate) fn done(mut self) -> Result {
-        self.import_transmitter.single(DatabaseImportRequest::Done)?;
-        self.import_transmitter.wait_until_done()
+    pub(crate) fn done(mut self) -> impl Promise<'static, Result> {
+        promisify! {
+            self.import_transmitter.single(DatabaseImportRequest::Done)?;
+            let promise = self.import_transmitter.wait_until_done();
+            resolve!(promise)
+        }
     }
 }
 

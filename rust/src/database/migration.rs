@@ -23,18 +23,13 @@ use std::{
     fs::{File, OpenOptions},
     io::{BufRead, BufWriter, Read, Write},
     marker::PhantomData,
-    path::{Path},
+    path::Path,
 };
 
-use prost::{
-    Message,
-};
+use prost::Message;
 use typedb_protocol::migration::Item as MigrationItemProto;
 
-use crate::{
-    error::{MigrationError},
-    Error, Result,
-};
+use crate::{error::MigrationError, Error, Result};
 
 #[derive(Debug)]
 pub(crate) enum DatabaseExportAnswer {
