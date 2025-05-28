@@ -16,7 +16,7 @@ java.util.List<Database> all()
                       throws TypeDBDriverException
 ----
 
-Retrieves all databases present on the TypeDB server 
+Retrieves all databases present on the TypeDB server. 
 
 
 [caption=""]
@@ -40,7 +40,7 @@ boolean contains​(java.lang.String name)
           throws TypeDBDriverException
 ----
 
-Checks if a database with the given name exists 
+Checks if a database with the given name exists. 
 
 
 [caption=""]
@@ -72,7 +72,7 @@ void create​(java.lang.String name)
      throws TypeDBDriverException
 ----
 
-Create a database with the given name 
+Create a database with the given name. 
 
 
 [caption=""]
@@ -126,6 +126,42 @@ a| `name` a| The name of the database to retrieve a| `java.lang.String`
 [source,java]
 ----
 driver.databases().get(name)
+----
+
+[#_DatabaseManager_importFile_java_lang_String_java_lang_String_java_lang_String]
+==== importFile
+
+[source,java]
+----
+void importFile​(java.lang.String name,
+                java.lang.String schema,
+                java.lang.String dataFilePath)
+         throws TypeDBDriverException
+----
+
+Create a database with the given name based on previously exported another database's data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| `java.lang.String`
+a| `schema` a| The schema definition query string for the database a| `java.lang.String`
+a| `dataFilePath` a| The exported database file path to import the data from a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().importFile(name, schema, "data.typedb")
 ----
 
 // end::methods[]

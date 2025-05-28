@@ -164,6 +164,8 @@ impl DatabaseManager {
 
     /// Create a database with the given name based on previously exported another database's data
     /// loaded from a file.
+    /// This is a blocking operation and may take a significant amount of time depending on the
+    /// database size.
     ///
     /// # Arguments
     ///
@@ -174,23 +176,24 @@ impl DatabaseManager {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().import_file(name, schema, path);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_file(name, schema, path).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import_file(name, schema, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_file(name, schema, data_path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn import_file(
         &self,
         name: impl Into<String>,
-        schema: String,
+        schema: impl Into<String>,
         data_file_path: impl AsRef<Path>,
     ) -> Result {
         const ITEM_BATCH_SIZE: usize = 250;
 
         let name = name.into();
-        let schema = schema.as_str();
+        let schema: String = schema.into();
+        let schema_ref: &str = schema.as_ref();
         let data_file_path = data_file_path.as_ref();
         self.run_failsafe(name, |server_connection, name| async move {
-            let mut import_stream = server_connection.import_database(name, schema.to_string()).await?;
+            let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;
 
             let file = try_opening_import_file(data_file_path)?;
             let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);

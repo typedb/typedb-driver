@@ -82,5 +82,59 @@ a| `includeInstanceTypes` a| Whether to include instance types in ConceptRow ans
 options.includeInstanceTypes(includeInstanceTypes);
 ----
 
+[#_QueryOptions_prefetchSize_]
+==== prefetchSize
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Integer> prefetchSize()
+----
+
+Returns the value set for the prefetch size in this ``QueryOptions`` object. If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Integer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.prefetchSize();
+----
+
+[#_QueryOptions_prefetchSize_int]
+==== prefetchSize
+
+[source,java]
+----
+public QueryOptions prefetchSize​(int prefetchSize)
+----
+
+Explicitly set the prefetch size. If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetchSize` a| Whether to include instance types in ConceptRow answers. a| `int`
+|===
+
+[caption=""]
+.Returns
+`public QueryOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.prefetchSize(prefetchSize);
+----
+
 // end::methods[]
 

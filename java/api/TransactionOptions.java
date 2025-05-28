@@ -21,12 +21,10 @@ package com.typedb.driver.api;
 
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
-import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Driver.POSITIVE_VALUE_REQUIRED;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_get_schema_lock_acquire_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_get_transaction_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_has_schema_lock_acquire_timeout_millis;

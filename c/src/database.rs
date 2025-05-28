@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::addr_of_mut, sync::Arc};
+use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
 use typedb_driver::{box_stream, info::ReplicaInfo, Database};
 
@@ -26,7 +26,7 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, release_optional, release_string, take_ownership},
 };
-use crate::memory::{decrement_arc, take_arc};
+use crate::memory::{decrement_arc, string_view, take_arc};
 
 /// Frees the native rust <code>Database</code> object
 #[no_mangle]
@@ -56,6 +56,23 @@ pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
 #[no_mangle]
 pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
     try_release_string(borrow(database).type_schema())
+}
+
+/// Export a database into a schema definition and a data files saved to the disk.
+/// This is a blocking operation and may take a significant amount of time depending on the database size.
+///
+/// @param database The <code>Database</code> object to export from.
+/// @param schema_file_path The path to the schema definition file to be created.
+/// @param data_file_path The path to the data file to be created.
+#[no_mangle]
+pub extern "C" fn database_export_file(
+    database: *const Database,
+    schema_file: *const c_char,
+    data_file: *const c_char,
+) {
+    let schema_file_path = Path::new(string_view(schema_file));
+    let data_file_path = Path::new(string_view(data_file));
+    unwrap_void(borrow(database).export_file(schema_file_path, data_file_path))
 }
 
 // /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.
