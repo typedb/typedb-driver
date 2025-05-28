@@ -26,19 +26,16 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use prost::{bytes::Buf, Message};
+use prost::{decode_length_delimiter, Message};
 use typedb_protocol::migration::Item;
 
 use super::Database;
 use crate::{
     common::{address::Address, error::ConnectionError, Result},
     connection::server_connection::ServerConnection,
-    database::migration::{
-        read_and_print_import_file, try_creating_export_file, try_opening_import_file, DatabaseExportAnswer,
-    },
-    error::MigrationError,
+    database::migration::{try_opening_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
-    resolve, Error,
+    Error,
 };
 
 /// Provides access to all database management methods.
@@ -166,6 +163,7 @@ impl DatabaseManager {
     }
 
     /// Create a database with the given name based on previously exported another database's data
+    /// loaded from a file.
     ///
     /// # Arguments
     ///
@@ -176,35 +174,41 @@ impl DatabaseManager {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().import(name, schema, path);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import(name, schema, path).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import_file(name, schema, path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_file(name, schema, path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn import(&self, name: impl Into<String>, schema: String, data_file_path: impl AsRef<Path>) -> Result {
+    pub async fn import_file(
+        &self,
+        name: impl Into<String>,
+        schema: String,
+        data_file_path: impl AsRef<Path>,
+    ) -> Result {
+        const ITEM_BATCH_SIZE: usize = 250;
+
         let name = name.into();
         let schema = schema.as_str();
         let data_file_path = data_file_path.as_ref();
         self.run_failsafe(name, |server_connection, name| async move {
-            let data_file = try_opening_import_file(data_file_path)?;
-            let mut data_reader = BufReader::new(data_file);
-            let mut data_buffer = Vec::new();
-            data_reader.read_to_end(&mut data_buffer)?; // TODO: Read only a part
-
-            // TODO: Don't clone schema......
             let mut import_stream = server_connection.import_database(name, schema.to_string()).await?;
-            let mut items = Vec::new();
 
-            let mut cursor = Cursor::new(data_buffer);
-            while cursor.has_remaining() {
-                let item = Item::decode_length_delimited(&mut cursor)
-                    .map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept))?;
-                items.push(item);
+            let file = try_opening_import_file(data_file_path)?;
+            let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
+            let mut item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
+
+            while let Some(item) = item_iterator.next() {
+                let item = item?;
+                item_buffer.push(item);
+                if item_buffer.len() >= ITEM_BATCH_SIZE {
+                    import_stream.items(item_buffer.split_off(0))?;
+                }
             }
-            println!("Collected import items: {items:?}");
-            import_stream.items(items)?; // TODO: Do it in parts
 
-            import_stream.done()?;
-            Ok(())
+            if !item_buffer.is_empty() {
+                import_stream.items(item_buffer)?;
+            }
+
+            import_stream.done()
         })
         .await
     }

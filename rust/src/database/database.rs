@@ -45,9 +45,7 @@ use crate::{
         Error, Result,
     },
     connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
-    database::migration::{
-        read_and_print_import_file, try_creating_export_file, write_export_file, DatabaseExportAnswer,
-    },
+    database::migration::{try_creating_export_file, write_export_file, DatabaseExportAnswer},
     driver::TypeDBDriver,
     error::{InternalError, MigrationError},
     resolve, Transaction, TransactionOptions, TransactionType,
@@ -164,7 +162,7 @@ impl Database {
         self.run_failsafe(|database| async move { database.type_schema().await }).await
     }
 
-    /// Export a database into a .tql schema definition and a .typedb data file
+    /// Export a database into a schema definition and a data files saved to the disk.
     ///
     /// # Arguments
     ///
@@ -174,11 +172,11 @@ impl Database {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "database.export(schema_path, data_path);")]
-    #[cfg_attr(not(feature = "sync"), doc = "database.export(schema_path, data_path).await;")]
+    #[cfg_attr(feature = "sync", doc = "database.export_file(schema_path, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.export_file(schema_path, data_path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn export(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+    pub async fn export_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
 
@@ -186,7 +184,7 @@ impl Database {
             .run_failsafe(|database| async move {
                 let schema_file = try_creating_export_file(schema_file_path)?;
                 let data_file = try_creating_export_file(data_file_path)?;
-                database.export(schema_file, data_file).await
+                database.export_file(schema_file, data_file).await
             })
             .await;
 
@@ -437,7 +435,7 @@ impl ServerDatabase {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn export(&self, mut schema_file: File, data_file: File) -> Result {
+    async fn export_file(&self, mut schema_file: File, data_file: File) -> Result {
         let mut export_stream = self.connection.database_export(self.name.clone()).await?;
         let mut data_writer = BufWriter::new(data_file);
 

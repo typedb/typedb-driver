@@ -82,14 +82,19 @@ impl DatabaseImportTransmitter {
     }
 
     pub(in crate::connection) fn wait_until_done(mut self) -> Result {
+        // TODO: Make sync/async in a smart way
         loop {
-            sleep(Duration::from_millis(100)); // TODO: Config and increase it with every loop
+            sleep(Duration::from_millis(100));
             match self.result_source.try_recv() {
                 Ok(result) => return result,
                 Err(TryRecvError::Closed) => return Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
-                Err(TryRecvError::Empty) => {} // TODO: Fix
+                Err(TryRecvError::Empty) => {}
             }
         }
+        // match self.result_source.await {
+        //     Ok(result) => result,
+        //     Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
+        // }
     }
 
     async fn start_workers(
