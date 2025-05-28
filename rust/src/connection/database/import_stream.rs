@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{fmt, iter, pin::Pin, sync::Arc};
+use std::fmt;
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
@@ -45,7 +45,7 @@ impl DatabaseImportStream {
     pub(crate) fn done(mut self) -> impl Promise<'static, Result> {
         promisify! {
             self.import_transmitter.single(DatabaseImportRequest::Done)?;
-            let promise = self.import_transmitter.wait_until_done();
+            let promise = self.import_transmitter.wait_done();
             resolve!(promise)
         }
     }

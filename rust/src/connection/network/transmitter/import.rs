@@ -84,7 +84,7 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn wait_until_done(mut self) -> impl Promise<'static, Result> {
+    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
         box_promise(async move {
             match self.result_source.await {
                 Ok(result) => result,
@@ -94,7 +94,7 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn wait_until_done(mut self) -> impl Promise<'static, Result> {
+    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
         box_promise(move || match self.result_source.recv() {
             Ok(result) => return result,
             Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
@@ -133,7 +133,7 @@ impl DatabaseImportTransmitter {
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
-        tokio::task::spawn_blocking({ move || Self::dispatch_loop(queue_source, request_sink, shutdown_signal) });
+        tokio::task::spawn_blocking(move || Self::dispatch_loop(queue_source, request_sink, shutdown_signal));
         tokio::spawn(Self::listen(response_source, result_sink, shutdown_sink));
     }
 
@@ -142,7 +142,6 @@ impl DatabaseImportTransmitter {
         request_sink: UnboundedSender<database_manager::import::Client>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
-        const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
         const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
 
         loop {
