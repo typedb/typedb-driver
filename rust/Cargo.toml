@@ -55,12 +55,12 @@
 
 	[dependencies.tokio]
 		features = ["bytes", "default", "fs", "full", "io-std", "io-util", "libc", "macros", "mio", "net", "parking_lot", "process", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "time", "tokio-macros"]
-		version = "1.44.2"
+		version = "1.45.0"
 		default-features = false
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "1480387a62e48b64b34d5d8626211c3d139e0465"
+		rev = "59ad51a9e9dcde8e5ac47015be7956f9b2b27fef"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
@@ -121,7 +121,7 @@
 
 	[dependencies.chrono]
 		features = ["alloc", "android-tzdata", "clock", "default", "iana-time-zone", "js-sys", "now", "oldtime", "serde", "std", "wasm-bindgen", "wasmbind", "winapi", "windows-link"]
-		version = "0.4.40"
+		version = "0.4.41"
 		default-features = false
 
 	[dependencies.crossbeam]
