@@ -193,9 +193,9 @@ impl DatabaseManager {
         let schema_ref: &str = schema.as_ref();
         let data_file_path = data_file_path.as_ref();
         self.run_failsafe(name, |server_connection, name| async move {
+            let file = try_opening_import_file(data_file_path)?;
             let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;
 
-            let file = try_opening_import_file(data_file_path)?;
             let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
             let mut read_item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
 
