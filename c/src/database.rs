@@ -62,8 +62,8 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 /// This is a blocking operation and may take a significant amount of time depending on the database size.
 ///
 /// @param database The <code>Database</code> object to export from.
-/// @param schema_file_path The path to the schema definition file to be created.
-/// @param data_file_path The path to the data file to be created.
+/// @param schema_file The path to the schema definition file to be created.
+/// @param data_file The path to the data file to be created.
 #[no_mangle]
 pub extern "C" fn database_export_file(
     database: *const Database,

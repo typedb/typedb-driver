@@ -257,6 +257,9 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
+        // TODO: With this, every operation fails with
+        // [CXN03] Connection Error: Unable to connect to TypeDB server(s), received errors: .... <stacktrace>
+        // Which is quite confusing as it's not really connected to connection.
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 }
