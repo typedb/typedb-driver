@@ -51,7 +51,7 @@ async fn database_type_schema(driver: &TypeDBDriver, name: &str) -> String {
 }
 
 async fn has_database(driver: &TypeDBDriver, name: &str) -> bool {
-    driver.databases().contains(name.clone()).await.unwrap()
+    driver.databases().contains(name).await.unwrap()
 }
 
 #[apply(generic_step)]

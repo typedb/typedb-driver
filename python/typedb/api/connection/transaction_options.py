@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_positive
 from typedb.native_driver_wrapper import transaction_options_new, \

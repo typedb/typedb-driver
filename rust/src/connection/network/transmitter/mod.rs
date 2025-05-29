@@ -17,10 +17,17 @@
  * under the License.
  */
 
-use crossbeam::channel::{bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender};
+use crossbeam::channel::{
+    bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender, TryRecvError as SyncTryRecvError,
+};
 
-pub(in crate::connection) use self::{rpc::RPCTransmitter, transaction::TransactionTransmitter};
+pub(in crate::connection) use self::{
+    export::DatabaseExportTransmitter, import::DatabaseImportTransmitter, rpc::RPCTransmitter,
+    transaction::TransactionTransmitter,
+};
 
+mod export;
+mod import;
 mod response_sink;
 mod rpc;
 mod transaction;

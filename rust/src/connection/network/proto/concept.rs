@@ -96,7 +96,6 @@ impl TryFromProto<ConceptProto> for Concept {
                 Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
             }
 
-            // Some(concept::Concept::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
             None => Err(MissingResponseField { field: "concept" }.into()),
         }
     }

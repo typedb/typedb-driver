@@ -27,6 +27,40 @@ Deletes this database.
 database.delete()
 ----
 
+[#_Database_exportFile_java_lang_String_java_lang_String]
+==== exportFile
+
+[source,java]
+----
+void exportFile​(java.lang.String schemaFilePath,
+                java.lang.String dataFilePath)
+         throws TypeDBDriverException
+----
+
+Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schemaFilePath` a| The path to the schema definition file to be created a| `java.lang.String`
+a| `dataFilePath` a| The path to the data file to be created a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.exportFile("schema.typeql", "data.typedb")
+----
+
 [#_Database_name_]
 ==== name
 

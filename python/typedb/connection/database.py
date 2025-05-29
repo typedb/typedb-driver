@@ -20,8 +20,9 @@ from __future__ import annotations
 from typedb.api.connection.database import Database
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_null
 from typedb.native_driver_wrapper import database_get_name, database_schema, database_delete, database_type_schema, \
-    Database as NativeDatabase, \
+    database_export_file, Database as NativeDatabase, \
     TypeDBDriverExceptionNative
 
 
@@ -52,6 +53,14 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
     def type_schema(self) -> str:
         try:
             return database_type_schema(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def export_file(self, schema_file_path: str, data_file_path: str) -> None:
+        require_non_null(schema_file_path, "schema_file_path")
+        require_non_null(data_file_path, "data_file_path")
+        try:
+            return database_export_file(self.native_object, schema_file_path, data_file_path)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
