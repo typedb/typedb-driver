@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::collections::HashSet;
+use std::{collections::HashSet, fs::File, io::Read};
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{
@@ -30,8 +30,12 @@ use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, Transacti
 use uuid::Uuid;
 
 use crate::{
-    assert_with_timeout, connection::transaction::open_transaction_for_database, generic_step, in_oneshot_background,
-    params, query::run_query, util::iter_table, Context,
+    assert_with_timeout,
+    connection::transaction::open_transaction_for_database,
+    generic_step, in_oneshot_background, params,
+    query::run_query,
+    util::{iter_table, read_file_to_string},
+    Context,
 };
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
@@ -52,6 +56,23 @@ async fn database_type_schema(driver: &TypeDBDriver, name: &str) -> String {
 
 async fn has_database(driver: &TypeDBDriver, name: &str) -> bool {
     driver.databases().contains(name).await.unwrap()
+}
+
+async fn execute_and_retrieve_schema_for_comparison(driver: &TypeDBDriver, schema_query: String) -> String {
+    let temp_database_name = create_temporary_database_with_schema(driver, schema_query).await;
+    database_schema(driver, &temp_database_name).await
+}
+
+async fn import_database(
+    context: &mut Context,
+    name: String,
+    schema: String,
+    data_file_name: String,
+    may_error: params::MayError,
+) {
+    let data_file_path = context.get_full_file_path(&data_file_name);
+    let databases = context.driver.as_ref().unwrap().databases();
+    may_error.check(databases.import_file(name, schema, data_file_path).await);
 }
 
 #[apply(generic_step)]
@@ -187,8 +208,7 @@ async fn connection_get_database_has_schema(context: &mut Context, name: String,
     let expected_schema_retrieved = if expected_schema.is_empty() {
         String::new()
     } else {
-        let temp_database_name = create_temporary_database_with_schema(driver, expected_schema).await;
-        database_schema(driver, &temp_database_name).await
+        execute_and_retrieve_schema_for_comparison(driver, expected_schema).await
     };
     let schema = database_schema(driver, &name).await;
     assert_eq!(expected_schema_retrieved, schema);
@@ -207,4 +227,61 @@ async fn connection_get_database_has_type_schema(context: &mut Context, name: St
     };
     let type_schema = database_type_schema(driver, &name).await;
     assert_eq!(expected_type_schema_retrieved, type_schema);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection get database\({word}\) export to schema file\({word}\), data file\({word}\){may_error}")]
+async fn connection_get_database_export_to_schema_file_data_file(
+    context: &mut Context,
+    name: String,
+    schema_file_name: String,
+    data_file_name: String,
+    may_error: params::MayError,
+) {
+    let database = context.driver.as_ref().unwrap().databases().get(name).await.expect("Expected database");
+    let schema_file_path = context.get_full_file_path(&schema_file_name);
+    let data_file_path = context.get_full_file_path(&data_file_name);
+    may_error.check(database.export_file(schema_file_path, data_file_path).await);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection import database\({word}\) from schema file\({word}\), data file\({word}\){may_error}")]
+async fn connection_import_database_from_schema_file_data_file(
+    context: &mut Context,
+    name: String,
+    schema_file_name: String,
+    data_file_name: String,
+    may_error: params::MayError,
+) {
+    let schema_file_path = context.get_full_file_path(&schema_file_name);
+    let schema = read_file_to_string(schema_file_path);
+    import_database(context, name, schema, data_file_name, may_error).await
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection import database\({word}\) from data file\({word}\) and schema{may_error}")]
+async fn connection_import_database_from_data_file_and_schema(
+    context: &mut Context,
+    name: String,
+    data_file_name: String,
+    may_error: params::MayError,
+    step: &Step,
+) {
+    let schema = step.docstring.as_ref().unwrap().trim().to_string();
+    import_database(context, name, schema, data_file_name, may_error).await
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) has schema:")]
+async fn file_has_schema(context: &mut Context, file_name: String, step: &Step) {
+    let expected_schema = step.docstring.as_ref().unwrap().trim().to_string();
+    let file_schema = read_file_to_string(context.get_full_file_path(&file_name));
+    let driver = context.driver.as_ref().unwrap();
+    let expected_schema_retrieved = if expected_schema.is_empty() {
+        String::new()
+    } else {
+        execute_and_retrieve_schema_for_comparison(driver, expected_schema).await
+    };
+    let file_schema_retrieved = execute_and_retrieve_schema_for_comparison(driver, file_schema).await;
+    assert_eq!(expected_schema_retrieved, file_schema_retrieved);
 }

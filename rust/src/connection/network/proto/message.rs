@@ -155,7 +155,7 @@ impl TryIntoProto<database::export::Req> for Request {
     fn try_into_proto(self) -> Result<database::export::Req> {
         match self {
             Self::DatabaseExport { database_name } => {
-                Ok(database::export::Req { req: Some(migration::export::Req { database: database_name }) })
+                Ok(database::export::Req { req: Some(migration::export::Req { name: database_name }) })
             }
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }

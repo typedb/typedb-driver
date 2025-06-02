@@ -99,6 +99,7 @@ pub struct Context {
     pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
     pub background_driver: Option<TypeDBDriver>,
+    pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
@@ -121,6 +122,7 @@ impl fmt::Debug for Context {
             .field("background_driver", &self.background_driver)
             .field("transactions", &self.transactions)
             .field("background_transactions", &self.background_transactions)
+            .field("temp_dir", &self.temp_dir)
             .field("answer", &self.answer)
             .field("answer_type", &self.answer_type)
             .field("answer_query_type", &self.answer_query_type)
@@ -194,6 +196,18 @@ impl Context {
         Self::reset_driver(self.background_driver.take());
         Self::reset_driver(self.driver.take());
         Ok(())
+    }
+
+    pub fn get_or_init_temp_dir(&mut self) -> &Path {
+        if self.temp_dir.is_none() {
+            self.temp_dir = Some(create_temp_dir());
+        }
+        self.temp_dir.as_ref().unwrap()
+    }
+
+    pub fn get_full_file_path(&mut self, file_name: &str) -> PathBuf {
+        let temp_dir = self.get_or_init_temp_dir();
+        temp_dir.join(file_name)
     }
 
     pub async fn all_databases(&self) -> HashSet<String> {
@@ -467,6 +481,7 @@ impl Default for Context {
             background_driver: None,
             transactions: VecDeque::new(),
             background_transactions: VecDeque::new(),
+            temp_dir: None,
             answer: None,
             answer_type: None,
             answer_query_type: None,
@@ -497,6 +512,8 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
+
+use crate::util::{create_temp_dir, TempDir};
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,
