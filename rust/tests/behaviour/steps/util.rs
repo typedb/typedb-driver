@@ -22,7 +22,7 @@ use std::{
     collections::{HashMap, HashSet},
     env, fs,
     fs::File,
-    io::Read,
+    io::{Read, Write},
     iter, mem,
     ops::Deref,
     path::{Path, PathBuf},
@@ -196,6 +196,12 @@ pub(crate) fn read_file(path: PathBuf) -> Vec<u8> {
     buffer
 }
 
+pub(crate) fn write_file(path: PathBuf, data: &[u8]) {
+    let mut file = fs::OpenOptions::new().write(true).create(true).open(path).expect("Expected file open to write");
+    file.write_all(data).expect("Expected file write");
+    file.flush().expect("Expected flush");
+}
+
 #[apply(generic_step)]
 #[step(expr = r"file\({word}\) {exists_or_doesnt}")]
 async fn file_exists(context: &mut Context, file_name: String, exists_or_doesnt: params::ExistsOrDoesnt) {
@@ -217,4 +223,13 @@ async fn file_is_not_empty(context: &mut Context, file_name: String) {
     let expected = params::Boolean::False;
     let path = context.get_full_file_path(&file_name);
     check_boolean!(expected, read_file(path).is_empty());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) write:")]
+async fn file_write(context: &mut Context, file_name: String, step: &Step) {
+    let data = step.docstring.as_ref().unwrap().trim().to_string();
+    let expected = params::Boolean::True;
+    let path = context.get_full_file_path(&file_name);
+    write_file(path, data.as_bytes());
 }

@@ -45,7 +45,7 @@ use crate::{
         Error, Result,
     },
     connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
-    database::migration::{try_creating_export_file, DatabaseExportAnswer},
+    database::migration::{try_creating_export_file, try_opening_existing_export_file, DatabaseExportAnswer},
     driver::TypeDBDriver,
     error::{InternalError, MigrationError},
     resolve, Transaction, TransactionOptions, TransactionType,
@@ -180,11 +180,17 @@ impl Database {
     pub async fn export_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
+        let _ = try_creating_export_file(schema_file_path)?;
+        if let Err(err) = try_creating_export_file(data_file_path) {
+            let _ = std::fs::remove_file(schema_file_path);
+            return Err(err);
+        }
 
         let result = self
             .run_failsafe(|database| async move {
-                let schema_file = try_creating_export_file(schema_file_path)?;
-                let data_file = try_creating_export_file(data_file_path)?;
+                // File opening should be idempotent for multiple function invocations
+                let schema_file = try_opening_existing_export_file(schema_file_path)?;
+                let data_file = try_opening_existing_export_file(data_file_path)?;
                 database.export_file(schema_file, data_file).await
             })
             .await;
