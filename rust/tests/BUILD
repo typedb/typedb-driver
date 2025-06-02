@@ -26,7 +26,11 @@ rustfmt_test(
         "//rust/tests/behaviour/steps:steps",
         "//rust/tests/behaviour/connection:test_database",
         "//rust/tests/behaviour/connection:test_transaction",
-        "//rust/tests/behaviour/driver:test_driver",
+        "//rust/tests/behaviour/driver:test_concept",
+        "//rust/tests/behaviour/driver:test_connection",
+        "//rust/tests/behaviour/driver:test_migration",
+        "//rust/tests/behaviour/driver:test_query",
+        "//rust/tests/behaviour/driver:test_user",
 
         "//rust/tests/integration:test_example",
     ],

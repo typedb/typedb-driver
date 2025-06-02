@@ -20,7 +20,11 @@
 use std::{
     borrow::Cow,
     collections::{HashMap, HashSet},
-    env, iter, mem,
+    env, fs,
+    fs::File,
+    io::Read,
+    iter, mem,
+    ops::Deref,
     path::{Path, PathBuf},
 };
 
@@ -41,8 +45,9 @@ use typedb_driver::{
     concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
     DatabaseManager, Error, Result as TypeDBResult,
 };
+use uuid::Uuid;
 
-use crate::{assert_with_timeout, generic_step, Context};
+use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
@@ -147,4 +152,69 @@ async fn set_time_zone(_context: &mut Context, timezone: String) {
 #[step(expr = "wait {word} seconds")]
 async fn wait_seconds(_context: &mut Context, seconds: String) {
     sleep(Duration::from_secs(seconds.parse().unwrap())).await
+}
+
+#[derive(Debug)]
+pub struct TempDir(PathBuf);
+
+impl Drop for TempDir {
+    fn drop(&mut self) {
+        fs::remove_dir_all(&self.0).ok();
+    }
+}
+
+impl AsRef<Path> for TempDir {
+    fn as_ref(&self) -> &Path {
+        self
+    }
+}
+
+impl Deref for TempDir {
+    type Target = Path;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+pub fn create_temp_dir() -> TempDir {
+    let dir_name = format!("temp-{}", Uuid::new_v4());
+    let dir = env::temp_dir().join(Path::new(&dir_name));
+    fs::create_dir_all(&dir).expect("Expected to create a temporary dir");
+    TempDir(dir)
+}
+
+pub(crate) fn read_file_to_string(path: PathBuf) -> String {
+    let mut content = String::new();
+    let _ = File::open(path).expect("Expected file").read_to_string(&mut content);
+    content
+}
+
+pub(crate) fn read_file(path: PathBuf) -> Vec<u8> {
+    let mut buffer = Vec::new();
+    let _ = File::open(path).expect("Expected file").read_to_end(&mut buffer);
+    buffer
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) {exists_or_doesnt}")]
+async fn file_exists(context: &mut Context, file_name: String, exists_or_doesnt: params::ExistsOrDoesnt) {
+    let path = context.get_full_file_path(&file_name);
+    exists_or_doesnt.check_bool(path.exists(), &format!("path: '{path:?}'"));
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) is empty")]
+async fn file_is_empty(context: &mut Context, file_name: String) {
+    let expected = params::Boolean::True;
+    let path = context.get_full_file_path(&file_name);
+    check_boolean!(expected, read_file(path).is_empty());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) is not empty")]
+async fn file_is_not_empty(context: &mut Context, file_name: String) {
+    let expected = params::Boolean::False;
+    let path = context.get_full_file_path(&file_name);
+    check_boolean!(expected, read_file(path).is_empty());
 }
