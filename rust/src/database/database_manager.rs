@@ -192,6 +192,7 @@ impl DatabaseManager {
         let schema: String = schema.into();
         let schema_ref: &str = schema.as_ref();
         let data_file_path = data_file_path.as_ref();
+
         self.run_failsafe(name, |server_connection, name| async move {
             let file = try_opening_import_file(data_file_path)?;
             let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;

@@ -103,9 +103,11 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
         };
 
         if self.buffer.len() < message_len {
-            let to_read = max(message_len - self.buffer.len(), Self::BUF_CAPACITY);
-            if let Err(_) = self.try_read_more(to_read) {
-                return Some(Err(Error::Migration(MigrationError::CannotDecodeImportedConcept)));
+            let required = message_len - self.buffer.len();
+            let to_read = max(required, Self::BUF_CAPACITY);
+            match self.try_read_more(to_read) {
+                Ok(bytes_read) if bytes_read >= required => {}
+                _ => return Some(Err(Error::Migration(MigrationError::CannotDecodeImportedConcept))),
             }
         }
 
@@ -115,7 +117,15 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
 }
 
 pub(crate) fn try_creating_export_file(path: impl AsRef<Path>) -> Result<File> {
-    OpenOptions::new().write(true).create_new(true).open(path.as_ref()).map_err(|source| {
+    try_opening_export_file(path, true)
+}
+
+pub(crate) fn try_opening_existing_export_file(path: impl AsRef<Path>) -> Result<File> {
+    try_opening_export_file(path, false)
+}
+
+fn try_opening_export_file(path: impl AsRef<Path>, is_new: bool) -> Result<File> {
+    OpenOptions::new().write(true).create_new(is_new).open(path.as_ref()).map_err(|source| {
         Error::Migration(MigrationError::CannotCreateExportFile {
             path: path.as_ref().to_str().unwrap_or("").to_string(),
             reason: source.to_string(),

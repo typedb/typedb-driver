@@ -456,7 +456,7 @@ impl ExistsOrDoesnt {
     pub fn check_bool(&self, contains: bool, message: &str) {
         match self {
             ExistsOrDoesnt::Exists => assert!(contains, "Expected to exist, not found: {message}"),
-            ExistsOrDoesnt::DoesNotExist => assert!(!contains, "Expected not to exist, but not found: {message}"),
+            ExistsOrDoesnt::DoesNotExist => assert!(!contains, "Expected not to exist, but found: {message}"),
         }
     }
 }
