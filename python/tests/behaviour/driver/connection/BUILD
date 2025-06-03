@@ -21,7 +21,7 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test(
     name = "test",
-    feats = ["@typedb_behaviour//driver:driver.feature"],
+    feats = ["@typedb_behaviour//driver:connection.feature"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",

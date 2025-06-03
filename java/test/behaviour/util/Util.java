@@ -138,7 +138,7 @@ public class Util {
         }
     }
 
-    public static boolean isEmpty(Path path) {
+    public static boolean isFileEmpty(Path path) {
         try {
             return Files.size(path) == 0;
         } catch (IOException e) {
@@ -146,7 +146,7 @@ public class Util {
         }
     }
 
-    // Otherwise, function bodies are passed with an excessive tabulation from docstrings...
+    // Can be useful for docstrings read with excessive tabulation compared to other languages
     public static String removeTwoSpacesInTabulation(String input) {
         return input.lines()
                 .map(line -> line.startsWith("  ") ? line.substring(2) : line)

@@ -25,7 +25,6 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
-import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
@@ -41,7 +40,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
-import static com.typedb.driver.test.behaviour.util.Util.deleteDir;
 import static org.junit.Assert.assertEquals;
 
 public abstract class ConnectionStepsBase {

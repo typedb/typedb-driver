@@ -14,7 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+import shutil
 from collections import Counter
+from pathlib import Path
 
 from hamcrest import *
 
@@ -54,3 +56,25 @@ def list_contains_json(json_list: list, json: dict) -> bool:
         if json_matches(json_from_list, json):
             return True
     return False
+
+
+def write_file(path: Path, content: str):
+    path.write_text(content, encoding="utf-8")
+
+
+def read_file_to_string(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+def is_file_empty(path: Path) -> bool:
+    return path.stat().st_size == 0
+
+
+def delete_dir(path: Path):
+    if path.exists():
+        shutil.rmtree(path)
+
+
+# Can be useful for docstrings read with excessive tabulation compared to other languages
+def remove_two_spaces_in_tabulation(input: str) -> str:
+    return "\n".join(line[2:] if line.startswith("  ") else line for line in input.splitlines())
