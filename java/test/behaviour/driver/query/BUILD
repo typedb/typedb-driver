@@ -15,37 +15,38 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//java/test/behaviour:__subpackages__"])
+package(default_visibility = ["//java/test/behaviour/query/language:__subpackages__"])
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
-java_library(
-    name = "util",
-    srcs = ["Util.java"],
-    visibility = ["//visibility:public"],
-    deps = [
-        # Package dependencies
-        "//java/api",
-        "//java/common",
-
-        # External Maven Dependencies
-        "@maven//:junit_junit",
+typedb_behaviour_java_test(
+    name = "test",
+    srcs = [
+        "QueryTest.java",
     ],
-)
-
-java_library(
-    name = "steps",
-    srcs = ["UtilSteps.java"],
+    test_class = "com.typedb.driver.test.behaviour.driver.query.QueryTest",
+    data = [
+        "@typedb_behaviour//driver:query.feature",
+    ],
+    connection_steps_community = "//java/test/behaviour/connection:steps-community",
+    connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
+    steps = [
+        "//java/test/behaviour/query:steps",
+        "//java/test/behaviour/util:steps",
+    ],
     deps = [
-        # Package dependencies
-        "//java/test/behaviour/connection:steps-base",
+        # Internal Package Dependencies
+        "//java/test/behaviour:behaviour",
+
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
+    ],
+    runtime_deps = [
         "//java/test/behaviour/config:parameters",
-        ":util",
-
-        # External Maven Dependencies
-        "@maven//:io_cucumber_cucumber_java",
-        "@maven//:junit_junit",
     ],
+    size = "enormous",
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(

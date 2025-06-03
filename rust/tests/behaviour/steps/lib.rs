@@ -242,14 +242,12 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
+        let users = self.driver.as_ref().expect("Expected driver").users();
         try_join_all(
-            self.driver
-                .as_ref()
-                .unwrap()
-                .users()
+            users
                 .all()
                 .await
-                .unwrap()
+                .expect("Expected all users")
                 .into_iter()
                 .filter(|user| user.name != Context::ADMIN_USERNAME)
                 .map(|user| user.delete()),
@@ -257,8 +255,14 @@ impl Context {
         .await
         .expect("Expected users cleanup");
 
-        // TODO: Return
-        // self.driver.as_ref().unwrap().users().set_password(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await.unwrap();
+        users
+            .get(Context::ADMIN_USERNAME)
+            .await
+            .expect("Expected admin user get")
+            .expect("Expected admin user")
+            .update_password(Context::ADMIN_PASSWORD)
+            .await
+            .expect("Expected password update");
     }
 
     pub async fn cleanup_answers(&mut self) {

@@ -26,6 +26,7 @@ import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +37,10 @@ import static com.typedb.driver.common.collection.Collections.set;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.backgroundDriver;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.fullPath;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.typedb.driver.test.behaviour.util.Util.readFileToString;
+import static com.typedb.driver.test.behaviour.util.Util.removeTwoSpacesInTabulation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -54,6 +58,11 @@ public class DatabaseSteps {
         }
     }
 
+    public String executeAndRetrieveSchemaForComparison(Driver driver, String schemaQuery) {
+        String tempDatabaseName = createTemporaryDatabaseWithSchema(driver, schemaQuery);
+        return driver.databases().get(tempDatabaseName).schema();
+    }
+
     public String createTemporaryDatabaseWithSchema(Driver driver, String schemaQuery) {
         String name = "temp-" + (int) (Math.random() * 10000);
         createDatabases(driver, list(name));
@@ -61,6 +70,11 @@ public class DatabaseSteps {
         transaction.query(schemaQuery).resolve();
         transaction.commit();
         return name;
+    }
+
+    public void importDatabase(String name, String schema, String dataFile, Parameters.MayError mayError) {
+        Path dataPath = fullPath(dataFile);
+        mayError.check(() -> driver.databases().importFile(name, schema, dataPath.toString()));
     }
 
     @When("connection create database: {non_semicolon}{may_error}")
@@ -120,7 +134,6 @@ public class DatabaseSteps {
         mayError.check(() -> deleteDatabases(backgroundDriver, list(name)));
     }
 
-    // TODO: Use "contains" instead. Cover "all" interfaces explicitly
     @When("connection has database: {word}")
     public void connection_has_database(String name) {
         connection_has_databases(list(name));
@@ -128,7 +141,7 @@ public class DatabaseSteps {
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertEquals(set(names), driver.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
+        assertTrue(names.stream().allMatch(name -> driver.databases().contains(name)));
     }
 
     @Then("connection does not have database: {word}")
@@ -145,14 +158,12 @@ public class DatabaseSteps {
     }
 
     @Then("connection get database\\({word}) has schema:")
-    public void connection_get_database_has_schema(String name, String schema) {
-        String expectedSchema = schema.strip();
+    public void connection_get_database_has_schema(String name, String expectedSchema) {
         String expectedSchemaRetrieved;
-        if (expectedSchema.isEmpty()) {
+        if (expectedSchema.isBlank()) {
             expectedSchemaRetrieved = "";
         } else {
-            String tempDatabaseName = createTemporaryDatabaseWithSchema(driver, expectedSchema);
-            expectedSchemaRetrieved = driver.databases().get(tempDatabaseName).schema();
+            expectedSchemaRetrieved = executeAndRetrieveSchemaForComparison(driver, expectedSchema);
         }
 
         String realSchema = driver.databases().get(name).schema();
@@ -160,10 +171,9 @@ public class DatabaseSteps {
     }
 
     @Then("connection get database\\({word}) has type schema:")
-    public void connection_get_database_has_type_schema(String name, String schema) {
-        String expectedSchema = schema.strip();
+    public void connection_get_database_has_type_schema(String name, String expectedSchema) {
         String expectedSchemaRetrieved;
-        if (expectedSchema.isEmpty()) {
+        if (expectedSchema.isBlank()) {
             expectedSchemaRetrieved = "";
         } else {
             String tempDatabaseName = createTemporaryDatabaseWithSchema(driver, expectedSchema);
@@ -172,5 +182,37 @@ public class DatabaseSteps {
 
         String realSchema = driver.databases().get(name).typeSchema();
         assertEquals(expectedSchemaRetrieved, realSchema);
+    }
+
+    @Then("file\\({word}) has schema:")
+    public void file_has_schema(String fileName, String expectedSchema) {
+        String fileSchema = readFileToString(fullPath(fileName));
+        String expectedSchemaRetrieved;
+        if (expectedSchema.isBlank()) {
+            expectedSchemaRetrieved = "";
+        } else {
+            expectedSchemaRetrieved = executeAndRetrieveSchemaForComparison(driver, removeTwoSpacesInTabulation(expectedSchema));
+        }
+        String fileSchemaRetrieved = executeAndRetrieveSchemaForComparison(driver, fileSchema);
+        assertEquals(expectedSchemaRetrieved, fileSchemaRetrieved);
+    }
+
+    @When("connection import database\\({word}) from schema file\\({word}), data file\\({word}){may_error}")
+    public void connection_import_database_from_schema_file_data_file(String name, String schemaFile, String dataFile, Parameters.MayError mayError) {
+        Path schemaPath = fullPath(schemaFile);
+        String schema = readFileToString(schemaPath);
+        importDatabase(name, schema, dataFile, mayError);
+    }
+
+    @When("connection import database\\({word}) from data file\\({word}) and schema{may_error}")
+    public void connection_import_database_from_schema_file_data_file(String name, String dataFile, Parameters.MayError mayError, String schema) {
+        importDatabase(name, removeTwoSpacesInTabulation(schema), dataFile, mayError);
+    }
+
+    @When("connection get database\\({word}) export to schema file\\({word}), data file\\({word}){may_error}")
+    public void connection_get_database_export_to_schema_file_data_file(String name, String schemaFile, String dataFile, Parameters.MayError mayError) {
+        Path schemaPath = fullPath(schemaFile);
+        Path dataPath = fullPath(dataFile);
+        mayError.check(() -> driver.databases().get(name).exportFile(schemaPath.toString(), dataPath.toString()));
     }
 }

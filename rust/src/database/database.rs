@@ -180,6 +180,10 @@ impl Database {
     pub async fn export_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
+        if schema_file_path == data_file_path {
+            return Err(Error::Migration(MigrationError::CannotExportToTheSameFile));
+        }
+
         let _ = try_creating_export_file(schema_file_path)?;
         if let Err(err) = try_creating_export_file(data_file_path) {
             let _ = std::fs::remove_file(schema_file_path);

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{sync::Arc, thread::sleep, time::Duration};
+use std::{ops::Deref, sync::Arc, thread::sleep, time::Duration};
 
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]
@@ -34,14 +34,17 @@ use crate::{
     common::{box_promise, error::ConnectionError, Promise, Result},
     connection::{
         message::DatabaseImportRequest,
-        network::{proto::IntoProto, transmitter::response_sink::ResponseSink},
+        network::{
+            proto::IntoProto,
+            transmitter::{response_sink::ResponseSink, shutdown_guard::ShutdownGuard},
+        },
         runtime::BackgroundRuntime,
     },
 };
 
 pub(in crate::connection) struct DatabaseImportTransmitter {
     request_sink: UnboundedSender<DatabaseImportRequest>,
-    shutdown_sink: UnboundedSender<()>,
+    shutdown_guard: ShutdownGuard<()>,
     result_source: OneshotReceiver<Result>,
     // runtime is alive as long as the import transmitter is alive:
     background_runtime: Arc<BackgroundRuntime>,
@@ -70,11 +73,16 @@ impl DatabaseImportTransmitter {
             shutdown_sink.clone(),
             shutdown_source,
         ));
-        Self { request_sink: buffer_sink, shutdown_sink, result_source, background_runtime }
+        Self {
+            request_sink: buffer_sink,
+            shutdown_guard: ShutdownGuard::new(shutdown_sink),
+            result_source,
+            background_runtime,
+        }
     }
 
     pub(in crate::connection) fn shutdown_sink(&self) -> &UnboundedSender<()> {
-        &self.shutdown_sink
+        &self.shutdown_guard
     }
 
     pub(in crate::connection) fn single(&mut self, req: DatabaseImportRequest) -> Result {
@@ -84,8 +92,9 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
+    pub(in crate::connection) fn wait_done(self) -> impl Promise<'static, Result> {
         box_promise(async move {
+            let _shutdown_guard = self.shutdown_guard; // Don't let it drop before resolving
             match self.result_source.await {
                 Ok(result) => result,
                 Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
@@ -94,10 +103,13 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
-        box_promise(move || match self.result_source.recv() {
-            Ok(result) => return result,
-            Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
+    pub(in crate::connection) fn wait_done(self) -> impl Promise<'static, Result> {
+        box_promise(move || {
+            let _shutdown_guard = self.shutdown_guard; // Don't let it drop before resolving
+            match self.result_source.recv() {
+                Ok(result) => return result,
+                Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
+            }
         })
     }
 

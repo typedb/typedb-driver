@@ -210,26 +210,16 @@ async fn file_exists(context: &mut Context, file_name: String, exists_or_doesnt:
 }
 
 #[apply(generic_step)]
-#[step(expr = r"file\({word}\) is empty")]
-async fn file_is_empty(context: &mut Context, file_name: String) {
-    let expected = params::Boolean::True;
+#[step(expr = r"file\({word}\) {is_or_not} empty")]
+async fn file_is_empty(context: &mut Context, file_name: String, is_or_not: params::IsOrNot) {
     let path = context.get_full_file_path(&file_name);
-    check_boolean!(expected, read_file(path).is_empty());
-}
-
-#[apply(generic_step)]
-#[step(expr = r"file\({word}\) is not empty")]
-async fn file_is_not_empty(context: &mut Context, file_name: String) {
-    let expected = params::Boolean::False;
-    let path = context.get_full_file_path(&file_name);
-    check_boolean!(expected, read_file(path).is_empty());
+    is_or_not.check(read_file(path).is_empty());
 }
 
 #[apply(generic_step)]
 #[step(expr = r"file\({word}\) write:")]
 async fn file_write(context: &mut Context, file_name: String, step: &Step) {
     let data = step.docstring.as_ref().unwrap().trim().to_string();
-    let expected = params::Boolean::True;
     let path = context.get_full_file_path(&file_name);
     write_file(path, data.as_bytes());
 }
