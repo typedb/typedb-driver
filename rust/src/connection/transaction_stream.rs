@@ -166,7 +166,7 @@ impl TransactionStream {
     fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item = Result<QueryResponse>>> {
         Ok(self.stream(TransactionRequest::Query(req))?.map(|response| match response {
             Ok(TransactionResponse::Query(res)) => Ok(res),
-            Ok(TransactionResponse::Close) => Err(ConnectionError::QueryStreamNoResponse.into()),
+            Ok(TransactionResponse::Close) => Err(ConnectionError::TransactionIsClosed.into()),
             Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
