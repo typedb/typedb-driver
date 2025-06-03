@@ -12,6 +12,7 @@ a| `CannotCreateExportFile`
 a| `CannotDecodeImportedConcept`
 a| `CannotDecodeImportedConceptLength`
 a| `CannotEncodeExportedConcept`
+a| `CannotExportToTheSameFile`
 a| `CannotOpenImportFile`
 |===
 // end::enum_constants[]
