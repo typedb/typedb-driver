@@ -200,12 +200,14 @@ error_messages! { MigrationError
         1: "Cannot open import file '{path}': {reason}",
     CannotCreateExportFile { path: String, reason: String } =
         2: "Cannot create export file '{path}': {reason}",
+    CannotExportToTheSameFile =
+        3: "Cannot export both schema and data to the same file.",
     CannotDecodeImportedConcept =
-        3: "Cannot decode a concept from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
+        4: "Cannot decode a concept from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
     CannotDecodeImportedConceptLength =
-        4: "Cannot decode a concept length from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
+        5: "Cannot decode a concept length from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
     CannotEncodeExportedConcept =
-        5: "Cannot encode a concept for export. It's either a version compatibility error or a bug."
+        6: "Cannot encode a concept for export. It's either a version compatibility error or a bug."
 }
 
 error_messages! { InternalError

@@ -25,8 +25,11 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.test.behaviour.config.Parameters;
+import com.typedb.driver.test.behaviour.util.Util;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +40,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
+import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
+import static com.typedb.driver.test.behaviour.util.Util.deleteDir;
 import static org.junit.Assert.assertEquals;
 
 public abstract class ConnectionStepsBase {
@@ -49,6 +54,7 @@ public abstract class ConnectionStepsBase {
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     public static Driver driver;
     public static Driver backgroundDriver;
+    private static Optional<Path> tempDir = Optional.empty();
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
@@ -57,6 +63,17 @@ public abstract class ConnectionStepsBase {
     public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
     static final int BEFORE_TIMEOUT_MILLIS = 10;
+
+    public static Path tempDir() {
+        if (tempDir.isEmpty()) {
+            tempDir = Optional.of(createTempDir());
+        }
+        return tempDir.get();
+    }
+
+    public static Path fullPath(String fileName) {
+        return tempDir().resolve(fileName);
+    }
 
     public static Transaction tx() {
         return transactions.get(0);
@@ -95,6 +112,9 @@ public abstract class ConnectionStepsBase {
     }
 
     void after() {
+        tempDir.ifPresent(Util::deleteDir);
+        tempDir = Optional.empty();
+
         cleanupTransactions();
         cleanupBackgroundTransactions();
         transactionOptions = Optional.empty();
@@ -102,8 +122,8 @@ public abstract class ConnectionStepsBase {
 
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
+        driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
-        // TODO: Set admin password to default
         driver.close();
         backgroundDriver.close();
     }

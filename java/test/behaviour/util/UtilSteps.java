@@ -19,10 +19,20 @@
 
 package com.typedb.driver.test.behaviour.util;
 
+import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.nio.file.Files;
 import java.util.TimeZone;
+
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.fullPath;
+import static com.typedb.driver.test.behaviour.util.Util.isEmpty;
+import static com.typedb.driver.test.behaviour.util.Util.readFileToString;
+import static com.typedb.driver.test.behaviour.util.Util.writeFile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UtilSteps {
 
@@ -34,5 +44,20 @@ public class UtilSteps {
     @Then("wait {integer} seconds")
     public void wait_seconds(int seconds) throws InterruptedException {
         Thread.sleep(seconds * 1000L);
+    }
+
+    @Then("file\\({word}) {exists_or_doesnt}")
+    public void file_exists(String name, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+        existsOrDoesnt.check(Files.exists(fullPath(name)));
+    }
+
+    @Then("file\\({word}) {is_or_not} empty")
+    public void file_is_empty(String name, Parameters.IsOrNot isOrNot) {
+        isOrNot.check(isEmpty(fullPath(name)));
+    }
+
+    @When("file\\({word}) write:")
+    public void file_write(String name, String text) {
+        writeFile(fullPath(name), text.strip());
     }
 }

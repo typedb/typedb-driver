@@ -63,6 +63,17 @@ async fn execute_and_retrieve_schema_for_comparison(driver: &TypeDBDriver, schem
     database_schema(driver, &temp_database_name).await
 }
 
+async fn create_temporary_database_with_schema(driver: &TypeDBDriver, schema_query: String) -> String {
+    let name = format!("temp-{}", Uuid::new_v4());
+    create_database(driver, name.clone(), params::MayError::False).await;
+    let transaction = open_transaction_for_database(driver, &name, TransactionType::Schema, None)
+        .await
+        .expect("Expected transaction");
+    run_query(&transaction, &schema_query, None).await.expect("Expected successful query");
+    transaction.commit().await.expect("Expected successful commit");
+    name
+}
+
 async fn import_database(
     context: &mut Context,
     name: String,
@@ -187,17 +198,6 @@ async fn connection_does_not_have_databases(context: &mut Context, step: &Step) 
             "Connection doesn't contain at least one of the databases.",
         );
     }
-}
-
-async fn create_temporary_database_with_schema(driver: &TypeDBDriver, schema_query: String) -> String {
-    let name = format!("temp-{}", Uuid::new_v4());
-    create_database(driver, name.clone(), params::MayError::False).await;
-    let transaction = open_transaction_for_database(driver, &name, TransactionType::Schema, None)
-        .await
-        .expect("Expected transaction");
-    run_query(&transaction, &schema_query, None).await.expect("Expected successful query");
-    transaction.commit().await.expect("Expected successful commit");
-    name
 }
 
 #[apply(generic_step)]

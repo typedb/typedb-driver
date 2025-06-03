@@ -21,10 +21,16 @@ package com.typedb.driver.test.behaviour.util;
 
 import com.typedb.driver.api.answer.JSON;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import static com.typedb.driver.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertTrue;
@@ -89,5 +95,62 @@ public class Util {
         } else {
             return lhs.equals(rhs);
         }
+    }
+
+    public static Path createTempDir() {
+        try {
+            return Files.createTempDirectory("temp-" + UUID.randomUUID());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create temp directory", e);
+        }
+    }
+
+    public static void deleteDir(Path dir) {
+        if (!Files.exists(dir)) return;
+
+        try (var paths = Files.walk(dir)) {
+            paths.sorted(Comparator.reverseOrder())
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Failed to delete: " + path, e);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete directory: " + dir, e);
+        }
+    }
+
+    public static void writeFile(Path path, String content) {
+        try {
+            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to file: " + path, e);
+        }
+    }
+
+    public static String readFileToString(Path path) {
+        try {
+            return Files.readString(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read file: " + path, e);
+        }
+    }
+
+    public static boolean isEmpty(Path path) {
+        try {
+            return Files.size(path) == 0;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to check file size: " + path, e);
+        }
+    }
+
+    // Otherwise, function bodies are passed with an excessive tabulation from docstrings...
+    public static String removeTwoSpacesInTabulation(String input) {
+        return input.lines()
+                .map(line -> line.startsWith("  ") ? line.substring(2) : line)
+                .reduce((a, b) -> a + "\n" + b)
+                .orElse("");
     }
 }

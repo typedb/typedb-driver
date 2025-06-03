@@ -16,23 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::ops::Deref;
 
-use crossbeam::channel::{
-    bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender, TryRecvError as SyncTryRecvError,
-};
+use tokio::sync::mpsc::UnboundedSender;
 
-pub(in crate::connection) use self::{
-    export::DatabaseExportTransmitter, import::DatabaseImportTransmitter, rpc::RPCTransmitter,
-    transaction::TransactionTransmitter,
-};
+// Makes sure that the shutdown signal is sent when it's dropped. Can try sending redundant shutdown
+// signals after another shutdown source: the channel is expected to be closed (no-op).
+pub(crate) struct ShutdownGuard<T: Default> {
+    shutdown_sender: UnboundedSender<T>,
+}
 
-mod export;
-mod import;
-mod response_sink;
-mod rpc;
-mod shutdown_guard;
-mod transaction;
+impl<T: Default> ShutdownGuard<T> {
+    pub(crate) fn new(shutdown_sender: UnboundedSender<T>) -> Self {
+        Self { shutdown_sender }
+    }
+}
 
-fn oneshot_blocking<T>() -> (SyncSender<T>, SyncReceiver<T>) {
-    bounded_blocking::<T>(1)
+impl<T: Default> Deref for ShutdownGuard<T> {
+    type Target = UnboundedSender<T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.shutdown_sender
+    }
+}
+
+impl<T: Default> Drop for ShutdownGuard<T> {
+    fn drop(&mut self) {
+        self.shutdown_sender.send(T::default()).ok();
+    }
 }

@@ -32,6 +32,7 @@ java_library(
         "//java/common:common",
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
+        "//java/test/behaviour/util:util",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
