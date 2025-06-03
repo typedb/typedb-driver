@@ -33,7 +33,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.typedb.driver.common.collection.Collections.list;
-import static com.typedb.driver.common.collection.Collections.set;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.backgroundDriver;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;

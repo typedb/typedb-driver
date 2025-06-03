@@ -27,12 +27,8 @@ import java.nio.file.Files;
 import java.util.TimeZone;
 
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.fullPath;
-import static com.typedb.driver.test.behaviour.util.Util.isEmpty;
-import static com.typedb.driver.test.behaviour.util.Util.readFileToString;
+import static com.typedb.driver.test.behaviour.util.Util.isFileEmpty;
 import static com.typedb.driver.test.behaviour.util.Util.writeFile;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class UtilSteps {
 
@@ -53,7 +49,7 @@ public class UtilSteps {
 
     @Then("file\\({word}) {is_or_not} empty")
     public void file_is_empty(String name, Parameters.IsOrNot isOrNot) {
-        isOrNot.check(isEmpty(fullPath(name)));
+        isOrNot.check(isFileEmpty(fullPath(name)));
     }
 
     @When("file\\({word}) write:")
