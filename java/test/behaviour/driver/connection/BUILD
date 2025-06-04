@@ -22,11 +22,11 @@ load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 typedb_behaviour_java_test(
     name = "test",
     srcs = [
-        "DriverTest.java",
+        "ConnectionTest.java",
     ],
-    test_class = "com.typedb.driver.test.behaviour.driver.driver.DriverTest",
+    test_class = "com.typedb.driver.test.behaviour.driver.connection.ConnectionTest",
     data = [
-        "@typedb_behaviour//driver:driver.feature",
+        "@typedb_behaviour//driver:connection.feature",
     ],
     connection_steps_community = "//java/test/behaviour/connection:steps-community",
     connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",

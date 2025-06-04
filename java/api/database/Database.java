@@ -54,6 +54,20 @@ public interface Database {
     String typeSchema() throws TypeDBDriverException;
 
     /**
+     * Export a database into a schema definition and a data files saved to the disk.
+     * This is a blocking operation and may take a significant amount of time depending on the database size.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.exportFile("schema.typeql", "data.typedb")
+     * </pre>
+     *
+     * @param schemaFilePath The path to the schema definition file to be created
+     * @param dataFilePath   The path to the data file to be created
+     */
+    void exportFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException;
+
+    /**
      * Deletes this database.
      *
      * <h3>Examples</h3>

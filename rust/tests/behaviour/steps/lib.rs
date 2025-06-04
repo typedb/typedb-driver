@@ -99,6 +99,7 @@ pub struct Context {
     pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
     pub background_driver: Option<TypeDBDriver>,
+    pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
     pub answer: Option<QueryAnswer>,
@@ -121,6 +122,7 @@ impl fmt::Debug for Context {
             .field("background_driver", &self.background_driver)
             .field("transactions", &self.transactions)
             .field("background_transactions", &self.background_transactions)
+            .field("temp_dir", &self.temp_dir)
             .field("answer", &self.answer)
             .field("answer_type", &self.answer_type)
             .field("answer_query_type", &self.answer_query_type)
@@ -139,7 +141,6 @@ impl Context {
     const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
     // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
     const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
-    const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
@@ -197,6 +198,18 @@ impl Context {
         Ok(())
     }
 
+    pub fn get_or_init_temp_dir(&mut self) -> &Path {
+        if self.temp_dir.is_none() {
+            self.temp_dir = Some(create_temp_dir());
+        }
+        self.temp_dir.as_ref().unwrap()
+    }
+
+    pub fn get_full_file_path(&mut self, file_name: &str) -> PathBuf {
+        let temp_dir = self.get_or_init_temp_dir();
+        temp_dir.join(file_name)
+    }
+
     pub async fn all_databases(&self) -> HashSet<String> {
         self.driver
             .as_ref()
@@ -229,14 +242,12 @@ impl Context {
     }
 
     pub async fn cleanup_users(&mut self) {
+        let users = self.driver.as_ref().expect("Expected driver").users();
         try_join_all(
-            self.driver
-                .as_ref()
-                .unwrap()
-                .users()
+            users
                 .all()
                 .await
-                .unwrap()
+                .expect("Expected all users")
                 .into_iter()
                 .filter(|user| user.name != Context::ADMIN_USERNAME)
                 .map(|user| user.delete()),
@@ -244,8 +255,14 @@ impl Context {
         .await
         .expect("Expected users cleanup");
 
-        // TODO: Return
-        // self.driver.as_ref().unwrap().users().set_password(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await.unwrap();
+        users
+            .get(Context::ADMIN_USERNAME)
+            .await
+            .expect("Expected admin user get")
+            .expect("Expected admin user")
+            .update_password(Context::ADMIN_PASSWORD)
+            .await
+            .expect("Expected password update");
     }
 
     pub async fn cleanup_answers(&mut self) {
@@ -468,6 +485,7 @@ impl Default for Context {
             background_driver: None,
             transactions: VecDeque::new(),
             background_transactions: VecDeque::new(),
+            temp_dir: None,
             answer: None,
             answer_type: None,
             answer_query_type: None,
@@ -498,6 +516,8 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
+
+use crate::util::{create_temp_dir, TempDir};
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,

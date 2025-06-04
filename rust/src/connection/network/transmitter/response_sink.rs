@@ -19,7 +19,7 @@
 
 use std::{fmt, fmt::Formatter, sync::Arc};
 
-use crossbeam::channel::Sender as SyncSender;
+use crossbeam::channel::Sender as SyncOneshotSender;
 use itertools::Either;
 use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
@@ -34,7 +34,7 @@ use crate::{
 pub(super) enum ResponseSink<T> {
     ImmediateOneShot(ImmediateHandler<Result<T>>),
     AsyncOneShot(AsyncOneshotSender<Result<T>>),
-    BlockingOneShot(SyncSender<Result<T>>),
+    BlockingOneShot(SyncOneshotSender<Result<T>>),
     Streamed(UnboundedSender<StreamResponse<T>>),
 }
 

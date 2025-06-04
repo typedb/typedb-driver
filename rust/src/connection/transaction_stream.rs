@@ -71,14 +71,10 @@ impl TransactionStream {
     }
 
     pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
-        let promise = self.transaction_transmitter.single(TransactionRequest::Commit);
+        let promise = self.single(TransactionRequest::Commit);
         promisify! {
-            let _this = self;  // move into the promise so the stream isn't dropped until the promise is resolved
-            resolve!(promise).map(|_| {
-                ()
-            }).map_err(|err| {
-                err
-            })
+            let _this = self; // move into the promise so the stream isn't dropped until the promise is resolved
+            resolve!(promise).map(|_| ())
         }
     }
 

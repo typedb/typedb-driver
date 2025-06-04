@@ -153,6 +153,16 @@ public class Parameters {
         return null;
     }
 
+    @ParameterType("exists|does not exist")
+    public ExistsOrDoesnt exists_or_doesnt(String value) {
+        if (value.equals("exists")) {
+            return ExistsOrDoesnt.DOES;
+        } else if (value.equals("does not exist")) {
+            return ExistsOrDoesnt.DOES_NOT;
+        }
+        return null;
+    }
+
     @ParameterType("| by index of variable")
     public IsByVarIndex by_index_of_var(String value) {
         if (value.equals(" by index of variable")) {
@@ -318,6 +328,25 @@ public class Parameters {
         private final boolean does;
 
         ContainsOrDoesnt(boolean is) {
+            this.does = is;
+        }
+
+        public boolean toBoolean() {
+            return does;
+        }
+
+        public void check(boolean toCheck) {
+            assertEquals(does, toCheck);
+        }
+    }
+
+    public enum ExistsOrDoesnt {
+        DOES(true),
+        DOES_NOT(false);
+
+        private final boolean does;
+
+        ExistsOrDoesnt(boolean is) {
             this.does = is;
         }
 

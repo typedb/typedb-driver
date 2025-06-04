@@ -31,6 +31,7 @@ import static com.typedb.driver.jni.typedb_driver.databases_all;
 import static com.typedb.driver.jni.typedb_driver.databases_contains;
 import static com.typedb.driver.jni.typedb_driver.databases_create;
 import static com.typedb.driver.jni.typedb_driver.databases_get;
+import static com.typedb.driver.jni.typedb_driver.databases_import_file;
 import static java.util.stream.Collectors.toList;
 
 public class DatabaseManagerImpl implements DatabaseManager {
@@ -65,6 +66,18 @@ public class DatabaseManagerImpl implements DatabaseManager {
         Validator.requireNonNull(name, "name");
         try {
             databases_create(nativeDriver, name);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public void importFile(String name, String schema, String dataFilePath) throws TypeDBDriverException {
+        Validator.requireNonNull(name, "name");
+        Validator.requireNonNull(schema, "schema");
+        Validator.requireNonNull(dataFilePath, "dataFilePath");
+        try {
+            databases_import_file(nativeDriver, name, schema, dataFilePath);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

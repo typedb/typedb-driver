@@ -36,7 +36,16 @@ java_library(
 java_library(
     name = "steps",
     srcs = ["UtilSteps.java"],
-    deps = ["@maven//:io_cucumber_cucumber_java"],
+    deps = [
+        # Package dependencies
+        "//java/test/behaviour/connection:steps-base",
+        "//java/test/behaviour/config:parameters",
+        ":util",
+
+        # External Maven Dependencies
+        "@maven//:io_cucumber_cucumber_java",
+        "@maven//:junit_junit",
+    ],
 )
 
 checkstyle_test(

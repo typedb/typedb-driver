@@ -257,7 +257,7 @@ def parse_may_error(value: str) -> MayError:
     else:
         match = re.match(r'; fails with a message containing: "(?P<message>.*)"', value)
         if match:
-            return MayError(True, match.group("message"))
+            return MayError(True, re.escape(match.group("message")))
         else:
             raise ValueError(f"Unrecognised MayError: {value}")
 
@@ -289,6 +289,19 @@ def parse_contains_or_doesnt(value: str) -> bool:
 
 
 register_type(ContainsOrDoesnt=parse_contains_or_doesnt)
+
+
+@parse.with_pattern("exists|does not exist")
+def parse_exists_or_doesnt(value: str) -> bool:
+    if value == "exists":
+        return True
+    elif value == "does not exist":
+        return False
+    else:
+        raise ValueError(f"Unrecognised ExistsOrDoesnt: {value}")
+
+
+register_type(ExistsOrDoesnt=parse_exists_or_doesnt)
 
 
 def is_or_not_reason(is_or_not: bool, real, expected) -> str:
