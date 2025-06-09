@@ -2490,6 +2490,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "test_load"
+version = "0.0.0"
+dependencies = [
+ "async-std",
+ "chrono",
+ "futures",
+ "itertools 0.10.5",
+ "rand 0.8.5",
+ "regex",
+ "serde_json",
+ "serial_test",
+ "smol",
+ "tokio",
+ "typedb-driver",
+ "uuid",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2753,7 +2771,7 @@ dependencies = [
 [[package]]
 name = "typedb-protocol"
 version = "0.0.0"
-source = "git+https://github.com/typedb/typedb-protocol?rev=59ad51a9e9dcde8e5ac47015be7956f9b2b27fef#59ad51a9e9dcde8e5ac47015be7956f9b2b27fef"
+source = "git+https://github.com/typedb/typedb-protocol?rev=f6528beec33d6e3c31cb5dafc30e8f0f097c3f82#f6528beec33d6e3c31cb5dafc30e8f0f097c3f82"
 dependencies = [
  "prost",
  "tonic",
