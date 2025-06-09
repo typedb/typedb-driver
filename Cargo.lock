@@ -2490,24 +2490,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "test_load"
-version = "0.0.0"
-dependencies = [
- "async-std",
- "chrono",
- "futures",
- "itertools 0.10.5",
- "rand 0.8.5",
- "regex",
- "serde_json",
- "serial_test",
- "smol",
- "tokio",
- "typedb-driver",
- "uuid",
-]
-
-[[package]]
 name = "textwrap"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
