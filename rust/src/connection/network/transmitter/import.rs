@@ -146,7 +146,7 @@ impl DatabaseImportTransmitter {
         shutdown_signal: UnboundedReceiver<()>,
     ) {
         tokio::task::spawn_blocking(move || Self::dispatch_loop(queue_source, request_sink, shutdown_signal));
-        tokio::spawn(Self::listen(response_source, result_sink, shutdown_sink));
+        tokio::spawn(Self::next(response_source, result_sink, shutdown_sink));
     }
 
     fn dispatch_loop(
@@ -168,7 +168,7 @@ impl DatabaseImportTransmitter {
         }
     }
 
-    async fn listen(
+    async fn next(
         mut grpc_source: Streaming<database_manager::import::Server>,
         result_sink: ResponseSink<()>,
         shutdown_sink: UnboundedSender<()>,

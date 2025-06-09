@@ -33,7 +33,7 @@ use super::Database;
 use crate::{
     common::{address::Address, error::ConnectionError, Result},
     connection::server_connection::ServerConnection,
-    database::migration::{try_opening_import_file, ProtoMessageIterator},
+    database::migration::{try_open_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
     resolve, Error,
 };
@@ -194,7 +194,7 @@ impl DatabaseManager {
         let data_file_path = data_file_path.as_ref();
 
         self.run_failsafe(name, |server_connection, name| async move {
-            let file = try_opening_import_file(data_file_path)?;
+            let file = try_open_import_file(data_file_path)?;
             let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;
 
             let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
@@ -204,12 +204,12 @@ impl DatabaseManager {
                 let item = item?;
                 item_buffer.push(item);
                 if item_buffer.len() >= ITEM_BATCH_SIZE {
-                    import_stream.items(item_buffer.split_off(0))?;
+                    import_stream.send_items(item_buffer.split_off(0))?;
                 }
             }
 
             if !item_buffer.is_empty() {
-                import_stream.items(item_buffer)?;
+                import_stream.send_items(item_buffer)?;
             }
 
             resolve!(import_stream.done())

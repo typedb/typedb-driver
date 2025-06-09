@@ -103,9 +103,6 @@ pub(super) enum Response {
     DatabaseExportStream {
         response_source: Streaming<database::export::Server>,
     },
-    DatabaseExportAnswer {
-        response_source: Streaming<database::export::Server>,
-    },
 
     TransactionStream {
         open_request_id: RequestID,

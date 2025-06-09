@@ -153,8 +153,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         req: database::export::Req,
     ) -> Result<Streaming<database::export::Server>> {
         self.call_with_auto_renew_token(|this| {
-            let req = req.clone();
-            Box::pin(async { this.grpc.database_export(req).map(|r| Ok(r?.into_inner())).await })
+            Box::pin(this.grpc.database_export(req.clone()).map(|r| Ok(r?.into_inner())))
         })
         .await
     }

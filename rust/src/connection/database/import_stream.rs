@@ -38,7 +38,7 @@ impl DatabaseImportStream {
         Self { import_transmitter }
     }
 
-    pub(crate) fn items(&mut self, items: Vec<migration::Item>) -> Result {
+    pub(crate) fn send_items(&mut self, items: Vec<migration::Item>) -> Result {
         self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 

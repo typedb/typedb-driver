@@ -45,7 +45,7 @@ use crate::{
         Error, Result,
     },
     connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
-    database::migration::{try_creating_export_file, try_opening_existing_export_file, DatabaseExportAnswer},
+    database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
     driver::TypeDBDriver,
     error::{InternalError, MigrationError},
     resolve, Transaction, TransactionOptions, TransactionType,
@@ -184,8 +184,8 @@ impl Database {
             return Err(Error::Migration(MigrationError::CannotExportToTheSameFile));
         }
 
-        let _ = try_creating_export_file(schema_file_path)?;
-        if let Err(err) = try_creating_export_file(data_file_path) {
+        let _ = try_create_export_file(schema_file_path)?;
+        if let Err(err) = try_create_export_file(data_file_path) {
             let _ = std::fs::remove_file(schema_file_path);
             return Err(err);
         }
@@ -193,8 +193,8 @@ impl Database {
         let result = self
             .run_failsafe(|database| async move {
                 // File opening should be idempotent for multiple function invocations
-                let schema_file = try_opening_existing_export_file(schema_file_path)?;
-                let data_file = try_opening_existing_export_file(data_file_path)?;
+                let schema_file = try_open_existing_export_file(schema_file_path)?;
+                let data_file = try_open_existing_export_file(data_file_path)?;
                 database.export_file(schema_file, data_file).await
             })
             .await;
@@ -451,7 +451,7 @@ impl ServerDatabase {
         let mut data_writer = BufWriter::new(data_file);
 
         loop {
-            match resolve!(export_stream.listen())? {
+            match resolve!(export_stream.next())? {
                 DatabaseExportAnswer::Done => break,
                 DatabaseExportAnswer::Schema(schema) => {
                     schema_file.write_all(schema.as_bytes())?;

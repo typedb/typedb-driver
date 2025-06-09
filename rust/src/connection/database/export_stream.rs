@@ -39,7 +39,7 @@ impl DatabaseExportStream {
         Self { export_transmitter }
     }
 
-    pub(crate) fn listen<'a>(&'a mut self) -> impl Promise<'a, Result<DatabaseExportAnswer>> + 'a {
+    pub(crate) fn next<'a>(&'a mut self) -> impl Promise<'a, Result<DatabaseExportAnswer>> + 'a {
         let mut stream = self.export_transmitter.stream();
         promisify! {
             #[cfg(feature = "sync")]

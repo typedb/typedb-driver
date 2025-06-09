@@ -116,15 +116,15 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
     }
 }
 
-pub(crate) fn try_creating_export_file(path: impl AsRef<Path>) -> Result<File> {
-    try_opening_export_file(path, true)
+pub(crate) fn try_create_export_file(path: impl AsRef<Path>) -> Result<File> {
+    try_open_export_file(path, true)
 }
 
-pub(crate) fn try_opening_existing_export_file(path: impl AsRef<Path>) -> Result<File> {
-    try_opening_export_file(path, false)
+pub(crate) fn try_open_existing_export_file(path: impl AsRef<Path>) -> Result<File> {
+    try_open_export_file(path, false)
 }
 
-fn try_opening_export_file(path: impl AsRef<Path>, is_new: bool) -> Result<File> {
+fn try_open_export_file(path: impl AsRef<Path>, is_new: bool) -> Result<File> {
     OpenOptions::new().write(true).create_new(is_new).open(path.as_ref()).map_err(|source| {
         Error::Migration(MigrationError::CannotCreateExportFile {
             path: path.as_ref().to_str().unwrap_or("").to_string(),
@@ -133,7 +133,7 @@ fn try_opening_export_file(path: impl AsRef<Path>, is_new: bool) -> Result<File>
     })
 }
 
-pub(crate) fn try_opening_import_file(path: impl AsRef<Path>) -> Result<File> {
+pub(crate) fn try_open_import_file(path: impl AsRef<Path>) -> Result<File> {
     File::open(path.as_ref()).map_err(|source| {
         Error::Migration(MigrationError::CannotOpenImportFile {
             path: path.as_ref().to_str().unwrap_or("").to_string(),

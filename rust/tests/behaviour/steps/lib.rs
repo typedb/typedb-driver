@@ -42,7 +42,10 @@ use typedb_driver::{
     TypeDBDriver,
 };
 
-use crate::params::QueryAnswerType;
+use crate::{
+    params::QueryAnswerType,
+    util::{create_temp_dir, TempDir},
+};
 
 mod connection;
 mod params;
@@ -516,8 +519,6 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
-
-use crate::util::{create_temp_dir, TempDir};
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,

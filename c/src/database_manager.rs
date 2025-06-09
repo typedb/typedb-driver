@@ -26,7 +26,7 @@ use super::{
     iterator::CIterator,
     memory::{borrow_mut, free, string_view},
 };
-use crate::{error::try_release_arc, iterator::iterator_arc_next, memory::borrow};
+use crate::{error::try_release_arc, iterator::iterator_arc_next};
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
