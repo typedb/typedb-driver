@@ -35,6 +35,30 @@ use crate::{
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
+macro_rules! require_transaction_response {
+    ($response:expr, $variant:ident(_)) => {
+        match $response {
+            Ok(TransactionResponse::$variant(inner)) => Ok(inner),
+            other => handle_unexpected_response(other),
+        }
+    };
+
+    ($response:expr, $variant:ident) => {
+        match $response {
+            Ok(TransactionResponse::$variant) => Ok(()),
+            other => handle_unexpected_response(other),
+        }
+    };
+}
+
+fn handle_unexpected_response<T>(response: Result<TransactionResponse>) -> Result<T> {
+    match response {
+        Ok(TransactionResponse::Close) => Err(ConnectionError::TransactionIsClosed.into()),
+        Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        Err(err) => Err(err),
+    }
+}
+
 pub(crate) struct TransactionStream {
     type_: TransactionType,
     options: TransactionOptions,
@@ -73,18 +97,14 @@ impl TransactionStream {
     pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
         let promise = self.transaction_transmitter.single(TransactionRequest::Commit);
         promisify! {
-            let _this = self;  // move into the promise so the stream isn't dropped until the promise is resolved
-            resolve!(promise).map(|_| {
-                ()
-            }).map_err(|err| {
-                err
-            })
+            let _this = self; // move into the promise so the stream isn't dropped until the promise is resolved
+            require_transaction_response!(resolve!(promise), Commit)
         }
     }
 
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
         let promise = self.single(TransactionRequest::Rollback);
-        promisify! { resolve!(promise).map(|_| ()) }
+        promisify! { require_transaction_response!(resolve!(promise), Rollback) }
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
@@ -164,12 +184,9 @@ impl TransactionStream {
     }
 
     fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item = Result<QueryResponse>>> {
-        Ok(self.stream(TransactionRequest::Query(req))?.map(|response| match response {
-            Ok(TransactionResponse::Query(res)) => Ok(res),
-            Ok(TransactionResponse::Close) => Err(ConnectionError::TransactionIsClosed.into()),
-            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-            Err(err) => Err(err),
-        }))
+        Ok(self
+            .stream(TransactionRequest::Query(req))?
+            .map(|response| require_transaction_response!(response, Query(_))))
     }
 }
 
