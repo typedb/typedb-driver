@@ -27,14 +27,14 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_exportFile_java_lang_String_java_lang_String]
-==== exportFile
+[#_Database_exportToFile_java_lang_String_java_lang_String]
+==== exportToFile
 
 [source,java]
 ----
-void exportFile​(java.lang.String schemaFilePath,
-                java.lang.String dataFilePath)
-         throws TypeDBDriverException
+void exportToFile​(java.lang.String schemaFilePath,
+                  java.lang.String dataFilePath)
+           throws TypeDBDriverException
 ----
 
 Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size. 
@@ -58,7 +58,7 @@ a| `dataFilePath` a| The path to the data file to be created a| `java.lang.Strin
 .Code examples
 [source,java]
 ----
-database.exportFile("schema.typeql", "data.typedb")
+database.exportToFile("schema.typeql", "data.typedb")
 ----
 
 [#_Database_name_]

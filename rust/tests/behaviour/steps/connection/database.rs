@@ -83,7 +83,7 @@ async fn import_database(
 ) {
     let data_file_path = context.get_full_file_path(&data_file_name);
     let databases = context.driver.as_ref().unwrap().databases();
-    may_error.check(databases.import_file(name, schema, data_file_path).await);
+    may_error.check(databases.import_from_file(name, schema, data_file_path).await);
 }
 
 #[apply(generic_step)]
@@ -241,7 +241,7 @@ async fn connection_get_database_export_to_schema_file_data_file(
     let database = context.driver.as_ref().unwrap().databases().get(name).await.expect("Expected database");
     let schema_file_path = context.get_full_file_path(&schema_file_name);
     let data_file_path = context.get_full_file_path(&data_file_name);
-    may_error.check(database.export_file(schema_file_path, data_file_path).await);
+    may_error.check(database.export_to_file(schema_file_path, data_file_path).await);
 }
 
 #[apply(generic_step)]

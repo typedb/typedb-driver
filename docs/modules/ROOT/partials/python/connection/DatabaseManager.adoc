@@ -115,12 +115,12 @@ a| `name` a| The name of the database to retrieve a| `str` a|
 driver.databases.get(name)
 ----
 
-[#_DatabaseManager_import_file_name_str_schema_str_data_file_path_str]
-==== import_file
+[#_DatabaseManager_import_from_file_name_str_schema_str_data_file_path_str]
+==== import_from_file
 
 [source,python]
 ----
-import_file(name: str, schema: str, data_file_path: str) -> None
+import_from_file(name: str, schema: str, data_file_path: str) -> None
 ----
 
 Create a database with the given name based on previously exported another database’s data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size.
@@ -144,7 +144,7 @@ a| `data_file_path` a| The exported database file path to import the data from a
 .Code examples
 [source,python]
 ----
-driver.databases.import_file(name, schema, "data.typedb")
+driver.databases.import_from_file(name, schema, "data.typedb")
 ----
 
 // end::methods[]

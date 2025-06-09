@@ -59,13 +59,13 @@ public interface Database {
      *
      * <h3>Examples</h3>
      * <pre>
-     * database.exportFile("schema.typeql", "data.typedb")
+     * database.exportToFile("schema.typeql", "data.typedb")
      * </pre>
      *
      * @param schemaFilePath The path to the schema definition file to be created
      * @param dataFilePath   The path to the data file to be created
      */
-    void exportFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException;
+    void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException;
 
     /**
      * Deletes this database.

@@ -59,7 +59,7 @@ def create_temporary_database_with_schema(context: Context, schema_query: str) -
 
 
 def import_database(context: Context, name: str, schema: str, data_file: str, may_error: MayError):
-    may_error.check(lambda: context.driver.databases.import_file(name, schema, str(context.full_path(data_file))))
+    may_error.check(lambda: context.driver.databases.import_from_file(name, schema, str(context.full_path(data_file))))
 
 
 @step("connection create database: {name:NonSemicolon}{may_error:MayError}")
@@ -200,6 +200,6 @@ def import_from_data_file_and_schema(context: Context, name: str, data_file: str
 @step(
     "connection get database({name:NonSemicolon}) export to schema file({schema_file:NonSemicolon}), data file({data_file:NonSemicolon}){may_error:MayError}")
 def export_to_schema_file_data_file(context: Context, name: str, schema_file: str, data_file: str, may_error: MayError):
-    may_error.check(lambda: context.driver.databases.get(name).export_file(
+    may_error.check(lambda: context.driver.databases.get(name).export_to_file(
         str(context.full_path(schema_file)), str(context.full_path(data_file))
     ))

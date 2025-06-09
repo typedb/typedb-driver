@@ -65,14 +65,14 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 /// @param schema_file The path to the schema definition file to be created.
 /// @param data_file The path to the data file to be created.
 #[no_mangle]
-pub extern "C" fn database_export_file(
+pub extern "C" fn database_export_to_file(
     database: *const Database,
     schema_file: *const c_char,
     data_file: *const c_char,
 ) {
     let schema_file_path = Path::new(string_view(schema_file));
     let data_file_path = Path::new(string_view(data_file));
-    unwrap_void(borrow(database).export_file(schema_file_path, data_file_path))
+    unwrap_void(borrow(database).export_to_file(schema_file_path, data_file_path))
 }
 
 // /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.

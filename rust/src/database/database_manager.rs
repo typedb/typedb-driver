@@ -176,11 +176,11 @@ impl DatabaseManager {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.databases().import_file(name, schema, data_path);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_file(name, schema, data_path).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import_from_file(name, schema, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_from_file(name, schema, data_path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn import_file(
+    pub async fn import_from_file(
         &self,
         name: impl Into<String>,
         schema: impl Into<String>,

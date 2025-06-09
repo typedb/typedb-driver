@@ -275,8 +275,8 @@ driver.databases().get(name);
 --
 ====
 
-[#_struct_DatabaseManager_import_file_name_impl_Into_String_schema_impl_Into_String_data_file_path_impl_AsRef_Path_]
-==== import_file
+[#_struct_DatabaseManager_import_from_file_name_impl_Into_String_schema_impl_Into_String_data_file_path_impl_AsRef_Path_]
+==== import_from_file
 
 [tabs]
 ====
@@ -285,7 +285,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn import_file(
+pub async fn import_from_file(
     &self,
     name: impl Into<String>,
     schema: impl Into<String>,
@@ -300,7 +300,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn import_file(
+pub fn import_from_file(
     &self,
     name: impl Into<String>,
     schema: impl Into<String>,
@@ -340,7 +340,7 @@ async::
 --
 [source,rust]
 ----
-driver.databases().import_file(name, schema, data_path).await;
+driver.databases().import_from_file(name, schema, data_path).await;
 ----
 
 --
@@ -350,7 +350,7 @@ sync::
 --
 [source,rust]
 ----
-driver.databases().import_file(name, schema, data_path);
+driver.databases().import_from_file(name, schema, data_path);
 ----
 
 --

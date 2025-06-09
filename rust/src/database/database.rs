@@ -173,11 +173,11 @@ impl Database {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "database.export_file(schema_path, data_path);")]
-    #[cfg_attr(not(feature = "sync"), doc = "database.export_file(schema_path, data_path).await;")]
+    #[cfg_attr(feature = "sync", doc = "database.export_to_file(schema_path, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.export_to_file(schema_path, data_path).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn export_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+    pub async fn export_to_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
         if schema_file_path == data_file_path {
@@ -195,7 +195,7 @@ impl Database {
                 // File opening should be idempotent for multiple function invocations
                 let schema_file = try_open_existing_export_file(schema_file_path)?;
                 let data_file = try_open_existing_export_file(data_file_path)?;
-                database.export_file(schema_file, data_file).await
+                database.export_to_file(schema_file, data_file).await
             })
             .await;
 
@@ -446,7 +446,7 @@ impl ServerDatabase {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn export_file(&self, mut schema_file: File, data_file: File) -> Result {
+    async fn export_to_file(&self, mut schema_file: File, data_file: File) -> Result {
         let mut export_stream = self.connection.database_export(self.name.clone()).await?;
         let mut data_writer = BufWriter::new(data_file);
 

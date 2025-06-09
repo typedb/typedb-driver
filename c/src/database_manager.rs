@@ -68,14 +68,14 @@ pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_cha
 /// @param schema The schema definition query string for the database.
 /// @param data_file The exported database file path to import the data from.
 #[no_mangle]
-pub extern "C" fn databases_import_file(
+pub extern "C" fn databases_import_from_file(
     driver: *mut TypeDBDriver,
     name: *const c_char,
     schema: *const c_char,
     data_file: *const c_char,
 ) {
     let data_file_path = Path::new(string_view(data_file));
-    unwrap_void(borrow_mut(driver).databases().import_file(string_view(name), string_view(schema), data_file_path))
+    unwrap_void(borrow_mut(driver).databases().import_from_file(string_view(name), string_view(schema), data_file_path))
 }
 
 /// Checks if a database with the given name exists.

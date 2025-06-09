@@ -73,14 +73,14 @@ public interface DatabaseManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().importFile(name, schema, "data.typedb")
+     * driver.databases().importFromFile(name, schema, "data.typedb")
      * </pre>
      *
      * @param name         The name of the database to be created
      * @param schema       The schema definition query string for the database
      * @param dataFilePath The exported database file path to import the data from
      */
-    void importFile(String name, String schema, String dataFilePath) throws TypeDBDriverException;
+    void importFromFile(String name, String schema, String dataFilePath) throws TypeDBDriverException;
 
     /**
      * Retrieves all databases present on the TypeDB server.

@@ -73,7 +73,7 @@ public class DatabaseSteps {
 
     public void importDatabase(String name, String schema, String dataFile, Parameters.MayError mayError) {
         Path dataPath = fullPath(dataFile);
-        mayError.check(() -> driver.databases().importFile(name, schema, dataPath.toString()));
+        mayError.check(() -> driver.databases().importFromFile(name, schema, dataPath.toString()));
     }
 
     @When("connection create database: {non_semicolon}{may_error}")
@@ -212,6 +212,6 @@ public class DatabaseSteps {
     public void connection_get_database_export_to_schema_file_data_file(String name, String schemaFile, String dataFile, Parameters.MayError mayError) {
         Path schemaPath = fullPath(schemaFile);
         Path dataPath = fullPath(dataFile);
-        mayError.check(() -> driver.databases().get(name).exportFile(schemaPath.toString(), dataPath.toString()));
+        mayError.check(() -> driver.databases().get(name).exportToFile(schemaPath.toString(), dataPath.toString()));
     }
 }

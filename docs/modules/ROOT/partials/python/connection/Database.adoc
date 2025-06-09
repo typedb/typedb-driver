@@ -34,12 +34,12 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_export_file_schema_file_path_str_data_file_path_str]
-==== export_file
+[#_Database_export_to_file_schema_file_path_str_data_file_path_str]
+==== export_to_file
 
 [source,python]
 ----
-export_file(schema_file_path: str, data_file_path: str) -> None
+export_to_file(schema_file_path: str, data_file_path: str) -> None
 ----
 
 Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
@@ -62,7 +62,7 @@ a| `data_file_path` a| The path to the data file to be created a| `str` a|
 .Code examples
 [source,python]
 ----
-database.export_file("schema.typeql", "data.typedb")
+database.export_to_file("schema.typeql", "data.typedb")
 ----
 
 [#_Database_schema_]

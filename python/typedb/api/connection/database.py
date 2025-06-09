@@ -60,7 +60,7 @@ class Database(ABC):
         """
         pass
 
-    def export_file(self, schema_file_path: str, data_file_path: str) -> None:
+    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
         """
         Export a database into a schema definition and a data files saved to the disk.
         This is a blocking operation and may take a significant amount of time depending on the database size.
@@ -73,7 +73,7 @@ class Database(ABC):
         ---------
         ::
 
-            database.export_file("schema.typeql", "data.typedb")
+            database.export_to_file("schema.typeql", "data.typedb")
         """
         pass
 
@@ -251,7 +251,7 @@ class DatabaseManager(ABC):
         pass
 
     @abstractmethod
-    def import_file(self, name: str, schema: str, data_file_path: str) -> None:
+    def import_from_file(self, name: str, schema: str, data_file_path: str) -> None:
         """
         Create a database with the given name based on previously exported another database's data loaded from a file.
         This is a blocking operation and may take a significant amount of time depending on the database size.
@@ -265,7 +265,7 @@ class DatabaseManager(ABC):
         ---------
         ::
 
-            driver.databases.import_file(name, schema, "data.typedb")
+            driver.databases.import_from_file(name, schema, "data.typedb")
         """
         pass
 

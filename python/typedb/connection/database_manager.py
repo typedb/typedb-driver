@@ -25,7 +25,7 @@ from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null
 from typedb.connection.database import _Database
 from typedb.native_driver_wrapper import databases_all, databases_contains, databases_create, databases_get, \
-    databases_import_file, database_iterator_next, TypeDBDriverExceptionNative
+    databases_import_from_file, database_iterator_next, TypeDBDriverExceptionNative
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import TypeDBDriver as NativeDriver
@@ -57,12 +57,12 @@ class _DatabaseManager(DatabaseManager):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def import_file(self, name: str, schema: str, data_file_path: str) -> None:
+    def import_from_file(self, name: str, schema: str, data_file_path: str) -> None:
         require_non_null(name, "name")
         require_non_null(schema, "schema")
         require_non_null(data_file_path, "data_file_path")
         try:
-            databases_import_file(self.native_driver, name, schema, data_file_path)
+            databases_import_from_file(self.native_driver, name, schema, data_file_path)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
