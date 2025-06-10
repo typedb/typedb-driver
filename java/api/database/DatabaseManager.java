@@ -43,7 +43,7 @@ public interface DatabaseManager {
     Database get(String name) throws TypeDBDriverException;
 
     /**
-     * Checks if a database with the given name exists
+     * Checks if a database with the given name exists.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -56,7 +56,7 @@ public interface DatabaseManager {
     boolean contains(String name) throws TypeDBDriverException;
 
     /**
-     * Create a database with the given name
+     * Create a database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -65,11 +65,25 @@ public interface DatabaseManager {
      *
      * @param name The name of the database to be created
      */
-    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
     void create(String name) throws TypeDBDriverException;
 
     /**
-     * Retrieves all databases present on the TypeDB server
+     * Create a database with the given name based on previously exported another database's data loaded from a file.
+     * This is a blocking operation and may take a significant amount of time depending on the database size.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().importFromFile(name, schema, "data.typedb")
+     * </pre>
+     *
+     * @param name         The name of the database to be created
+     * @param schema       The schema definition query string for the database
+     * @param dataFilePath The exported database file path to import the data from
+     */
+    void importFromFile(String name, String schema, String dataFilePath) throws TypeDBDriverException;
+
+    /**
+     * Retrieves all databases present on the TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>

@@ -25,7 +25,7 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    authentication, connection, database, database_manager, server_manager, transaction,
+    authentication, connection, database, database_manager, migration, server_manager, transaction,
     type_db_client::TypeDbClient as GRPC, user, user_manager,
 };
 
@@ -117,6 +117,22 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.databases_create(req.clone()))).await
     }
 
+    pub(super) async fn databases_import(
+        &mut self,
+        client: migration::import::Client,
+    ) -> Result<(UnboundedSender<database_manager::import::Client>, Streaming<database_manager::import::Server>)> {
+        self.call_with_auto_renew_token(|this| {
+            let import_req = database_manager::import::Client { client: Some(client.clone()) };
+            Box::pin(async {
+                let (sender, receiver) = unbounded_async();
+                sender.send(import_req)?;
+                let response = this.grpc.databases_import(UnboundedReceiverStream::new(receiver)).await?.into_inner();
+                Ok((sender, response))
+            })
+        })
+        .await
+    }
+
     pub(super) async fn database_delete(&mut self, req: database::delete::Req) -> Result<database::delete::Res> {
         self.single(|this| Box::pin(this.grpc.database_delete(req.clone()))).await
     }
@@ -130,6 +146,16 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         req: database::type_schema::Req,
     ) -> Result<database::type_schema::Res> {
         self.single(|this| Box::pin(this.grpc.database_type_schema(req.clone()))).await
+    }
+
+    pub(super) async fn database_export(
+        &mut self,
+        req: database::export::Req,
+    ) -> Result<Streaming<database::export::Server>> {
+        self.call_with_auto_renew_token(|this| {
+            Box::pin(this.grpc.database_export(req.clone()).map(|r| Ok(r?.into_inner())))
+        })
+        .await
     }
 
     pub(super) async fn transaction(

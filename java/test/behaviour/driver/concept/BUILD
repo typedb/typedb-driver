@@ -15,34 +15,41 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
+package(default_visibility = ["//visibility:__subpackages__"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
-typedb_behaviour_py_test(
+typedb_behaviour_java_test(
     name = "test",
-    feats = ["@typedb_behaviour//driver:driver.feature"],
+    srcs = [
+        "ConceptTest.java",
+    ],
+    test_class = "com.typedb.driver.test.behaviour.driver.concept.ConceptTest",
+    data = [
+        "@typedb_behaviour//driver:concept.feature",
+    ],
+    connection_steps_community = "//java/test/behaviour/connection:steps-community",
+    connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
     steps = [
-        "//python/tests/behaviour/connection:steps",
-        "//python/tests/behaviour/connection/database:steps",
-        "//python/tests/behaviour/connection/transaction:steps",
-        "//python/tests/behaviour/query:steps",
-        "//python/tests/behaviour/util:steps",
+        "//java/test/behaviour/query:steps",
+        "//java/test/behaviour/util:steps",
     ],
     deps = [
-        "//python:driver_python",
-        "//python/tests/behaviour:context",
-        "//python/tests/behaviour/util:util",
-        "//python/tests/behaviour/config:parameters",
-        "//python/tests/behaviour/background",
+        # Internal Package Dependencies
+        "//java/test/behaviour:behaviour",
+
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
     ],
-    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "medium",
+    runtime_deps = [
+        "//java/test/behaviour/config:parameters",
+    ],
+    size = "enormous",
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-    size = "small",
 )

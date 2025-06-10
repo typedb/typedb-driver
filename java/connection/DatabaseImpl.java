@@ -21,10 +21,12 @@ package com.typedb.driver.connection;
 
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.DATABASE_DELETED;
 import static com.typedb.driver.jni.typedb_driver.database_delete;
+import static com.typedb.driver.jni.typedb_driver.database_export_to_file;
 import static com.typedb.driver.jni.typedb_driver.database_get_name;
 import static com.typedb.driver.jni.typedb_driver.database_schema;
 import static com.typedb.driver.jni.typedb_driver.database_type_schema;
@@ -55,6 +57,17 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             return database_type_schema(nativeObject);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException {
+        Validator.requireNonNull(schemaFilePath, "schemaFilePath");
+        Validator.requireNonNull(dataFilePath, "dataFilePath");
+        try {
+            database_export_to_file(nativeObject, schemaFilePath, dataFilePath);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

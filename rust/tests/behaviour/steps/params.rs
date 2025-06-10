@@ -430,6 +430,49 @@ impl FromStr for ContainsOrDoesnt {
 }
 
 #[derive(Debug, Parameter)]
+#[param(name = "exists_or_doesnt", regex = "(exists|does not exist)")]
+pub(crate) enum ExistsOrDoesnt {
+    Exists,
+    DoesNotExist,
+}
+
+impl ExistsOrDoesnt {
+    pub fn check<T: fmt::Debug>(&self, scrutinee: &Option<T>, message: &str) {
+        match (self, scrutinee) {
+            (Self::Exists, Some(_)) | (Self::DoesNotExist, None) => (),
+            (Self::Exists, None) => panic!("Expected to exist, not found: {message}"),
+            (Self::DoesNotExist, Some(value)) => panic!("Expected not to exist, {value:?} is found: {message}"),
+        }
+    }
+
+    pub fn check_result<T: fmt::Debug, E>(&self, scrutinee: &Result<T, E>, message: &str) {
+        let option = match scrutinee {
+            Ok(result) => Some(result),
+            Err(_) => None,
+        };
+        self.check(&option, message)
+    }
+
+    pub fn check_bool(&self, contains: bool, message: &str) {
+        match self {
+            ExistsOrDoesnt::Exists => assert!(contains, "Expected to exist, not found: {message}"),
+            ExistsOrDoesnt::DoesNotExist => assert!(!contains, "Expected not to exist, but found: {message}"),
+        }
+    }
+}
+
+impl FromStr for ExistsOrDoesnt {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "exists" => Self::Exists,
+            "does not exist" => Self::DoesNotExist,
+            invalid => return Err(format!("Invalid `ExistsOrDoesnt`: {invalid}")),
+        })
+    }
+}
+
+#[derive(Debug, Parameter)]
 #[param(name = "is_by_var_index", regex = "(| by index of variable)")]
 pub(crate) enum IsByVarIndex {
     Is,

@@ -60,6 +60,23 @@ class Database(ABC):
         """
         pass
 
+    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
+        """
+        Export a database into a schema definition and a data files saved to the disk.
+        This is a blocking operation and may take a significant amount of time depending on the database size.
+
+        :param schema_file_path: The path to the schema definition file to be created
+        :param data_file_path: The path to the data file to be created
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            database.export_to_file("schema.typeql", "data.typedb")
+        """
+        pass
+
     @abstractmethod
     def delete(self) -> None:
         """
@@ -204,7 +221,7 @@ class DatabaseManager(ABC):
     @abstractmethod
     def contains(self, name: str) -> bool:
         """
-        Checks if a database with the given name exists
+        Checks if a database with the given name exists.
 
         :param name: The database name to be checked
         :return:
@@ -220,7 +237,7 @@ class DatabaseManager(ABC):
     @abstractmethod
     def create(self, name: str) -> None:
         """
-        Create a database with the given name
+        Create a database with the given name.
 
         :param name: The name of the database to be created
         :return:
@@ -234,9 +251,28 @@ class DatabaseManager(ABC):
         pass
 
     @abstractmethod
+    def import_from_file(self, name: str, schema: str, data_file_path: str) -> None:
+        """
+        Create a database with the given name based on previously exported another database's data loaded from a file.
+        This is a blocking operation and may take a significant amount of time depending on the database size.
+
+        :param name: The name of the database to be created
+        :param schema: The schema definition query string for the database
+        :param data_file_path: The exported database file path to import the data from
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.databases.import_from_file(name, schema, "data.typedb")
+        """
+        pass
+
+    @abstractmethod
     def all(self) -> List[Database]:
         """
-        Retrieves all databases present on the TypeDB server
+        Retrieves all databases present on the TypeDB server.
 
         :return:
 

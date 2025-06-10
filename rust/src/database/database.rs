@@ -22,6 +22,9 @@ use std::future::Future;
 use std::{
     collections::HashMap,
     fmt,
+    fs::File,
+    io::{BufWriter, Write},
+    path::Path,
     sync::{
         atomic::{AtomicU64, Ordering},
         Arc, RwLock,
@@ -32,6 +35,7 @@ use std::{
 
 use itertools::Itertools;
 use log::{debug, error};
+use prost::Message;
 
 use crate::{
     common::{
@@ -40,10 +44,11 @@ use crate::{
         info::{DatabaseInfo, ReplicaInfo},
         Error, Result,
     },
-    connection::server_connection::ServerConnection,
+    connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
+    database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
     driver::TypeDBDriver,
-    error::InternalError,
-    Transaction, TransactionOptions, TransactionType,
+    error::{InternalError, MigrationError},
+    resolve, Transaction, TransactionOptions, TransactionType,
 };
 
 /// A TypeDB database
@@ -155,6 +160,50 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
         self.run_failsafe(|database| async move { database.type_schema().await }).await
+    }
+
+    /// Export a database into a schema definition and a data files saved to the disk.
+    /// This is a blocking operation and may take a significant amount of time depending on the database size.
+    ///
+    /// # Arguments
+    ///
+    /// * `schema_file_path` — The path to the schema definition file to be created
+    /// * `data_file_path` — The path to the data file to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.export_to_file(schema_path, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.export_to_file(schema_path, data_path).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn export_to_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+        let schema_file_path = schema_file_path.as_ref();
+        let data_file_path = data_file_path.as_ref();
+        if schema_file_path == data_file_path {
+            return Err(Error::Migration(MigrationError::CannotExportToTheSameFile));
+        }
+
+        let _ = try_create_export_file(schema_file_path)?;
+        if let Err(err) = try_create_export_file(data_file_path) {
+            let _ = std::fs::remove_file(schema_file_path);
+            return Err(err);
+        }
+
+        let result = self
+            .run_failsafe(|database| async move {
+                // File opening should be idempotent for multiple function invocations
+                let schema_file = try_open_existing_export_file(schema_file_path)?;
+                let data_file = try_open_existing_export_file(data_file_path)?;
+                database.export_to_file(schema_file, data_file).await
+            })
+            .await;
+
+        if result.is_err() {
+            let _ = std::fs::remove_file(schema_file_path);
+            let _ = std::fs::remove_file(data_file_path);
+        }
+        result
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -394,6 +443,33 @@ impl ServerDatabase {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn type_schema(&self) -> Result<String> {
         self.connection.database_type_schema(self.name.clone()).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn export_to_file(&self, mut schema_file: File, data_file: File) -> Result {
+        let mut export_stream = self.connection.database_export(self.name.clone()).await?;
+        let mut data_writer = BufWriter::new(data_file);
+
+        loop {
+            match resolve!(export_stream.next())? {
+                DatabaseExportAnswer::Done => break,
+                DatabaseExportAnswer::Schema(schema) => {
+                    schema_file.write_all(schema.as_bytes())?;
+                    schema_file.flush()?;
+                }
+                DatabaseExportAnswer::Items(items) => {
+                    for item in items {
+                        let mut buf = Vec::new();
+                        item.encode_length_delimited(&mut buf)
+                            .map_err(|_| Error::Migration(MigrationError::CannotEncodeExportedConcept))?;
+                        data_writer.write_all(&buf)?;
+                    }
+                }
+            }
+        }
+
+        data_writer.flush()?;
+        Ok(())
     }
 }
 

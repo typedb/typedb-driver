@@ -13,6 +13,10 @@ a| `BrokenPipe`
 a| `ClusterAllNodesFailed`
 a| `ClusterReplicaNotPrimary`
 a| `ConnectionFailed`
+a| `DatabaseExportChannelIsClosed`
+a| `DatabaseExportStreamNoResponse`
+a| `DatabaseImportChannelIsClosed`
+a| `DatabaseImportStreamUnexpectedResponse`
 a| `DatabaseNotFound`
 a| `EncryptionSettingsMismatch`
 a| `InvalidResponseField`

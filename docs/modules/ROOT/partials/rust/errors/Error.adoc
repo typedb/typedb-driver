@@ -13,6 +13,7 @@ Represents errors encountered during operation.
 a| `Concept(ConceptError)`
 a| `Connection(ConnectionError)`
 a| `Internal(InternalError)`
+a| `Migration(MigrationError)`
 a| `Other(String)`
 a| `Server(ServerError)`
 |===

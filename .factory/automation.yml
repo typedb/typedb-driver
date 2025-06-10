@@ -80,11 +80,17 @@ build:
         find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
         git add "${DOCS_DIRS[@]}"
-        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || echo "Failed to verify docs files: please update it manually and verify the changes"
+        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || { 
+          echo "Failed to verify docs files: please update it manually and verify the changes"
+          exit 1
+        }
         
         tool/docs/update_readme.sh
         git add .
-        git diff --exit-code || echo "Failed to verify README files: please update it manually and verify the changes"
+        git diff --exit-code || { 
+          echo "Failed to verify README files: plese update it manually and verify the changes"
+          exit 1
+        }
 
     test-rust-unit-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against

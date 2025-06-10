@@ -21,15 +21,21 @@
 use std::future::Future;
 use std::{
     collections::HashMap,
+    io::{BufReader, BufWriter, Cursor, Read},
+    path::Path,
     sync::{Arc, RwLock},
 };
+
+use prost::{decode_length_delimiter, Message};
+use typedb_protocol::migration::Item;
 
 use super::Database;
 use crate::{
     common::{address::Address, error::ConnectionError, Result},
     connection::server_connection::ServerConnection,
+    database::migration::{try_open_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
-    Error,
+    resolve, Error,
 };
 
 /// Provides access to all database management methods.
@@ -156,6 +162,61 @@ impl DatabaseManager {
         Ok(())
     }
 
+    /// Create a database with the given name based on previously exported another database's data
+    /// loaded from a file.
+    /// This is a blocking operation and may take a significant amount of time depending on the
+    /// database size.
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The name of the database to be created
+    /// * `schema` — The schema definition query string for the database
+    /// * `data_file_path` — The exported database file to import the data from
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().import_from_file(name, schema, data_path);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().import_from_file(name, schema, data_path).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn import_from_file(
+        &self,
+        name: impl Into<String>,
+        schema: impl Into<String>,
+        data_file_path: impl AsRef<Path>,
+    ) -> Result {
+        const ITEM_BATCH_SIZE: usize = 250;
+
+        let name = name.into();
+        let schema: String = schema.into();
+        let schema_ref: &str = schema.as_ref();
+        let data_file_path = data_file_path.as_ref();
+
+        self.run_failsafe(name, |server_connection, name| async move {
+            let file = try_open_import_file(data_file_path)?;
+            let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;
+
+            let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
+            let mut read_item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
+
+            while let Some(item) = read_item_iterator.next() {
+                let item = item?;
+                item_buffer.push(item);
+                if item_buffer.len() >= ITEM_BATCH_SIZE {
+                    import_stream.send_items(item_buffer.split_off(0))?;
+                }
+            }
+
+            if !item_buffer.is_empty() {
+                import_stream.send_items(item_buffer)?;
+            }
+
+            resolve!(import_stream.done())
+        })
+        .await
+    }
+
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_cached_or_fetch(&self, name: &str) -> Result<Arc<Database>> {
         match self.try_get_cached(name) {
@@ -197,6 +258,9 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }
+        // TODO: With this, every operation fails with
+        // [CXN03] Connection Error: Unable to connect to TypeDB server(s), received errors: .... <stacktrace>
+        // Which is quite confusing as it's not really connected to connection.
         Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 }

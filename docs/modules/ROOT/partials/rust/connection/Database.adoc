@@ -68,6 +68,84 @@ database.delete();
 --
 ====
 
+[#_struct_Database_export_to_file_schema_file_path_impl_AsRef_Path_data_file_path_impl_AsRef_Path_]
+==== export_to_file
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn export_to_file(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn export_to_file(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+====
+
+Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schema_file_path` a|  — The path to the schema definition file to be created a| `impl AsRef<Path>`
+a| `data_file_path` a|  — The path to the data file to be created a| `impl AsRef<Path>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.export_to_file(schema_path, data_path).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.export_to_file(schema_path, data_path);
+----
+
+--
+====
+
 [#_struct_Database_name_]
 ==== name
 

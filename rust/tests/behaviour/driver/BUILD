@@ -21,9 +21,27 @@ load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_behaviour_test(
-    name = "test_driver",
-    srcs = ["driver.rs"],
-    data = ["@typedb_behaviour//driver:driver.feature"],
+    name = "test_concept",
+    srcs = ["concept.rs"],
+    data = ["@typedb_behaviour//driver:concept.feature"],
+)
+
+rust_behaviour_test(
+    name = "test_connection",
+    srcs = ["connection.rs"],
+    data = ["@typedb_behaviour//driver:connection.feature"],
+)
+
+rust_behaviour_test(
+    name = "test_migration",
+    srcs = ["migration.rs"],
+    data = ["@typedb_behaviour//driver:migration.feature"],
+)
+
+rust_behaviour_test(
+    name = "test_query",
+    srcs = ["query.rs"],
+    data = ["@typedb_behaviour//driver:query.feature"],
 )
 
 rust_behaviour_test(

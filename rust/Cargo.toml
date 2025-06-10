@@ -55,13 +55,13 @@
 
 	[dependencies.tokio]
 		features = ["bytes", "default", "fs", "full", "io-std", "io-util", "libc", "macros", "mio", "net", "parking_lot", "process", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "time", "tokio-macros"]
-		version = "1.44.2"
+		version = "1.45.0"
 		default-features = false
 
 	[dependencies.typedb-protocol]
 		features = []
+		rev = "f6528beec33d6e3c31cb5dafc30e8f0f097c3f82"
 		git = "https://github.com/typedb/typedb-protocol"
-		tag = "3.2.0"
 		default-features = false
 
 	[dependencies.log]
@@ -121,7 +121,7 @@
 
 	[dependencies.chrono]
 		features = ["alloc", "android-tzdata", "clock", "default", "iana-time-zone", "js-sys", "now", "oldtime", "serde", "std", "wasm-bindgen", "wasmbind", "winapi", "windows-link"]
-		version = "0.4.40"
+		version = "0.4.41"
 		default-features = false
 
 	[dependencies.crossbeam]
@@ -142,10 +142,22 @@
 	name = "test_transaction"
 
 [[test]]
-	path = "tests/behaviour/driver/driver.rs"
-	name = "test_driver"
+	path = "tests/behaviour/driver/connection.rs"
+	name = "test_connection"
+
+[[test]]
+	path = "tests/behaviour/driver/query.rs"
+	name = "test_query"
+
+[[test]]
+	path = "tests/behaviour/driver/concept.rs"
+	name = "test_concept"
 
 [[test]]
 	path = "tests/behaviour/driver/user.rs"
 	name = "test_user"
+
+[[test]]
+	path = "tests/behaviour/driver/migration.rs"
+	name = "test_migration"
 

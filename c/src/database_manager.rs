@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::addr_of_mut, sync::Arc};
+use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
 use typedb_driver::{box_stream, Database, TypeDBDriver};
 
@@ -28,7 +28,7 @@ use super::{
 };
 use crate::{error::try_release_arc, iterator::iterator_arc_next};
 
-/// An <code>Iterator</code> over databases present on the TypeDB server
+/// An <code>Iterator</code> over databases present on the TypeDB server.
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
 
 /// Forwards the <code>DatabaseIterator</code> and returns the next <code>Database</code> if it exists,
@@ -38,13 +38,13 @@ pub extern "C" fn database_iterator_next(it: *mut DatabaseIterator) -> *const Da
     unsafe { iterator_arc_next(addr_of_mut!((*it).0)) }
 }
 
-/// Frees the native rust <code>DatabaseIterator</code> object
+/// Frees the native rust <code>DatabaseIterator</code> object.
 #[no_mangle]
 pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
     free(it);
 }
 
-/// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server
+/// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 #[no_mangle]
 pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseIterator {
     try_release(
@@ -52,13 +52,33 @@ pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseItera
     )
 }
 
-/// Create a database with the given name
+/// Create a database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_char) {
     unwrap_void(borrow_mut(driver).databases().create(string_view(name)));
 }
 
-/// Checks if a database with the given name exists
+/// Create a database with the given name based on previously exported another database's data
+/// loaded from a file.
+/// This is a blocking operation and may take a significant amount of time depending on the database
+/// size.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param name The name of the database to be created.
+/// @param schema The schema definition query string for the database.
+/// @param data_file The exported database file path to import the data from.
+#[no_mangle]
+pub extern "C" fn databases_import_from_file(
+    driver: *mut TypeDBDriver,
+    name: *const c_char,
+    schema: *const c_char,
+    data_file: *const c_char,
+) {
+    let data_file_path = Path::new(string_view(data_file));
+    unwrap_void(borrow_mut(driver).databases().import_from_file(string_view(name), string_view(schema), data_file_path))
+}
+
+/// Checks if a database with the given name exists.
 #[no_mangle]
 pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_char) -> bool {
     unwrap_or_default(borrow_mut(driver).databases().contains(string_view(name)))

@@ -19,14 +19,13 @@
 
 use std::{ffi::c_char, path::Path};
 
-use itertools::Itertools;
 use typedb_driver::{Credentials, DriverOptions, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, free, string_view},
 };
-use crate::memory::{release, string_array_view};
+use crate::memory::release;
 
 const DRIVER_LANG: &'static str = "c";
 
