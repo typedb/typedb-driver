@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.2.0
+cargo add typedb-driver@3.4.0-rc0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.2.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.4.0-rc0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.2.0</version>
+        <version>3.4.0-rc0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,71 +42,57 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.2.0
+pip install typedb-driver==3.4.0rc0
 ```
 
+
 ## New Features
-- **Introduce transaction and query options**
-  **Introduce transaction options:**
-  * `transaction_timeout`: If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions,
-  * `schema_lock_acquire_timeout`: If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
+- **Introduce file-based database export and import**
+  Introduce interfaces to export databases into schema definition and data files and to import databases using these files. Database import supports files exported from both TypeDB 2.x and TypeDB 3.x.
   
-  Rust examples:
+  Both operations are blocking and may take a significant amount of time to execute for large databases. Use parallel connections to continue operating with the server and its other databases.
+  
+  Usage examples in Rust:
   ```rust
-  let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(10));
-  let transaction =
-      driver.transaction_with_options(database.name(), TransactionType::Schema, options).await.unwrap();
+  // export
+  let db = driver.databases().get(db_name).await.unwrap();
+  db.export_to_file(schema_file_path, data_file_path).await.unwrap();
+  
+  // import
+  let schema = read_to_string(schema_file_path).unwrap();
+  driver.databases().import_from_file(db_name2, schema, data_file_path).await.unwrap();
   ```
   
-  Python example:
+  Usage examples in Python:
   ```py
-  options = TransactionOptions(transaction_timeout_millis=10_000)
-  tx = driver.transaction(database.name, TransactionType.SCHEMA, options)
+  # export
+  database = driver.databases.get(db_name)
+  database.export_to_file(schema_file_path, data_file_path)
+  
+  # import
+  with open(schema_file_path, 'r', encoding='utf-8') as f:
+      schema = f.read()
+  driver.databases.import_from_file(db_name2, schema, data_file_path)
   ```
   
-  Java example:
+  Usage examples in Java:
   ```java
-  TransactionOptions transactionOptions = new TransactionOptions().transactionTimeoutMillis(10_000);
-  Transaction transaction = driver.transaction(database.name(), Transaction.Type.SCHEMA, transactionOptions);
+  // export
+  Database database = driver.databases().get(dbName);
+  database.exportToFile(schemaFilePath, dataFilePath);
+  
+  // import
+  String schema = Files.readString(Path.of(schemaFilePath));
+  driver.databases().importFromFile(dbName2, schema, dataFilePath);
   ```
-  
-  **Introduce query options:**
-  * `include_instance_types`: If set, specifies if types should be included in instance structs returned in ConceptRow answers,
-  * `prefetch_size`: If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side.
-  
-  Rust examples:
-  ```rust
-  let options = QueryOptions::new().include_instance_types(true);
-  let answer = transaction.query_with_options("match $x isa person;", options).await.unwrap();
-  ```
-  
-  Python example:
-  ```py
-  options = QueryOptions(include_instance_types=True)
-  answer = tx.query("match $x isa person;").resolve()
-  ```
-  
-  Java example:
-  ```java
-  QueryOptions queryOptions = new QueryOptions().includeInstanceTypes(true);                
-  QueryAnswer matchAnswer = transaction.query("match $x isa person;", queryOptions).resolve();                
-  ```
-  
-  
-- **Introduce Rust driver token-based authentication**
-  We update the protocol version and introduce token-based authentication for all the available drivers. Now, instead of sending usernames and passwords for authentication purposes, authorization tokens are implicitly added to every network request to a TypeDB server. It enhances the authentication speed and security. 
-  
-  These tokens are acquired as a result of driver instantiation and are renewed automatically. This feature does not require any user-side changes.
-  
-  Additionally, as a part of the HTTP client introduction work, we rename Concept Documents key style from snake_case to camelCase, which is a common convention for JSONs (it affects only value types: `value_type` -> `valueType`).
   
   
 
 ## Bugs Fixed
-- **Fix incorrect resource ownership transmission in schema retrieval C functions**
-  Fix a crash caused by an incorrect database's ownership acquisition in the C layer of the `schema` and `type_schema` functions, affecting Python and Java drivers.
+- **Handle "Unexpected response type for remote procedure call: Close" on query stream opening**
+  Fix a rare `InternalError` returned by mistake when a client sends a query request while the transaction is being closed. Now, an expected "The transaction is closed and no further operation is allowed." error is returned instead.
   
-  Add respective BDD steps implementations for these functions in Rust, Python, and Java.
+  Additionally, wait for specific transaction responses in `rollback`, `commit`, and `query` to solidify the protocol and ensure that the server acts as expected.
   
   
 
@@ -114,15 +100,5 @@ pip install typedb-driver==3.2.0
 
 
 ## Other Improvements
-  
-- **Update dependencies**
-  After a recent update of the crates, rustls added aws-lc-rs as a default dependency. This caused runtime issues during loading of the shared library where the dynamic linker could not find some symbols from aws-lc: 
-  
-  ```
-  ImportError: dlopen(.../native_driver_python.so, 0x0002): symbol not found in flat namespace '_aws_lc_0_28_0_EVP_aead_aes_128_gcm'
-  ```
-  
-  We decided to force the use of ring as the cryptographic provider for rustls instead.
-  
-  
+
     
