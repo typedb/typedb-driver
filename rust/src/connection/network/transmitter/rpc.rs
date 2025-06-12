@@ -25,14 +25,13 @@ use tokio::{
         oneshot::channel as oneshot_async,
     },
 };
-use tonic::Status;
-use typedb_protocol::{database, database_manager, migration, transaction, transaction::server::Server};
+use typedb_protocol::{transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
     common::{address::Address, error::ConnectionError, RequestID, Result},
     connection::{
-        message::{DatabaseExportResponse, Request, Response, TransactionResponse},
+        message::{Request, Response, TransactionResponse},
         network::{
             channel::{open_callcred_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
@@ -40,7 +39,6 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
-    database::migration::DatabaseExportAnswer,
     Credentials, DriverOptions, Error,
 };
 
