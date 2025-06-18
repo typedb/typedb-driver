@@ -24,6 +24,7 @@ use tonic::{Code, Status};
 use tonic_types::{ErrorDetails, ErrorInfo, StatusExt};
 
 use super::{address::Address, RequestID};
+use crate::connection::server::Addresses;
 
 macro_rules! error_messages {
     {
@@ -120,7 +121,7 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ServerConnectionFailed { addresses: Vec<Address> } =
+    ServerConnectionFailed { addresses: Addresses } =
         2: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
     ServerConnectionFailedWithError { error: String } =
         3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
@@ -184,6 +185,8 @@ error_messages! { ConnectionError
         32: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
         33: "Didn't receive any server responses for the database export command.",
+    UnexpectedReplicaType { replica_type: i32 } =
+        34: "Unexpected replica type in message received from server: {replica_type}. This is either a version compatibility issue or a bug.",
 }
 
 error_messages! { ConceptError

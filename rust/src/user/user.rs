@@ -52,7 +52,7 @@ impl User {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.update_password(self.name.clone(), password.clone()).await {
-                Ok(res) => return Ok(()),
+                Ok(res) => return Ok(res),
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }

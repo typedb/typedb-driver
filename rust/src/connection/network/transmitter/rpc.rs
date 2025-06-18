@@ -115,6 +115,9 @@ impl RPCTransmitter {
             }
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
+            Request::ServerVersion => {
+                rpc.server_version(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
 
             Request::DatabasesAll => {
                 rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)

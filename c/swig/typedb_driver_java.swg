@@ -186,6 +186,9 @@
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
 
+%nojavaexception ServerVersion::distribution;
+%nojavaexception ServerVersion::version;
+
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
@@ -225,6 +228,7 @@
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
 //%nojavaexception ~ReplicaInfo;
+%nojavaexception ~ServerVersion;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
 %nojavaexception ~StringAndOptValueIterator;

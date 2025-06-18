@@ -20,12 +20,12 @@
 use std::sync::Arc;
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use log::{debug, trace, warn};
+use log::{debug, trace};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, server_manager, transaction,
+    connection, database, database_manager, migration, server, server_manager, transaction,
     type_db_client::TypeDbClient as GRPC, user, user_manager,
 };
 
@@ -87,6 +87,10 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
         self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
+    }
+
+    pub(super) async fn server_version(&mut self, req: server::version::Req) -> Result<server::version::Res> {
+        self.single(|this| Box::pin(this.grpc.server_version(req.clone()))).await
     }
 
     pub(super) async fn databases_all(

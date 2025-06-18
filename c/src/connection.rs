@@ -19,13 +19,14 @@
 
 use std::{ffi::c_char, path::Path};
 
-use typedb_driver::{Credentials, DriverOptions, TypeDBDriver};
+use chrono::DateTime;
+use typedb_driver::{concept::value::TimeZone, Credentials, DriverOptions, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, free, string_view},
 };
-use crate::memory::release;
+use crate::memory::{release, release_string, string_free};
 
 const DRIVER_LANG: &'static str = "c";
 
@@ -89,33 +90,59 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
 
-// Creates a new <code>Credentials</code> for connecting to TypeDB Server.
-//
-// @param username The name of the user to connect as
-// @param password The password for the user
+/// Creates a new <code>Credentials</code> for connecting to TypeDB Server.
+///
+/// @param username The name of the user to connect as
+/// @param password The password for the user
 #[no_mangle]
 pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
     release(Credentials::new(string_view(username), string_view(password)))
 }
 
-// Frees the native rust <code>Credentials</code> object
+/// Frees the native rust <code>Credentials</code> object
 #[no_mangle]
 pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
     free(credentials);
 }
 
-// Creates a new <code>DriverOptions</code> for connecting to TypeDB Server.
-//
-// @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
-// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
+/// Creates a new <code>DriverOptions</code> for connecting to TypeDB Server.
+///
+/// @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
+/// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
 #[no_mangle]
 pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
     try_release(DriverOptions::new(is_tls_enabled, tls_root_ca_path))
 }
 
-// Frees the native rust <code>DriverOptions</code> object
+/// Frees the native rust <code>DriverOptions</code> object
 #[no_mangle]
 pub extern "C" fn driver_options_drop(driver_options: *mut DriverOptions) {
     free(driver_options);
+}
+
+/// <code>ServerVersion</code> is an FFI representation of a full server's version specification.
+#[repr(C)]
+pub struct ServerVersion {
+    distribution: *mut c_char,
+    version: *mut c_char,
+}
+
+impl ServerVersion {
+    pub fn new(distribution: String, version: String) -> Self {
+        Self { distribution: release_string(distribution), version: release_string(version) }
+    }
+}
+
+impl Drop for ServerVersion {
+    fn drop(&mut self) {
+        string_free(self.distribution);
+        string_free(self.version);
+    }
+}
+
+/// Frees the native rust <code>ServerVersion</code> object
+#[no_mangle]
+pub extern "C" fn server_version_drop(server_version: *mut ServerVersion) {
+    free(server_version);
 }

@@ -17,14 +17,33 @@
  * under the License.
  */
 
-pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{credentials::Credentials, driver_options::DriverOptions, server::ServerVersion};
+package com.typedb.driver.api.server;
 
-mod credentials;
-pub(crate) mod database;
-mod driver_options;
-mod message;
-mod network;
-pub(crate) mod runtime;
-pub(crate) mod server;
-pub(crate) mod transaction_stream;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
+import javax.annotation.CheckReturnValue;
+
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+
+/**
+ * The metadata and state of an individual raft replica of a driver connection.
+ */
+public interface Replica {
+    /**
+     * The address this replica is hosted at.
+     */
+    @CheckReturnValue
+    String address();
+
+    /**
+     * Gets the type of this replica: whether it's a primary or a secondary replica.
+     */
+    @CheckReturnValue
+    ReplicaType type();
+
+    /**
+     * The raft protocol ‘term’ of this replica.
+     */
+    @CheckReturnValue
+    long term();
+}

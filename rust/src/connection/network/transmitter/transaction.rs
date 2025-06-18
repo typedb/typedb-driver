@@ -36,21 +36,16 @@ use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
-use tokio::{
-    select,
-    sync::{
-        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
-    },
-    time::{sleep_until, Instant},
+use tokio::sync::{
+    mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+    oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
 };
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
-use uuid::Uuid;
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
-use super::response_sink::{ImmediateHandler, ResponseSink, StreamResponse};
+use super::response_sink::{ResponseSink, StreamResponse};
 use crate::{
     common::{
         box_promise,
@@ -59,7 +54,7 @@ use crate::{
         Callback, Promise, RequestID, Result,
     },
     connection::{
-        message::{QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
+        message::{QueryResponse, Response, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
         server_connection::LatencyTracker,

@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::collections::HashMap;
+use std::{sync::Arc};
 
 use crate::{
-    common::{address::Address, Result},
-    connection::server_connection::ServerConnection,
+    common::{Result},
+    connection::{server::server_manager::ServerManager},
     error::ConnectionError,
     User,
 };
@@ -28,12 +28,12 @@ use crate::{
 /// Provides access to all user management methods.
 #[derive(Debug)]
 pub struct UserManager {
-    server_connections: HashMap<Address, ServerConnection>,
+    server_manager: Arc<ServerManager>,
 }
 
 impl UserManager {
-    pub fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
-        Self { server_connections }
+    pub fn new(server_manager: Arc<ServerManager>) -> Self {
+        Self { server_manager }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -42,7 +42,7 @@ impl UserManager {
             .server_connections
             .iter()
             .next()
-            .expect("Unexpected condition: the server connection collection is empty");
+            .expect("Expected a non-empty server connection collection");
         self.get(connection.username()).await
     }
 

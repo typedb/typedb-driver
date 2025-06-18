@@ -21,7 +21,7 @@ use std::{
     cmp::max,
     collections::VecDeque,
     fs::{File, OpenOptions},
-    io::{BufRead, BufWriter, Read, Write},
+    io::BufRead,
     marker::PhantomData,
     path::Path,
 };

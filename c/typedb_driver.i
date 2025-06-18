@@ -84,6 +84,7 @@ struct Type {};
 
 %dropproxydefined(DatetimeAndTimeZone, datetime_and_time_zone)
 %dropproxydefined(StringAndOptValue, string_and_opt_value)
+%dropproxydefined(ServerVersion, server_version)
 %dropproxy(StringAndOptValueIterator, string_and_opt_value_iterator)
 
 %dropproxy(StringIterator, string_iterator)

@@ -17,14 +17,21 @@
  * under the License.
  */
 
-pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{credentials::Credentials, driver_options::DriverOptions, server::ServerVersion};
+/// A full TypeDB's server version specification
+#[derive(Debug, Clone)]
+pub struct ServerVersion {
+    pub(crate) distribution: String,
+    pub(crate) version: String,
+}
 
-mod credentials;
-pub(crate) mod database;
-mod driver_options;
-mod message;
-mod network;
-pub(crate) mod runtime;
-pub(crate) mod server;
-pub(crate) mod transaction_stream;
+impl ServerVersion {
+    /// Retrieves the server's distribution.
+    pub fn distribution(&self) -> &str {
+        &self.distribution
+    }
+
+    /// Retrieves the server's version number.
+    pub fn version(&self) -> &str {
+        &self.version
+    }
+}

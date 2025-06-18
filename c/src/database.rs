@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
-use typedb_driver::{box_stream, info::ReplicaInfo, Database};
+use typedb_driver::{box_stream, info::ServerInfo, Database};
 
 use super::{
     error::{try_release_string, unwrap_void},

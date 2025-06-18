@@ -48,14 +48,6 @@ impl DatetimeInNanos {
     pub fn new<TZ: ChronoTimeZone>(datetime: &DateTime<TZ>) -> Self {
         Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
     }
-
-    pub fn get_seconds(self) -> i64 {
-        self.seconds
-    }
-
-    pub fn get_subsec_nanos(self) -> u32 {
-        self.subsec_nanos
-    }
 }
 
 /// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
@@ -83,22 +75,6 @@ impl DatetimeAndTimeZone {
             local_minus_utc_offset: offset,
             is_fixed_offset,
         }
-    }
-
-    pub fn get_datetime_in_nanos(self) -> DatetimeInNanos {
-        self.datetime_in_nanos
-    }
-
-    pub fn get_zone_name(self) -> *mut c_char {
-        self.zone_name
-    }
-
-    pub fn get_local_minus_utc_offset(self) -> i32 {
-        self.local_minus_utc_offset
-    }
-
-    pub fn get_is_fixed_offset(self) -> bool {
-        self.is_fixed_offset
     }
 }
 

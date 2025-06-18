@@ -18,7 +18,6 @@
  */
 
 use std::{
-    collections::{HashMap, HashSet},
     fmt,
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -31,19 +30,20 @@ use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
 use crate::{
-    common::{address::Address, RequestID},
+    common::address::Address,
     connection::{
         database::{export_stream::DatabaseExportStream, import_stream::DatabaseImportStream},
-        message::{DatabaseImportRequest, Request, Response, TransactionRequest, TransactionResponse},
+        message::{DatabaseImportRequest, Request, Response, TransactionRequest},
         network::transmitter::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
         runtime::BackgroundRuntime,
-        TransactionStream,
+        server::server_replica::ServerReplica,
+        ServerVersion, TransactionStream,
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, TransactionOptions, TransactionType, User,
+    Credentials, DriverOptions, Result, TransactionOptions, TransactionType,
 };
 
 #[derive(Clone)]
@@ -65,11 +65,11 @@ impl ServerConnection {
         driver_options: DriverOptions,
         driver_lang: &str,
         driver_version: &str,
-    ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
+    ) -> Result<(Self, Vec<ServerReplica>)> {
         let username = credentials.username().to_string();
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
-        let (connection_id, latency, database_info) =
+        let (connection_id, latency, servers) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version, credentials).await?;
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
@@ -80,7 +80,7 @@ impl ServerConnection {
             shutdown_senders: Default::default(),
             latency_tracker,
         };
-        Ok((server_connection, database_info))
+        Ok((server_connection, servers))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -89,7 +89,7 @@ impl ServerConnection {
         driver_lang: &str,
         driver_version: &str,
         credentials: Credentials,
-    ) -> crate::Result<(Uuid, Duration, Vec<DatabaseInfo>)> {
+    ) -> Result<(Uuid, Duration, Vec<ServerReplica>)> {
         let message = Request::ConnectionOpen {
             driver_lang: driver_lang.to_owned(),
             driver_version: driver_version.to_owned(),
@@ -98,42 +98,27 @@ impl ServerConnection {
 
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
-            Response::ConnectionOpen { connection_id, server_duration_millis, databases: database_info } => {
+            Response::ConnectionOpen { connection_id, server_duration_millis, servers } => {
                 let latency =
                     Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
-                Ok((connection_id, latency, database_info))
+                Ok((connection_id, latency, servers))
             }
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
     }
 
-    pub fn username(&self) -> &str {
+    pub(crate) fn username(&self) -> &str {
         self.username.as_str()
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn request(&self, request: Request) -> crate::Result<Response> {
-        if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ServerConnectionIsClosed.into());
-        }
-        self.request_transmitter.request(request).await
-    }
-
-    fn request_blocking(&self, request: Request) -> crate::Result<Response> {
-        if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ServerConnectionIsClosed.into());
-        }
-        self.request_transmitter.request_blocking(request)
-    }
-
-    pub(crate) fn force_close(&self) -> crate::Result {
+    pub(crate) fn force_close(&self) -> Result {
         for sender in self.shutdown_senders.lock().unwrap().drain(..) {
             let _ = sender.send(());
         }
         self.request_transmitter.force_close()
     }
 
-    pub(crate) fn servers_all(&self) -> crate::Result<Vec<Address>> {
+    pub(crate) fn servers_all(&self) -> Result<Vec<ServerReplica>> {
         match self.request_blocking(Request::ServersAll)? {
             Response::ServersAll { servers } => Ok(servers),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -141,7 +126,15 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn all_databases(&self) -> crate::Result<Vec<DatabaseInfo>> {
+    pub(crate) async fn version(&self) -> Result<ServerVersion> {
+        match self.request(Request::ServerVersion).await? {
+            Response::ServerVersion { server_version: version } => Ok(version),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn all_databases(&self) -> Result<Vec<DatabaseInfo>> {
         match self.request(Request::DatabasesAll).await? {
             Response::DatabasesAll { databases } => Ok(databases),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -149,15 +142,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_database_replicas(&self, database_name: String) -> crate::Result<DatabaseInfo> {
-        match self.request(Request::DatabaseGet { database_name }).await? {
-            Response::DatabaseGet { database } => Ok(database),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn contains_database(&self, database_name: String) -> crate::Result<bool> {
+    pub(crate) async fn contains_database(&self, database_name: String) -> Result<bool> {
         match self.request(Request::DatabasesContains { database_name }).await? {
             Response::DatabasesContains { contains } => Ok(contains),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -165,19 +150,23 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn create_database(&self, database_name: String) -> crate::Result<DatabaseInfo> {
-        match self.request(Request::DatabaseCreate { database_name }).await? {
-            Response::DatabaseCreate { database } => Ok(database),
+    pub(crate) async fn get_database(&self, database_name: String) -> Result<DatabaseInfo> {
+        match self.request(Request::DatabaseGet { database_name }).await? {
+            Response::DatabaseGet { database } => Ok(database),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn import_database(
-        &self,
-        database_name: String,
-        schema: String,
-    ) -> crate::Result<DatabaseImportStream> {
+    pub(crate) async fn create_database(&self, database_name: String) -> Result {
+        match self.request(Request::DatabaseCreate { database_name }).await? {
+            Response::DatabaseCreate { .. } => Ok(()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn import_database(&self, database_name: String, schema: String) -> Result<DatabaseImportStream> {
         match self
             .request(Request::DatabaseImport(DatabaseImportRequest::Initial { name: database_name, schema }))
             .await?
@@ -196,13 +185,13 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn delete_database(&self, database_name: String) -> crate::Result {
+    pub(crate) async fn delete_database(&self, database_name: String) -> Result {
         self.request(Request::DatabaseDelete { database_name }).await?;
         Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn database_schema(&self, database_name: String) -> crate::Result<String> {
+    pub(crate) async fn database_schema(&self, database_name: String) -> Result<String> {
         match self.request(Request::DatabaseSchema { database_name }).await? {
             Response::DatabaseSchema { schema } => Ok(schema),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -210,7 +199,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn database_type_schema(&self, database_name: String) -> crate::Result<String> {
+    pub(crate) async fn database_type_schema(&self, database_name: String) -> Result<String> {
         match self.request(Request::DatabaseTypeSchema { database_name }).await? {
             Response::DatabaseTypeSchema { schema } => Ok(schema),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -218,7 +207,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn database_export(&self, database_name: String) -> crate::Result<DatabaseExportStream> {
+    pub(crate) async fn database_export(&self, database_name: String) -> Result<DatabaseExportStream> {
         match self.request(Request::DatabaseExport { database_name }).await? {
             Response::DatabaseExportStream { response_source } => {
                 let transmitter = DatabaseExportTransmitter::new(self.background_runtime.clone(), response_source);
@@ -237,7 +226,7 @@ impl ServerConnection {
         database_name: &str,
         transaction_type: TransactionType,
         options: TransactionOptions,
-    ) -> crate::Result<TransactionStream> {
+    ) -> Result<TransactionStream> {
         let network_latency = self.latency_tracker.current_latency();
         let open_request_start = Instant::now();
 
@@ -272,7 +261,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn all_users(&self) -> crate::Result<Vec<UserInfo>> {
+    pub(crate) async fn all_users(&self) -> Result<Vec<UserInfo>> {
         match self.request(Request::UsersAll).await? {
             Response::UsersAll { users } => Ok(users),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -280,7 +269,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_user(&self, name: String) -> crate::Result<Option<UserInfo>> {
+    pub(crate) async fn get_user(&self, name: String) -> Result<Option<UserInfo>> {
         match self.request(Request::UsersGet { name }).await? {
             Response::UsersGet { user } => Ok(user),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -288,7 +277,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn contains_user(&self, name: String) -> crate::Result<bool> {
+    pub(crate) async fn contains_user(&self, name: String) -> Result<bool> {
         match self.request(Request::UsersContains { name }).await? {
             Response::UsersContain { contains } => Ok(contains),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -296,7 +285,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn create_user(&self, name: String, password: String) -> crate::Result {
+    pub(crate) async fn create_user(&self, name: String, password: String) -> Result {
         match self.request(Request::UsersCreate { user: UserInfo { name, password: Some(password) } }).await? {
             Response::UsersCreate => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -304,7 +293,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn update_password(&self, name: String, password: String) -> crate::Result {
+    pub(crate) async fn update_password(&self, name: String, password: String) -> Result {
         match self
             .request(Request::UsersUpdate {
                 username: name,
@@ -318,11 +307,26 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn delete_user(&self, name: String) -> crate::Result {
+    pub(crate) async fn delete_user(&self, name: String) -> Result {
         match self.request(Request::UsersDelete { name }).await? {
             Response::UsersDelete => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn request(&self, request: Request) -> Result<Response> {
+        if !self.background_runtime.is_open() {
+            return Err(ConnectionError::ServerConnectionIsClosed.into());
+        }
+        self.request_transmitter.request(request).await
+    }
+
+    fn request_blocking(&self, request: Request) -> Result<Response> {
+        if !self.background_runtime.is_open() {
+            return Err(ConnectionError::ServerConnectionIsClosed.into());
+        }
+        self.request_transmitter.request_blocking(request)
     }
 }
 
