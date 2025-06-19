@@ -16,14 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::{sync::Arc};
+use std::sync::Arc;
 
-use crate::{
-    common::{Result},
-    connection::{server::server_manager::ServerManager},
-    error::ConnectionError,
-    User,
-};
+use crate::{common::Result, connection::server::server_manager::ServerManager, error::ConnectionError, User};
 
 /// Provides access to all user management methods.
 #[derive(Debug)]
@@ -38,11 +33,8 @@ impl UserManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_current_user(&self) -> Result<Option<User>> {
-        let (_, connection) = self
-            .server_connections
-            .iter()
-            .next()
-            .expect("Expected a non-empty server connection collection");
+        let (_, connection) =
+            self.server_connections.iter().next().expect("Expected a non-empty server connection collection");
         self.get(connection.username()).await
     }
 

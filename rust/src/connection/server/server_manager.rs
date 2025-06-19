@@ -21,7 +21,7 @@ use std::{
     collections::{HashMap, HashSet},
     fmt,
     future::Future,
-    sync::{Arc, RwLock},
+    sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
     time::Duration,
 };
 
@@ -31,7 +31,7 @@ use log::debug;
 use crate::{
     common::address::Address,
     connection::{
-        message::{Request, Response},
+        message::Response,
         runtime::BackgroundRuntime,
         server::{server_connection::ServerConnection, server_replica::ServerReplica, Addresses},
     },
@@ -40,9 +40,17 @@ use crate::{
 };
 
 pub(crate) struct ServerManager {
-    // TODO: Merge ServerConnection with ServerReplica?
-    server_connections: HashMap<Address, ServerConnection>,
-    replicas: RwLock<HashSet<ServerReplica>>,
+    // TODO: Merge ServerConnection with ServerReplica? Probably should not as they can be different
+    initial_addresses: Addresses,
+    replicas: RwLock<Vec<ServerReplica>>,
+    server_connections: RwLock<HashMap<Address, ServerConnection>>,
+    address_translation: HashMap<Address, Address>,
+
+    background_runtime: Arc<BackgroundRuntime>,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+    driver_lang: String,
+    driver_version: String,
 }
 
 impl ServerManager {
@@ -59,7 +67,7 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
-        let replicas = Self::fetch_server_list(
+        let replicas = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
             &addresses,
             credentials.clone(),
@@ -68,163 +76,163 @@ impl ServerManager {
             driver_version.as_ref(),
         )
         .await?;
-        let mut server_connections = HashMap::new();
-        for replica in &replicas {
-            let (server_connection, _) = ServerConnection::new(
-                background_runtime.clone(),
-                replica.address().clone(),
-                credentials.clone(),
-                driver_options.clone(),
-                driver_lang.as_ref(),
-                driver_version.as_ref(),
-            )
-            .await?;
-            server_connections.insert(replica.address().clone(), server_connection);
+        let address_translation = addresses.address_translation();
+
+        let mut server_manager = Self {
+            initial_addresses: addresses,
+            replicas: RwLock::new(replicas),
+            server_connections: RwLock::new(HashMap::new()),
+            address_translation,
+            background_runtime,
+            credentials,
+            driver_options,
+            driver_lang: driver_lang.as_ref().to_string(),
+            driver_version: driver_version.as_ref().to_string(),
+        };
+        server_manager.update_server_connections().await?;
+        Ok(server_manager)
+    }
+
+    async fn update_server_connections(&self) -> Result {
+        let replicas = self.replicas.read().expect("Expected replicas read access");
+        let replica_addresses: HashSet<Address> =
+            replicas.iter().map(|replica| replica.private_address().clone()).collect();
+        let mut connection_errors = Vec::with_capacity(replicas.len());
+        let mut server_connections = self.write_server_connections();
+        server_connections.retain(|address, _| replica_addresses.contains(address));
+        for replica in replicas.iter() {
+            let private_address = replica.private_address().clone();
+            if !server_connections.contains_key(&private_address) {
+                match ServerConnection::new(
+                    self.background_runtime.clone(),
+                    replica.address().clone(),
+                    self.credentials.clone(),
+                    self.driver_options.clone(),
+                    self.driver_lang.as_ref(),
+                    self.driver_version.as_ref(),
+                )
+                .await
+                {
+                    Ok((server_connection, _)) => {
+                        server_connections.insert(private_address, server_connection);
+                    }
+                    Err(err) => {
+                        connection_errors.push(err);
+                    }
+                }
+            }
         }
 
         if server_connections.is_empty() {
-            return Err(ConnectionError::ServerConnectionFailed { addresses }.into());
+            // TODO: use connection_errors (convert to string or what??)
+            Err(ConnectionError::ServerConnectionFailed { addresses: self.initial_addresses.clone() }.into())
+        } else {
+            Ok(())
         }
+    }
 
-        Ok(Self { server_connections, replicas: RwLock::new(replicas) })
+    fn read_server_connections(&self) -> RwLockReadGuard<'_, HashMap<Address, ServerConnection>> {
+        self.server_connections.read().expect("Expected server connections read access")
+    }
+
+    fn write_server_connections(&self) -> RwLockWriteGuard<'_, HashMap<Address, ServerConnection>> {
+        self.server_connections.write().expect("Expected server connections write access")
     }
 
     pub(crate) fn force_close(&self) -> Result {
-        self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
+        self.read_server_connections().values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
     }
 
     pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
-        self.run_failsafe(|server_connection| async move {
-            server_connection.servers_all()
-        }).await
+        self.run_read_operation(|server_connection| async move { server_connection.servers_all() }).await
     }
 
     pub(crate) fn server_count(&self) -> usize {
-        self.server_connections.len()
+        self.read_server_connections().len()
     }
-
-    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
-        self.server_connections.keys()
-    }
-
-    pub(crate) fn connection(&self, address: &Address) -> Option<&ServerConnection> {
-        self.server_connections.get(address)
-    }
-
-    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
-        self.server_connections.iter()
-    }
-
-    // TODO: Implement everything below
-
-    // #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    // pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
-    // where
-    //     F: Fn(crate::database::database::ServerDatabase) -> P,
-    //     P: Future<Output = Result<R>>,
-    // {
-    //     match self.run_on_any_replica(&task).await {
-    //         Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
-    //             debug!("Attempted to run on a non-primary replica, retrying on primary...");
-    //             self.run_on_primary_replica(&task).await
-    //         }
-    //         res => res,
-    //     }
-    // }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
+    pub(crate) async fn run_read_operation<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
+        // TODO: Add retries?
+        // TODO: Sort randomly? Remember the last working replica to try it first?
+        for (address, server_connection) in self.read_server_connections().iter() {
             match task(server_connection.clone()).await {
-                Ok(res) => return Ok(res),
-                // TODO: Refactor errors
-                // Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
-                //     return Database::get(name, self.connection.clone())
-                //         .await?
-                //         .run_on_primary_replica(|database| {
-                //             let task = &task;
-                //             async move { task(database.connection().clone(), database.name().to_owned()).await }
-                //         })
-                //         .await
-                // }
-                err @ Err(Error::Connection(ConnectionError::ServerConnectionIsClosed)) => return err,
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        // TODO: With this, every operation fails with
-        // [CXN03] Connection Error: Unable to connect to TypeDB server(s), received errors: .... <stacktrace>
-        // Which is quite confusing as it's not really connected to connection.
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(crate::database::database::ServerDatabase) -> P,
-        P: Future<Output = Result<R>>,
-    {
-        let replicas = self.replicas.read().unwrap().clone();
-        for replica in replicas {
-            match task(replica.database.clone()).await {
+                // TODO: refactor errors
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.server);
+                    // TODO: Expose public instead
+                    debug!("Unable to connect to {} (private). Attempting next server.", address);
                 }
                 res => return res,
             }
         }
-        Err(Self::unable_to_connect_error(&self.server_connections))
+        Err(ConnectionError::ServerConnectionFailed {
+            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
+        }
+        .into())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
+    pub(crate) async fn run_write_operation<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(crate::database::database::ServerDatabase) -> P,
+        F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut primary_replica =
-            if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
+        let mut primary_replica = match self.primary_replica() {
+            Some(replica) => replica,
+            None => self.seek_primary_replica().await?,
+        };
+        let server_connections = self.read_server_connections();
 
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(primary_replica.database.clone()).await {
-                Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary
-                    | ConnectionError::ServerConnectionFailedStatusError { .. }
-                    | ConnectionError::ConnectionFailed,
-                )) => {
-                    debug!("Primary replica error, waiting...");
-                    Self::wait_for_primary_replica_selection().await;
-                    primary_replica = self.seek_primary_replica().await?;
+            if let Some(server_connection) = server_connections.get(primary_replica.private_address()) {
+                match task(server_connection.clone()).await {
+                    // TODO: Refactor errors
+                    Err(Error::Connection(
+                        ConnectionError::ClusterReplicaNotPrimary
+                        | ConnectionError::ServerConnectionFailedStatusError { .. }
+                        | ConnectionError::ConnectionFailed,
+                    )) => {
+                        debug!("Primary replica error, waiting...");
+                        Self::wait_for_primary_replica_selection().await;
+                        primary_replica = self.seek_primary_replica().await?;
+                    }
+                    res => return res,
                 }
-                res => return res,
+            } else {
+                // TODO: Refactor
+                debug!("Could not connect to the primary replica, waiting...");
+                Self::wait_for_primary_replica_selection().await;
+                primary_replica = self.seek_primary_replica().await?;
             }
         }
-        Err(Self::unable_to_connect_error(&self.server_connections))
+        Err(ConnectionError::ServerConnectionFailed {
+            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
+        }
+        .into())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self) -> Result<ServerReplica> {
         for _ in 0..Self::FETCH_REPLICAS_MAX_RETRIES {
-            let replicas = ServerReplica::fetch_all(self.name.clone(), &self.server_connections).await?;
-            *self.replicas.write().unwrap() = replicas;
+            let replicas = self.fetch_replicas()?;
+            *self.replicas.write().expect("Expected replicas write lock") = replicas;
             if let Some(replica) = self.primary_replica() {
+                self.update_server_connections().await?;
                 return Ok(replica);
             }
             Self::wait_for_primary_replica_selection().await;
         }
-        Err(Self::unable_to_connect_error(&self.server_connections))
-    }
-
-    fn unable_to_connect_error(server_connections: &HashMap<Address, ServerConnection>) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailed {
-            addresses: Addresses::from_addresses(server_connections.keys().map(Address::clone)),
-        })
+        self.update_server_connections().await?;
+        Err(ConnectionError::ServerConnectionFailed {
+            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
+        }
+        .into())
     }
 
     fn primary_replica(&self) -> Option<ServerReplica> {
@@ -233,7 +241,7 @@ impl ServerManager {
             .expect("Expected a read replica lock")
             .iter()
             .filter(|replica| replica.is_primary())
-            .max_by_key(|replica| replica.term)
+            .max_by_key(|replica| replica.term())
             .cloned()
     }
 
@@ -248,14 +256,15 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn fetch_server_list(
+    async fn fetch_replicas_from_addresses(
         background_runtime: Arc<BackgroundRuntime>,
         addresses: &Addresses,
         credentials: Credentials,
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
-    ) -> Result<HashSet<ServerReplica>> {
+    ) -> Result<Vec<ServerReplica>> {
+        let address_translation = addresses.address_translation();
         for address in addresses.addresses() {
             let server_connection = ServerConnection::new(
                 background_runtime.clone(),
@@ -268,7 +277,7 @@ impl ServerManager {
             .await;
             match server_connection {
                 // TODO: Don't we need to close the connection?
-                Ok((_, servers)) => return Ok(servers.into_iter().collect()),
+                Ok((_, replicas)) => return Ok(Self::translate_replicas(replicas, &address_translation)),
                 // TODO: Rework connection errors
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
@@ -277,6 +286,29 @@ impl ServerManager {
             }
         }
         Err(ConnectionError::ServerConnectionFailed { addresses: addresses.clone() }.into())
+    }
+
+    fn fetch_replicas(&self) -> Result<Vec<ServerReplica>> {
+        for (_, server_connection) in self.read_server_connections().iter() {
+            match server_connection.servers_all() {
+                Ok(replicas) => {
+                    return Ok(Self::translate_replicas(replicas, &self.address_translation));
+                } // TODO: Rework connection errors
+                Err(Error::Connection(
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                )) => (),
+                Err(err) => return Err(err),
+            }
+        }
+        // TODO: This addresses are the initial addresses. They can be changed. What to return here?
+        Err(ConnectionError::ServerConnectionFailed { addresses: self.initial_addresses.clone() }.into())
+    }
+
+    fn translate_replicas(
+        replicas: Vec<ServerReplica>,
+        address_translation: &HashMap<Address, Address>,
+    ) -> Vec<ServerReplica> {
+        replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
     }
 }
 

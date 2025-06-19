@@ -42,7 +42,7 @@ impl TryFromProto<ServerProto> for ServerReplica {
             Some(replication_status) => ReplicationStatus::try_from_proto(replication_status)?,
             None => ReplicationStatus::default(),
         };
-        Ok(Self { address, replica_type: replication_status.replica_type, term: replication_status.term })
+        Ok(Self::from_private(address, replication_status.replica_type, replication_status.term))
     }
 }
 

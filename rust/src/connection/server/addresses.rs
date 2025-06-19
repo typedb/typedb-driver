@@ -84,7 +84,7 @@ impl Addresses {
         Self::Direct(addresses.into_iter().collect())
     }
 
-    /// Prepare addresses based on multiple key-value "key:port" string pairs.
+    /// Prepare addresses based on multiple key-value (public-private) "key:port" string pairs.
     /// Translation map from addresses to be used by the driver for connection to addresses received
     /// from the TypeDB server(s).
     ///
@@ -107,7 +107,7 @@ impl Addresses {
         Ok(Self::from_translation(addresses))
     }
 
-    /// Prepare addresses based on multiple TypeDB address pairs.
+    /// Prepare addresses based on multiple key-value (public-private) TypeDB address pairs.
     /// Translation map from addresses to be used by the driver for connection to addresses received
     /// from the TypeDB server(s).
     ///
@@ -129,6 +129,15 @@ impl Addresses {
         match self {
             Addresses::Direct(vec) => AddressIter::Direct(vec.iter()),
             Addresses::Translated(map) => AddressIter::Translated(map.keys()),
+        }
+    }
+
+    pub(crate) fn address_translation(&self) -> HashMap<Address, Address> {
+        match self {
+            Addresses::Direct(addresses) => {
+                addresses.into_iter().map(|address| (address.clone(), address.clone())).collect()
+            }
+            Addresses::Translated(translation) => translation.clone(),
         }
     }
 }

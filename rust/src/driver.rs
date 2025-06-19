@@ -17,13 +17,10 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt, sync::Arc};
-
-use itertools::Itertools;
+use std::{fmt, sync::Arc};
 
 use crate::{
     common::{
-        address::Address,
         error::{ConnectionError, Error},
         Result,
     },
@@ -136,8 +133,9 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn server_version(&self) -> Result<ServerVersion> {
-        // TODO: check expect
-        self.server_connections.iter().next().expect("TODO: Change to failsafe or smth").1.version().await
+        self.server_manager
+            .run_write_operation(|server_connection| async move { server_connection.version().await })
+            .await
     }
 
     /// Retrieves the server's replicas.
@@ -213,6 +211,7 @@ impl TypeDBDriver {
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
         let database = self.database_manager.get(database_name).await?;
+        // TODO: Will probably need a failsafe operation!
         let transaction_stream = database
             .run_failsafe(|database| async move {
                 database.connection().open_transaction(database.name(), transaction_type, options).await
@@ -233,14 +232,12 @@ impl TypeDBDriver {
             return Ok(());
         }
 
-        let result =
-            self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
-        self.background_runtime.force_close().and(result)
+        self.server_manager.force_close().and(self.background_runtime.force_close())
     }
 }
 
 impl fmt::Debug for TypeDBDriver {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Connection").field("server_connections", &self.server_connections).finish()
+        f.debug_struct("Connection").field("server_manager", &self.server_manager).finish()
     }
 }

@@ -57,7 +57,6 @@ use crate::{
         message::{QueryResponse, Response, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
-        server_connection::LatencyTracker,
     },
     Error,
 };

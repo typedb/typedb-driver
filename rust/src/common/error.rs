@@ -163,8 +163,8 @@ error_messages! { ConnectionError
         21: "Connection failed. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         22: "Invalid URL '{address}': missing port.",
-    AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
+    UnexpectedReplicaType { replica_type: i32 } =
+        23: "Unexpected replica type in message received from server: {replica_type}. This is either a version compatibility issue or a bug.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
         24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
@@ -185,8 +185,6 @@ error_messages! { ConnectionError
         32: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
         33: "Didn't receive any server responses for the database export command.",
-    UnexpectedReplicaType { replica_type: i32 } =
-        34: "Unexpected replica type in message received from server: {replica_type}. This is either a version compatibility issue or a bug.",
 }
 
 error_messages! { ConceptError

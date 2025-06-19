@@ -16,25 +16,48 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::collections::HashMap;
 
 use crate::common::address::Address;
 
 /// The metadata and state of an individual raft replica of a driver connection.
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct ServerReplica {
-    /// The address this replica is hosted at.
-    pub(crate) address: Address,
-    /// Checks whether this is the primary replica of the raft cluster.
-    pub(crate) replica_type: ReplicaType,
-    /// The raft protocol ‘term’ of this replica.
-    pub(crate) term: i64,
+    private_address: Address,
+    public_address: Option<Address>,
+    replica_type: ReplicaType,
+    term: i64,
 }
 
 impl ServerReplica {
-    pub fn address(&self) -> &Address {
-        &self.address
+    pub(crate) fn from_private(private_address: Address, replica_type: ReplicaType, term: i64) -> Self {
+        Self { private_address, public_address: None, replica_type, term }
     }
 
+    pub(crate) fn translate_address(&mut self, address_translation: &HashMap<Address, Address>) -> bool {
+        if let Some((public, _)) = address_translation.iter().find(|(_, private)| private == &self.address()) {
+            self.private_address = public.clone();
+            true
+        } else {
+            false
+        }
+    }
+
+    pub(crate) fn translated(mut self, address_translation: &HashMap<Address, Address>) -> Self {
+        self.translate_address(address_translation);
+        self
+    }
+
+    pub(crate) fn private_address(&self) -> &Address {
+        &self.private_address
+    }
+
+    /// The address this replica is hosted at.
+    pub fn address(&self) -> &Address {
+        self.public_address.as_ref().unwrap_or(&self.private_address)
+    }
+
+    /// Whether this is the primary replica of the raft cluster or any of the supporting types.
     pub fn replica_type(&self) -> ReplicaType {
         self.replica_type
     }
@@ -43,6 +66,7 @@ impl ServerReplica {
         matches!(self.replica_type, ReplicaType::Primary)
     }
 
+    /// The raft protocol ‘term’ of this replica.
     pub fn term(&self) -> i64 {
         self.term
     }
