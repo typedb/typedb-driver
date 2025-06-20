@@ -40,8 +40,8 @@ impl Addresses {
     /// ```rust
     /// Addresses::try_from_address_str("127.0.0.1:11729")
     /// ```
-    pub fn try_from_address_str(address_str: String) -> crate::Result<Self> {
-        let address = address_str.parse()?;
+    pub fn try_from_address_str(address_str: impl AsRef<str>) -> crate::Result<Self> {
+        let address = address_str.as_ref().parse()?;
         Ok(Self::from_address(address))
     }
 
@@ -65,8 +65,9 @@ impl Addresses {
     /// ```rust
     /// Addresses::try_from_addresses_str(["127.0.0.1:11729", "127.0.0.1:11730", "127.0.0.1:11731"])
     /// ```
-    pub fn try_from_addresses_str(addresses_str: impl IntoIterator<Item = String>) -> crate::Result<Self> {
-        let addresses: Vec<Address> = addresses_str.into_iter().map(|address_str| address_str.parse()).try_collect()?;
+    pub fn try_from_addresses_str(addresses_str: impl IntoIterator<Item = impl AsRef<str>>) -> crate::Result<Self> {
+        let addresses: Vec<Address> =
+            addresses_str.into_iter().map(|address_str| address_str.as_ref().parse()).try_collect()?;
         Ok(Self::from_addresses(addresses))
     }
 
@@ -99,10 +100,10 @@ impl Addresses {
     ///     ].into()
     /// )
     /// ```
-    pub fn try_from_translation_str(addresses_str: HashMap<String, String>) -> crate::Result<Self> {
+    pub fn try_from_translation_str(addresses_str: HashMap<impl AsRef<str>, impl AsRef<str>>) -> crate::Result<Self> {
         let mut addresses = HashMap::new();
         for (address_key, address_value) in addresses_str.into_iter() {
-            addresses.insert(address_key.parse()?, address_value.parse()?);
+            addresses.insert(address_key.as_ref().parse()?, address_value.as_ref().parse()?);
         }
         Ok(Self::from_translation(addresses))
     }
@@ -142,7 +143,7 @@ impl Addresses {
     }
 }
 
-enum AddressIter<'a> {
+pub(crate) enum AddressIter<'a> {
     Direct(std::slice::Iter<'a, Address>),
     Translated(std::collections::hash_map::Keys<'a, Address, Address>),
 }

@@ -25,7 +25,7 @@ pub use self::{
         box_stream, error, info, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result, TransactionOptions,
         TransactionType, IID,
     },
-    connection::{Credentials, DriverOptions},
+    connection::{server::Addresses, Credentials, DriverOptions},
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,
     transaction::Transaction,

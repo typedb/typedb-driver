@@ -22,6 +22,7 @@ use std::{
     fmt,
     future::Future,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    thread::sleep,
     time::Duration,
 };
 
@@ -31,7 +32,6 @@ use log::debug;
 use crate::{
     common::address::Address,
     connection::{
-        message::Response,
         runtime::BackgroundRuntime,
         server::{server_connection::ServerConnection, server_replica::ServerReplica, Addresses},
     },
@@ -78,7 +78,7 @@ impl ServerManager {
         .await?;
         let address_translation = addresses.address_translation();
 
-        let mut server_manager = Self {
+        let server_manager = Self {
             initial_addresses: addresses,
             replicas: RwLock::new(replicas),
             server_connections: RwLock::new(HashMap::new()),
@@ -93,6 +93,7 @@ impl ServerManager {
         Ok(server_manager)
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn update_server_connections(&self) -> Result {
         let replicas = self.replicas.read().expect("Expected replicas read access");
         let replica_addresses: HashSet<Address> =
@@ -143,12 +144,20 @@ impl ServerManager {
         self.read_server_connections().values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
-        self.run_read_operation(|server_connection| async move { server_connection.servers_all() }).await
+        self.run_read_operation(|server_connection| async move { server_connection.servers_all().await }).await
     }
 
     pub(crate) fn server_count(&self) -> usize {
         self.read_server_connections().len()
+    }
+
+    pub(crate) fn username(&self) -> Result<String> {
+        match self.read_server_connections().iter().next() {
+            Some((_, server_connection)) => Ok(server_connection.username().to_string()),
+            None => Err(ConnectionError::ServerConnectionIsClosed {}.into()),
+        }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -220,7 +229,7 @@ impl ServerManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self) -> Result<ServerReplica> {
         for _ in 0..Self::FETCH_REPLICAS_MAX_RETRIES {
-            let replicas = self.fetch_replicas()?;
+            let replicas = self.fetch_replicas().await?;
             *self.replicas.write().expect("Expected replicas write lock") = replicas;
             if let Some(replica) = self.primary_replica() {
                 self.update_server_connections().await?;
@@ -288,9 +297,10 @@ impl ServerManager {
         Err(ConnectionError::ServerConnectionFailed { addresses: addresses.clone() }.into())
     }
 
-    fn fetch_replicas(&self) -> Result<Vec<ServerReplica>> {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn fetch_replicas(&self) -> Result<Vec<ServerReplica>> {
         for (_, server_connection) in self.read_server_connections().iter() {
-            match server_connection.servers_all() {
+            match server_connection.servers_all().await {
                 Ok(replicas) => {
                     return Ok(Self::translate_replicas(replicas, &self.address_translation));
                 } // TODO: Rework connection errors

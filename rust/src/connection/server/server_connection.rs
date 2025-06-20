@@ -118,8 +118,9 @@ impl ServerConnection {
         self.request_transmitter.force_close()
     }
 
-    pub(crate) fn servers_all(&self) -> Result<Vec<ServerReplica>> {
-        match self.request_blocking(Request::ServersAll)? {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
+        match self.request(Request::ServersAll).await? {
             Response::ServersAll { servers } => Ok(servers),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
@@ -240,7 +241,7 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionStream {
-                open_request_id: request_id,
+                open_request_id: _,
                 request_sink,
                 response_source,
                 server_duration_millis,

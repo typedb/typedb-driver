@@ -29,14 +29,14 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 // EXAMPLE END MARKER
 
 async fn cleanup() {
     let driver = TypeDBDriver::new(
-        TypeDBDriver::DEFAULT_ADDRESS,
+        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
         Credentials::new("admin", "password"),
         DriverOptions::new(false, None).unwrap(),
     )
@@ -57,7 +57,7 @@ fn example() {
         // EXAMPLE START MARKER
         // Open a driver connection. Specify your parameters if needed
         let driver = TypeDBDriver::new(
-            TypeDBDriver::DEFAULT_ADDRESS,
+            Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
             DriverOptions::new(false, None).unwrap(),
         )

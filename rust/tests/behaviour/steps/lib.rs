@@ -38,8 +38,8 @@ use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction, TransactionOptions,
-    TypeDBDriver,
+    Addresses, BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction,
+    TransactionOptions, TypeDBDriver,
 };
 
 use crate::{
@@ -441,9 +441,10 @@ impl Context {
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cluster);
+        let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
         let conn_settings = DriverOptions::new(false, None)?;
-        TypeDBDriver::new(address, credentials, conn_settings).await
+        TypeDBDriver::new(addresses, credentials, conn_settings).await
     }
 
     async fn create_driver_cluster(
@@ -455,11 +456,12 @@ impl Context {
         assert!(self.is_cluster);
         // TODO: Change when multiple addresses are introduced
         let address = addresses.iter().next().expect("Expected at least one address");
+        let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
 
         // TODO: We probably want to add encryption to cluster tests
         let credentials = Credentials::new(username, password);
         let conn_settings = DriverOptions::new(false, None)?;
-        TypeDBDriver::new(address, credentials, conn_settings).await
+        TypeDBDriver::new(addresses, credentials, conn_settings).await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {

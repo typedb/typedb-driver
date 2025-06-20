@@ -210,13 +210,15 @@ impl TypeDBDriver {
         options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
-        let database = self.database_manager.get(database_name).await?;
-        // TODO: Will probably need a failsafe operation!
-        let transaction_stream = database
-            .run_failsafe(|database| async move {
-                database.connection().open_transaction(database.name(), transaction_type, options).await
-            })
-            .await?;
+        let open_fn = |server_connection: ServerConnection| async move {
+            server_connection.open_transaction(database_name, transaction_type, options).await
+        };
+        let transaction_stream = match transaction_type {
+            TransactionType::Read => self.server_manager.run_read_operation(open_fn).await?,
+            TransactionType::Write | TransactionType::Schema => {
+                self.server_manager.run_write_operation(open_fn).await?
+            }
+        };
         Ok(Transaction::new(transaction_stream))
     }
 
