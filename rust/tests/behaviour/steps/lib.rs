@@ -252,7 +252,7 @@ impl Context {
                 .await
                 .expect("Expected all users")
                 .into_iter()
-                .filter(|user| user.name != Context::ADMIN_USERNAME)
+                .filter(|user| user.name() != Context::ADMIN_USERNAME)
                 .map(|user| user.delete()),
         )
         .await
@@ -443,7 +443,7 @@ impl Context {
         assert!(!self.is_cluster);
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        let conn_settings = DriverOptions::new(false, None)?;
+        let conn_settings = DriverOptions::new();
         TypeDBDriver::new(addresses, credentials, conn_settings).await
     }
 
@@ -460,7 +460,7 @@ impl Context {
 
         // TODO: We probably want to add encryption to cluster tests
         let credentials = Credentials::new(username, password);
-        let conn_settings = DriverOptions::new(false, None)?;
+        let conn_settings = DriverOptions::new();
         TypeDBDriver::new(addresses, credentials, conn_settings).await
     }
 

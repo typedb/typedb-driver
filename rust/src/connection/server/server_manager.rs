@@ -67,13 +67,14 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
-        let replicas = Self::fetch_replicas_from_addresses(
+        let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
             &addresses,
             credentials.clone(),
             driver_options.clone(),
             driver_lang.as_ref(),
             driver_version.as_ref(),
+            driver_options.use_replication,
         )
         .await?;
         let address_translation = addresses.address_translation();
@@ -81,7 +82,7 @@ impl ServerManager {
         let server_manager = Self {
             configured_addresses: addresses,
             replicas: RwLock::new(replicas),
-            server_connections: RwLock::new(HashMap::new()),
+            server_connections: RwLock::new(source_connections),
             address_translation,
             background_runtime,
             credentials,
@@ -171,7 +172,7 @@ impl ServerManager {
             match task(server_connection.clone()).await {
                 // TODO: refactor errors
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
                 )) => {
                     // TODO: Expose public instead
                     debug!("Unable to connect to {} (private). Attempting next server.", address);
@@ -200,8 +201,8 @@ impl ServerManager {
                     // TODO: Refactor errors
                     Err(Error::Connection(
                         ConnectionError::ClusterReplicaNotPrimary
-                        | ConnectionError::ServerConnectionFailedStatusError { .. }
-                        | ConnectionError::ConnectionFailed,
+                        | ConnectionError::ServerConnectionFailedNetworking { .. }
+                        | ConnectionError::ConnectionRefused,
                     )) => {
                         debug!("Primary replica error, waiting...");
                         Self::wait_for_primary_replica_selection().await;
@@ -262,9 +263,15 @@ impl ServerManager {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
-    ) -> Result<Vec<ServerReplica>> {
+        use_replication: bool,
+    ) -> Result<(HashMap<Address, ServerConnection>, Vec<ServerReplica>)> {
+        if !use_replication && addresses.len() > 1 {
+            return Err(ConnectionError::MultipleAddressesForNoReplicationMode { addresses: addresses.clone() }.into());
+        }
+
         let address_translation = addresses.address_translation();
         for address in addresses.addresses() {
+            // TODO: Insert into server connections right away to connect only once?
             let server_connection = ServerConnection::new(
                 background_runtime.clone(),
                 address.clone(),
@@ -276,10 +283,23 @@ impl ServerManager {
             .await;
             match server_connection {
                 // TODO: Don't we need to close the connection?
-                Ok((_, replicas)) => return Ok(Self::translate_replicas(replicas, &address_translation)),
+                Ok((server_connection, replicas)) => {
+                    let translated_replicas = Self::translate_replicas(replicas, &address_translation);
+                    if use_replication {
+                        let source_connections = HashMap::from([(address.clone(), server_connection)]);
+                        return Ok((source_connections, translated_replicas));
+                    } else {
+                        if let Some(target_replica) =
+                            translated_replicas.into_iter().find(|replica| replica.address() == address)
+                        {
+                            let source_connections = HashMap::from([(address.clone(), server_connection)]);
+                            return Ok((source_connections, vec![target_replica]));
+                        }
+                    }
+                }
                 // TODO: Rework connection errors
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
                 )) => (),
                 Err(err) => return Err(err),
             }
@@ -299,7 +319,7 @@ impl ServerManager {
                     return Ok(Self::translate_replicas(replicas, &self.address_translation));
                 } // TODO: Rework connection errors
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
+                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
                 )) => (),
                 Err(err) => return Err(err),
             }
@@ -308,7 +328,7 @@ impl ServerManager {
     }
 
     fn translate_replicas(
-        replicas: Vec<ServerReplica>,
+        replicas: impl IntoIterator<Item = ServerReplica>,
         address_translation: &HashMap<Address, Address>,
     ) -> Vec<ServerReplica> {
         replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()

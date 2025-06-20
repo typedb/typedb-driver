@@ -19,14 +19,16 @@
 
 use std::{ffi::c_char, path::Path};
 
-use chrono::DateTime;
-use typedb_driver::{concept::value::TimeZone, Credentials, DriverOptions, TypeDBDriver};
+use typedb_driver::{Addresses, Credentials, DriverOptions, TypeDBDriver};
 
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, free, string_view},
 };
-use crate::memory::{release, release_string, string_free};
+use crate::{
+    error::unwrap_or_default,
+    memory::{release, release_string, string_free},
+};
 
 const DRIVER_LANG: &'static str = "c";
 
@@ -42,7 +44,7 @@ pub extern "C" fn driver_open(
     driver_options: *const DriverOptions,
 ) -> *mut TypeDBDriver {
     try_release(TypeDBDriver::new_with_description(
-        string_view(address),
+        unwrap_or_default(Addresses::try_from_address_str(string_view(address))),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
         DRIVER_LANG,
@@ -64,7 +66,7 @@ pub extern "C" fn driver_open_with_description(
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     try_release(TypeDBDriver::new_with_description(
-        string_view(address),
+        unwrap_or_default(Addresses::try_from_address_str(string_view(address))),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
         string_view(driver_lang),
@@ -112,7 +114,7 @@ pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
 #[no_mangle]
 pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
-    try_release(DriverOptions::new(is_tls_enabled, tls_root_ca_path))
+    try_release(DriverOptions::new().is_tls_enabled(is_tls_enabled).tls_root_ca(tls_root_ca_path))
 }
 
 /// Frees the native rust <code>DriverOptions</code> object

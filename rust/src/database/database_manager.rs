@@ -54,7 +54,7 @@ impl DatabaseManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<Arc<Database>>> {
         self.server_manager
-            .run_read_operation(move |server_connection| async move {
+            .run_write_operation(move |server_connection| async move {
                 server_connection
                     .all_databases()
                     .await?
@@ -82,7 +82,7 @@ impl DatabaseManager {
         let name = name.into();
         let database_info = self
             .server_manager
-            .run_read_operation(move |server_connection| {
+            .run_write_operation(move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.get_database(name).await }
             })
@@ -106,7 +106,7 @@ impl DatabaseManager {
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
         let name = name.into();
         self.server_manager
-            .run_read_operation(move |server_connection| {
+            .run_write_operation(move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.contains_database(name).await }
             })

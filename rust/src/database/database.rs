@@ -143,7 +143,7 @@ impl Database {
         // TODO: What happens if the leader changes in the process?..
         let result = self
             .server_manager
-            .run_read_operation(|server_connection| {
+            .run_write_operation(|server_connection| {
                 let name = self.name.clone();
                 async move {
                     // File opening should be idempotent for multiple function invocations

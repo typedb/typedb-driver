@@ -38,7 +38,7 @@ async fn cleanup() {
     let driver = TypeDBDriver::new(
         Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
         Credentials::new("admin", "password"),
-        DriverOptions::new(false, None).unwrap(),
+        DriverOptions::new(),
     )
     .await
     .unwrap();
@@ -59,7 +59,7 @@ fn example() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
-            DriverOptions::new(false, None).unwrap(),
+            DriverOptions::new(),
         )
         .await
         .unwrap();

@@ -28,7 +28,17 @@ use typedb_driver::{Database, Result as TypeDBResult, TypeDBDriver, User};
 use crate::{assert_err, assert_with_timeout, generic_step, params, util::iter_table, Context};
 
 async fn all_user_names(context: &Context) -> HashSet<String> {
-    context.driver.as_ref().unwrap().users().all().await.unwrap().into_iter().map(|user| user.name).collect()
+    context
+        .driver
+        .as_ref()
+        .unwrap()
+        .users()
+        .all()
+        .await
+        .unwrap()
+        .into_iter()
+        .map(|user| user.name().to_string())
+        .collect()
 }
 
 #[apply(generic_step)]
@@ -61,7 +71,7 @@ async fn get_user(context: &mut Context, username: String, may_error: params::Ma
 #[step(expr = r"get user\({word}\) get name: {word}")]
 async fn get_user_get_name(context: &mut Context, user: String, name: String) {
     let user = context.driver.as_ref().unwrap().users().get(user).await.unwrap().unwrap();
-    assert_eq!(user.name, name);
+    assert_eq!(user.name(), name);
 }
 
 #[apply(generic_step)]
@@ -100,5 +110,5 @@ async fn delete_user(context: &mut Context, username: String, may_error: params:
 #[apply(generic_step)]
 #[step(expr = "get current username: {word}")]
 async fn get_current_username(context: &mut Context, username: String) {
-    assert_eq!(context.driver.as_ref().unwrap().users().get_current_user().await.unwrap().unwrap().name, username);
+    assert_eq!(context.driver.as_ref().unwrap().users().get_current_user().await.unwrap().unwrap().name(), username);
 }

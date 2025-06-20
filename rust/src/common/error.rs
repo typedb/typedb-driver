@@ -117,6 +117,15 @@ macro_rules! error_messages {
     };
 }
 
+macro_rules! __retryable_helper {
+    (retryable) => {
+        true
+    };
+    () => {
+        false
+    };
+}
+
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
@@ -125,7 +134,7 @@ error_messages! { ConnectionError
         2: "Unable to connect to TypeDB server(s).\nInitially configured addresses: {configured_addresses}.\nTried accessing addresses: {accessed_addresses}",
     ServerConnectionFailedWithError { error: String } =
         3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
-    ServerConnectionFailedStatusError { error: String } =
+    ServerConnectionFailedNetworking { error: String } =
         4: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
     ServerConnectionIsClosed =
         5: "The connection has been closed and no further operation is allowed.",
@@ -159,8 +168,8 @@ error_messages! { ConnectionError
         19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
-    ConnectionFailed =
-        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
+    ConnectionRefused =
+        21: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         22: "Invalid URL '{address}': missing port.",
     UnexpectedReplicaType { replica_type: i32 } =
@@ -185,6 +194,22 @@ error_messages! { ConnectionError
         32: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
         33: "Didn't receive any server responses for the database export command.",
+    MissingTlsConfigForTls =
+        34: "TLS config object must be set when TLS is enabled.",
+    MultipleAddressesForNoReplicationMode { addresses: Addresses } =
+        35: "Server replicas usage is turned off, but multiple connection addresses ({addresses}) are provided. This is error-prone, thus prohibited.",
+}
+
+impl ConnectionError {
+    pub fn retryable(&self) -> bool {
+        match self {
+            ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused => true,
+            // | ConnectionError::DatabaseNotFound {} // TODO???
+            // | ConnectionError::ClusterReplicaNotPrimary // TODO???
+            // | ConnectionError::TokenCredentialInvalid // TODO???
+            _ => false,
+        }
+    }
 }
 
 error_messages! { ConceptError
@@ -310,8 +335,11 @@ impl Error {
     }
 
     fn from_message(message: &str) -> Self {
-        // TODO: Consider converting some of the messages to connection errors
-        Self::Other(message.to_owned())
+        if is_rst_stream(message) {
+            Self::Connection(ConnectionError::ServerConnectionFailedNetworking { error: message.to_owned() })
+        } else {
+            Self::Other(message.to_owned())
+        }
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
@@ -322,9 +350,9 @@ impl Error {
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::SSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionFailed)
+            Error::Connection(ConnectionError::ConnectionRefused)
         } else {
-            Error::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status_message.to_owned() })
+            Error::Connection(ConnectionError::ServerConnectionFailedNetworking { error: status_message.to_owned() })
         }
     }
 }
@@ -367,6 +395,12 @@ impl From<ConceptError> for Error {
     }
 }
 
+impl From<MigrationError> for Error {
+    fn from(error: MigrationError) -> Self {
+        Self::Migration(error)
+    }
+}
+
 impl From<InternalError> for Error {
     fn from(error: InternalError) -> Self {
         Self::Internal(error)
@@ -389,39 +423,36 @@ impl From<Status> for Error {
             } else if let Some(error_info) = details.error_info() {
                 let code = error_info.reason.clone();
                 if let Some(connection_error) = Self::try_extracting_connection_error(&status, &code) {
-                    return Self::Connection(connection_error);
+                    Self::Connection(connection_error)
+                } else {
+                    let domain = error_info.domain.clone();
+                    let stack_trace =
+                        details.debug_info().map(|debug_info| debug_info.stack_entries.clone()).unwrap_or_default();
+                    Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
                 }
-                let domain = error_info.domain.clone();
-                let stack_trace =
-                    if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
-
-                Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
                 Self::from_message(status.message())
             }
         } else {
-            if status.code() == Code::Unavailable {
-                Self::parse_unavailable(status.message())
-            } else if status.code() == Code::Unknown
-                || is_rst_stream(&status)
-                || status.code() == Code::FailedPrecondition
-                || status.code() == Code::AlreadyExists
-            {
-                Self::Connection(ConnectionError::ServerConnectionFailedStatusError {
-                    error: status.message().to_owned(),
-                })
-            } else if status.code() == Code::Unimplemented {
-                Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
-            } else {
-                Self::from_message(status.message())
+            match status.code() {
+                Code::Unavailable => Self::parse_unavailable(status.message()),
+                Code::Unknown | Code::FailedPrecondition | Code::AlreadyExists => {
+                    Self::Connection(ConnectionError::ServerConnectionFailedNetworking {
+                        error: status.message().to_owned(),
+                    })
+                }
+                Code::Unimplemented => {
+                    Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
+                }
+                _ => Self::from_message(status.message()),
             }
         }
     }
 }
 
-fn is_rst_stream(status: &Status) -> bool {
+fn is_rst_stream(message: &str) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
-    status.message().contains("Received Rst Stream")
+    message.contains("Received Rst Stream")
 }
 
 impl From<http::uri::InvalidUri> for Error {

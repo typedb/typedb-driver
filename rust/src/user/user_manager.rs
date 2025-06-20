@@ -58,7 +58,7 @@ impl UserManager {
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
         let username = username.into();
         self.server_manager
-            .run_read_operation(move |server_connection| {
+            .run_write_operation(move |server_connection| {
                 let username = username.clone();
                 async move { server_connection.contains_user(username).await }
             })
@@ -80,7 +80,7 @@ impl UserManager {
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
         let username = username.into();
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .run_write_operation(|server_connection| {
                 let username = username.clone();
                 let server_manager = self.server_manager.clone();
                 async move {
@@ -101,7 +101,7 @@ impl UserManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .run_write_operation(|server_connection| {
                 let server_manager = self.server_manager.clone();
                 async move {
                     let user_infos = server_connection.all_users().await?;

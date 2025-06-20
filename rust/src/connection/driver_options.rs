@@ -21,42 +21,59 @@ use std::{fs, path::Path};
 
 use tonic::transport::{Certificate, ClientTlsConfig};
 
-/// User connection settings for connecting to TypeDB.
+/// TypeDB driver connection options.
+/// `DriverOptions` object can be used to override the default driver behavior while connecting to
+/// TypeDB.
+///
+/// # Examples
+///
+/// ```rust
+/// let options = DriverOptions::new().is_tls_enabled(true).tls_root_ca(Some(&path_to_ca)).unwrap();
+/// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {
-    is_tls_enabled: bool,
-    tls_config: Option<ClientTlsConfig>,
+    /// Specifies whether the connection to TypeDB must be done over TLS.
+    /// Defaults to false.
+    pub is_tls_enabled: bool,
+    /// If set, specifies the TLS config to use for server certificates authentication.
+    /// Defaults to None.
+    pub tls_config: Option<ClientTlsConfig>,
+    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
+    /// or it should be limited to the provided address.
+    /// Defaults to true. If set to false, restricts the driver to only a single address.
+    pub use_replication: bool,
 }
 
 impl DriverOptions {
-    /// Creates a credentials with username and password. Specifies the connection must use TLS
-    ///
-    /// # Arguments
-    ///
-    /// * `is_tls_enabled` — Specify whether the connection to TypeDB Server must be done over TLS.
-    /// * `tls_root_ca` — Path to the CA certificate to use for authenticating server certificates.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// DriverOptions::new(true, Some(&path_to_ca));
-    ///```
-    pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Specifies whether the connection to TypeDB must be done over TLS.
+    pub fn is_tls_enabled(self, is_tls_enabled: bool) -> Self {
+        Self { is_tls_enabled, ..self }
+    }
+
+    /// If set, specifies the path to the CA certificate to use for server certificates authentication.
+    pub fn tls_root_ca(self, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
         let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
             ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
         } else {
             ClientTlsConfig::new().with_native_roots()
         });
-
-        Ok(Self { is_tls_enabled, tls_config })
+        Ok(Self { tls_config, ..self })
     }
 
-    /// Retrieves whether TLS is enabled for the connection.
-    pub fn is_tls_enabled(&self) -> bool {
-        self.is_tls_enabled
+    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
+    /// or it should be limited to the provided address.
+    /// If set to false, restricts the driver to only a single address.
+    pub fn use_replication(self, use_replication: bool) -> Self {
+        Self { use_replication, ..self }
     }
+}
 
-    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
-        &self.tls_config
+impl Default for DriverOptions {
+    fn default() -> Self {
+        Self { is_tls_enabled: false, tls_config: None, use_replication: true }
     }
 }

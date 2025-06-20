@@ -81,7 +81,7 @@ pub(super) fn try_release_optional_arc<T>(result: Option<Arc<T>>) -> *const T {
     result.map(release_arc).unwrap_or_else(null)
 }
 
-pub(super) fn unwrap_or_default<T: Copy + Default>(result: Result<T>) -> T {
+pub(super) fn unwrap_or_default<T: Default>(result: Result<T>) -> T {
     ok_record(result).unwrap_or_default()
 }
 

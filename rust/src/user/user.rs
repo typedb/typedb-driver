@@ -22,8 +22,8 @@ use crate::{common::Result, connection::server::server_manager::ServerManager, i
 
 #[derive(Clone, Debug)]
 pub struct User {
-    pub name: String, // TODO: Should not be PUB
-    pub password: Option<String>,
+    name: String,
+    password: Option<String>,
     server_manager: Arc<ServerManager>,
 }
 

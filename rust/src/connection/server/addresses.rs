@@ -130,6 +130,20 @@ impl Addresses {
         Self::Translated(addresses)
     }
 
+    /// Returns the number of address entries (addresses or address pairs) in the collection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// addresses.len()
+    /// ```
+    pub fn len(&self) -> usize {
+        match self {
+            Addresses::Direct(vec) => vec.len(),
+            Addresses::Translated(map) => map.len(),
+        }
+    }
+
     pub(crate) fn addresses(&self) -> AddressIter<'_> {
         match self {
             Addresses::Direct(vec) => AddressIter::Direct(vec.iter()),
@@ -171,6 +185,12 @@ impl fmt::Display for Addresses {
                 f.write_char('}')
             }
         }
+    }
+}
+
+impl Default for Addresses {
+    fn default() -> Self {
+        Self::Direct(Vec::default())
     }
 }
 

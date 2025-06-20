@@ -18,7 +18,7 @@ fn typedb_example() {
         let driver = TypeDBDriver::new(
             TypeDBDriver::DEFAULT_ADDRESS,
             Credentials::new("admin", "password"),
-            DriverOptions::new(false, None).unwrap(),
+            DriverOptions::new(),
         )
         .await
         .unwrap();
