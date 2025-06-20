@@ -131,7 +131,7 @@ impl UserManager {
         let username = username.into();
         let password = password.into();
         self.server_manager
-            .run_read_operation(move |server_connection| {
+            .run_write_operation(move |server_connection| {
                 let username = username.clone();
                 let password = password.clone();
                 async move { server_connection.create_user(username, password).await }

@@ -134,7 +134,7 @@ impl TypeDBDriver {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn server_version(&self) -> Result<ServerVersion> {
         self.server_manager
-            .run_write_operation(|server_connection| async move { server_connection.version().await })
+            .run_read_operation(|server_connection| async move { server_connection.version().await })
             .await
     }
 

@@ -41,7 +41,7 @@ use crate::{
 
 pub(crate) struct ServerManager {
     // TODO: Merge ServerConnection with ServerReplica? Probably should not as they can be different
-    initial_addresses: Addresses,
+    configured_addresses: Addresses,
     replicas: RwLock<Vec<ServerReplica>>,
     server_connections: RwLock<HashMap<Address, ServerConnection>>,
     address_translation: HashMap<Address, Address>,
@@ -79,7 +79,7 @@ impl ServerManager {
         let address_translation = addresses.address_translation();
 
         let server_manager = Self {
-            initial_addresses: addresses,
+            configured_addresses: addresses,
             replicas: RwLock::new(replicas),
             server_connections: RwLock::new(HashMap::new()),
             address_translation,
@@ -125,8 +125,7 @@ impl ServerManager {
         }
 
         if server_connections.is_empty() {
-            // TODO: use connection_errors (convert to string or what??)
-            Err(ConnectionError::ServerConnectionFailed { addresses: self.initial_addresses.clone() }.into())
+            Err(self.server_connection_failed_err())
         } else {
             Ok(())
         }
@@ -166,7 +165,7 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        // TODO: Add retries?
+        // TODO: Add retries? YES, if no connections are alive, update connections based on replicas
         // TODO: Sort randomly? Remember the last working replica to try it first?
         for (address, server_connection) in self.read_server_connections().iter() {
             match task(server_connection.clone()).await {
@@ -180,10 +179,7 @@ impl ServerManager {
                 res => return res,
             }
         }
-        Err(ConnectionError::ServerConnectionFailed {
-            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
-        }
-        .into())
+        Err(self.server_connection_failed_err())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -220,10 +216,7 @@ impl ServerManager {
                 primary_replica = self.seek_primary_replica().await?;
             }
         }
-        Err(ConnectionError::ServerConnectionFailed {
-            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
-        }
-        .into())
+        Err(self.server_connection_failed_err())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -238,10 +231,7 @@ impl ServerManager {
             Self::wait_for_primary_replica_selection().await;
         }
         self.update_server_connections().await?;
-        Err(ConnectionError::ServerConnectionFailed {
-            addresses: Addresses::from_addresses(self.read_server_connections().keys().map(Address::clone)),
-        }
-        .into())
+        Err(self.server_connection_failed_err())
     }
 
     fn primary_replica(&self) -> Option<ServerReplica> {
@@ -294,7 +284,11 @@ impl ServerManager {
                 Err(err) => return Err(err),
             }
         }
-        Err(ConnectionError::ServerConnectionFailed { addresses: addresses.clone() }.into())
+        Err(ConnectionError::ServerConnectionFailed {
+            configured_addresses: addresses.clone(),
+            accessed_addresses: addresses.clone(),
+        }
+        .into())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -310,8 +304,7 @@ impl ServerManager {
                 Err(err) => return Err(err),
             }
         }
-        // TODO: This addresses are the initial addresses. They can be changed. What to return here?
-        Err(ConnectionError::ServerConnectionFailed { addresses: self.initial_addresses.clone() }.into())
+        Err(self.server_connection_failed_err())
     }
 
     fn translate_replicas(
@@ -319,6 +312,17 @@ impl ServerManager {
         address_translation: &HashMap<Address, Address>,
     ) -> Vec<ServerReplica> {
         replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
+    }
+
+    fn server_connection_failed_err(&self) -> Error {
+        let accessed_addresses = Addresses::from_addresses(
+            self.replicas.read().expect("Expected a read replica lock").iter().map(|replica| replica.address().clone()),
+        );
+        ConnectionError::ServerConnectionFailed {
+            configured_addresses: self.configured_addresses.clone(),
+            accessed_addresses,
+        }
+        .into()
     }
 }
 

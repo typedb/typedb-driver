@@ -121,8 +121,8 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ServerConnectionFailed { addresses: Addresses } =
-        2: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
+    ServerConnectionFailed { configured_addresses: Addresses, accessed_addresses: Addresses } =
+        2: "Unable to connect to TypeDB server(s).\nInitially configured addresses: {configured_addresses}.\nTried accessing addresses: {accessed_addresses}",
     ServerConnectionFailedWithError { error: String } =
         3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
@@ -221,10 +221,6 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}. This is either a version compatibility issue or a bug.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}. This is either a version compatibility issue or a bug.",
-    UnknownServer { server: Address } =
-        5: "Received replica at unrecognized server: {server}.",
-    EnumOutOfBounds { value: i32, enum_name: &'static str } =
-        6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
 }
 
 #[derive(Clone, PartialEq, Eq)]

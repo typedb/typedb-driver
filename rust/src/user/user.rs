@@ -64,7 +64,7 @@ impl User {
     pub async fn update_password(&self, password: impl Into<String>) -> Result<()> {
         let password = password.into();
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .run_write_operation(|server_connection| {
                 let name = self.name.clone();
                 let password = password.clone();
                 async move { server_connection.update_password(name, password).await }
@@ -86,7 +86,7 @@ impl User {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .run_write_operation(|server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.delete_user(name).await }
             })

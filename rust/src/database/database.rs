@@ -87,7 +87,7 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
         self.server_manager
-            .run_write_operation(|server_connection| {
+            .run_read_operation(|server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.database_schema(name).await }
             })
@@ -105,7 +105,7 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
         self.server_manager
-            .run_write_operation(|server_connection| {
+            .run_read_operation(|server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.database_type_schema(name).await }
             })
@@ -143,7 +143,7 @@ impl Database {
         // TODO: What happens if the leader changes in the process?..
         let result = self
             .server_manager
-            .run_write_operation(|server_connection| {
+            .run_read_operation(|server_connection| {
                 let name = self.name.clone();
                 async move {
                     // File opening should be idempotent for multiple function invocations

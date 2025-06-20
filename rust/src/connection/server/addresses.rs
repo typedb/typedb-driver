@@ -17,7 +17,11 @@
  * under the License.
  */
 
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fmt,
+    fmt::{Formatter, Write},
+};
 
 use itertools::Itertools;
 
@@ -139,6 +143,33 @@ impl Addresses {
                 addresses.into_iter().map(|address| (address.clone(), address.clone())).collect()
             }
             Addresses::Translated(translation) => translation.clone(),
+        }
+    }
+}
+
+impl fmt::Display for Addresses {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Addresses::Direct(addresses) => {
+                f.write_char('[')?;
+                for (i, address) in addresses.iter().enumerate() {
+                    if i > 0 {
+                        f.write_str(", ")?;
+                    }
+                    write!(f, "{address}")?;
+                }
+                f.write_char(']')
+            }
+            Addresses::Translated(translation) => {
+                f.write_char('{')?;
+                for (i, (public, private)) in translation.iter().enumerate() {
+                    if i > 0 {
+                        f.write_str(", ")?;
+                    }
+                    write!(f, "{public}: {private}")?;
+                }
+                f.write_char('}')
+            }
         }
     }
 }
