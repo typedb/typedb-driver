@@ -38,7 +38,11 @@ pub struct Transaction {
 impl Transaction {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
         let transaction_stream = Box::pin(transaction_stream);
-        Transaction { type_: transaction_stream.type_(), options: transaction_stream.options(), transaction_stream }
+        Transaction {
+            type_: transaction_stream.type_(),
+            options: transaction_stream.options().clone(),
+            transaction_stream,
+        }
     }
 
     /// Closes the transaction.

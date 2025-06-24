@@ -78,7 +78,7 @@ fn typedb_example() {
         let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
         let row = rows.get(0).unwrap();
 
-        // Retrieve column names to get concepts by index if the variable names are lost
+        // Retrieves column names to get concepts by index if the variable names are lost
         let column_names = row.get_column_names();
 
         let column_name = column_names.get(0).unwrap();
@@ -89,7 +89,7 @@ fn typedb_example() {
         // Get concept by the header's index
         let concept_by_index = row.get_index(0).unwrap().unwrap();
 
-        // Check if it's an entity type
+        // Checks if it's an entity type
         if concept_by_name.is_entity_type() {
             print!("Getting concepts by variable names and indexes is equally correct. ");
             println!(
@@ -110,7 +110,7 @@ fn typedb_example() {
 
             let concept_by_name = row.get(column_name).unwrap().unwrap();
 
-            // Check if it's an attribute type to safely retrieve its value type
+            // Checks if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
                 let label = concept_by_name.get_label();
                 let value_type = concept_by_name.try_get_value_type().unwrap();

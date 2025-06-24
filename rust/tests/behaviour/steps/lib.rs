@@ -281,6 +281,10 @@ impl Context {
         self.concurrent_rows_streams = None;
     }
 
+    pub fn transaction_options(&self) -> Option<TransactionOptions> {
+        self.transaction_options.clone()
+    }
+
     pub fn transaction_opt(&self) -> Option<&Transaction> {
         self.transactions.get(0)
     }

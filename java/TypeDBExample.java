@@ -32,7 +32,7 @@ public class TypeDBExample {
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
         try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
-            // Create a database
+            // Creates a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");
 
@@ -93,7 +93,7 @@ public class TypeDBExample {
                         conceptByName.getLabel(),
                         conceptByIndex.getLabel());
 
-                // Check if it's an entity type before the conversion
+                // Checks if it's an entity type before the conversion
                 if (conceptByName.isEntityType()) {
                     System.out.printf("Both represent the defined entity type: '%s' (in case of a doubt: '%s')%n",
                             conceptByName.asEntityType().getLabel(),
@@ -115,7 +115,7 @@ public class TypeDBExample {
 
                     conceptByName = attributeRow.get(columnName).get();
 
-                    // Check if it's an attribute type before the conversion
+                    // Checks if it's an attribute type before the conversion
                     if (conceptByName.isAttributeType()) {
                         AttributeType attributeType = conceptByName.asAttributeType();
                         System.out.printf("Defined attribute type's label: '%s', value type: '%s'%n", attributeType.getLabel(), attributeType.tryGetValueType().get());

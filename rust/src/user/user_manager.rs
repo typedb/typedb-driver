@@ -18,7 +18,12 @@
  */
 use std::sync::Arc;
 
-use crate::{common::Result, connection::server::server_manager::ServerManager, error::ConnectionError, User};
+use crate::{
+    common::{consistency_level::ConsistencyLevel, Result},
+    connection::server::server_manager::ServerManager,
+    error::ConnectionError,
+    User,
+};
 
 /// Provides access to all user management methods.
 #[derive(Debug)]
@@ -36,11 +41,26 @@ impl UserManager {
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.get_current_user().await;
+    /// driver.users().get_current_user().await;
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_current_user(&self) -> Result<Option<User>> {
         self.get(self.server_manager.username()?).await
+    }
+
+    /// Checks if a user with the given name exists, using default strong consistency.
+    ///
+    /// See [`Self::contains_with_consistency`] for more details and options.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().contains(username);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().contains(username).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
+        self.contains_with_consistency(username, ConsistencyLevel::Strong).await
     }
 
     /// Checks if a user with the given name exists.
@@ -48,39 +68,73 @@ impl UserManager {
     /// # Arguments
     ///
     /// * `username` — The username to be checked
+    /// * `consistency_level` — The consistency level to use for the operation
     ///
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.contains(username).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().contains_with_consistency(username, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.users().contains_with_consistency(username, ConsistencyLevel::Strong).await;"
+    )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
+    pub async fn contains_with_consistency(
+        &self,
+        username: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<bool> {
         let username = username.into();
         self.server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let username = username.clone();
                 async move { server_connection.contains_user(username).await }
             })
             .await
     }
 
-    /// Retrieve a user with the given name.
+    /// Retrieves a user with the given name, using default strong consistency.
     ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user to retrieve
+    /// See [`Self::get_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.get(username).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().get(username);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().get(username).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
+        self.get_with_consistency(username, ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves a user with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` — The name of the user to retrieve
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().get_with_consistency(username, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.users().get_with_consistency(username, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get_with_consistency(
+        &self,
+        username: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<Option<User>> {
         let username = username.into();
         self.server_manager
-            .run_write_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let username = username.clone();
                 let server_manager = self.server_manager.clone();
                 async move {
@@ -91,17 +145,37 @@ impl UserManager {
             .await
     }
 
-    /// Retrieves all users which exist on the TypeDB server.
+    /// Retrieves all users which exist on the TypeDB server, using default strong consistency.
+    ///
+    /// See [`Self::all_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.all().await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().all();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
+        self.all_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves all users which exist on the TypeDB server.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn all_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<Vec<User>> {
         self.server_manager
-            .run_write_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let server_manager = self.server_manager.clone();
                 async move {
                     let user_infos = server_connection.all_users().await?;
@@ -114,7 +188,7 @@ impl UserManager {
             .await
     }
 
-    /// Create a user with the given name &amp; password.
+    /// Creates a user with the given name &amp; password. Always uses strong consistency.
     ///
     /// # Arguments
     ///
@@ -124,14 +198,25 @@ impl UserManager {
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.create(username, password).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().create(username, password);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().create(username, password).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
+        self.create_with_consistency(username, password, ConsistencyLevel::Strong).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn create_with_consistency(
+        &self,
+        username: impl Into<String>,
+        password: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result {
         let username = username.into();
         let password = password.into();
         self.server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let username = username.clone();
                 let password = password.clone();
                 async move { server_connection.create_user(username, password).await }

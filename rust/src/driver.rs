@@ -21,6 +21,7 @@ use std::{fmt, sync::Arc};
 
 use crate::{
     common::{
+        consistency_level::ConsistencyLevel,
         error::{ConnectionError, Error},
         Result,
     },
@@ -64,10 +65,13 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "TypeDBDriver::new(Address::try_from_address_str(\"127.0.0.1:1729\").unwrap())")]
+    #[cfg_attr(
+        feature = "sync",
+        doc = "TypeDBDriver::new(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap())"
+    )]
     #[cfg_attr(
         not(feature = "sync"),
-        doc = "TypeDBDriver::new(Address::try_from_address_str(\"127.0.0.1:1729\").unwrap()).await"
+        doc = "TypeDBDriver::new(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap()).await"
     )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -91,11 +95,11 @@ impl TypeDBDriver {
     /// ```rust
     #[cfg_attr(
         feature = "sync",
-        doc = "TypeDBDriver::new_with_description(Address::try_from_address_str(\"127.0.0.1:1729\").unwrap(), \"rust\")"
+        doc = "TypeDBDriver::new_with_description(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), \"rust\")"
     )]
     #[cfg_attr(
         not(feature = "sync"),
-        doc = "TypeDBDriver::new_with_description(Address::try_from_address_str(\"127.0.0.1:1729\").unwrap(), \"rust\").await"
+        doc = "TypeDBDriver::new_with_description(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), \"rust\").await"
     )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -123,7 +127,9 @@ impl TypeDBDriver {
         Ok(Self { server_manager, database_manager, user_manager, background_runtime })
     }
 
-    /// Retrieves the server's version.
+    /// Retrieves the server's version, using default strong consistency.
+    ///
+    /// See [`Self::server_version_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -133,8 +139,25 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn server_version(&self) -> Result<ServerVersion> {
+        self.server_version_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves the server's version, using default strong consistency.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn server_version_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<ServerVersion> {
         self.server_manager
-            .run_read_operation(|server_connection| async move { server_connection.version().await })
+            .execute(consistency_level, |server_connection| async move { server_connection.version().await })
             .await
     }
 
@@ -143,8 +166,8 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.server_version()")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version().await")]
+    #[cfg_attr(feature = "sync", doc = "driver.replicas()")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas().await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn replicas(&self) -> Result<Vec<ServerReplica>> {
@@ -172,7 +195,15 @@ impl TypeDBDriver {
     }
 
     /// Opens a transaction with default options.
-    /// See [`TypeDBDriver::transaction_with_options`]
+    ///
+    /// See [`TypeDBDriver::transaction_with_options`] for more details.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction(
         &self,
@@ -182,7 +213,10 @@ impl TypeDBDriver {
         self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
-    /// Opens a new transaction.
+    /// Opens a new transaction with the following consistency level:
+    /// * read transaction - strong consistency, can be overridden through `options`;
+    /// * write transaction - strong consistency, cannot be overridden;
+    /// * schema transaction - strong consistency, cannot be overridden.
     ///
     /// # Arguments
     ///
@@ -210,13 +244,19 @@ impl TypeDBDriver {
         options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
-        let open_fn = |server_connection: ServerConnection| async move {
-            server_connection.open_transaction(database_name, transaction_type, options).await
+        let consistency_level = options.read_consistency_level.clone();
+        let open_fn = |server_connection: ServerConnection| {
+            let options = options.clone();
+            async move { server_connection.open_transaction(database_name, transaction_type, options).await }
         };
         let transaction_stream = match transaction_type {
-            TransactionType::Read => self.server_manager.run_read_operation(open_fn).await?,
+            TransactionType::Read => {
+                self.server_manager
+                    .execute(consistency_level.unwrap_or_else(|| ConsistencyLevel::Strong), open_fn)
+                    .await?
+            }
             TransactionType::Write | TransactionType::Schema => {
-                self.server_manager.run_write_operation(open_fn).await?
+                self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
             }
         };
         Ok(Transaction::new(transaction_stream))

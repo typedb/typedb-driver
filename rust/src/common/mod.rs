@@ -26,12 +26,14 @@ pub use self::{
 };
 
 pub(crate) mod address;
+pub mod consistency_level;
 pub mod error;
 mod id;
 pub mod info;
 #[cfg_attr(not(feature = "sync"), path = "promise_async.rs")]
 #[cfg_attr(feature = "sync", path = "promise_sync.rs")]
 mod promise;
+mod proto;
 mod query_options;
 #[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
 #[cfg_attr(feature = "sync", path = "stream_sync.rs")]

@@ -205,7 +205,7 @@ class DatabaseManager(ABC):
     @abstractmethod
     def get(self, name: str) -> Database:
         """
-        Retrieve the database with the given name.
+        Retrieves the database with the given name.
 
         :param name: The name of the database to retrieve
         :return:
@@ -237,7 +237,7 @@ class DatabaseManager(ABC):
     @abstractmethod
     def create(self, name: str) -> None:
         """
-        Create a database with the given name.
+        Creates a database with the given name.
 
         :param name: The name of the database to be created
         :return:
@@ -253,7 +253,7 @@ class DatabaseManager(ABC):
     @abstractmethod
     def import_from_file(self, name: str, schema: str, data_file_path: str) -> None:
         """
-        Create a database with the given name based on previously exported another database's data loaded from a file.
+        Creates a database with the given name based on previously exported another database's data loaded from a file.
         This is a blocking operation and may take a significant amount of time depending on the database size.
 
         :param name: The name of the database to be created

@@ -52,13 +52,13 @@ pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseItera
     )
 }
 
-/// Create a database with the given name.
+/// Creates a database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_char) {
     unwrap_void(borrow_mut(driver).databases().create(string_view(name)));
 }
 
-/// Create a database with the given name based on previously exported another database's data
+/// Creates a database with the given name based on previously exported another database's data
 /// loaded from a file.
 /// This is a blocking operation and may take a significant amount of time depending on the database
 /// size.
@@ -84,7 +84,7 @@ pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_c
     unwrap_or_default(borrow_mut(driver).databases().contains(string_view(name)))
 }
 
-/// Retrieve the database with the given name.
+/// Retrieves the database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
     try_release_arc(borrow_mut(driver).databases().get(string_view(name)))

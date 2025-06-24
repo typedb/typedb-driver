@@ -24,7 +24,7 @@ use typedb_protocol::migration::Item;
 
 use super::Database;
 use crate::{
-    common::Result,
+    common::{consistency_level::ConsistencyLevel, Result},
     connection::server::server_manager::ServerManager,
     database::migration::{try_open_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
@@ -43,7 +43,9 @@ impl DatabaseManager {
         Ok(Self { server_manager })
     }
 
-    /// Retrieves all databases present on the TypeDB server.
+    /// Retrieves all databases present on the TypeDB server, using default strong consistency.
+    ///
+    /// See [`Self::all_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -53,8 +55,25 @@ impl DatabaseManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<Arc<Database>>> {
+        self.all_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves all databases present on the TypeDB server.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().all_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().all_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn all_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<Vec<Arc<Database>>> {
         self.server_manager
-            .run_write_operation(move |server_connection| async move {
+            .execute(consistency_level, move |server_connection| async move {
                 server_connection
                     .all_databases()
                     .await?
@@ -65,11 +84,9 @@ impl DatabaseManager {
             .await
     }
 
-    /// Retrieve the database with the given name.
+    /// Retrieves the database with the given name, using default strong consistency.
     ///
-    /// # Arguments
-    ///
-    /// * `name` — The name of the database to retrieve
+    /// See [`Self::get_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -79,10 +96,35 @@ impl DatabaseManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl Into<String>) -> Result<Arc<Database>> {
+        self.get_with_consistency(name, ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves the database with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The name of the database to retrieve
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().get_with_consistency(name, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.databases().get_with_consistency(name, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get_with_consistency(
+        &self,
+        name: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<Arc<Database>> {
         let name = name.into();
         let database_info = self
             .server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.get_database(name).await }
             })
@@ -90,11 +132,9 @@ impl DatabaseManager {
         self.try_build_database(database_info)
     }
 
-    /// Checks if a database with the given name exists
+    /// Checks if a database with the given name exists, using default strong consistency.
     ///
-    /// # Arguments
-    ///
-    /// * `name` — The database name to be checked
+    /// See [`Self::contains_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -104,16 +144,41 @@ impl DatabaseManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
+        self.contains_with_consistency(name, ConsistencyLevel::Strong).await
+    }
+
+    /// Checks if a database with the given name exists.
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The database name to be checked
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().contains_with_consistency(name, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.databases().contains_with_consistency(name, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn contains_with_consistency(
+        &self,
+        name: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<bool> {
         let name = name.into();
         self.server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.contains_database(name).await }
             })
             .await
     }
 
-    /// Create a database with the given name.
+    /// Creates a database with the given name. Always uses strong consistency.
     ///
     /// # Arguments
     ///
@@ -127,17 +192,22 @@ impl DatabaseManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
+        self.create_with_consistency(name, ConsistencyLevel::Strong).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn create_with_consistency(&self, name: impl Into<String>, consistency_level: ConsistencyLevel) -> Result {
         let name = name.into();
         self.server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.create_database(name).await }
             })
             .await
     }
 
-    /// Create a database with the given name based on previously exported another database's data
-    /// loaded from a file.
+    /// Creates a database with the given name based on previously exported another database's data
+    /// loaded from a file. Always uses strong consistency.
     /// This is a blocking operation and may take a significant amount of time depending on the
     /// database size.
     ///
@@ -160,6 +230,17 @@ impl DatabaseManager {
         schema: impl Into<String>,
         data_file_path: impl AsRef<Path>,
     ) -> Result {
+        self.import_from_file_with_consistency(name, schema, data_file_path, ConsistencyLevel::Strong).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn import_from_file_with_consistency(
+        &self,
+        name: impl Into<String>,
+        schema: impl Into<String>,
+        data_file_path: impl AsRef<Path>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result {
         const ITEM_BATCH_SIZE: usize = 250;
 
         let name = name.into();
@@ -168,7 +249,7 @@ impl DatabaseManager {
         let data_file_path = data_file_path.as_ref();
 
         self.server_manager
-            .run_write_operation(move |server_connection| {
+            .execute(consistency_level, move |server_connection| {
                 let name = name.clone();
                 async move {
                     let file = try_open_import_file(data_file_path)?;

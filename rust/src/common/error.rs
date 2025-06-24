@@ -17,14 +17,16 @@
  * under the License.
  */
 
-use std::{collections::HashSet, error::Error as StdError, fmt};
+use std::{error::Error as StdError, fmt, str::FromStr};
 
-use itertools::Itertools;
 use tonic::{Code, Status};
-use tonic_types::{ErrorDetails, ErrorInfo, StatusExt};
+use tonic_types::StatusExt;
 
-use super::{address::Address, RequestID};
-use crate::connection::server::Addresses;
+use super::RequestID;
+use crate::{
+    common::{address::Address, proto::decode_address},
+    connection::server::Addresses,
+};
 
 macro_rules! error_messages {
     {
@@ -142,29 +144,25 @@ error_messages! { ConnectionError
         6: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors { errors: String } =
         7: "The transaction is closed because of the error(s):\n{errors}",
-    DatabaseNotFound { name: String } =
-        8: "Database '{name}' not found.",
     MissingResponseField { field: &'static str } =
         9: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
     UnknownRequestId { request_id: RequestID } =
         10: "Received a response with unknown request id '{request_id}'",
     UnexpectedResponse { response: String } =
         11: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
-    InvalidResponseField { name: &'static str } =
-        12: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
     QueryStreamNoResponse =
         13: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     ClusterReplicaNotPrimary =
         15: "The replica is not the primary replica.",
-    ClusterAllNodesFailed { errors: String } =
-        16: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
+    ClusterReplicaNotPrimaryHinted { primary_hint: Address } =
+        16: "The replica is not the primary replica. Use {primary_hint} instead.",
     TokenCredentialInvalid =
         17: "Invalid token credentials.",
     EncryptionSettingsMismatch =
         18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
-    SSLCertificateNotValidated =
+    SslCertificateNotValidated =
         19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
@@ -203,10 +201,10 @@ error_messages! { ConnectionError
 impl ConnectionError {
     pub fn retryable(&self) -> bool {
         match self {
-            ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused => true,
-            // | ConnectionError::DatabaseNotFound {} // TODO???
-            // | ConnectionError::ClusterReplicaNotPrimary // TODO???
-            // | ConnectionError::TokenCredentialInvalid // TODO???
+            ConnectionError::ServerConnectionFailedNetworking { .. }
+            | ConnectionError::ConnectionRefused
+            | ConnectionError::ClusterReplicaNotPrimary
+            | ConnectionError::ClusterReplicaNotPrimaryHinted { .. } => true,
             _ => false,
         }
     }
@@ -324,14 +322,37 @@ impl Error {
         }
     }
 
+    pub fn retryable(&self) -> bool {
+        match self {
+            Error::Connection(error) => error.retryable(),
+            Error::Concept(_) => false,
+            Error::Migration(_) => false,
+            Error::Internal(_) => false,
+            Error::Server(_) => false,
+            Error::Other(_) => false,
+        }
+    }
+
     fn try_extracting_connection_error(status: &Status, code: &str) -> Option<ConnectionError> {
-        // TODO: We should probably catch more connection errors instead of wrapping them into
-        // ServerErrors. However, the most valuable information even for connection is inside
-        // stacktraces now.
         match code {
             "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "TEST1" => match Self::decode_address(status) {
+                Ok(Some(primary_hint)) => Some(ConnectionError::ClusterReplicaNotPrimaryHinted { primary_hint }),
+                Ok(None) => Some(ConnectionError::ClusterReplicaNotPrimary),
+                Err(err) => {
+                    debug_assert!(
+                        false,
+                        "Unexpected error while decoding primary replica address: {err:?}, for {status:?}"
+                    );
+                    Some(ConnectionError::ClusterReplicaNotPrimary)
+                }
+            },
             _ => None,
         }
+    }
+
+    fn decode_address(status: &Status) -> crate::Result<Option<Address>> {
+        decode_address(status).map(|address| Address::from_str(&address.address)).transpose()
     }
 
     fn from_message(message: &str) -> Self {
@@ -348,7 +369,7 @@ impl Error {
         } else if status_message.contains("received corrupt message") {
             Error::Connection(ConnectionError::EncryptionSettingsMismatch)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::SSLCertificateNotValidated)
+            Error::Connection(ConnectionError::SslCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionRefused)
         } else {

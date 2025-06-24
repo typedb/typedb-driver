@@ -30,7 +30,7 @@ use itertools::Itertools;
 use log::debug;
 
 use crate::{
-    common::address::Address,
+    common::{address::Address, consistency_level::ConsistencyLevel},
     connection::{
         runtime::BackgroundRuntime,
         server::{server_connection::ServerConnection, server_replica::ServerReplica, Addresses},
@@ -38,6 +38,12 @@ use crate::{
     error::{ConnectionError, InternalError},
     Credentials, DriverOptions, Error, Result,
 };
+
+macro_rules! primary_replica_hinted_error {
+    ($primary_hint:ident) => {
+        Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimaryHinted { primary_hint: $primary_hint }))
+    };
+}
 
 pub(crate) struct ServerManager {
     // TODO: Merge ServerConnection with ServerReplica? Probably should not as they can be different
@@ -146,7 +152,9 @@ impl ServerManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
-        self.run_read_operation(|server_connection| async move { server_connection.servers_all().await }).await
+        // TODO: May need to expose multiple consistency levels. Check the driver's "replicas" impl!
+        self.execute(ConsistencyLevel::Strong, |server_connection| async move { server_connection.servers_all().await })
+            .await
     }
 
     pub(crate) fn server_count(&self) -> usize {
@@ -161,7 +169,7 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn run_read_operation<F, P, R>(&self, task: F) -> Result<R>
+    pub(crate) async fn execute_read<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
@@ -170,10 +178,11 @@ impl ServerManager {
         // TODO: Sort randomly? Remember the last working replica to try it first?
         for (address, server_connection) in self.read_server_connections().iter() {
             match task(server_connection.clone()).await {
-                // TODO: refactor errors
-                Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
-                )) => {
+                primary_replica_hinted_error!(primary) => {
+                    // TODO: Should probably return the whole replica information... Otherwise, it's unsynced
+                    todo!("Use primary_hint") // TODO
+                }
+                Err(err) if err.retryable() => {
                     // TODO: Expose public instead
                     debug!("Unable to connect to {} (private). Attempting next server.", address);
                 }
@@ -184,7 +193,7 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn run_write_operation<F, P, R>(&self, task: F) -> Result<R>
+    pub(crate) async fn execute<F, P, R>(&self, consistency_level: ConsistencyLevel, task: F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
@@ -198,24 +207,16 @@ impl ServerManager {
         for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             if let Some(server_connection) = server_connections.get(primary_replica.private_address()) {
                 match task(server_connection.clone()).await {
-                    // TODO: Refactor errors
-                    Err(Error::Connection(
-                        ConnectionError::ClusterReplicaNotPrimary
-                        | ConnectionError::ServerConnectionFailedNetworking { .. }
-                        | ConnectionError::ConnectionRefused,
-                    )) => {
-                        debug!("Primary replica error, waiting...");
-                        Self::wait_for_primary_replica_selection().await;
-                        primary_replica = self.seek_primary_replica().await?;
+                    primary_replica_hinted_error!(primary) => {
+                        todo!("Use primary_hint") // TODO
                     }
+                    Err(err) if err.retryable() => (),
                     res => return res,
                 }
-            } else {
-                // TODO: Refactor
-                debug!("Could not connect to the primary replica, waiting...");
-                Self::wait_for_primary_replica_selection().await;
-                primary_replica = self.seek_primary_replica().await?;
             }
+            debug!("Could not connect to the primary replica, waiting...");
+            Self::wait_for_primary_replica_selection().await;
+            primary_replica = self.seek_primary_replica().await?;
         }
         Err(self.server_connection_failed_err())
     }
@@ -271,7 +272,6 @@ impl ServerManager {
 
         let address_translation = addresses.address_translation();
         for address in addresses.addresses() {
-            // TODO: Insert into server connections right away to connect only once?
             let server_connection = ServerConnection::new(
                 background_runtime.clone(),
                 address.clone(),
@@ -286,7 +286,8 @@ impl ServerManager {
                 Ok((server_connection, replicas)) => {
                     let translated_replicas = Self::translate_replicas(replicas, &address_translation);
                     if use_replication {
-                        let source_connections = HashMap::from([(address.clone(), server_connection)]);
+                        let mut source_connections = HashMap::with_capacity(translated_replicas.len());
+                        source_connections.insert(address.clone(), server_connection);
                         return Ok((source_connections, translated_replicas));
                     } else {
                         if let Some(target_replica) =
@@ -297,10 +298,7 @@ impl ServerManager {
                         }
                     }
                 }
-                // TODO: Rework connection errors
-                Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
-                )) => (),
+                Err(err) if err.retryable() => (),
                 Err(err) => return Err(err),
             }
         }
@@ -317,10 +315,8 @@ impl ServerManager {
             match server_connection.servers_all().await {
                 Ok(replicas) => {
                     return Ok(Self::translate_replicas(replicas, &self.address_translation));
-                } // TODO: Rework connection errors
-                Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefused,
-                )) => (),
+                }
+                Err(err) if err.retryable() => (),
                 Err(err) => return Err(err),
             }
         }

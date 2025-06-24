@@ -94,7 +94,7 @@ class UserManager(ABC):
     @abstractmethod
     def create(self, username: str, password: str) -> None:
         """
-        Create a user with the given name and password.
+        Creates a user with the given name and password.
 
         :param username: The name of the user to be created
         :param password: The password of the user to be created
@@ -111,7 +111,7 @@ class UserManager(ABC):
     @abstractmethod
     def get(self, username: str) -> Optional[User]:
         """
-        Retrieve a user with the given name.
+        Retrieves a user with the given name.
 
         :param username: The name of the user to retrieve
         :return:
@@ -127,7 +127,7 @@ class UserManager(ABC):
     @abstractmethod
     def get_current_user(self) -> Optional[User]:
         """
-        Retrieve the name of the user who opened the current connection.
+        Retrieves the name of the user who opened the current connection.
 
         :return:
 

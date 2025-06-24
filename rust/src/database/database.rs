@@ -18,18 +18,15 @@
  */
 
 use std::{
-    fmt,
-    fs::File,
     io::{BufWriter, Write},
     path::Path,
     sync::Arc,
-    time::Duration,
 };
 
 use prost::Message;
 
 use crate::{
-    common::{info::DatabaseInfo, Error, Result},
+    common::{consistency_level::ConsistencyLevel, info::DatabaseInfo, Error, Result},
     connection::server::server_manager::ServerManager,
     database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
     error::MigrationError,
@@ -58,7 +55,7 @@ impl Database {
         self.name.as_str()
     }
 
-    /// Deletes this database.
+    /// Deletes this database. Always uses strong consistency.
     ///
     /// # Examples
     ///
@@ -68,15 +65,22 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self: Arc<Self>) -> Result {
+        self.delete_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn delete_with_consistency(self: Arc<Self>, consistency_level: ConsistencyLevel) -> Result {
         self.server_manager
-            .run_write_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.delete_database(name).await }
             })
             .await
     }
 
-    /// Returns a full schema text as a valid TypeQL define query string.
+    /// Returns a full schema text as a valid TypeQL define query string, using default strong consistency.
+    ///
+    /// See [`Self::schema_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -86,15 +90,34 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
+        self.schema_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Returns a full schema text as a valid TypeQL define query string.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.schema_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.schema_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn schema_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<String> {
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.database_schema(name).await }
             })
             .await
     }
 
-    /// Returns the types in the schema as a valid TypeQL define query string.
+    /// Returns the types in the schema as a valid TypeQL define query string, using default strong consistency.
+    ///
+    /// See [`Self::type_schema_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -104,21 +127,35 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
+        self.type_schema_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Returns the types in the schema as a valid TypeQL define query string.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.type_schema_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.type_schema_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn type_schema_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<String> {
         self.server_manager
-            .run_read_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.database_type_schema(name).await }
             })
             .await
     }
 
-    /// Export a database into a schema definition and a data files saved to the disk.
+    /// Export a database into a schema definition and a data files saved to the disk, using default strong consistency.
     /// This is a blocking operation and may take a significant amount of time depending on the database size.
     ///
-    /// # Arguments
-    ///
-    /// * `schema_file_path` — The path to the schema definition file to be created
-    /// * `data_file_path` — The path to the data file to be created
+    /// See [`Self::export_to_file_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -128,6 +165,37 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn export_to_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+        self.export_to_file_with_consistency(schema_file_path, data_file_path, ConsistencyLevel::Strong).await
+    }
+
+    /// Export a database into a schema definition and a data files saved to the disk.
+    /// This is a blocking operation and may take a significant amount of time depending on the database size.
+    ///
+    /// # Arguments
+    ///
+    /// * `schema_file_path` — The path to the schema definition file to be created
+    /// * `data_file_path` — The path to the data file to be created
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(
+        feature = "sync",
+        doc = "database.export_to_file_with_consistency(schema_path, data_path, ConsistencyLevel::Strong);"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "database.export_to_file_with_consistency(schema_path, data_path, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn export_to_file_with_consistency(
+        &self,
+        schema_file_path: impl AsRef<Path>,
+        data_file_path: impl AsRef<Path>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
         if schema_file_path == data_file_path {
@@ -140,10 +208,9 @@ impl Database {
             return Err(err);
         }
 
-        // TODO: What happens if the leader changes in the process?..
         let result = self
             .server_manager
-            .run_write_operation(|server_connection| {
+            .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();
                 async move {
                     // File opening should be idempotent for multiple function invocations

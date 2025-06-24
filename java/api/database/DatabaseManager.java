@@ -30,7 +30,7 @@ import java.util.List;
 public interface DatabaseManager {
 
     /**
-     * Retrieve the database with the given name.
+     * Retrieves the database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -56,7 +56,7 @@ public interface DatabaseManager {
     boolean contains(String name) throws TypeDBDriverException;
 
     /**
-     * Create a database with the given name.
+     * Creates a database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -68,7 +68,7 @@ public interface DatabaseManager {
     void create(String name) throws TypeDBDriverException;
 
     /**
-     * Create a database with the given name based on previously exported another database's data loaded from a file.
+     * Creates a database with the given name based on previously exported another database's data loaded from a file.
      * This is a blocking operation and may take a significant amount of time depending on the database size.
      *
      * <h3>Examples</h3>

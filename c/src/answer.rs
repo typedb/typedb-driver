@@ -62,7 +62,7 @@ pub extern "C" fn query_answer_promise_drop(promise: *mut QueryAnswerPromise) {
     drop(take_ownership(promise))
 }
 
-/// Retrieve the executed query's type of the <code>QueryAnswer</code>.
+/// Retrieves the executed query's type of the <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_get_query_type(query_answer: *const QueryAnswer) -> QueryType {
     borrow(query_answer).get_query_type()
@@ -120,7 +120,7 @@ pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -
     release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
 }
 
-/// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.
+/// Retrieves the executed query's type of the <code>ConceptRow</code>'s header.
 #[no_mangle]
 pub extern "C" fn concept_row_get_query_type(concept_row: *const ConceptRow) -> QueryType {
     borrow(concept_row).get_query_type()

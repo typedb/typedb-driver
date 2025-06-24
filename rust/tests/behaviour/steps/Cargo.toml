@@ -16,7 +16,7 @@ features = {}
 
 	[dependencies.tokio]
 		features = ["bytes", "default", "fs", "full", "io-std", "io-util", "libc", "macros", "mio", "net", "parking_lot", "process", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "time", "tokio-macros"]
-		version = "1.45.0"
+		version = "1.45.1"
 		default-features = false
 
 	[dependencies.smol]
@@ -41,7 +41,7 @@ features = {}
 
 	[dependencies.macro_rules_attribute]
 		features = ["default"]
-		version = "0.2.0"
+		version = "0.2.2"
 		default-features = false
 
 	[dependencies.typedb-driver]
@@ -61,7 +61,7 @@ features = {}
 
 	[dependencies.uuid]
 		features = ["default", "fast-rng", "rng", "serde", "std", "v4"]
-		version = "1.16.0"
+		version = "1.17.0"
 		default-features = false
 
 	[dependencies.itertools]
