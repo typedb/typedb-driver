@@ -22,9 +22,11 @@ use std::{
     fmt,
     future::Future,
     iter,
+    iter::Filter,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
     thread::sleep,
     time::Duration,
+    vec::IntoIter,
 };
 
 use itertools::Itertools;
@@ -58,7 +60,6 @@ pub(crate) struct ServerManager {
 
 impl ServerManager {
     const PRIMARY_REPLICA_TASK_MAX_RETRIES: usize = 1;
-    const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn new(
@@ -119,7 +120,7 @@ impl ServerManager {
         }
 
         if server_connections.is_empty() {
-            Err(self.server_connection_failed_err())
+            Err(self.server_connection_failed_err(None))
         } else {
             Ok(())
         }
@@ -202,7 +203,7 @@ impl ServerManager {
                     }
                     .into());
                 }
-                self.execute_on(&address, self.private_address(&address), &task).await
+                self.execute_on(&address, self.private_address(&address), false, &task).await
             }
         }
     }
@@ -215,42 +216,35 @@ impl ServerManager {
     {
         let mut primary_replica = match self.primary_replica() {
             Some(replica) => replica,
-            None => {
-                let replicas = self.read_replicas().clone();
-                self.seek_primary_replica(replicas).await?
-            }
+            None => self.seek_primary_replica(self.read_replicas().clone()).await?,
         };
-        let server_connections = self.read_server_connections();
 
-        for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
+        for _ in 0..=Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             let private_address = primary_replica.private_address().clone();
-            // TODO: Instead of "if let some", make connection if empty or throw networking error"
-            if let Some(server_connection) = server_connections.get(&private_address) {
-                match task(server_connection.clone()).await {
-                    Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
-                        debug!("Could not connect to the primary replica: no longer primary...");
-                        let replicas = iter::once(primary_replica).chain(
-                            self.read_replicas()
-                                .clone()
-                                .into_iter()
-                                .filter(|replica| replica.private_address() != &private_address),
-                        );
-                        primary_replica = self.seek_primary_replica(replicas).await?;
-                    }
-                    Err(Error::Connection(err)) => {
-                        debug!("Could not connect to the primary replica...");
-                        let replicas = self
-                            .read_replicas()
-                            .clone()
-                            .into_iter()
-                            .filter(|replica| replica.private_address() != primary_replica.private_address());
-                        primary_replica = self.seek_primary_replica(replicas).await?;
-                    }
-                    res => return res,
+            match self.execute_on(primary_replica.address(), &private_address, false, &task).await {
+                Err(Error::Connection(connection_error)) => {
+                    let replicas_without_old_primary = self
+                        .read_replicas()
+                        .clone()
+                        .into_iter()
+                        .filter(|replica| replica.private_address() != &private_address);
+
+                    primary_replica = match connection_error {
+                        ConnectionError::ClusterReplicaNotPrimary => {
+                            debug!("Could not connect to the primary replica: no longer primary. Retrying...");
+                            let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
+                            self.seek_primary_replica(replicas).await?
+                        }
+                        err => {
+                            debug!("Could not connect to the primary replica: {err:?}. Retrying...");
+                            self.seek_primary_replica(replicas_without_old_primary).await?
+                        }
+                    };
                 }
+                res => return res,
             }
         }
-        Err(self.server_connection_failed_err())
+        Err(self.server_connection_failed_err(None))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -270,7 +264,7 @@ impl ServerManager {
         P: Future<Output = Result<R>>,
     {
         for replica in replicas.into_iter() {
-            match self.execute_on(replica.address(), replica.private_address(), &task).await {
+            match self.execute_on(replica.address(), replica.private_address(), true, &task).await {
                 Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
                     return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
                 }
@@ -280,18 +274,29 @@ impl ServerManager {
                 res => return res,
             }
         }
-        Err(self.server_connection_failed_err())
+        Err(self.server_connection_failed_err(None))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn execute_on<F, P, R>(&self, public_address: &Address, private_address: &Address, task: &F) -> Result<R>
+    async fn execute_on<F, P, R>(
+        &self,
+        public_address: &Address,
+        private_address: &Address,
+        require_connected: bool,
+        task: &F,
+    ) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
         let server_connection = match self.read_server_connections().get(private_address).cloned() {
             Some(server_connection) => server_connection,
-            None => self.record_new_server_connection(public_address.clone(), private_address.clone()).await?,
+            None => match require_connected {
+                false => self.record_new_server_connection(public_address.clone(), private_address.clone()).await?,
+                true => {
+                    return Err(self.server_connection_failed_err(Some(Addresses::from_address(public_address.clone()))))
+                }
+            },
         };
         task(server_connection).await
     }
@@ -315,7 +320,7 @@ impl ServerManager {
             self.update_server_connections().await?;
             Ok(replica)
         } else {
-            Err(self.server_connection_failed_err())
+            Err(self.server_connection_failed_err(None))
         }
     }
 
@@ -327,16 +332,6 @@ impl ServerManager {
             .filter(|replica| replica.is_primary())
             .max_by_key(|replica| replica.term())
             .cloned()
-    }
-
-    #[cfg(feature = "sync")]
-    fn wait_for_primary_replica_selection() {
-        sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
-    }
-
-    #[cfg(not(feature = "sync"))]
-    async fn wait_for_primary_replica_selection() {
-        tokio::time::sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -409,9 +404,10 @@ impl ServerManager {
         replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
     }
 
-    fn server_connection_failed_err(&self) -> Error {
-        let accessed_addresses =
-            Addresses::from_addresses(self.read_replicas().iter().map(|replica| replica.address().clone()));
+    fn server_connection_failed_err(&self, accessed_addresses: Option<Addresses>) -> Error {
+        let accessed_addresses = accessed_addresses.unwrap_or_else(|| {
+            Addresses::from_addresses(self.read_replicas().iter().map(|replica| replica.address().clone()))
+        });
         ConnectionError::ServerConnectionFailed {
             configured_addresses: self.configured_addresses.clone(),
             accessed_addresses,
