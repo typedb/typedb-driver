@@ -193,33 +193,8 @@ error_messages! { ConnectionError
         34: "TLS config object must be set when TLS is enabled.",
     MultipleAddressesForNoReplicationMode { addresses: Addresses } =
         35: "Server replicas usage is turned off, but multiple connection addresses ({addresses}) are provided. This is error-prone, thus prohibited.",
-}
-
-impl ConnectionError {
-    pub fn retryable(&self) -> bool {
-        match self {
-            ConnectionError::ServerConnectionFailedNetworking { .. }
-            | ConnectionError::ConnectionRefusedNetworking
-            | ConnectionError::ClusterReplicaNotPrimary => true,
-            _ => false,
-        }
-    }
-
-    pub fn not_primary(&self) -> bool {
-        match self {
-            ConnectionError::ClusterReplicaNotPrimary => true,
-            _ => false,
-        }
-    }
-
-    pub fn networking(&self) -> bool {
-        match self {
-            ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefusedNetworking => {
-                true
-            }
-            _ => false,
-        }
-    }
+    NotPrimaryOnReadOnly { address: Address } =
+        36: "Could not execute a readonly operation on a non-primary replica '{address}'. It is either a version compatibility issue or a bug.",
 }
 
 error_messages! { ConceptError
@@ -331,39 +306,6 @@ impl Error {
             Self::Internal(error) => error.message(),
             Self::Server(error) => error.message(),
             Self::Other(error) => error.clone(),
-        }
-    }
-
-    pub fn retryable(&self) -> bool {
-        match self {
-            Error::Connection(error) => error.retryable(),
-            Error::Concept(_) => false,
-            Error::Migration(_) => false,
-            Error::Internal(_) => false,
-            Error::Server(_) => false,
-            Error::Other(_) => false,
-        }
-    }
-
-    pub fn not_primary(&self) -> bool {
-        match self {
-            Error::Connection(error) => error.not_primary(),
-            Error::Concept(_) => false,
-            Error::Migration(_) => false,
-            Error::Internal(_) => false,
-            Error::Server(_) => false,
-            Error::Other(_) => false,
-        }
-    }
-
-    pub fn networking(&self) -> bool {
-        match self {
-            Error::Connection(error) => error.networking(),
-            Error::Concept(_) => false,
-            Error::Migration(_) => false,
-            Error::Internal(_) => false,
-            Error::Server(_) => false,
-            Error::Other(_) => false,
         }
     }
 

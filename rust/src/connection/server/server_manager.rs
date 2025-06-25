@@ -227,8 +227,8 @@ impl ServerManager {
             // TODO: Instead of "if let some", make connection if empty or throw networking error"
             if let Some(server_connection) = server_connections.get(&private_address) {
                 match task(server_connection.clone()).await {
-                    Err(err) if err.not_primary() => {
-                        debug!("Could not connect to the primary replica (no longer primary)...");
+                    Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
+                        debug!("Could not connect to the primary replica: no longer primary...");
                         let replicas = iter::once(primary_replica).chain(
                             self.read_replicas()
                                 .clone()
@@ -237,8 +237,8 @@ impl ServerManager {
                         );
                         primary_replica = self.seek_primary_replica(replicas).await?;
                     }
-                    Err(err) if err.networking() => {
-                        debug!("Could not connect to the primary replica (networking)...");
+                    Err(Error::Connection(err)) => {
+                        debug!("Could not connect to the primary replica...");
                         let replicas = self
                             .read_replicas()
                             .clone()
@@ -271,6 +271,9 @@ impl ServerManager {
     {
         for replica in replicas.into_iter() {
             match self.execute_on(replica.address(), replica.private_address(), &task).await {
+                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
+                    return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
+                }
                 Err(Error::Connection(err)) => {
                     debug!("Unable to connect to {}: {err:?}. Attempting next server.", replica.address());
                 }
@@ -378,7 +381,9 @@ impl ServerManager {
                         }
                     }
                 }
-                Err(err) if err.retryable() => (),
+                Err(Error::Connection(err)) => {
+                    debug!("Unable to fetch replicas from {}: {err:?}. Attempting next server.", address);
+                }
                 Err(err) => return Err(err),
             }
         }
