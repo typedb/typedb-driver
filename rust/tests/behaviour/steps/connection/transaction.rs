@@ -20,13 +20,11 @@
 use std::{collections::VecDeque, time::Duration};
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::join_all, FutureExt};
+use futures::future::join_all;
 use macro_rules_attribute::apply;
 use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
-use crate::{
-    generic_step, in_background, in_oneshot_background, params, params::check_boolean, util::iter_table, Context,
-};
+use crate::{generic_step, in_background, params, params::check_boolean, util::iter_table, Context};
 
 pub(crate) async fn open_transaction_for_database(
     driver: &TypeDBDriver,

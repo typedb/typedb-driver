@@ -228,7 +228,7 @@ fn example() {
         // just call `commit`, which will wait for all ongoing operations to finish before executing.
         let queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"];
         for query in queries {
-            transaction.query(query);
+            let _unawaited_future = transaction.query(query);
         }
         transaction.commit().await.unwrap();
 

@@ -34,10 +34,7 @@ use crate::{
 
 impl TryFromProto<ServerProto> for ServerReplica {
     fn try_from_proto(proto: ServerProto) -> Result<Self> {
-        let address = match proto.address {
-            Some(address) => address.address.parse()?,
-            None => return Err(ConnectionError::MissingResponseField { field: "address" }.into()),
-        };
+        let address = proto.address.parse()?;
         let replication_status = match proto.replication_status {
             Some(replication_status) => ReplicationStatus::try_from_proto(replication_status)?,
             None => ReplicationStatus::default(),

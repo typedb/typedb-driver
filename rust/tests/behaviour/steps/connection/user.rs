@@ -23,9 +23,8 @@ use cucumber::{gherkin::Step, given, then, when};
 use futures::TryFutureExt;
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, Result as TypeDBResult, TypeDBDriver, User};
 
-use crate::{assert_err, assert_with_timeout, generic_step, params, util::iter_table, Context};
+use crate::{assert_with_timeout, generic_step, params, util::iter_table, Context};
 
 async fn all_user_names(context: &Context) -> HashSet<String> {
     context

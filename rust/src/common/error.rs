@@ -17,16 +17,13 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt, str::FromStr};
+use std::{error::Error as StdError, fmt};
 
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
 
 use super::RequestID;
-use crate::{
-    common::{address::Address, proto::decode_address},
-    connection::server::Addresses,
-};
+use crate::{common::address::Address, connection::server::Addresses};
 
 macro_rules! error_messages {
     {
@@ -156,8 +153,8 @@ error_messages! { ConnectionError
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     ClusterReplicaNotPrimary =
         15: "The replica is not the primary replica.",
-    ClusterReplicaNotPrimaryHinted { primary_hint: Address } =
-        16: "The replica is not the primary replica. Use {primary_hint} instead.",
+    UnknownDirectReplica { address: Address, configured_addresses: Addresses } =
+        16: "Could not execute operation against '{address}' since it's not a known replica of configured addresses ({configured_addresses}).",
     TokenCredentialInvalid =
         17: "Invalid token credentials.",
     EncryptionSettingsMismatch =
@@ -166,7 +163,7 @@ error_messages! { ConnectionError
         19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
-    ConnectionRefused =
+    ConnectionRefusedNetworking =
         21: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         22: "Invalid URL '{address}': missing port.",
@@ -202,9 +199,24 @@ impl ConnectionError {
     pub fn retryable(&self) -> bool {
         match self {
             ConnectionError::ServerConnectionFailedNetworking { .. }
-            | ConnectionError::ConnectionRefused
-            | ConnectionError::ClusterReplicaNotPrimary
-            | ConnectionError::ClusterReplicaNotPrimaryHinted { .. } => true,
+            | ConnectionError::ConnectionRefusedNetworking
+            | ConnectionError::ClusterReplicaNotPrimary => true,
+            _ => false,
+        }
+    }
+
+    pub fn not_primary(&self) -> bool {
+        match self {
+            ConnectionError::ClusterReplicaNotPrimary => true,
+            _ => false,
+        }
+    }
+
+    pub fn networking(&self) -> bool {
+        match self {
+            ConnectionError::ServerConnectionFailedNetworking { .. } | ConnectionError::ConnectionRefusedNetworking => {
+                true
+            }
             _ => false,
         }
     }
@@ -333,26 +345,33 @@ impl Error {
         }
     }
 
-    fn try_extracting_connection_error(status: &Status, code: &str) -> Option<ConnectionError> {
-        match code {
-            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
-            "TEST1" => match Self::decode_address(status) {
-                Ok(Some(primary_hint)) => Some(ConnectionError::ClusterReplicaNotPrimaryHinted { primary_hint }),
-                Ok(None) => Some(ConnectionError::ClusterReplicaNotPrimary),
-                Err(err) => {
-                    debug_assert!(
-                        false,
-                        "Unexpected error while decoding primary replica address: {err:?}, for {status:?}"
-                    );
-                    Some(ConnectionError::ClusterReplicaNotPrimary)
-                }
-            },
-            _ => None,
+    pub fn not_primary(&self) -> bool {
+        match self {
+            Error::Connection(error) => error.not_primary(),
+            Error::Concept(_) => false,
+            Error::Migration(_) => false,
+            Error::Internal(_) => false,
+            Error::Server(_) => false,
+            Error::Other(_) => false,
         }
     }
 
-    fn decode_address(status: &Status) -> crate::Result<Option<Address>> {
-        decode_address(status).map(|address| Address::from_str(&address.address)).transpose()
+    pub fn networking(&self) -> bool {
+        match self {
+            Error::Connection(error) => error.networking(),
+            Error::Concept(_) => false,
+            Error::Migration(_) => false,
+            Error::Internal(_) => false,
+            Error::Server(_) => false,
+            Error::Other(_) => false,
+        }
+    }
+
+    fn try_extracting_connection_error(_status: &Status, code: &str) -> Option<ConnectionError> {
+        match code {
+            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            _ => None,
+        }
     }
 
     fn from_message(message: &str) -> Self {
@@ -371,7 +390,7 @@ impl Error {
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::SslCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionRefused)
+            Error::Connection(ConnectionError::ConnectionRefusedNetworking)
         } else {
             Error::Connection(ConnectionError::ServerConnectionFailedNetworking { error: status_message.to_owned() })
         }

@@ -144,6 +144,20 @@ impl Addresses {
         }
     }
 
+    /// Checks if the public address is a part of the addresses.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// addresses.contains(&address)
+    /// ```
+    pub fn contains(&self, address: &Address) -> bool {
+        match self {
+            Addresses::Direct(vec) => vec.contains(address),
+            Addresses::Translated(map) => map.contains_key(address),
+        }
+    }
+
     pub(crate) fn addresses(&self) -> AddressIter<'_> {
         match self {
             Addresses::Direct(vec) => AddressIter::Direct(vec.iter()),

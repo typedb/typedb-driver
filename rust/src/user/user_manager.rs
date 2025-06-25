@@ -125,7 +125,6 @@ impl UserManager {
         doc = "driver.users().get_with_consistency(username, ConsistencyLevel::Strong).await;"
     )]
     /// ```
-    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_with_consistency(
         &self,

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{borrow::Borrow, convert::Infallible, fmt, str::FromStr};
+use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;

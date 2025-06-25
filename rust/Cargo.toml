@@ -55,12 +55,12 @@
 
 	[dependencies.tokio]
 		features = ["bytes", "default", "fs", "full", "io-std", "io-util", "libc", "macros", "mio", "net", "parking_lot", "process", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "time", "tokio-macros"]
-		version = "1.45.1"
+		version = "1.45.0"
 		default-features = false
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "36c7175097f02b3e2d6f0956652d90564e5c89f8"
+		rev = "ab1e84f24e861437d00bbb6082ae282e50860763"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
@@ -86,7 +86,7 @@
 
 	[dependencies.uuid]
 		features = ["default", "fast-rng", "rng", "serde", "std", "v4"]
-		version = "1.17.0"
+		version = "1.16.0"
 		default-features = false
 
 	[dependencies.prost]
@@ -102,11 +102,6 @@
 	[dependencies.tonic-types]
 		features = []
 		version = "0.12.3"
-		default-features = false
-
-	[dependencies.prost-types]
-		features = ["default", "std"]
-		version = "0.13.5"
 		default-features = false
 
 	[dependencies.http]
