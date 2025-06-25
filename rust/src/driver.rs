@@ -20,11 +20,7 @@
 use std::{fmt, sync::Arc};
 
 use crate::{
-    common::{
-        consistency_level::ConsistencyLevel,
-        error::{ConnectionError, Error},
-        Result,
-    },
+    common::{consistency_level::ConsistencyLevel, Result},
     connection::{
         runtime::BackgroundRuntime,
         server::{
@@ -33,8 +29,7 @@ use crate::{
         },
         ServerVersion,
     },
-    Credentials, Database, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType,
-    UserManager,
+    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -166,13 +161,21 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.replicas()")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas().await")]
+    /// driver.replicas()
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn replicas(&self) -> Result<Vec<ServerReplica>> {
-        // TODO: check expect
-        todo!("Todo implement")
+    pub fn replicas(&self) -> Vec<ServerReplica> {
+        self.server_manager.replicas()
+    }
+
+    /// Retrieves the server's primary replica, if exists.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.primary_replica()
+    /// ```
+    pub fn primary_replica(&self) -> Option<ServerReplica> {
+        self.server_manager.primary_replica()
     }
 
     /// Checks it this connection is opened.

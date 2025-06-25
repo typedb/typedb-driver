@@ -21,7 +21,6 @@ use std::sync::Arc;
 use crate::{
     common::{consistency_level::ConsistencyLevel, Result},
     connection::server::server_manager::ServerManager,
-    error::ConnectionError,
     User,
 };
 

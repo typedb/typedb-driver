@@ -22,11 +22,8 @@ use std::{
     fmt,
     future::Future,
     iter,
-    iter::Filter,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
-    thread::sleep,
     time::Duration,
-    vec::IntoIter,
 };
 
 use itertools::Itertools;
@@ -59,6 +56,7 @@ pub(crate) struct ServerManager {
 }
 
 impl ServerManager {
+    // TODO: Introduce a timer-based connections update
     const PRIMARY_REPLICA_TASK_MAX_RETRIES: usize = 1;
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -168,15 +166,12 @@ impl ServerManager {
         self.read_server_connections().values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
-        // TODO: May need to expose multiple consistency levels. Check the driver's "replicas" impl!
-        self.execute(ConsistencyLevel::Strong, |server_connection| async move { server_connection.servers_all().await })
-            .await
+    pub(crate) fn replicas(&self) -> Vec<ServerReplica> {
+        self.read_replicas().clone()
     }
 
-    pub(crate) fn server_count(&self) -> usize {
-        self.read_server_connections().len()
+    pub(crate) fn primary_replica(&self) -> Option<ServerReplica> {
+        self.read_replicas().iter().filter(|replica| replica.is_primary()).max_by_key(|replica| replica.term()).cloned()
     }
 
     pub(crate) fn username(&self) -> Result<String> {
@@ -203,7 +198,8 @@ impl ServerManager {
                     }
                     .into());
                 }
-                self.execute_on(&address, self.private_address(&address), false, &task).await
+                let private_address = self.address_translation.get(&address).unwrap_or_else(|| &address);
+                self.execute_on(&address, private_address, false, &task).await
             }
         }
     }
@@ -216,7 +212,7 @@ impl ServerManager {
     {
         let mut primary_replica = match self.primary_replica() {
             Some(replica) => replica,
-            None => self.seek_primary_replica(self.read_replicas().clone()).await?,
+            None => self.seek_primary_replica_in(self.read_replicas().clone()).await?,
         };
 
         for _ in 0..=Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
@@ -233,11 +229,11 @@ impl ServerManager {
                         ConnectionError::ClusterReplicaNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
                             let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
-                            self.seek_primary_replica(replicas).await?
+                            self.seek_primary_replica_in(replicas).await?
                         }
                         err => {
                             debug!("Could not connect to the primary replica: {err:?}. Retrying...");
-                            self.seek_primary_replica(replicas_without_old_primary).await?
+                            self.seek_primary_replica_in(replicas_without_old_primary).await?
                         }
                     };
                 }
@@ -302,18 +298,18 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn seek_primary_replica(
+    async fn seek_primary_replica_in(
         &self,
         source_replicas: impl IntoIterator<Item = ServerReplica>,
     ) -> Result<ServerReplica> {
         self.execute_on_any(source_replicas, |server_connection| async {
-            self.try_fetch_primary_replica(server_connection).await
+            self.seek_primary_replica(server_connection).await
         })
         .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn try_fetch_primary_replica(&self, server_connection: ServerConnection) -> Result<ServerReplica> {
+    async fn seek_primary_replica(&self, server_connection: ServerConnection) -> Result<ServerReplica> {
         let replicas = self.fetch_replicas(&server_connection).await?;
         *self.replicas.write().expect("Expected replicas write lock") = replicas;
         if let Some(replica) = self.primary_replica() {
@@ -322,16 +318,6 @@ impl ServerManager {
         } else {
             Err(self.server_connection_failed_err(None))
         }
-    }
-
-    fn primary_replica(&self) -> Option<ServerReplica> {
-        self.replicas
-            .read()
-            .expect("Expected a read replica lock")
-            .iter()
-            .filter(|replica| replica.is_primary())
-            .max_by_key(|replica| replica.term())
-            .cloned()
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -413,10 +399,6 @@ impl ServerManager {
             accessed_addresses,
         }
         .into()
-    }
-
-    fn private_address<'a>(&'a self, address: &'a Address) -> &'a Address {
-        self.address_translation.get(address).unwrap_or_else(|| address)
     }
 }
 

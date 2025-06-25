@@ -30,7 +30,7 @@ use crate::{
         concept_row::ConceptRowHeader,
         QueryType,
     },
-    common::{address::Address, info::DatabaseInfo, RequestID},
+    common::{info::DatabaseInfo, RequestID},
     concept::Concept,
     connection::{server::server_replica::ServerReplica, ServerVersion},
     error::ServerError,

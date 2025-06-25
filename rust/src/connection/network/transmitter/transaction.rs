@@ -54,7 +54,7 @@ use crate::{
         Callback, Promise, RequestID, Result,
     },
     connection::{
-        message::{QueryResponse, Response, TransactionRequest, TransactionResponse},
+        message::{QueryResponse, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
     },
@@ -229,7 +229,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
-        let mut collector = ResponseCollector {
+        let collector = ResponseCollector {
             callbacks: Default::default(),
             is_open,
             error,

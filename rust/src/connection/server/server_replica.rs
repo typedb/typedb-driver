@@ -35,8 +35,12 @@ impl ServerReplica {
     }
 
     pub(crate) fn translate_address(&mut self, address_translation: &HashMap<Address, Address>) -> bool {
-        if let Some((public, _)) = address_translation.iter().find(|(_, private)| private == &self.address()) {
-            self.private_address = public.clone();
+        if let Some(translated) = address_translation
+            .iter()
+            .find(|(_, private)| private == &self.private_address())
+            .map(|(public, _)| public.clone())
+        {
+            self.public_address = Some(translated);
             true
         } else {
             false

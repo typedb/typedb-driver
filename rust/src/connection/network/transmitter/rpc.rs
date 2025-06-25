@@ -146,7 +146,7 @@ impl RPCTransmitter {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseExport { .. } => {
-                let mut response_source = rpc.database_export(request.try_into_proto()?).await?;
+                let response_source = rpc.database_export(request.try_into_proto()?).await?;
                 Ok(Response::DatabaseExportStream { response_source })
             }
 
