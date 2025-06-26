@@ -20,6 +20,10 @@ use std::fmt;
 
 use crate::common::address::Address;
 
+/// Consistency levels of operations against a distributed database. All driver methods have default
+/// recommended values, however, readonly operations can be configured in order to potentially
+/// speed up the execution (introducing risks of stale data) or test a specific replica.
+/// This setting does not affect clusters with a single node.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ConsistencyLevel {
     /// Strongest consistency, always up-to-date due to the guarantee of the primary replica usage.

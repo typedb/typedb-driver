@@ -50,7 +50,7 @@ impl DatetimeInNanos {
     }
 }
 
-/// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
+/// <code>DatetimeAndTimeZone</code> is used to represent time zoned datetime in FFI.
 /// Time zone can be represented either as an IANA <code>Tz</code> or as a <code>FixedOffset</code>.
 /// Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 #[repr(C)]
@@ -321,9 +321,9 @@ pub extern "C" fn concept_get_datetime(concept: *const Concept) -> DatetimeInNan
 /// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and timezone information.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> DatetimeAndTimeZone {
+pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> *mut DatetimeAndTimeZone {
     match borrow(concept).try_get_datetime_tz() {
-        Some(value) => DatetimeAndTimeZone::new(&value),
+        Some(value) => release(DatetimeAndTimeZone::new(&value)),
         None => unreachable!("Attempting to unwrap a non-datetime-tz {:?} as datetime-tz", borrow(concept)),
     }
 }

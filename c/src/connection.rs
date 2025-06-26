@@ -19,7 +19,10 @@
 
 use std::{ffi::c_char, path::Path};
 
-use typedb_driver::{Addresses, Credentials, DriverOptions, TypeDBDriver};
+use typedb_driver::{
+    box_stream, consistency_level::ConsistencyLevel, Addresses, Credentials, Database, DriverOptions, ServerReplica,
+    TypeDBDriver,
+};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -27,7 +30,9 @@ use super::{
 };
 use crate::{
     error::unwrap_or_default,
-    memory::{release, release_string, string_free},
+    iterator::CIterator,
+    memory::{release, release_optional, release_string, string_free},
+    server_replica::ServerReplicaIterator,
 };
 
 const DRIVER_LANG: &'static str = "c";
@@ -147,4 +152,16 @@ impl Drop for ServerVersion {
 #[no_mangle]
 pub extern "C" fn server_version_drop(server_version: *mut ServerVersion) {
     free(server_version);
+}
+
+/// Retrieves the server's replicas.
+#[no_mangle]
+pub extern "C" fn driver_replicas(driver: *const TypeDBDriver) -> *mut ServerReplicaIterator {
+    release(ServerReplicaIterator(CIterator(box_stream(borrow(driver).replicas().into_iter()))))
+}
+
+/// Retrieves the server's primary replica, if exists.
+#[no_mangle]
+pub extern "C" fn driver_primary_replicas(driver: *const TypeDBDriver) -> *mut ServerReplica {
+    release_optional(borrow(driver).primary_replica())
 }

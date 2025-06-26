@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api.database;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -83,13 +84,32 @@ public interface DatabaseManager {
     void importFromFile(String name, String schema, String dataFilePath) throws TypeDBDriverException;
 
     /**
-     * Retrieves all databases present on the TypeDB server.
+     * Retrieves all databases present on the TypeDB server, using default strong consistency.
+     * See {@link #all(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
      * driver.databases().all()
      * </pre>
+     *
+     * @see #allWithConsistency(ConsistencyLevel)
      */
     @CheckReturnValue
-    List<Database> all() throws TypeDBDriverException;
+    default List<Database> all() throws TypeDBDriverException {
+        return all(null);
+    }
+
+    /**
+     * Retrieves all databases present on the TypeDB server.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().all(ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     * @see #all()
+     */
+    @CheckReturnValue
+    List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 }

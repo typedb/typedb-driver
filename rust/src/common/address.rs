@@ -26,7 +26,7 @@ use crate::{
     error::ConnectionError,
 };
 
-#[derive(Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Hash, PartialEq, Eq, Default)]
 pub struct Address {
     uri: Uri,
 }

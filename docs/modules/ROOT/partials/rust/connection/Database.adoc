@@ -219,7 +219,7 @@ database.primary_replica_info()
 pub fn replicas_info(&self) -> Vec<ReplicaInfo>
 ----
 
-Returns the ``Replica`` instances for this database. _Only works in TypeDB Cloud / Enterprise_
+Returns the ``ServerReplica`` instances for this database. _Only works in TypeDB Cloud / Enterprise_
 
 [caption=""]
 .Returns

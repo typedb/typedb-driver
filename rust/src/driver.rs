@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{fmt, sync::Arc};
+use std::{collections::HashSet, fmt, sync::Arc};
 
 use crate::{
     common::{consistency_level::ConsistencyLevel, Result},
@@ -163,7 +163,7 @@ impl TypeDBDriver {
     /// ```rust
     /// driver.replicas()
     /// ```
-    pub fn replicas(&self) -> Vec<ServerReplica> {
+    pub fn replicas(&self) -> HashSet<ServerReplica> {
         self.server_manager.replicas()
     }
 

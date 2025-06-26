@@ -25,11 +25,16 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.user.UserManagerImpl;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
@@ -81,6 +86,19 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(database, "database");
         Validator.requireNonNull(type, "type");
         return new TransactionImpl(this, database, type, options);
+    }
+
+    @Override
+    public Set<? extends ServerReplica> replicas() {
+        // TODO: Implement
+        HashSet<ServerReplica> replicas = new HashSet<>();
+        return replicas;
+    }
+
+    @Override
+    public Optional<? extends ServerReplica> primaryReplica() {
+        // TODO: Implement
+        return Optional.empty();
     }
 
     @Override

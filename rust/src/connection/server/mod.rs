@@ -22,5 +22,5 @@ pub use self::{addresses::Addresses, server_version::ServerVersion};
 pub(crate) mod addresses;
 pub(crate) mod server_connection;
 pub(crate) mod server_manager;
-pub(crate) mod server_replica;
+pub mod server_replica;
 mod server_version;

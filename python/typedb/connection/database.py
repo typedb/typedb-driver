@@ -73,7 +73,7 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
 
     # def replicas(self) -> set[Replica]:
     #     try:
-    #         repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
+    #         repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), server_replica_iterator_next)
     #         return set(_Database.Replica(replica_info) for replica_info in repl_iter)
     #     except TypeDBDriverExceptionNative as e:
     #         raise TypeDBDriverException.of(e) from None
@@ -103,13 +103,13 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
     #         pass
     #
     #     def server(self) -> str:
-    #         return replica_info_get_server(self._info)
+    #         return server_replica_get_server(self._info)
     #
     #     def is_primary(self) -> bool:
-    #         return replica_info_is_primary(self._info)
+    #         return server_replica_is_primary(self._info)
     #
     #     def is_preferred(self) -> bool:
-    #         return replica_info_is_preferred(self._info)
+    #         return server_replica_is_preferred(self._info)
     #
     #     def term(self) -> int:
-    #         return replica_info_get_term(self._info)
+    #         return server_replica_get_term(self._info)

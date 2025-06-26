@@ -19,31 +19,27 @@
 
 package com.typedb.driver.api.server;
 
-import com.typedb.driver.common.exception.TypeDBDriverException;
-
 import javax.annotation.CheckReturnValue;
-
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 /**
  * The metadata and state of an individual raft replica of a driver connection.
  */
-public interface Replica {
+public interface ServerReplica {
     /**
      * The address this replica is hosted at.
      */
     @CheckReturnValue
-    String address();
+    String getAddress();
 
     /**
      * Gets the type of this replica: whether it's a primary or a secondary replica.
      */
     @CheckReturnValue
-    ReplicaType type();
+    ReplicaType getType();
 
     /**
      * The raft protocol ‘term’ of this replica.
      */
     @CheckReturnValue
-    long term();
+    long getTerm();
 }

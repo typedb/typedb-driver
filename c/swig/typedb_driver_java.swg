@@ -104,21 +104,24 @@
 %nojavaexception error_message;
 
 %nojavaexception driver_is_open;
+%nojavaexception driver_replicas;
+%nojavaexception driver_primary_replica;
 
 %nojavaexception transaction_is_open;
 
 %nojavaexception user_get_name;
 %nojavaexception user_get_password_expiry_seconds;
 
-//%nojavaexception replica_info_get_server;
-//%nojavaexception replica_info_is_primary;
-//%nojavaexception replica_info_is_preferred;
-//%nojavaexception replica_info_get_term;
+%nojavaexception server_replica_address;
+%nojavaexception server_replica_is_primary;
+%nojavaexception server_replica_type;
+%nojavaexception server_replica_term;
 
 %nojavaexception database_get_name;
-//%nojavaexception database_get_replicas_info;
-//%nojavaexception database_get_primary_replica_info;
-//%nojavaexception database_get_preferred_replica_info;
+
+%nojavaexception consistency_level_strong;
+%nojavaexception consistency_level_eventual;
+%nojavaexception consistency_level_replica_dependant;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;
@@ -218,6 +221,7 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
+%nojavaexception ~ConsistencyLevel;
 %nojavaexception ~DriverOptions;
 %nojavaexception ~Credentials;
 %nojavaexception ~Database;
@@ -227,7 +231,8 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-//%nojavaexception ~ReplicaInfo;
+%nojavaexception ~ServerReplica;
+%nojavaexception ~ServerReplicaIterator;
 %nojavaexception ~ServerVersion;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
@@ -388,7 +393,7 @@
 %iterator(StringAndOptValue, string_and_opt_value)
 %iterator(User, user)
 %iterator(Database, database)
-//%iterator(ReplicaInfo, replica_info)
+%iterator(ServerReplica, server_replica)
 
 %typemap(javabody) QueryAnswer %{
     private transient long swigCPtr;

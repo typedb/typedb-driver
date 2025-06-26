@@ -20,13 +20,13 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
-import com.typedb.driver.api.server.Replica;
+import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
-
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import java.util.Optional;
+import java.util.Set;
 
 public interface Driver extends AutoCloseable {
     String LANGUAGE = "java";
@@ -107,7 +107,7 @@ public interface Driver extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    Set<? extends Replica> replicas();
+    Set<? extends ServerReplica> replicas();
 
     /**
      * Returns the primary replica for this driver connection.
@@ -118,5 +118,5 @@ public interface Driver extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    Optional<? extends Replica> primaryReplica();
+    Optional<? extends ServerReplica> primaryReplica();
 }

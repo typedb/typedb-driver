@@ -19,9 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{
-    DatabaseManager, Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver,
-};
+use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -39,7 +37,7 @@ pub extern "C" fn transaction_new(
     type_: TransactionType,
     options: *const TransactionOptions,
 ) -> *mut Transaction {
-    try_release(borrow(driver).transaction_with_options(string_view(database_name), type_, *borrow(options)))
+    try_release(borrow(driver).transaction_with_options(string_view(database_name), type_, borrow(options).clone()))
 }
 
 /// Performs a TypeQL query in the transaction.

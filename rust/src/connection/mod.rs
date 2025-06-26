@@ -18,7 +18,11 @@
  */
 
 pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{credentials::Credentials, driver_options::DriverOptions, server::ServerVersion};
+pub use self::{
+    credentials::Credentials,
+    driver_options::DriverOptions,
+    server::{server_replica, ServerVersion},
+};
 
 mod credentials;
 pub(crate) mod database;

@@ -22,8 +22,6 @@ package com.typedb.driver.api.server;
 import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-
 /**
  * Type of replica.
  *
@@ -45,30 +43,27 @@ public class ServerVersion {
         this.version = nativeObject.getVersion();
     }
 
-    // TODO: Rename to getters? Make the fields public instead?
-
     /**
      * Returns the server's distribution.
      *
      * <h3>Examples</h3>
      * <pre>
-     * serverVersion.distribution();
+     * serverVersion.getDistribution();
      * </pre>
      */
-    public String distribution() {
+    public String getDistribution() {
         return distribution;
     }
-
 
     /**
      * Returns the server's version.
      *
      * <h3>Examples</h3>
      * <pre>
-     * serverVersion.version();
+     * serverVersion.getVersion();
      * </pre>
      */
-    public String version() {
+    public String getVersion() {
         return version;
     }
 }

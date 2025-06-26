@@ -21,21 +21,19 @@ package com.typedb.driver.api.server;
 
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import javax.annotation.CheckReturnValue;
-
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 /**
- * Type of replica.
+ * This enum is used to specify the type of replica.
  *
  * <h3>Examples</h3>
  * <pre>
- * replica.type();
+ * replica.getType();
  * </pre>
  */
 public enum ReplicaType {
     PRIMARY(0, com.typedb.driver.jni.ReplicaType.Primary),
-    SECONDARY(1, com.typedb.driver.jni.ReplicaType.Secondary),
+    SECONDARY(1, com.typedb.driver.jni.ReplicaType.Secondary);
 
     public final com.typedb.driver.jni.ReplicaType nativeObject;
     private final int id;
@@ -59,13 +57,13 @@ public enum ReplicaType {
      * Checks whether this is the primary replica of the raft cluster.
      */
     public boolean isPrimary() {
-        return nativeObject == com.typedb.driver.jni.QueryType.Primary;
+        return nativeObject == com.typedb.driver.jni.ReplicaType.Primary;
     }
 
     /**
      * Checks whether this is a secondary replica of the raft cluster.
      */
     public boolean isSecondary() {
-        return nativeObject == com.typedb.driver.jni.QueryType.Secondary;
+        return nativeObject == com.typedb.driver.jni.ReplicaType.Secondary;
     }
 }

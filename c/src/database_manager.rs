@@ -26,7 +26,9 @@ use super::{
     iterator::CIterator,
     memory::{borrow_mut, free, string_view},
 };
-use crate::{error::try_release_arc, iterator::iterator_arc_next};
+use crate::{
+    consistency_level::ConsistencyLevel, error::try_release_arc, iterator::iterator_arc_next, memory::borrow_optional,
+};
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
@@ -45,11 +47,20 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
 }
 
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation.
 #[no_mangle]
-pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseIterator {
-    try_release(
-        borrow_mut(driver).databases().all().map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))),
-    )
+pub extern "C" fn databases_all(
+    driver: *mut TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut DatabaseIterator {
+    let databases = borrow_mut(driver).databases();
+    let result = match borrow_optional(consistency_level).cloned() {
+        Some(consistency_level) => databases.all_with_consistency(consistency_level.into()),
+        None => databases.all(),
+    };
+    try_release(result.map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))))
 }
 
 /// Creates a database with the given name.

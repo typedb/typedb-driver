@@ -166,8 +166,8 @@ impl ServerManager {
         self.read_server_connections().values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
     }
 
-    pub(crate) fn replicas(&self) -> Vec<ServerReplica> {
-        self.read_replicas().clone()
+    pub(crate) fn replicas(&self) -> HashSet<ServerReplica> {
+        self.read_replicas().iter().cloned().collect()
     }
 
     pub(crate) fn primary_replica(&self) -> Option<ServerReplica> {
@@ -214,6 +214,7 @@ impl ServerManager {
             Some(replica) => replica,
             None => self.seek_primary_replica_in(self.read_replicas().clone()).await?,
         };
+        let mut primary_changed = true;
 
         for _ in 0..=Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             let private_address = primary_replica.private_address().clone();
@@ -236,6 +237,10 @@ impl ServerManager {
                             self.seek_primary_replica_in(replicas_without_old_primary).await?
                         }
                     };
+
+                    if primary_replica.private_address() == &private_address {
+                        break;
+                    }
                 }
                 res => return res,
             }
