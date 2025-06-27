@@ -97,18 +97,16 @@ impl ServerManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn update_server_connections(&self) -> Result {
-        let replicas = self.read_replicas();
-        let replica_addresses: HashSet<Address> =
-            replicas.iter().map(|replica| replica.private_address().clone()).collect();
+        let replicas = self.read_replicas().clone();
         let mut connection_errors = Vec::with_capacity(replicas.len());
-        let mut server_connections = self.write_server_connections();
-        server_connections.retain(|address, _| replica_addresses.contains(address));
-        for replica in replicas.iter() {
+        let mut new_server_connections = HashMap::new();
+        let connection_addresses: HashSet<Address> = self.read_server_connections().keys().cloned().collect();
+        for replica in &replicas {
             let private_address = replica.private_address().clone();
-            if !server_connections.contains_key(&private_address) {
+            if !connection_addresses.contains(&private_address) {
                 match self.new_server_connection(replica.address().clone()).await {
                     Ok(server_connection) => {
-                        server_connections.insert(private_address, server_connection);
+                        new_server_connections.insert(private_address, server_connection);
                     }
                     Err(err) => {
                         connection_errors.push(err);
@@ -116,6 +114,12 @@ impl ServerManager {
                 }
             }
         }
+
+        let replica_addresses: HashSet<Address> =
+            replicas.into_iter().map(|replica| replica.private_address().clone()).collect();
+        let mut server_connections = self.write_server_connections();
+        server_connections.retain(|address, _| replica_addresses.contains(address));
+        server_connections.extend(new_server_connections);
 
         if server_connections.is_empty() {
             Err(self.server_connection_failed_err(None))
@@ -212,19 +216,15 @@ impl ServerManager {
     {
         let mut primary_replica = match self.primary_replica() {
             Some(replica) => replica,
-            None => self.seek_primary_replica_in(self.read_replicas().clone()).await?,
+            None => self.seek_primary_replica_in(self.replicas()).await?,
         };
-        let mut primary_changed = true;
 
         for _ in 0..=Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, false, &task).await {
                 Err(Error::Connection(connection_error)) => {
-                    let replicas_without_old_primary = self
-                        .read_replicas()
-                        .clone()
-                        .into_iter()
-                        .filter(|replica| replica.private_address() != &private_address);
+                    let replicas_without_old_primary =
+                        self.replicas().into_iter().filter(|replica| replica.private_address() != &private_address);
 
                     primary_replica = match connection_error {
                         ConnectionError::ClusterReplicaNotPrimary => {
@@ -254,7 +254,7 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let replicas = self.read_replicas().clone();
+        let replicas = self.replicas();
         self.execute_on_any(replicas, task).await
     }
 
@@ -290,7 +290,8 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let server_connection = match self.read_server_connections().get(private_address).cloned() {
+        let existing_connection = { self.read_server_connections().get(private_address).cloned() };
+        let server_connection = match existing_connection {
             Some(server_connection) => server_connection,
             None => match require_connected {
                 false => self.record_new_server_connection(public_address.clone(), private_address.clone()).await?,
