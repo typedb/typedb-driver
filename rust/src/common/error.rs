@@ -195,6 +195,8 @@ error_messages! { ConnectionError
         35: "Server replicas usage is turned off, but multiple connection addresses ({addresses}) are provided. This is error-prone, thus prohibited.",
     NotPrimaryOnReadOnly { address: Address } =
         36: "Could not execute a readonly operation on a non-primary replica '{address}'. It is either a version compatibility issue or a bug.",
+    NoAvailableReplicas { configured_addresses: Addresses } =
+        37: "Could not connect: no available replicas read from addresses {configured_addresses}.",
 }
 
 error_messages! { ConceptError

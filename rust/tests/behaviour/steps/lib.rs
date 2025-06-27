@@ -285,6 +285,10 @@ impl Context {
         self.transaction_options.clone()
     }
 
+    pub fn transaction_options_mut(&mut self) -> Option<&mut TransactionOptions> {
+        self.transaction_options.as_mut()
+    }
+
     pub fn transaction_opt(&self) -> Option<&Transaction> {
         self.transactions.get(0)
     }

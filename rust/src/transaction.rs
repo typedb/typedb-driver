@@ -45,12 +45,12 @@ impl Transaction {
         }
     }
 
-    /// Closes the transaction.
+    /// Checks if the transaction is open.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// transaction.close()
+    /// transaction.is_open()
     /// ```
     pub fn is_open(&self) -> bool {
         self.transaction_stream.is_open()
@@ -58,6 +58,12 @@ impl Transaction {
 
     /// Performs a TypeQL query with default options.
     /// See [`Transaction::query_with_options`]
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query(query)
+    /// ```
     pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
         self.query_with_options(query, QueryOptions::new())
     }

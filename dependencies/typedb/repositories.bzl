@@ -34,6 +34,10 @@ def typedb_protocol():
 
 def typedb_behaviour():
     # TODO: Update ref after merge to master
+#    native.local_repository(
+#        name = "typedb_behaviour",
+#        path = "../typedb-behaviour",
+#    )
     git_repository(
         name = "typedb_behaviour",
         remote = "https://github.com/typedb/typedb-behaviour",
