@@ -21,6 +21,13 @@ use std::{fs, path::Path};
 
 use tonic::transport::{Certificate, ClientTlsConfig};
 
+// When changing these numbers, also update docs in DriverOptions
+const DEFAULT_IS_TLS_ENABLED: bool = false;
+const DEFAULT_TLS_CONFIG: Option<ClientTlsConfig> = None;
+const DEFAULT_USE_REPLICATION: bool = true;
+const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
+const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
+
 /// TypeDB driver connection options.
 /// `DriverOptions` object can be used to override the default driver behavior while connecting to
 /// TypeDB.
@@ -39,9 +46,23 @@ pub struct DriverOptions {
     /// Defaults to None.
     pub tls_config: Option<ClientTlsConfig>,
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-    /// or it should be limited to the provided address.
-    /// Defaults to true. If set to false, restricts the driver to only a single address.
+    /// or it should be limited to a single configured address.
+    /// Defaults to true.
     pub use_replication: bool,
+    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// primary replica in case of a failure due to the change of replica roles.
+    /// Defaults to 1.
+    pub redirect_failover_retries: usize,
+    /// Limits the number of driver attempts to discover a single working replica to perform an
+    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// that at most:
+    /// - {limit} operations are performed if the limit <= the number of replicas.
+    /// - {number of replicas} operations are performed if the limit > the number of replicas.
+    /// - {number of replicas} operations are performed if the limit is None.
+    /// Affects every eventually consistent operation, including redirect failover, when the new
+    /// primary replica is unknown.
+    /// Defaults to None.
+    pub discovery_failover_retries: Option<usize>,
 }
 
 impl DriverOptions {
@@ -70,10 +91,36 @@ impl DriverOptions {
     pub fn use_replication(self, use_replication: bool) -> Self {
         Self { use_replication, ..self }
     }
+
+    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// primary replica in case of a failure due to the change of replica roles.
+    /// Defaults to 1.
+    pub fn redirect_failover_retries(self, redirect_failover_retries: usize) -> Self {
+        Self { redirect_failover_retries, ..self }
+    }
+
+    /// Limits the number of driver attempts to discover a single working replica to perform an
+    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// that at most:
+    /// - {limit} operations are performed if the limit <= the number of replicas.
+    /// - {number of replicas} operations are performed if the limit > the number of replicas.
+    /// - {number of replicas} operations are performed if the limit is None.
+    /// Affects every eventually consistent operation, including redirect failover, when the new
+    /// primary replica is unknown.
+    /// Defaults to None.
+    pub fn discovery_failover_retries(self, discovery_failover_retries: Option<usize>) -> Self {
+        Self { discovery_failover_retries, ..self }
+    }
 }
 
 impl Default for DriverOptions {
     fn default() -> Self {
-        Self { is_tls_enabled: false, tls_config: None, use_replication: true }
+        Self {
+            is_tls_enabled: DEFAULT_IS_TLS_ENABLED,
+            tls_config: DEFAULT_TLS_CONFIG,
+            use_replication: DEFAULT_USE_REPLICATION,
+            redirect_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
+            discovery_failover_retries: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+        }
     }
 }

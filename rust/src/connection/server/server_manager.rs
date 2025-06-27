@@ -26,7 +26,7 @@ use std::{
     time::Duration,
 };
 
-use itertools::Itertools;
+use itertools::{enumerate, Itertools};
 use log::debug;
 
 use crate::{
@@ -57,7 +57,6 @@ pub(crate) struct ServerManager {
 
 impl ServerManager {
     // TODO: Introduce a timer-based connections update
-    const PRIMARY_REPLICA_TASK_MAX_RETRIES: usize = 1;
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn new(
@@ -219,7 +218,7 @@ impl ServerManager {
             None => self.seek_primary_replica_in(self.replicas()).await?,
         };
 
-        for _ in 0..=Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
+        for _ in 0..=self.driver_options.redirect_failover_retries {
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, false, &task).await {
                 Err(Error::Connection(connection_error)) => {
@@ -264,7 +263,11 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        for replica in replicas.into_iter() {
+        let limit = self.driver_options.discovery_failover_retries.unwrap_or(usize::MAX);
+        for (attempt, replica) in enumerate(replicas.into_iter()) {
+            if attempt == limit {
+                break;
+            }
             match self.execute_on(replica.address(), replica.private_address(), true, &task).await {
                 Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
                     return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
