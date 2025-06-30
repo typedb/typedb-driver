@@ -25,12 +25,12 @@ use crate::common::address::Address;
 pub struct ServerReplica {
     private_address: Address,
     public_address: Option<Address>,
-    replication_status: ReplicationStatus,
+    replica_status: ReplicaStatus,
 }
 
 impl ServerReplica {
-    pub(crate) fn from_private(private_address: Address, replication_status: ReplicationStatus) -> Self {
-        Self { private_address, public_address: None, replication_status }
+    pub(crate) fn from_private(private_address: Address, replica_status: ReplicaStatus) -> Self {
+        Self { private_address, public_address: None, replica_status }
     }
 
     pub(crate) fn translate_address(&mut self, address_translation: &HashMap<Address, Address>) -> bool {
@@ -62,7 +62,7 @@ impl ServerReplica {
 
     /// Returns whether this is the primary replica of the raft cluster or any of the supporting types.
     pub fn replica_type(&self) -> ReplicaType {
-        self.replication_status.replica_type
+        self.replica_status.replica_type
     }
 
     /// Checks whether this is the primary replica of the raft cluster.
@@ -72,20 +72,20 @@ impl ServerReplica {
 
     /// Returns the raft protocol ‘term’ of this replica.
     pub fn term(&self) -> i64 {
-        self.replication_status.term
+        self.replica_status.term
     }
 }
 
 /// The metadata and state of an individual server as a raft replica.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
-pub(crate) struct ReplicationStatus {
+pub(crate) struct ReplicaStatus {
     /// The role of this replica in the raft cluster.
     pub replica_type: ReplicaType,
     /// The raft protocol ‘term’ of this server replica.
     pub term: i64,
 }
 
-impl Default for ReplicationStatus {
+impl Default for ReplicaStatus {
     fn default() -> Self {
         Self { replica_type: ReplicaType::Primary, term: 0 }
     }

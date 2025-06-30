@@ -25,19 +25,15 @@ def typedb_dependencies():
     )
 
 def typedb_protocol():
-    # TODO: Return typedb
+    # TODO: Return ref after merge to master
     git_repository(
         name = "typedb_protocol",
-        remote = "https://github.com/farost/typedb-protocol",
-        commit = "ab1e84f24e861437d00bbb6082ae282e50860763",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
+        remote = "https://github.com/typedb/typedb-protocol",
+        commit = "94560a87db703ba1686fa830d12d095dc8ab2795",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @typedb_protocol
     )
 
 def typedb_behaviour():
     # TODO: Update ref after merge to master
-#    native.local_repository(
-#        name = "typedb_behaviour",
-#        path = "../typedb-behaviour",
-#    )
     git_repository(
         name = "typedb_behaviour",
         remote = "https://github.com/typedb/typedb-behaviour",

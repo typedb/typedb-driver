@@ -18,7 +18,7 @@
  */
 
 use typedb_protocol::{
-    server::{version::Res as VersionProto, ReplicationStatus as ReplicationStatusProto},
+    server::{version::Res as VersionProto, ReplicaStatus as ReplicaStatusProto},
     Server as ServerProto,
 };
 
@@ -26,7 +26,7 @@ use super::TryFromProto;
 use crate::{
     common::Result,
     connection::{
-        server::server_replica::{ReplicaType, ReplicationStatus, ServerReplica},
+        server::server_replica::{ReplicaType, ReplicaStatus, ServerReplica},
         ServerVersion,
     },
     error::ConnectionError,
@@ -35,16 +35,16 @@ use crate::{
 impl TryFromProto<ServerProto> for ServerReplica {
     fn try_from_proto(proto: ServerProto) -> Result<Self> {
         let address = proto.address.parse()?;
-        let replication_status = match proto.replication_status {
-            Some(replication_status) => ReplicationStatus::try_from_proto(replication_status)?,
-            None => ReplicationStatus::default(),
+        let replica_status = match proto.replica_status {
+            Some(replica_status) => ReplicaStatus::try_from_proto(replica_status)?,
+            None => ReplicaStatus::default(),
         };
-        Ok(Self::from_private(address, replication_status))
+        Ok(Self::from_private(address, replica_status))
     }
 }
 
-impl TryFromProto<ReplicationStatusProto> for ReplicationStatus {
-    fn try_from_proto(proto: ReplicationStatusProto) -> Result<Self> {
+impl TryFromProto<ReplicaStatusProto> for ReplicaStatus {
+    fn try_from_proto(proto: ReplicaStatusProto) -> Result<Self> {
         Ok(Self { replica_type: ReplicaType::try_from_proto(proto.replica_type)?, term: proto.term })
     }
 }
