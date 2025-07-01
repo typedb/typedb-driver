@@ -18,7 +18,6 @@
  */
 
 use std::{fmt, str::FromStr};
-
 use http::Uri;
 
 use crate::{
@@ -32,8 +31,24 @@ pub struct Address {
 }
 
 impl Address {
+    const DEFAULT_SCHEME: &'static str = "http";
+
     pub(crate) fn into_uri(self) -> Uri {
         self.uri
+    }
+
+    pub(crate) fn uri_scheme(&self) -> Option<&http::uri::Scheme> {
+        self.uri.scheme()
+    }
+
+    pub(crate) fn is_https(&self) -> bool {
+        self.uri_scheme().map_or(false, |scheme| scheme == &http::uri::Scheme::HTTPS)
+    }
+
+    pub(crate) fn with_scheme(&self, scheme: http::uri::Scheme) -> Self {
+        let mut parts = self.uri.clone().into_parts();
+        parts.scheme = Some(scheme);
+        Self { uri: Uri::from_parts(parts).expect("Valid URI after scheme change") }
     }
 }
 
@@ -44,7 +59,7 @@ impl FromStr for Address {
         let uri = if address.contains("://") {
             address.parse::<Uri>()?
         } else {
-            format!("http://{address}").parse::<Uri>()?
+            format!("{}://{}", Self::DEFAULT_SCHEME, address).parse::<Uri>()?
         };
         if uri.port().is_none() {
             return Err(Error::Connection(ConnectionError::MissingPort { address: address.to_owned() }));
@@ -61,6 +76,6 @@ impl fmt::Display for Address {
 
 impl fmt::Debug for Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(self, f)
+        write!(f, "{:?}", self.uri)
     }
 }

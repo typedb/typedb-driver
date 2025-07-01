@@ -129,8 +129,8 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ServerConnectionFailed { configured_addresses: Addresses, accessed_addresses: Addresses } =
-        2: "Unable to connect to TypeDB server(s).\nInitially configured addresses: {configured_addresses}.\nTried accessing addresses: {accessed_addresses}",
+    ServerConnectionFailed { configured_addresses: Addresses, accessed_addresses: Addresses, details: String } =
+        2: "Unable to connect to TypeDB server(s).\nInitially configured addresses: {configured_addresses}.\nTried accessing addresses: {accessed_addresses}. Details: {details}",
     ServerConnectionFailedWithError { error: String } =
         3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedNetworking { error: String } =
@@ -197,6 +197,8 @@ error_messages! { ConnectionError
         36: "Could not execute a readonly operation on a non-primary replica '{address}'. It is either a version compatibility issue or a bug.",
     NoAvailableReplicas { configured_addresses: Addresses } =
         37: "Could not connect: no available replicas read from addresses {configured_addresses}.",
+    HttpHttpsMismatch { addresses: Addresses } =
+        38: "Invalid encryption used: either all or none addresses must use 'https': {addresses}.",
 }
 
 error_messages! { ConceptError

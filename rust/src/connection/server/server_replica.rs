@@ -17,7 +17,7 @@
  * under the License.
  */
 use std::collections::HashMap;
-
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use crate::common::address::Address;
 
 /// The metadata and state of an individual raft replica of a driver connection.
@@ -33,21 +33,22 @@ impl ServerReplica {
         Self { private_address, public_address: None, replica_status }
     }
 
-    pub(crate) fn translate_address(&mut self, address_translation: &HashMap<Address, Address>) -> bool {
+    pub(crate) fn translate_address(&mut self, connection_scheme: &http::uri::Scheme, address_translation: &HashMap<Address, Address>) {
         if let Some(translated) = address_translation
             .iter()
             .find(|(_, private)| private == &self.private_address())
             .map(|(public, _)| public.clone())
         {
             self.public_address = Some(translated);
-            true
-        } else {
-            false
+        } else if let Some(scheme) = self.address().uri_scheme() {
+            if scheme != connection_scheme {
+                self.public_address = Some(self.address().with_scheme(connection_scheme.clone()));
+            }
         }
     }
 
-    pub(crate) fn translated(mut self, address_translation: &HashMap<Address, Address>) -> Self {
-        self.translate_address(address_translation);
+    pub(crate) fn translated(mut self, connection_scheme: &http::uri::Scheme, address_translation: &HashMap<Address, Address>) -> Self {
+        self.translate_address(connection_scheme, address_translation);
         self
     }
 

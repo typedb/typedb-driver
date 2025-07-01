@@ -44,6 +44,7 @@ pub(crate) struct ServerManager {
     configured_addresses: Addresses,
     replicas: RwLock<Vec<ServerReplica>>,
     server_connections: RwLock<HashMap<Address, ServerConnection>>,
+    connection_scheme: http::uri::Scheme,
 
     // public - private
     address_translation: HashMap<Address, Address>,
@@ -67,9 +68,26 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
+        if !driver_options.use_replication && addresses.len() > 1 {
+            return Err(ConnectionError::MultipleAddressesForNoReplicationMode { addresses: addresses.clone() }.into());
+        }
+
+        let is_https = addresses.addresses().all(|address| address.is_https());
+        let is_http = addresses.addresses().all(|address| !address.is_https());
+        if !is_https && !is_http {
+            return Err(ConnectionError::HttpHttpsMismatch { addresses: addresses.clone() }.into());
+        }
+
+        let connection_scheme = if is_https {
+            http::uri::Scheme::HTTPS
+        } else {
+            http::uri::Scheme::HTTP
+        };
+
         let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
             &addresses,
+            &connection_scheme,
             credentials.clone(),
             driver_options.clone(),
             driver_lang.as_ref(),
@@ -83,6 +101,7 @@ impl ServerManager {
             configured_addresses: addresses,
             replicas: RwLock::new(replicas),
             server_connections: RwLock::new(source_connections),
+            connection_scheme,
             address_translation,
             background_runtime,
             credentials,
@@ -121,7 +140,7 @@ impl ServerManager {
         server_connections.extend(new_server_connections);
 
         if server_connections.is_empty() {
-            Err(self.server_connection_failed_err(None))
+            Err(self.server_connection_failed_err(None, connection_errors))
         } else {
             Ok(())
         }
@@ -218,14 +237,15 @@ impl ServerManager {
             None => self.seek_primary_replica_in(self.replicas()).await?,
         };
 
-        for _ in 0..=self.driver_options.redirect_failover_retries {
+        let retries = self.driver_options.redirect_failover_retries;
+        let mut connection_errors = Vec::with_capacity(retries + 1);
+        for _ in 0..=retries {
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, false, &task).await {
                 Err(Error::Connection(connection_error)) => {
                     let replicas_without_old_primary =
                         self.replicas().into_iter().filter(|replica| replica.private_address() != &private_address);
-
-                    primary_replica = match connection_error {
+                    primary_replica = match &connection_error {
                         ConnectionError::ClusterReplicaNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
                             let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
@@ -237,6 +257,8 @@ impl ServerManager {
                         }
                     };
 
+                    connection_errors.push(connection_error.into());
+
                     if primary_replica.private_address() == &private_address {
                         break;
                     }
@@ -244,7 +266,7 @@ impl ServerManager {
                 res => return res,
             }
         }
-        Err(self.server_connection_failed_err(None))
+        Err(self.server_connection_failed_err(None, connection_errors))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -264,6 +286,7 @@ impl ServerManager {
         P: Future<Output = Result<R>>,
     {
         let limit = self.driver_options.discovery_failover_retries.unwrap_or(usize::MAX);
+        let mut connection_errors = Vec::new();
         for (attempt, replica) in enumerate(replicas.into_iter()) {
             if attempt == limit {
                 break;
@@ -274,11 +297,12 @@ impl ServerManager {
                 }
                 Err(Error::Connection(err)) => {
                     debug!("Unable to connect to {}: {err:?}. Attempting next server.", replica.address());
+                    connection_errors.push(err.into());
                 }
                 res => return res,
             }
         }
-        Err(self.server_connection_failed_err(None))
+        Err(self.server_connection_failed_err(None, connection_errors))
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -299,7 +323,7 @@ impl ServerManager {
             None => match require_connected {
                 false => self.record_new_server_connection(public_address.clone(), private_address.clone()).await?,
                 true => {
-                    return Err(self.server_connection_failed_err(Some(Addresses::from_address(public_address.clone()))))
+                    return Err(self.server_connection_failed_err(Some(Addresses::from_address(public_address.clone())), Vec::default()))
                 }
             },
         };
@@ -325,7 +349,7 @@ impl ServerManager {
             self.update_server_connections().await?;
             Ok(replica)
         } else {
-            Err(self.server_connection_failed_err(None))
+            Err(self.server_connection_failed_err(None, Vec::default()))
         }
     }
 
@@ -333,17 +357,15 @@ impl ServerManager {
     async fn fetch_replicas_from_addresses(
         background_runtime: Arc<BackgroundRuntime>,
         addresses: &Addresses,
+        connection_scheme: &http::uri::Scheme,
         credentials: Credentials,
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
         use_replication: bool,
     ) -> Result<(HashMap<Address, ServerConnection>, Vec<ServerReplica>)> {
-        if !use_replication && addresses.len() > 1 {
-            return Err(ConnectionError::MultipleAddressesForNoReplicationMode { addresses: addresses.clone() }.into());
-        }
-
         let address_translation = addresses.address_translation();
+        let mut errors = Vec::with_capacity(addresses.len());
         for address in addresses.addresses() {
             let server_connection = ServerConnection::new(
                 background_runtime.clone(),
@@ -357,14 +379,14 @@ impl ServerManager {
             match server_connection {
                 Ok((server_connection, replicas)) => {
                     debug!("Fetched replicas from configured address '{address}': {replicas:?}");
-                    let translated_replicas = Self::translate_replicas(replicas, &address_translation);
+                    let translated_replicas = Self::translate_replicas(replicas, connection_scheme, &address_translation);
                     if use_replication {
                         let mut source_connections = HashMap::with_capacity(translated_replicas.len());
                         source_connections.insert(address.clone(), server_connection);
                         return Ok((source_connections, translated_replicas));
                     } else {
                         if let Some(target_replica) =
-                            translated_replicas.into_iter().find(|replica| replica.address() == address)
+                            translated_replicas.into_iter().find(|replica| {replica.address() == address})
                         {
                             let source_connections = HashMap::from([(address.clone(), server_connection)]);
                             return Ok((source_connections, vec![target_replica]));
@@ -373,6 +395,7 @@ impl ServerManager {
                 }
                 Err(Error::Connection(err)) => {
                     debug!("Unable to fetch replicas from {}: {err:?}. Attempting next server.", address);
+                    errors.push(err);
                 }
                 Err(err) => return Err(err),
             }
@@ -380,6 +403,7 @@ impl ServerManager {
         Err(ConnectionError::ServerConnectionFailed {
             configured_addresses: addresses.clone(),
             accessed_addresses: addresses.clone(),
+            details: errors.into_iter().join(";\n"),
         }
         .into())
     }
@@ -389,23 +413,25 @@ impl ServerManager {
         server_connection
             .servers_all()
             .await
-            .map(|replicas| Self::translate_replicas(replicas, &self.address_translation))
+            .map(|replicas| Self::translate_replicas(replicas, &self.connection_scheme, &self.address_translation))
     }
 
     fn translate_replicas(
         replicas: impl IntoIterator<Item = ServerReplica>,
+        connection_scheme: &http::uri::Scheme,
         address_translation: &HashMap<Address, Address>,
     ) -> Vec<ServerReplica> {
-        replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
+        replicas.into_iter().map(|replica| replica.translated(connection_scheme, address_translation)).collect()
     }
 
-    fn server_connection_failed_err(&self, accessed_addresses: Option<Addresses>) -> Error {
+    fn server_connection_failed_err(&self, accessed_addresses: Option<Addresses>, errors: Vec<Error>) -> Error {
         let accessed_addresses = accessed_addresses.unwrap_or_else(|| {
             Addresses::from_addresses(self.read_replicas().iter().map(|replica| replica.address().clone()))
         });
         ConnectionError::ServerConnectionFailed {
             configured_addresses: self.configured_addresses.clone(),
             accessed_addresses,
+            details: errors.into_iter().join(";\n")
         }
         .into()
     }
