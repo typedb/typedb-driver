@@ -97,7 +97,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 #[derive(World)]
 pub struct Context {
     pub is_cluster: bool,
-    pub tls_root_ca: PathBuf,
+    pub tls_root_ca: Option<PathBuf>,
     pub transaction_options: Option<TransactionOptions>,
     pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
@@ -143,7 +143,7 @@ impl fmt::Debug for Context {
 impl Context {
     const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
     // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
-    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:1729"];
+    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:11729"];
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
@@ -451,8 +451,8 @@ impl Context {
         assert!(!self.is_cluster);
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        let conn_settings = DriverOptions::new();
-        TypeDBDriver::new(addresses, credentials, conn_settings).await
+        let driver_options = DriverOptions::new();
+        TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
     async fn create_driver_cluster(
@@ -462,14 +462,15 @@ impl Context {
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cluster);
-        // TODO: Change when multiple addresses are introduced
-        let address = addresses.iter().next().expect("Expected at least one address");
-        let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
+        let https_addresses = addresses.iter().map(|address| format!("https://{address}"));
+        let addresses = Addresses::try_from_addresses_str(https_addresses).expect("Expected addresses");
 
-        // TODO: We probably want to add encryption to cluster tests
         let credentials = Credentials::new(username, password);
-        let conn_settings = DriverOptions::new();
-        TypeDBDriver::new(addresses, credentials, conn_settings).await
+        assert!(self.tls_root_ca.is_some(), "Root CA is expected for cluster tests!");
+        let driver_options = DriverOptions::new()
+            .is_tls_enabled(true)
+            .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
+        TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
     pub fn set_driver(&mut self, driver: TypeDBDriver) {
@@ -485,10 +486,7 @@ impl Context {
 
 impl Default for Context {
     fn default() -> Self {
-        let tls_root_ca = match std::env::var("ROOT_CA") {
-            Ok(root_ca) => PathBuf::from(root_ca),
-            Err(_) => PathBuf::new(),
-        };
+        let tls_root_ca = std::env::var("ROOT_CA").ok().map(|root_ca| PathBuf::from(root_ca));
         Self {
             is_cluster: false,
             tls_root_ca,

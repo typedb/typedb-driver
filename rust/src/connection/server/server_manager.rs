@@ -78,11 +78,7 @@ impl ServerManager {
             return Err(ConnectionError::HttpHttpsMismatch { addresses: addresses.clone() }.into());
         }
 
-        let connection_scheme = if is_https {
-            http::uri::Scheme::HTTPS
-        } else {
-            http::uri::Scheme::HTTP
-        };
+        let connection_scheme = if is_https { http::uri::Scheme::HTTPS } else { http::uri::Scheme::HTTP };
 
         let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
@@ -323,7 +319,10 @@ impl ServerManager {
             None => match require_connected {
                 false => self.record_new_server_connection(public_address.clone(), private_address.clone()).await?,
                 true => {
-                    return Err(self.server_connection_failed_err(Some(Addresses::from_address(public_address.clone())), Vec::default()))
+                    return Err(self.server_connection_failed_err(
+                        Some(Addresses::from_address(public_address.clone())),
+                        Vec::default(),
+                    ))
                 }
             },
         };
@@ -379,14 +378,15 @@ impl ServerManager {
             match server_connection {
                 Ok((server_connection, replicas)) => {
                     debug!("Fetched replicas from configured address '{address}': {replicas:?}");
-                    let translated_replicas = Self::translate_replicas(replicas, connection_scheme, &address_translation);
+                    let translated_replicas =
+                        Self::translate_replicas(replicas, connection_scheme, &address_translation);
                     if use_replication {
                         let mut source_connections = HashMap::with_capacity(translated_replicas.len());
                         source_connections.insert(address.clone(), server_connection);
                         return Ok((source_connections, translated_replicas));
                     } else {
                         if let Some(target_replica) =
-                            translated_replicas.into_iter().find(|replica| {replica.address() == address})
+                            translated_replicas.into_iter().find(|replica| replica.address() == address)
                         {
                             let source_connections = HashMap::from([(address.clone(), server_connection)]);
                             return Ok((source_connections, vec![target_replica]));
@@ -431,7 +431,7 @@ impl ServerManager {
         ConnectionError::ServerConnectionFailed {
             configured_addresses: self.configured_addresses.clone(),
             accessed_addresses,
-            details: errors.into_iter().join(";\n")
+            details: errors.into_iter().join(";\n"),
         }
         .into()
     }

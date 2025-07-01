@@ -18,6 +18,7 @@
  */
 
 use std::{fmt, str::FromStr};
+
 use http::Uri;
 
 use crate::{

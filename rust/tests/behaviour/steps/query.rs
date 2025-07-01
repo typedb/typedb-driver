@@ -18,7 +18,7 @@
  */
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::join_all, StreamExt, TryStreamExt};
+use futures::{future::join_all, StreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{

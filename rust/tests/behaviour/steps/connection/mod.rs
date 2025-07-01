@@ -18,6 +18,7 @@
  */
 
 use cucumber::{given, then, when};
+use itertools::Itertools;
 use macro_rules_attribute::apply;
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};

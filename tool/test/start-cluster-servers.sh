@@ -30,7 +30,7 @@ NODE_COUNT=${1:-1}
 
 function server_start() {
   ./${1}/typedb server \
-    --server.address=0.0.0.0:${1}1729 \
+    --server.address=127.0.0.1:${1}1729 \
     --server.encryption.enabled true \
     --server.encryption.certificate `realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
     --server.encryption.certificate-key `realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
@@ -58,9 +58,6 @@ rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 #bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
 bazel run //tool/test:typedb-extractor -- typedb-cluster-all
 
-ROOT_CA=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem`
-export ROOT_CA
-
 echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
 for i in $(seq 1 $NODE_COUNT); do
   cp -r typedb-cluster-all $i || exit 1
@@ -69,6 +66,9 @@ echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
+
+ROOT_CA=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem`
+export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60

@@ -26,7 +26,7 @@ use super::TryFromProto;
 use crate::{
     common::Result,
     connection::{
-        server::server_replica::{ReplicaType, ReplicaStatus, ServerReplica},
+        server::server_replica::{ReplicaStatus, ReplicaType, ServerReplica},
         ServerVersion,
     },
     error::ConnectionError,

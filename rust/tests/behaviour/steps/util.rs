@@ -27,12 +27,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cucumber::{
-    gherkin::{Feature, Step},
-    given, then, when, StatsWriter, World,
-};
-use futures::stream::StreamExt;
-use itertools::Itertools;
+use cucumber::{gherkin::Step, given, then, when, StatsWriter};
 use macro_rules_attribute::apply;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{answer::JSON, Result as TypeDBResult};
