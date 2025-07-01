@@ -64,7 +64,7 @@ Retrieves the label of this Concept. If this is an Instance, returns the label o
 pub fn is_attribute(&self) -> bool
 ----
 
-Check if this Concept represents an Attribute instance from the database
+Checks if this Concept represents an Attribute instance from the database
 
 [caption=""]
 .Returns
@@ -81,7 +81,7 @@ bool
 pub fn is_attribute_type(&self) -> bool
 ----
 
-Check if this Concept represents an Attribute Type from the schema of the database
+Checks if this Concept represents an Attribute Type from the schema of the database
 
 [caption=""]
 .Returns
@@ -98,7 +98,7 @@ bool
 pub fn is_boolean(&self) -> bool
 ----
 
-Check if this Concept holds a boolean as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a boolean as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -115,7 +115,7 @@ bool
 pub fn is_date(&self) -> bool
 ----
 
-Check if this Concept holds a date as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a date as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -132,7 +132,7 @@ bool
 pub fn is_datetime(&self) -> bool
 ----
 
-Check if this Concept holds a datetime as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a datetime as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -149,7 +149,7 @@ bool
 pub fn is_datetime_tz(&self) -> bool
 ----
 
-Check if this Concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -166,7 +166,7 @@ bool
 pub fn is_decimal(&self) -> bool
 ----
 
-Check if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -183,7 +183,7 @@ bool
 pub fn is_double(&self) -> bool
 ----
 
-Check if this Concept holds a double as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a double as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -200,7 +200,7 @@ bool
 pub fn is_duration(&self) -> bool
 ----
 
-Check if this Concept holds a duration as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a duration as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -217,7 +217,7 @@ bool
 pub fn is_entity(&self) -> bool
 ----
 
-Check if this Concept represents an Entity instance from the database
+Checks if this Concept represents an Entity instance from the database
 
 [caption=""]
 .Returns
@@ -234,7 +234,7 @@ bool
 pub fn is_entity_type(&self) -> bool
 ----
 
-Check if this Concept represents an Entity Type from the schema of the database
+Checks if this Concept represents an Entity Type from the schema of the database
 
 [caption=""]
 .Returns
@@ -251,7 +251,7 @@ bool
 pub fn is_instance(&self) -> bool
 ----
 
-Check if this Concept represents a stored database instance from the database. These are exactly: Entity, Relation, and Attribute
+Checks if this Concept represents a stored database instance from the database. These are exactly: Entity, Relation, and Attribute
 
 Equivalent to:
 
@@ -277,7 +277,7 @@ concept.is_entity() || concept.is_relation() ||  concept.is_attribute()
 pub fn is_integer(&self) -> bool
 ----
 
-Check if this Concept holds an integer as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds an integer as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -294,7 +294,7 @@ bool
 pub fn is_relation(&self) -> bool
 ----
 
-Check if this Concept represents an Relation instance from the database
+Checks if this Concept represents an Relation instance from the database
 
 [caption=""]
 .Returns
@@ -311,7 +311,7 @@ bool
 pub fn is_relation_type(&self) -> bool
 ----
 
-Check if this Concept represents a Relation Type from the schema of the database
+Checks if this Concept represents a Relation Type from the schema of the database
 
 [caption=""]
 .Returns
@@ -328,7 +328,7 @@ bool
 pub fn is_role_type(&self) -> bool
 ----
 
-Check if this Concept represents a Role Type from the schema of the database
+Checks if this Concept represents a Role Type from the schema of the database
 
 [caption=""]
 .Returns
@@ -345,7 +345,7 @@ bool
 pub fn is_string(&self) -> bool
 ----
 
-Check if this Concept holds a string as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a string as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -362,7 +362,7 @@ bool
 pub fn is_struct(&self) -> bool
 ----
 
-Check if this Concept holds a struct as an AttributeType, an Attribute, or a Value
+Checks if this Concept holds a struct as an AttributeType, an Attribute, or a Value
 
 [caption=""]
 .Returns
@@ -379,7 +379,7 @@ bool
 pub fn is_type(&self) -> bool
 ----
 
-Check if this Concept represents a Type from the schema of the database. These are exactly: Entity Types, Relation Types, Role Types, and Attribute Types
+Checks if this Concept represents a Type from the schema of the database. These are exactly: Entity Types, Relation Types, Role Types, and Attribute Types
 
 Equivalent to:
 
@@ -405,7 +405,7 @@ concept.is_entity_type() || concept.is_relation_type() || concept.is_role_type()
 pub fn is_value(&self) -> bool
 ----
 
-Check if this Concept represents a Value returned by the database
+Checks if this Concept represents a Value returned by the database
 
 [caption=""]
 .Returns

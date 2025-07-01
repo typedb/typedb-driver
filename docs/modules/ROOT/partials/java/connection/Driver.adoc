@@ -79,6 +79,52 @@ Checks whether this connection is presently open.
 driver.isOpen();
 ----
 
+[#_Driver_primaryReplica_]
+==== primaryReplica
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends ServerReplica> primaryReplica()
+----
+
+Returns the primary replica for this driver connection. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.primaryReplica()
+----
+
+[#_Driver_replicas_]
+==== replicas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends ServerReplica> replicas()
+----
+
+Set of ``Replica`` instances for this driver connection. 
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.replicas()
+----
+
 [#_Driver_transaction_java_lang_String_Transaction_Type]
 ==== transaction
 

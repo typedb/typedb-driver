@@ -23,7 +23,7 @@ a| `Ok(QueryType)`
 pub fn get_query_type(&self) -> QueryType
 ----
 
-Retrieve the executed query’s type (shared by all elements in this stream).
+Retrieves the executed query’s type (shared by all elements in this stream).
 
 [caption=""]
 .Returns
@@ -95,7 +95,7 @@ query_answer.into_rows()
 pub fn is_document_stream(&self) -> bool
 ----
 
-Check if the ``QueryAnswer`` is a ``ConceptDocumentStream``.
+Checks if the ``QueryAnswer`` is a ``ConceptDocumentStream``.
 
 [caption=""]
 .Returns
@@ -119,7 +119,7 @@ query_answer.is_document_stream()
 pub fn is_ok(&self) -> bool
 ----
 
-Check if the ``QueryAnswer`` is an ``Ok`` response.
+Checks if the ``QueryAnswer`` is an ``Ok`` response.
 
 [caption=""]
 .Returns
@@ -143,7 +143,7 @@ query_answer.is_ok()
 pub fn is_row_stream(&self) -> bool
 ----
 
-Check if the ``QueryAnswer`` is a ``ConceptRowStream``.
+Checks if the ``QueryAnswer`` is a ``ConceptRowStream``.
 
 [caption=""]
 .Returns

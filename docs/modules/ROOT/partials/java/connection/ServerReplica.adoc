@@ -1,0 +1,55 @@
+[#_ServerReplica]
+=== ServerReplica
+
+*Package*: `com.typedb.driver.api.server`
+
+The metadata and state of an individual raft replica of a driver connection.
+
+// tag::methods[]
+[#_ServerReplica_getAddress_]
+==== getAddress
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getAddress()
+----
+
+The address this replica is hosted at.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_ServerReplica_getTerm_]
+==== getTerm
+
+[source,java]
+----
+@CheckReturnValue
+long getTerm()
+----
+
+The raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`long`
+
+[#_ServerReplica_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+ReplicaType getType()
+----
+
+Gets the type of this replica: whether it's a primary or a secondary replica.
+
+[caption=""]
+.Returns
+`ReplicaType`
+
+// end::methods[]
+

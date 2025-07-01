@@ -17,10 +17,7 @@
  * under the License.
  */
 
-pub use self::{addresses::Addresses, server_version::ServerVersion};
-
-pub(crate) mod addresses;
 pub(crate) mod server_connection;
 pub(crate) mod server_manager;
 pub mod server_replica;
-mod server_version;
+pub mod server_version;

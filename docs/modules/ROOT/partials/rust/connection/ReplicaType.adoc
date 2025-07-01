@@ -1,5 +1,7 @@
-[#_enum_InternalError]
-=== InternalError
+[#_enum_ReplicaType]
+=== ReplicaType
+
+This enum is used to specify the type of replica.
 
 [caption=""]
 .Enum variants
@@ -8,10 +10,8 @@
 [options="header"]
 |===
 |Variant
-a| `RecvError`
-a| `SendError`
-a| `UnexpectedRequestType`
-a| `UnexpectedResponseType`
+a| `Primary = 0`
+a| `Secondary = 1`
 |===
 // end::enum_constants[]
 

@@ -30,10 +30,13 @@ use itertools::{enumerate, Itertools};
 use log::debug;
 
 use crate::{
-    common::{address::Address, consistency_level::ConsistencyLevel},
+    common::{
+        address::{address_translation::AddressTranslation, Address, Addresses},
+        consistency_level::ConsistencyLevel,
+    },
     connection::{
         runtime::BackgroundRuntime,
-        server::{server_connection::ServerConnection, server_replica::ServerReplica, Addresses},
+        server::{server_connection::ServerConnection, server_replica::ServerReplica},
     },
     error::ConnectionError,
     Credentials, DriverOptions, Error, Result,
@@ -45,9 +48,7 @@ pub(crate) struct ServerManager {
     replicas: RwLock<Vec<ServerReplica>>,
     server_connections: RwLock<HashMap<Address, ServerConnection>>,
     connection_scheme: http::uri::Scheme,
-
-    // public - private
-    address_translation: HashMap<Address, Address>,
+    address_translation: AddressTranslation,
 
     background_runtime: Arc<BackgroundRuntime>,
     credentials: Credentials,
@@ -216,8 +217,8 @@ impl ServerManager {
                     }
                     .into());
                 }
-                let private_address = self.address_translation.get(&address).unwrap_or_else(|| &address);
-                self.execute_on(&address, private_address, false, &task).await
+                let private_address = self.address_translation.to_private(&address).unwrap_or_else(|| address.clone());
+                self.execute_on(&address, &private_address, false, &task).await
             }
         }
     }
@@ -419,7 +420,7 @@ impl ServerManager {
     fn translate_replicas(
         replicas: impl IntoIterator<Item = ServerReplica>,
         connection_scheme: &http::uri::Scheme,
-        address_translation: &HashMap<Address, Address>,
+        address_translation: &AddressTranslation,
     ) -> Vec<ServerReplica> {
         replicas.into_iter().map(|replica| replica.translated(connection_scheme, address_translation)).collect()
     }

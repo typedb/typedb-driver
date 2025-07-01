@@ -6,21 +6,8 @@
 * `Clone`
 * `Debug`
 
-[caption=""]
-.Fields
-// tag::properties[]
-[cols=",,"]
-[options="header"]
-|===
-|Name |Type |Description
-a| `name` a| `String` a| 
-a| `password` a| `Option<String>` a| 
-a| `server_connections` a| `HashMap<Address, ServerConnection>` a| 
-|===
-// end::properties[]
-
 // tag::methods[]
-[#_struct_User_delete_username]
+[#_struct_User_delete_]
 ==== delete
 
 [tabs]
@@ -46,16 +33,7 @@ pub fn delete(self) -> Result
 --
 ====
 
-Deletes this user
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `username` a|  — The name of the user to be deleted a| 
-|===
+Deletes this user. Always uses strong consistency.
 
 [caption=""]
 .Returns
@@ -91,7 +69,41 @@ user.delete(username).await;
 --
 ====
 
-[#_struct_User_update_password_username_password_impl_Into_String_-_Result_]
+[#_struct_User_name_]
+==== name
+
+[source,rust]
+----
+pub fn name(&self) -> &str
+----
+
+Retrieves the username as a string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_User_password_]
+==== password
+
+[source,rust]
+----
+pub fn password(&self) -> Option<&str>
+----
+
+Retrieves the password as a string, if accessible.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
+----
+
+[#_struct_User_update_password_password_impl_Into_String_-_Result_]
 ==== update_password
 
 [tabs]
@@ -117,7 +129,7 @@ pub fn update_password(&self, password: impl Into<String>) -> Result<()>
 --
 ====
 
-Update the user’s password.
+Updates the user’s password. Always uses strong consistency.
 
 [caption=""]
 .Input parameters
@@ -125,7 +137,6 @@ Update the user’s password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a|  — The name of the user a| 
 a| `password` a|  — The new password a| `impl Into<String>) -> Result<(`
 |===
 
@@ -145,8 +156,7 @@ async::
 --
 [source,rust]
 ----
-user.update_password(username, password).await;
-user.update_password(username, password).await;
+user.update_password(password).await;
 ----
 
 --
@@ -156,8 +166,7 @@ sync::
 --
 [source,rust]
 ----
-user.update_password(username, password);
-user.update_password(username, password).await;
+user.update_password(password);
 ----
 
 --

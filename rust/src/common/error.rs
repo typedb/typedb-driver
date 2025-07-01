@@ -23,7 +23,7 @@ use tonic::{Code, Status};
 use tonic_types::StatusExt;
 
 use super::RequestID;
-use crate::{common::address::Address, connection::server::Addresses};
+use crate::common::address::{Address, Addresses};
 
 macro_rules! error_messages {
     {

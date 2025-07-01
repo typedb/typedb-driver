@@ -20,14 +20,13 @@
 use std::{collections::HashSet, fmt, sync::Arc};
 
 use crate::{
-    common::{consistency_level::ConsistencyLevel, Result},
+    common::{consistency_level::ConsistencyLevel, Addresses, Result},
     connection::{
         runtime::BackgroundRuntime,
         server::{
             server_connection::ServerConnection, server_manager::ServerManager, server_replica::ServerReplica,
-            Addresses,
+            server_version::ServerVersion,
         },
-        ServerVersion,
     },
     Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };

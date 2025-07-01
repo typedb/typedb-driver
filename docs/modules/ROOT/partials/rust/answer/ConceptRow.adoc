@@ -64,7 +64,7 @@ concept_row.get(var_name)
 pub fn get_column_names(&self) -> &[String]
 ----
 
-Retrieve the row column names (shared by all elements in this stream).
+Retrieves the row column names (shared by all elements in this stream).
 
 [caption=""]
 .Returns
@@ -145,7 +145,7 @@ concept_row.get_position(column_index)
 pub fn get_query_type(&self) -> QueryType
 ----
 
-Retrieve the executed query’s type (shared by all elements in this stream).
+Retrieves the executed query’s type (shared by all elements in this stream).
 
 [caption=""]
 .Returns

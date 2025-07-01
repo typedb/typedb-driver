@@ -63,7 +63,7 @@ driver.users.contains(username)
 create(username: str, password: str) -> None
 ----
 
-Create a user with the given name and password.
+Creates a user with the given name and password.
 
 [caption=""]
 .Input parameters
@@ -94,7 +94,7 @@ driver.users.create(username, password)
 get(username: str) -> User | None
 ----
 
-Retrieve a user with the given name.
+Retrieves a user with the given name.
 
 [caption=""]
 .Input parameters
@@ -124,7 +124,7 @@ driver.users.get(username)
 get_current_user() -> User | None
 ----
 
-Retrieve the name of the user who opened the current connection.
+Retrieves the name of the user who opened the current connection.
 
 [caption=""]
 .Returns

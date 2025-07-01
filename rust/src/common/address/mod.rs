@@ -17,30 +17,9 @@
  * under the License.
  */
 
-#![deny(elided_lifetimes_in_paths)]
-#![deny(unused_must_use)]
+pub(crate) use self::address::Address;
+pub use self::addresses::Addresses;
 
-pub use self::{
-    common::{
-        box_stream, consistency_level, error, info, Addresses, BoxPromise, BoxStream, Error, Promise, QueryOptions,
-        Result, TransactionOptions, TransactionType, IID,
-    },
-    connection::{
-        server_replica::{ReplicaType, ServerReplica},
-        server_version::ServerVersion,
-        Credentials, DriverOptions,
-    },
-    database::{Database, DatabaseManager},
-    driver::TypeDBDriver,
-    transaction::Transaction,
-    user::{User, UserManager},
-};
-
-pub mod answer;
-mod common;
-pub mod concept;
-mod connection;
-mod database;
-pub mod driver;
-pub mod transaction;
-mod user;
+pub(crate) mod address;
+pub(crate) mod address_translation;
+pub(crate) mod addresses;

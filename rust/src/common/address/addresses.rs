@@ -25,9 +25,7 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::common::address::Address;
-
-// TODO: Move to common/address.rs?
+use crate::common::address::{address_translation::AddressTranslation, Address};
 
 /// A collection of server addresses used for connection.
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -165,12 +163,12 @@ impl Addresses {
         }
     }
 
-    pub(crate) fn address_translation(&self) -> HashMap<Address, Address> {
+    pub(crate) fn address_translation(&self) -> AddressTranslation {
         match self {
-            Addresses::Direct(addresses) => {
-                addresses.into_iter().map(|address| (address.clone(), address.clone())).collect()
-            }
-            Addresses::Translated(translation) => translation.clone(),
+            Addresses::Direct(addresses) => AddressTranslation::Mapping(
+                addresses.into_iter().map(|address| (address.clone(), address.clone())).collect(),
+            ),
+            Addresses::Translated(translation) => AddressTranslation::Mapping(translation.clone()),
         }
     }
 }

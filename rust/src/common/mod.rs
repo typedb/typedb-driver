@@ -18,6 +18,7 @@
  */
 
 pub use self::{
+    address::Addresses,
     error::Error,
     promise::{box_promise, BoxPromise, Promise},
     query_options::QueryOptions,

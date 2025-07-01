@@ -63,7 +63,7 @@ driver.databases.contains(name)
 create(name: str) -> None
 ----
 
-Create a database with the given name.
+Creates a database with the given name.
 
 [caption=""]
 .Input parameters
@@ -93,7 +93,7 @@ driver.databases.create(name)
 get(name: str) -> Database
 ----
 
-Retrieve the database with the given name.
+Retrieves the database with the given name.
 
 [caption=""]
 .Input parameters
@@ -123,7 +123,7 @@ driver.databases.get(name)
 import_from_file(name: str, schema: str, data_file_path: str) -> None
 ----
 
-Create a database with the given name based on previously exported another database’s data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size.
+Creates a database with the given name based on previously exported another database’s data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size.
 
 [caption=""]
 .Input parameters

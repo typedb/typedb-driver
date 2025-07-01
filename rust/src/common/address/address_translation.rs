@@ -17,30 +17,28 @@
  * under the License.
  */
 
-#![deny(elided_lifetimes_in_paths)]
-#![deny(unused_must_use)]
+use std::collections::HashMap;
 
-pub use self::{
-    common::{
-        box_stream, consistency_level, error, info, Addresses, BoxPromise, BoxStream, Error, Promise, QueryOptions,
-        Result, TransactionOptions, TransactionType, IID,
-    },
-    connection::{
-        server_replica::{ReplicaType, ServerReplica},
-        server_version::ServerVersion,
-        Credentials, DriverOptions,
-    },
-    database::{Database, DatabaseManager},
-    driver::TypeDBDriver,
-    transaction::Transaction,
-    user::{User, UserManager},
-};
+use crate::common::address::Address;
 
-pub mod answer;
-mod common;
-pub mod concept;
-mod connection;
-mod database;
-pub mod driver;
-pub mod transaction;
-mod user;
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub(crate) enum AddressTranslation {
+    // public : private
+    Mapping(HashMap<Address, Address>),
+}
+
+impl AddressTranslation {
+    pub(crate) fn to_private(&self, address: &Address) -> Option<Address> {
+        match self {
+            AddressTranslation::Mapping(mapping) => mapping.get(address).cloned(),
+        }
+    }
+
+    pub(crate) fn to_public(&self, address: &Address) -> Option<Address> {
+        match self {
+            AddressTranslation::Mapping(mapping) => {
+                mapping.iter().find(|(_, private)| private == &address).map(|(public, _)| public.clone())
+            }
+        }
+    }
+}

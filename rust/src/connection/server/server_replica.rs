@@ -16,12 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::{
-    collections::HashMap,
-    net::{IpAddr, Ipv4Addr, SocketAddr},
-};
-
-use crate::common::address::Address;
+use crate::common::address::{address_translation::AddressTranslation, Address};
 
 /// The metadata and state of an individual raft replica of a driver connection.
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
@@ -39,13 +34,9 @@ impl ServerReplica {
     pub(crate) fn translate_address(
         &mut self,
         connection_scheme: &http::uri::Scheme,
-        address_translation: &HashMap<Address, Address>,
+        address_translation: &AddressTranslation,
     ) {
-        if let Some(translated) = address_translation
-            .iter()
-            .find(|(_, private)| private == &self.private_address())
-            .map(|(public, _)| public.clone())
-        {
+        if let Some(translated) = address_translation.to_public(self.private_address()) {
             self.public_address = Some(translated);
         } else if let Some(scheme) = self.address().uri_scheme() {
             if scheme != connection_scheme {
@@ -57,7 +48,7 @@ impl ServerReplica {
     pub(crate) fn translated(
         mut self,
         connection_scheme: &http::uri::Scheme,
-        address_translation: &HashMap<Address, Address>,
+        address_translation: &AddressTranslation,
     ) -> Self {
         self.translate_address(connection_scheme, address_translation);
         self
