@@ -19,7 +19,7 @@
 
 use typedb_driver::QueryOptions;
 
-use super::memory::{borrow, borrow_mut, free, release};
+use crate::common::memory::{borrow, borrow_mut, free, release};
 
 /// Produces a new <code>QueryOptions</code> object.
 #[no_mangle]

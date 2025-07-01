@@ -17,15 +17,32 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod driver;
-mod credentials;
-mod server;
-mod database;
-mod driver_options;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
+use std::{ffi::c_char};
+
+use crate::common::memory::{release_string, string_free, free};
+
+/// <code>ServerVersion</code> is an FFI representation of a full server's version specification.
+#[repr(C)]
+pub struct ServerVersion {
+    distribution: *mut c_char,
+    version: *mut c_char,
+}
+
+impl ServerVersion {
+    pub fn new(distribution: String, version: String) -> Self {
+        Self { distribution: release_string(distribution), version: release_string(version) }
+    }
+}
+
+impl Drop for ServerVersion {
+    fn drop(&mut self) {
+        string_free(self.distribution);
+        string_free(self.version);
+    }
+}
+
+/// Frees the native rust <code>ServerVersion</code> object
+#[no_mangle]
+pub extern "C" fn server_version_drop(server_version: *mut ServerVersion) {
+    free(server_version);
+}

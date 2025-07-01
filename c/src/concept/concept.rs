@@ -24,11 +24,11 @@ use typedb_driver::{
     box_stream,
     concept::{
         value::{Decimal, Duration, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Attribute, Concept, Entity,Relation, Value,
     },
 };
 
-use crate::{
+use crate::common::{
     iterator::CIterator,
     memory::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,

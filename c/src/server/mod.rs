@@ -17,26 +17,6 @@
  * under the License.
  */
 
-use std::sync::Arc;
-
-use typedb_driver::{BoxStream, Result};
-
-use super::{
-    error::try_release_optional,
-    memory::{borrow_mut, release_optional},
-};
-use crate::error::try_release_optional_arc;
-
-pub struct CIterator<T: 'static>(pub(super) BoxStream<'static, T>);
-
-pub(super) fn iterator_next<T: 'static>(it: *mut CIterator<T>) -> *mut T {
-    release_optional(borrow_mut(it).0.next())
-}
-
-pub(super) fn iterator_try_next<T: 'static>(it: *mut CIterator<Result<T>>) -> *mut T {
-    try_release_optional(borrow_mut(it).0.next())
-}
-
-pub(super) fn iterator_arc_next<T: 'static>(it: *mut CIterator<Arc<T>>) -> *const T {
-    try_release_optional_arc(borrow_mut(it).0.next())
-}
+pub(crate) mod consistency_level;
+pub(crate) mod server_replica;
+mod server_version;

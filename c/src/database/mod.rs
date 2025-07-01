@@ -17,15 +17,5 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod driver;
-mod credentials;
-mod server;
-mod database;
-mod driver_options;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
+pub(crate) mod database;
+pub(crate) mod database_manager;

@@ -17,28 +17,5 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::null_mut};
-
-use typedb_driver::Result;
-
-use super::{
-    iterator::CIterator,
-    memory::{borrow_mut, free},
-};
-use crate::error::try_release_string;
-
-/// Iterator over the strings in the result of a request or a TypeQL Fetch query.
-pub struct StringIterator(pub CIterator<Result<String>>);
-
-/// Forwards the <code>StringIterator</code> and returns the next string if it exists,
-/// or null if there are no more elements.
-#[no_mangle]
-pub extern "C" fn string_iterator_next(it: *mut StringIterator) -> *mut c_char {
-    borrow_mut(it).0 .0.next().map(try_release_string).unwrap_or_else(null_mut)
-}
-
-/// Frees the native rust <code>StringIterator</code> object
-#[no_mangle]
-pub extern "C" fn string_iterator_drop(it: *mut StringIterator) {
-    free(it);
-}
+pub(crate) mod user;
+pub(crate) mod user_manager;

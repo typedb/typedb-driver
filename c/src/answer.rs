@@ -26,16 +26,16 @@ use typedb_driver::{
     BoxPromise, Promise, Result,
 };
 
-use super::{
+use crate::{
     concept::ConceptIterator,
-    iterator::CIterator,
-    memory::{borrow, free, release, release_optional, release_string, string_view},
+    common::iterator::CIterator,
+    common::memory::{borrow, free, release, release_string, string_view},
 };
 use crate::{
     common::StringIterator,
     concept::ConceptRowIterator,
-    error::{try_release, try_release_optional},
-    memory::take_ownership,
+    common::error::{try_release, try_release_optional},
+    common::memory::take_ownership,
 };
 
 /// Promise object representing the result of an asynchronous operation.

@@ -20,9 +20,8 @@
 use std::{ffi::c_char, ptr::null_mut};
 
 use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
-
-use super::memory::{borrow, borrow_mut, free, release, take_ownership};
-use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
+use crate::answer::QueryAnswerPromise;
+use crate::common::{error::try_release, memory::{borrow, borrow_mut, free, release, take_ownership, string_view}, promise::VoidPromise};
 
 /// Opens a transaction to perform read or write queries on the database connected to the session.
 ///

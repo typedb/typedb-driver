@@ -32,18 +32,31 @@ import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.user.UserManagerImpl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
-import static com.typedb.driver.jni.typedb_driver.driver_open_with_description;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation_with_description;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses_with_description;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_description;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
 
     public DriverImpl(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         this(open(address, credentials, driverOptions));
+    }
+
+    public DriverImpl(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        this(open(addresses, credentials, driverOptions));
+    }
+
+    public DriverImpl(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
+        this(open(addressTranslation, credentials, driverOptions));
     }
 
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
@@ -55,7 +68,35 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(credentials, "credentials");
         Validator.requireNonNull(driverOptions, "driverOptions");
         try {
-            return driver_open_with_description(address, credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            return driver_new_with_description(address, credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    private static com.typedb.driver.jni.TypeDBDriver open(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) {
+        Validator.requireNonNull(addresses, "addresses");
+        Validator.requireNonNull(credentials, "credentials");
+        Validator.requireNonNull(driverOptions, "driverOptions");
+        try {
+            return driver_new_with_addresses_with_description(addresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    private static com.typedb.driver.jni.TypeDBDriver open(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) {
+        Validator.requireNonNull(addressTranslation, "addressTranslation");
+        Validator.requireNonNull(credentials, "credentials");
+        Validator.requireNonNull(driverOptions, "driverOptions");
+        try {
+            List<String> publicAddresses = new ArrayList<>();
+            List<String> privateAddresses = new ArrayList<>();
+            for (Map.Entry<String, String> entry: addressTranslation.entrySet()) {
+                publicAddresses.add(entry.getKey());
+                privateAddresses.add(entry.getValue());
+            }
+            return driver_new_with_address_translation_with_description(publicAddresses.toArray(new String[0]), privateAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

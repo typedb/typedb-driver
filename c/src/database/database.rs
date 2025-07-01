@@ -21,11 +21,11 @@ use std::{ffi::c_char, path::Path};
 
 use typedb_driver::Database;
 
-use super::{
+use crate::common::{
     error::{try_release_string, unwrap_void},
     memory::{borrow, release_string},
 };
-use crate::memory::{decrement_arc, string_view, take_arc};
+use crate::common::memory::{decrement_arc, string_view, take_arc};
 
 /// Frees the native rust <code>Database</code> object
 #[no_mangle]

@@ -21,11 +21,10 @@ use std::ffi::c_char;
 
 use typedb_driver::User;
 
-use super::{
+use crate::common::{
     error::unwrap_void,
-    memory::{borrow, free, release_string, string_view},
+    memory::{borrow,take_ownership, free, release_string, string_view},
 };
-use crate::memory::take_ownership;
 
 /// Frees the native rust <code>User</code> object.
 #[no_mangle]
@@ -38,12 +37,6 @@ pub extern "C" fn user_drop(user: *mut User) {
 pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
     release_string(borrow(user).name().to_string())
 }
-
-// /// Returns the number of seconds remaining till this user’s current password expires.
-// #[no_mangle]
-// pub extern "C" fn user_get_password_expiry_seconds(user: *mut User) -> i64 {
-//     borrow(user).password_expiry_seconds.unwrap_or(-1)
-// }
 
 /// Updates the password for the current authenticated user.
 ///

@@ -21,10 +21,9 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{ReplicaType, ServerReplica};
 
-use super::memory::{borrow, release_string};
-use crate::{
+use crate::common::memory::{borrow, release_string, free};
+use crate::common::{
     iterator::{iterator_next, CIterator},
-    memory::free,
 };
 
 /// Iterator over the <code>ServerReplica</code> corresponding to each replica of a TypeDB cluster.

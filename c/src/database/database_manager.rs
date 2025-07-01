@@ -21,14 +21,12 @@ use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
 use typedb_driver::{box_stream, Database, TypeDBDriver};
 
-use super::{
-    error::{try_release, unwrap_or_default, unwrap_void},
-    iterator::CIterator,
-    memory::{borrow_mut, free, string_view},
+use crate::common::{
+    error::{try_release, try_release_arc, unwrap_or_default, unwrap_void},
+    iterator::{iterator_arc_next, CIterator},
+    memory::{borrow_mut, borrow_optional, free, string_view},
 };
-use crate::{
-    consistency_level::ConsistencyLevel, error::try_release_arc, iterator::iterator_arc_next, memory::borrow_optional,
-};
+use crate::server::consistency_level::ConsistencyLevel;
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
 pub struct DatabaseIterator(CIterator<Arc<Database>>);

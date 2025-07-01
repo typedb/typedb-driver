@@ -21,7 +21,7 @@ use std::time::Duration;
 
 use typedb_driver::TransactionOptions;
 
-use super::memory::{borrow, borrow_mut, free, release};
+use crate::common::memory::{borrow, borrow_mut, free, release};
 
 /// Produces a new <code>TransactionOptions</code> object.
 #[no_mangle]

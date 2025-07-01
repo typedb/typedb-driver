@@ -20,7 +20,7 @@ use std::ffi::c_char;
 
 use typedb_driver::consistency_level::ConsistencyLevel as NativeConsistencyLevel;
 
-use crate::{
+use crate::common::{
     error::unwrap_or_default,
     memory::{free, release, release_string, string_free, string_view},
 };

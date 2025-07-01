@@ -57,35 +57,35 @@ fn ok_record_flatten<T>(result: Option<Result<T>>) -> Option<T> {
     result.and_then(ok_record)
 }
 
-pub(super) fn try_release<T>(result: Result<T>) -> *mut T {
+pub(crate) fn try_release<T>(result: Result<T>) -> *mut T {
     release_optional(ok_record(result))
 }
 
-pub(super) fn try_release_optional<T>(result: Option<Result<T>>) -> *mut T {
+pub(crate) fn try_release_optional<T>(result: Option<Result<T>>) -> *mut T {
     release_optional(ok_record_flatten(result))
 }
 
-pub(super) fn try_release_string(result: Result<String>) -> *mut c_char {
+pub(crate) fn try_release_string(result: Result<String>) -> *mut c_char {
     ok_record(result).map(release_string).unwrap_or_else(null_mut)
 }
 
-pub(super) fn try_release_optional_string(result: Option<Result<String>>) -> *mut c_char {
+pub(crate) fn try_release_optional_string(result: Option<Result<String>>) -> *mut c_char {
     ok_record_flatten(result).map(release_string).unwrap_or_else(null_mut)
 }
 
-pub(super) fn try_release_arc<T>(result: Result<Arc<T>>) -> *const T {
+pub(crate) fn try_release_arc<T>(result: Result<Arc<T>>) -> *const T {
     try_release_optional_arc(ok_record(result))
 }
 
-pub(super) fn try_release_optional_arc<T>(result: Option<Arc<T>>) -> *const T {
+pub(crate) fn try_release_optional_arc<T>(result: Option<Arc<T>>) -> *const T {
     result.map(release_arc).unwrap_or_else(null)
 }
 
-pub(super) fn unwrap_or_default<T: Default>(result: Result<T>) -> T {
+pub(crate) fn unwrap_or_default<T: Default>(result: Result<T>) -> T {
     ok_record(result).unwrap_or_default()
 }
 
-pub(super) fn unwrap_void(result: Result) {
+pub(crate) fn unwrap_void(result: Result) {
     ok_record(result);
 }
 

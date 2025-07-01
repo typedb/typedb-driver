@@ -17,15 +17,25 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod driver;
-mod credentials;
-mod server;
-mod database;
-mod driver_options;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
+use std::sync::Arc;
+
+use typedb_driver::{BoxStream, Result};
+
+use super::{
+    error::{try_release_optional, try_release_optional_arc},
+    memory::{borrow_mut, release_optional},
+};
+
+pub struct CIterator<T: 'static>(pub(crate) BoxStream<'static, T>);
+
+pub(crate) fn iterator_next<T: 'static>(it: *mut CIterator<T>) -> *mut T {
+    release_optional(borrow_mut(it).0.next())
+}
+
+pub(crate) fn iterator_try_next<T: 'static>(it: *mut CIterator<Result<T>>) -> *mut T {
+    try_release_optional(borrow_mut(it).0.next())
+}
+
+pub(crate) fn iterator_arc_next<T: 'static>(it: *mut CIterator<Arc<T>>) -> *const T {
+    try_release_optional_arc(borrow_mut(it).0.next())
+}

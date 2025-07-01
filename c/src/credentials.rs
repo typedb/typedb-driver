@@ -17,15 +17,31 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod driver;
-mod credentials;
-mod server;
-mod database;
-mod driver_options;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
+use std::{ffi::c_char};
+
+use typedb_driver::{
+    Credentials
+    
+};
+
+use crate::common::{
+    memory::{free, string_view},
+};
+use crate::common::{
+    memory::{release},
+};
+
+/// Creates a new <code>Credentials</code> for connecting to TypeDB Server.
+///
+/// @param username The name of the user to connect as
+/// @param password The password for the user
+#[no_mangle]
+pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
+    release(Credentials::new(string_view(username), string_view(password)))
+}
+
+/// Frees the native rust <code>Credentials</code> object
+#[no_mangle]
+pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
+    free(credentials);
+}

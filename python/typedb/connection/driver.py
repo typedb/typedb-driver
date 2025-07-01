@@ -26,7 +26,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_open_with_description, driver_is_open, driver_force_close, \
+from typedb.native_driver_wrapper import driver_new_with_description, driver_is_open, driver_force_close, \
     TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
@@ -44,7 +44,7 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         require_non_null(credentials, "credentials")
         require_non_null(driver_options, "driver_options")
         try:
-            native_driver = driver_open_with_description(address, credentials.native_object,
+            native_driver = driver_new_with_description(address, credentials.native_object,
                                                          driver_options.native_object, Driver.LANGUAGE)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

@@ -21,7 +21,7 @@ use std::ffi::c_char;
 
 use typedb_driver::{BoxPromise, Promise, Result};
 
-use crate::{
+use super::{
     error::{try_release_optional_string, unwrap_or_default, unwrap_void},
     memory::take_ownership,
 };
