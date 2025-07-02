@@ -19,4 +19,4 @@
 
 pub(crate) mod consistency_level;
 pub(crate) mod server_replica;
-mod server_version;
+pub(crate) mod server_version;

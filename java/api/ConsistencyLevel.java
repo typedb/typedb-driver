@@ -19,11 +19,9 @@
 
 package com.typedb.driver.api;
 
-import com.typedb.driver.common.exception.TypeDBDriverException;
-
 import static com.typedb.driver.jni.typedb_driver.consistency_level_eventual;
-import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_replica_dependant;
+import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
 
 /**
  * Consistency levels of operations against a distributed database. All driver methods have default

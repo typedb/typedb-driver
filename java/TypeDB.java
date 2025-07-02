@@ -72,8 +72,8 @@ public class TypeDB {
      * </pre>
      *
      * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
-     * @param credentials   The credentials to connect with
-     * @param driverOptions The connection settings to connect with
+     * @param credentials        The credentials to connect with
+     * @param driverOptions      The connection settings to connect with
      */
     public static Driver driver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addressTranslation, credentials, driverOptions);

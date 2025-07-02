@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/// A full TypeDB's server version specification
+/// A full TypeDB server's version specification
 #[derive(Debug, Clone)]
 pub struct ServerVersion {
     pub(crate) distribution: String,

@@ -46,6 +46,8 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
     free(it);
 }
 
+// TODO: Propage consistency_levels to every read function!
+
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.

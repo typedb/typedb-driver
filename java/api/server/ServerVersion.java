@@ -19,28 +19,22 @@
 
 package com.typedb.driver.api.server;
 
-import com.typedb.driver.common.exception.ErrorMessage;
-import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.NativeObject;
 
 /**
- * Type of replica.
+ * A full TypeDB server's version specification.
  *
  * <h3>Examples</h3>
  * <pre>
- * replica.type();
+ * driver.serverVersion();
  * </pre>
  */
-public class ServerVersion {
-    private final String distribution;
-    private final String version;
-
+public class ServerVersion extends NativeObject<com.typedb.driver.jni.ServerVersion> {
     /**
      * @hidden
      */
-    ServerVersion(com.typedb.driver.jni.ServerVersion nativeObject) {
-        if (nativeObject == null) throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
-        this.distribution = nativeObject.getDistribution();
-        this.version = nativeObject.getVersion();
+    public ServerVersion(com.typedb.driver.jni.ServerVersion nativeObject) {
+        super(nativeObject);
     }
 
     /**
@@ -52,7 +46,7 @@ public class ServerVersion {
      * </pre>
      */
     public String getDistribution() {
-        return distribution;
+        return nativeObject.getDistribution();
     }
 
     /**
@@ -64,6 +58,6 @@ public class ServerVersion {
      * </pre>
      */
     public String getVersion() {
-        return version;
+        return nativeObject.getVersion();
     }
 }

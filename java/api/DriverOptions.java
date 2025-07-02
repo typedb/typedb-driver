@@ -22,14 +22,13 @@ package com.typedb.driver.api;
 import com.typedb.driver.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
-
 import java.util.Optional;
 
-import static com.typedb.driver.jni.typedb_driver.driver_options_new;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_is_tls_enabled;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_is_tls_enabled;
-import static com.typedb.driver.jni.typedb_driver.driver_options_has_tls_root_ca_path;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_root_ca_path;
+import static com.typedb.driver.jni.typedb_driver.driver_options_has_tls_root_ca_path;
+import static com.typedb.driver.jni.typedb_driver.driver_options_new;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_is_tls_enabled;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_root_ca_path;
 
 /**

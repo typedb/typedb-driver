@@ -103,7 +103,6 @@ impl TypeDBDriver {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
-        println!("Opening a new driver with these options: {driver_options:?}, to: {addresses}");
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let server_manager = Arc::new(
             ServerManager::new(

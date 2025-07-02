@@ -92,7 +92,7 @@ public interface DatabaseManager {
      * driver.databases().all()
      * </pre>
      *
-     * @see #allWithConsistency(ConsistencyLevel)
+     * @see #all(ConsistencyLevel)
      */
     @CheckReturnValue
     default List<Database> all() throws TypeDBDriverException {

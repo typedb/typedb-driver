@@ -17,14 +17,13 @@
  * under the License.
  */
 
-use std::ffi::c_char;
+use std::{ffi::c_char, ptr::null_mut};
 
 use crate::common::memory::{free, release_string, string_free};
 
-// TODO: Use
-
 /// <code>ServerVersion</code> is an FFI representation of a full server's version specification.
 #[repr(C)]
+#[derive(Debug)]
 pub struct ServerVersion {
     distribution: *mut c_char,
     version: *mut c_char,
@@ -33,6 +32,12 @@ pub struct ServerVersion {
 impl ServerVersion {
     pub fn new(distribution: String, version: String) -> Self {
         Self { distribution: release_string(distribution), version: release_string(version) }
+    }
+}
+
+impl Default for ServerVersion {
+    fn default() -> Self {
+        Self { distribution: null_mut(), version: null_mut() }
     }
 }
 

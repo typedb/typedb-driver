@@ -28,7 +28,7 @@ use crate::{
         iterators_to_map,
         memory::{borrow, free, release, release_optional, string_array_view, string_view},
     },
-    server::server_replica::ServerReplicaIterator,
+    server::{server_replica::ServerReplicaIterator, server_version::ServerVersion},
 };
 
 const DRIVER_LANG: &'static str = "c";
@@ -171,16 +171,24 @@ pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);
 }
 
+/// Forcibly closes the driver. To be used in exceptional cases.
+#[no_mangle]
+pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
+    unwrap_void(borrow(driver).force_close());
+}
+
 /// Checks whether this connection is presently open.
 #[no_mangle]
 pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
     borrow(driver).is_open()
 }
 
-/// Forcibly closes the driver. To be used in exceptional cases.
+/// Retrieves the server version and distribution information.
 #[no_mangle]
-pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
-    unwrap_void(borrow(driver).force_close());
+pub extern "C" fn driver_server_version(driver: *const TypeDBDriver) -> *mut ServerVersion {
+    release(unwrap_or_default(borrow(driver).server_version().map(|server_version| {
+        ServerVersion::new(server_version.distribution().to_string(), server_version.version().to_string())
+    })))
 }
 
 /// Retrieves the server's replicas.

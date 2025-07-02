@@ -21,6 +21,7 @@ package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.server.ServerReplica;
+import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
@@ -41,6 +42,17 @@ public interface Driver extends AutoCloseable {
      */
     @CheckReturnValue
     boolean isOpen();
+
+    /**
+     * Retrieves the server's version.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.serverVersion();
+     * </pre>
+     */
+    @CheckReturnValue
+    ServerVersion serverVersion();
 
     /**
      * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
