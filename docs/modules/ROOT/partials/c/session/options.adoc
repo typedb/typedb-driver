@@ -195,7 +195,7 @@ bool options_has_explain(const struct Options* options)
 
 
 
-Checks whether the option for explanation was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for explanation was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -211,7 +211,7 @@ bool options_has_infer(const struct Options* options)
 
 
 
-Checks whether the option for inference was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for inference was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -227,7 +227,7 @@ bool options_has_parallel(const struct Options* options)
 
 
 
-Checks whether the option for parallel execution was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for parallel execution was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -243,7 +243,7 @@ bool options_has_prefetch(const struct Options* options)
 
 
 
-Checks whether the option for prefetching was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for prefetching was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -259,7 +259,7 @@ bool options_has_prefetch_size(const struct Options* options)
 
 
 
-Checks whether the option for prefetch size was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for prefetch size was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -275,7 +275,7 @@ bool options_has_read_any_replica(const struct Options* options)
 
 
 
-Checks whether the option for reading data from any replica was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for reading data from any replica was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -291,7 +291,7 @@ bool options_has_schema_lock_acquire_timeout_millis(const struct Options* option
 
 
 
-Checks whether the option for schema lock acquire timeout was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for schema lock acquire timeout was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -307,7 +307,7 @@ bool options_has_session_idle_timeout_millis(const struct Options* options)
 
 
 
-Checks whether the option for the session idle timeout was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for the session idle timeout was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -323,7 +323,7 @@ bool options_has_trace_inference(const struct Options* options)
 
 
 
-Checks whether the option for reasoning tracing was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for reasoning tracing was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -339,7 +339,7 @@ bool options_has_transaction_timeout_millis(const struct Options* options)
 
 
 
-Checks whether the option for transaction timeout was explicitly set for this ``TypeDBOptions`` object.
+Checks whether the option for transaction timeout was Explicitly setsfor this ``TypeDBOptions`` object.
 
 [caption=""]
 .Returns
@@ -525,7 +525,7 @@ void options_set_transaction_timeout_millis(struct Options* options, int64_t tim
 
 
 
-Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+Explicitly setsa transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
 [caption=""]
 .Returns

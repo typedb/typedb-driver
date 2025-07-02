@@ -3,26 +3,63 @@
 
 *Package*: `com.typedb.driver.api`
 
-User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 
-
-
-[caption=""]
-.Examples
-[source,java]
-----
-DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
-----
+TypeDB driver options. ``DriverOptions`` are used to specify the driver's connection behavior.
 
 // tag::methods[]
-[#_DriverOptions_DriverOptions_boolean_java_lang_String]
+[#_DriverOptions_DriverOptions_]
 ==== DriverOptions
 
 [source,java]
 ----
-public DriverOptions​(boolean isTlsEnabled,
-                     java.lang.String tlsRootCAPath)
+public DriverOptions()
 ----
 
+Produces a new ``DriverOptions`` object. 
+
+
+[caption=""]
+.Returns
+`public`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+DriverOptions options = DriverOptions();
+----
+
+[#_DriverOptions_isTlsEnabled_]
+==== isTlsEnabled
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Boolean isTlsEnabled()
+----
+
+Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB must be done over TLS. 
+
+
+[caption=""]
+.Returns
+`public java.lang.Boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.isTlsEnabled();
+----
+
+[#_DriverOptions_isTlsEnabled_boolean]
+==== isTlsEnabled
+
+[source,java]
+----
+public DriverOptions isTlsEnabled​(boolean isTlsEnabled)
+----
+
+Explicitly sets whether the connection to TypeDB must be done over TLS. 
 
 
 [caption=""]
@@ -31,13 +68,73 @@ public DriverOptions​(boolean isTlsEnabled,
 [options="header"]
 |===
 |Name |Description |Type
-a| `isTlsEnabled` a| Specify whether the connection to TypeDB Server must be done over TLS. a| `boolean`
-a| `tlsRootCAPath` a| Path to the CA certificate to use for authenticating server certificates. a| `java.lang.String`
+a| `isTlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
 |===
 
 [caption=""]
 .Returns
-`public`
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.isTlsEnabled(true);
+----
+
+[#_DriverOptions_tlsRootCAPath_]
+==== tlsRootCAPath
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.String> tlsRootCAPath()
+----
+
+Returns the TLS root CA set in this ``DriverOptions`` object. Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsRootCAPath();
+----
+
+[#_DriverOptions_tlsRootCAPath_java_util_Optional_java_lang_String_]
+==== tlsRootCAPath
+
+[source,java]
+----
+public DriverOptions tlsRootCAPath​(java.util.Optional<java.lang.String> tlsRootCAPath)
+----
+
+Returns the TLS root CA set in this ``DriverOptions`` object. Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `tlsRootCAPath` a| The path to the TLS root CA. If None, system roots are used. a| `java.util.Optional<java.lang.String>`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsRootCAPath(Optional.of("/path/to/ca-certificate.pem"));
+----
 
 // end::methods[]
 

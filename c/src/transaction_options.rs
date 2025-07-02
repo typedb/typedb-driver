@@ -35,7 +35,7 @@ pub extern "C" fn transaction_options_drop(options: *mut TransactionOptions) {
     free(options);
 }
 
-/// Explicitly set a transaction timeout.
+/// Explicitly setsa transaction timeout.
 /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 #[no_mangle]
 pub extern "C" fn transaction_options_set_transaction_timeout_millis(
@@ -52,7 +52,7 @@ pub extern "C" fn transaction_options_get_transaction_timeout_millis(options: *c
     borrow(options).transaction_timeout.unwrap().as_millis() as i64
 }
 
-/// Checks whether the option for transaction timeout was explicitly set for this <code>TransactionOptions</code> object.
+/// Checks whether the option for transaction timeout was Explicitly setsfor this <code>TransactionOptions</code> object.
 #[no_mangle]
 pub extern "C" fn transaction_options_has_transaction_timeout_millis(options: *const TransactionOptions) -> bool {
     borrow(options).transaction_timeout.is_some()
@@ -77,7 +77,7 @@ pub extern "C" fn transaction_options_get_schema_lock_acquire_timeout_millis(
     borrow(options).schema_lock_acquire_timeout.unwrap().as_millis() as i64
 }
 
-/// Checks whether the option for schema lock acquire timeout was explicitly set for this <code>TransactionOptions</code> object.
+/// Checks whether the option for schema lock acquire timeout was Explicitly setsfor this <code>TransactionOptions</code> object.
 #[no_mangle]
 pub extern "C" fn transaction_options_has_schema_lock_acquire_timeout_millis(
     options: *const TransactionOptions,

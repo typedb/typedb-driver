@@ -28,6 +28,8 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
+import java.util.Optional;
+
 public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
@@ -36,6 +38,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Before
     public synchronized void before() {
+        driverOptions = driverOptions.isTlsEnabled(true).tlsRootCAPath(Optional.of(System.getenv("ROOT_CA")));
         super.before();
     }
 
@@ -51,8 +54,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        // TODO: Add encryption to cluster tests
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, driverOptions);
     }
 
     @When("typedb starts")
@@ -67,7 +69,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
         Credentials credentials = new Credentials(username, password);
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, DEFAULT_CONNECTION_SETTINGS));
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, driverOptions));
     }
 
     @When("connection opens with a wrong host{may_error}")
@@ -75,7 +77,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         mayError.check(() -> driver = createTypeDBDriver(
                 TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 
@@ -84,7 +86,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         mayError.check(() -> driver = createTypeDBDriver(
                 TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 

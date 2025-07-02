@@ -17,9 +17,11 @@
  * under the License.
  */
 
-use std::{ffi::c_char};
+use std::ffi::c_char;
 
-use crate::common::memory::{release_string, string_free, free};
+use crate::common::memory::{free, release_string, string_free};
+
+// TODO: Use
 
 /// <code>ServerVersion</code> is an FFI representation of a full server's version specification.
 #[repr(C)]

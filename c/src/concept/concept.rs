@@ -24,7 +24,7 @@ use typedb_driver::{
     box_stream,
     concept::{
         value::{Decimal, Duration, TimeZone},
-        Attribute, Concept, Entity,Relation, Value,
+        Attribute, Concept, Entity, Relation, Value,
     },
 };
 
@@ -147,7 +147,7 @@ pub extern "C" fn concept_try_get_iid(thing: *mut Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[no_mangle]
 pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
-    release_string(borrow(concept).get_label().clone().to_owned())
+    release_string(borrow(concept).get_label().to_owned())
 }
 
 /// Retrieves the optional label of this <code>Concept</code>.
@@ -156,7 +156,7 @@ pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[no_mangle]
 pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_label().map(|str| str.clone().to_owned()))
+    release_optional_string(borrow(concept).try_get_label().map(|str| str.to_owned()))
 }
 
 /// Retrieves the value type of this <code>Concept</code>, if it exists.
@@ -166,7 +166,7 @@ pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char 
 /// Otherwise, returns null.
 #[no_mangle]
 pub extern "C" fn concept_try_get_value_type(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_value_label().map(|str| str.clone().to_owned()))
+    release_optional_string(borrow(concept).try_get_value_label().map(|str| str.to_owned()))
 }
 
 /// Retrieves the value of this <code>Concept</code>, if it exists.
@@ -293,7 +293,7 @@ pub extern "C" fn concept_get_decimal(concept: *const Concept) -> Decimal {
 #[no_mangle]
 pub extern "C" fn concept_get_string(concept: *const Concept) -> *mut c_char {
     match borrow(concept).try_get_string() {
-        Some(value) => release_string(value.clone().to_owned()),
+        Some(value) => release_string(value.to_owned()),
         None => unreachable!("Attempting to unwrap a non-string {:?} as string", borrow(concept)),
     }
 }

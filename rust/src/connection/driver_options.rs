@@ -17,13 +17,17 @@
  * under the License.
  */
 
-use std::{fs, path::Path};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use tonic::transport::{Certificate, ClientTlsConfig};
 
 // When changing these numbers, also update docs in DriverOptions
 const DEFAULT_IS_TLS_ENABLED: bool = false;
 const DEFAULT_TLS_CONFIG: Option<ClientTlsConfig> = None;
+const DEFAULT_TLS_ROOT_CA_PATH: Option<PathBuf> = None;
 const DEFAULT_USE_REPLICATION: bool = true;
 const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
 const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
@@ -42,9 +46,6 @@ pub struct DriverOptions {
     /// Specifies whether the connection to TypeDB must be done over TLS.
     /// Defaults to false.
     pub is_tls_enabled: bool,
-    /// If set, specifies the TLS config to use for server certificates authentication.
-    /// Defaults to None.
-    pub tls_config: Option<ClientTlsConfig>,
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
     /// or it should be limited to a single configured address.
     /// Defaults to true.
@@ -63,6 +64,9 @@ pub struct DriverOptions {
     /// primary replica is unknown.
     /// Defaults to None.
     pub discovery_failover_retries: Option<usize>,
+
+    tls_config: Option<ClientTlsConfig>,
+    tls_root_ca: Option<PathBuf>,
 }
 
 impl DriverOptions {
@@ -75,14 +79,35 @@ impl DriverOptions {
         Self { is_tls_enabled, ..self }
     }
 
-    /// If set, specifies the path to the CA certificate to use for server certificates authentication.
-    pub fn tls_root_ca(self, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
-        let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
+    /// Specifies the root CA used in the TLS config for server certificates authentication.
+    /// Uses system roots if None is set. See [`Self::is_tls_enabled`] to enable or disable TLS.
+    pub fn tls_root_ca(mut self, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
+        self.set_tls_root_ca(tls_root_ca)?;
+        Ok(self)
+    }
+
+    /// Specifies the root CA used in the TLS config for server certificates authentication.
+    /// Uses system roots if None is set. See [`Self::is_tls_enabled`] to enable or disable TLS.
+    pub fn set_tls_root_ca(&mut self, tls_root_ca: Option<&Path>) -> crate::Result {
+        let tls_config = if let Some(tls_root_ca) = tls_root_ca {
+            self.tls_root_ca = Some(tls_root_ca.to_path_buf());
             ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
         } else {
+            self.tls_root_ca = None;
             ClientTlsConfig::new().with_native_roots()
-        });
-        Ok(Self { tls_config, ..self })
+        };
+        self.tls_config = Some(tls_config);
+        Ok(())
+    }
+
+    /// Retrieves the TLS config of this options object if configured.
+    pub fn get_tls_config(&self) -> Option<&ClientTlsConfig> {
+        self.tls_config.as_ref()
+    }
+
+    /// Retrieves the TLS root CA path of this options object if configured.
+    pub fn get_tls_root_ca(&self) -> Option<&Path> {
+        self.tls_root_ca.as_deref()
     }
 
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
@@ -117,10 +142,12 @@ impl Default for DriverOptions {
     fn default() -> Self {
         Self {
             is_tls_enabled: DEFAULT_IS_TLS_ENABLED,
-            tls_config: DEFAULT_TLS_CONFIG,
             use_replication: DEFAULT_USE_REPLICATION,
             redirect_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
             discovery_failover_retries: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+
+            tls_config: DEFAULT_TLS_CONFIG,
+            tls_root_ca: DEFAULT_TLS_ROOT_CA_PATH,
         }
     }
 }

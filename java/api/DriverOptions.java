@@ -20,34 +20,96 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.common.NativeObject;
-import com.typedb.driver.common.exception.TypeDBDriverException;
 
-import javax.annotation.Nullable;
+import javax.annotation.CheckReturnValue;
+
+import java.util.Optional;
 
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_is_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_is_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_has_tls_root_ca_path;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_root_ca_path;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_root_ca_path;
 
 /**
- * User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
- *
- * <h3>Examples</h3>
- * <pre>
- * DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
- * </pre>
+ * TypeDB driver options. <code>DriverOptions</code> are used to specify the driver's connection behavior.
  */
 public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOptions> {
     /**
-     * @param isTlsEnabled  Specify whether the connection to TypeDB Server must be done over TLS.
-     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
+     * Produces a new <code>DriverOptions</code> object.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * DriverOptions options = DriverOptions();
+     * </pre>
      */
-    public DriverOptions(boolean isTlsEnabled, String tlsRootCAPath) { // TODO: Maybe Optional<String>? Optional.of(Path.of(..))?..
-        super(newNative(isTlsEnabled, tlsRootCAPath));
+    public DriverOptions() {
+        super(driver_options_new());
     }
 
-    private static com.typedb.driver.jni.DriverOptions newNative(boolean isTlsEnabled, @Nullable String tlsRootCAPath) {
-        try {
-            return driver_options_new(isTlsEnabled, tlsRootCAPath);
-        } catch (com.typedb.driver.jni.Error error) {
-            throw new TypeDBDriverException(error);
-        }
+    /**
+     * Returns the value set for the TLS flag in this <code>DriverOptions</code> object.
+     * Specifies whether the connection to TypeDB must be done over TLS.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.isTlsEnabled();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Boolean isTlsEnabled() {
+        return driver_options_get_is_tls_enabled(nativeObject);
     }
+
+    /**
+     * Explicitly sets whether the connection to TypeDB must be done over TLS.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.isTlsEnabled(true);
+     * </pre>
+     *
+     * @param isTlsEnabled Whether the connection to TypeDB must be done over TLS.
+     */
+    public DriverOptions isTlsEnabled(boolean isTlsEnabled) {
+        driver_options_set_is_tls_enabled(nativeObject, isTlsEnabled);
+        return this;
+    }
+
+    /**
+     * Returns the TLS root CA set in this <code>DriverOptions</code> object.
+     * Specifies the root CA used in the TLS config for server certificates authentication.
+     * Uses system roots if None is set.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.tlsRootCAPath();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Optional<String> tlsRootCAPath() {
+        if (driver_options_has_tls_root_ca_path(nativeObject))
+            return Optional.of(driver_options_get_tls_root_ca_path(nativeObject));
+        return Optional.empty();
+    }
+
+    /**
+     * Returns the TLS root CA set in this <code>DriverOptions</code> object.
+     * Specifies the root CA used in the TLS config for server certificates authentication.
+     * Uses system roots if None is set.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.tlsRootCAPath(Optional.of("/path/to/ca-certificate.pem"));
+     * </pre>
+     *
+     * @param tlsRootCAPath The path to the TLS root CA. If None, system roots are used.
+     */
+    public DriverOptions tlsRootCAPath(Optional<String> tlsRootCAPath) {
+        driver_options_set_tls_root_ca_path(nativeObject, tlsRootCAPath.orElse(null));
+        return this;
+    }
+
+    // TODO: Add other flags when they are finalized!
 }

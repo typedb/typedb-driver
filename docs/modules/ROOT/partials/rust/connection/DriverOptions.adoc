@@ -24,7 +24,6 @@ a| `discovery_failover_retries` a| `Option<usize>` a| Limits the number of drive
 
 a| `is_tls_enabled` a| `bool` a| Specifies whether the connection to TypeDB must be done over TLS. Defaults to false.
 a| `redirect_failover_retries` a| `usize` a| Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
-a| `tls_config` a| `Option<ClientTlsConfig>` a| If set, specifies the TLS config to use for server certificates authentication. Defaults to None.
 a| `use_replication` a| `bool` a| Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to true.
 |===
 // end::properties[]
@@ -48,6 +47,40 @@ Limits the number of driver attempts to discover a single working replica to per
 [source,rust]
 ----
 Self
+----
+
+[#_struct_DriverOptions_get_tls_config_]
+==== get_tls_config
+
+[source,rust]
+----
+pub fn get_tls_config(&self) -> Option<&ClientTlsConfig>
+----
+
+Retrieves the TLS config of this options object if configured.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&ClientTlsConfig>
+----
+
+[#_struct_DriverOptions_get_tls_root_ca_]
+==== get_tls_root_ca
+
+[source,rust]
+----
+pub fn get_tls_root_ca(&self) -> Option<&Path>
+----
+
+Retrieves the TLS root CA path of this options object if configured.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Path>
 ----
 
 [#_struct_DriverOptions_is_tls_enabled_]
@@ -84,6 +117,23 @@ Limits the number of attempts to redirect a strongly consistent request to anoth
 Self
 ----
 
+[#_struct_DriverOptions_set_tls_root_ca_]
+==== set_tls_root_ca
+
+[source,rust]
+----
+pub fn set_tls_root_ca(&mut self, tls_root_ca: Option<&Path>) -> Result
+----
+
+Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. See <<#_struct_DriverOptions_method_is_tls_enabled,`Self::is_tls_enabled`>> to enable or disable TLS.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
 [#_struct_DriverOptions_tls_root_ca_]
 ==== tls_root_ca
 
@@ -92,7 +142,7 @@ Self
 pub fn tls_root_ca(self, tls_root_ca: Option<&Path>) -> Result<Self>
 ----
 
-If set, specifies the path to the CA certificate to use for server certificates authentication.
+Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. See <<#_struct_DriverOptions_method_is_tls_enabled,`Self::is_tls_enabled`>> to enable or disable TLS.
 
 [caption=""]
 .Returns

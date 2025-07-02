@@ -23,9 +23,8 @@ use typedb_driver::Database;
 
 use crate::common::{
     error::{try_release_string, unwrap_void},
-    memory::{borrow, release_string},
+    memory::{borrow, decrement_arc, release_string, string_view, take_arc},
 };
-use crate::common::memory::{decrement_arc, string_view, take_arc};
 
 /// Frees the native rust <code>Database</code> object
 #[no_mangle]

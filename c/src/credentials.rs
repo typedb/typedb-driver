@@ -17,19 +17,11 @@
  * under the License.
  */
 
-use std::{ffi::c_char};
+use std::ffi::c_char;
 
-use typedb_driver::{
-    Credentials
-    
-};
+use typedb_driver::Credentials;
 
-use crate::common::{
-    memory::{free, string_view},
-};
-use crate::common::{
-    memory::{release},
-};
+use crate::common::memory::{free, release, string_view};
 
 /// Creates a new <code>Credentials</code> for connecting to TypeDB Server.
 ///

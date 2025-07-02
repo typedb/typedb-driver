@@ -52,7 +52,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, driverOptions);
     }
 
     @When("typedb starts")
@@ -67,7 +67,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
         Credentials credentials = new Credentials(username, password);
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, DEFAULT_CONNECTION_SETTINGS));
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, driverOptions));
     }
 
     @When("connection opens with a wrong host{may_error}")
@@ -75,7 +75,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
         mayError.check(() -> driver = createTypeDBDriver(
                 TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 
@@ -84,7 +84,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
         mayError.check(() -> driver = createTypeDBDriver(
                 TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 

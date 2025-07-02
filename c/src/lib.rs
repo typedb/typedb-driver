@@ -20,12 +20,12 @@
 mod answer;
 mod common;
 mod concept;
-mod driver;
 mod credentials;
-mod server;
 mod database;
+mod driver;
 mod driver_options;
 mod query_options;
+mod server;
 mod transaction;
 mod transaction_options;
 mod user;

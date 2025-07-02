@@ -33,7 +33,7 @@ pub extern "C" fn query_options_drop(options: *mut QueryOptions) {
     free(options);
 }
 
-/// Explicitly set the "include instance types" flag.
+/// Explicitly setsthe "include instance types" flag.
 /// If set, specifies if types should be included in instance structs returned in ConceptRow answers.
 /// This option allows reducing the amount of unnecessary data transmitted.
 #[no_mangle]
@@ -49,13 +49,13 @@ pub extern "C" fn query_options_get_include_instance_types(options: *const Query
     borrow(options).include_instance_types.unwrap()
 }
 
-/// Checks whether the "include instance types" flag was explicitly set for this <code>QueryOptions</code> object.
+/// Checks whether the "include instance types" flag was Explicitly setsfor this <code>QueryOptions</code> object.
 #[no_mangle]
 pub extern "C" fn query_options_has_include_instance_types(options: *const QueryOptions) -> bool {
     borrow(options).include_instance_types.is_some()
 }
 
-/// Explicitly set the prefetch size.
+/// Explicitly setsthe prefetch size.
 /// If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
 /// Increasing this may increase performance for queries with a huge number of answers, as it can
 /// reduce the number of network round-trips at the cost of more resources on the server side.
@@ -75,7 +75,7 @@ pub extern "C" fn query_options_get_prefetch_size(options: *const QueryOptions) 
     borrow(options).prefetch_size.unwrap() as i64
 }
 
-/// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
+/// Checks whether the prefetch size was Explicitly setsfor this <code>QueryOptions</code> object.
 #[no_mangle]
 pub extern "C" fn query_options_has_prefetch_size(options: *const QueryOptions) -> bool {
     borrow(options).prefetch_size.is_some()

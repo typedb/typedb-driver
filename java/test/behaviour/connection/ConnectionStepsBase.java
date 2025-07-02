@@ -30,9 +30,7 @@ import com.typedb.driver.test.behaviour.util.Util;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -46,8 +44,6 @@ public abstract class ConnectionStepsBase {
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "password";
     public static final Credentials DEFAULT_CREDENTIALS = new Credentials(ADMIN_USERNAME, ADMIN_PASSWORD);
-    public static final DriverOptions DEFAULT_CONNECTION_SETTINGS = new DriverOptions(false, null);
-    public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     public static Driver driver;
@@ -57,6 +53,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
+    public static DriverOptions driverOptions = new DriverOptions();
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
@@ -115,6 +112,7 @@ public abstract class ConnectionStepsBase {
 
         cleanupTransactions();
         cleanupBackgroundTransactions();
+        driverOptions = new DriverOptions();
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
 
@@ -148,7 +146,7 @@ public abstract class ConnectionStepsBase {
 
     abstract Driver createDefaultTypeDBDriver();
 
-    public static void initTransactionOptionsIfNeeded() { // TODO: Implement steps
+    public static void initTransactionOptionsIfNeeded() {
         if (transactionOptions.isEmpty()) {
             transactionOptions = Optional.of(new TransactionOptions());
         }

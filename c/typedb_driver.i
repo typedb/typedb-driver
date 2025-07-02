@@ -179,9 +179,11 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject driver_new_with_description;
 %newobject driver_new_with_addresses_with_description;
 %newobject driver_new_with_address_translation_with_description;
-%newobject driver_options_new;
 %newobject driver_primary_replica;
 %newobject driver_replicas;
+
+%newobject driver_options_new;
+%newobject driver_options_get_tls_root_ca_path;
 
 %newobject database_get_name;
 %newobject database_schema;

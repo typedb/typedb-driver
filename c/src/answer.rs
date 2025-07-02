@@ -27,15 +27,13 @@ use typedb_driver::{
 };
 
 use crate::{
-    concept::ConceptIterator,
-    common::iterator::CIterator,
-    common::memory::{borrow, free, release, release_string, string_view},
-};
-use crate::{
-    common::StringIterator,
-    concept::ConceptRowIterator,
-    common::error::{try_release, try_release_optional},
-    common::memory::take_ownership,
+    common::{
+        error::{try_release, try_release_optional},
+        iterator::CIterator,
+        memory::{borrow, free, release, release_string, string_view, take_ownership},
+        StringIterator,
+    },
+    concept::{ConceptIterator, ConceptRowIterator},
 };
 
 /// Promise object representing the result of an asynchronous operation.

@@ -17,9 +17,8 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::null_mut};
-use std::collections::HashMap;
-use std::hash::Hash;
+use std::{collections::HashMap, ffi::c_char, hash::Hash, ptr::null_mut};
+
 use itertools::Itertools;
 use typedb_driver::Result;
 
@@ -30,8 +29,7 @@ pub(crate) mod promise;
 
 use error::try_release_string;
 use iterator::CIterator;
-use memory::borrow_mut;
-use memory::free;
+use memory::{borrow_mut, free};
 
 /// Iterator over the strings in the result of a request or a TypeQL Fetch query.
 pub struct StringIterator(pub CIterator<Result<String>>);
@@ -40,7 +38,7 @@ pub struct StringIterator(pub CIterator<Result<String>>);
 /// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn string_iterator_next(it: *mut StringIterator) -> *mut c_char {
-    borrow_mut(it).0.0.next().map(try_release_string).unwrap_or_else(null_mut)
+    borrow_mut(it).0 .0.next().map(try_release_string).unwrap_or_else(null_mut)
 }
 
 /// Frees the native rust <code>StringIterator</code> object
@@ -49,6 +47,9 @@ pub extern "C" fn string_iterator_drop(it: *mut StringIterator) {
     free(it);
 }
 
-pub(crate) fn iterators_to_map<K: Eq + Hash, V>(keys: impl Iterator<Item = K>, values: impl Iterator<Item = V>) -> HashMap<K, V> {
+pub(crate) fn iterators_to_map<K: Eq + Hash, V>(
+    keys: impl Iterator<Item = K>,
+    values: impl Iterator<Item = V>,
+) -> HashMap<K, V> {
     keys.zip_eq(values).collect()
 }

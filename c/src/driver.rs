@@ -18,14 +18,18 @@
  */
 
 use std::ffi::c_char;
-use typedb_driver::{
-    box_stream, Addresses, Credentials, DriverOptions, ServerReplica,
-    TypeDBDriver,
-};
 
-use crate::common::{error::{try_release, unwrap_or_default, unwrap_void}, iterator::CIterator, iterators_to_map, memory::{borrow, free, release, release_optional, string_view}};
-use crate::common::memory::string_array_view;
-use crate::server::server_replica::ServerReplicaIterator;
+use typedb_driver::{box_stream, Addresses, Credentials, DriverOptions, ServerReplica, TypeDBDriver};
+
+use crate::{
+    common::{
+        error::{try_release, unwrap_or_default, unwrap_void},
+        iterator::CIterator,
+        iterators_to_map,
+        memory::{borrow, free, release, release_optional, string_array_view, string_view},
+    },
+    server::server_replica::ServerReplicaIterator,
+};
 
 const DRIVER_LANG: &'static str = "c";
 

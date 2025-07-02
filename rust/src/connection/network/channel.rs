@@ -55,8 +55,8 @@ pub(super) fn open_callcred_channel(
     let mut builder = Channel::builder(address.into_uri());
     if driver_options.is_tls_enabled {
         let tls_config = driver_options
-            .tls_config
-            .clone()
+            .get_tls_config()
+            .cloned()
             .ok_or_else(|| Error::Connection(ConnectionError::MissingTlsConfigForTls))?;
         builder = builder.tls_config(tls_config)?;
     }
