@@ -6,7 +6,7 @@
 * `Clone`
 * `Debug`
 
-A full TypeDB’s server version specification
+A full TypeDB server’s version specification
 
 // tag::methods[]
 [#_struct_ServerVersion_distribution_]

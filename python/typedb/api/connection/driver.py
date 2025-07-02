@@ -18,13 +18,15 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Set
 
 if TYPE_CHECKING:
     from typedb.api.connection.database import DatabaseManager
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
     from typedb.api.user.user import UserManager
+    from typedb.api.server.server_replica import ServerReplica
+    from typedb.api.server.server_version import ServerVersion
 
 
 class Driver(ABC):
@@ -42,6 +44,21 @@ class Driver(ABC):
         ::
 
             driver.is_open()
+        """
+        pass
+
+    @abstractmethod
+    def server_version(self) -> ServerVersion:
+        """
+        Retrieves the server's version.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.server_version()
         """
         pass
 
@@ -93,6 +110,36 @@ class Driver(ABC):
         """
         The ``UserManager`` instance for this connection, providing access to user management methods.
         Only for TypeDB Cloud.
+        """
+        pass
+
+    @abstractmethod
+    def replicas(self) -> Set[ServerReplica]:
+        """
+        Set of ``Replica`` instances for this driver connection.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.replicas()
+        """
+        pass
+
+    @abstractmethod
+    def primary_replica(self) -> Optional[ServerReplica]:
+        """
+        Returns the primary replica for this driver connection.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.primary_replica()
         """
         pass
 

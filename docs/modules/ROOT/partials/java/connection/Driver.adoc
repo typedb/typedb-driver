@@ -125,6 +125,29 @@ Set of ``Replica`` instances for this driver connection.
 driver.replicas()
 ----
 
+[#_Driver_serverVersion_]
+==== serverVersion
+
+[source,java]
+----
+@CheckReturnValue
+ServerVersion serverVersion()
+----
+
+Retrieves the server's version. 
+
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
 [#_Driver_transaction_java_lang_String_Transaction_Type]
 ==== transaction
 

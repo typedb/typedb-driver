@@ -20,7 +20,7 @@ Retrieves all databases present on the TypeDB server, using default strong consi
 
 
 
-See also: ``#allWithConsistency(ConsistencyLevel)``
+See also: <<#_all_com_typedb_driver_api_ConsistencyLevel,``all(ConsistencyLevel)``>>
 
 
 [caption=""]

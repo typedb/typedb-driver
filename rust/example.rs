@@ -9,14 +9,14 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 fn typedb_example() {
     async_std::task::block_on(async {
         // Open a driver connection. Specify your parameters if needed
         let driver = TypeDBDriver::new(
-            TypeDBDriver::DEFAULT_ADDRESS,
+            Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
             DriverOptions::new(),
         )
@@ -78,7 +78,7 @@ fn typedb_example() {
         let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
         let row = rows.get(0).unwrap();
 
-        // Retrieves column names to get concepts by index if the variable names are lost
+        // Retrieve column names to get concepts by index if the variable names are lost
         let column_names = row.get_column_names();
 
         let column_name = column_names.get(0).unwrap();
@@ -89,7 +89,7 @@ fn typedb_example() {
         // Get concept by the header's index
         let concept_by_index = row.get_index(0).unwrap().unwrap();
 
-        // Checks if it's an entity type
+        // Check if it's an entity type
         if concept_by_name.is_entity_type() {
             print!("Getting concepts by variable names and indexes is equally correct. ");
             println!(
@@ -110,7 +110,7 @@ fn typedb_example() {
 
             let concept_by_name = row.get(column_name).unwrap().unwrap();
 
-            // Checks if it's an attribute type to safely retrieve its value type
+            // Check if it's an attribute type to safely retrieve its value type
             if concept_by_name.is_attribute_type() {
                 let label = concept_by_name.get_label();
                 let value_type = concept_by_name.try_get_value_type().unwrap();
@@ -161,7 +161,7 @@ fn typedb_example() {
         // just call `commit`, which will wait for all ongoing operations to finish before executing.
         let queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"];
         for query in queries {
-            transaction.query(query);
+            let _unawaited_future = transaction.query(query);
         }
         transaction.commit().await.unwrap();
 

@@ -15,6 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from collections.abc import Mapping as ABCMapping
+from typing import Iterable, Mapping, Union
+
 from typedb.api.answer.concept_document_iterator import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_row_iterator import *  # noqa # pylint: disable=unused-import
@@ -50,15 +53,22 @@ from typedb.connection.driver import _Driver
 
 class TypeDB:
     DEFAULT_ADDRESS = "127.0.0.1:1729"
+    ADDRESSES = Union[Mapping[str, str], Iterable[str], str]
 
     @staticmethod
-    def driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver:
+    def driver(addresses: ADDRESSES, credentials: Credentials, driver_options: DriverOptions) -> Driver:
         """
         Creates a connection to TypeDB.
 
-        :param address: Address of the TypeDB server.
+        :param addresses: Address(-es) of the TypeDB server(-s).
+        Can be a single string, multiple strings, or multiple pairs of strings.
         :param credentials: The credentials to connect with.
-        :param driver_options: The connection settings to connect with.
+        :param driver_options: The driver connection options to connect with.
         :return:
         """
-        return _Driver(address, credentials, driver_options)
+        if isinstance(addresses, str):
+            return _Driver(addresses, credentials, driver_options)
+        elif isinstance(addresses, ABCMapping):
+            return _Driver(dict(addresses), credentials, driver_options)
+        else:
+            return _Driver(list(addresses), credentials, driver_options)

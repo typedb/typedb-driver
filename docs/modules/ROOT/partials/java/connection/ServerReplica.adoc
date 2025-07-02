@@ -15,7 +15,7 @@ The metadata and state of an individual raft replica of a driver connection.
 java.lang.String getAddress()
 ----
 
-The address this replica is hosted at.
+Returns the address this replica is hosted at.
 
 [caption=""]
 .Returns
@@ -30,7 +30,7 @@ The address this replica is hosted at.
 long getTerm()
 ----
 
-The raft protocol ‘term’ of this replica.
+Returns the raft protocol ‘term’ of this replica.
 
 [caption=""]
 .Returns

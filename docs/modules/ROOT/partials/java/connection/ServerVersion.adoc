@@ -3,14 +3,14 @@
 
 *Package*: `com.typedb.driver.api.server`
 
-Type of replica. 
+A full TypeDB server's version specification. 
 
 
 [caption=""]
 .Examples
 [source,java]
 ----
-replica.type();
+driver.serverVersion();
 ----
 
 // tag::methods[]

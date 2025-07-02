@@ -56,6 +56,69 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
+[#_Driver_primary_replica_]
+==== primary_replica
+
+[source,python]
+----
+primary_replica() -> ServerReplica | None
+----
+
+Returns the primary replica for this driver connection.
+
+[caption=""]
+.Returns
+`ServerReplica | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.primary_replica()
+----
+
+[#_Driver_replicas_]
+==== replicas
+
+[source,python]
+----
+replicas() -> Set[ServerReplica]
+----
+
+Set of ``Replica`` instances for this driver connection.
+
+[caption=""]
+.Returns
+`Set[ServerReplica]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.replicas()
+----
+
+[#_Driver_server_version_]
+==== server_version
+
+[source,python]
+----
+server_version() -> ServerVersion
+----
+
+Retrieves the server’s version.
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.server_version()
+----
+
 [#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]
 ==== transaction
 

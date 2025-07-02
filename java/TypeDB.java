@@ -41,7 +41,7 @@ public class TypeDB {
      *
      * @param address       The address of the TypeDB server
      * @param credentials   The credentials to connect with
-     * @param driverOptions The connection settings to connect with
+     * @param driverOptions The driver connection options to connect with
      */
     public static Driver driver(String address, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(address, credentials, driverOptions);
@@ -57,7 +57,7 @@ public class TypeDB {
      *
      * @param addresses     The addresses of TypeDB cluster replicas for connection
      * @param credentials   The credentials to connect with
-     * @param driverOptions The connection settings to connect with
+     * @param driverOptions The driver connection options to connect with
      */
     public static Driver driver(Set<String> addresses, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addresses, credentials, driverOptions);
@@ -73,7 +73,7 @@ public class TypeDB {
      *
      * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
      * @param credentials        The credentials to connect with
-     * @param driverOptions      The connection settings to connect with
+     * @param driverOptions      The driver connection options to connect with
      */
     public static Driver driver(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         return new DriverImpl(addressTranslation, credentials, driverOptions);

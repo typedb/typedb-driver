@@ -9,7 +9,7 @@ class TypeDBExample:
         # Open a driver connection. Specify your parameters if needed
         # The connection will be automatically closed on the "with" block exit
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions()) as driver:
-            # Creates a database
+            # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")
 
@@ -71,7 +71,7 @@ class TypeDBExample:
                 print(f"Getting concepts by variable names ({concept_by_name.get_label()}) and "
                       f"indexes ({concept_by_index.get_label()}) is equally correct. ")
 
-                # Checks if it's an entity type before the conversion
+                # Check if it's an entity type before the conversion
                 if concept_by_name.is_entity_type():
                     print(f"Both represent the defined entity type: '{concept_by_name.as_entity_type().get_label()}' "
                           f"(in case of a doubt: '{concept_by_index.as_entity_type().get_label()}')")
@@ -89,7 +89,7 @@ class TypeDBExample:
 
                     concept_by_name = row.get(column_name)
 
-                    # Checks if it's an attribute type before the conversion
+                    # Check if it's an attribute type before the conversion
                     if concept_by_name.is_attribute_type():
                         attribute_type = concept_by_name.as_attribute_type()
                         print(f"Defined attribute type's label: '{attribute_type.get_label()}', "

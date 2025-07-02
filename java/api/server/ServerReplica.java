@@ -26,7 +26,7 @@ import javax.annotation.CheckReturnValue;
  */
 public interface ServerReplica {
     /**
-     * The address this replica is hosted at.
+     * Returns the address this replica is hosted at.
      */
     @CheckReturnValue
     String getAddress();
@@ -38,7 +38,7 @@ public interface ServerReplica {
     ReplicaType getType();
 
     /**
-     * The raft protocol ‘term’ of this replica.
+     * Returns the raft protocol ‘term’ of this replica.
      */
     @CheckReturnValue
     long getTerm();
