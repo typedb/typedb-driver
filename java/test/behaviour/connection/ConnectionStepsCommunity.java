@@ -45,7 +45,6 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
         super.after();
     }
 
-    @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
         return TypeDB.driver(address, credentials, driverOptions);
     }
@@ -73,7 +72,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                TypeDB.DEFAULT_ADDRESS.replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
                 driverOptions
         ));
@@ -82,7 +81,7 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                TypeDB.DEFAULT_ADDRESS.replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
                 driverOptions
         ));

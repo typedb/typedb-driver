@@ -29,8 +29,14 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
 import java.util.Optional;
+import java.util.Set;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
+    // TODO: Add 2 more addresses
+    public static Set<String> DEFAULT_CLUSTER_ADDRESSES = Set.of(
+        "https://127.0.0.1:11729"
+    );
+
     @Override
     public void beforeAll() {
         super.beforeAll();
@@ -47,14 +53,17 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         super.after();
     }
 
-    @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
+        return TypeDB.driver(Set.of(address), credentials, driverOptions);
+    }
+
+    Driver createTypeDBDriver(Set<String> address, Credentials credentials, DriverOptions driverOptions) {
         return TypeDB.driver(address, credentials, driverOptions);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, driverOptions);
+        return createTypeDBDriver(DEFAULT_CLUSTER_ADDRESSES, DEFAULT_CREDENTIALS, driverOptions);
     }
 
     @When("typedb starts")
@@ -69,13 +78,13 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
         Credentials credentials = new Credentials(username, password);
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, driverOptions));
+        mayError.check(() -> driver = createTypeDBDriver(DEFAULT_CLUSTER_ADDRESSES, credentials, driverOptions));
     }
 
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CLUSTER_ADDRESSES.iterator().next().replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
                 driverOptions
         ));
@@ -84,7 +93,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                DEFAULT_CLUSTER_ADDRESSES.iterator().next().replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
                 driverOptions
         ));

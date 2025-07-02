@@ -49,7 +49,7 @@ from typedb.connection.driver import _Driver
 
 
 class TypeDB:
-    DEFAULT_ADDRESS = "localhost:1729"
+    DEFAULT_ADDRESS = "127.0.0.1:1729"
 
     @staticmethod
     def driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver:

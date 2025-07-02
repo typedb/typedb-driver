@@ -112,7 +112,6 @@ public abstract class ConnectionStepsBase {
 
         cleanupTransactions();
         cleanupBackgroundTransactions();
-        driverOptions = new DriverOptions();
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
 
@@ -122,6 +121,7 @@ public abstract class ConnectionStepsBase {
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
         backgroundDriver.close();
+        driverOptions = new DriverOptions();
     }
 
     void cleanupTransactions() {
@@ -141,8 +141,6 @@ public abstract class ConnectionStepsBase {
         backgroundTransactions.parallelStream().forEach(Transaction::close);
         backgroundTransactions.clear();
     }
-
-    abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
 
     abstract Driver createDefaultTypeDBDriver();
 

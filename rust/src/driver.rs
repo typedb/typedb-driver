@@ -46,7 +46,7 @@ impl TypeDBDriver {
         Some(version) => version,
     };
 
-    pub const DEFAULT_ADDRESS: &'static str = "localhost:1729";
+    pub const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
 
     /// Creates a new TypeDB Server connection.
     ///
@@ -103,6 +103,7 @@ impl TypeDBDriver {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
+        println!("Opening a new driver with these options: {driver_options:?}, to: {addresses}");
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let server_manager = Arc::new(
             ServerManager::new(
@@ -117,7 +118,6 @@ impl TypeDBDriver {
         );
         let database_manager = DatabaseManager::new(server_manager.clone())?;
         let user_manager = UserManager::new(server_manager.clone());
-
         Ok(Self { server_manager, database_manager, user_manager, background_runtime })
     }
 

@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TypeDB {
-    public static final String DEFAULT_ADDRESS = "localhost:1729";
+    public static final String DEFAULT_ADDRESS = "127.0.0.1:1729";
 
     /**
      * Open a TypeDB Driver to a TypeDB server available at the provided address.
