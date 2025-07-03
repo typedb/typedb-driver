@@ -25,8 +25,8 @@ def before_all(context: Context):
     context.create_driver_fn = lambda address=None, user=None, password=None: \
         create_driver(context, address, user, password)
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
-        setup_context_driver(context, host, port, username, password)
-    context.DEFAULT_ADDRESS = TypeDB.DEFAULT_ADDRESS
+        setup_context_driver(context, address, username, password)
+    context.default_address = TypeDB.DEFAULT_ADDRESS
 
 
 def before_scenario(context: Context, scenario):
@@ -39,7 +39,7 @@ def setup_context_driver(context, address=None, username=None, password=None):
 
 def create_driver(context, address=None, username=None, password=None) -> Driver:
     if address is None:
-        address = context.DEFAULT_ADDRESS
+        address = context.default_address
     if username is None:
         username = context.DEFAULT_USERNAME
     if password is None:

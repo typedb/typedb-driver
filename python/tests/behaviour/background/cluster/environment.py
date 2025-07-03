@@ -25,12 +25,12 @@ from typedb.driver import *
 def before_all(context: Context):
     environment_base.before_all(context)
     context.tls_root_ca_path = os.environ["ROOT_CA"]
-    context.create_driver_fn = lambda addresses=None, user=None, password=None: \
-        create_driver(context, addresses, user, password)
-    context.setup_context_driver_fn = lambda addresses=None, username=None, password=None: \
-        setup_context_driver(context, addresses, username, password)
+    context.create_driver_fn = lambda address=None, user=None, password=None: \
+        create_driver(context, address, user, password)
+    context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
+        setup_context_driver(context, address, username, password)
     # TODO: Add 2 more addresses (or 1?)
-    context.DEFAULT_ADDRESSES = ["https://127.0.0.1:11729"]
+    context.default_address = ["https://127.0.0.1:11729"]
 
 
 def before_scenario(context: Context, scenario):
@@ -39,19 +39,19 @@ def before_scenario(context: Context, scenario):
     context.driver_options.tls_root_ca_path = context.tls_root_ca_path
 
 
-def setup_context_driver(context, addresses=None, username=None, password=None):
-    context.driver = create_driver(context, addresses, username, password)
+def setup_context_driver(context, address=None, username=None, password=None):
+    context.driver = create_driver(context, address, username, password)
 
 
-def create_driver(context, addresses=None, username=None, password=None) -> Driver:
-    if addresses is None:
-        addresses = context.DEFAULT_ADDRESSES
+def create_driver(context, address=None, username=None, password=None) -> Driver:
+    if address is None:
+        address = context.default_address
     if username is None:
         username = context.DEFAULT_USERNAME
     if password is None:
         password = context.DEFAULT_PASSWORD
     credentials = Credentials(username, password)
-    return TypeDB.driver(addresses=addresses, credentials=credentials, driver_options=context.driver_options)
+    return TypeDB.driver(addresses=address, credentials=credentials, driver_options=context.driver_options)
 
 
 def after_scenario(context: Context, scenario):

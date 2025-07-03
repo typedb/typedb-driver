@@ -19,6 +19,15 @@ from behave import *
 from tests.behaviour.config.parameters import MayError
 from tests.behaviour.context import Context
 
+def replace_host(address: str, new_host: str) -> str:
+    return address.replace("127.0.0.1", new_host)
+
+
+def replace_port(address: str, new_port: str) -> str:
+    address_parts = address.rsplit(":", 1)
+    address_parts[-1] = new_port
+    return "".join(address_parts)
+
 
 @step(u'typedb has configuration')
 def step_impl(context: Context):
@@ -39,12 +48,26 @@ def step_impl(context: Context):
 
 @step(u'connection opens with a wrong host{may_error:MayError}')
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.setup_context_driver_fn(host="surely-not-localhost"))
+    address = context.default_address
+    if isinstance(address, str):
+        address = replace_host(address, "surely-not-localhost")
+    elif isinstance(address, list):
+        address = [replace_host(addr, "surely-not-localhost") for addr in address]
+    else:
+        raise Exception("Unexpected default address: cannot finish the test")
+    may_error.check(lambda: context.setup_context_driver_fn(address=address))
 
 
 @step(u'connection opens with a wrong port{may_error:MayError}')
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: context.setup_context_driver_fn(port=0))
+    address = context.default_address
+    if isinstance(address, str):
+        address = replace_port(address, "0")
+    elif isinstance(address, list):
+        address = [replace_port(addr, "0") for addr in address]
+    else:
+        raise Exception("Unexpected default address: cannot finish the test")
+    may_error.check(lambda: context.setup_context_driver_fn(address=address))
 
 
 @step(

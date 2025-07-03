@@ -48,6 +48,12 @@ pub extern "C" fn server_replica_drop(replica_info: *mut ServerReplica) {
     free(replica_info);
 }
 
+/// Returns the id of this replica.
+#[no_mangle]
+pub extern "C" fn server_replica_id(replica_info: *const ServerReplica) -> u64 {
+    borrow(replica_info).id()
+}
+
 /// Returns the address this replica is hosted at.
 #[no_mangle]
 pub extern "C" fn server_replica_address(replica_info: *const ServerReplica) -> *mut c_char {

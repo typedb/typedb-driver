@@ -30,6 +30,23 @@ Returns the address this replica is hosted at.
 &Address
 ----
 
+[#_struct_ServerReplica_id_]
+==== id
+
+[source,rust]
+----
+pub fn id(&self) -> u64
+----
+
+Returns the id of this replica.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+u64
+----
+
 [#_struct_ServerReplica_is_primary_]
 ==== is_primary
 

@@ -32,6 +32,22 @@ class ServerReplica(ABC):
 
     @property
     @abstractmethod
+    def id(self) -> int:
+        """
+        Returns the id of this replica.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          server_replica.id
+        """
+        pass
+
+    @property
+    @abstractmethod
     def address(self) -> str:
         """
         Returns the address this replica is hosted at.
@@ -50,7 +66,7 @@ class ServerReplica(ABC):
     @abstractmethod
     def replica_type(self) -> ReplicaType:
         """
-        Gets the type of this replica: whether it's a primary or a secondary replica.
+        Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 
         :return:
 
@@ -58,7 +74,22 @@ class ServerReplica(ABC):
         --------
         ::
 
-          server_replica.query_type
+          server_replica.replica_type
+        """
+        pass
+
+    @abstractmethod
+    def is_primary(self) -> bool:
+        """
+        Checks whether this is the primary replica of the raft cluster.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          server_replica.is_primary()
         """
         pass
 

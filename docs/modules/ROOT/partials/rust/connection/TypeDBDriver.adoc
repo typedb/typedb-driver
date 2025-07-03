@@ -8,6 +8,75 @@
 A connection to a TypeDB server which serves as the starting point for all interaction.
 
 // tag::methods[]
+[#_struct_TypeDBDriver_deregister_replica_replica_id_u64]
+==== deregister_replica
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn deregister_replica(&self, replica_id: u64) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn deregister_replica(&self, replica_id: u64) -> Result
+----
+
+--
+====
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replica_id` a|  — The numeric identifier of the deregistered replica a| `u64`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.deregister_replica(2).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.deregister_replica(2)
+----
+
+--
+====
+
 [#_struct_TypeDBDriver_force_close_]
 ==== force_close
 
@@ -240,6 +309,76 @@ Option<ServerReplica>
 ----
 driver.primary_replica()
 ----
+
+[#_struct_TypeDBDriver_register_replica_replica_id_u64_address_String]
+==== register_replica
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn register_replica(&self, replica_id: u64, address: String) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn register_replica(&self, replica_id: u64, address: String) -> Result
+----
+
+--
+====
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replica_id` a|  — The numeric identifier of the new replica a| `u64`
+a| `address` a|  — The address(es) of the TypeDB replica as a string a| `String`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.register_replica(2, "127.0.0.1:2729").await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.register_replica(2, "127.0.0.1:2729")
+----
+
+--
+====
 
 [#_struct_TypeDBDriver_replicas_]
 ==== replicas

@@ -58,6 +58,11 @@ impl ServerReplica {
         &self.private_address
     }
 
+    /// Returns the id of this replica.
+    pub fn id(&self) -> u64 {
+        self.replica_status.id
+    }
+
     /// Returns the address this replica is hosted at.
     pub fn address(&self) -> &Address {
         self.public_address.as_ref().unwrap_or(&self.private_address)
@@ -82,6 +87,8 @@ impl ServerReplica {
 /// The metadata and state of an individual server as a raft replica.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub(crate) struct ReplicaStatus {
+    /// The id of this replica.
+    pub id: u64,
     /// The role of this replica in the raft cluster.
     pub replica_type: ReplicaType,
     /// The raft protocol ‘term’ of this server replica.
@@ -90,7 +97,7 @@ pub(crate) struct ReplicaStatus {
 
 impl Default for ReplicaStatus {
     fn default() -> Self {
-        Self { replica_type: ReplicaType::Primary, term: 0 }
+        Self { id: 0, replica_type: ReplicaType::Primary, term: 0 }
     }
 }
 

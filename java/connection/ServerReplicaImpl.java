@@ -23,13 +23,22 @@ import com.typedb.driver.api.server.ReplicaType;
 import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.common.NativeObject;
 
+import java.math.BigInteger;
+
 import static com.typedb.driver.jni.typedb_driver.server_replica_address;
+import static com.typedb.driver.jni.typedb_driver.server_replica_id;
+import static com.typedb.driver.jni.typedb_driver.server_replica_is_primary;
 import static com.typedb.driver.jni.typedb_driver.server_replica_term;
 import static com.typedb.driver.jni.typedb_driver.server_replica_type;
 
 public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.ServerReplica> implements ServerReplica {
     public ServerReplicaImpl(com.typedb.driver.jni.ServerReplica serverReplica) {
         super(serverReplica);
+    }
+
+    @Override
+    public BigInteger getID() {
+        return server_replica_id(nativeObject);
     }
 
     @Override
@@ -40,6 +49,11 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     @Override
     public ReplicaType getType() {
         return ReplicaType.of(server_replica_type(nativeObject));
+    }
+
+    @Override
+    public Boolean isPrimary() {
+        return server_replica_is_primary(nativeObject);
     }
 
     @Override

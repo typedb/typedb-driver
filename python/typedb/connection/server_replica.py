@@ -20,8 +20,8 @@ from __future__ import annotations
 from typedb.api.server.server_replica import ServerReplica
 from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import server_replica_address, server_replica_type, server_replica_term, \
-    ServerReplica as NativeServerReplica, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import server_replica_address, server_replica_id, server_replica_type, \
+    server_replica_is_primary, server_replica_term, ServerReplica as NativeServerReplica, TypeDBDriverExceptionNative
 
 
 class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
@@ -36,12 +36,19 @@ class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
         return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
+    def id(self) -> int:
+        return server_replica_id(self.native_object)
+
+    @property
     def address(self) -> str:
         return server_replica_address(self.native_object)
 
     @property
     def replica_type(self) -> str:
         return server_replica_type(self.native_object)
+
+    def is_primary(self) -> bool:
+        return server_replica_is_primary(self.native_object)
 
     @property
     def term(self) -> str:

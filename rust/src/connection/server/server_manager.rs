@@ -111,6 +111,21 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn register_replica(&self, replica_id: u64, address: String) -> Result {
+        self.execute(ConsistencyLevel::Strong, |server_connection| {
+            let address = address.clone();
+            async move { server_connection.servers_register(replica_id, address).await }
+        })
+            .await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn deregister_replica(&self, replica_id: u64) -> Result {
+        self.execute(ConsistencyLevel::Strong, |server_connection| async move { server_connection.servers_deregister(replica_id).await })
+            .await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn update_server_connections(&self) -> Result {
         let replicas = self.read_replicas().clone();
         let mut connection_errors = Vec::with_capacity(replicas.len());

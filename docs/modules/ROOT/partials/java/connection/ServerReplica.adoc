@@ -21,6 +21,21 @@ Returns the address this replica is hosted at.
 .Returns
 `java.lang.String`
 
+[#_ServerReplica_getID_]
+==== getID
+
+[source,java]
+----
+@CheckReturnValue
+java.math.BigInteger getID()
+----
+
+Returns the id of this replica.
+
+[caption=""]
+.Returns
+`java.math.BigInteger`
+
 [#_ServerReplica_getTerm_]
 ==== getTerm
 
@@ -45,11 +60,26 @@ Returns the raft protocol ‘term’ of this replica.
 ReplicaType getType()
 ----
 
-Gets the type of this replica: whether it's a primary or a secondary replica.
+Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 
 [caption=""]
 .Returns
 `ReplicaType`
+
+[#_ServerReplica_isPrimary_]
+==== isPrimary
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.Boolean isPrimary()
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`java.lang.Boolean`
 
 // end::methods[]
 

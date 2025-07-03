@@ -20,11 +20,19 @@
 package com.typedb.driver.api.server;
 
 import javax.annotation.CheckReturnValue;
+import java.math.BigInteger;
 
 /**
  * The metadata and state of an individual raft replica of a driver connection.
  */
 public interface ServerReplica {
+    // TODO: This is what u64 is converted to. This one feels weird, although I don't know what to do with it.
+    /**
+     * Returns the id of this replica.
+     */
+    @CheckReturnValue
+    BigInteger getID();
+
     /**
      * Returns the address this replica is hosted at.
      */
@@ -32,10 +40,16 @@ public interface ServerReplica {
     String getAddress();
 
     /**
-     * Gets the type of this replica: whether it's a primary or a secondary replica.
+     * Returns whether this is the primary replica of the raft cluster or any of the supporting types.
      */
     @CheckReturnValue
     ReplicaType getType();
+
+    /**
+     * Checks whether this is the primary replica of the raft cluster.
+     */
+    @CheckReturnValue
+    Boolean isPrimary();
 
     /**
      * Returns the raft protocol ‘term’ of this replica.

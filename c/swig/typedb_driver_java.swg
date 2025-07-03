@@ -121,6 +121,7 @@
 
 %nojavaexception server_replica_address;
 %nojavaexception server_replica_is_primary;
+%nojavaexception server_replica_id;
 %nojavaexception server_replica_type;
 %nojavaexception server_replica_term;
 

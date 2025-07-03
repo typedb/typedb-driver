@@ -43,6 +43,8 @@ pub(super) enum Request {
     ConnectionOpen { driver_lang: String, driver_version: String, credentials: Credentials },
 
     ServersAll,
+    ServersRegister { replica_id: u64, address: String },
+    ServersDeregister { replica_id: u64 },
     ServerVersion,
 
     DatabasesAll,
@@ -77,6 +79,8 @@ pub(super) enum Response {
     ServersAll {
         servers: Vec<ServerReplica>,
     },
+    ServersRegister,
+    ServersDeregister,
     ServerVersion {
         server_version: ServerVersion,
     },

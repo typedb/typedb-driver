@@ -154,6 +154,43 @@ impl TypeDBDriver {
             .await
     }
 
+    /// Registers a new replica in the cluster the driver is currently connected to. The registered
+    /// replica will become available eventually, depending on the behavior of the whole cluster.
+    ///
+    /// # Arguments
+    ///
+    /// * `replica_id` — The numeric identifier of the new replica
+    /// * `address` — The address(es) of the TypeDB replica as a string
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.register_replica(2, \"127.0.0.1:2729\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.register_replica(2, \"127.0.0.1:2729\").await")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn register_replica(&self, replica_id: u64, address: String) -> Result {
+        self.server_manager.register_replica(replica_id, address).await
+    }
+
+    /// Deregisters a replica from the cluster the driver is currently connected to. This replica
+    /// will no longer play a raft role in this cluster.
+    ///
+    /// # Arguments
+    ///
+    /// * `replica_id` — The numeric identifier of the deregistered replica
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.deregister_replica(2)")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_replica(2).await")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn deregister_replica(&self, replica_id: u64) -> Result {
+        self.server_manager.deregister_replica(replica_id).await
+    }
+
     /// Retrieves the server's replicas.
     ///
     /// # Examples
