@@ -18,7 +18,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List
+from typedb.api.connection.consistency_level import ConsistencyLevel
+from typing import List, Optional
 
 
 class Database(ABC):
@@ -100,27 +101,29 @@ class DatabaseManager(ABC):
     """
 
     @abstractmethod
-    def get(self, name: str) -> Database:
+    def all(self, consistency_level: Optional[ConsistencyLevel] = None) -> List[Database]:
         """
-        Retrieves the database with the given name.
+        Retrieves all databases present on the TypeDB server.
 
-        :param name: The name of the database to retrieve
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
         ---------
         ::
 
-            driver.databases.get(name)
+            driver.databases.all()
+            driver.databases.all(ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def contains(self, name: str) -> bool:
+    def contains(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> bool:
         """
         Checks if a database with the given name exists.
 
         :param name: The database name to be checked
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -128,6 +131,25 @@ class DatabaseManager(ABC):
         ::
 
             driver.databases.contains(name)
+            driver.databases.contains(name, ConsistencyLevel.Strong())
+        """
+        pass
+
+    @abstractmethod
+    def get(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> Database:
+        """
+        Retrieves the database with the given name.
+
+        :param name: The name of the database to retrieve
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.databases.get(name)
+            driver.databases.get(name, ConsistencyLevel.Strong())
         """
         pass
 
@@ -163,20 +185,5 @@ class DatabaseManager(ABC):
         ::
 
             driver.databases.import_from_file(name, schema, "data.typedb")
-        """
-        pass
-
-    @abstractmethod
-    def all(self) -> List[Database]:
-        """
-        Retrieves all databases present on the TypeDB server.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-            driver.databases.all()
         """
         pass

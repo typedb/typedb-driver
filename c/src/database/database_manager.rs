@@ -25,9 +25,9 @@ use crate::{
     common::{
         error::{try_release, try_release_arc, unwrap_or_default, unwrap_void},
         iterator::{iterator_arc_next, CIterator},
-        memory::{borrow_mut, borrow_optional, free, string_view},
+        memory::{borrow_mut, free, string_view},
     },
-    server::consistency_level::ConsistencyLevel,
+    server::consistency_level::{native_consistency_level, ConsistencyLevel},
 };
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
@@ -46,8 +46,6 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
     free(it);
 }
 
-// TODO: Propage consistency_levels to every read function!
-
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
@@ -58,11 +56,49 @@ pub extern "C" fn databases_all(
     consistency_level: *const ConsistencyLevel,
 ) -> *mut DatabaseIterator {
     let databases = borrow_mut(driver).databases();
-    let result = match borrow_optional(consistency_level).cloned() {
-        Some(consistency_level) => databases.all_with_consistency(consistency_level.into()),
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => databases.all_with_consistency(consistency_level),
         None => databases.all(),
     };
     try_release(result.map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))))
+}
+
+/// Checks if a database with the given name exists.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation.
+/// @param name The name of the database.
+#[no_mangle]
+pub extern "C" fn databases_contains(
+    driver: *mut TypeDBDriver,
+    name: *const c_char,
+    consistency_level: *const ConsistencyLevel,
+) -> bool {
+    let databases = borrow_mut(driver).databases();
+    let name = string_view(name);
+    unwrap_or_default(match native_consistency_level(consistency_level) {
+        Some(consistency_level) => databases.contains_with_consistency(name, consistency_level),
+        None => databases.contains(name),
+    })
+}
+
+/// Retrieves the database with the given name.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation.
+/// @param name The name of the database.
+#[no_mangle]
+pub extern "C" fn databases_get(
+    driver: *mut TypeDBDriver,
+    name: *const c_char,
+    consistency_level: *const ConsistencyLevel,
+) -> *const Database {
+    let databases = borrow_mut(driver).databases();
+    let name = string_view(name);
+    try_release_arc(match native_consistency_level(consistency_level) {
+        Some(consistency_level) => databases.get_with_consistency(name, consistency_level),
+        None => databases.get(name),
+    })
 }
 
 /// Creates a database with the given name.
@@ -89,16 +125,4 @@ pub extern "C" fn databases_import_from_file(
 ) {
     let data_file_path = Path::new(string_view(data_file));
     unwrap_void(borrow_mut(driver).databases().import_from_file(string_view(name), string_view(schema), data_file_path))
-}
-
-/// Checks if a database with the given name exists.
-#[no_mangle]
-pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_char) -> bool {
-    unwrap_or_default(borrow_mut(driver).databases().contains(string_view(name)))
-}
-
-/// Retrieves the database with the given name.
-#[no_mangle]
-pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
-    try_release_arc(borrow_mut(driver).databases().get(string_view(name)))
 }

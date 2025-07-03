@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import os
+
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 from typedb.driver import *
@@ -33,7 +35,8 @@ def before_all(context: Context):
 
 def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context, scenario)
-    context.driver_options = context.driver_options.is_tls_enabled(True).tls_root_ca_path(context.tls_root_ca_path)
+    context.driver_options.is_tls_enabled = True
+    context.driver_options.tls_root_ca_path = context.tls_root_ca_path
 
 
 def setup_context_driver(context, addresses=None, username=None, password=None):

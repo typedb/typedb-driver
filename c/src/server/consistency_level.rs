@@ -22,7 +22,7 @@ use typedb_driver::consistency_level::ConsistencyLevel as NativeConsistencyLevel
 
 use crate::common::{
     error::unwrap_or_default,
-    memory::{free, release, release_string, string_free, string_view},
+    memory::{borrow_optional, free, release, release_string, string_free, string_view},
 };
 
 /// <code>ConsistencyLevelTag</code> is used to represent consistency levels in FFI.
@@ -80,6 +80,10 @@ pub extern "C" fn consistency_level_replica_dependant(address: *const c_char) ->
 #[no_mangle]
 pub extern "C" fn consistency_level_drop(consistency_level: *mut ConsistencyLevel) {
     free(consistency_level)
+}
+
+pub(crate) fn native_consistency_level(consistency_level: *const ConsistencyLevel) -> Option<NativeConsistencyLevel> {
+    borrow_optional(consistency_level).cloned().map(|consistency_level| consistency_level.into())
 }
 
 impl Into<NativeConsistencyLevel> for ConsistencyLevel {

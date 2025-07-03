@@ -24,7 +24,7 @@ import static com.typedb.driver.jni.typedb_driver.consistency_level_replica_depe
 import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
 
 /**
- * Consistency levels of operations against a distributed database. All driver methods have default
+ * Consistency levels of operations against a distributed server. All driver methods have default
  * recommended values, however, readonly operations can be configured in order to potentially
  * speed up the execution (introducing risks of stale data) or test a specific replica.
  * This setting does not affect clusters with a single node.
@@ -106,6 +106,9 @@ public abstract class ConsistencyLevel {
             return consistency_level_replica_dependant(address);
         }
 
+        /**
+         * Retrieves the address of the replica this consistency level depends on.
+         */
         public String getAddress() {
             return address;
         }

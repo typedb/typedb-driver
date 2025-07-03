@@ -43,20 +43,29 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public Database get(String name) throws TypeDBDriverException {
-        Validator.requireNonNull(name, "name");
+    public List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         try {
-            return new DatabaseImpl(databases_get(nativeDriver, name));
+            return new NativeIterator<>(databases_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(DatabaseImpl::new).collect(toList());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public boolean contains(String name) throws TypeDBDriverException {
+    public boolean contains(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         Validator.requireNonNull(name, "name");
         try {
-            return databases_contains(nativeDriver, name);
+            return databases_contains(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel));
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public Database get(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+        Validator.requireNonNull(name, "name");
+        try {
+            return new DatabaseImpl(databases_get(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel)));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -79,15 +88,6 @@ public class DatabaseManagerImpl implements DatabaseManager {
         Validator.requireNonNull(dataFilePath, "dataFilePath");
         try {
             databases_import_from_file(nativeDriver, name, schema, dataFilePath);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
-        try {
-            return new NativeIterator<>(databases_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(DatabaseImpl::new).collect(toList());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

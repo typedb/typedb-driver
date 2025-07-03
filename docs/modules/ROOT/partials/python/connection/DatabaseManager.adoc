@@ -4,15 +4,24 @@
 Provides access to all database management methods.
 
 // tag::methods[]
-[#_DatabaseManager_all_]
+[#_DatabaseManager_all_consistency_level_ConsistencyLevel_None]
 ==== all
 
 [source,python]
 ----
-all() -> List[Database]
+all(consistency_level: ConsistencyLevel | None = None) -> List[Database]
 ----
 
 Retrieves all databases present on the TypeDB server.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -23,14 +32,15 @@ Retrieves all databases present on the TypeDB server.
 [source,python]
 ----
 driver.databases.all()
+driver.databases.all(ConsistencyLevel.Strong())
 ----
 
-[#_DatabaseManager_contains_name_str]
+[#_DatabaseManager_contains_name_str_consistency_level_ConsistencyLevel_None]
 ==== contains
 
 [source,python]
 ----
-contains(name: str) -> bool
+contains(name: str, consistency_level: ConsistencyLevel | None = None) -> bool
 ----
 
 Checks if a database with the given name exists.
@@ -42,6 +52,7 @@ Checks if a database with the given name exists.
 |===
 |Name |Description |Type |Default Value
 a| `name` a| The database name to be checked a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -53,6 +64,7 @@ a| `name` a| The database name to be checked a| `str` a|
 [source,python]
 ----
 driver.databases.contains(name)
+driver.databases.contains(name, ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_create_name_str]
@@ -85,12 +97,12 @@ a| `name` a| The name of the database to be created a| `str` a|
 driver.databases.create(name)
 ----
 
-[#_DatabaseManager_get_name_str]
+[#_DatabaseManager_get_name_str_consistency_level_ConsistencyLevel_None]
 ==== get
 
 [source,python]
 ----
-get(name: str) -> Database
+get(name: str, consistency_level: ConsistencyLevel | None = None) -> Database
 ----
 
 Retrieves the database with the given name.
@@ -102,6 +114,7 @@ Retrieves the database with the given name.
 |===
 |Name |Description |Type |Default Value
 a| `name` a| The name of the database to retrieve a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -113,6 +126,7 @@ a| `name` a| The name of the database to retrieve a| `str` a|
 [source,python]
 ----
 driver.databases.get(name)
+driver.databases.get(name, ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_import_from_file_name_str_schema_str_data_file_path_str]

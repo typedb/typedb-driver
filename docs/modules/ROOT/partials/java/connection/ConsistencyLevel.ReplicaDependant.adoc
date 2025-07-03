@@ -28,7 +28,7 @@ public ReplicaDependant​(java.lang.String address)
 public java.lang.String getAddress()
 ----
 
-
+Retrieves the address of the replica this consistency level depends on.
 
 [caption=""]
 .Returns
