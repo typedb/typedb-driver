@@ -9,7 +9,7 @@
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
-a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+a| `users` a| `UserManager` a| The ``UserManager`` for this connection, providing access to user management methods.
 |===
 // end::properties[]
 
@@ -33,6 +33,36 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 [source,python]
 ----
 driver.close()
+----
+
+[#_Driver_deregister_replica_replica_id_int]
+==== deregister_replica
+
+[source,python]
+----
+deregister_replica(replica_id: int) -> None
+----
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `replica_id` a| The numeric identifier of the deregistered replica a| `int` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.deregister_replica(2)
 ----
 
 [#_Driver_is_open_]
@@ -75,6 +105,37 @@ Returns the primary replica for this driver connection.
 [source,python]
 ----
 driver.primary_replica()
+----
+
+[#_Driver_register_replica_replica_id_int_address_str]
+==== register_replica
+
+[source,python]
+----
+register_replica(replica_id: int, address: str) -> None
+----
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `replica_id` a| The numeric identifier of the new replica a| `int` a| 
+a| `address` a| The address(es) of the TypeDB replica as a string a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.register_replica(2, "127.0.0.1:11729")
 ----
 
 [#_Driver_replicas_]

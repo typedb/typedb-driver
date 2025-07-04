@@ -120,6 +120,39 @@ impl TypeDBDriver {
         Ok(Self { server_manager, database_manager, user_manager, background_runtime })
     }
 
+    /// Checks it this connection is opened.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.is_open()
+    /// ```
+    pub fn is_open(&self) -> bool {
+        self.background_runtime.is_open()
+    }
+
+    /// The ``DatabaseManager`` for this connection, providing access to database management methods.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.databases()
+    /// ```
+    pub fn databases(&self) -> &DatabaseManager {
+        &self.database_manager
+    }
+
+    /// The ``UserManager`` for this connection, providing access to user management methods.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.databases()
+    /// ```
+    pub fn users(&self) -> &UserManager {
+        &self.user_manager
+    }
+
     /// Retrieves the server's version, using default strong consistency.
     ///
     /// See [`Self::server_version_with_consistency`] for more details and options.
@@ -152,6 +185,28 @@ impl TypeDBDriver {
         self.server_manager
             .execute(consistency_level, |server_connection| async move { server_connection.version().await })
             .await
+    }
+
+    /// Retrieves the server's replicas.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.replicas()
+    /// ```
+    pub fn replicas(&self) -> HashSet<ServerReplica> {
+        self.server_manager.replicas()
+    }
+
+    /// Retrieves the server's primary replica, if exists.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.primary_replica()
+    /// ```
+    pub fn primary_replica(&self) -> Option<ServerReplica> {
+        self.server_manager.primary_replica()
     }
 
     /// Registers a new replica in the cluster the driver is currently connected to. The registered
@@ -189,47 +244,6 @@ impl TypeDBDriver {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn deregister_replica(&self, replica_id: u64) -> Result {
         self.server_manager.deregister_replica(replica_id).await
-    }
-
-    /// Retrieves the server's replicas.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.replicas()
-    /// ```
-    pub fn replicas(&self) -> HashSet<ServerReplica> {
-        self.server_manager.replicas()
-    }
-
-    /// Retrieves the server's primary replica, if exists.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.primary_replica()
-    /// ```
-    pub fn primary_replica(&self) -> Option<ServerReplica> {
-        self.server_manager.primary_replica()
-    }
-
-    /// Checks it this connection is opened.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// driver.is_open()
-    /// ```
-    pub fn is_open(&self) -> bool {
-        self.background_runtime.is_open()
-    }
-
-    pub fn databases(&self) -> &DatabaseManager {
-        &self.database_manager
-    }
-
-    pub fn users(&self) -> &UserManager {
-        &self.user_manager
     }
 
     /// Opens a transaction with default options.

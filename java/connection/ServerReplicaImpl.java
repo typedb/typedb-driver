@@ -23,8 +23,6 @@ import com.typedb.driver.api.server.ReplicaType;
 import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.common.NativeObject;
 
-import java.math.BigInteger;
-
 import static com.typedb.driver.jni.typedb_driver.server_replica_address;
 import static com.typedb.driver.jni.typedb_driver.server_replica_id;
 import static com.typedb.driver.jni.typedb_driver.server_replica_is_primary;
@@ -37,7 +35,7 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     }
 
     @Override
-    public BigInteger getID() {
+    public long getID() {
         return server_replica_id(nativeObject);
     }
 

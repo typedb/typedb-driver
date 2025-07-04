@@ -47,6 +47,22 @@ class Driver(ABC):
         """
         pass
 
+    @property
+    @abstractmethod
+    def databases(self) -> DatabaseManager:
+        """
+        The ``DatabaseManager`` for this connection, providing access to database management methods.
+        """
+        pass
+
+    @property
+    @abstractmethod
+    def users(self) -> UserManager:
+        """
+        The ``UserManager`` for this connection, providing access to user management methods.
+        """
+        pass
+
     @abstractmethod
     def server_version(self) -> ServerVersion:
         """
@@ -59,14 +75,6 @@ class Driver(ABC):
         ::
 
             driver.server_version()
-        """
-        pass
-
-    @property
-    @abstractmethod
-    def databases(self) -> DatabaseManager:
-        """
-        The ``DatabaseManager`` for this connection, providing access to database management methods.
         """
         pass
 
@@ -104,15 +112,6 @@ class Driver(ABC):
         """
         pass
 
-    @property
-    @abstractmethod
-    def users(self) -> UserManager:
-        """
-        The ``UserManager`` instance for this connection, providing access to user management methods.
-        Only for TypeDB Cloud.
-        """
-        pass
-
     @abstractmethod
     def replicas(self) -> Set[ServerReplica]:
         """
@@ -140,6 +139,41 @@ class Driver(ABC):
         ::
 
             driver.primary_replica()
+        """
+        pass
+
+    @abstractmethod
+    def register_replica(self, replica_id: int, address: str) -> None:
+        """
+        Registers a new replica in the cluster the driver is currently connected to. The registered
+        replica will become available eventually, depending on the behavior of the whole cluster.
+
+        :param replica_id: The numeric identifier of the new replica
+        :param address: The address(es) of the TypeDB replica as a string
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.register_replica(2, "127.0.0.1:11729")
+        """
+        pass
+
+    @abstractmethod
+    def deregister_replica(self, replica_id: int) -> None:
+        """
+        Deregisters a replica from the cluster the driver is currently connected to. This replica
+        will no longer play a raft role in this cluster.
+
+        :param replica_id: The numeric identifier of the deregistered replica
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.deregister_replica(2)
         """
         pass
 

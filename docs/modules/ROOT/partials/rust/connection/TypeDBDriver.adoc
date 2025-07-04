@@ -8,6 +8,30 @@
 A connection to a TypeDB server which serves as the starting point for all interaction.
 
 // tag::methods[]
+[#_struct_TypeDBDriver_databases_]
+==== databases
+
+[source,rust]
+----
+pub fn databases(&self) -> &DatabaseManager
+----
+
+The ``DatabaseManager`` for this connection, providing access to database management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&DatabaseManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
+----
+
 [#_struct_TypeDBDriver_deregister_replica_replica_id_u64]
 ==== deregister_replica
 
@@ -692,6 +716,30 @@ transaction.transaction_with_options(database_name, transaction_type, options)
 
 --
 ====
+
+[#_struct_TypeDBDriver_users_]
+==== users
+
+[source,rust]
+----
+pub fn users(&self) -> &UserManager
+----
+
+The ``UserManager`` for this connection, providing access to user management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&UserManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
+----
 
 // end::methods[]
 

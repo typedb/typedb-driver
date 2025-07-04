@@ -79,7 +79,7 @@ impl ServerReplica {
     }
 
     /// Returns the raft protocol ‘term’ of this replica.
-    pub fn term(&self) -> i64 {
+    pub fn term(&self) -> u64 {
         self.replica_status.term
     }
 }
@@ -92,7 +92,7 @@ pub(crate) struct ReplicaStatus {
     /// The role of this replica in the raft cluster.
     pub replica_type: ReplicaType,
     /// The raft protocol ‘term’ of this server replica.
-    pub term: i64,
+    pub term: u64,
 }
 
 impl Default for ReplicaStatus {

@@ -35,7 +35,7 @@ pub extern "C" fn transaction_options_drop(options: *mut TransactionOptions) {
     free(options);
 }
 
-/// Explicitly setsa transaction timeout.
+/// Explicitly sets a transaction timeout.
 /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 #[no_mangle]
 pub extern "C" fn transaction_options_set_transaction_timeout_millis(

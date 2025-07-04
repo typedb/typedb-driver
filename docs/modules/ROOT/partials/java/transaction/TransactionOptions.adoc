@@ -112,7 +112,7 @@ options.transactionTimeoutMillis();
 public TransactionOptions transactionTimeoutMillis​(int transactionTimeoutMillis)
 ----
 
-Explicitly setsa transaction timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
+Explicitly sets a transaction timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
 
 
 [caption=""]

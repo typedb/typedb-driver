@@ -67,7 +67,7 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
     }
 
     /**
-     * Explicitly setsa transaction timeout.
+     * Explicitly sets a transaction timeout.
      * If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
      *
      * <h3>Examples</h3>

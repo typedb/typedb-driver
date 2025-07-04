@@ -20,7 +20,6 @@
 package com.typedb.driver.api.server;
 
 import javax.annotation.CheckReturnValue;
-import java.math.BigInteger;
 
 /**
  * The metadata and state of an individual raft replica of a driver connection.
@@ -31,7 +30,7 @@ public interface ServerReplica {
      * Returns the id of this replica.
      */
     @CheckReturnValue
-    BigInteger getID();
+    long getID();
 
     /**
      * Returns the address this replica is hosted at.

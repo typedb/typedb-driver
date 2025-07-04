@@ -86,7 +86,7 @@ ReplicaType
 
 [source,rust]
 ----
-pub fn term(&self) -> i64
+pub fn term(&self) -> u64
 ----
 
 Returns the raft protocol ‘term’ of this replica.
@@ -95,7 +95,7 @@ Returns the raft protocol ‘term’ of this replica.
 .Returns
 [source,rust]
 ----
-i64
+u64
 ----
 
 // end::methods[]

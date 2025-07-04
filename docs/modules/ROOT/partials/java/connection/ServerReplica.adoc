@@ -27,14 +27,14 @@ Returns the address this replica is hosted at.
 [source,java]
 ----
 @CheckReturnValue
-java.math.BigInteger getID()
+long getID()
 ----
 
 Returns the id of this replica.
 
 [caption=""]
 .Returns
-`java.math.BigInteger`
+`long`
 
 [#_ServerReplica_getTerm_]
 ==== getTerm

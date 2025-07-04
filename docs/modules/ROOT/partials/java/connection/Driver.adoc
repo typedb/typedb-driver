@@ -38,7 +38,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Code examples
 [source,java]
 ----
-driver.close()
+driver.close();
 ----
 
 [#_Driver_databases_]
@@ -50,11 +50,50 @@ driver.close()
 DatabaseManager databases()
 ----
 
-The ``DatabaseManager`` for this connection, providing access to database management methods.
+The ``DatabaseManager`` for this connection, providing access to database management methods. 
+
 
 [caption=""]
 .Returns
 `DatabaseManager`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases();
+----
+
+[#_Driver_deregisterReplica_long]
+==== deregisterReplica
+
+[source,java]
+----
+void deregisterReplica​(long replicaID)
+----
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replicaID` a| The numeric identifier of the deregistered replica a| `long`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.deregisterReplica(2);
+----
 
 [#_Driver_isOpen_]
 ==== isOpen
@@ -99,7 +138,40 @@ Returns the primary replica for this driver connection.
 .Code examples
 [source,java]
 ----
-driver.primaryReplica()
+driver.primaryReplica();
+----
+
+[#_Driver_registerReplica_long_java_lang_String]
+==== registerReplica
+
+[source,java]
+----
+void registerReplica​(long replicaID,
+                     java.lang.String address)
+----
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replicaID` a| The numeric identifier of the new replica a| `long`
+a| `address` a| The address(es) of the TypeDB replica as a string a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.registerReplica(2, "127.0.0.1:11729");
 ----
 
 [#_Driver_replicas_]
@@ -122,7 +194,7 @@ Set of ``Replica`` instances for this driver connection.
 .Code examples
 [source,java]
 ----
-driver.replicas()
+driver.replicas();
 ----
 
 [#_Driver_serverVersion_]
@@ -228,7 +300,7 @@ driver.transaction(database, sessionType);
 UserManager users()
 ----
 
-The ``UserManager`` instance for this connection, providing access to user management methods. 
+The ``UserManager`` for this connection, providing access to user management methods. 
 
 
 [caption=""]

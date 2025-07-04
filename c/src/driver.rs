@@ -30,6 +30,7 @@ use crate::{
     },
     server::{server_replica::ServerReplicaIterator, server_version::ServerVersion},
 };
+use crate::common::memory::borrow_mut;
 
 const DRIVER_LANG: &'static str = "c";
 
@@ -201,4 +202,23 @@ pub extern "C" fn driver_replicas(driver: *const TypeDBDriver) -> *mut ServerRep
 #[no_mangle]
 pub extern "C" fn driver_primary_replica(driver: *const TypeDBDriver) -> *mut ServerReplica {
     release_optional(borrow(driver).primary_replica())
+}
+
+/// Registers a new replica in the cluster the driver is currently connected to. The registered
+/// replica will become available eventually, depending on the behavior of the whole cluster.
+///
+/// @param replica_id The numeric identifier of the new replica
+/// @param address The address(es) of the TypeDB replica as a string
+#[no_mangle]
+pub extern "C" fn driver_register_replica(driver: *const TypeDBDriver, replica_id: i64, address: *const c_char) {
+    unwrap_void(borrow(driver).register_replica(replica_id as u64, string_view(address).to_string()))
+}
+
+/// Deregisters a replica from the cluster the driver is currently connected to. This replica
+/// will no longer play a raft role in this cluster.
+///
+/// @param replica_id The numeric identifier of the deregistered replica
+#[no_mangle]
+pub extern "C" fn driver_deregister_replica(driver: *const TypeDBDriver, replica_id: i64) {
+    unwrap_void(borrow(driver).deregister_replica(replica_id as u64))
 }
