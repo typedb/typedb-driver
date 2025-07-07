@@ -26,6 +26,7 @@ import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -106,16 +107,6 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.close();
-     * </pre>
-     */
-    void close();
-
-    /**
      * Set of <code>Replica</code> instances for this driver connection.
      *
      * <h3>Examples</h3>
@@ -163,4 +154,28 @@ public interface Driver extends AutoCloseable {
      * @param replicaID The numeric identifier of the deregistered replica
      */
     void deregisterReplica(long replicaID);
+
+    /**
+     * Updates address translation of the driver. This lets you actualize new translation
+     * information without recreating the driver from scratch. Useful after registering new
+     * replicas requiring address translation.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.updateAddressTranslation(2);
+     * </pre>
+     *
+     * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
+     */
+    void updateAddressTranslation(Map<String, String> addressTranslation);
+
+    /**
+     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.close();
+     * </pre>
+     */
+    void close();
 }

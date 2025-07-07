@@ -17,7 +17,8 @@
  * under the License.
  */
 use std::{
-    env, io,
+    env, fs, io,
+    path::Path,
     process::{Child, Command, ExitStatus},
     str::FromStr,
     time::Duration,
@@ -80,7 +81,7 @@ fn primary_reelection_read() {
         .unwrap();
 
         for (i, address) in ADDRESSES[1..].iter().enumerate() {
-            driver.register_replica((i + 1) as u64, address.to_string()).await;
+            driver.register_replica((i + 1) as u64, address.to_string()).await.unwrap();
         }
 
         // sleep(Duration::from_secs(5)).await;
@@ -130,29 +131,38 @@ fn primary_reelection_read() {
 
 fn start_server(index: &str) -> Child {
     // Command::new(format!("../{index}/typedb"))
+    let data_directory_path = format!("{index}/data");
+    let data_directory = Path::new(&data_directory_path);
+    fs::create_dir_all(data_directory).unwrap();
+    let data_directory_path = fs::canonicalize(data_directory).unwrap();
+    let logs_directory_path = format!("{index}/logs");
+    let logs_directory = Path::new(&logs_directory_path);
+    fs::create_dir_all(logs_directory).unwrap();
+    let logs_directory_path = fs::canonicalize(logs_directory).unwrap();
     // TODO: Temporary, should be called in a better way
-    Command::new(format!(
-        "{}/tool/test/temp-cluster-server/typedb_cluster_server_bin",
-        env::current_dir().unwrap().to_string_lossy()
-    ))
-    .args([
-        "--server.address",
-        &format!("127.0.0.1:{index}1729"),
-        "--server-clustering-id",
-        &format!("{index}"),
-        "--server-clustering-address",
-        &format!("127.0.0.1:{index}1730"),
-        "--diagnostics.deployment-id",
-        "test",
-        "--server.encryption.enabled",
-        "false",
-        "--diagnostics.monitoring.port",
-        &format!("{index}1731"),
-        "--development-mode.enabled",
-        "true",
-    ])
-    .spawn()
-    .expect("Failed to start TypeDB server")
+    Command::new(format!("{}/tool/test/temp-cluster-server/typedb", env::current_dir().unwrap().to_string_lossy()))
+        .args([
+            "--server.address",
+            &format!("127.0.0.1:{index}1729"),
+            "--server-clustering-id",
+            &format!("{index}"),
+            "--server-clustering-address",
+            &format!("127.0.0.1:{index}1730"),
+            "--storage.data-directory",
+            &data_directory_path.display().to_string(),
+            "--logging.logdir",
+            &logs_directory_path.display().to_string(),
+            "--diagnostics.deployment-id",
+            "test",
+            "--server.encryption.enabled",
+            "false",
+            "--diagnostics.monitoring.port",
+            &format!("{index}1731"),
+            "--development-mode.enabled",
+            "true",
+        ])
+        .spawn()
+        .expect("Failed to start TypeDB server")
 }
 
 async fn get_primary_replica(driver: &TypeDBDriver) -> ServerReplica {

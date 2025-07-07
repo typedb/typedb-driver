@@ -83,7 +83,7 @@ public interface DatabaseManager {
      * driver.databases().contains(name, ConsistencyLevel.Strong)
      * </pre>
      *
-     * @param name The database name to be checked
+     * @param name             The database name to be checked
      * @param consistencyLevel The consistency level to use for the operation
      */
     @CheckReturnValue
@@ -113,7 +113,7 @@ public interface DatabaseManager {
      * driver.databases().get(name, ConsistencyLevel.Strong)
      * </pre>
      *
-     * @param name The name of the database to retrieve
+     * @param name             The name of the database to retrieve
      * @param consistencyLevel The consistency level to use for the operation
      */
     @CheckReturnValue

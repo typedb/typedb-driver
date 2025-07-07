@@ -48,7 +48,7 @@ pub(crate) struct ServerManager {
     replicas: RwLock<Vec<ServerReplica>>,
     server_connections: RwLock<HashMap<Address, ServerConnection>>,
     connection_scheme: http::uri::Scheme,
-    address_translation: AddressTranslation,
+    address_translation: RwLock<AddressTranslation>,
 
     background_runtime: Arc<BackgroundRuntime>,
     credentials: Credentials,
@@ -99,7 +99,7 @@ impl ServerManager {
             replicas: RwLock::new(replicas),
             server_connections: RwLock::new(source_connections),
             connection_scheme,
-            address_translation,
+            address_translation: RwLock::new(address_translation),
             background_runtime,
             credentials,
             driver_options,
@@ -125,6 +125,16 @@ impl ServerManager {
             server_connection.servers_deregister(replica_id).await
         })
         .await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) fn update_address_translation(&self, addresses: Addresses) -> Result {
+        if !matches!(addresses, Addresses::Translated(_)) {
+            return Err(ConnectionError::AddressTranslationWithoutTranslation { addresses }.into());
+        }
+        *self.address_translation.write().expect("Expected address translation write access") =
+            addresses.address_translation();
+        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -198,6 +208,10 @@ impl ServerManager {
         self.replicas.read().expect("Expected a read replica lock")
     }
 
+    fn read_address_translation(&self) -> RwLockReadGuard<'_, AddressTranslation> {
+        self.address_translation.read().expect("Expected address translation read access")
+    }
+
     pub(crate) fn force_close(&self) -> Result {
         self.read_server_connections().values().map(ServerConnection::force_close).try_collect().map_err(Into::into)
     }
@@ -234,7 +248,8 @@ impl ServerManager {
                     }
                     .into());
                 }
-                let private_address = self.address_translation.to_private(&address).unwrap_or_else(|| address.clone());
+                let private_address =
+                    self.read_address_translation().to_private(&address).unwrap_or_else(|| address.clone());
                 self.execute_on(&address, &private_address, false, &task).await
             }
         }
@@ -428,10 +443,11 @@ impl ServerManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_replicas(&self, server_connection: &ServerConnection) -> Result<Vec<ServerReplica>> {
+        let address_translation = self.read_address_translation();
         server_connection
             .servers_all()
             .await
-            .map(|replicas| Self::translate_replicas(replicas, &self.connection_scheme, &self.address_translation))
+            .map(|replicas| Self::translate_replicas(replicas, &self.connection_scheme, &address_translation))
     }
 
     fn translate_replicas(

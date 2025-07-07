@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Tuple
 
 from typedb.api.connection.driver import Driver
 from typedb.api.connection.transaction import Transaction
@@ -32,7 +32,8 @@ from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
     driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, driver_register_replica, \
     driver_deregister_replica, driver_replicas, driver_primary_replica, driver_server_version, \
-    server_replica_iterator_next, TypeDBDriver as NativeDriver, TypeDBDriverExceptionNative
+    driver_update_address_translation, server_replica_iterator_next, TypeDBDriver as NativeDriver, \
+    TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
@@ -52,18 +53,19 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         require_non_null(credentials, "credentials")
         require_non_null(driver_options, "driver_options")
 
-        if isinstance(addresses, str):
-            driver_new_fn = driver_new_with_description
-        elif isinstance(addresses, list):
-            driver_new_fn = driver_new_with_addresses_with_description
-        elif isinstance(addresses, dict):
-            driver_new_fn = driver_new_with_address_translation_with_description
-        else:
-            raise TypeDBDriverException(INVALID_ADDRESS_FORMAT)
-
         try:
-            native_driver = driver_new_fn(addresses, credentials.native_object, driver_options.native_object,
-                                          Driver.LANGUAGE)
+            if isinstance(addresses, str):
+                native_driver = driver_new_with_description(addresses, credentials.native_object, driver_options.native_object,
+                                                            Driver.LANGUAGE)
+            elif isinstance(addresses, list):
+                native_driver = driver_new_with_addresses_with_description(addresses, credentials.native_object, driver_options.native_object,
+                                                                           Driver.LANGUAGE)
+            elif isinstance(addresses, dict):
+                public_addresses, private_addresses = _Driver._get_translated_addresses(addresses)
+                native_driver = driver_new_with_address_translation_with_description(public_addresses, private_addresses, credentials.native_object, driver_options.native_object,
+                                                                                     Driver.LANGUAGE)
+            else:
+                raise TypeDBDriverException(INVALID_ADDRESS_FORMAT)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
         super().__init__(native_driver)
@@ -114,11 +116,34 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def register_replica(self, replica_id: int, address: str) -> None:
         require_non_negative(replica_id, "replica_id")
         require_non_null(address, "address")
-        driver_register_replica(self._native_driver)
+        try:
+            driver_register_replica(self._native_driver, replica_id, address)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
 
     def deregister_replica(self, replica_id: int) -> None:
         require_non_negative(replica_id, "replica_id")
-        driver_deregister_replica(self._native_driver)
+        try:
+            driver_deregister_replica(self._native_driver, replica_id)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def update_address_translation(self, address_translation: dict[str, str]) -> None:
+        require_non_null(address_translation, "address_translation")
+        public_addresses, private_addresses = _Driver._get_translated_addresses(address_translation)
+        try:
+            driver_update_address_translation(self._native_driver, public_addresses, private_addresses)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def close(self) -> None:
+        driver_force_close(self._native_driver)
+
+    @classmethod
+    def _get_translated_addresses(cls, address_translation: dict[str, str]) -> Tuple[list[str], list[str]]:
+        public_addresses = list(address_translation.keys())
+        private_addresses = [address_translation[public] for public in public_addresses]
+        return public_addresses, private_addresses
 
     def __enter__(self):
         return self
@@ -127,6 +152,3 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         self.close()
         if exc_tb is not None:
             return False
-
-    def close(self) -> None:
-        driver_force_close(self._native_driver)

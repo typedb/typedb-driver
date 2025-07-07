@@ -34,6 +34,7 @@ import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.user.UserManagerImpl;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ import static com.typedb.driver.jni.typedb_driver.driver_primary_replica;
 import static com.typedb.driver.jni.typedb_driver.driver_register_replica;
 import static com.typedb.driver.jni.typedb_driver.driver_replicas;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
+import static com.typedb.driver.jni.typedb_driver.driver_update_address_translation;
 import static java.util.stream.Collectors.toSet;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
@@ -97,13 +99,8 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(credentials, "credentials");
         Validator.requireNonNull(driverOptions, "driverOptions");
         try {
-            List<String> publicAddresses = new ArrayList<>();
-            List<String> privateAddresses = new ArrayList<>();
-            for (Map.Entry<String, String> entry : addressTranslation.entrySet()) {
-                publicAddresses.add(entry.getKey());
-                privateAddresses.add(entry.getValue());
-            }
-            return driver_new_with_address_translation_with_description(publicAddresses.toArray(new String[0]), privateAddresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
+            return driver_new_with_address_translation_with_description(addresses.getKey(), addresses.getValue(), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -178,11 +175,34 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
+    public void updateAddressTranslation(Map<String, String> addressTranslation) {
+        Validator.requireNonNull(addressTranslation, "addressTranslation");
+        try {
+            Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
+            driver_update_address_translation(nativeObject, addresses.getKey(), addresses.getValue());
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
     public void close() {
         try {
             driver_force_close(nativeObject);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
+    }
+
+    public static Map.Entry<String[], String[]> getTranslatedAddresses(Map<String, String> addressTranslation) {
+        List<String> publicAddresses = new ArrayList<>();
+        List<String> privateAddresses = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : addressTranslation.entrySet()) {
+            publicAddresses.add(entry.getKey());
+            privateAddresses.add(entry.getValue());
+        }
+
+        return new AbstractMap.SimpleEntry<>(publicAddresses.toArray(new String[0]), privateAddresses.toArray(new String[0]));
     }
 }

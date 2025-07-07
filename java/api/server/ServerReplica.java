@@ -26,6 +26,7 @@ import javax.annotation.CheckReturnValue;
  */
 public interface ServerReplica {
     // TODO: This is what u64 is converted to. This one feels weird, although I don't know what to do with it.
+
     /**
      * Returns the id of this replica.
      */

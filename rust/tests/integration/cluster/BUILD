@@ -37,7 +37,7 @@ rust_test(
         "@crates//:uuid",
     ],
     # TODO: Temporary. Use a binary extracted in a better way
-    data = ["//tool/test/temp-cluster-server:typedb_cluster_server_bin",
+    data = ["//tool/test/temp-cluster-server:typedb",
             "//tool/test/temp-cluster-server:config.yml"],
 )
 

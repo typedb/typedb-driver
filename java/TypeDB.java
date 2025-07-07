@@ -68,7 +68,7 @@ public class TypeDB {
      *
      * <h3>Examples</h3>
      * <pre>
-     * TypeDB.driver(address);
+     * TypeDB.driver(addresses);
      * </pre>
      *
      * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)

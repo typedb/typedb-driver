@@ -199,6 +199,8 @@ error_messages! { ConnectionError
         37: "Could not connect: no available replicas read from addresses {configured_addresses}.",
     HttpHttpsMismatch { addresses: Addresses } =
         38: "Invalid encryption used: either all or none addresses must use 'https': {addresses}.",
+    AddressTranslationWithoutTranslation { addresses: Addresses } =
+        39: "Specified addresses do not contain address translation: {addresses}.",
 }
 
 error_messages! { ConceptError
