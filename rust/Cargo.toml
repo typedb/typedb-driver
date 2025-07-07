@@ -130,6 +130,10 @@
 		default-features = false
 
 [[test]]
+	path = "tests/integration/cluster/clustering.rs"
+	name = "test_clustering"
+
+[[test]]
 	path = "tests/integration/example.rs"
 	name = "test_example"
 

@@ -116,13 +116,15 @@ impl ServerManager {
             let address = address.clone();
             async move { server_connection.servers_register(replica_id, address).await }
         })
-            .await
+        .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn deregister_replica(&self, replica_id: u64) -> Result {
-        self.execute(ConsistencyLevel::Strong, |server_connection| async move { server_connection.servers_deregister(replica_id).await })
-            .await
+        self.execute(ConsistencyLevel::Strong, |server_connection| async move {
+            server_connection.servers_deregister(replica_id).await
+        })
+        .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

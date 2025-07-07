@@ -45,7 +45,11 @@ impl TryFromProto<ServerProto> for ServerReplica {
 
 impl TryFromProto<ReplicaStatusProto> for ReplicaStatus {
     fn try_from_proto(proto: ReplicaStatusProto) -> Result<Self> {
-        Ok(Self { id: proto.replica_id, replica_type: ReplicaType::try_from_proto(proto.replica_type)?, term: proto.term })
+        Ok(Self {
+            id: proto.replica_id,
+            replica_type: ReplicaType::try_from_proto(proto.replica_type)?,
+            term: proto.term,
+        })
     }
 }
 

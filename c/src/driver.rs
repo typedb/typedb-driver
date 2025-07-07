@@ -26,11 +26,10 @@ use crate::{
         error::{try_release, unwrap_or_default, unwrap_void},
         iterator::CIterator,
         iterators_to_map,
-        memory::{borrow, free, release, release_optional, string_array_view, string_view},
+        memory::{borrow, borrow_mut, free, release, release_optional, string_array_view, string_view},
     },
     server::{server_replica::ServerReplicaIterator, server_version::ServerVersion},
 };
-use crate::common::memory::borrow_mut;
 
 const DRIVER_LANG: &'static str = "c";
 

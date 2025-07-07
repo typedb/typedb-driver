@@ -22,8 +22,8 @@
 
 pub use self::{
     common::{
-        box_stream, consistency_level, error, info, Addresses, BoxPromise, BoxStream, Error, Promise, QueryOptions,
-        Result, TransactionOptions, TransactionType, IID,
+        box_stream, consistency_level, error, info, Address, Addresses, BoxPromise, BoxStream, Error, Promise,
+        QueryOptions, Result, TransactionOptions, TransactionType, IID,
     },
     connection::{
         server_replica::{ReplicaType, ServerReplica},

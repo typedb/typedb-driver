@@ -17,8 +17,7 @@
  * under the License.
  */
 
-pub(crate) use self::address::Address;
-pub use self::addresses::Addresses;
+pub use self::{address::Address, addresses::Addresses};
 
 pub(crate) mod address;
 pub(crate) mod address_translation;
