@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::fmt;
 
 /// A full TypeDB server's version specification
 #[derive(Debug, Clone)]
@@ -33,5 +34,11 @@ impl ServerVersion {
     /// Retrieves the server's version number.
     pub fn version(&self) -> &str {
         &self.version
+    }
+}
+
+impl fmt::Display for ServerVersion {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}", self.distribution, self.version)
     }
 }

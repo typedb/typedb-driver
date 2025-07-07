@@ -228,6 +228,8 @@ impl TypeDBDriver {
         self.server_manager.register_replica(replica_id, address).await
     }
 
+    // TODO: Rename to replica_register and replica_deregister?
+
     /// Deregisters a replica from the cluster the driver is currently connected to. This replica
     /// will no longer play a raft role in this cluster.
     ///
