@@ -443,7 +443,7 @@ impl ServerManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_replicas(&self, server_connection: &ServerConnection) -> Result<Vec<ServerReplica>> {
-        let address_translation = self.read_address_translation();
+        let address_translation = self.read_address_translation().clone();
         server_connection
             .servers_all()
             .await
