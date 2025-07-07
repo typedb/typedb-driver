@@ -259,18 +259,10 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(
-        feature = "sync",
-        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap())"
-    )]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap()).await"
-    )]
+    /// driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap())
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn update_address_translation(&self, addresses: Addresses) -> Result {
-        self.server_manager.update_address_translation(addresses).await
+    pub fn update_address_translation(&self, addresses: Addresses) -> Result {
+        self.server_manager.update_address_translation(addresses)
     }
 
     /// Opens a transaction with default options.
