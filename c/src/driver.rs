@@ -26,9 +26,13 @@ use crate::{
         error::{try_release, unwrap_or_default, unwrap_void},
         iterator::CIterator,
         iterators_to_map,
-        memory::{borrow, borrow_mut, free, release, release_optional, string_array_view, string_view},
+        memory::{borrow, free, release, release_optional, string_array_view, string_view},
     },
-    server::{server_replica::ServerReplicaIterator, server_version::ServerVersion},
+    server::{
+        consistency_level::{native_consistency_level, ConsistencyLevel},
+        server_replica::ServerReplicaIterator,
+        server_version::ServerVersion,
+    },
 };
 
 const DRIVER_LANG: &'static str = "c";
@@ -164,14 +168,14 @@ pub extern "C" fn driver_new_with_address_translation_with_description(
     ))
 }
 
-/// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+/// Closes the <code>TypeDBDriver</code>. Before instantiating a new driver, the driver that’s currently open should first be closed.
 /// Closing a driver frees the underlying Rust object.
 #[no_mangle]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);
 }
 
-/// Forcibly closes the driver. To be used in exceptional cases.
+/// Forcibly closes the <code>TypeDBDriver</code>. To be used in exceptional cases.
 #[no_mangle]
 pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
@@ -184,9 +188,20 @@ pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
 }
 
 /// Retrieves the server version and distribution information.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn driver_server_version(driver: *const TypeDBDriver) -> *mut ServerVersion {
-    release(unwrap_or_default(borrow(driver).server_version().map(|server_version| {
+pub extern "C" fn driver_server_version(
+    driver: *const TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut ServerVersion {
+    let driver = borrow(driver);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => driver.server_version_with_consistency(consistency_level),
+        None => driver.server_version(),
+    };
+    release(unwrap_or_default(result.map(|server_version| {
         ServerVersion::new(server_version.distribution().to_string(), server_version.version().to_string())
     })))
 }
@@ -194,7 +209,7 @@ pub extern "C" fn driver_server_version(driver: *const TypeDBDriver) -> *mut Ser
 /// Retrieves the server's replicas.
 #[no_mangle]
 pub extern "C" fn driver_replicas(driver: *const TypeDBDriver) -> *mut ServerReplicaIterator {
-    release(ServerReplicaIterator(CIterator(box_stream(borrow(driver).replicas().into_iter()))))
+    release(ServerReplicaIterator(CIterator(box_stream(unwrap_or_default(borrow(driver).replicas()).into_iter()))))
 }
 
 /// Retrieves the server's primary replica, if exists.
@@ -205,6 +220,7 @@ pub extern "C" fn driver_primary_replica(driver: *const TypeDBDriver) -> *mut Se
 
 /// Registers a new replica in the cluster the driver is currently connected to. The registered
 /// replica will become available eventually, depending on the behavior of the whole cluster.
+/// To register a replica, its clustering address should be passed, not the connection address.
 ///
 /// @param replica_id The numeric identifier of the new replica
 /// @param address The address(es) of the TypeDB replica as a string

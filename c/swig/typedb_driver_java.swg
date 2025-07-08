@@ -104,7 +104,7 @@
 %nojavaexception error_message;
 
 %nojavaexception driver_is_open;
-%nojavaexception driver_replicas;
+// TODO: Remove from this list if we start making network calls to retrieve this
 %nojavaexception driver_primary_replica;
 
 %nojavaexception driver_options_new;
@@ -113,17 +113,24 @@
 %nojavaexception driver_options_set_tls_root_ca_path;
 %nojavaexception driver_options_get_tls_root_ca_path;
 %nojavaexception driver_options_has_tls_root_ca_path;
+%nojavaexception driver_options_set_use_replication;
+%nojavaexception driver_options_get_use_replication;
+%nojavaexception driver_options_set_primary_failover_retries;
+%nojavaexception driver_options_get_primary_failover_retries;
+%nojavaexception driver_options_set_replica_discovery_attempts;
+%nojavaexception driver_options_get_replica_discovery_attempts;
+%nojavaexception driver_options_has_replica_discovery_attempts;
 
 %nojavaexception transaction_is_open;
 
 %nojavaexception user_get_name;
 %nojavaexception user_get_password_expiry_seconds;
 
-%nojavaexception server_replica_address;
+%nojavaexception server_replica_get_address;
 %nojavaexception server_replica_is_primary;
-%nojavaexception server_replica_id;
-%nojavaexception server_replica_type;
-%nojavaexception server_replica_term;
+%nojavaexception server_replica_get_id;
+%nojavaexception server_replica_get_type;
+%nojavaexception server_replica_get_term;
 
 %nojavaexception database_get_name;
 

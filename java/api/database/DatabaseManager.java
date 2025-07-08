@@ -37,8 +37,6 @@ public interface DatabaseManager {
      * <pre>
      * driver.databases().all()
      * </pre>
-     *
-     * @see #all(ConsistencyLevel)
      */
     @CheckReturnValue
     default List<Database> all() throws TypeDBDriverException {
@@ -54,7 +52,6 @@ public interface DatabaseManager {
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
-     * @see #all()
      */
     @CheckReturnValue
     List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;

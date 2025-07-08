@@ -19,6 +19,7 @@
 
 package com.typedb.driver.connection;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
@@ -112,9 +113,9 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public ServerVersion serverVersion() {
+    public ServerVersion serverVersion(ConsistencyLevel consistencyLevel) {
         try {
-            return new ServerVersion(driver_server_version(nativeObject));
+            return new ServerVersion(driver_server_version(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel)));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -144,7 +145,11 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     @Override
     public Set<? extends ServerReplica> replicas() {
-        return new NativeIterator<>(driver_replicas(nativeObject)).stream().map(ServerReplicaImpl::new).collect(toSet());
+        try {
+            return new NativeIterator<>(driver_replicas(nativeObject)).stream().map(ServerReplicaImpl::new).collect(toSet());
+        } catch (com.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
     }
 
     @Override

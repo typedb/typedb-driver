@@ -37,6 +37,7 @@ from typedb.native_driver_wrapper import driver_new_with_description, driver_new
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
+    from typedb.api.connection.consistency_level import ConsistencyLevel
     from typedb.api.connection.driver_options import DriverOptions
     from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import TransactionType
@@ -89,9 +90,10 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def users(self) -> UserManager:
         return _UserManager(self._native_driver)
 
-    def server_version(self) -> ServerVersion:
+    def server_version(self, consistency_level: Optional[ConsistencyLevel] = None) -> ServerVersion:
         try:
-            return ServerVersion(driver_server_version(self._native_driver))
+            consistency_level = ConsistencyLevel.native_value(consistency_level)
+            return ServerVersion(driver_server_version(self._native_driver, consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

@@ -190,7 +190,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject database_type_schema;
 %delobject database_delete;
 
-%newobject server_replica_address;
+%newobject server_replica_get_address;
 
 %newobject databases_all;
 %newobject databases_get;

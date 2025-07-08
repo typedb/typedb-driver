@@ -33,10 +33,11 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def schema(self) -> str:
+    def schema(self, consistency_level: Optional[ConsistencyLevel] = None) -> str:
         """
         Returns a full schema text as a valid TypeQL define query string.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -44,14 +45,16 @@ class Database(ABC):
         ::
 
             database.schema()
+            database.schema(ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def type_schema(self) -> str:
+    def type_schema(self, consistency_level: Optional[ConsistencyLevel] = None) -> str:
         """
         Returns the types in the schema as a valid TypeQL define query string.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -59,16 +62,18 @@ class Database(ABC):
         ::
 
             database.type_schema()
+            database.type_schema(ConsistencyLevel.Strong())
         """
         pass
 
-    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
+    def export_to_file(self, schema_file_path: str, data_file_path: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
         Export a database into a schema definition and a data files saved to the disk.
         This is a blocking operation and may take a significant amount of time depending on the database size.
 
         :param schema_file_path: The path to the schema definition file to be created
         :param data_file_path: The path to the data file to be created
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -76,6 +81,7 @@ class Database(ABC):
         ::
 
             database.export_to_file("schema.typeql", "data.typedb")
+            database.export_to_file("schema.typeql", "data.typedb", ConsistencyLevel.Strong())
         """
         pass
 

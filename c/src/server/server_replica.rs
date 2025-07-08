@@ -50,19 +50,19 @@ pub extern "C" fn server_replica_drop(replica_info: *mut ServerReplica) {
 
 /// Returns the id of this replica.
 #[no_mangle]
-pub extern "C" fn server_replica_id(replica_info: *const ServerReplica) -> i64 {
+pub extern "C" fn server_replica_get_id(replica_info: *const ServerReplica) -> i64 {
     borrow(replica_info).id() as i64
 }
 
 /// Returns the address this replica is hosted at.
 #[no_mangle]
-pub extern "C" fn server_replica_address(replica_info: *const ServerReplica) -> *mut c_char {
+pub extern "C" fn server_replica_get_address(replica_info: *const ServerReplica) -> *mut c_char {
     release_string(borrow(replica_info).address().to_string())
 }
 
 /// Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 #[no_mangle]
-pub extern "C" fn server_replica_type(replica_info: *const ServerReplica) -> ReplicaType {
+pub extern "C" fn server_replica_get_type(replica_info: *const ServerReplica) -> ReplicaType {
     borrow(replica_info).replica_type()
 }
 
@@ -74,6 +74,6 @@ pub extern "C" fn server_replica_is_primary(replica_info: *const ServerReplica) 
 
 /// Returns the raft protocol ‘term’ of this replica.
 #[no_mangle]
-pub extern "C" fn server_replica_term(replica_info: *const ServerReplica) -> i64 {
+pub extern "C" fn server_replica_get_term(replica_info: *const ServerReplica) -> i64 {
     borrow(replica_info).term() as i64
 }

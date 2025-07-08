@@ -45,7 +45,8 @@ public interface Driver extends AutoCloseable {
     boolean isOpen();
 
     /**
-     * Retrieves the server's version.
+     * Retrieves the server's version, using default strong consistency.
+     * See {@link #serverVersion(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -53,7 +54,22 @@ public interface Driver extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    ServerVersion serverVersion();
+    default ServerVersion serverVersion() {
+        return serverVersion(null);
+    }
+
+    /**
+     * Retrieves the server's version.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.serverVersion();
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    @CheckReturnValue
+    ServerVersion serverVersion(ConsistencyLevel consistencyLevel);
 
     /**
      * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
@@ -131,6 +147,7 @@ public interface Driver extends AutoCloseable {
     /**
      * Registers a new replica in the cluster the driver is currently connected to. The registered
      * replica will become available eventually, depending on the behavior of the whole cluster.
+     * To register a replica, its clustering address should be passed, not the connection address.
      *
      * <h3>Examples</h3>
      * <pre>

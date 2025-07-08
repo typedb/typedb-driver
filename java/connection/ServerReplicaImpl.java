@@ -23,11 +23,11 @@ import com.typedb.driver.api.server.ReplicaType;
 import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.common.NativeObject;
 
-import static com.typedb.driver.jni.typedb_driver.server_replica_address;
-import static com.typedb.driver.jni.typedb_driver.server_replica_id;
+import static com.typedb.driver.jni.typedb_driver.server_replica_get_address;
+import static com.typedb.driver.jni.typedb_driver.server_replica_get_id;
 import static com.typedb.driver.jni.typedb_driver.server_replica_is_primary;
-import static com.typedb.driver.jni.typedb_driver.server_replica_term;
-import static com.typedb.driver.jni.typedb_driver.server_replica_type;
+import static com.typedb.driver.jni.typedb_driver.server_replica_get_term;
+import static com.typedb.driver.jni.typedb_driver.server_replica_get_type;
 
 public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.ServerReplica> implements ServerReplica {
     public ServerReplicaImpl(com.typedb.driver.jni.ServerReplica serverReplica) {
@@ -36,17 +36,17 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
 
     @Override
     public long getID() {
-        return server_replica_id(nativeObject);
+        return server_replica_get_id(nativeObject);
     }
 
     @Override
     public String getAddress() {
-        return server_replica_address(nativeObject);
+        return server_replica_get_address(nativeObject);
     }
 
     @Override
     public ReplicaType getType() {
-        return ReplicaType.of(server_replica_type(nativeObject));
+        return ReplicaType.of(server_replica_get_type(nativeObject));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
 
     @Override
     public long getTerm() {
-        return server_replica_term(nativeObject);
+        return server_replica_get_term(nativeObject);
     }
 
     @Override

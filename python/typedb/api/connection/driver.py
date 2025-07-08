@@ -21,6 +21,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Set, Mapping
 
 if TYPE_CHECKING:
+    from typedb.api.connection.consistency_level import ConsistencyLevel
     from typedb.api.connection.database import DatabaseManager
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
@@ -64,10 +65,11 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def server_version(self) -> ServerVersion:
+    def server_version(self, consistency_level: Optional[ConsistencyLevel] = None) -> ServerVersion:
         """
         Retrieves the server's version.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -75,6 +77,7 @@ class Driver(ABC):
         ::
 
             driver.server_version()
+            driver.server_version(ConsistencyLevel.Strong())
         """
         pass
 
@@ -132,6 +135,7 @@ class Driver(ABC):
         """
         Registers a new replica in the cluster the driver is currently connected to. The registered
         replica will become available eventually, depending on the behavior of the whole cluster.
+        To register a replica, its clustering address should be passed, not the connection address.
 
         :param replica_id: The numeric identifier of the new replica
         :param address: The address(es) of the TypeDB replica as a string

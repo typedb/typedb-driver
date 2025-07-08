@@ -19,6 +19,7 @@
 set -e
 
 NODE_COUNT=${1:-1}
+ENCRYPTION_ENABLED=${2:-true}
 
 # TODO: Update configs
 #peers=
@@ -31,10 +32,10 @@ NODE_COUNT=${1:-1}
 function server_start() {
   ./${1}/typedb server \
     --server.address=127.0.0.1:${1}1729 \
-    --server.encryption.enabled true \
-    --server.encryption.certificate `realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.certificate-key `realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.ca-certificate `realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+    --server.encryption.enabled=$ENCRYPTION_ENABLED \
+    --server.encryption.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
+    --server.encryption.certificate-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
+    --server.encryption.ca-certificate=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
     --diagnostics.monitoring.port ${1}1732 \
     --development-mode.enabled true
 #    --storage.data=server/data \

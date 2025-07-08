@@ -49,7 +49,7 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
 pub extern "C" fn databases_all(
     driver: *mut TypeDBDriver,
@@ -66,7 +66,7 @@ pub extern "C" fn databases_all(
 /// Checks if a database with the given name exists.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 /// @param name The name of the database.
 #[no_mangle]
 pub extern "C" fn databases_contains(
@@ -85,7 +85,7 @@ pub extern "C" fn databases_contains(
 /// Retrieves the database with the given name.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 /// @param name The name of the database.
 #[no_mangle]
 pub extern "C" fn databases_get(

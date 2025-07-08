@@ -53,7 +53,7 @@ pub struct DriverOptions {
     /// Limits the number of attempts to redirect a strongly consistent request to another
     /// primary replica in case of a failure due to the change of replica roles.
     /// Defaults to 1.
-    pub redirect_failover_retries: usize,
+    pub primary_failover_retries: usize,
     /// Limits the number of driver attempts to discover a single working replica to perform an
     /// operation in case of a replica unavailability. Every replica is tested once, which means
     /// that at most:
@@ -63,7 +63,7 @@ pub struct DriverOptions {
     /// Affects every eventually consistent operation, including redirect failover, when the new
     /// primary replica is unknown.
     /// Defaults to None.
-    pub discovery_failover_retries: Option<usize>,
+    pub replica_discovery_attempts: Option<usize>,
 
     tls_config: Option<ClientTlsConfig>,
     tls_root_ca: Option<PathBuf>,
@@ -120,8 +120,8 @@ impl DriverOptions {
     /// Limits the number of attempts to redirect a strongly consistent request to another
     /// primary replica in case of a failure due to the change of replica roles.
     /// Defaults to 1.
-    pub fn redirect_failover_retries(self, redirect_failover_retries: usize) -> Self {
-        Self { redirect_failover_retries, ..self }
+    pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
+        Self { primary_failover_retries, ..self }
     }
 
     /// Limits the number of driver attempts to discover a single working replica to perform an
@@ -133,8 +133,8 @@ impl DriverOptions {
     /// Affects every eventually consistent operation, including redirect failover, when the new
     /// primary replica is unknown.
     /// Defaults to None.
-    pub fn discovery_failover_retries(self, discovery_failover_retries: Option<usize>) -> Self {
-        Self { discovery_failover_retries, ..self }
+    pub fn replica_discovery_attempts(self, replica_discovery_attempts: Option<usize>) -> Self {
+        Self { replica_discovery_attempts, ..self }
     }
 }
 
@@ -143,8 +143,8 @@ impl Default for DriverOptions {
         Self {
             is_tls_enabled: DEFAULT_IS_TLS_ENABLED,
             use_replication: DEFAULT_USE_REPLICATION,
-            redirect_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
-            discovery_failover_retries: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+            primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
+            replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
 
             tls_config: DEFAULT_TLS_CONFIG,
             tls_root_ca: DEFAULT_TLS_ROOT_CA_PATH,

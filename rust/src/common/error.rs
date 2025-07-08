@@ -237,6 +237,8 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}. This is either a version compatibility issue or a bug.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}. This is either a version compatibility issue or a bug.",
+    Unimplemented { details: String } =
+        5: "Unimplemented feature: {details}.",
 }
 
 #[derive(Clone, PartialEq, Eq)]

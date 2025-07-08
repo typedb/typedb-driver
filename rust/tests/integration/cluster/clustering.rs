@@ -17,9 +17,9 @@
  * under the License.
  */
 use std::{
-    env, fs, io,
+    env, fs,
     path::Path,
-    process::{Child, Command, ExitStatus},
+    process::{Child, Command},
     str::FromStr,
     time::Duration,
 };
@@ -28,38 +28,18 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, Address, Addresses, Credentials, DriverOptions, Error, ServerReplica, TransactionOptions,
+    answer::ConceptRow, Addresses, Credentials, DriverOptions, Error, ServerReplica, TransactionOptions,
     TransactionType, TypeDBDriver,
 };
 
 const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
+const CLUSTERING_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11730", "127.0.0.1:21730", "127.0.0.1:31730"];
 const USERNAME: &'static str = "admin";
 const PASSWORD: &'static str = "password";
 
-async fn remove_test_database() {
-    let driver = TypeDBDriver::new(
-        Addresses::try_from_addresses_str(ADDRESSES.iter()).unwrap(),
-        Credentials::new(USERNAME, PASSWORD),
-        DriverOptions::new(),
-    )
-    .await
-    .unwrap();
-    if driver.databases().contains("typedb").await.unwrap() {
-        driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
-    }
-}
-
-async fn kill_servers() -> Result<(), TestError> {
-    for address in &ADDRESSES {
-        let (_, port) = address.rsplit_once(':').unwrap();
-        kill_server_replica_from_parts(port).await?;
-    }
-    Ok(())
-}
-
 #[test]
 #[serial]
-fn primary_reelection_read() {
+fn primary_reelection_read_query() {
     async_std::task::block_on(async {
         kill_servers().await.ok();
 
@@ -80,32 +60,34 @@ fn primary_reelection_read() {
         .await
         .unwrap();
 
-        for (i, address) in ADDRESSES[1..].iter().enumerate() {
-            driver.register_replica((i + 1) as u64, address.to_string()).await.unwrap();
+        for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
+            driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
         }
+
+        // TODO: Temp, resolve it somehow!!!
+        sleep(Duration::from_secs(6)).await;
+        println!("Recreating the driver to fetch new replicas");
+        drop(driver);
+        let driver = TypeDBDriver::new(
+            Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
+            Credentials::new(USERNAME, PASSWORD),
+            DriverOptions::new(),
+        )
+        .await
+        .unwrap();
 
         // sleep(Duration::from_secs(5)).await;
         // TODO: Does it need to return all the current replicas? Or is it not needed?
         // It's currently handled automatically, so we won't see the new replicas now after registering them!!!
-        // let replicas = driver.replicas();
+        let replicas = driver.replicas().await;
+        println!("Replicas: {replicas:?}");
 
+        let database_name = "typedb";
         println!("Registered replicas. Creating the database");
-        driver.databases().create("typedb").await.unwrap();
+        driver.databases().create(database_name).await.unwrap();
         println!("Retrieving the database...");
-        let database = driver.databases().get("typedb").await.unwrap();
-        assert_eq!(database.name(), "typedb");
 
-        println!("Created database {}. Initializing schema", database.name());
-        {
-            let transaction = driver
-                .transaction_with_options(database.name(), TransactionType::Schema, TransactionOptions::default())
-                .await
-                .unwrap();
-            transaction.query("define entity person;").await.unwrap();
-            transaction.commit().await.unwrap();
-        }
-
-        verify_defined(&driver, database.name()).await;
+        verify_created_database(&driver, database_name).await;
 
         for iteration in 0..10 {
             let primary_replica = get_primary_replica(&driver).await;
@@ -113,7 +95,7 @@ fn primary_reelection_read() {
             kill_server_replica(&primary_replica).await.unwrap();
 
             sleep(Duration::from_secs(5)).await;
-            verify_defined(&driver, database.name()).await;
+            verify_created_database(&driver, database_name).await;
 
             start_server_replica(&primary_replica).await;
         }
@@ -127,6 +109,99 @@ fn primary_reelection_read() {
         kill_servers().await.unwrap();
         println!("Successfully cleaned up!");
     })
+}
+
+// #[test]
+// #[serial]
+// fn primary_reelection_read_query() {
+//     async_std::task::block_on(async {
+//         kill_servers().await.ok();
+//
+//         for (i, address) in ADDRESSES.iter().enumerate() {
+//             let (_, port) = address.rsplit_once(':').unwrap();
+//             start_server_replica_from_parts(&(i + 1).to_string(), port).await;
+//         }
+//         sleep(Duration::from_secs(10)).await;
+//
+//         remove_test_database().await;
+//
+//         println!("Building the main driver");
+//         let driver = TypeDBDriver::new(
+//             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
+//             Credentials::new(USERNAME, PASSWORD),
+//             DriverOptions::new(),
+//         )
+//             .await
+//             .unwrap();
+//
+//         for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
+//             driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+//         }
+//
+//         // sleep(Duration::from_secs(5)).await;
+//         // TODO: Does it need to return all the current replicas? Or is it not needed?
+//         // It's currently handled automatically, so we won't see the new replicas now after registering them!!!
+//         // let replicas = driver.replicas();
+//
+//         println!("Registered replicas. Creating the database");
+//         driver.databases().create("typedb").await.unwrap();
+//         println!("Retrieving the database...");
+//         let database = driver.databases().get("typedb").await.unwrap();
+//         assert_eq!(database.name(), "typedb");
+//
+//         println!("Created database {}. Initializing schema", database.name());
+//         {
+//             let transaction = driver
+//                 .transaction_with_options(database.name(), TransactionType::Schema, TransactionOptions::default())
+//                 .await
+//                 .unwrap();
+//             transaction.query("define entity person;").await.unwrap();
+//             transaction.commit().await.unwrap();
+//         }
+//
+//         verify_defined(&driver, database.name()).await;
+//
+//         for iteration in 0..10 {
+//             let primary_replica = get_primary_replica(&driver).await;
+//             println!("Stopping primary replica (iteration {}). Testing retrieval from other replicas", iteration);
+//             kill_server_replica(&primary_replica).await.unwrap();
+//
+//             sleep(Duration::from_secs(5)).await;
+//             verify_defined(&driver, database.name()).await;
+//
+//             start_server_replica(&primary_replica).await;
+//         }
+//
+//         println!("Done!");
+//     });
+//
+//     async_std::task::block_on(async {
+//         println!("Cleanup!");
+//         remove_test_database().await;
+//         kill_servers().await.unwrap();
+//         println!("Successfully cleaned up!");
+//     })
+// }
+
+async fn remove_test_database() {
+    let driver = TypeDBDriver::new(
+        Addresses::try_from_addresses_str(ADDRESSES.iter()).unwrap(),
+        Credentials::new(USERNAME, PASSWORD),
+        DriverOptions::new(),
+    )
+    .await
+    .unwrap();
+    if driver.databases().contains("typedb").await.unwrap() {
+        driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
+    }
+}
+
+async fn kill_servers() -> Result<(), TestError> {
+    for address in &ADDRESSES {
+        let (_, port) = address.rsplit_once(':').unwrap();
+        kill_server_replica_from_parts(port).await?;
+    }
+    Ok(())
 }
 
 fn start_server(index: &str) -> Child {
@@ -158,6 +233,8 @@ fn start_server(index: &str) -> Child {
             "false",
             "--diagnostics.monitoring.port",
             &format!("{index}1731"),
+            "--server.http.enabled",
+            "false",
             "--development-mode.enabled",
             "true",
         ])
@@ -176,7 +253,7 @@ async fn get_primary_replica(driver: &TypeDBDriver) -> ServerReplica {
     panic!("Retry limit exceeded while seeking a primary replica.");
 }
 
-async fn verify_defined(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
+async fn verify_defined_type(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
     let transaction = driver
         .transaction_with_options(database_name, TransactionType::Read, TransactionOptions::default())
         .await
@@ -188,6 +265,16 @@ async fn verify_defined(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
     let entity_type = row.get("p").unwrap().unwrap();
     assert_eq!(entity_type.is_entity_type(), true);
     assert_eq!(entity_type.get_label(), "person");
+}
+
+async fn verify_created_database(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
+    // TODO: Can additionally test with eventual consistency when it's introduced. Like this:
+    // use typedb_driver::consistency_level::ConsistencyLevel;
+    // assert_eq!(driver.databases().get_with_consistency(database_name.as_ref(), ConsistencyLevel::Eventual).await.unwrap().name(), database_name.as_ref());
+    // assert!(driver.databases().contains_with_consistency(database_name.as_ref(), ConsistencyLevel::Eventual).await.unwrap());
+
+    assert_eq!(driver.databases().get(database_name.as_ref()).await.unwrap().name(), database_name.as_ref());
+    assert!(driver.databases().contains(database_name.as_ref()).await.unwrap());
 }
 
 async fn start_server_replica(server_replica: &ServerReplica) {

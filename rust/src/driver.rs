@@ -192,10 +192,13 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// driver.replicas()
+    #[cfg_attr(feature = "sync", doc = "driver.replicas();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas().await;")]
     /// ```
-    pub fn replicas(&self) -> HashSet<ServerReplica> {
-        self.server_manager.replicas()
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn replicas(&self) -> Result<HashSet<ServerReplica>> {
+        // TODO: Probably should be only with Strong consistency?
+        self.server_manager.fetch_replicas().await
     }
 
     /// Retrieves the server's primary replica, if exists.
@@ -206,16 +209,18 @@ impl TypeDBDriver {
     /// driver.primary_replica()
     /// ```
     pub fn primary_replica(&self) -> Option<ServerReplica> {
+        // TODO: Query the server or not?
         self.server_manager.primary_replica()
     }
 
     /// Registers a new replica in the cluster the driver is currently connected to. The registered
     /// replica will become available eventually, depending on the behavior of the whole cluster.
+    /// To register a replica, its clustering address should be passed, not the connection address.
     ///
     /// # Arguments
     ///
     /// * `replica_id` — The numeric identifier of the new replica
-    /// * `address` — The address(es) of the TypeDB replica as a string
+    /// * `address` — The clustering address of the TypeDB replica as a string
     ///
     /// # Examples
     ///
@@ -351,6 +356,6 @@ impl TypeDBDriver {
 
 impl fmt::Debug for TypeDBDriver {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Connection").field("server_manager", &self.server_manager).finish()
+        f.debug_struct("TypeDBDriver").field("server_manager", &self.server_manager).finish()
     }
 }
