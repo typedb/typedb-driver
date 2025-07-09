@@ -139,7 +139,7 @@ export class TypeDBHttpDriver {
     }
 
     private async jsonApiReq<RES, BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiResponse<RES>> {
-        const resp = await this.apiReq(method, path, body, undefined, options);
+        const resp = await this.apiReq(method, path, body, options);
         if ("err" in resp) return resp;
         const json = await this.jsonOrNull(resp);
         if (resp.ok) return { ok: json as RES };

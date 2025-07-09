@@ -260,6 +260,14 @@ npm_translate_lock(
 load("@nodejs_npm//:repositories.bzl", "npm_repositories")
 npm_repositories()
 
+npm_translate_lock(
+    name = "http-ts_npm",
+    pnpm_lock = "//http-ts:pnpm-lock.yaml",
+)
+
+load("@http-ts_npm//:repositories.bzl", http_ts_npm_repositories = "npm_repositories")
+http_ts_npm_repositories()
+
 # Setup rules_ts
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
