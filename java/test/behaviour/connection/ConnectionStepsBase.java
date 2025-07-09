@@ -25,6 +25,7 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
@@ -39,6 +40,8 @@ import java.util.stream.Stream;
 
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
     public static final String ADMIN_USERNAME = "admin";
@@ -167,6 +170,28 @@ public abstract class ConnectionStepsBase {
 
     void connection_is_open(boolean isOpen) {
         assertEquals(isOpen, driver != null && driver.isOpen());
+    }
+
+    void connection_contains_distribution(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getDistribution().isEmpty());
+        });
+    }
+
+    void connection_contains_version(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getVersion().isEmpty());
+        });
+    }
+
+    void connection_has_count_replicas(int count) {
+        assertEquals(driver.replicas().size(), count);
+    }
+
+    void connection_contains_primary_replica() {
+        assertTrue(driver.primaryReplica().isPresent());
     }
 
     void connection_has_count_databases(int count) {

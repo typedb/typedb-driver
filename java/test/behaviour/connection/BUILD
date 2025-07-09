@@ -33,6 +33,7 @@ java_library(
         # External dependencies from Maven
         "@maven//:junit_junit",
 #        "@maven//:com_typedb_typedb_runner",
+        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 

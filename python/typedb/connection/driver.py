@@ -19,9 +19,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Tuple
 
+from typedb.api.connection.consistency_level import ConsistencyLevel
 from typedb.api.connection.driver import Driver
 from typedb.api.connection.transaction import Transaction
 from typedb.api.connection.transaction_options import TransactionOptions
+from typedb.api.server.server_version import ServerVersion
 from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED, INVALID_ADDRESS_FORMAT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
@@ -37,13 +39,11 @@ from typedb.native_driver_wrapper import driver_new_with_description, driver_new
 from typedb.user.user_manager import _UserManager
 
 if TYPE_CHECKING:
-    from typedb.api.connection.consistency_level import ConsistencyLevel
     from typedb.api.connection.driver_options import DriverOptions
     from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import TransactionType
     from typedb.api.user.user import UserManager
     from typedb.api.server.server_replica import ServerReplica
-    from typedb.api.server.server_version import ServerVersion
 
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):

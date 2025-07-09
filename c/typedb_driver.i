@@ -179,6 +179,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject driver_new_with_description;
 %newobject driver_new_with_addresses_with_description;
 %newobject driver_new_with_address_translation_with_description;
+%newobject driver_server_version;
 %newobject driver_primary_replica;
 %newobject driver_replicas;
 

@@ -25,7 +25,7 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.Optional;
@@ -99,6 +99,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         ));
     }
 
+
     @Override
     @When("connection closes")
     public void connection_closes() {
@@ -106,19 +107,43 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @Given("connection is open: {bool}")
+    @Then("connection is open: {bool}")
     public void connection_is_open(boolean isOpen) {
         super.connection_is_open(isOpen);
     }
 
     @Override
-    @Given("connection has {integer} database(s)")
+    @Then("connection contains distribution{may_error}")
+    public void connection_contains_distribution(Parameters.MayError mayError) {
+        super.connection_contains_distribution(mayError);
+    }
+
+    @Override
+    @Then("connection contains version{may_error}")
+    public void connection_contains_version(Parameters.MayError mayError) {
+        super.connection_contains_version(mayError);
+    }
+
+    @Override
+    @Then("connection has {integer} replica(s)")
+    public void connection_has_count_replicas(int count) {
+        super.connection_has_count_replicas(count);
+    }
+
+    @Override
+    @Then("connection contains primary replica")
+    public void connection_contains_primary_replica() {
+        super.connection_contains_primary_replica();
+    }
+
+    @Override
+    @Then("connection has {integer} database(s)")
     public void connection_has_count_databases(int count) {
         super.connection_has_count_databases(count);
     }
 
     @Override
-    @Given("connection has {integer} user(s)")
+    @Then("connection has {integer} user(s)")
     public void connection_has_count_users(int count) {
         super.connection_has_count_users(count);
     }

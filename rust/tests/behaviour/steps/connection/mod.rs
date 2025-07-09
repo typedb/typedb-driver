@@ -20,12 +20,17 @@
 use cucumber::{given, then, when};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
+use typedb_driver::{ServerVersion, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
 mod database;
 mod transaction;
 mod user;
+
+async fn get_server_version(driver: &TypeDBDriver, may_error: params::MayError) -> Option<ServerVersion> {
+    may_error.check(driver.server_version().await)
+}
 
 #[apply(generic_step)]
 #[step("typedb starts")]
@@ -107,6 +112,34 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
 #[step(expr = "connection is open: {boolean}")]
 async fn connection_has_been_opened(context: &mut Context, is_open: params::Boolean) {
     check_boolean!(is_open, context.driver.is_some() && context.driver.as_ref().unwrap().is_open());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection contains distribution{may_error}")]
+async fn connection_has_distribution(context: &mut Context, may_error: params::MayError) {
+    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+        assert!(!server_version.distribution().is_empty());
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection contains version{may_error}")]
+async fn connection_has_version(context: &mut Context, may_error: params::MayError) {
+    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+        assert!(!server_version.version().is_empty());
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection has {int} replica(s)")]
+async fn connection_has_count_replicas(context: &mut Context, count: usize) {
+    assert_eq!(context.driver.as_ref().unwrap().replicas().await.unwrap().len(), count);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection contains primary replica")]
+async fn connection_contains_primary_replica(context: &mut Context, count: usize) {
+    assert!(context.driver.as_ref().unwrap().primary_replica().is_some());
 }
 
 #[apply(generic_step)]
