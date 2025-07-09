@@ -23,7 +23,14 @@ import { QueryOptions } from "./query";
 
 const HTTP_UNAUTHORIZED = 401;
 
-export { isOkResponse, isApiErrorResponse } from "./response";
+export * from "./concept";
+export * from "./database";
+export * from "./params";
+export * from "./query";
+export * from "./query-structure";
+export * from "./response";
+export * from "./transaction";
+export * from "./user";
 
 export class TypeDBHttpDriver {
 
@@ -31,7 +38,7 @@ export class TypeDBHttpDriver {
 
     constructor(private params: DriverParams) {}
 
-    listDatabases(): Promise<ApiResponse<DatabasesListResponse>> {
+    getDatabases(): Promise<ApiResponse<DatabasesListResponse>> {
         return this.apiGet<DatabasesListResponse>(`/v1/databases`);
     }
 
@@ -55,7 +62,7 @@ export class TypeDBHttpDriver {
         return this.apiGetString(`/v1/databases/${name}/type-schema`);
     }
 
-    listUsers(): Promise<ApiResponse<UsersListResponse>> {
+    getUsers(): Promise<ApiResponse<UsersListResponse>> {
         return this.apiGet<UsersListResponse>(`/v1/users`);
     }
 
