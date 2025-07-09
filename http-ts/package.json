@@ -1,5 +1,5 @@
 {
-  "name": "@samuel-butcher-typedb/typedb-http-driver",
+  "name": "typedb-http-driver",
   "version": "0.0.0",
   "description": "TypeDB HTTP Driver",
   "author": "TypeDB",
