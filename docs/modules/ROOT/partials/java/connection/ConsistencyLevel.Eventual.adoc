@@ -34,6 +34,20 @@ public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyL
 .Returns
 `public static com.typedb.driver.jni.ConsistencyLevel`
 
+[#_ConsistencyLevel_Eventual_of_com_typedb_driver_jni_ConsistencyLevel]
+==== of
+
+[source,java]
+----
+public static ConsistencyLevel of​(com.typedb.driver.jni.ConsistencyLevel nativeValue)
+----
+
+
+
+[caption=""]
+.Returns
+`public static ConsistencyLevel`
+
 [#_ConsistencyLevel_Eventual_toString_]
 ==== toString
 

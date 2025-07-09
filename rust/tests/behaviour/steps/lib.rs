@@ -98,6 +98,7 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
 pub struct Context {
     pub is_cluster: bool,
     pub tls_root_ca: Option<PathBuf>,
+    pub driver_options: Option<DriverOptions>,
     pub transaction_options: Option<TransactionOptions>,
     pub query_options: Option<QueryOptions>,
     pub driver: Option<TypeDBDriver>,
@@ -119,6 +120,7 @@ impl fmt::Debug for Context {
         f.debug_struct("Context")
             .field("is_cluster", &self.is_cluster)
             .field("tls_root_ca", &self.tls_root_ca)
+            .field("driver_options", &self.driver_options)
             .field("transaction_options", &self.transaction_options)
             .field("query_options", &self.query_options)
             .field("driver", &self.driver)
@@ -281,6 +283,14 @@ impl Context {
         self.concurrent_rows_streams = None;
     }
 
+    pub fn driver_options(&self) -> Option<DriverOptions> {
+        self.driver_options.clone()
+    }
+
+    pub fn driver_options_mut(&mut self) -> Option<&mut DriverOptions> {
+        self.driver_options.as_mut()
+    }
+
     pub fn transaction_options(&self) -> Option<TransactionOptions> {
         self.transaction_options.clone()
     }
@@ -322,6 +332,12 @@ impl Context {
     pub async fn set_transactions(&mut self, transactions: VecDeque<Transaction>) {
         self.cleanup_transactions().await;
         self.transactions = transactions;
+    }
+
+    pub fn init_driver_options_if_needed(&mut self) {
+        if self.driver_options.is_none() {
+            self.driver_options = Some(DriverOptions::default());
+        }
     }
 
     pub fn init_transaction_options_if_needed(&mut self) {
@@ -448,11 +464,10 @@ impl Context {
         username: &str,
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(!self.is_cluster);
+        assert!(!self.is_cluster, "Only non-cluster drivers are available in this mode");
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        let driver_options = DriverOptions::new();
-        TypeDBDriver::new(addresses, credentials, driver_options).await
+        TypeDBDriver::new(addresses, credentials, self.driver_options().unwrap_or_default()).await
     }
 
     async fn create_driver_cluster(
@@ -461,13 +476,15 @@ impl Context {
         username: &str,
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
-        assert!(self.is_cluster);
+        assert!(self.is_cluster, "Only cluster drivers are available in this mode");
         let https_addresses = addresses.iter().map(|address| format!("https://{address}"));
         let addresses = Addresses::try_from_addresses_str(https_addresses).expect("Expected addresses");
 
         let credentials = Credentials::new(username, password);
         assert!(self.tls_root_ca.is_some(), "Root CA is expected for cluster tests!");
-        let driver_options = DriverOptions::new()
+        let driver_options = self
+            .driver_options()
+            .unwrap_or_default()
             .is_tls_enabled(true)
             .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await
@@ -490,6 +507,7 @@ impl Default for Context {
         Self {
             is_cluster: false,
             tls_root_ca,
+            driver_options: None,
             transaction_options: None,
             query_options: None,
             driver: None,

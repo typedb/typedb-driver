@@ -49,7 +49,7 @@ pub extern "C" fn query_options_get_include_instance_types(options: *const Query
     borrow(options).include_instance_types.unwrap()
 }
 
-/// Checks whether the "include instance types" flag was Explicitly setsfor this <code>QueryOptions</code> object.
+/// Checks whether the "include instance types" flag was explicitly set for this <code>QueryOptions</code> object.
 #[no_mangle]
 pub extern "C" fn query_options_has_include_instance_types(options: *const QueryOptions) -> bool {
     borrow(options).include_instance_types.is_some()
@@ -75,7 +75,7 @@ pub extern "C" fn query_options_get_prefetch_size(options: *const QueryOptions) 
     borrow(options).prefetch_size.unwrap() as i64
 }
 
-/// Checks whether the prefetch size was Explicitly setsfor this <code>QueryOptions</code> object.
+/// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
 #[no_mangle]
 pub extern "C" fn query_options_has_prefetch_size(options: *const QueryOptions) -> bool {
     borrow(options).prefetch_size.is_some()

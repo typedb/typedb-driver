@@ -19,6 +19,9 @@
 
 package com.typedb.driver.api;
 
+import com.typedb.driver.common.exception.TypeDBDriverException;
+
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_eventual;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_replica_dependant;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
@@ -31,6 +34,15 @@ import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
  */
 public abstract class ConsistencyLevel {
     public abstract com.typedb.driver.jni.ConsistencyLevel nativeValue();
+
+    public static ConsistencyLevel of(com.typedb.driver.jni.ConsistencyLevel nativeValue) {
+        if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.Strong) return new Strong();
+        else if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.Eventual) return new Eventual();
+        else if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.ReplicaDependant) {
+            return new ReplicaDependant(nativeValue.getAddress());
+        }
+        throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+    }
 
     public static com.typedb.driver.jni.ConsistencyLevel nativeValue(ConsistencyLevel consistencyLevel) {
         if (consistencyLevel == null) {

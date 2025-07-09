@@ -74,5 +74,19 @@ static native_value(consistency_level: ConsistencyLevel | None) -> ConsistencyLe
 .Returns
 `ConsistencyLevel`
 
+[#_ConsistencyLevel_of_]
+==== of
+
+[source,python]
+----
+static of(native_value: ConsistencyLevel) -> None | Strong | Eventual | ReplicaDependant
+----
+
+
+
+[caption=""]
+.Returns
+`None | Strong | Eventual | ReplicaDependant`
+
 // end::methods[]
 

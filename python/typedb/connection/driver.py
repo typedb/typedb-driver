@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from typedb.api.connection.driver_options import DriverOptions
     from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import TransactionType
-    from typedb.api.user.user import UserManager
+    from typedb.api.user.user_manager import UserManager
     from typedb.api.server.server_replica import ServerReplica
 
 
@@ -56,14 +56,19 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
 
         try:
             if isinstance(addresses, str):
-                native_driver = driver_new_with_description(addresses, credentials.native_object, driver_options.native_object,
+                native_driver = driver_new_with_description(addresses, credentials.native_object,
+                                                            driver_options.native_object,
                                                             Driver.LANGUAGE)
             elif isinstance(addresses, list):
-                native_driver = driver_new_with_addresses_with_description(addresses, credentials.native_object, driver_options.native_object,
+                native_driver = driver_new_with_addresses_with_description(addresses, credentials.native_object,
+                                                                           driver_options.native_object,
                                                                            Driver.LANGUAGE)
             elif isinstance(addresses, dict):
                 public_addresses, private_addresses = _Driver._get_translated_addresses(addresses)
-                native_driver = driver_new_with_address_translation_with_description(public_addresses, private_addresses, credentials.native_object, driver_options.native_object,
+                native_driver = driver_new_with_address_translation_with_description(public_addresses,
+                                                                                     private_addresses,
+                                                                                     credentials.native_object,
+                                                                                     driver_options.native_object,
                                                                                      Driver.LANGUAGE)
             else:
                 raise TypeDBDriverException(INVALID_ADDRESS_FORMAT)

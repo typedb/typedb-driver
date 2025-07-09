@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from typedb.api.connection.consistency_level import ConsistencyLevel
-from typedb.api.connection.database import DatabaseManager
+from typedb.api.database.database_manager import DatabaseManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null

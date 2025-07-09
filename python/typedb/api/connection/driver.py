@@ -22,10 +22,10 @@ from typing import TYPE_CHECKING, Optional, Set, Mapping
 
 if TYPE_CHECKING:
     from typedb.api.connection.consistency_level import ConsistencyLevel
-    from typedb.api.connection.database import DatabaseManager
+    from typedb.api.database.database_manager import DatabaseManager
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
-    from typedb.api.user.user import UserManager
+    from typedb.api.user.user_manager import UserManager
     from typedb.api.server.server_replica import ServerReplica
     from typedb.api.server.server_version import ServerVersion
 

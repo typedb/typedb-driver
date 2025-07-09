@@ -134,4 +134,22 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     public void connection_has_count_users(int count) {
         super.connection_has_count_users(count);
     }
+
+    @Override
+    @When("set driver option use_replication to: {bool}")
+    public void set_driver_option_use_replication_to(boolean value) {
+        super.set_driver_option_use_replication_to(value);
+    }
+
+    @Override
+    @When("set driver option primary_failover_retries to: {integer}")
+    public void set_driver_option_primary_failover_retries_to(int value) {
+        super.set_driver_option_primary_failover_retries_to(value);
+    }
+
+    @Override
+    @When("set driver option replica_discovery_attempts to: {integer}")
+    public void set_driver_option_replica_discovery_attempts_to(int value) {
+        super.set_driver_option_replica_discovery_attempts_to(value);
+    }
 }

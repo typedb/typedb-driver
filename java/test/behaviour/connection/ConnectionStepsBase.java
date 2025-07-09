@@ -201,4 +201,16 @@ public abstract class ConnectionStepsBase {
     void connection_has_count_users(int count) {
         assertEquals(count, driver.users().all().size());
     }
+
+    void set_driver_option_use_replication_to(boolean value) {
+        driverOptions = driverOptions.useReplication(value);
+    }
+
+    void set_driver_option_primary_failover_retries_to(int value) {
+        driverOptions = driverOptions.primaryFailoverRetries(value);
+    }
+
+    void set_driver_option_replica_discovery_attempts_to(int value) {
+        driverOptions = driverOptions.replicaDiscoveryAttempts(value);
+    }
 }

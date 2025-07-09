@@ -125,3 +125,18 @@ def step_impl(context: Context, count: int):
 @step("connection has {count:Int} users")
 def step_impl(context: Context, count: int):
     assert_that(len(context.driver.users.all()), equal_to(count))
+
+
+@step("set driver option use_replication to: {value:Bool}")
+def step_impl(context: Context, value: bool):
+    context.driver_options.use_replication = value
+
+
+@step("set driver option primary_failover_retries to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.driver_options.primary_failover_retries = value
+
+
+@step("set driver option replica_discovery_attempts to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.driver_options.replica_discovery_attempts = value

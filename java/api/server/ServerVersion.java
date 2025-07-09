@@ -46,7 +46,7 @@ public class ServerVersion extends NativeObject<com.typedb.driver.jni.ServerVers
      * </pre>
      */
     public String getDistribution() {
-        assert(nativeObject.isOwned());
+        assert (nativeObject.isOwned());
         return nativeObject.getDistribution();
     }
 
@@ -59,7 +59,7 @@ public class ServerVersion extends NativeObject<com.typedb.driver.jni.ServerVers
      * </pre>
      */
     public String getVersion() {
-        assert(nativeObject.isOwned());
+        assert (nativeObject.isOwned());
         return nativeObject.getVersion();
     }
 }

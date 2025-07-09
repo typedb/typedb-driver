@@ -20,6 +20,7 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.Validator;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
@@ -177,6 +178,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
      * @param primaryFailoverRetries The limit of primary failover retries.
      */
     public DriverOptions primaryFailoverRetries(int primaryFailoverRetries) {
+        Validator.requireNonNegative(primaryFailoverRetries, "primaryFailoverRetries");
         driver_options_set_primary_failover_retries(nativeObject, primaryFailoverRetries);
         return this;
     }
@@ -222,6 +224,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
      * @param replicaDiscoveryAttempts The limit of replica discovery attempts.
      */
     public DriverOptions replicaDiscoveryAttempts(int replicaDiscoveryAttempts) {
+        Validator.requireNonNegative(replicaDiscoveryAttempts, "replicaDiscoveryAttempts");
         driver_options_set_replica_discovery_attempts(nativeObject, replicaDiscoveryAttempts);
         return this;
     }

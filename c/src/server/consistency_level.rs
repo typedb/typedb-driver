@@ -47,6 +47,20 @@ pub struct ConsistencyLevel {
     pub(crate) address: *mut c_char,
 }
 
+impl ConsistencyLevel {
+    fn new_strong() -> Self {
+        ConsistencyLevel { tag: ConsistencyLevelTag::Strong, address: std::ptr::null_mut() }
+    }
+
+    fn new_eventual() -> Self {
+        ConsistencyLevel { tag: ConsistencyLevelTag::Eventual, address: std::ptr::null_mut() }
+    }
+
+    fn new_replica_dependant(address: *mut c_char) -> Self {
+        ConsistencyLevel { tag: ConsistencyLevelTag::ReplicaDependant, address }
+    }
+}
+
 impl Drop for ConsistencyLevel {
     fn drop(&mut self) {
         string_free(self.address);
@@ -56,13 +70,13 @@ impl Drop for ConsistencyLevel {
 /// Creates a strong <code>ConsistencyLevel</code> object.
 #[no_mangle]
 pub extern "C" fn consistency_level_strong() -> *mut ConsistencyLevel {
-    release(ConsistencyLevel { tag: ConsistencyLevelTag::Strong, address: std::ptr::null_mut() })
+    release(ConsistencyLevel::new_strong())
 }
 
 /// Creates an eventual <code>ConsistencyLevel</code> object.
 #[no_mangle]
 pub extern "C" fn consistency_level_eventual() -> *mut ConsistencyLevel {
-    release(ConsistencyLevel { tag: ConsistencyLevelTag::Eventual, address: std::ptr::null_mut() })
+    release(ConsistencyLevel::new_eventual())
 }
 
 /// Creates a replica dependant <code>ConsistencyLevel</code> object.
@@ -70,10 +84,7 @@ pub extern "C" fn consistency_level_eventual() -> *mut ConsistencyLevel {
 /// @param address The address of the replica to depend on.
 #[no_mangle]
 pub extern "C" fn consistency_level_replica_dependant(address: *const c_char) -> *mut ConsistencyLevel {
-    release(ConsistencyLevel {
-        tag: ConsistencyLevelTag::ReplicaDependant,
-        address: release_string(string_view(address.clone()).to_string()),
-    })
+    release(ConsistencyLevel::new_replica_dependant(release_string(string_view(address.clone()).to_string())))
 }
 
 /// Drops the <code>ConsistencyLevel</code> object.
@@ -95,6 +106,18 @@ impl Into<NativeConsistencyLevel> for ConsistencyLevel {
             ConsistencyLevelTag::ReplicaDependant => {
                 let address = unwrap_or_default(string_view(address).parse());
                 NativeConsistencyLevel::ReplicaDependant { address }
+            }
+        }
+    }
+}
+
+impl From<NativeConsistencyLevel> for ConsistencyLevel {
+    fn from(value: NativeConsistencyLevel) -> Self {
+        match value {
+            NativeConsistencyLevel::Strong => ConsistencyLevel::new_strong(),
+            NativeConsistencyLevel::Eventual => ConsistencyLevel::new_eventual(),
+            NativeConsistencyLevel::ReplicaDependant { address } => {
+                ConsistencyLevel::new_replica_dependant(release_string(address.to_string()))
             }
         }
     }

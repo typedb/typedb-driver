@@ -88,9 +88,9 @@
 %nojavaexception transaction_options_get_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_set_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_has_schema_lock_acquire_timeout_millis;
-%nojavaexception transaction_options_get_parallel;
-%nojavaexception transaction_options_set_parallel;
-%nojavaexception transaction_options_has_parallel;
+%nojavaexception transaction_options_get_read_consistency_level;
+%nojavaexception transaction_options_set_read_consistency_level;
+%nojavaexception transaction_options_has_read_consistency_level;
 
 %nojavaexception query_options_new;
 %nojavaexception query_options_get_include_instance_types;
@@ -227,6 +227,9 @@
 %nojavaexception Duration::months;
 %nojavaexception Duration::days;
 %nojavaexception Duration::nanos;
+
+%nojavaexception ConsistencyLevel::tag;
+%nojavaexception ConsistencyLevel::address;
 
 /* director constructors do not throw */
 %nojavaexception TransactionCallbackDirector;

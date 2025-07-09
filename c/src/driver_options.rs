@@ -67,7 +67,7 @@ pub extern "C" fn driver_options_get_tls_root_ca_path(options: *const DriverOpti
     release_string(borrow(options).get_tls_root_ca().unwrap().to_string_lossy().to_string())
 }
 
-/// Checks whether TLS root CA was Explicitly setsfor this <code>DriverOptions</code> object.
+/// Checks whether TLS root CA was explicitly set for this <code>DriverOptions</code> object.
 #[no_mangle]
 pub extern "C" fn driver_options_has_tls_root_ca_path(options: *const DriverOptions) -> bool {
     borrow(options).get_tls_root_ca().is_some()

@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::time::Duration;
 
 use cucumber::{given, then, when};
 use itertools::Itertools;
@@ -159,4 +160,25 @@ async fn connection_has_count_users(context: &mut Context, count: usize) {
 async fn driver_closes(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.driver.as_ref().unwrap().force_close());
     context.cleanup_transactions().await;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option use_replication to: {boolean}")]
+pub async fn set_transaction_option_use_replication(context: &mut Context, value: params::Boolean) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().use_replication = value.to_bool();
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option primary_failover_retries to: {int}")]
+pub async fn set_transaction_option_primary_failover_retries(context: &mut Context, value: usize) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().primary_failover_retries = value;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option replica_discovery_attempts to: {int}")]
+pub async fn set_transaction_option_replica_discovery_attempts(context: &mut Context, value: usize) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().replica_discovery_attempts = Some(value);
 }

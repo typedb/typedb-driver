@@ -134,7 +134,7 @@ a| `driverOptions` a| The driver connection options to connect with a| `DriverOp
 .Code examples
 [source,java]
 ----
-TypeDB.driver(address);
+TypeDB.driver(addresses);
 ----
 
 // end::methods[]

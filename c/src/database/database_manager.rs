@@ -66,8 +66,8 @@ pub extern "C" fn databases_all(
 /// Checks if a database with the given name exists.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 /// @param name The name of the database.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
 pub extern "C" fn databases_contains(
     driver: *mut TypeDBDriver,
@@ -85,8 +85,8 @@ pub extern "C" fn databases_contains(
 /// Retrieves the database with the given name.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 /// @param name The name of the database.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
 pub extern "C" fn databases_get(
     driver: *mut TypeDBDriver,
@@ -102,6 +102,9 @@ pub extern "C" fn databases_get(
 }
 
 /// Creates a database with the given name.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param name The name of the database to be created.
 #[no_mangle]
 pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_char) {
     unwrap_void(borrow_mut(driver).databases().create(string_view(name)));

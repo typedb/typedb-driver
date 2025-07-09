@@ -16,10 +16,13 @@
 # under the License.
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Union
 
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
 from typedb.native_driver_wrapper import consistency_level_strong, consistency_level_eventual, \
-    consistency_level_replica_dependant, ConsistencyLevel as NativeConsistencyLevel
+    consistency_level_replica_dependant, ConsistencyLevel as NativeConsistencyLevel, \
+    Strong as NativeStrong, Eventual as NativeEventual, ReplicaDependant as NativeReplicaDependant
+
 
 class ConsistencyLevel(ABC):
     """
@@ -34,6 +37,20 @@ class ConsistencyLevel(ABC):
         pass
 
     @staticmethod
+    def of(native_value: NativeConsistencyLevel) -> Union[None, "Strong", "Eventual", "ReplicaDependant"]:
+        if native_value is None:
+            return None
+
+        if native_value.tag == NativeStrong:
+            return ConsistencyLevel.Strong()
+        elif native_value.tag == NativeEventual:
+            return ConsistencyLevel.Eventual()
+        elif native_value.tag == NativeReplicaDependant:
+            return ConsistencyLevel.ReplicaDependant(native_value.address)
+        else:
+            raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
+
+    @staticmethod
     def native_value(consistency_level: Optional["ConsistencyLevel"]) -> NativeConsistencyLevel:
         return None if consistency_level is None else consistency_level.native_object()
 
@@ -46,7 +63,7 @@ class ConsistencyLevel(ABC):
     def is_replica_dependant(self) -> bool:
         return isinstance(self, ConsistencyLevel.ReplicaDependant)
 
-    class Strong(ABC):
+    class Strong:
         """
         The strongest consistency level. Always up-to-date due to the guarantee of the primary replica usage.
         May require more time for operation execution.
@@ -58,7 +75,7 @@ class ConsistencyLevel(ABC):
         def __str__(self):
             return "Strong"
 
-    class Eventual(ABC):
+    class Eventual:
         """
         Eventual consistency level. Allow stale reads from any replica. May not reflect latest writes.
         The execution may be eventually faster compared to other consistency levels.
@@ -70,7 +87,7 @@ class ConsistencyLevel(ABC):
         def __str__(self):
             return "Eventual"
 
-    class ReplicaDependant(ABC):
+    class ReplicaDependant:
         """
         Replica dependant consistency level. The operation is executed against the provided replica address only.
         Its guarantees depend on the replica selected.
@@ -85,6 +102,7 @@ class ConsistencyLevel(ABC):
         """
         Retrieves the address of the replica this consistency level depends on.
         """
+
         @property
         def address(self) -> str:
             return self._address

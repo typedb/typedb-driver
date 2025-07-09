@@ -35,16 +35,39 @@ impl UserManager {
         Self { server_manager }
     }
 
-    /// Returns the user of the current connection.
+    /// Returns the user of the current connection, using default strong consistency.
+    ///
+    /// See [`Self::get_current_user_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// driver.users().get_current_user().await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().get_current_user();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().get_current_user().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_current_user(&self) -> Result<Option<User>> {
         self.get(self.server_manager.username()?).await
+    }
+
+    /// Returns the user of the current connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().get_current_user_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.users().get_current_user_with_consistency(ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get_current_user_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<Option<User>> {
+        self.get_with_consistency(self.server_manager.username()?, consistency_level).await
     }
 
     /// Checks if a user with the given name exists, using default strong consistency.

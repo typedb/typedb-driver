@@ -19,10 +19,6 @@ default java.util.List<Database> all()
 Retrieves all databases present on the TypeDB server, using default strong consistency. See <<#_all_com_typedb_driver_api_ConsistencyLevel,``all(ConsistencyLevel)``>> for more details and options. 
 
 
-
-See also: <<#_all_com_typedb_driver_api_ConsistencyLevel,``all(ConsistencyLevel)``>>
-
-
 [caption=""]
 .Returns
 `java.util.List<Database>`
@@ -45,10 +41,6 @@ java.util.List<Database> all​(ConsistencyLevel consistencyLevel)
 ----
 
 Retrieves all databases present on the TypeDB server. 
-
-
-
-See also: <<#_all_,``all()``>>
 
 
 [caption=""]

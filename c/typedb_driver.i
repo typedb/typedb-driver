@@ -185,6 +185,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject driver_options_new;
 %newobject driver_options_get_tls_root_ca_path;
+%newobject transaction_options_get_read_consistency_level;
 
 %newobject database_get_name;
 %newobject database_schema;

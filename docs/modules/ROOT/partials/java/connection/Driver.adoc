@@ -150,7 +150,7 @@ void registerReplica​(long replicaID,
                      java.lang.String address)
 ----
 
-Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. 
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address. 
 
 
 [caption=""]
@@ -203,11 +203,43 @@ driver.replicas();
 [source,java]
 ----
 @CheckReturnValue
-ServerVersion serverVersion()
+default ServerVersion serverVersion()
+----
+
+Retrieves the server's version, using default strong consistency. See <<#_serverVersion_com_typedb_driver_api_ConsistencyLevel,``serverVersion(ConsistencyLevel)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+[#_Driver_serverVersion_ConsistencyLevel]
+==== serverVersion
+
+[source,java]
+----
+@CheckReturnValue
+ServerVersion serverVersion​(ConsistencyLevel consistencyLevel)
 ----
 
 Retrieves the server's version. 
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
 
 [caption=""]
 .Returns
@@ -289,6 +321,37 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `T
 [source,java]
 ----
 driver.transaction(database, sessionType);
+----
+
+[#_Driver_updateAddressTranslation_java_util_Map_java_lang_String_​java_lang_String_]
+==== updateAddressTranslation
+
+[source,java]
+----
+void updateAddressTranslation​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation)
+----
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addressTranslation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.updateAddressTranslation(2);
 ----
 
 [#_Driver_users_]

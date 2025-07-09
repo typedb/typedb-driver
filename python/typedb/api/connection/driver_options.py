@@ -19,6 +19,7 @@ from typing import Optional
 
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.validation import require_non_negative
 from typedb.native_driver_wrapper import driver_options_get_is_tls_enabled, driver_options_get_tls_root_ca_path, \
     driver_options_has_tls_root_ca_path, driver_options_new, driver_options_set_is_tls_enabled, \
     driver_options_set_tls_root_ca_path, driver_options_get_use_replication, driver_options_set_use_replication, \
@@ -115,6 +116,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
 
     @primary_failover_retries.setter
     def primary_failover_retries(self, primary_failover_retries: int):
+        require_non_negative(primary_failover_retries, "primary_failover_retries")
         driver_options_set_primary_failover_retries(self.native_object, primary_failover_retries)
 
     @property
@@ -135,4 +137,5 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
 
     @replica_discovery_attempts.setter
     def replica_discovery_attempts(self, replica_discovery_attempts: int):
+        require_non_negative(replica_discovery_attempts, "replica_discovery_attempts")
         driver_options_set_replica_discovery_attempts(self.native_object, replica_discovery_attempts)

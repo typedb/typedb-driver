@@ -21,13 +21,16 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{box_stream, TypeDBDriver, User};
 
-use crate::common::{
-    error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
-    iterator::{iterator_next, CIterator},
-    memory::{borrow, free, string_view},
+use crate::{
+    common::{
+        error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
+        iterator::{iterator_next, CIterator},
+        memory::{borrow, free, string_view},
+    },
+    server::consistency_level::{native_consistency_level, ConsistencyLevel},
 };
 
-/// Iterator over a set of <code>User</code>s
+/// Iterator over a set of <code>User</code>s.
 pub struct UserIterator(CIterator<User>);
 
 /// Forwards the <code>UserIterator</code> and returns the next <code>User</code> if it exists,
@@ -37,38 +40,90 @@ pub extern "C" fn user_iterator_next(it: *mut UserIterator) -> *mut User {
     unsafe { iterator_next(addr_of_mut!((*it).0)) }
 }
 
-/// Frees the native rust <code>UserIterator</code> object
+/// Frees the native rust <code>UserIterator</code> object.
 #[no_mangle]
 pub extern "C" fn user_iterator_drop(it: *mut UserIterator) {
     free(it);
 }
 
 /// Retrieves all users which exist on the TypeDB server.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_all(driver: *const TypeDBDriver) -> *mut UserIterator {
-    try_release(borrow(driver).users().all().map(|users| UserIterator(CIterator(box_stream(users.into_iter())))))
+pub extern "C" fn users_all(
+    driver: *const TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut UserIterator {
+    let users = borrow(driver).users();
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => users.all_with_consistency(consistency_level),
+        None => users.all(),
+    };
+    try_release(result.map(|users| UserIterator(CIterator(box_stream(users.into_iter())))))
 }
 
 /// Checks if a user with the given name exists.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param username The username of the user.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_contains(driver: *const TypeDBDriver, username: *const c_char) -> bool {
-    unwrap_or_default(borrow(driver).users().contains(string_view(username)))
-}
-
-/// Creates a user with the given name &amp; password.
-#[no_mangle]
-pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
-    unwrap_void(borrow(driver).users().create(string_view(username), string_view(password)));
+pub extern "C" fn users_contains(
+    driver: *const TypeDBDriver,
+    username: *const c_char,
+    consistency_level: *const ConsistencyLevel,
+) -> bool {
+    let users = borrow(driver).users();
+    let username = string_view(username);
+    unwrap_or_default(match native_consistency_level(consistency_level) {
+        Some(consistency_level) => users.contains_with_consistency(username, consistency_level),
+        None => users.contains(username),
+    })
 }
 
 /// Retrieves a user with the given name.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param username The username of the user.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char) -> *mut User {
-    try_release_optional(borrow(driver).users().get(string_view(username)).transpose())
+pub extern "C" fn users_get(
+    driver: *const TypeDBDriver,
+    username: *const c_char,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut User {
+    let users = borrow(driver).users();
+    let username = string_view(username);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => users.get_with_consistency(username, consistency_level),
+        None => users.get(username),
+    };
+    try_release_optional(result.transpose())
 }
 
-/// Retrieves the username of the user who opened this connection
+/// Retrieves the username of the user who opened this connection.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_get_current_user(driver: *const TypeDBDriver) -> *mut User {
-    try_release_optional(borrow(driver).users().get_current_user().transpose())
+pub extern "C" fn users_get_current_user(
+    driver: *const TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut User {
+    let users = borrow(driver).users();
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => users.get_current_user_with_consistency(consistency_level),
+        None => users.get_current_user(),
+    };
+    try_release_optional(result.transpose())
+}
+
+/// Creates a user with the given name &amp; password.
+///
+/// @param username The username of the user to be created.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
+#[no_mangle]
+pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
+    unwrap_void(borrow(driver).users().create(string_view(username), string_view(password)));
 }
