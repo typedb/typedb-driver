@@ -37,8 +37,7 @@ export interface QueryVertexValue {
 }
 
 export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue;
-// TODO:
-// export enum VertexKindOther = { }
+
 export type QueryStructure = {
     blocks: { constraints: QueryConstraintAny[] }[],
     variables: {[name: string]: QueryVariableInfo },
