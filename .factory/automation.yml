@@ -283,6 +283,8 @@ build:
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS
 
+# TODO: introduce integration/behaviour tests for http-ts driver
+
 #    test-nodejs-integration:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
