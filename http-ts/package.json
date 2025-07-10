@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "TypeDB HTTP Driver",
   "author": "TypeDB",
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "homepage": "https://typedb.com",
   "type": "module",
   "main": "index.ts",
