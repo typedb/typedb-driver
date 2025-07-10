@@ -482,7 +482,7 @@ commands:
       - run: |
           export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //http-ts:deploy-npm -- snapshot
+          bazel run --define version=$(git rev-parse HEAD) //http-ts:deploy-npm -- snapshot
 
   test-npm-snapshot-unix:
     steps:
@@ -510,7 +510,7 @@ commands:
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //http-ts:deploy-npm --compilation_mode=opt -- release
+          bazel run --define version=$(cat VERSION) //http-ts:deploy-npm --compilation_mode=opt -- release
 
 jobs:
 

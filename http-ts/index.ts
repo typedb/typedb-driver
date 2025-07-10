@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import { TransactionOptions, TransactionType } from "./transaction";
 import { DriverParams, remoteOrigin } from "./params";
 import {
     ApiErrorResponse,
@@ -30,20 +29,13 @@ import {
     UsersListResponse,
     VersionResponse
 } from "./response";
-import { User } from "./user";
-import { Database } from "./database";
-import { QueryOptions } from "./query";
 
 const HTTP_UNAUTHORIZED = 401;
 
 export * from "./concept";
-export * from "./database";
 export * from "./params";
-export * from "./query";
 export * from "./query-structure";
 export * from "./response";
-export * from "./transaction";
-export * from "./user";
 
 export class TypeDBHttpDriver {
 
@@ -221,4 +213,24 @@ export class TypeDBHttpDriver {
         if (isNaN(contentLength)) throw `Received invalid Content-Length header: ${contentLengthRaw}`;
         return contentLength > 0 ? await resp.text() : null;
     }
+}
+
+export interface Database {
+    name: string;
+}
+
+export type TransactionType = "read" | "write" | "schema";
+
+export interface TransactionOptions {
+    schemaLockAcquireTimeoutMillis?: number;
+    transactionTimeoutMillis?: number;
+}
+
+export interface QueryOptions {
+    includeInstanceTypes?: boolean;
+    answerCountLimit?: number;
+}
+
+export interface User {
+    username: string;
 }

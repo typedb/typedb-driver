@@ -23,7 +23,7 @@ npm install typedb-http-driver
 3. Use TypeDB Driver in your program:
 
 ```ts
-import { TypeDBHttpDriver, isApiErrorResponse } from "typedb-http-driver";
+import { TypeDBHttpDriver, isApiErrorResponse } from "typedb-driver-http";
 
 const driver = new TypeDBHttpDriver({
     username: "admin",
