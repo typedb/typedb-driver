@@ -19,7 +19,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-from typedb.api.user.user import UserManager
+from typedb.api.connection.consistency_level import ConsistencyLevel
+from typedb.api.user.user_manager import UserManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null
@@ -37,10 +38,34 @@ class _UserManager(UserManager):
     def __init__(self, native_driver: NativeDriver):
         self.native_driver = native_driver
 
-    def contains(self, username: str) -> bool:
+    def all(self, consistency_level: Optional[ConsistencyLevel] = None) -> list[User]:
+        try:
+            native_users = users_all(self.native_driver, ConsistencyLevel.native_value(consistency_level))
+            return [_User(user, self) for user in IteratorWrapper(native_users, user_iterator_next)]
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def contains(self, username: str, consistency_level: Optional[ConsistencyLevel] = None) -> bool:
         require_non_null(username, "username")
         try:
-            return users_contains(self.native_driver, username)
+            return users_contains(self.native_driver, username, ConsistencyLevel.native_value(consistency_level))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def get(self, username: str, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
+        require_non_null(username, "username")
+        try:
+            if user := users_get(self.native_driver, username, ConsistencyLevel.native_value(consistency_level)):
+                return _User(user, self)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def get_current_user(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
+        try:
+            if user := users_get_current_user(self.native_driver, ConsistencyLevel.native_value(consistency_level)):
+                return _User(user, self)
+            return None
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
@@ -49,28 +74,5 @@ class _UserManager(UserManager):
         require_non_null(password, "password")
         try:
             users_create(self.native_driver, username, password)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def all(self) -> list[User]:
-        try:
-            return [_User(user, self) for user in IteratorWrapper(users_all(self.native_driver), user_iterator_next)]
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def get(self, username: str) -> Optional[User]:
-        require_non_null(username, "username")
-        try:
-            if user := users_get(self.native_driver, username):
-                return _User(user, self)
-            return None
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def get_current_user(self) -> Optional[User]:
-        try:
-            if user := users_get_current_user(self.native_driver):
-                return _User(user, self)
-            return None
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

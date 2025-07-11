@@ -60,7 +60,7 @@
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "38f66a1cc4db3b7a301676f50800e9530ac5c8a3"
+		rev = "d1b71067c7e78364c69701625ea3f6d6b1f24a9d"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
@@ -128,6 +128,10 @@
 		features = ["alloc", "crossbeam-channel", "crossbeam-deque", "crossbeam-epoch", "crossbeam-queue", "default", "std"]
 		version = "0.8.4"
 		default-features = false
+
+[[test]]
+	path = "tests/integration/cluster/clustering.rs"
+	name = "test_clustering"
 
 [[test]]
 	path = "tests/integration/example.rs"

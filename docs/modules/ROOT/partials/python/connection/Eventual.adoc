@@ -1,0 +1,22 @@
+[#_Eventual]
+=== Eventual
+
+Eventual consistency level. Allow stale reads from any replica. May not reflect latest writes. The execution may be eventually faster compared to other consistency levels.
+
+// tag::methods[]
+[#_Eventual_native_object_]
+==== native_object
+
+[source,python]
+----
+native_object()
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+// end::methods[]
+

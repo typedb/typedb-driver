@@ -206,19 +206,19 @@ class Datetime:
 
     @property
     def datetime_without_nanos(self) -> datetime:
-        """Return the standard library's datetime, containing data up to microseconds."""
+        """Returns the standard library's datetime, containing data up to microseconds."""
         return datetime(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute,
                         second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo)
 
     @property
     def tz_name(self) -> Optional[str]:
-        """Return the timezone IANA name. None if fixed offset is used for the initialisation instead."""
+        """Returns the timezone IANA name. None if fixed offset is used for the initialisation instead."""
         return self._tz_name
 
     @property
     def offset_seconds(self) -> Optional[str]:
         """
-        Return the timezone offset (local minus UTC) in seconds.
+        Returns the timezone offset (local minus UTC) in seconds.
         None if an IANA name is used for the initialisation instead.
         """
         return self._offset_seconds
@@ -226,7 +226,7 @@ class Datetime:
     @property
     def total_seconds(self) -> float:
         """
-        Return the total number of seconds including the nanoseconds part as a float.
+        Returns the total number of seconds including the nanoseconds part as a float.
 
         :raises ValueError: If timestamp is before the start of the epoch.
         """
@@ -234,63 +234,63 @@ class Datetime:
 
     @property
     def year(self) -> int:
-        """Return the datetime's year (1-9999)."""
+        """Returns the datetime's year (1-9999)."""
         return self._datetime_of_seconds.year
 
     @property
     def month(self) -> int:
-        """Return the datetime's month (1-12)."""
+        """Returns the datetime's month (1-12)."""
         return self._datetime_of_seconds.month
 
     @property
     def day(self) -> int:
-        """Return the datetime's day (1-31)."""
+        """Returns the datetime's day (1-31)."""
         return self._datetime_of_seconds.day
 
     @property
     def hour(self) -> int:
-        """Return the datetime's hour (0-23)."""
+        """Returns the datetime's hour (0-23)."""
         return self._datetime_of_seconds.hour
 
     @property
     def minute(self) -> int:
-        """Return the datetime's minute (0-59)."""
+        """Returns the datetime's minute (0-59)."""
         return self._datetime_of_seconds.minute
 
     @property
     def second(self) -> int:
-        """Return the datetime's second (0-59)."""
+        """Returns the datetime's second (0-59)."""
         return self._datetime_of_seconds.second
 
     @property
     def microsecond(self) -> int:
-        """Return the rounded number of microseconds."""
+        """Returns the rounded number of microseconds."""
         return self._nanos // MICROS_IN_NANO
 
     @property
     def nanos(self) -> int:
-        """Return the nanoseconds part."""
+        """Returns the nanoseconds part."""
         return self._nanos
 
     @property
     def tzinfo(self) -> tzinfo:
-        """Return timezone info."""
+        """Returns timezone info."""
         return self._datetime_of_seconds.tzinfo
 
     @property
     def date(self) -> date:
-        """Return the date part."""
+        """Returns the date part."""
         return self._datetime_of_seconds.date()
 
     @property
     def weekday(self) -> int:
-        """Return the day of the week as an integer, where Monday == 0 ... Sunday == 6."""
+        """Returns the day of the week as an integer, where Monday == 0 ... Sunday == 6."""
         return self._datetime_of_seconds.weekday()
 
     ISO_TZ_LEN = 6
 
     def isoformat(self) -> str:
-        """Return the time formatted according to ISO."""
+        """Returns the time formatted according to ISO."""
         datetime_part = self._datetime_of_seconds.isoformat()
         tz_part = ""
         if self._tz_name is not None or self._offset_seconds is not None:
