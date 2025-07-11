@@ -2,112 +2,112 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}@api-ref::partial$rust/connection/TypeDBDriver.adoc[]
+include::{page-version}::partial$rust/connection/TypeDBDriver.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/Credentials.adoc[]
+include::{page-version}::partial$rust/connection/Credentials.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/DriverOptions.adoc[]
+include::{page-version}::partial$rust/connection/DriverOptions.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/DatabaseManager.adoc[]
+include::{page-version}::partial$rust/connection/DatabaseManager.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/Database.adoc[]
+include::{page-version}::partial$rust/connection/Database.adoc[]
 
 // TODO: Enable when Replicas are introduced
-// include::{page-version}@api-ref::partial$rust/connection/ReplicaInfo.adoc[]
+// include::{page-version}::partial$rust/connection/ReplicaInfo.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/UserManager.adoc[]
+include::{page-version}::partial$rust/connection/UserManager.adoc[]
 
-include::{page-version}@api-ref::partial$rust/connection/User.adoc[]
+include::{page-version}::partial$rust/connection/User.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-version}@api-ref::partial$rust/transaction/Transaction.adoc[]
+include::{page-version}::partial$rust/transaction/Transaction.adoc[]
 
-include::{page-version}@api-ref::partial$rust/transaction/TransactionType.adoc[]
+include::{page-version}::partial$rust/transaction/TransactionType.adoc[]
 
 // TODO: Enable when Options are introduced
-// include::{page-version}@api-ref::partial$rust/transaction/Options.adoc[]
+// include::{page-version}::partial$rust/transaction/Options.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}@api-ref::partial$rust/answer/QueryAnswer.adoc[]
+include::{page-version}::partial$rust/answer/QueryAnswer.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/ConceptRow.adoc[]
+include::{page-version}::partial$rust/answer/ConceptRow.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/ConceptRowHeader.adoc[]
+include::{page-version}::partial$rust/answer/ConceptRowHeader.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/ConceptDocument.adoc[]
+include::{page-version}::partial$rust/answer/ConceptDocument.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/ConceptDocumentHeader.adoc[]
+include::{page-version}::partial$rust/answer/ConceptDocumentHeader.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/JSON.adoc[]
+include::{page-version}::partial$rust/answer/JSON.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/Node.adoc[]
+include::{page-version}::partial$rust/answer/Node.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/Leaf.adoc[]
+include::{page-version}::partial$rust/answer/Leaf.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/QueryType.adoc[]
+include::{page-version}::partial$rust/answer/QueryType.adoc[]
 
-include::{page-version}@api-ref::partial$rust/answer/Trait_Promise.adoc[]
+include::{page-version}::partial$rust/answer/Trait_Promise.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-version}@api-ref::partial$rust/concept/Concept.adoc[]
+include::{page-version}::partial$rust/concept/Concept.adoc[]
 
-include::{page-version}@api-ref::partial$rust/concept/ConceptCategory.adoc[]
+include::{page-version}::partial$rust/concept/ConceptCategory.adoc[]
 
-include::{page-version}@api-ref::partial$rust/concept/Kind.adoc[]
+include::{page-version}::partial$rust/concept/Kind.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-version}@api-ref::partial$rust/schema/EntityType.adoc[]
+include::{page-version}::partial$rust/schema/EntityType.adoc[]
 
-include::{page-version}@api-ref::partial$rust/schema/RelationType.adoc[]
+include::{page-version}::partial$rust/schema/RelationType.adoc[]
 
-include::{page-version}@api-ref::partial$rust/schema/RoleType.adoc[]
+include::{page-version}::partial$rust/schema/RoleType.adoc[]
 
-include::{page-version}@api-ref::partial$rust/schema/AttributeType.adoc[]
+include::{page-version}::partial$rust/schema/AttributeType.adoc[]
 
-include::{page-version}@api-ref::partial$rust/schema/ValueType.adoc[]
+include::{page-version}::partial$rust/schema/ValueType.adoc[]
 
 [#_data_header]
 == Data
 
-include::{page-version}@api-ref::partial$rust/data/Entity.adoc[]
+include::{page-version}::partial$rust/data/Entity.adoc[]
 
-include::{page-version}@api-ref::partial$rust/data/Relation.adoc[]
+include::{page-version}::partial$rust/data/Relation.adoc[]
 
-include::{page-version}@api-ref::partial$rust/data/Attribute.adoc[]
+include::{page-version}::partial$rust/data/Attribute.adoc[]
 
-include::{page-version}@api-ref::partial$rust/data/Value.adoc[]
+include::{page-version}::partial$rust/data/Value.adoc[]
 
 [#_value_header]
 == Value
 
-include::{page-version}@api-ref::partial$rust/value/Decimal.adoc[]
+include::{page-version}::partial$rust/value/Decimal.adoc[]
 
-include::{page-version}@api-ref::partial$rust/value/Duration.adoc[]
+include::{page-version}::partial$rust/value/Duration.adoc[]
 
-include::{page-version}@api-ref::partial$rust/value/Offset.adoc[]
+include::{page-version}::partial$rust/value/Offset.adoc[]
 
-include::{page-version}@api-ref::partial$rust/value/TimeZone.adoc[]
+include::{page-version}::partial$rust/value/TimeZone.adoc[]
 
 // TODO: Enable when Structs are introduced
-// include::{page-version}@api-ref::partial$rust/value/Struct.adoc[]
+// include::{page-version}::partial$rust/value/Struct.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-version}@api-ref::partial$rust/errors/Error.adoc[]
+include::{page-version}::partial$rust/errors/Error.adoc[]
 
-include::{page-version}@api-ref::partial$rust/errors/ConnectionError.adoc[]
+include::{page-version}::partial$rust/errors/ConnectionError.adoc[]
 
-include::{page-version}@api-ref::partial$rust/errors/ServerError.adoc[]
+include::{page-version}::partial$rust/errors/ServerError.adoc[]
 
-include::{page-version}@api-ref::partial$rust/errors/DurationParseError.adoc[]
+include::{page-version}::partial$rust/errors/DurationParseError.adoc[]
 
-include::{page-version}@api-ref::partial$rust/errors/InternalError.adoc[]
+include::{page-version}::partial$rust/errors/InternalError.adoc[]
