@@ -2,116 +2,116 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}::partial$csharp/connection/Drivers.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/Drivers.adoc[]
 
-include::{page-version}::partial$csharp/connection/ITypeDBDriver.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/ITypeDBDriver.adoc[]
 
-include::{page-version}::partial$csharp/connection/TypeDBCredential.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/TypeDBCredential.adoc[]
 
-include::{page-version}::partial$csharp/connection/IDatabaseManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/IDatabaseManager.adoc[]
 
-include::{page-version}::partial$csharp/connection/IDatabase.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/IDatabase.adoc[]
 
-include::{page-version}::partial$csharp/connection/IReplica.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/IReplica.adoc[]
 
-include::{page-version}::partial$csharp/connection/IUserManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/IUserManager.adoc[]
 
-include::{page-version}::partial$csharp/connection/IUser.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/connection/IUser.adoc[]
 
 [#_session_header]
 == Session
 
-include::{page-version}::partial$csharp/session/ITypeDBSession.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/session/ITypeDBSession.adoc[]
 
-include::{page-version}::partial$csharp/session/SessionType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/session/SessionType.adoc[]
 
-include::{page-version}::partial$csharp/session/TypeDBOptions.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/session/TypeDBOptions.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-version}::partial$csharp/transaction/ITypeDBTransaction.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/transaction/ITypeDBTransaction.adoc[]
 
-include::{page-version}::partial$csharp/transaction/TransactionType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/transaction/TransactionType.adoc[]
 
-include::{page-version}::partial$csharp/transaction/IQueryManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/transaction/IQueryManager.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}::partial$csharp/answer/IConceptMap.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IConceptMap.adoc[]
 
-include::{page-version}::partial$csharp/answer/IConceptMapGroup.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IConceptMapGroup.adoc[]
 
-include::{page-version}::partial$csharp/answer/IValueGroup.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IValueGroup.adoc[]
 
-// include::{page-version}::partial$csharp/answer/JSON.adoc[]
+// include::{page-version}@external-typedb-driver::partial$csharp/answer/JSON.adoc[]
 
-// include::{page-version}::partial$csharp/answer/JSONType.adoc[]
+// include::{page-version}@external-typedb-driver::partial$csharp/answer/JSONType.adoc[]
 
-include::{page-version}::partial$csharp/answer/IExplainables.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IExplainables.adoc[]
 
-include::{page-version}::partial$csharp/answer/IExplainable.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IExplainable.adoc[]
 
-include::{page-version}::partial$csharp/answer/IExplanation.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/IExplanation.adoc[]
 
-include::{page-version}::partial$csharp/answer/Promise__T__.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/Promise__T__.adoc[]
 
-include::{page-version}::partial$csharp/answer/VoidPromise.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/answer/VoidPromise.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-version}::partial$csharp/concept/IConceptManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/concept/IConceptManager.adoc[]
 
-include::{page-version}::partial$csharp/concept/IConcept.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/concept/IConcept.adoc[]
 
-include::{page-version}::partial$csharp/concept/Transitivity.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/concept/Transitivity.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-version}::partial$csharp/schema/IType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IType.adoc[]
 
-include::{page-version}::partial$csharp/schema/IThingType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IThingType.adoc[]
 
-include::{page-version}::partial$csharp/schema/IEntityType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IEntityType.adoc[]
 
-include::{page-version}::partial$csharp/schema/IRelationType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IRelationType.adoc[]
 
-include::{page-version}::partial$csharp/schema/IRoleType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IRoleType.adoc[]
 
-include::{page-version}::partial$csharp/schema/IAttributeType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/IAttributeType.adoc[]
 
-include::{page-version}::partial$csharp/schema/Annotation.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/Annotation.adoc[]
 
-include::{page-version}::partial$csharp/schema/Label.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/schema/Label.adoc[]
 
 [#_data_header]
 == Data
 
-include::{page-version}::partial$csharp/data/IThing.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IThing.adoc[]
 
-include::{page-version}::partial$csharp/data/IEntity.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IEntity.adoc[]
 
-include::{page-version}::partial$csharp/data/IRelation.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IRelation.adoc[]
 
-include::{page-version}::partial$csharp/data/IAttribute.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IAttribute.adoc[]
 
-include::{page-version}::partial$csharp/data/IValue.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IValue.adoc[]
 
-include::{page-version}::partial$csharp/data/ValueType.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/ValueType.adoc[]
 
-include::{page-version}::partial$csharp/data/ValueTypeExtensions.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/ValueTypeExtensions.adoc[]
 
 [#_logic_header]
 == Logic
 
-include::{page-version}::partial$csharp/logic/ILogicManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/logic/ILogicManager.adoc[]
 
-include::{page-version}::partial$csharp/logic/IRule.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/logic/IRule.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-version}::partial$csharp/errors/TypeDBDriverException.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/errors/TypeDBDriverException.adoc[]

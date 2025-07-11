@@ -2,112 +2,112 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}::partial$nodejs/connection/TypeDB.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/TypeDB.adoc[]
 
-include::{page-version}::partial$nodejs/connection/TypeDBDriver.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/TypeDBDriver.adoc[]
 
-include::{page-version}::partial$nodejs/connection/TypeDBCredential.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/TypeDBCredential.adoc[]
 
-include::{page-version}::partial$nodejs/connection/DatabaseManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/DatabaseManager.adoc[]
 
-include::{page-version}::partial$nodejs/connection/Database.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/Database.adoc[]
 
-include::{page-version}::partial$nodejs/connection/Replica.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/Replica.adoc[]
 
-include::{page-version}::partial$nodejs/connection/UserManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/UserManager.adoc[]
 
-include::{page-version}::partial$nodejs/connection/User.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/connection/User.adoc[]
 
 [#_session_header]
 == Session
 
-include::{page-version}::partial$nodejs/session/TypeDBSession.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/session/TypeDBSession.adoc[]
 
-include::{page-version}::partial$nodejs/session/SessionType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/session/SessionType.adoc[]
 
-include::{page-version}::partial$nodejs/session/TypeDBOptions.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/session/TypeDBOptions.adoc[]
 
-include::{page-version}::partial$nodejs/session/Opts.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/session/Opts.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-version}::partial$nodejs/transaction/TypeDBTransaction.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/transaction/TypeDBTransaction.adoc[]
 
-include::{page-version}::partial$nodejs/transaction/TransactionType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/transaction/TransactionType.adoc[]
 
-include::{page-version}::partial$nodejs/transaction/QueryManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/transaction/QueryManager.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}::partial$nodejs/answer/ConceptMapGroup.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/ConceptMapGroup.adoc[]
 
-include::{page-version}::partial$nodejs/answer/ConceptMap.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/ConceptMap.adoc[]
 
-include::{page-version}::partial$nodejs/answer/Stream_T_.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/Stream_T_.adoc[]
 
-include::{page-version}::partial$nodejs/answer/ValueGroup.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/ValueGroup.adoc[]
 
-include::{page-version}::partial$nodejs/answer/Explainables.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/Explainables.adoc[]
 
-include::{page-version}::partial$nodejs/answer/Explainable.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/Explainable.adoc[]
 
-include::{page-version}::partial$nodejs/answer/Explanation.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/answer/Explanation.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-version}::partial$nodejs/concept/ConceptManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/concept/ConceptManager.adoc[]
 
-include::{page-version}::partial$nodejs/concept/Concept.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/concept/Concept.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-version}::partial$nodejs/schema/Type.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/Type.adoc[]
 
-include::{page-version}::partial$nodejs/schema/Label.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/Label.adoc[]
 
-include::{page-version}::partial$nodejs/schema/ThingType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/ThingType.adoc[]
 
-include::{page-version}::partial$nodejs/schema/EntityType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/EntityType.adoc[]
 
-include::{page-version}::partial$nodejs/schema/RelationType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/RelationType.adoc[]
 
-include::{page-version}::partial$nodejs/schema/RoleType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/RoleType.adoc[]
 
-include::{page-version}::partial$nodejs/schema/AttributeType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/AttributeType.adoc[]
 
-include::{page-version}::partial$nodejs/schema/Annotation.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/Annotation.adoc[]
 
-include::{page-version}::partial$nodejs/schema/Transitivity.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/Transitivity.adoc[]
 
-include::{page-version}::partial$nodejs/schema/ValueType.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/schema/ValueType.adoc[]
 
 [#_data_header]
 == Data
 
-include::{page-version}::partial$nodejs/data/Thing.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/data/Thing.adoc[]
 
-include::{page-version}::partial$nodejs/data/Entity.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/data/Entity.adoc[]
 
-include::{page-version}::partial$nodejs/data/Relation.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/data/Relation.adoc[]
 
-include::{page-version}::partial$nodejs/data/Attribute.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/data/Attribute.adoc[]
 
-include::{page-version}::partial$nodejs/data/Value.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/data/Value.adoc[]
 
 [#_logic_header]
 == Logic
 
-include::{page-version}::partial$nodejs/logic/LogicManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/logic/LogicManager.adoc[]
 
-include::{page-version}::partial$nodejs/logic/Rule.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/logic/Rule.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-version}::partial$nodejs/errors/TypeDBDriverError.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/errors/TypeDBDriverError.adoc[]
 
-include::{page-version}::partial$nodejs/errors/ErrorMessage.adoc[]
+include::{page-version}@external-typedb-driver::partial$nodejs/errors/ErrorMessage.adoc[]
