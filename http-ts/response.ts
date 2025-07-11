@@ -17,9 +17,8 @@
  * under the License.
  */
 
+import { Database, User } from "index";
 import { Concept } from "./concept";
-import { Database } from "./database";
-import { User } from "./user";
 import { QueryStructure } from "./query-structure";
 
 export interface SignInResponse {

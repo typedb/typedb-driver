@@ -12,10 +12,10 @@ the [API Reference](https://typedb.com/docs/reference/http-drivers/typescript).
 
 ## Install TypeDB HTTP Typescript Driver through NPM
 
-1. Install `typedb-http-driver` through npm:
+1. Install `typedb-driver-http` through npm:
 
 ```bash
-npm install typedb-http-driver
+npm install typedb-driver-http
 ```
 
 2. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is

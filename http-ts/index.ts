@@ -202,6 +202,7 @@ export class TypeDBHttpDriver {
 
     private async jsonOrNull(resp: Response) {
         const contentLengthRaw = resp.headers.get("Content-Length");
+        if (!contentLengthRaw) return null;
         const contentLength = parseInt(contentLengthRaw || "");
         if (isNaN(contentLength)) throw `Received invalid Content-Length header: ${contentLengthRaw}`;
         return contentLength > 0 ? await resp.json() : null;
@@ -209,6 +210,7 @@ export class TypeDBHttpDriver {
 
     private async stringOrNull(resp: Response) {
         const contentLengthRaw = resp.headers.get("Content-Length");
+        if (!contentLengthRaw) return null;
         const contentLength = parseInt(contentLengthRaw || "");
         if (isNaN(contentLength)) throw `Received invalid Content-Length header: ${contentLengthRaw}`;
         return contentLength > 0 ? await resp.text() : null;
