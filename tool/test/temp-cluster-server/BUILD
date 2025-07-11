@@ -17,52 +17,16 @@
 # under the License.
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@typedb_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-load("@typedb_dependencies//builder/java:rules.bzl", "native_typedb_artifact")
 
+# TODO: The whole directory is temporary. REMOVE it after a normal cluster distribution is ready!
 
 exports_files([
-    "temp-cluster-server/typedb_cluster_server_bin",
+    "typedb",
+    "config.yml",
 ])
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-)
-
-native_typedb_artifact(
-    name = "native-typedb-artifact",
-    native_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_artifact_linux-arm64//file"],
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_artifact_linux-x86_64//file"],
-        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_artifact_mac-arm64//file"],
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_artifact_mac-x86_64//file"],
-        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_artifact_windows-x86_64//file"],
-    },
-    output = "typedb-artifact.tar.gz",
-    visibility = ["//visibility:public"],
-)
-
-#native_typedb_artifact(
-#    name = "native-typedb-cluster-artifact",
-#    native_artifacts = {
-#        "@typedb_bazel_distribution//platform:is_linux_arm64": ["@typedb_cluster_artifact_linux-arm64//file"],
-#        "@typedb_bazel_distribution//platform:is_linux_x86_64": ["@typedb_cluster_artifact_linux-x86_64//file"],
-#        "@typedb_bazel_distribution//platform:is_mac_arm64": ["@typedb_cluster_artifact_mac-arm64//file"],
-#        "@typedb_bazel_distribution//platform:is_mac_x86_64": ["@typedb_cluster_artifact_mac-x86_64//file"],
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": ["@typedb_cluster_artifact_windows-x86_64//file"],
-#    },
-#    output = "typedb-cluster-artifact.tar.gz",
-#    visibility = ["//visibility:public"],
-#)
-
-artifact_extractor(
-    name = "typedb-extractor",
-    artifact = ":native-typedb-artifact",
-)
-
-artifact_extractor(
-    name = "typedb-cluster-extractor",
-    artifact = ":native-typedb-cluster-artifact",
 )

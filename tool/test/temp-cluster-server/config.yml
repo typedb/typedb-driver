@@ -4,7 +4,7 @@
 
 server:
     address: 127.0.0.1:11729
-    http-enabled: true
+    http-enabled: false
     http-address: 127.0.0.1:8000
 
     authentication:
@@ -24,11 +24,11 @@ logging:
 
 diagnostics:
     monitoring:
-        enabled: true
+        enabled: false
         port: 4104
     reporting:
-        metrics: true
-        errors: true
+        metrics: false
+        errors: false
 
 development-mode:
-    enabled: false
+    enabled: true

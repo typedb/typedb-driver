@@ -18,7 +18,7 @@
 
 set -e
 
-kill $(ps aux | awk '/typedb[_server_bin]/ {print $2}')
+ps aux | grep '[t]emp-cluster-server/typedb' | awk '{print $2}' | xargs kill
 
 #procs=$(ps aux | awk '/TypeDBCloudServe[r]/ {print $2}' | paste -sd " " -)
 #echo $procs

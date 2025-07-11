@@ -19,49 +19,25 @@
 set -e
 
 NODE_COUNT=${1:-1}
-ENCRYPTION_ENABLED=${2:-true}
-
-# TODO: Update configs
-#peers=
-#for i in $(seq 1 $NODE_COUNT); do
-#  peers="${peers} --server.peers.peer-${i}.address=127.0.0.1:${i}1729"
-#  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=127.0.0.1:${i}1730"
-#  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=127.0.0.1:${i}1731"
-#done
 
 function server_start() {
-  ./${1}/typedb server \
+  /Users/georgii/work/typedb-driver/tool/test/temp-cluster-server/typedb \
     --server.address=127.0.0.1:${1}1729 \
-    --server.encryption.enabled=$ENCRYPTION_ENABLED \
-    --server.encryption.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.certificate-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.ca-certificate=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+    --server.encryption.enabled=false \
     --diagnostics.monitoring.port ${1}1732 \
+    --server-clustering-id=${1} \
+    --server-clustering-address=127.0.0.1:${1}1730 \
+    --diagnostics.deployment-id=test \
+    --storage.data-directory=${1}/data \
+    --logging.logdir=${1}/logs \
     --development-mode.enabled true
-#    --storage.data=server/data \
-#    --server.internal-address.zeromq=127.0.0.1:${1}1730 \
-#    --server.internal-address.grpc=127.0.0.1:${1}1731 \
-#    $(echo $peers) \
-#    --server.encryption.enable=true \
-#    --server.encryption.file.enable=true \
-#    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-#    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-#    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-#    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
-#    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
-#    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
-#    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
-#    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
 }
 
-rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
-
-#bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
-bazel run //tool/test:typedb-extractor -- typedb-cluster-all
-
-echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-cluster-all $i || exit 1
+  rm -rf $i/data 2>/dev/null
+  rm -rf $i/logs 2>/dev/null
+  mkdir -p $i/data || exit 1
+  mkdir -p $i/logs || exit 1
 done
 echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do

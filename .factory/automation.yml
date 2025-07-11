@@ -87,7 +87,7 @@ build:
         
         tool/docs/update_readme.sh
         git add .
-        git diff --exit-code || { 
+        git diff --exit-code || {
           echo "Failed to verify README files: please update it manually and verify the changes"
           exit 1
         }
