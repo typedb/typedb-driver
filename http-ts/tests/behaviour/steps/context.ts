@@ -76,7 +76,7 @@ export function setConcurrentAnswers(answers: QueryResponse[]) {
 
 export const DEFAULT_USERNAME = "admin";
 export const DEFAULT_PASSWORD = "password";
-export const DEFAULT_HOST = "127.0.0.1";
+export const DEFAULT_HOST = "http://127.0.0.1";
 export const DEFAULT_PORT = 1729;
 
 export async function openAndTestConnection(username: string, password: string) {
