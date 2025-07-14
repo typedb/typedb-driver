@@ -15,8 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//http-ts/test/behaviour:rules.bzl", "typedb_behaviour_http_ts_test")
+load("//http-ts/tests/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
@@ -24,26 +25,17 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
-typedb_behaviour_http_ts_test(
-    name = "query",
-    features = ["@typedb_behaviour//driver:query.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_test(
-    name = "user",
-    features = ["@typedb_behaviour//driver:user.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_test(
-    name = "connection",
-    features = ["@typedb_behaviour//driver:connection.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_test(
-    name = "concept",
-    features = ["@typedb_behaviour//driver:concept.feature"],
-    data = [],
+ts_project(
+    name = "steps",
+    srcs = ["connection.ts", "context.ts", "database.ts", "params.ts", "query.ts", "transaction.ts", "user.ts", "util.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//http-ts:driver-http-ts",
+        "//http-ts:node_modules/@cucumber/cucumber",
+        "//http-ts:node_modules/@types/node",
+    ],
+    transpiler = "tsc",
+    declaration = True,
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
 )

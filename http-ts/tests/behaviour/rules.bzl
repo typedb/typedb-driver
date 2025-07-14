@@ -39,7 +39,7 @@ def http_ts_cucumber_test(name, features, data, steps, **kwargs):
         fixed_args = [
             "--publish-quiet", "--strict",
             "--tags 'not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-nodejs and not @ignore-typedb-http'",
-            "--require", "http-ts/test/**/*.js",
+            "--require", "http-ts/tests/**/*.js",
         ] + ["$(location {})".format(feature) for feature in features],
         **kwargs,
     )
@@ -47,6 +47,6 @@ def http_ts_cucumber_test(name, features, data, steps, **kwargs):
 def typedb_behaviour_http_ts_test(name, **kwargs):
     http_ts_cucumber_test(
         name = name + "-community",
-        steps = "//http-ts/test/behaviour/steps",
+        steps = "//http-ts/tests/behaviour/steps",
         **kwargs,
     )
