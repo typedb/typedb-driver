@@ -72,6 +72,8 @@ export async function openAndTestConnectionWithHostPort(username: string, passwo
     return healthCheck;
 }
 export function closeConnection() {
+    if (transactionID) driver.closeTransaction(transactionID).then(assertNotError);
+    if (backgroundTransactionID) driver.closeTransaction(backgroundTransactionID).then(assertNotError);
     driver = undefined;
 }
 

@@ -73,12 +73,13 @@ defineParameterType({
     }
 });
 
-export type ConceptKind = "concept" | "variable" | "type" | "instance" | "entityType" | "relationType" | "attributeType" | "roleType" | "entity" | "relation" | "attribute" | "value"
+export type ConceptKind = "concept" | "type" | "instance" | "entityType" | "relationType" | "attributeType" | "roleType" | "entity" | "relation" | "attribute" | "value"
 defineParameterType({
     name: "concept_kind",
     regexp: /(concept|variable|type|instance|entity type|relation type|attribute type|role type|entity|relation|attribute|value)/,
     transformer: s => s.split(" ")
         .map((x, i) =>{
+            if (x === "variable") return "concept";
             if (i === 0) return x;
             else return x[0].toUpperCase() + x.substring(1, undefined);
         }).join("") as ConceptKind
@@ -104,9 +105,75 @@ defineParameterType({
 
 defineParameterType({
     name: "value",
-    regexp: /.*/,
+    regexp: /.*?/,
     transformer: s => s,
 });
+
+export function parseValue(value: string, valueType: ValueType) {
+    switch (valueType) {
+        case "boolean": return JSON.parse(value);
+        case "integer": return parseInt(value);
+        case "double": return parseFloat(value);
+        case "decimal": {
+            const stripped = value.replace("dec", "");
+            return parseFloat(stripped);
+        }
+        case "string": {
+            const unescaped = unescapeString(value);
+            if (unescaped.startsWith("\"") && unescaped.endsWith("\""))
+                return unescaped.substring(1, unescaped.length - 1);
+            else return unescaped;
+        }
+        case "date": return new Date(value);
+        case "datetime": return parseDateTime(value);
+        case "datetime-tz": {
+            const split = value.split(" ");
+            const dateTime = split[0].split("+")[0].replace("Z", "");
+            const tz = (split[1] ?? value.split("+")[1] ?? "Z").replace(":", "");
+            return `${parseDateTime(dateTime)} ` + tz;
+        }
+        case "duration": return parseDuration(value);
+        case "struct": return JSON.parse(value);
+    }
+}
+
+function unescapeString(value: string) {
+    if (value.includes("\\\"")) return unescapeString(value.replace("\\\"", "\""));
+    else return value;
+}
+
+function parseDateTime(value: string): string {
+    const split = value.split('.');
+    const date = new Date(split[0]);
+    const dateString = date.toISOString().replace("Z", "");
+    if (split.length > 1) return `${dateString}${split[1].slice(3)}`;
+    else return `${dateString}000000`;
+}
+
+const iso8601DurationRegex = /(-)?P(?:([.,\d]+)Y)?(?:([.,\d]+)M)?(?:([.,\d]+)W)?(?:([.,\d]+)D)?(?:T(?:([.,\d]+)H)?(?:([.,\d]+)M)?(?:([.,\d]+)S)?)?/;
+function parseDuration(duration: string) {
+    const matches = duration.match(iso8601DurationRegex);
+
+    const sign = matches[1] ? -1 : 1;
+    const seconds = matches[8] ? parseFloat(matches[8]) : 0;
+    const minutes = (matches[7] ? parseFloat(matches[7]) : 0) + Math.floor(seconds/60);
+    const hours = (matches[6] ? parseFloat(matches[6]) : 0) + Math.floor(minutes/60);
+    const days = (matches[5] ? parseFloat(matches[5]) : 0) + Math.floor(hours/24);
+    const weeks = (matches[4] ? parseFloat(matches[4]) : 0) + Math.floor(days/7);
+    const months = (matches[3] ? parseFloat(matches[3]) : 0);
+    const years = (matches[2] ? parseFloat(matches[2]) : 0) + Math.floor(months/12) + Math.floor(weeks/52);
+
+    return {
+        sign,
+        seconds: seconds % 60,
+        minutes: minutes % 60,
+        hours: hours % 24,
+        days: days % 7,
+        weeks: weeks % 52,
+        months: months % 12,
+        years
+    }
+}
 
 defineParameterType({
     name: "value_type",
