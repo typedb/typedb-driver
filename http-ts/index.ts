@@ -47,44 +47,48 @@ export class TypeDBHttpDriver {
         return this.apiGet<DatabasesListResponse>(`/v1/databases`);
     }
 
-    getDatabase(name: String): Promise<ApiResponse<Database>> {
-        return this.apiGet<Database>(`/v1/databases/${name}`);
+    getDatabase(name: string): Promise<ApiResponse<Database>> {
+        return this.apiGet<Database>(`/v1/databases/${encodeURIComponent(name)}`);
     }
 
     createDatabase(name: string): Promise<ApiResponse> {
-        return this.apiPost(`/v1/databases/${name}`, {});
+        return this.apiPost(`/v1/databases/${encodeURIComponent(name)}`, {});
     }
 
     deleteDatabase(name: string): Promise<ApiResponse> {
-        return this.apiDelete(`/v1/databases/${name}`);
+        return this.apiDelete(`/v1/databases/${encodeURIComponent(name)}`);
     }
 
     getDatabaseSchema(name: string): Promise<ApiResponse<string>> {
-        return this.apiGetString(`/v1/databases/${name}/schema`);
+        return this.apiGetString(`/v1/databases/${encodeURIComponent(name)}/schema`);
     }
 
     getDatabaseTypeSchema(name: string): Promise<ApiResponse<string>> {
-        return this.apiGetString(`/v1/databases/${name}/type-schema`);
+        return this.apiGetString(`/v1/databases/${encodeURIComponent(name)}/type-schema`);
     }
 
     getUsers(): Promise<ApiResponse<UsersListResponse>> {
         return this.apiGet<UsersListResponse>(`/v1/users`);
     }
 
+    getCurrentUser(): Promise<ApiResponse<User>> {
+        return this.apiGet<User>(`/v1/users/${encodeURIComponent(this.params.username)}`);
+    }
+
     getUser(username: string): Promise<ApiResponse<User>> {
-        return this.apiGet<User>(`/v1/users/${username}`);
+        return this.apiGet<User>(`/v1/users/${encodeURIComponent(username)}`);
     }
 
     createUser(username: string, password: string): Promise<ApiResponse> {
-        return this.apiPost(`/v1/users/${username}`, { password });
+        return this.apiPost(`/v1/users/${encodeURIComponent(username)}`, { password });
     }
 
     updateUser(username: string, password: string): Promise<ApiResponse> {
-        return this.apiPut(`/v1/users/${username}`, { password });
+        return this.apiPut(`/v1/users/${encodeURIComponent(username)}`, { password });
     }
 
     deleteUser(username: string): Promise<ApiResponse> {
-        return this.apiDelete(`/v1/users/${username}`);
+        return this.apiDelete(`/v1/users/${encodeURIComponent(username)}`);
     }
 
     openTransaction(databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions): Promise<ApiResponse<TransactionOpenResponse>> {
@@ -92,19 +96,19 @@ export class TypeDBHttpDriver {
     }
 
     commitTransaction(transactionId: string): Promise<ApiResponse> {
-        return this.apiPost(`/v1/transactions/${transactionId}/commit`, {});
+        return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/commit`, {});
     }
 
     closeTransaction(transactionId: string): Promise<ApiResponse> {
-        return this.apiPost(`/v1/transactions/${transactionId}/close`, {});
+        return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/close`, {});
     }
 
     rollbackTransaction(transactionId: string): Promise<ApiResponse> {
-        return this.apiPost(`/v1/transactions/${transactionId}/rollback`, {});
+        return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/rollback`, {});
     }
 
     query(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<QueryResponse>> {
-        return this.apiPost<QueryResponse>(`/v1/transactions/${transactionId}/query`, { query, queryOptions });
+        return this.apiPost<QueryResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/query`, { query, queryOptions });
     }
 
     oneShotQuery(query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions) {
@@ -155,7 +159,7 @@ export class TypeDBHttpDriver {
     private async stringApiReq(method: string, path: string, options?: { headers?: Record<string, string> }): Promise<ApiResponse<string>> {
         const resp = await this.apiReq(method, path, undefined, options);
         if ("err" in resp) return resp;
-        if (resp.ok) return { ok: await this.stringOrNull(resp) };
+        if (resp.ok) return { ok: await this.stringOrNull(resp) ?? "" };
         else {
             const json = await this.jsonOrNull(resp);
             if (isApiError(json)) return { err: json, status: resp.status };

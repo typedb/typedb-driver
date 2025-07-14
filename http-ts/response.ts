@@ -94,7 +94,7 @@ export interface ApiErrorResponse {
 }
 
 export function isApiError(err: any): err is ApiError {
-    return typeof err.code === "string" && typeof err.message === "string";
+    return err != null && typeof err.code === "string" && typeof err.message === "string";
 }
 
 export type ApiResponse<OK_RES = {} | null> = ApiOkResponse<OK_RES> | ApiErrorResponse;

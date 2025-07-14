@@ -38,6 +38,7 @@ bazel-*
 # Compiled files #
 target/
 dist/
+dist-test/
 out/
 *.class
 
