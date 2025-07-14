@@ -146,7 +146,6 @@ Then(`answer get row\\({int}\\) get variable{is_by_var_index}\\({var}\\)${EXPECT
 Then('answer get row\\({int}\\) get variable{is_by_var_index}\\({var}\\) {is_or_not} empty', (rowIdx: number, indexed: boolean, variable: string, is: boolean) => {
     if (indexed) return; // http does not have indices
     if (answers.answerType === "ok" || answers.answerType === "conceptDocuments") assert.fail("Expected conceptRow answers");
-    // TODO-sam: not sure if this is correct. revisit at some point
     if (is) assert.equal(answers.answers[rowIdx].data[variable], "");
     else assert.notEqual(answers.answers[rowIdx].data[variable], "");
 });
