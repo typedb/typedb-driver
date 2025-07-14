@@ -1,5 +1,5 @@
 import { defineParameterType } from "@cucumber/cucumber";
-import { AnswerType, ApiOkResponse, ApiResponse, isApiErrorResponse, isOkResponse, TransactionType } from "../../../dist";
+import { AnswerType, ApiOkResponse, ApiResponse, isApiErrorResponse, isOkResponse, QueryType, TransactionType, ValueType } from "../../../dist";
 import assert from "assert";
 
 export type MayError = boolean | string;
@@ -45,6 +45,12 @@ defineParameterType({
     transformer: s => s as TransactionType
 });
 
+defineParameterType({
+    name: "query_type",
+    regexp: /(schema|write|read)/,
+    transformer: s => s as QueryType
+});
+
 function stringToAnswerType(s: string): AnswerType {
     if (s === "ok") return "ok";
     if (s === "concept documents") return "conceptDocuments";
@@ -75,7 +81,7 @@ defineParameterType({
         .map((x, i) =>{
             if (i === 0) return x;
             else return x[0].toUpperCase() + x.substring(1, undefined);
-        }).join() as ConceptKind
+        }).join("") as ConceptKind
 });
 
 defineParameterType({
@@ -100,4 +106,10 @@ defineParameterType({
     name: "value",
     regexp: /.*/,
     transformer: s => s,
+});
+
+defineParameterType({
+    name: "value_type",
+    regexp: /boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct/,
+    transformer: s => s as ValueType,
 });

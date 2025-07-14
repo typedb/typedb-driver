@@ -57,7 +57,7 @@ export function setConcurrentAnswers(answers: QueryResponse[]) {
 
 export const DEFAULT_USERNAME = "admin";
 export const DEFAULT_PASSWORD = "password";
-export const DEFAULT_HOST = "https://hdhg00-0.cluster.typedb.dev";
+export const DEFAULT_HOST = "https://d8u7nl-0.cluster.typedb.dev";
 export const DEFAULT_PORT = 80;
 
 export async function openAndTestConnection(username: string, password: string) {
@@ -86,10 +86,8 @@ async function resetDB() {
     setDefaultDriver();
 
     if (transactionID != undefined) await driver.closeTransaction(transactionID).then(assertNotError);
-    transactionID = undefined;
 
     if (backgroundTransactionID != undefined) await driver.closeTransaction(backgroundTransactionID).then(assertNotError);
-    backgroundTransactionID = undefined;
 
     const dbRes = await driver.getDatabases().then(assertNotError);
     for (const db of dbRes.ok.databases) {
@@ -102,4 +100,10 @@ async function resetDB() {
     }
 
     driver = undefined;
+    transactionID = undefined;
+    backgroundTransactionID = undefined;
+    transactionOptions = {};
+    queryOptions = {};
+    answers = undefined;
+    concurrentAnswers = undefined;
 }

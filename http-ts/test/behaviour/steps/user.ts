@@ -25,11 +25,10 @@ Then('get current username: {word}', async (username: string) => {
 Then('get all users:', async (names: DataTable) => {
     const res = await driver.getUsers().then(assertNotError);
     const expectedUsers = names.raw().map(x => x[0]);
+    expectedUsers.sort();
     const actualUsers = res.ok.users.map((x: User) => x.username);
-    assert.equal(expectedUsers.length, actualUsers.length);
-    expectedUsers.forEach(expectedUser => {
-        assert.ok(actualUsers.includes(expectedUser), `Did not find ${expectedUser} in ${actualUsers}`);
-    })
+    actualUsers.sort();
+    assert.deepEqual(actualUsers, expectedUsers);
 });
 async function getAllUsersMayError(mayError: MayError) {
     await driver.getUsers().then(checkMayError(mayError));

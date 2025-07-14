@@ -47,10 +47,7 @@ Given('connection has databases:', async (databases: DataTable) => {
     expectedDBNames.sort();
     const dbNames = (await driver.getDatabases().then(assertNotError)).ok.databases.map((x: Database) => x.name);
     dbNames.sort();
-    assert.equal(expectedDBNames.length, dbNames.length);
-    for (let i = 0; i < dbNames.length; i++) {
-        assert.equal(dbNames[i], expectedDBNames[i]);
-    }
+    assert.deepEqual(dbNames, expectedDBNames);
 });
 
 Given('connection does not have database: {word}', async (database: string) => {
