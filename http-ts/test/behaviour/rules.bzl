@@ -46,7 +46,7 @@ def http_ts_cucumber_test(name, features, data, steps, **kwargs):
 
 def typedb_behaviour_http_ts_test(name, **kwargs):
     http_ts_cucumber_test(
-        name = name,
+        name = name + "-community",
         steps = "//http-ts/test/behaviour/steps",
         **kwargs,
     )
