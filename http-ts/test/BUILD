@@ -34,6 +34,7 @@ checkstyle_test(
     exclude = glob([
         "**/*.md",
         "tsconfig.json",
+        "package.json",
     ]),
     license_type = "apache-header",
 )

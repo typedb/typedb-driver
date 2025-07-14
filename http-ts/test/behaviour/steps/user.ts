@@ -9,7 +9,7 @@ import {
 import { driver } from "./context";
 import { DataTable, Then, When } from "@cucumber/cucumber";
 import assert from "assert";
-import { isApiErrorResponse, isOkResponse, User } from "../../../dist";
+import { isOkResponse, User } from "../../../dist";
 
 async function createUser(username: string, password: string, mayError: MayError) {
     await driver.createUser(username, password).then(checkMayError(mayError));

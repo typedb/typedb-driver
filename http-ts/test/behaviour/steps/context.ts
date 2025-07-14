@@ -57,8 +57,8 @@ export function setConcurrentAnswers(answers: QueryResponse[]) {
 
 export const DEFAULT_USERNAME = "admin";
 export const DEFAULT_PASSWORD = "password";
-export const DEFAULT_HOST = "https://d8u7nl-0.cluster.typedb.dev";
-export const DEFAULT_PORT = 80;
+export const DEFAULT_HOST = "127.0.0.1";
+export const DEFAULT_PORT = 1729;
 
 export async function openAndTestConnection(username: string, password: string) {
     return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
