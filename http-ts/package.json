@@ -5,8 +5,8 @@
   "author": "TypeDB",
   "license": "Apache-2.0",
   "homepage": "https://typedb.com",
-  "type": "module",
-  "main": "index.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/typedb/typedb-driver"
