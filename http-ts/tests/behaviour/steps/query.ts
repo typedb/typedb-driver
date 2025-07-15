@@ -184,9 +184,19 @@ function tryGetAndCheckLabel(rowIdx: number, kind: ConceptKind, indexed: boolean
     if (indexed) return; // http does not have indices
     const concept = getRowIndexConceptKindVariable(rowIdx, variable, kind);
     let actualLabel: string | undefined = undefined;
-    if ("label" in concept) actualLabel = concept.label;
-    else if ("type" in concept && concept.type && "label" in concept.type) actualLabel = concept.type.label;
-    else if ("valueType" in concept) actualLabel = concept.valueType
+    switch (concept.kind) {
+        case "entityType":
+        case "relationType":
+        case "attributeType":
+        case "roleType": actualLabel = concept.label; break;
+        case "entity":
+        case "relation":
+        case "attribute":  {
+            if (concept.type) actualLabel = concept.type.label;
+            break;
+        }
+        case "value": actualLabel = concept.valueType; break;
+    }
     if (is) assert.equal(actualLabel, label);
     else assert.notEqual(actualLabel, label);
 }
