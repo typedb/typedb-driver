@@ -477,6 +477,13 @@ commands:
           export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
+  deploy-http-ts-npm-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //http-ts:deploy-npm -- snapshot
+
   test-npm-snapshot-unix:
     steps:
       - run: |
@@ -496,6 +503,14 @@ commands:
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
+
+  deploy-http-ts-npm-release-unix:
+    steps:
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+          bazel run --define version=$(cat VERSION) //http-ts:deploy-npm --compilation_mode=opt -- release
 
 jobs:
 
@@ -621,6 +636,7 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
+      - deploy-http-ts-npm-snapshot-unix
 #      - deploy-npm-snapshot-unix
 
   deploy-snapshot-dotnet-any:
@@ -777,6 +793,7 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
+      - deploy=http-ts-npm-release-unix
 #      - deploy-npm-release-unix
 
   deploy-release-dotnet-any:
