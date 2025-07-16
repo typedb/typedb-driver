@@ -18,8 +18,8 @@
  */
 
 import { After, Before } from "@cucumber/cucumber";
-import { isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.js";
-import { assertNotError } from "./params.js";
+import { isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist";
+import { assertNotError } from "./params";
 
 export let driver: TypeDBHttpDriver;
 let transactionID: string;

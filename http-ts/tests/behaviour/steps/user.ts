@@ -24,11 +24,11 @@ import {
     ContainsOrDoesnt,
     EXPECT_ERROR_CONTAINING,
     MayError
-} from "./params.js";
-import { driver } from "./context.js";
+} from "./params";
+import { driver } from "./context";
 import { DataTable, Then, When } from "@cucumber/cucumber";
 import assert from "assert";
-import { isOkResponse, User } from "../../../dist/index.js";
+import { isOkResponse, User } from "../../../dist";
 
 async function createUser(username: string, password: string, mayError: MayError) {
     await driver.createUser(username, password).then(checkMayError(mayError));

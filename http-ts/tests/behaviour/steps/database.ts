@@ -18,10 +18,10 @@
  */
 
 import { DataTable, Given, Then } from "@cucumber/cucumber";
-import { driver } from "./context.js";
-import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params.js";
+import { driver } from "./context";
+import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import assert from "assert";
-import { Database, isApiErrorResponse } from "../../../dist/index.js";
+import { Database, isApiErrorResponse } from "../../../dist";
 
 async function createDatabase(database: string, mayError: MayError) {
     await driver.createDatabase(database).then(checkMayError(mayError));

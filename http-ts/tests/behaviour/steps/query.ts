@@ -25,15 +25,15 @@ import {
     setAnswers,
     setConcurrentAnswers, setQueryAnswerCountLimit,
     setQueryIncludeInstanceTypes,
-} from "./context.js";
+} from "./context";
 import {
     assertNotError,
     checkMayError, ConceptKind,
     ContainsOrDoesnt,
     EXPECT_ERROR_CONTAINING,
     MayError, parseValue
-} from "./params.js";
-import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.js";
+} from "./params";
+import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist";
 import assert from "assert";
 
 const runQuery = async (mayError: MayError, query: string) =>  {
@@ -219,8 +219,8 @@ Then('answer get row\\({int}\\) get {concept_kind}{is_by_var_index}\\({var}\\) g
 function tryGetAndCheckFieldInConcept(rowIdx: number, kind: ConceptKind, indexed: boolean, variable: string, fieldName: string, expectPresent: boolean) {
     if (indexed) return; // http does not have indices
     const concept = getRowIndexConceptKindVariable(rowIdx, variable, kind);
-    if (expectPresent) assert.ok(fieldName in concept && (concept as any)[fieldName], `Expected concept to have ${fieldName}`);
-    else assert.ok(fieldName !in concept || !(concept as any)[fieldName], `Expected concept to not have ${fieldName}`);
+    if (expectPresent) assert.ok(fieldName in concept && concept[fieldName], `Expected concept to have ${fieldName}`);
+    else assert.ok(fieldName !in concept || !concept[fieldName], `Expected concept to not have ${fieldName}`);
 }
 
 Then('answer get row\\({int}\\) get {concept_kind}{is_by_var_index}\\({var}\\) {contains_or_doesnt} iid', (rowIdx: number, kind: ConceptKind, indexed: boolean, variable: string, containsOrDoesnt: ContainsOrDoesnt) => {
@@ -290,7 +290,7 @@ function getRowGetVariableCheckValueType(rowIdx: number, kind: ConceptKind, inde
         assert.ok("valueType" in concept, "Expected concept to have valueType");
         assert.equal(concept.valueType, valueType);
     } else {
-        assert.ok("valueType" ! in concept || (concept as any)["valueType"] !== valueType, "Expected concept to not have valueType");
+        assert.ok("valueType" ! in concept || concept["valueType"] !== valueType, "Expected concept to not have valueType");
     }
 }
 Then('answer get row\\({int}\\) get {concept_kind}{is_by_var_index}\\({var}\\) get {value_type}{may_error}', getRowGetVariableCheckValueType);

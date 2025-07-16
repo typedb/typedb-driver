@@ -18,7 +18,7 @@
  */
 
 import { defineParameterType } from "@cucumber/cucumber";
-import { AnswerType, ApiOkResponse, ApiResponse, isApiErrorResponse, isOkResponse, QueryType, TransactionType, ValueType } from "../../../dist/index.js";
+import { AnswerType, ApiOkResponse, ApiResponse, isApiErrorResponse, isOkResponse, QueryType, TransactionType, ValueType } from "../../../dist";
 import assert from "assert";
 
 export type MayError = boolean | string;
