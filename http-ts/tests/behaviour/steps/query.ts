@@ -25,15 +25,15 @@ import {
     setAnswers,
     setConcurrentAnswers, setQueryAnswerCountLimit,
     setQueryIncludeInstanceTypes,
-} from "./context";
+} from "./context.js";
 import {
     assertNotError,
     checkMayError, ConceptKind,
     ContainsOrDoesnt,
     EXPECT_ERROR_CONTAINING,
     MayError, parseValue
-} from "./params";
-import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist";
+} from "./params.js";
+import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.js";
 import assert from "assert";
 
 const runQuery = async (mayError: MayError, query: string) =>  {
