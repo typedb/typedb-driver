@@ -18,7 +18,7 @@
  */
 
 import { Given, Then, When } from "@cucumber/cucumber";
-import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
+import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params.js";
 import {
     closeConnection, DEFAULT_HOST,
     DEFAULT_PASSWORD, DEFAULT_PORT,
@@ -26,7 +26,7 @@ import {
     driver,
     openAndTestConnection,
     openAndTestConnectionWithHostPort
-} from "./context";
+} from "./context.js";
 import assert from "assert";
 
 Given("typedb starts", () => {});
