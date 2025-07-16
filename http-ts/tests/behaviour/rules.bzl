@@ -21,7 +21,7 @@ def behaviour_test_ts_config():
     return {
         "compilerOptions": {
             "target": "es2021",
-            "module": "es2022",
+            "module": "commonjs",
             "moduleResolution": "node",
             "esModuleInterop": True,
             "skipLibCheck": True,

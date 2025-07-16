@@ -18,15 +18,15 @@
  */
 
 import { Then, When } from "@cucumber/cucumber";
-import { TransactionType } from "../../../dist/index.js";
-import { checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params.js";
+import { TransactionType } from "../../../dist";
+import { checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import {
     driver, openBackgroundTransaction,
     openTransaction,
     setTransactionSchemaLockAcquireTimeout,
     setTransactionTimeoutMillis,
     tx
-} from "./context.js";
+} from "./context";
 
 async function connectionOpenTransactionForDatabase(type: TransactionType, databaseName: string, mayError: MayError) {
     await openTransaction(databaseName, type).then(checkMayError(mayError));

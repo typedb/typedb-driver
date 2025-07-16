@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { DriverParams, remoteOrigin } from "./params.js";
+import { DriverParams, remoteOrigin } from "./params";
 import {
     ApiErrorResponse,
     ApiResponse,
@@ -28,14 +28,14 @@ import {
     TransactionOpenResponse,
     UsersListResponse,
     VersionResponse
-} from "./response.js";
+} from "./response";
 
 const HTTP_UNAUTHORIZED = 401;
 
-export * from "./concept.js";
-export * from "./params.js";
-export * from "./query-structure.js";
-export * from "./response.js";
+export * from "./concept";
+export * from "./params";
+export * from "./query-structure";
+export * from "./response";
 
 export class TypeDBHttpDriver {
 
