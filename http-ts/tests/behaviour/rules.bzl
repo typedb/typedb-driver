@@ -20,7 +20,7 @@ load("@http-ts_npm//http-ts:@cucumber/cucumber/package_json.bzl", cucumber_bin =
 def behaviour_test_ts_config():
     return {
         "compilerOptions": {
-            "target": "es2019",
+            "target": "es2021",
             "module": "commonjs",
             "moduleResolution": "node",
             "esModuleInterop": True,

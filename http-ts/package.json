@@ -1,12 +1,13 @@
 {
-  "name": "typedb-driver-http",
+  "name": "@samuel-butcher-typedb/typedb-http-driver",
   "version": "0.0.0",
   "description": "TypeDB HTTP Driver",
   "author": "TypeDB",
   "license": "Apache-2.0",
   "homepage": "https://typedb.com",
   "type": "module",
-  "main": "index.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/typedb/typedb-driver"
@@ -17,9 +18,9 @@
   ],
   "packageManager": "pnpm@8.15.9",
   "dependencies": {
-    "@cucumber/cucumber": "^9.0.0",
-    "@types/node": "^24.0.12",
-    "typescript": "^5.8.3"
+    "@cucumber/cucumber": "9.0.0",
+    "@types/node": "24.0.12",
+    "typescript": "5.8.3"
   },
   "engines": {
     "node": ">=22.16 <23"

@@ -281,7 +281,8 @@ http_ts_npm_repositories()
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
 rules_ts_dependencies(
-    ts_version_from = "//nodejs:package.json",
+    ts_version_from = "//http-ts:package.json",
+    ts_integrity = "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="
 )
 
 load("@aspect_bazel_lib//lib:repositories.bzl", "register_jq_toolchains")
