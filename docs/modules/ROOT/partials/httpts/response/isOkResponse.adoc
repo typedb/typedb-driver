@@ -1,0 +1,29 @@
+[#_isOkResponse]
+=== isOkResponse
+
+// tag::methods[]
+[#_isOkResponse_isOkResponse_res_ApiResponse]
+==== isOkResponse
+
+[source,httpts]
+----
+isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `res` a|  a| `ApiResponse`
+|===
+
+[caption=""]
+.Returns
+`res is ApiOkResponse<OK_RES>`
+
+// end::methods[]
+

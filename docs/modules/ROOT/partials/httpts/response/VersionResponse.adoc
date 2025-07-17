@@ -1,0 +1,15 @@
+[#_VersionResponse]
+=== VersionResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `distribution` a| `Distribution` a| 
+a| `version` a| `string` a| 
+|===
+// end::properties[]
+

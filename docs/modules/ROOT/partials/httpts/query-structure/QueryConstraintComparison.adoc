@@ -1,0 +1,18 @@
+[#_QueryConstraintComparison]
+=== QueryConstraintComparison
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `comparator` a| `string` a| 
+a| `lhs` a| `QueryVertexVariable` a| 
+a| `rhs` a| `QueryVertexVariable` a| 
+a| `tag` a| `"comparison"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+|===
+// end::properties[]
+

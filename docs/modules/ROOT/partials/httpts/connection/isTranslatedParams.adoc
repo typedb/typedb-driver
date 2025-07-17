@@ -1,0 +1,29 @@
+[#_isTranslatedParams]
+=== isTranslatedParams
+
+// tag::methods[]
+[#_isTranslatedParams_isTranslatedParams_params_DriverParams]
+==== isTranslatedParams
+
+[source,httpts]
+----
+isTranslatedParams(params: DriverParams): params is DriverParamsTranslated
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `params` a|  a| `DriverParams`
+|===
+
+[caption=""]
+.Returns
+`params is DriverParamsTranslated`
+
+// end::methods[]
+

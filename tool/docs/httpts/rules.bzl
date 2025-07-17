@@ -15,26 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-package(default_visibility = ["//http-ts/test/behaviour:__subpackages__"])
 
-exports_files([
-    "tsconfig.json",
-    "package.json",
-    "node_modules",
-    "pnpm-lock.yaml",
-])
-
-checkstyle_test(
-    name = "checkstyle",
-    include = glob([
-        "**/*",
-    ]),
-    exclude = glob([
-        "**/*.md",
-        "tsconfig.json",
-        "package.json",
-    ]),
-    license_type = "apache-header",
-)
+def typedoc_to_adoc(name, data, docs_dirs):
+    args = ["$(location %s)" % target for target in data] + [
+        "--output",
+        "docs/modules/ROOT/partials/httpts",
+    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
+    kt_jvm_binary(
+        name = name,
+        srcs = [
+            "//tool/docs:httpts/HTTPTSDocsParser.kt",
+        ],
+        main_class = "com.typedb.driver.tool.docs.httpts.HTTPTSDocsParserKt",
+        args = args,
+        deps = [
+            "//tool/docs:html_docs_to_adoc_lib",
+            "@maven//:org_jsoup_jsoup",
+            "@maven//:info_picocli_picocli",
+        ],
+        data = data,
+        visibility = ["//visibility:public"],
+    )

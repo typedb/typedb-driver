@@ -1,0 +1,18 @@
+[#_QueryConstraintLinks]
+=== QueryConstraintLinks
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `player` a| `QueryVertexVariable` a| 
+a| `relation` a| `QueryVertexVariable` a| 
+a| `role` a| `QueryVertexVariable` a| 
+a| `tag` a| `"links"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+|===
+// end::properties[]
+

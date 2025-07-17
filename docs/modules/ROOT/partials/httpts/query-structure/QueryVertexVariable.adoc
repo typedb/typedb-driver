@@ -1,0 +1,15 @@
+[#_QueryVertexVariable]
+=== QueryVertexVariable
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `id` a| `string` a| 
+a| `tag` a| `"variable"` a| 
+|===
+// end::properties[]
+

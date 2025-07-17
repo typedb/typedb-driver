@@ -1,0 +1,18 @@
+[#_ConceptDocumentsQueryResponse]
+=== ConceptDocumentsQueryResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `answerType` a| `"conceptDocuments"` a| 
+a| `answers` a| `Object` a| 
+a| `comment` a| `string` a| 
+a| `query` a| `QueryStructure` a| 
+a| `queryType` a| `QueryType` a| 
+|===
+// end::properties[]
+

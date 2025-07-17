@@ -1,0 +1,17 @@
+[#_QueryConstraintIid]
+=== QueryConstraintIid
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `concept` a| `QueryVertexVariable` a| 
+a| `iid` a| `string` a| 
+a| `tag` a| `"iid"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+|===
+// end::properties[]
+

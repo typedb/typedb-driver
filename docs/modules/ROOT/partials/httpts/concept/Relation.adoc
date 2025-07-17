@@ -1,0 +1,16 @@
+[#_Relation]
+=== Relation
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `string` a| 
+a| `kind` a| `"relation"` a| 
+a| `type` a| `RelationType` a| 
+|===
+// end::properties[]
+

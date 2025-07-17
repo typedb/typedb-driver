@@ -29,9 +29,9 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@http-ts_npm//:defs.bzl", "npm_link_all_packages")
-load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
-load("//nodejs:docs_structure.bzl", "dir_mapping")
-load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
+load("//http-ts:tool/typedoc/rules.bzl", "typedoc_docs")
+load("//http-ts:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:httpts/rules.bzl", "typedoc_to_adoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -91,4 +91,47 @@ checkstyle_test(
         "pnpm-lock.yaml",
     ]),
     license_type = "apache-header",
+)
+
+# This rule should be in tool/typedoc, but there is a problem with the path configurations
+# when typedoc script is placed below the modules being documented.
+ts_project(
+    name = "typedoc_runner",
+    srcs = glob(["tool/typedoc/TypeDocRunner.ts",]),
+    tsconfig = "tool/typedoc/tsconfig.json",
+    declaration = True,
+    deps = [
+        ":node_modules/typedoc",
+        ":node_modules/@types/node",
+    ],
+    transpiler = "tsc",
+    visibility = ["//visibility:public"],
+    out_dir = ".",
+)
+
+js_binary(
+    name = "typedoc_runner_bin",
+    data = [
+        ":typedoc_runner",
+    ],
+    entry_point = ":typedoc_runner",
+    chdir = "http-ts",
+)
+
+typedoc_docs(
+    name = "docs_html",
+    script = ":typedoc_runner_bin",
+    deps = [":node_modules/@types/node"],
+    srcs = glob([
+        "*.ts",
+        "tsconfig.json",
+        "tool/**/*.json",
+    ]),
+    out = "driver_docs_typedoc",
+)
+
+typedoc_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = dir_mapping,
 )

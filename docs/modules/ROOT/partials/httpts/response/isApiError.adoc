@@ -1,0 +1,29 @@
+[#_isApiError]
+=== isApiError
+
+// tag::methods[]
+[#_isApiError_isApiError_err_any]
+==== isApiError
+
+[source,httpts]
+----
+isApiError(err: any): err is ApiError
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `err` a|  a| `any`
+|===
+
+[caption=""]
+.Returns
+`err is ApiError`
+
+// end::methods[]
+

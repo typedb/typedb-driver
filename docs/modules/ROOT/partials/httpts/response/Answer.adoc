@@ -1,0 +1,9 @@
+[#_Answer]
+=== Answer
+
+[,typescript]
+----
+type Answer = ConceptRowAnswer | ConceptDocument
+----
+
+

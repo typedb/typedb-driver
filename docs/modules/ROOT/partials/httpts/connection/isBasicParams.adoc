@@ -1,0 +1,29 @@
+[#_isBasicParams]
+=== isBasicParams
+
+// tag::methods[]
+[#_isBasicParams_isBasicParams_params_DriverParams]
+==== isBasicParams
+
+[source,httpts]
+----
+isBasicParams(params: DriverParams): params is DriverParamsBasic
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `params` a|  a| `DriverParams`
+|===
+
+[caption=""]
+.Returns
+`params is DriverParamsBasic`
+
+// end::methods[]
+

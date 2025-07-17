@@ -1,0 +1,9 @@
+[#_ValueKind]
+=== ValueKind
+
+[,typescript]
+----
+type ValueKind = "value"
+----
+
+

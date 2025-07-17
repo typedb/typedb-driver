@@ -1,0 +1,15 @@
+[#_QueryVertexLabel]
+=== QueryVertexLabel
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `tag` a| `"label"` a| 
+a| `type` a| `Type` a| 
+|===
+// end::properties[]
+

@@ -1,0 +1,14 @@
+[#_TransactionOpenResponse]
+=== TransactionOpenResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `transactionId` a| `string` a| 
+|===
+// end::properties[]
+

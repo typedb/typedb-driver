@@ -1,0 +1,9 @@
+[#_Concept]
+=== Concept
+
+[,typescript]
+----
+type Concept = Type | Entity | Relation | Attribute | Value
+----
+
+

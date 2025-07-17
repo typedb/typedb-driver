@@ -1,0 +1,9 @@
+[#_ValueType]
+=== ValueType
+
+[,typescript]
+----
+type ValueType = "boolean" | "integer" | "double" | "decimal" | "date" | "datetime" | "datetime-tz" | "duration" | "string" | "struct"
+----
+
+

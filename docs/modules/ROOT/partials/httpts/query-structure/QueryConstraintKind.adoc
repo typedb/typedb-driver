@@ -1,0 +1,17 @@
+[#_QueryConstraintKind]
+=== QueryConstraintKind
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `kind` a| `string` a| 
+a| `tag` a| `"kind"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+a| `type` a| `QueryVertexVariable` a| 
+|===
+// end::properties[]
+

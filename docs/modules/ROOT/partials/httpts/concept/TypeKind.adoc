@@ -1,0 +1,9 @@
+[#_TypeKind]
+=== TypeKind
+
+[,typescript]
+----
+type TypeKind = "entityType" | "relationType" | "attributeType" | "roleType"
+----
+
+

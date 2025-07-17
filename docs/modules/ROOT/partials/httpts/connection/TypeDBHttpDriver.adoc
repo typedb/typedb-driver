@@ -1,0 +1,455 @@
+[#_TypeDBHttpDriver]
+=== TypeDBHttpDriver
+
+// tag::methods[]
+[#_TypeDBHttpDriver_TypeDBHttpDriver_params_DriverParams]
+==== TypeDBHttpDriver
+
+[source,httpts]
+----
+new TypeDBHttpDriver(params: DriverParams): TypeDBHttpDriver
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `params` a|  a| `DriverParams`
+|===
+
+[caption=""]
+.Returns
+`TypeDBHttpDriver`
+
+[#_TypeDBHttpDriver_closeTransaction_transactionId_string]
+==== closeTransaction
+
+[source,httpts]
+----
+closeTransaction(transactionId: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionId` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_commitTransaction_transactionId_string]
+==== commitTransaction
+
+[source,httpts]
+----
+commitTransaction(transactionId: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionId` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_createDatabase_name_string]
+==== createDatabase
+
+[source,httpts]
+----
+createDatabase(name: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_createUser_username_string_password_string]
+==== createUser
+
+[source,httpts]
+----
+createUser(username: string, password: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  a| `string`
+a| `password` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_deleteDatabase_name_string]
+==== deleteDatabase
+
+[source,httpts]
+----
+deleteDatabase(name: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_deleteUser_username_string]
+==== deleteUser
+
+[source,httpts]
+----
+deleteUser(username: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_getCurrentUser_]
+==== getCurrentUser
+
+[source,httpts]
+----
+getCurrentUser(): Promise<ApiResponse<User>>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<User>>`
+
+[#_TypeDBHttpDriver_getDatabase_name_string]
+==== getDatabase
+
+[source,httpts]
+----
+getDatabase(name: string): Promise<ApiResponse<Database>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<Database>>`
+
+[#_TypeDBHttpDriver_getDatabaseSchema_name_string]
+==== getDatabaseSchema
+
+[source,httpts]
+----
+getDatabaseSchema(name: string): Promise<ApiResponse<string>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<string>>`
+
+[#_TypeDBHttpDriver_getDatabaseTypeSchema_name_string]
+==== getDatabaseTypeSchema
+
+[source,httpts]
+----
+getDatabaseTypeSchema(name: string): Promise<ApiResponse<string>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<string>>`
+
+[#_TypeDBHttpDriver_getDatabases_]
+==== getDatabases
+
+[source,httpts]
+----
+getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<DatabasesListResponse>>`
+
+[#_TypeDBHttpDriver_getUser_username_string]
+==== getUser
+
+[source,httpts]
+----
+getUser(username: string): Promise<ApiResponse<User>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<User>>`
+
+[#_TypeDBHttpDriver_getUsers_]
+==== getUsers
+
+[source,httpts]
+----
+getUsers(): Promise<ApiResponse<UsersListResponse>>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<UsersListResponse>>`
+
+[#_TypeDBHttpDriver_health_]
+==== health
+
+[source,httpts]
+----
+health(): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_oneShotQuery_query_string_commit_boolean_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions_queryOptions_QueryOptions]
+==== oneShotQuery
+
+[source,httpts]
+----
+oneShotQuery( query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a|  a| `string`
+a| `commit` a|  a| `boolean`
+a| `databaseName` a|  a| `string`
+a| `transactionType` a|  a| `TransactionType`
+a| `transactionOptions` a|  a| `TransactionOptions`
+a| `queryOptions` a|  a| `QueryOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<QueryResponse>>`
+
+[#_TypeDBHttpDriver_openTransaction_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions]
+==== openTransaction
+
+[source,httpts]
+----
+openTransaction( databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, ): Promise<ApiResponse<TransactionOpenResponse>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `databaseName` a|  a| `string`
+a| `transactionType` a|  a| `TransactionType`
+a| `transactionOptions` a|  a| `TransactionOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<TransactionOpenResponse>>`
+
+[#_TypeDBHttpDriver_query_transactionId_string_query_string_queryOptions_QueryOptions]
+==== query
+
+[source,httpts]
+----
+query( transactionId: string, query: string, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionId` a|  a| `string`
+a| `query` a|  a| `string`
+a| `queryOptions` a|  a| `QueryOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<QueryResponse>>`
+
+[#_TypeDBHttpDriver_rollbackTransaction_transactionId_string]
+==== rollbackTransaction
+
+[source,httpts]
+----
+rollbackTransaction(transactionId: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionId` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_updateUser_username_string_password_string]
+==== updateUser
+
+[source,httpts]
+----
+updateUser(username: string, password: string): Promise<ApiResponse>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  a| `string`
+a| `password` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse>`
+
+[#_TypeDBHttpDriver_version_]
+==== version
+
+[source,httpts]
+----
+version(): Promise<ApiResponse<VersionResponse>>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<VersionResponse>>`
+
+// end::methods[]
+

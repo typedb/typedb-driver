@@ -1,0 +1,9 @@
+[#_ThingKind]
+=== ThingKind
+
+[,typescript]
+----
+type ThingKind = "entity" | "relation" | "attribute"
+----
+
+

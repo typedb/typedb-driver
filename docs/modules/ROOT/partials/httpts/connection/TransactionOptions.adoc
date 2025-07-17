@@ -1,0 +1,15 @@
+[#_TransactionOptions]
+=== TransactionOptions
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `schemaLockAcquireTimeoutMillis` a| `number` a| 
+a| `transactionTimeoutMillis` a| `number` a| 
+|===
+// end::properties[]
+

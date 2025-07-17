@@ -1,0 +1,9 @@
+[#_QueryConstraintAny]
+=== QueryConstraintAny
+
+[,typescript]
+----
+type QueryConstraintAny = QueryConstraintIsa | QueryConstraintIsaExact | QueryConstraintHas | QueryConstraintLinks | QueryConstraintSub | QueryConstraintSubExact | QueryConstraintOwns | QueryConstraintRelates | QueryConstraintPlays | QueryConstraintExpression | QueryConstraintFunction | QueryConstraintComparison | QueryConstraintIs | QueryConstraintIid | QueryConstraintKind | QueryConstraintValue | QueryConstraintLabel
+----
+
+

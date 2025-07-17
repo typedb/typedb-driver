@@ -1,0 +1,16 @@
+[#_AttributeType]
+=== AttributeType
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `kind` a| `"attributeType"` a| 
+a| `label` a| `string` a| 
+a| `valueType` a| `ValueType` a| 
+|===
+// end::properties[]
+

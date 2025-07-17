@@ -1,0 +1,9 @@
+[#_DriverParams]
+=== DriverParams
+
+[,typescript]
+----
+type DriverParams = DriverParamsBasic | DriverParamsTranslated
+----
+
+

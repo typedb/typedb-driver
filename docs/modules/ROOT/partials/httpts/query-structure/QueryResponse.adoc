@@ -1,0 +1,9 @@
+[#_QueryResponse]
+=== QueryResponse
+
+[,typescript]
+----
+type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse
+----
+
+

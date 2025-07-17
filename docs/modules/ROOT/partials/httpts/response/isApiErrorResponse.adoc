@@ -1,0 +1,29 @@
+[#_isApiErrorResponse]
+=== isApiErrorResponse
+
+// tag::methods[]
+[#_isApiErrorResponse_isApiErrorResponse_res_ApiResponse]
+==== isApiErrorResponse
+
+[source,httpts]
+----
+isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `res` a|  a| `ApiResponse`
+|===
+
+[caption=""]
+.Returns
+`res is ApiErrorResponse`
+
+// end::methods[]
+

@@ -1,0 +1,16 @@
+[#_DriverParamsTranslated]
+=== DriverParamsTranslated
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `password` a| `string` a| 
+a| `translatedAddresses` a| `TranslatedAddress` a| 
+a| `username` a| `string` a| 
+|===
+// end::properties[]
+

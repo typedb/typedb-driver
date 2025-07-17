@@ -1,0 +1,14 @@
+[#_ApiOkResponse_OK_RES]
+=== ApiOkResponse<OK_RES>
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `ok` a| `OK_RES` a| 
+|===
+// end::properties[]
+

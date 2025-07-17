@@ -1,0 +1,9 @@
+[#_QueryType]
+=== QueryType
+
+[,typescript]
+----
+type QueryType = "read" | "write" | "schema"
+----
+
+

@@ -1,0 +1,9 @@
+[#_ConceptRow]
+=== ConceptRow
+
+[,typescript]
+----
+type ConceptRow = 
+----
+
+

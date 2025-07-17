@@ -1,0 +1,14 @@
+[#_User]
+=== User
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `username` a| `string` a| 
+|===
+// end::properties[]
+

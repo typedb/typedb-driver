@@ -1,0 +1,9 @@
+[#_QueryVertexKind]
+=== QueryVertexKind
+
+[,typescript]
+----
+type QueryVertexKind = "variable" | "label" | "value"
+----
+
+
