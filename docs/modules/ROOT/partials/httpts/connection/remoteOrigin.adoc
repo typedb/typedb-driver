@@ -5,7 +5,7 @@
 [#_remoteOrigin_remoteOrigin_params_DriverParams]
 ==== remoteOrigin
 
-[source,httpts]
+[source,nodejs]
 ----
 remoteOrigin(params: DriverParams): string
 ----

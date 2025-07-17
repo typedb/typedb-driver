@@ -5,7 +5,7 @@
 [#_isApiError_isApiError_err_any]
 ==== isApiError
 
-[source,httpts]
+[source,nodejs]
 ----
 isApiError(err: any): err is ApiError
 ----

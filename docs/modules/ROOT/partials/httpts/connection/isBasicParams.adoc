@@ -5,7 +5,7 @@
 [#_isBasicParams_isBasicParams_params_DriverParams]
 ==== isBasicParams
 
-[source,httpts]
+[source,nodejs]
 ----
 isBasicParams(params: DriverParams): params is DriverParamsBasic
 ----

@@ -5,7 +5,7 @@
 [#_isOkResponse_isOkResponse_res_ApiResponse]
 ==== isOkResponse
 
-[source,httpts]
+[source,nodejs]
 ----
 isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES>
 ----

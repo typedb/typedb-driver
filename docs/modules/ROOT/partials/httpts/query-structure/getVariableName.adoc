@@ -5,7 +5,7 @@
 [#_getVariableName_getVariableName_structure_QueryStructure_variable_QueryVertexVariable]
 ==== getVariableName
 
-[source,httpts]
+[source,nodejs]
 ----
 getVariableName( structure: QueryStructure, variable: QueryVertexVariable, ): string
 ----

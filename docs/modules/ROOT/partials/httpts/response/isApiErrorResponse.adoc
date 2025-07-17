@@ -5,7 +5,7 @@
 [#_isApiErrorResponse_isApiErrorResponse_res_ApiResponse]
 ==== isApiErrorResponse
 
-[source,httpts]
+[source,nodejs]
 ----
 isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse
 ----

@@ -104,9 +104,9 @@ class HTTPTSDocParser : Callable<Unit> {
             parsedClasses.merge(namespaceName, classWithMethod) { a, b -> a.merge(b) }
         }
 
-        parsedClasses.forEach { (name, parsedClass) ->
-            if (parsedClasses[parsedClass.name]!!.isNotEmpty()) {
-                val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("httpts")
+        parsedClasses.values.forEach { parsedClass ->
+            if (parsedClass.isNotEmpty()) {
+                val parsedClassAsciiDoc = parsedClass.toAsciiDoc("nodejs")
                 val fileName = "${generateFilename(parsedClass.name)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
                         ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
@@ -154,7 +154,7 @@ class HTTPTSDocParser : Callable<Unit> {
 
         val descr = if (properties.isNotEmpty() || methods.isNotEmpty()) {
             classDescr
-        } else classDescr + listOf("[,typescript]\n----\ntype $className = $typeAlias\n----\n")
+        } else classDescr + listOf("[source,nodejs]\n----\ntype $className = $typeAlias\n----\n")
 
         return  Class(
             name = className,
