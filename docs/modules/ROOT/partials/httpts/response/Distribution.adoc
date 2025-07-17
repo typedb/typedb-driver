@@ -1,7 +1,7 @@
 [#_Distribution]
 === Distribution
 
-[,typescript]
+[source,nodejs]
 ----
 type Distribution = "TypeDB Cluster" | "TypeDB CE"
 ----

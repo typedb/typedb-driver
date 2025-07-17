@@ -1,7 +1,7 @@
 [#_Answer]
 === Answer
 
-[,typescript]
+[source,nodejs]
 ----
 type Answer = ConceptRowAnswer | ConceptDocument
 ----

@@ -1,7 +1,7 @@
 [#_ValueKind]
 === ValueKind
 
-[,typescript]
+[source,nodejs]
 ----
 type ValueKind = "value"
 ----

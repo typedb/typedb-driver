@@ -1,7 +1,7 @@
 [#_AnswerType]
 === AnswerType
 
-[,typescript]
+[source,nodejs]
 ----
 type AnswerType = "ok" | "conceptRows" | "conceptDocuments"
 ----

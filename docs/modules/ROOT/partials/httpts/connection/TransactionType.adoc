@@ -1,7 +1,7 @@
 [#_TransactionType]
 === TransactionType
 
-[,typescript]
+[source,nodejs]
 ----
 type TransactionType = "read" | "write" | "schema"
 ----

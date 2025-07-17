@@ -1,7 +1,7 @@
 [#_TypeKind]
 === TypeKind
 
-[,typescript]
+[source,nodejs]
 ----
 type TypeKind = "entityType" | "relationType" | "attributeType" | "roleType"
 ----

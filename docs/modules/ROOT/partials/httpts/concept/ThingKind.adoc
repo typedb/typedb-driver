@@ -1,7 +1,7 @@
 [#_ThingKind]
 === ThingKind
 
-[,typescript]
+[source,nodejs]
 ----
 type ThingKind = "entity" | "relation" | "attribute"
 ----

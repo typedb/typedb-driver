@@ -1,7 +1,7 @@
 [#_ApiResponse_OK_RES]
 === ApiResponse<OK_RES>
 
-[,typescript]
+[source,nodejs]
 ----
 type ApiResponse<OK_RES> = 
 ----

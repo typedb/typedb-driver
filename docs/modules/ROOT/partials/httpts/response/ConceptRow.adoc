@@ -1,7 +1,7 @@
 [#_ConceptRow]
 === ConceptRow
 
-[,typescript]
+[source,nodejs]
 ----
 type ConceptRow = 
 ----

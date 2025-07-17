@@ -1,7 +1,7 @@
 [#_Type]
 === Type
 
-[,typescript]
+[source,nodejs]
 ----
 type Type = InstantiableType | RoleType
 ----

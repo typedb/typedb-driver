@@ -1,7 +1,7 @@
 [#_DriverParams]
 === DriverParams
 
-[,typescript]
+[source,nodejs]
 ----
 type DriverParams = DriverParamsBasic | DriverParamsTranslated
 ----

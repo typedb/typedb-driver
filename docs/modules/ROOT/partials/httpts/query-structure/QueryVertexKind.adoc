@@ -1,7 +1,7 @@
 [#_QueryVertexKind]
 === QueryVertexKind
 
-[,typescript]
+[source,nodejs]
 ----
 type QueryVertexKind = "variable" | "label" | "value"
 ----

@@ -1,7 +1,7 @@
 [#_QueryType]
 === QueryType
 
-[,typescript]
+[source,nodejs]
 ----
 type QueryType = "read" | "write" | "schema"
 ----

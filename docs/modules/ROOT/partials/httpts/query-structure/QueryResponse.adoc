@@ -1,7 +1,7 @@
 [#_QueryResponse]
 === QueryResponse
 
-[,typescript]
+[source,nodejs]
 ----
 type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse
 ----
