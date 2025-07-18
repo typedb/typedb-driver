@@ -83,7 +83,7 @@ deploy_npm(
 checkstyle_test(
     name = "checkstyle",
     include = glob([
-        "*",
+        "**/*",
     ]),
     exclude = glob([
         "*.json",
