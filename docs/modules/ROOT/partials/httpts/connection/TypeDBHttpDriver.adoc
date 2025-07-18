@@ -5,7 +5,7 @@
 [#_TypeDBHttpDriver_TypeDBHttpDriver_params_DriverParams]
 ==== TypeDBHttpDriver
 
-[source,nodejs]
+[source,typescript]
 ----
 new TypeDBHttpDriver(params: DriverParams): TypeDBHttpDriver
 ----
@@ -28,7 +28,7 @@ a| `params` a|  a| `DriverParams`
 [#_TypeDBHttpDriver_closeTransaction_transactionId_string]
 ==== closeTransaction
 
-[source,nodejs]
+[source,typescript]
 ----
 closeTransaction(transactionId: string): Promise<ApiResponse>
 ----
@@ -51,7 +51,7 @@ a| `transactionId` a|  a| `string`
 [#_TypeDBHttpDriver_commitTransaction_transactionId_string]
 ==== commitTransaction
 
-[source,nodejs]
+[source,typescript]
 ----
 commitTransaction(transactionId: string): Promise<ApiResponse>
 ----
@@ -74,7 +74,7 @@ a| `transactionId` a|  a| `string`
 [#_TypeDBHttpDriver_createDatabase_name_string]
 ==== createDatabase
 
-[source,nodejs]
+[source,typescript]
 ----
 createDatabase(name: string): Promise<ApiResponse>
 ----
@@ -97,7 +97,7 @@ a| `name` a|  a| `string`
 [#_TypeDBHttpDriver_createUser_username_string_password_string]
 ==== createUser
 
-[source,nodejs]
+[source,typescript]
 ----
 createUser(username: string, password: string): Promise<ApiResponse>
 ----
@@ -121,7 +121,7 @@ a| `password` a|  a| `string`
 [#_TypeDBHttpDriver_deleteDatabase_name_string]
 ==== deleteDatabase
 
-[source,nodejs]
+[source,typescript]
 ----
 deleteDatabase(name: string): Promise<ApiResponse>
 ----
@@ -144,7 +144,7 @@ a| `name` a|  a| `string`
 [#_TypeDBHttpDriver_deleteUser_username_string]
 ==== deleteUser
 
-[source,nodejs]
+[source,typescript]
 ----
 deleteUser(username: string): Promise<ApiResponse>
 ----
@@ -167,7 +167,7 @@ a| `username` a|  a| `string`
 [#_TypeDBHttpDriver_getCurrentUser_]
 ==== getCurrentUser
 
-[source,nodejs]
+[source,typescript]
 ----
 getCurrentUser(): Promise<ApiResponse<User>>
 ----
@@ -181,7 +181,7 @@ getCurrentUser(): Promise<ApiResponse<User>>
 [#_TypeDBHttpDriver_getDatabase_name_string]
 ==== getDatabase
 
-[source,nodejs]
+[source,typescript]
 ----
 getDatabase(name: string): Promise<ApiResponse<Database>>
 ----
@@ -204,7 +204,7 @@ a| `name` a|  a| `string`
 [#_TypeDBHttpDriver_getDatabaseSchema_name_string]
 ==== getDatabaseSchema
 
-[source,nodejs]
+[source,typescript]
 ----
 getDatabaseSchema(name: string): Promise<ApiResponse<string>>
 ----
@@ -227,7 +227,7 @@ a| `name` a|  a| `string`
 [#_TypeDBHttpDriver_getDatabaseTypeSchema_name_string]
 ==== getDatabaseTypeSchema
 
-[source,nodejs]
+[source,typescript]
 ----
 getDatabaseTypeSchema(name: string): Promise<ApiResponse<string>>
 ----
@@ -250,7 +250,7 @@ a| `name` a|  a| `string`
 [#_TypeDBHttpDriver_getDatabases_]
 ==== getDatabases
 
-[source,nodejs]
+[source,typescript]
 ----
 getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
 ----
@@ -264,7 +264,7 @@ getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
 [#_TypeDBHttpDriver_getUser_username_string]
 ==== getUser
 
-[source,nodejs]
+[source,typescript]
 ----
 getUser(username: string): Promise<ApiResponse<User>>
 ----
@@ -287,7 +287,7 @@ a| `username` a|  a| `string`
 [#_TypeDBHttpDriver_getUsers_]
 ==== getUsers
 
-[source,nodejs]
+[source,typescript]
 ----
 getUsers(): Promise<ApiResponse<UsersListResponse>>
 ----
@@ -301,7 +301,7 @@ getUsers(): Promise<ApiResponse<UsersListResponse>>
 [#_TypeDBHttpDriver_health_]
 ==== health
 
-[source,nodejs]
+[source,typescript]
 ----
 health(): Promise<ApiResponse>
 ----
@@ -315,7 +315,7 @@ health(): Promise<ApiResponse>
 [#_TypeDBHttpDriver_oneShotQuery_query_string_commit_boolean_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions_queryOptions_QueryOptions]
 ==== oneShotQuery
 
-[source,nodejs]
+[source,typescript]
 ----
 oneShotQuery( query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
 ----
@@ -343,7 +343,7 @@ a| `queryOptions` a|  a| `QueryOptions`
 [#_TypeDBHttpDriver_openTransaction_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions]
 ==== openTransaction
 
-[source,nodejs]
+[source,typescript]
 ----
 openTransaction( databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, ): Promise<ApiResponse<TransactionOpenResponse>>
 ----
@@ -368,7 +368,7 @@ a| `transactionOptions` a|  a| `TransactionOptions`
 [#_TypeDBHttpDriver_query_transactionId_string_query_string_queryOptions_QueryOptions]
 ==== query
 
-[source,nodejs]
+[source,typescript]
 ----
 query( transactionId: string, query: string, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
 ----
@@ -393,7 +393,7 @@ a| `queryOptions` a|  a| `QueryOptions`
 [#_TypeDBHttpDriver_rollbackTransaction_transactionId_string]
 ==== rollbackTransaction
 
-[source,nodejs]
+[source,typescript]
 ----
 rollbackTransaction(transactionId: string): Promise<ApiResponse>
 ----
@@ -416,7 +416,7 @@ a| `transactionId` a|  a| `string`
 [#_TypeDBHttpDriver_updateUser_username_string_password_string]
 ==== updateUser
 
-[source,nodejs]
+[source,typescript]
 ----
 updateUser(username: string, password: string): Promise<ApiResponse>
 ----
@@ -440,7 +440,7 @@ a| `password` a|  a| `string`
 [#_TypeDBHttpDriver_version_]
 ==== version
 
-[source,nodejs]
+[source,typescript]
 ----
 version(): Promise<ApiResponse<VersionResponse>>
 ----

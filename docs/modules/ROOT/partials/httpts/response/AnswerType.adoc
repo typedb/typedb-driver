@@ -1,9 +1,9 @@
 [#_AnswerType]
 === AnswerType
 
-[source,nodejs]
+[source,typescript]
 ----
-type AnswerType = "ok" | "conceptRows" | "conceptDocuments"
+AnswerType: "ok" | "conceptRows" | "conceptDocuments"
 ----
 
 

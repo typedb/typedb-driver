@@ -54,6 +54,20 @@ class HTTPTSDocParser : Callable<Unit> {
     @CommandLine.Option(names = ["--dir", "-d"], required = true)
     private lateinit var dirs: HashMap<String, String>
 
+    /**
+     * --static-functions=functionName=directory: put a file into the static functions section of the specified directory
+     * If no directory is specified for at least one function name, an exception will be thrown.
+     */
+    @CommandLine.Option(names = ["--static-function", "-f"], required = false)
+    private lateinit var staticFunctions: HashMap<String, String>
+
+    /**
+     * --static-functions=functionName=directory: put a file into the static functions section of the specified directory
+     * If no directory is specified for at least one function name, an exception will be thrown.
+     */
+    @CommandLine.Option(names = ["--nested-class", "-c"], required = false)
+    private lateinit var nestedClasses: List<String>
+
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
@@ -100,14 +114,21 @@ class HTTPTSDocParser : Callable<Unit> {
         }
 
         namespaceFunctions.forEach{ (namespaceName, functions) ->
-            val classWithMethod = Class(namespaceName, methods = functions.toList())
-            parsedClasses.merge(namespaceName, classWithMethod) { a, b -> a.merge(b) }
+            val parsedClassNamespaceName = if (parsedClasses.contains(namespaceName)) {
+                namespaceName
+            } else {
+                val dir = staticFunctions[namespaceName] ?: throw IllegalArgumentException("Function $functions exists in namespace $namespaceName but no class definition or static function location was found to attach to");
+                "${dir}StaticFunctions"
+            }
+            val classWithMethod = Class("Static Functions", anchor = replaceSymbolsForAnchor(parsedClassNamespaceName), methods = functions.toList())
+            parsedClasses.merge(parsedClassNamespaceName, classWithMethod) { a, b -> a.merge(b) }
         }
 
-        parsedClasses.values.forEach { parsedClass ->
+        parsedClasses.forEach { (classId, parsedClass) ->
             if (parsedClass.isNotEmpty()) {
-                val parsedClassAsciiDoc = parsedClass.toAsciiDoc("nodejs")
-                val fileName = "${generateFilename(parsedClass.name)}.adoc"
+                val classNested = nestedClasses.any { parsedClass.name.startsWith(it) }
+                val parsedClassAsciiDoc = parsedClass.toAsciiDoc("typescript", headerLevel = if (classNested) 4 else 3)
+                val fileName = "${generateFilename(classId)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
                         ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
@@ -124,8 +145,6 @@ class HTTPTSDocParser : Callable<Unit> {
         val className =
                 document.selectFirst(".tsd-page-title h1")!!.textNodes().first()!!.text().split(" ").last()
         val classAnchor = replaceSymbolsForAnchor(className)
-        val typeAlias = document.select(".tsd-signature:Contains($className) .tsd-signature-type")
-            .joinToString(" | ") { it.text() }
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
         }
@@ -137,6 +156,14 @@ class HTTPTSDocParser : Callable<Unit> {
         val propertiesElements = document.select("details.tsd-member-group:contains(Properties)")
         val properties = propertiesElements.select("section.tsd-member:not(.tsd-is-private)").map {
             parseProperty(it)
+        }
+
+        val indexableElements = document.select("section.tsd-panel:contains(Indexable)")
+        val indexable = indexableElements.select(".tsd-signatures > li > .tsd-signature").map {
+            val parts = it.text().split(":")
+            val type = parts.last().trim()
+            val name = parts.subList(0, parts.size - 1).joinToString(":")
+            Variable(type = type, name = name, description = "")
         }
 
         val methodsElements = document.select(
@@ -152,15 +179,20 @@ class HTTPTSDocParser : Callable<Unit> {
                     parseAccessor(it, classAnchor)
                 }
 
-        val descr = if (properties.isNotEmpty() || methods.isNotEmpty()) {
-            classDescr
-        } else classDescr + listOf("[source,nodejs]\n----\ntype $className = $typeAlias\n----\n")
+        val isTypeAlias = document.select(".tsd-page-title:contains(Type Alias)").isNotEmpty()
+
+        val descr = if (properties.isEmpty() && indexable.isEmpty() && methods.isEmpty() && isTypeAlias) {
+            val signatureElement = document.select(".tsd-signature").first()!!
+            signatureElement.select("br").before("\\n")
+            val typeAliasFor = signatureElement.text().replace("\\n", "\n")
+            classDescr + listOf("[source,typescript]\n----\n$typeAliasFor\n----\n")
+        } else classDescr
 
         return  Class(
             name = className,
             anchor = classAnchor,
             description = descr,
-            fields = properties,
+            fields = properties + indexable,
             methods = methods,
             superClasses = superClasses,
         )

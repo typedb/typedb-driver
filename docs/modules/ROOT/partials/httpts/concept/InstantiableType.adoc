@@ -1,9 +1,9 @@
 [#_InstantiableType]
 === InstantiableType
 
-[source,nodejs]
+[source,typescript]
 ----
-type InstantiableType = EntityType | RelationType | AttributeType
+InstantiableType: EntityType | RelationType | AttributeType
 ----
 
 

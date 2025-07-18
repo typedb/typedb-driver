@@ -1,9 +1,9 @@
 [#_Answer]
 === Answer
 
-[source,nodejs]
+[source,typescript]
 ----
-type Answer = ConceptRowAnswer | ConceptDocument
+Answer: ConceptRowAnswer | ConceptDocument
 ----
 
 

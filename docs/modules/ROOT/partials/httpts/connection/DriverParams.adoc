@@ -1,9 +1,9 @@
 [#_DriverParams]
-=== DriverParams
+==== DriverParams
 
-[source,nodejs]
+[source,typescript]
 ----
-type DriverParams = DriverParamsBasic | DriverParamsTranslated
+DriverParams: DriverParamsBasic | DriverParamsTranslated
 ----
 
 

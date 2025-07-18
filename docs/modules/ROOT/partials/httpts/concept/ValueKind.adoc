@@ -1,9 +1,9 @@
 [#_ValueKind]
 === ValueKind
 
-[source,nodejs]
+[source,typescript]
 ----
-type ValueKind = "value"
+ValueKind: "value"
 ----
 
 

@@ -1,9 +1,20 @@
 [#_EdgeKind]
 === EdgeKind
 
-[source,nodejs]
+[source,typescript]
 ----
-type EdgeKind = "isa" | "has" | "links" | "sub" | "owns" | "relates" | "plays" | "isaExact" | "subExact" | "assigned" | "argument"
+EdgeKind:
+ | "isa"
+ | "has"
+ | "links"
+ | "sub"
+ | "owns"
+ | "relates"
+ | "plays"
+ | "isaExact"
+ | "subExact"
+ | "assigned"
+ | "argument"
 ----
 
 

@@ -30,7 +30,7 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@http-ts_npm//:defs.bzl", "npm_link_all_packages")
 load("//http-ts:tool/typedoc/rules.bzl", "typedoc_docs")
-load("//http-ts:docs_structure.bzl", "dir_mapping")
+load("//http-ts:docs_structure.bzl", "dir_mapping", "static_function_mapping", "class_nesting_prefixes")
 load("//tool/docs:httpts/rules.bzl", "typedoc_to_adoc")
 
 npm_link_all_packages(
@@ -134,4 +134,6 @@ typedoc_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
+    static_functions = static_function_mapping,
+    nested_classes = class_nesting_prefixes
 )

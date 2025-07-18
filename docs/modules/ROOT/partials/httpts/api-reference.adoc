@@ -3,17 +3,14 @@
 
 include::{page-version}@api-ref::partial$httpts/connection/Database.adoc[]
 
+[#_DriverParams_header]
+=== Driver Params
+
 include::{page-version}@api-ref::partial$httpts/connection/DriverParams.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/connection/DriverParamsBasic.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/connection/DriverParamsTranslated.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/connection/isBasicParams.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/connection/isTranslatedParams.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/connection/remoteOrigin.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/connection/TransactionOptions.adoc[]
 
@@ -24,6 +21,8 @@ include::{page-version}@api-ref::partial$httpts/connection/TranslatedAddress.ado
 include::{page-version}@api-ref::partial$httpts/connection/TypeDBHttpDriver.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/connection/User.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/connection/connectionStaticFunctions.adoc[]
 
 [#_response_header]
 == Response
@@ -52,12 +51,6 @@ include::{page-version}@api-ref::partial$httpts/response/DatabasesListResponse.a
 
 include::{page-version}@api-ref::partial$httpts/response/Distribution.adoc[]
 
-include::{page-version}@api-ref::partial$httpts/response/isApiError.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/response/isApiErrorResponse.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/response/isOkResponse.adoc[]
-
 include::{page-version}@api-ref::partial$httpts/response/OkQueryResponse.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/response/SignInResponse.adoc[]
@@ -67,6 +60,8 @@ include::{page-version}@api-ref::partial$httpts/response/TransactionOpenResponse
 include::{page-version}@api-ref::partial$httpts/response/UsersListResponse.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/response/VersionResponse.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/response/responseStaticFunctions.adoc[]
 
 [#_concept_header]
 == Concept
@@ -108,45 +103,46 @@ include::{page-version}@api-ref::partial$httpts/concept/ValueType.adoc[]
 [#_query_structure_header]
 == Query Structure
 
-include::{page-version}@api-ref::partial$httpts/query-structure/getVariableName.adoc[]
+[#_QueryConstraint_header]
+=== Query Constraint
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintAny.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintComparison.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintExpression.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintFunction.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintHas.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIid.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIs.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIsa.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIsaExact.adoc[]
 
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintKind.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintLabel.adoc[]
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintHas.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintLinks.adoc[]
 
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintSub.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintSubExact.adoc[]
+
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintOwns.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintExpression.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintFunction.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintComparison.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIs.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintIid.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintKind.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintValue.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintLabel.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintPlays.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintRelates.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintSpan.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintSub.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintSubExact.adoc[]
-
-include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintValue.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryOptions.adoc[]
 
@@ -160,6 +156,9 @@ include::{page-version}@api-ref::partial$httpts/query-structure/QueryType.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVariableInfo.adoc[]
 
+[#_QueryVertex_header]
+=== Query Vertex
+
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertex.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertexKind.adoc[]
@@ -169,3 +168,5 @@ include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertexLabel
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertexValue.adoc[]
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertexVariable.adoc[]
+
+include::{page-version}@api-ref::partial$httpts/query-structure/query-structureStaticFunctions.adoc[]

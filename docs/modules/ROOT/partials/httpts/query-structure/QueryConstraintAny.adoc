@@ -1,9 +1,26 @@
 [#_QueryConstraintAny]
-=== QueryConstraintAny
+==== QueryConstraintAny
 
-[source,nodejs]
+[source,typescript]
 ----
-type QueryConstraintAny = QueryConstraintIsa | QueryConstraintIsaExact | QueryConstraintHas | QueryConstraintLinks | QueryConstraintSub | QueryConstraintSubExact | QueryConstraintOwns | QueryConstraintRelates | QueryConstraintPlays | QueryConstraintExpression | QueryConstraintFunction | QueryConstraintComparison | QueryConstraintIs | QueryConstraintIid | QueryConstraintKind | QueryConstraintValue | QueryConstraintLabel
+QueryConstraintAny:
+ | QueryConstraintIsa
+ | QueryConstraintIsaExact
+ | QueryConstraintHas
+ | QueryConstraintLinks
+ | QueryConstraintSub
+ | QueryConstraintSubExact
+ | QueryConstraintOwns
+ | QueryConstraintRelates
+ | QueryConstraintPlays
+ | QueryConstraintExpression
+ | QueryConstraintFunction
+ | QueryConstraintComparison
+ | QueryConstraintIs
+ | QueryConstraintIid
+ | QueryConstraintKind
+ | QueryConstraintValue
+ | QueryConstraintLabel
 ----
 
 

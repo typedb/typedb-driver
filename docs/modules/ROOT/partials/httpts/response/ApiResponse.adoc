@@ -1,9 +1,9 @@
 [#_ApiResponse_OK_RES]
 === ApiResponse<OK_RES>
 
-[source,nodejs]
+[source,typescript]
 ----
-type ApiResponse<OK_RES> = 
+ApiResponse: ApiOkResponse<OK_RES> | ApiErrorResponse
 ----
 
 

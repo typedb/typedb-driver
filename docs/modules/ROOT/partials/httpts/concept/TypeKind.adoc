@@ -1,9 +1,9 @@
 [#_TypeKind]
 === TypeKind
 
-[source,nodejs]
+[source,typescript]
 ----
-type TypeKind = "entityType" | "relationType" | "attributeType" | "roleType"
+TypeKind: "entityType" | "relationType" | "attributeType" | "roleType"
 ----
 
 

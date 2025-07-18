@@ -15,6 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
+static_function_mapping = {
+    "getVariableName": "query-structure",
+
+    "isApiError": "response",
+    "isApiErrorResponse": "response",
+    "isOkResponse": "response",
+
+    "isBasicParams": "connection",
+    "isTranslatedParams": "connection",
+    "remoteOrigin": "connection",
+}
+
+class_nesting_prefixes = [
+    "DriverParams",
+    "QueryConstraint",
+    "QueryVertex",
+]
+
 dir_mapping = {
     "TypeDBHttpDriver.adoc": "connection",
 
@@ -92,11 +110,7 @@ dir_mapping = {
     "ValueKind.adoc": "concept",
     "ValueType.adoc": "concept",
 
-    "getVariableName.adoc": "query-structure",
-    "isApiError.adoc": "response",
-    "isApiErrorResponse.adoc": "response",
-    "isBasicParams.adoc": "connection",
-    "isOkResponse.adoc": "response",
-    "isTranslatedParams.adoc": "connection",
-    "remoteOrigin.adoc": "connection",
+    "query-structureStaticFunctions.adoc": "query-structure",
+    "responseStaticFunctions.adoc": "response",
+    "connectionStaticFunctions.adoc": "connection",
 }

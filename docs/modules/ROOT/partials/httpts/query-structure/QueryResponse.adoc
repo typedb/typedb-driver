@@ -1,9 +1,12 @@
 [#_QueryResponse]
 === QueryResponse
 
-[source,nodejs]
+[source,typescript]
 ----
-type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse
+QueryResponse:
+ | OkQueryResponse
+ | ConceptRowsQueryResponse
+ | ConceptDocumentsQueryResponse
 ----
 
 

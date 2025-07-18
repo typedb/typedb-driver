@@ -18,11 +18,17 @@
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 
-def typedoc_to_adoc(name, data, docs_dirs):
+def typedoc_to_adoc(name, data, docs_dirs, static_functions, nested_classes):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
         "docs/modules/ROOT/partials/httpts",
-    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
+    ] + [
+        "--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs
+    ] + [
+        "--static-function=%s=%s" % (function, static_functions[function]) for function in static_functions
+    ] + [
+        "--nested-class=%s" % (class_name) for class_name in nested_classes
+    ]
     kt_jvm_binary(
         name = name,
         srcs = [

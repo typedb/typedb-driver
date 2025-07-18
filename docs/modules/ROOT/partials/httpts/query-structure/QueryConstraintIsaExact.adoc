@@ -1,5 +1,5 @@
 [#_QueryConstraintIsaExact]
-=== QueryConstraintIsaExact
+==== QueryConstraintIsaExact
 
 [caption=""]
 .Fields

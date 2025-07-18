@@ -1,9 +1,9 @@
 [#_QueryVertex]
-=== QueryVertex
+==== QueryVertex
 
-[source,nodejs]
+[source,typescript]
 ----
-type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue
+QueryVertex: QueryVertexVariable | QueryVertexLabel | QueryVertexValue
 ----
 
 

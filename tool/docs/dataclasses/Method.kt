@@ -34,11 +34,11 @@ data class Method(
     val returnDescription: String? = null,
     val returnType: String? = null,
 ) {
-    fun toAsciiDoc(language: String): String {
+    fun toAsciiDoc(language: String, headerLevel: Int = 4): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(4, this.name)
+        result += builder.header(headerLevel, this.name)
         result += builder.codeBlock(this.signature, language)
         result += "${this.description.joinToString("\n\n")}\n\n"
 

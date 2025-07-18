@@ -1,9 +1,9 @@
 [#_Concept]
 === Concept
 
-[source,nodejs]
+[source,typescript]
 ----
-type Concept = Type | Entity | Relation | Attribute | Value
+Concept: Type | Entity | Relation | Attribute | Value
 ----
 
 

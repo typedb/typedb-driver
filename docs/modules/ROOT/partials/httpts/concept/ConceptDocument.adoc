@@ -1,9 +1,9 @@
 [#_ConceptDocument]
 === ConceptDocument
 
-[source,nodejs]
+[source,typescript]
 ----
-type ConceptDocument = Object
+ConceptDocument: Object
 ----
 
 

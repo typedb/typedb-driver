@@ -1,9 +1,19 @@
 [#_ValueType]
 === ValueType
 
-[source,nodejs]
+[source,typescript]
 ----
-type ValueType = "boolean" | "integer" | "double" | "decimal" | "date" | "datetime" | "datetime-tz" | "duration" | "string" | "struct"
+ValueType:
+ | "boolean"
+ | "integer"
+ | "double"
+ | "decimal"
+ | "date"
+ | "datetime"
+ | "datetime-tz"
+ | "duration"
+ | "string"
+ | "struct"
 ----
 
 
