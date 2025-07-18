@@ -104,7 +104,7 @@ include::{page-version}@api-ref::partial$httpts/concept/ValueType.adoc[]
 == Query Structure
 
 [#_QueryConstraint_header]
-=== Query Constraint
+=== Query Constraints
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryConstraintAny.adoc[]
 
@@ -157,7 +157,7 @@ include::{page-version}@api-ref::partial$httpts/query-structure/QueryType.adoc[]
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVariableInfo.adoc[]
 
 [#_QueryVertex_header]
-=== Query Vertex
+=== Query Vertices
 
 include::{page-version}@api-ref::partial$httpts/query-structure/QueryVertex.adoc[]
 

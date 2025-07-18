@@ -86,8 +86,8 @@ checkstyle_test(
         "**/*",
     ]),
     exclude = glob([
-        "*.json",
-        "*.md",
+        "**/*.json",
+        "**/*.md",
         "pnpm-lock.yaml",
     ]),
     license_type = "apache-header",

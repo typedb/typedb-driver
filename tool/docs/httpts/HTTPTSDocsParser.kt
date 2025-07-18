@@ -55,7 +55,7 @@ class HTTPTSDocParser : Callable<Unit> {
     private lateinit var dirs: HashMap<String, String>
 
     /**
-     * --static-functions=functionName=directory: put a file into the static functions section of the specified directory
+     * --static-function=functionName=directory: put a file into the static functions section of the specified directory
      * If no directory is specified for at least one function name, an exception will be thrown.
      */
     @CommandLine.Option(names = ["--static-function", "-f"], required = false)
