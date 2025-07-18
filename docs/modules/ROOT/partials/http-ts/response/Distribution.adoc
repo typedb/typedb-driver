@@ -1,0 +1,9 @@
+[#_Distribution]
+=== Distribution
+
+[source,typescript]
+----
+Distribution: "TypeDB Cluster" | "TypeDB CE"
+----
+
+

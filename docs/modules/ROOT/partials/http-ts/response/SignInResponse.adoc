@@ -1,0 +1,14 @@
+[#_SignInResponse]
+=== SignInResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `token` a| `string` a| 
+|===
+// end::properties[]
+

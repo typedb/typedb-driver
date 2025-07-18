@@ -1,0 +1,15 @@
+[#_RelationType]
+=== RelationType
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `kind` a| `"relationType"` a| 
+a| `label` a| `string` a| 
+|===
+// end::properties[]
+

@@ -1,0 +1,15 @@
+[#_ConceptRowAnswer]
+=== ConceptRowAnswer
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `data` a| `ConceptRow` a| 
+a| `involvedBlocks` a| `number` a| 
+|===
+// end::properties[]
+

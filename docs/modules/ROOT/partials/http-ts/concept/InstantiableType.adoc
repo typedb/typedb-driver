@@ -1,0 +1,9 @@
+[#_InstantiableType]
+=== InstantiableType
+
+[source,typescript]
+----
+InstantiableType: EntityType | RelationType | AttributeType
+----
+
+

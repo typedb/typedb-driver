@@ -1,0 +1,17 @@
+[#_QueryConstraintOwns]
+==== QueryConstraintOwns
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `attribute` a| `QueryVertexVariable` a| 
+a| `owner` a| `QueryVertexVariable` a| 
+a| `tag` a| `"owns"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+|===
+// end::properties[]
+

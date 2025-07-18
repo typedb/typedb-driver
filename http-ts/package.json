@@ -20,6 +20,7 @@
   "dependencies": {
     "@cucumber/cucumber": "9.0.0",
     "@types/node": "24.0.12",
+    "typedoc": "^0.28.7",
     "typescript": "5.8.3"
   },
   "engines": {

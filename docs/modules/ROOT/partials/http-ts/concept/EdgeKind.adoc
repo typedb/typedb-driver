@@ -1,0 +1,20 @@
+[#_EdgeKind]
+=== EdgeKind
+
+[source,typescript]
+----
+EdgeKind:
+ | "isa"
+ | "has"
+ | "links"
+ | "sub"
+ | "owns"
+ | "relates"
+ | "plays"
+ | "isaExact"
+ | "subExact"
+ | "assigned"
+ | "argument"
+----
+
+

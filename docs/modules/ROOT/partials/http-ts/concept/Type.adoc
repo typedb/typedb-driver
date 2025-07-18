@@ -1,0 +1,9 @@
+[#_Type]
+=== Type
+
+[source,typescript]
+----
+Type: InstantiableType | RoleType
+----
+
+

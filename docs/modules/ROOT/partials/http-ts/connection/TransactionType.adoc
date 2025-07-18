@@ -1,0 +1,9 @@
+[#_TransactionType]
+=== TransactionType
+
+[source,typescript]
+----
+TransactionType: "read" | "write" | "schema"
+----
+
+

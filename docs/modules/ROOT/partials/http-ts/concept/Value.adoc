@@ -1,0 +1,16 @@
+[#_Value]
+=== Value
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `kind` a| `"value"` a| 
+a| `value` a| `any` a| 
+a| `valueType` a| `ValueType` a| 
+|===
+// end::properties[]
+

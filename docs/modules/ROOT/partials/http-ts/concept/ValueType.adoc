@@ -1,0 +1,19 @@
+[#_ValueType]
+=== ValueType
+
+[source,typescript]
+----
+ValueType:
+ | "boolean"
+ | "integer"
+ | "double"
+ | "decimal"
+ | "date"
+ | "datetime"
+ | "datetime-tz"
+ | "duration"
+ | "string"
+ | "struct"
+----
+
+

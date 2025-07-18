@@ -1,0 +1,12 @@
+[#_QueryResponse]
+=== QueryResponse
+
+[source,typescript]
+----
+QueryResponse:
+ | OkQueryResponse
+ | ConceptRowsQueryResponse
+ | ConceptDocumentsQueryResponse
+----
+
+

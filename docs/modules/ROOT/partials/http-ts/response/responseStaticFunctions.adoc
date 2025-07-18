@@ -1,0 +1,75 @@
+[#_responseStaticFunctions]
+=== Static Functions
+
+// tag::methods[]
+[#_isApiError_isApiError_err_any]
+==== isApiError
+
+[source,typescript]
+----
+isApiError(err: any): err is ApiError
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `err` a|  a| `any`
+|===
+
+[caption=""]
+.Returns
+`err is ApiError`
+
+[#_isApiErrorResponse_isApiErrorResponse_res_ApiResponse]
+==== isApiErrorResponse
+
+[source,typescript]
+----
+isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `res` a|  a| `ApiResponse`
+|===
+
+[caption=""]
+.Returns
+`res is ApiErrorResponse`
+
+[#_isOkResponse_isOkResponse_res_ApiResponse]
+==== isOkResponse
+
+[source,typescript]
+----
+isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `res` a|  a| `ApiResponse`
+|===
+
+[caption=""]
+.Returns
+`res is ApiOkResponse<OK_RES>`
+
+// end::methods[]
+

@@ -1,0 +1,15 @@
+[#_ApiErrorResponse]
+=== ApiErrorResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `err` a| `ApiError` a| 
+a| `status` a| `number` a| 
+|===
+// end::properties[]
+

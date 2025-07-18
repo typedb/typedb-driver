@@ -1,0 +1,9 @@
+[#_AnswerType]
+=== AnswerType
+
+[source,typescript]
+----
+AnswerType: "ok" | "conceptRows" | "conceptDocuments"
+----
+
+

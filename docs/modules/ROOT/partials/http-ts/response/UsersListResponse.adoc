@@ -1,0 +1,14 @@
+[#_UsersListResponse]
+=== UsersListResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `users` a| `User` a| 
+|===
+// end::properties[]
+

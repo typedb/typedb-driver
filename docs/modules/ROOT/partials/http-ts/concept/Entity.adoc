@@ -1,0 +1,16 @@
+[#_Entity]
+=== Entity
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `string` a| 
+a| `kind` a| `"entity"` a| 
+a| `type` a| `EntityType` a| 
+|===
+// end::properties[]
+

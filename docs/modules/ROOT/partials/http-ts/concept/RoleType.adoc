@@ -1,0 +1,15 @@
+[#_RoleType]
+=== RoleType
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `kind` a| `"roleType"` a| 
+a| `label` a| `string` a| 
+|===
+// end::properties[]
+

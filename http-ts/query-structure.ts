@@ -44,7 +44,7 @@ export type QueryStructure = {
     outputs: string[],
 };
 
-export function get_variable_name(structure: QueryStructure, variable: QueryVertexVariable) : string | null {
+export function getVariableName(structure: QueryStructure, variable: QueryVertexVariable) : string | null {
     return structure.variables[variable.id]?.name;
 }
 

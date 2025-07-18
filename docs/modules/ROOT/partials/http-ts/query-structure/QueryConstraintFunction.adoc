@@ -1,0 +1,18 @@
+[#_QueryConstraintFunction]
+==== QueryConstraintFunction
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `arguments` a| `QueryVertexVariable` a| 
+a| `assigned` a| `QueryVertexVariable` a| 
+a| `name` a| `string` a| 
+a| `tag` a| `"functionCall"` a| 
+a| `textSpan` a| `QueryConstraintSpan` a| 
+|===
+// end::properties[]
+

@@ -17,7 +17,7 @@
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-package(default_visibility = ["//nodejs/test/behaviour:__subpackages__"])
+package(default_visibility = ["//http-ts/test/behaviour:__subpackages__"])
 
 exports_files([
     "tsconfig.json",

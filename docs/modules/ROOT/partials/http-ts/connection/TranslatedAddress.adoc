@@ -1,0 +1,15 @@
+[#_TranslatedAddress]
+=== TranslatedAddress
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `external` a| `string` a| 
+a| `internal` a| `string` a| 
+|===
+// end::properties[]
+

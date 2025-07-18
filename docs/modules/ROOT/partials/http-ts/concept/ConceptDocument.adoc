@@ -1,0 +1,9 @@
+[#_ConceptDocument]
+=== ConceptDocument
+
+[source,typescript]
+----
+ConceptDocument: Object
+----
+
+

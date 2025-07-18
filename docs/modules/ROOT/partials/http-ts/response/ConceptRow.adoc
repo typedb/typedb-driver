@@ -1,0 +1,14 @@
+[#_ConceptRow]
+=== ConceptRow
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `[varName: string]` a| `Concept` a| 
+|===
+// end::properties[]
+

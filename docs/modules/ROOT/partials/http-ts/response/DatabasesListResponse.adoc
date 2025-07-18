@@ -1,0 +1,14 @@
+[#_DatabasesListResponse]
+=== DatabasesListResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `databases` a| `Database` a| 
+|===
+// end::properties[]
+

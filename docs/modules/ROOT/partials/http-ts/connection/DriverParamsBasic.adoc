@@ -1,0 +1,16 @@
+[#_DriverParamsBasic]
+==== DriverParamsBasic
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `addresses` a| `string` a| 
+a| `password` a| `string` a| 
+a| `username` a| `string` a| 
+|===
+// end::properties[]
+
