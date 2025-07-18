@@ -62,10 +62,9 @@ class HTTPTSDocParser : Callable<Unit> {
     private lateinit var staticFunctions: HashMap<String, String>
 
     /**
-     * --static-functions=functionName=directory: put a file into the static functions section of the specified directory
-     * If no directory is specified for at least one function name, an exception will be thrown.
+     * --nested-class-prefix=classNamePrefix: put classes with the specified prefix an extra header level deep, allowing them to be categorized
      */
-    @CommandLine.Option(names = ["--nested-class", "-c"], required = false)
+    @CommandLine.Option(names = ["--nested-class-prefix", "-n"], required = false)
     private lateinit var nestedClasses: List<String>
 
     @Override

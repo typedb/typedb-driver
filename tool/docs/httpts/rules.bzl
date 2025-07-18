@@ -27,7 +27,7 @@ def typedoc_to_adoc(name, data, docs_dirs, static_functions, nested_classes):
     ] + [
         "--static-function=%s=%s" % (function, static_functions[function]) for function in static_functions
     ] + [
-        "--nested-class=%s" % (class_name) for class_name in nested_classes
+        "--nested-class-prefix=%s" % (class_name) for class_name in nested_classes
     ]
     kt_jvm_binary(
         name = name,
