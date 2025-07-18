@@ -2,85 +2,85 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}@api-ref::partial$java/connection/TypeDB.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/TypeDB.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/Driver.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/Driver.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/Credentials.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/Credentials.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/DriverOptions.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/DriverOptions.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/DatabaseManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/DatabaseManager.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/Database.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/Database.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/UserManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/UserManager.adoc[]
 
-include::{page-version}@api-ref::partial$java/connection/User.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/connection/User.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-version}@api-ref::partial$java/transaction/Transaction.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/transaction/Transaction.adoc[]
 
-include::{page-version}@api-ref::partial$java/transaction/Transaction.Type.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/transaction/Transaction.Type.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}@api-ref::partial$java/answer/QueryAnswer.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/QueryAnswer.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/OkQueryAnswer.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/OkQueryAnswer.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/ConceptRowIterator.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/ConceptRowIterator.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/ConceptRow.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/ConceptRow.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/ConceptDocumentIterator.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/ConceptDocumentIterator.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/JSON.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/JSON.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/QueryType.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/QueryType.adoc[]
 
-include::{page-version}@api-ref::partial$java/answer/Promise_T_.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/answer/Promise_T_.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-version}@api-ref::partial$java/concept/Concept.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/concept/Concept.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-version}@api-ref::partial$java/schema/Type.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/schema/Type.adoc[]
 
-include::{page-version}@api-ref::partial$java/schema/EntityType.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/schema/EntityType.adoc[]
 
-include::{page-version}@api-ref::partial$java/schema/RelationType.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/schema/RelationType.adoc[]
 
-include::{page-version}@api-ref::partial$java/schema/RoleType.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/schema/RoleType.adoc[]
 
-include::{page-version}@api-ref::partial$java/schema/AttributeType.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/schema/AttributeType.adoc[]
 
 [#_data_header]
 == Data
 
-include::{page-version}@api-ref::partial$java/data/Instance.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/data/Instance.adoc[]
 
-include::{page-version}@api-ref::partial$java/data/Entity.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/data/Entity.adoc[]
 
-include::{page-version}@api-ref::partial$java/data/Relation.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/data/Relation.adoc[]
 
-include::{page-version}@api-ref::partial$java/data/Attribute.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/data/Attribute.adoc[]
 
-include::{page-version}@api-ref::partial$java/data/Value.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/data/Value.adoc[]
 
 [#_value_header]
 == Value
 
-include::{page-version}@api-ref::partial$java/value/Duration.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/value/Duration.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-version}@api-ref::partial$java/errors/TypeDBDriverException.adoc[]
+include::{page-version}@external-typedb-driver::partial$java/errors/TypeDBDriverException.adoc[]

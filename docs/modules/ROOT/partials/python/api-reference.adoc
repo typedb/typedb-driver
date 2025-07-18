@@ -1,85 +1,85 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}@api-ref::partial$python/connection/TypeDB.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/TypeDB.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/Driver.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/Driver.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/Credentials.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/Credentials.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/DriverOptions.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/DriverOptions.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/DatabaseManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/DatabaseManager.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/Database.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/Database.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/UserManager.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/UserManager.adoc[]
 
-include::{page-version}@api-ref::partial$python/connection/User.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/User.adoc[]
 
 [#_transaction_header]
 == Transaction
 
-include::{page-version}@api-ref::partial$python/transaction/Transaction.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/transaction/Transaction.adoc[]
 
-include::{page-version}@api-ref::partial$python/transaction/TransactionType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/transaction/TransactionType.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}@api-ref::partial$python/answer/QueryAnswer.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/QueryAnswer.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/OkQueryAnswer.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/OkQueryAnswer.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/ConceptRowIterator.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/ConceptRowIterator.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/ConceptRow.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/ConceptRow.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/ConceptDocumentIterator.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/ConceptDocumentIterator.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/QueryType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/QueryType.adoc[]
 
-include::{page-version}@api-ref::partial$python/answer/Promise.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/answer/Promise.adoc[]
 
 [#_concept_header]
 == Concept
 
-include::{page-version}@api-ref::partial$python/concept/Concept.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/concept/Concept.adoc[]
 
 [#_schema_header]
 == Schema
 
-include::{page-version}@api-ref::partial$python/schema/Type.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/schema/Type.adoc[]
 
-include::{page-version}@api-ref::partial$python/schema/EntityType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/schema/EntityType.adoc[]
 
-include::{page-version}@api-ref::partial$python/schema/RelationType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/schema/RelationType.adoc[]
 
-include::{page-version}@api-ref::partial$python/schema/RoleType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/schema/RoleType.adoc[]
 
-include::{page-version}@api-ref::partial$python/schema/AttributeType.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/schema/AttributeType.adoc[]
 
 [#_data_header]
 == Data
 
-include::{page-version}@api-ref::partial$python/data/Instance.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/data/Instance.adoc[]
 
-include::{page-version}@api-ref::partial$python/data/Entity.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/data/Entity.adoc[]
 
-include::{page-version}@api-ref::partial$python/data/Relation.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/data/Relation.adoc[]
 
-include::{page-version}@api-ref::partial$python/data/Attribute.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/data/Attribute.adoc[]
 
-include::{page-version}@api-ref::partial$python/data/Value.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/data/Value.adoc[]
 
 [#_value_header]
 == Value
 
-include::{page-version}@api-ref::partial$python/value/Datetime.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/value/Datetime.adoc[]
 
-include::{page-version}@api-ref::partial$python/value/Duration.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/value/Duration.adoc[]
 
 [#_errors_header]
 == Errors
 
-include::{page-version}@api-ref::partial$python/errors/TypeDBDriverException.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/errors/TypeDBDriverException.adoc[]
