@@ -21,7 +21,7 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 def typedoc_to_adoc(name, data, docs_dirs, static_functions, nested_classes):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "docs/modules/ROOT/partials/httpts",
+        "docs/modules/ROOT/partials/http-ts",
     ] + [
         "--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs
     ] + [
