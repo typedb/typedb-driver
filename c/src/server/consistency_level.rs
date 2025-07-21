@@ -33,13 +33,13 @@ use crate::common::{
 pub enum ConsistencyLevelTag {
     Strong,
     Eventual,
-    ReplicaDependant,
+    ReplicaDependent,
 }
 
 /// <code>ConsistencyLevel</code> is used to represent consistency levels in FFI.
 /// It combines <code>ConsistencyLevelTag</code> and optional fields to form an instance of the
 /// original enum.
-/// <code>address</code> is not null only when tag is <code>ReplicaDependant</code>.
+/// <code>address</code> is not null only when tag is <code>ReplicaDependent</code>.
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct ConsistencyLevel {
@@ -56,8 +56,8 @@ impl ConsistencyLevel {
         ConsistencyLevel { tag: ConsistencyLevelTag::Eventual, address: std::ptr::null_mut() }
     }
 
-    fn new_replica_dependant(address: *mut c_char) -> Self {
-        ConsistencyLevel { tag: ConsistencyLevelTag::ReplicaDependant, address }
+    fn new_replica_dependent(address: *mut c_char) -> Self {
+        ConsistencyLevel { tag: ConsistencyLevelTag::ReplicaDependent, address }
     }
 }
 
@@ -79,12 +79,12 @@ pub extern "C" fn consistency_level_eventual() -> *mut ConsistencyLevel {
     release(ConsistencyLevel::new_eventual())
 }
 
-/// Creates a replica dependant <code>ConsistencyLevel</code> object.
+/// Creates a replica dependent <code>ConsistencyLevel</code> object.
 ///
 /// @param address The address of the replica to depend on.
 #[no_mangle]
-pub extern "C" fn consistency_level_replica_dependant(address: *const c_char) -> *mut ConsistencyLevel {
-    release(ConsistencyLevel::new_replica_dependant(release_string(string_view(address.clone()).to_string())))
+pub extern "C" fn consistency_level_replica_dependent(address: *const c_char) -> *mut ConsistencyLevel {
+    release(ConsistencyLevel::new_replica_dependent(release_string(string_view(address.clone()).to_string())))
 }
 
 /// Drops the <code>ConsistencyLevel</code> object.
@@ -103,9 +103,9 @@ impl Into<NativeConsistencyLevel> for ConsistencyLevel {
         match tag {
             ConsistencyLevelTag::Strong => NativeConsistencyLevel::Strong,
             ConsistencyLevelTag::Eventual => NativeConsistencyLevel::Eventual,
-            ConsistencyLevelTag::ReplicaDependant => {
+            ConsistencyLevelTag::ReplicaDependent => {
                 let address = unwrap_or_default(string_view(address).parse());
-                NativeConsistencyLevel::ReplicaDependant { address }
+                NativeConsistencyLevel::ReplicaDependent { address }
             }
         }
     }
@@ -116,8 +116,8 @@ impl From<NativeConsistencyLevel> for ConsistencyLevel {
         match value {
             NativeConsistencyLevel::Strong => ConsistencyLevel::new_strong(),
             NativeConsistencyLevel::Eventual => ConsistencyLevel::new_eventual(),
-            NativeConsistencyLevel::ReplicaDependant { address } => {
-                ConsistencyLevel::new_replica_dependant(release_string(address.to_string()))
+            NativeConsistencyLevel::ReplicaDependent { address } => {
+                ConsistencyLevel::new_replica_dependent(release_string(address.to_string()))
             }
         }
     }

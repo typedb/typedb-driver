@@ -1,7 +1,7 @@
-[#_ReplicaDependant]
-=== ReplicaDependant
+[#_ReplicaDependent]
+=== ReplicaDependent
 
-Replica dependant consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
+Replica dependent consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
 
 [caption=""]
 .Properties
@@ -15,7 +15,7 @@ a| `address` a| `str` a|
 // end::properties[]
 
 // tag::methods[]
-[#_ReplicaDependant_native_object_]
+[#_ReplicaDependent_native_object_]
 ==== native_object
 
 [source,python]

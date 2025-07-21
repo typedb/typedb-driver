@@ -23,7 +23,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_eventual;
-import static com.typedb.driver.jni.typedb_driver.consistency_level_replica_dependant;
+import static com.typedb.driver.jni.typedb_driver.consistency_level_replica_dependent;
 import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
 
 /**
@@ -38,8 +38,8 @@ public abstract class ConsistencyLevel {
     public static ConsistencyLevel of(com.typedb.driver.jni.ConsistencyLevel nativeValue) {
         if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.Strong) return new Strong();
         else if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.Eventual) return new Eventual();
-        else if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.ReplicaDependant) {
-            return new ReplicaDependant(nativeValue.getAddress());
+        else if (nativeValue.getTag() == com.typedb.driver.jni.ConsistencyLevelTag.ReplicaDependent) {
+            return new ReplicaDependent(nativeValue.getAddress());
         }
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
@@ -102,10 +102,10 @@ public abstract class ConsistencyLevel {
      * The operation is executed against the provided replica address only. Its guarantees depend
      * on the replica selected.
      */
-    public static final class ReplicaDependant extends ConsistencyLevel {
+    public static final class ReplicaDependent extends ConsistencyLevel {
         private final String address;
 
-        public ReplicaDependant(String address) {
+        public ReplicaDependent(String address) {
             this.address = address;
         }
 
@@ -115,7 +115,7 @@ public abstract class ConsistencyLevel {
         }
 
         private static com.typedb.driver.jni.ConsistencyLevel newNative(String address) {
-            return consistency_level_replica_dependant(address);
+            return consistency_level_replica_dependent(address);
         }
 
         /**
@@ -127,7 +127,7 @@ public abstract class ConsistencyLevel {
 
         @Override
         public String toString() {
-            return "ReplicaDependant(" + address + ")";
+            return "ReplicaDependent(" + address + ")";
         }
     }
 }

@@ -18,12 +18,12 @@ is_eventual() -> bool
 .Returns
 `bool`
 
-[#_ConsistencyLevel_is_replica_dependant_]
-==== is_replica_dependant
+[#_ConsistencyLevel_is_replica_dependent_]
+==== is_replica_dependent
 
 [source,python]
 ----
-is_replica_dependant() -> bool
+is_replica_dependent() -> bool
 ----
 
 
@@ -79,14 +79,14 @@ static native_value(consistency_level: ConsistencyLevel | None) -> ConsistencyLe
 
 [source,python]
 ----
-static of(native_value: ConsistencyLevel) -> None | Strong | Eventual | ReplicaDependant
+static of(native_value: ConsistencyLevel) -> None | Strong | Eventual | ReplicaDependent
 ----
 
 
 
 [caption=""]
 .Returns
-`None | Strong | Eventual | ReplicaDependant`
+`None | Strong | Eventual | ReplicaDependent`
 
 // end::methods[]
 

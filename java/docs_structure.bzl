@@ -31,7 +31,7 @@ dir_mapping = {
     "ConsistencyLevel.adoc": "connection",
     "ConsistencyLevel.Strong.adoc": "connection",
     "ConsistencyLevel.Eventual.adoc": "connection",
-    "ConsistencyLevel.ReplicaDependant.adoc": "connection",
+    "ConsistencyLevel.ReplicaDependent.adoc": "connection",
     "ReplicaType.adoc": "connection",
     "ServerReplica.adoc": "connection",
     "ServerVersion.adoc": "connection",

@@ -36,7 +36,7 @@ dir_mapping = {
     "ConsistencyLevel.adoc": "connection",
     "Strong.adoc": "connection",
     "Eventual.adoc": "connection",
-    "ReplicaDependant.adoc": "connection",
+    "ReplicaDependent.adoc": "connection",
     "DriverOptions.adoc": "connection",
     "Driver.adoc": "connection",
     "ServerReplica.adoc": "connection",

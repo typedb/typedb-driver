@@ -243,7 +243,7 @@ impl ServerManager {
             ConsistencyLevel::Eventual => {
                 Err(InternalError::Unimplemented { details: "eventual consistency".to_string() }.into())
             }
-            ConsistencyLevel::ReplicaDependant { address } => {
+            ConsistencyLevel::ReplicaDependent { address } => {
                 if self.read_replicas().iter().find(|replica| replica.address() == &address).is_none() {
                     return Err(ConnectionError::UnknownDirectReplica {
                         address,

@@ -20,8 +20,8 @@ from typing import Optional, Union
 
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
 from typedb.native_driver_wrapper import consistency_level_strong, consistency_level_eventual, \
-    consistency_level_replica_dependant, ConsistencyLevel as NativeConsistencyLevel, \
-    Strong as NativeStrong, Eventual as NativeEventual, ReplicaDependant as NativeReplicaDependant
+    consistency_level_replica_dependent, ConsistencyLevel as NativeConsistencyLevel, \
+    Strong as NativeStrong, Eventual as NativeEventual, ReplicaDependent as NativeReplicaDependent
 
 
 class ConsistencyLevel(ABC):
@@ -37,7 +37,7 @@ class ConsistencyLevel(ABC):
         pass
 
     @staticmethod
-    def of(native_value: NativeConsistencyLevel) -> Union[None, "Strong", "Eventual", "ReplicaDependant"]:
+    def of(native_value: NativeConsistencyLevel) -> Union[None, "Strong", "Eventual", "ReplicaDependent"]:
         if native_value is None:
             return None
 
@@ -45,8 +45,8 @@ class ConsistencyLevel(ABC):
             return ConsistencyLevel.Strong()
         elif native_value.tag == NativeEventual:
             return ConsistencyLevel.Eventual()
-        elif native_value.tag == NativeReplicaDependant:
-            return ConsistencyLevel.ReplicaDependant(native_value.address)
+        elif native_value.tag == NativeReplicaDependent:
+            return ConsistencyLevel.ReplicaDependent(native_value.address)
         else:
             raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
@@ -60,8 +60,8 @@ class ConsistencyLevel(ABC):
     def is_eventual(self) -> bool:
         return isinstance(self, ConsistencyLevel.Eventual)
 
-    def is_replica_dependant(self) -> bool:
-        return isinstance(self, ConsistencyLevel.ReplicaDependant)
+    def is_replica_dependent(self) -> bool:
+        return isinstance(self, ConsistencyLevel.ReplicaDependent)
 
     class Strong:
         """
@@ -87,9 +87,9 @@ class ConsistencyLevel(ABC):
         def __str__(self):
             return "Eventual"
 
-    class ReplicaDependant:
+    class ReplicaDependent:
         """
-        Replica dependant consistency level. The operation is executed against the provided replica address only.
+        Replica dependent consistency level. The operation is executed against the provided replica address only.
         Its guarantees depend on the replica selected.
         """
 
@@ -97,7 +97,7 @@ class ConsistencyLevel(ABC):
             self._address = address
 
         def native_object(self):
-            return consistency_level_replica_dependant(self._address)
+            return consistency_level_replica_dependent(self._address)
 
         """
         Retrieves the address of the replica this consistency level depends on.
@@ -108,4 +108,4 @@ class ConsistencyLevel(ABC):
             return self._address
 
         def __str__(self):
-            return f"ReplicaDependant({self._address})"
+            return f"ReplicaDependent({self._address})"

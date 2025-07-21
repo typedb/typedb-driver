@@ -136,7 +136,7 @@
 
 %nojavaexception consistency_level_strong;
 %nojavaexception consistency_level_eventual;
-%nojavaexception consistency_level_replica_dependant;
+%nojavaexception consistency_level_replica_dependent;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;

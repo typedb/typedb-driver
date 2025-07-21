@@ -1,17 +1,17 @@
-[#_ConsistencyLevel_ReplicaDependant]
-=== ConsistencyLevel.ReplicaDependant
+[#_ConsistencyLevel_ReplicaDependent]
+=== ConsistencyLevel.ReplicaDependent
 
 *Package*: `com.typedb.driver.api`
 
 The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
 
 // tag::methods[]
-[#_ConsistencyLevel_ReplicaDependant_ReplicaDependant_java_lang_String]
-==== ReplicaDependant
+[#_ConsistencyLevel_ReplicaDependent_ReplicaDependent_java_lang_String]
+==== ReplicaDependent
 
 [source,java]
 ----
-public ReplicaDependant​(java.lang.String address)
+public ReplicaDependent​(java.lang.String address)
 ----
 
 
@@ -20,7 +20,7 @@ public ReplicaDependant​(java.lang.String address)
 .Returns
 `public`
 
-[#_ConsistencyLevel_ReplicaDependant_getAddress_]
+[#_ConsistencyLevel_ReplicaDependent_getAddress_]
 ==== getAddress
 
 [source,java]
@@ -34,7 +34,7 @@ Retrieves the address of the replica this consistency level depends on.
 .Returns
 `public java.lang.String`
 
-[#_ConsistencyLevel_ReplicaDependant_nativeValue_]
+[#_ConsistencyLevel_ReplicaDependent_nativeValue_]
 ==== nativeValue
 
 [source,java]
@@ -48,7 +48,7 @@ public com.typedb.driver.jni.ConsistencyLevel nativeValue()
 .Returns
 `public com.typedb.driver.jni.ConsistencyLevel`
 
-[#_ConsistencyLevel_ReplicaDependant_nativeValue_ConsistencyLevel]
+[#_ConsistencyLevel_ReplicaDependent_nativeValue_ConsistencyLevel]
 ==== nativeValue
 
 [source,java]
@@ -62,7 +62,7 @@ public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyL
 .Returns
 `public static com.typedb.driver.jni.ConsistencyLevel`
 
-[#_ConsistencyLevel_ReplicaDependant_of_com_typedb_driver_jni_ConsistencyLevel]
+[#_ConsistencyLevel_ReplicaDependent_of_com_typedb_driver_jni_ConsistencyLevel]
 ==== of
 
 [source,java]
@@ -76,7 +76,7 @@ public static ConsistencyLevel of​(com.typedb.driver.jni.ConsistencyLevel nati
 .Returns
 `public static ConsistencyLevel`
 
-[#_ConsistencyLevel_ReplicaDependant_toString_]
+[#_ConsistencyLevel_ReplicaDependent_toString_]
 ==== toString
 
 [source,java]

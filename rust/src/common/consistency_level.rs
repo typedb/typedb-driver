@@ -36,7 +36,7 @@ pub enum ConsistencyLevel {
 
     /// The operation is executed against the provided replica address only. Its guarantees depend
     /// on the replica selected.
-    ReplicaDependant { address: Address },
+    ReplicaDependent { address: Address },
 }
 
 impl fmt::Display for ConsistencyLevel {
@@ -44,7 +44,7 @@ impl fmt::Display for ConsistencyLevel {
         match self {
             ConsistencyLevel::Strong => write!(f, "Strong"),
             ConsistencyLevel::Eventual => write!(f, "Eventual"),
-            ConsistencyLevel::ReplicaDependant { address } => write!(f, "Target({address})"),
+            ConsistencyLevel::ReplicaDependent { address } => write!(f, "Target({address})"),
         }
     }
 }
