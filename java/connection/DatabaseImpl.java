@@ -19,6 +19,7 @@
 
 package com.typedb.driver.connection;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
@@ -43,31 +44,31 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public String schema() throws TypeDBDriverException {
+    public String schema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
-            return database_schema(nativeObject);
+            return database_schema(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public String typeSchema() throws TypeDBDriverException {
+    public String typeSchema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
-            return database_type_schema(nativeObject);
+            return database_type_schema(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException {
+    public void exportToFile(String schemaFilePath, String dataFilePath, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         Validator.requireNonNull(schemaFilePath, "schemaFilePath");
         Validator.requireNonNull(dataFilePath, "dataFilePath");
         try {
-            database_export_to_file(nativeObject, schemaFilePath, dataFilePath);
+            database_export_to_file(nativeObject, schemaFilePath, dataFilePath, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -88,52 +89,4 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     public String toString() {
         return name();
     }
-
-//    @Override
-//    public Set<? extends Database.Replica> replicas() {
-//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-//        return new NativeIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
-//    }
-//
-//    @Override
-//    public Optional<? extends Database.Replica> primaryReplica() {
-//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-//        com.typedb.driver.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
-//        if (res != null) return Optional.of(new Replica(res));
-//        else return Optional.empty();
-//    }
-//
-//    @Override
-//    public Optional<? extends Database.Replica> preferredReplica() {
-//        if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-//        com.typedb.driver.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
-//        if (res != null) return Optional.of(new Replica(res));
-//        else return Optional.empty();
-//    }
-//
-//    public static class Replica extends NativeObject<com.typedb.driver.jni.ReplicaInfo> implements Database.Replica {
-//        Replica(com.typedb.driver.jni.ReplicaInfo replicaInfo) {
-//            super(replicaInfo);
-//        }
-//
-//        @Override
-//        public String server() {
-//            return replica_info_get_server(nativeObject);
-//        }
-//
-//        @Override
-//        public boolean isPrimary() {
-//            return replica_info_is_primary(nativeObject);
-//        }
-//
-//        @Override
-//        public boolean isPreferred(){
-//            return replica_info_is_preferred(nativeObject);
-//        }
-//
-//        @Override
-//        public long term() {
-//            return replica_info_get_term(nativeObject);
-//        }
-//    }
 }

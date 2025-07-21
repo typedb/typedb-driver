@@ -1,0 +1,28 @@
+[#_ServerVersion]
+=== ServerVersion
+
+A full TypeDB server’s version specification.
+
+[caption=""]
+.Examples
+[source,python]
+----
+driver.server_version()
+----
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `distribution` a| `str` a| Returns the server’s distribution.
+
+
+a| `version` a| `str` a| Returns the server’s version.
+
+
+|===
+// end::properties[]
+

@@ -24,11 +24,11 @@ use typedb_driver::{
     box_stream,
     concept::{
         value::{Decimal, Duration, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Attribute, Concept, Entity, Relation, Value,
     },
 };
 
-use crate::{
+use crate::common::{
     iterator::CIterator,
     memory::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,
@@ -48,17 +48,9 @@ impl DatetimeInNanos {
     pub fn new<TZ: ChronoTimeZone>(datetime: &DateTime<TZ>) -> Self {
         Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
     }
-
-    pub fn get_seconds(self) -> i64 {
-        self.seconds
-    }
-
-    pub fn get_subsec_nanos(self) -> u32 {
-        self.subsec_nanos
-    }
 }
 
-/// A <code>DatetimeAndTimeZone</code> used to represent time zoned datetime in FFI.
+/// <code>DatetimeAndTimeZone</code> is used to represent time zoned datetime in FFI.
 /// Time zone can be represented either as an IANA <code>Tz</code> or as a <code>FixedOffset</code>.
 /// Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 #[repr(C)]
@@ -83,22 +75,6 @@ impl DatetimeAndTimeZone {
             local_minus_utc_offset: offset,
             is_fixed_offset,
         }
-    }
-
-    pub fn get_datetime_in_nanos(self) -> DatetimeInNanos {
-        self.datetime_in_nanos
-    }
-
-    pub fn get_zone_name(self) -> *mut c_char {
-        self.zone_name
-    }
-
-    pub fn get_local_minus_utc_offset(self) -> i32 {
-        self.local_minus_utc_offset
-    }
-
-    pub fn get_is_fixed_offset(self) -> bool {
-        self.is_fixed_offset
     }
 }
 
@@ -171,7 +147,7 @@ pub extern "C" fn concept_try_get_iid(thing: *mut Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[no_mangle]
 pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
-    release_string(borrow(concept).get_label().clone().to_owned())
+    release_string(borrow(concept).get_label().to_owned())
 }
 
 /// Retrieves the optional label of this <code>Concept</code>.
@@ -180,7 +156,7 @@ pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[no_mangle]
 pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_label().map(|str| str.clone().to_owned()))
+    release_optional_string(borrow(concept).try_get_label().map(|str| str.to_owned()))
 }
 
 /// Retrieves the value type of this <code>Concept</code>, if it exists.
@@ -190,7 +166,7 @@ pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char 
 /// Otherwise, returns null.
 #[no_mangle]
 pub extern "C" fn concept_try_get_value_type(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_value_label().map(|str| str.clone().to_owned()))
+    release_optional_string(borrow(concept).try_get_value_label().map(|str| str.to_owned()))
 }
 
 /// Retrieves the value of this <code>Concept</code>, if it exists.
@@ -317,7 +293,7 @@ pub extern "C" fn concept_get_decimal(concept: *const Concept) -> Decimal {
 #[no_mangle]
 pub extern "C" fn concept_get_string(concept: *const Concept) -> *mut c_char {
     match borrow(concept).try_get_string() {
-        Some(value) => release_string(value.clone().to_owned()),
+        Some(value) => release_string(value.to_owned()),
         None => unreachable!("Attempting to unwrap a non-string {:?} as string", borrow(concept)),
     }
 }
@@ -345,9 +321,9 @@ pub extern "C" fn concept_get_datetime(concept: *const Concept) -> DatetimeInNan
 /// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and timezone information.
 /// If the value has another type, the error is set.
 #[no_mangle]
-pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> DatetimeAndTimeZone {
+pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> *mut DatetimeAndTimeZone {
     match borrow(concept).try_get_datetime_tz() {
-        Some(value) => DatetimeAndTimeZone::new(&value),
+        Some(value) => release(DatetimeAndTimeZone::new(&value)),
         None => unreachable!("Attempting to unwrap a non-datetime-tz {:?} as datetime-tz", borrow(concept)),
     }
 }

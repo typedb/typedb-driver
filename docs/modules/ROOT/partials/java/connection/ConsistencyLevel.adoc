@@ -1,0 +1,66 @@
+[#_ConsistencyLevel]
+=== ConsistencyLevel
+
+*Package*: `com.typedb.driver.api`
+
+Consistency levels of operations against a distributed server. All driver methods have default recommended values, however, readonly operations can be configured in order to potentially speed up the execution (introducing risks of stale data) or test a specific replica. This setting does not affect clusters with a single node.
+
+// tag::methods[]
+[#_ConsistencyLevel_ConsistencyLevel_]
+==== ConsistencyLevel
+
+[source,java]
+----
+public ConsistencyLevel()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_ConsistencyLevel_nativeValue_]
+==== nativeValue
+
+[source,java]
+----
+public abstract com.typedb.driver.jni.ConsistencyLevel nativeValue()
+----
+
+
+
+[caption=""]
+.Returns
+`public abstract com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_nativeValue_ConsistencyLevel]
+==== nativeValue
+
+[source,java]
+----
+public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyLevel consistencyLevel)
+----
+
+
+
+[caption=""]
+.Returns
+`public static com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_of_com_typedb_driver_jni_ConsistencyLevel]
+==== of
+
+[source,java]
+----
+public static ConsistencyLevel of​(com.typedb.driver.jni.ConsistencyLevel nativeValue)
+----
+
+
+
+[caption=""]
+.Returns
+`public static ConsistencyLevel`
+
+// end::methods[]
+
