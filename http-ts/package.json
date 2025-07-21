@@ -1,5 +1,5 @@
 {
-  "name": "typedb-driver-http",
+  "name": "@samuel-butcher-typedb/typedb-http-driver",
   "version": "0.0.0",
   "description": "TypeDB HTTP Driver",
   "author": "TypeDB",
@@ -17,7 +17,7 @@
     "typedb"
   ],
   "packageManager": "pnpm@8.15.9",
-  "dependencies": {
+  "devDependencies": {
     "@cucumber/cucumber": "9.0.0",
     "@types/node": "24.0.12",
     "typedoc": "^0.28.7",
