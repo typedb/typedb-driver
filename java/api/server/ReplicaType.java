@@ -61,6 +61,13 @@ public enum ReplicaType {
     }
 
     /**
+     * Checks whether this is a candidate replica of the raft cluster.
+     */
+    public boolean isCandidate() {
+        return nativeObject == com.typedb.driver.jni.ReplicaType.Candidate;
+    }
+
+    /**
      * Checks whether this is a secondary replica of the raft cluster.
      */
     public boolean isSecondary() {

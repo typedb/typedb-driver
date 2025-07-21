@@ -57,7 +57,8 @@ impl TryFromProto<i32> for ReplicaType {
     fn try_from_proto(replica_type: i32) -> Result<Self> {
         match replica_type {
             0 => Ok(Self::Primary),
-            1 => Ok(Self::Secondary),
+            1 => Ok(Self::Candidate),
+            2 => Ok(Self::Secondary),
             _ => Err(ConnectionError::UnexpectedReplicaType { replica_type }.into()),
         }
     }

@@ -31,10 +31,14 @@ class ReplicaType(enum.Enum):
        server_replica.replica_type
     """
     PRIMARY = 0
-    SECONDARY = 1
+    CANDIDATE = 1
+    SECONDARY = 2
 
     def is_primary(self) -> bool:
         return self is ReplicaType.PRIMARY
+
+    def is_candidate(self) -> bool:
+        return self is ReplicaType.CANDIDATE
 
     def is_secondary(self) -> bool:
         return self is ReplicaType.SECONDARY

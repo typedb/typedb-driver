@@ -106,5 +106,6 @@ impl Default for ReplicaStatus {
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum ReplicaType {
     Primary,
+    Candidate,
     Secondary,
 }
