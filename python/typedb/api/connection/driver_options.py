@@ -32,7 +32,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     --------
     ::
 
-        driver_options = DriverOptions(tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+        driver_options = DriverOptions(is_tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
     """
 
     def __init__(self, is_tls_enabled: bool = True, tls_root_ca_path: Optional[str] = None):
