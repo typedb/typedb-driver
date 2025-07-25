@@ -1,6 +1,10 @@
 # TypeDB C++ Driver
 The C++ driver is built against the C++17 standard.
 
+**NOTE: this gRPC driver has not been updated to TypeDB 3.x. 
+Please use the HTTP endpoint instead.**
+
+
 ## Usage
 The driver is distributed as an archive containing the headers & a shared library.
 ```
