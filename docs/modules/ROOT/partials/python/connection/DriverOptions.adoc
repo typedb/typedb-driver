@@ -7,6 +7,6 @@ User credentials and TLS encryption settings for connecting to TypeDB Server. Ar
 .Examples
 [source,python]
 ----
-driver_options = DriverOptions(tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+driver_options = DriverOptions(is_tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
 ----
 
