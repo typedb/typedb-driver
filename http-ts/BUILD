@@ -37,17 +37,6 @@ npm_link_all_packages(
     name = "node_modules",
 )
 
-ts_project(
-    name = "driver-lib-dev",
-    srcs = glob(["src/*.ts"]),
-    tsconfig = ":tsconfig.json",
-    declaration = True,
-    deps = [":node_modules/typescript"],
-    transpiler = "tsc",
-    visibility = ["//visibility:public"],
-    out_dir = "dist",
-)
-
 jq(
     name = "package",
     srcs = ["package.json"],
@@ -60,33 +49,33 @@ jq(
     ]),
 )
 
-driver_lib_srcs = glob(["src/*.ts"]) + [
+driver_lib_data = glob(["src/*.ts"]) + [
     "tsup.config.ts",
     "tsconfig.json",
     ":node_modules/typescript",
     ":node_modules/tsup",
-],
+]
 
 js_binary(
     name = "tsup_bin",
     entry_point = ":node_modules/tsup/dist/cli-default.js",
-    no_copy_to_bin = [":node_modules/tsup/dist/cli-default.js"],
-    data = driver_lib_srcs,
+    data = driver_lib_data,
     copy_data_to_bin = False,
 )
 
+# TODO: should also output index.d.cts (works in filesystem but not in bazel)
 js_run_binary(
     name = "driver-lib",
     tool = ":tsup_bin",
     chdir = package_name(),
-    srcs = driver_lib_srcs,
+    srcs = driver_lib_data,
     outs = [
         "dist/index.cjs",
         "dist/index.d.ts",
         "dist/index.mjs",
     ],
-    visibility = ["//visibility:public"],
     use_execroot_entry_point = False,
+    visibility = ["//visibility:public"],
 )
 
 # TODO: figure out how to include LICENSE from repo root

@@ -30,7 +30,7 @@ ts_project(
     srcs = ["connection.ts", "context.ts", "database.ts", "params.ts", "query.ts", "transaction.ts", "user.ts", "util.ts"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//http-ts:driver-lib-dev",
+        "//http-ts:driver-lib",
         "//http-ts:node_modules/@cucumber/cucumber",
         "//http-ts:node_modules/@types/node",
     ],

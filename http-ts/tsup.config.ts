@@ -16,7 +16,7 @@ const tsup: Options = {
     minify: false,
     bundle: true,
     skipNodeModulesBundle: true,
-    watch: env === "development",
+    watch: false,
     target: "es2020",
     outDir: "dist",
     entry: ["src/index.ts"],
