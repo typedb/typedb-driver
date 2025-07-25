@@ -102,7 +102,7 @@ jq(
 
 npm_package(
     name = "driver-nodejs-npm-package",
-    srcs = [":driver-nodejs", ":package", "README.md"],
+    srcs = [":driver-nodejs", ":package", "README.md", "//:LICENSE"],
     include_runfiles = False,
     package = "typedb-driver",
     replace_prefixes = { "dist/": "" },
