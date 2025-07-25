@@ -1,5 +1,8 @@
 # TypeDB Node.js Driver
 
+**NOTE: this NodeJS gRPC driver has not been updated to TypeDB 3.x.
+In the meantime, please us the `http-ts` node driver instead.**
+
 ## Driver Architecture
 To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
 
