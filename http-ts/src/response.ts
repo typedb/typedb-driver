@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Database, User } from "index";
+import { Database, User } from "./index";
 import { Concept } from "./concept";
 import { QueryStructure } from "./query-structure";
 
