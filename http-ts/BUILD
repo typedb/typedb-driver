@@ -101,7 +101,9 @@ deploy_npm(
 checkstyle_test(
     name = "checkstyle",
     include = glob([
-        "**/*",
+        "*",
+        "src/**/*",
+        "tool/**/*",
     ]),
     exclude = glob([
         "**/*.json",
@@ -109,6 +111,8 @@ checkstyle_test(
         "pnpm-lock.yaml",
         "tsup.config.ts",
         "LICENSE",
+        "docs/**/*",
+        "dist/**/*",
     ]),
     license_type = "apache-header",
 )
