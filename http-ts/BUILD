@@ -37,17 +37,6 @@ npm_link_all_packages(
     name = "node_modules",
 )
 
-ts_project(
-    name = "driver-lib-dev",
-    srcs = glob(["src/*.ts"]),
-    tsconfig = ":tsconfig.json",
-    declaration = True,
-    deps = [":node_modules/typescript"],
-    transpiler = "tsc",
-    visibility = ["//visibility:public"],
-    out_dir = "dist",
-)
-
 jq(
     name = "package",
     srcs = ["package.json"],
