@@ -118,6 +118,8 @@ checkstyle_test(
         "**/*.json",
         "**/*.md",
         "pnpm-lock.yaml",
+        "tsup.config.ts",
+        "LICENSE",
     ]),
     license_type = "apache-header",
 )
