@@ -16,6 +16,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install 22
 nvm use 22
 npm install --global corepack@0.17.0
