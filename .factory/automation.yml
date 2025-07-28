@@ -43,6 +43,7 @@ build:
         sudo apt install python3-pip -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
+        tool/http-ts/install-deps.sh
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -52,13 +53,11 @@ build:
         bazel build //rust/...
         bazel build //java/...
         bazel build //python/...
+        bazel build //http-ts/...
+        
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
-        # TODO: Return these three steps when npm is reimplemented for 3.x
-        # cd nodejs
-        # npm install
-        # npm run lint
 
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
