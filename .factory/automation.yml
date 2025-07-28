@@ -293,6 +293,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        
+        tool/http-ts/install-deps.sh
 
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //http-ts/tests/behaviour/... --test_output=streamed --jobs=1 &&
