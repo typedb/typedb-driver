@@ -33,7 +33,7 @@ import {
     EXPECT_ERROR_CONTAINING,
     MayError, parseValue
 } from "./params";
-import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.mjs";
+import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.cjs";
 import assert from "assert";
 
 const runQuery = async (mayError: MayError, query: string) =>  {

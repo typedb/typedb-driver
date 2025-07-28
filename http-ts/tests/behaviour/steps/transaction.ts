@@ -18,7 +18,7 @@
  */
 
 import { Then, When } from "@cucumber/cucumber";
-import { TransactionType } from "../../../dist/index.mjs";
+import { TransactionType } from "../../../dist/index.cjs";
 import { checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import {
     driver, openBackgroundTransaction,
