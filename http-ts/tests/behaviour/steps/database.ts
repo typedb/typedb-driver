@@ -21,7 +21,7 @@ import { DataTable, Given, Then } from "@cucumber/cucumber";
 import { driver } from "./context";
 import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import assert from "assert";
-import { Database, isApiErrorResponse } from "../../../dist";
+import { Database, isApiErrorResponse } from "../../../dist/index.cjs";
 
 async function createDatabase(database: string, mayError: MayError) {
     await driver.createDatabase(database).then(checkMayError(mayError));

@@ -43,6 +43,7 @@ build:
         sudo apt install python3-pip -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
+        tool/http-ts/install-deps.sh
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -52,13 +53,11 @@ build:
         bazel build //rust/...
         bazel build //java/...
         bazel build //python/...
+        bazel build //http-ts/...
+        
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
-        # TODO: Return these three steps when npm is reimplemented for 3.x
-        # cd nodejs
-        # npm install
-        # npm run lint
 
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
@@ -94,8 +93,6 @@ build:
 
     test-rust-unit-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-      dependencies:
-        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
@@ -119,8 +116,6 @@ build:
 
     test-rust-behaviour-community:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-      dependencies:
-        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
@@ -167,8 +162,6 @@ build:
 
     test-java-integration:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
@@ -190,8 +183,6 @@ build:
 
     test-java-behaviour-community:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
@@ -223,8 +214,6 @@ build:
 
     test-python-integration:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -248,8 +237,6 @@ build:
 
     test-python-behaviour-community:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -286,8 +273,6 @@ build:
 
     test-http-ts-behaviour-community:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -295,6 +280,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        
+        tool/http-ts/install-deps.sh
 
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //http-ts/tests/behaviour/... --test_output=streamed --jobs=1 &&

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,26 +16,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//http-ts/tests/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-)
-
-ts_project(
-    name = "steps",
-    srcs = glob(["*.ts"]) + ["//http-ts:driver-lib"],
-    tsconfig = behaviour_test_ts_config(),
-    deps = [
-        "//http-ts:node_modules/@cucumber/cucumber",
-        "//http-ts:node_modules/@types/node",
-    ],
-    transpiler = "tsc",
-    declaration = True,
-    resolve_json_module = True,
-    visibility = ["//visibility:public"],
 )

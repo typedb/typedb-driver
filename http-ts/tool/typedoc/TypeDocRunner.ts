@@ -23,7 +23,7 @@ async function main() {
     const app = await TypeDoc.Application.bootstrapWithPlugins({
         tsconfig: "http-ts/tsconfig.json",
         options: "http-ts/tool/typedoc/typedoc.json",
-        entryPoints: ["http-ts/index.ts"],
+        entryPoints: ["http-ts/src/index.ts"],
     });
 
     const project = await app.convert();

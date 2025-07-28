@@ -5,9 +5,17 @@
   "author": "TypeDB",
   "license": "Apache-2.0",
   "homepage": "https://typedb.com",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/typedb/typedb-driver"
@@ -16,10 +24,17 @@
     "database",
     "typedb"
   ],
-  "packageManager": "pnpm@8.15.9",
+  "scripts": {
+    "build:dev": "tsc",
+    "build": "tsup",
+    "test": "cucumber-js",
+    "docs": "typedoc"
+  },
+  "packageManager" : "pnpm@8.15.9",
   "devDependencies": {
     "@cucumber/cucumber": "9.0.0",
     "@types/node": "24.0.12",
+    "tsup": "8.5.0",
     "typedoc": "^0.28.7",
     "typescript": "5.8.3"
   },

@@ -25,8 +25,8 @@ load("@typedb_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@aspect_rules_js//js:defs.bzl", "js_binary")
-load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@http-ts_npm//:defs.bzl", "npm_link_all_packages")
 load("//http-ts:tool/typedoc/rules.bzl", "typedoc_docs")
@@ -35,17 +35,6 @@ load("//tool/docs:httpts/rules.bzl", "typedoc_to_adoc")
 
 npm_link_all_packages(
     name = "node_modules",
-)
-
-ts_project(
-    name = "driver-http-ts",
-    srcs = glob(["*.ts"]),
-    tsconfig = ":tsconfig.json",
-    declaration = True,
-    deps = [":node_modules/typescript"],
-    transpiler = "tsc",
-    visibility = ["//visibility:public"],
-    out_dir = "dist",
 )
 
 jq(
@@ -60,17 +49,46 @@ jq(
     ]),
 )
 
+driver_lib_data = glob(["src/*.ts"]) + [
+    "tsup.config.ts",
+    "tsconfig.json",
+    ":node_modules/typescript",
+    ":node_modules/tsup",
+]
+
+js_binary(
+    name = "tsup_bin",
+    entry_point = ":node_modules/tsup/dist/cli-default.js",
+    data = driver_lib_data,
+    copy_data_to_bin = False,
+)
+
+# TODO: should also output index.d.cts (works in filesystem but not in bazel)
+js_run_binary(
+    name = "driver-lib",
+    tool = ":tsup_bin",
+    chdir = package_name(),
+    srcs = driver_lib_data,
+    outs = [
+        "dist/index.cjs",
+        "dist/index.d.ts",
+        "dist/index.mjs",
+    ],
+    use_execroot_entry_point = False,
+    visibility = ["//visibility:public"],
+)
+
+# TODO: figure out how to include LICENSE from repo root
 npm_package(
-    name = "driver-http-ts-npm-package",
-    srcs = [":driver-http-ts", ":package", "README.md"],
+    name = "npm-package",
+    srcs = [":driver-lib", ":package", "README.md", "LICENSE"],
     include_runfiles = False,
-    replace_prefixes = { "dist/": "" },
     visibility = ["//visibility:public"],
 )
 
 assemble_npm(
-    name= "assemble-npm",
-    target = ":driver-http-ts-npm-package",
+    name = "assemble-npm",
+    target = ":npm-package",
 )
 
 deploy_npm(
@@ -83,12 +101,18 @@ deploy_npm(
 checkstyle_test(
     name = "checkstyle",
     include = glob([
-        "**/*",
+        "*",
+        "src/**/*",
+        "tool/**/*",
     ]),
     exclude = glob([
         "**/*.json",
         "**/*.md",
         "pnpm-lock.yaml",
+        "tsup.config.ts",
+        "LICENSE",
+        "docs/**/*",
+        "dist/**/*",
     ]),
     license_type = "apache-header",
 )
@@ -115,7 +139,7 @@ js_binary(
         ":typedoc_runner",
     ],
     entry_point = ":typedoc_runner",
-    chdir = "http-ts",
+    chdir = package_name(),
 )
 
 typedoc_docs(
@@ -123,7 +147,7 @@ typedoc_docs(
     script = ":typedoc_runner_bin",
     deps = [":node_modules/@types/node"],
     srcs = glob([
-        "*.ts",
+        "src/*.ts",
         "tsconfig.json",
         "tool/**/*.json",
     ]),
