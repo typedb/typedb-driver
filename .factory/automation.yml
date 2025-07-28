@@ -286,8 +286,6 @@ build:
 
     test-http-ts-behaviour-community:
       image: typedb-ubuntu-22.04
-      dependencies:
-        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
