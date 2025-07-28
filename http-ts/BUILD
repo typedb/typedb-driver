@@ -135,7 +135,7 @@ js_binary(
         ":typedoc_runner",
     ],
     entry_point = ":typedoc_runner",
-    chdir = "http-ts",
+    chdir = package_name(),
 )
 
 typedoc_docs(
