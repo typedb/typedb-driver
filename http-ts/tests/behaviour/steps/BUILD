@@ -27,10 +27,9 @@ checkstyle_test(
 
 ts_project(
     name = "steps",
-    srcs = ["connection.ts", "context.ts", "database.ts", "params.ts", "query.ts", "transaction.ts", "user.ts", "util.ts"],
+    srcs = glob(["*.ts"]) + ["//http-ts:driver-lib"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//http-ts:driver-lib",
         "//http-ts:node_modules/@cucumber/cucumber",
         "//http-ts:node_modules/@types/node",
     ],
