@@ -22,7 +22,7 @@ nvm install 22
 nvm use 22
 npm install --global corepack@0.17.0
 corepack enable
-corepack prepare pnpm@10.12.1 --activate
+corepack prepare pnpm@8.15.9 --activate
 pushd http-ts
 pnpm install
 popd
