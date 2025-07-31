@@ -1,0 +1,92 @@
+[#_ConsistencyLevel]
+=== ConsistencyLevel
+
+Consistency levels of operations against a distributed server. All driver methods have default recommended values, however, readonly operations can be configured in order to potentially speed up the execution (introducing risks of stale data) or test a specific replica. This setting does not affect clusters with a single node.
+
+// tag::methods[]
+[#_ConsistencyLevel_is_eventual_]
+==== is_eventual
+
+[source,python]
+----
+is_eventual() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConsistencyLevel_is_replica_dependent_]
+==== is_replica_dependent
+
+[source,python]
+----
+is_replica_dependent() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConsistencyLevel_is_strong_]
+==== is_strong
+
+[source,python]
+----
+is_strong() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConsistencyLevel_native_object_]
+==== native_object
+
+[source,python]
+----
+native_object()
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_ConsistencyLevel_native_value_]
+==== native_value
+
+[source,python]
+----
+static native_value(consistency_level: ConsistencyLevel | None) -> ConsistencyLevel
+----
+
+
+
+[caption=""]
+.Returns
+`ConsistencyLevel`
+
+[#_ConsistencyLevel_of_]
+==== of
+
+[source,python]
+----
+static of(native_value: ConsistencyLevel) -> None | Strong | Eventual | ReplicaDependent
+----
+
+
+
+[caption=""]
+.Returns
+`None | Strong | Eventual | ReplicaDependent`
+
+// end::methods[]
+

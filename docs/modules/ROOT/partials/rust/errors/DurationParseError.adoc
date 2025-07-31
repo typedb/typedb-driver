@@ -1,7 +1,0 @@
-[#_struct_DurationParseError]
-=== DurationParseError
-
-*Implements traits:*
-
-* `Debug`
-

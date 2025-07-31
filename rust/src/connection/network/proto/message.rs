@@ -19,7 +19,7 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, query::initial_res::Res, server_manager,
+    authentication, connection, database, database_manager, migration, query::initial_res::Res, server, server_manager,
     transaction, user, user_manager, Version::Version,
 };
 use uuid::Uuid;
@@ -28,9 +28,13 @@ use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
-    connection::message::{
-        DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
-        TransactionRequest, TransactionResponse,
+    connection::{
+        message::{
+            DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
+            TransactionRequest, TransactionResponse,
+        },
+        server_replica::ServerReplica,
+        server_version::ServerVersion,
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
@@ -55,6 +59,33 @@ impl TryIntoProto<server_manager::all::Req> for Request {
     fn try_into_proto(self) -> Result<server_manager::all::Req> {
         match self {
             Self::ServersAll => Ok(server_manager::all::Req {}),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<server_manager::register::Req> for Request {
+    fn try_into_proto(self) -> Result<server_manager::register::Req> {
+        match self {
+            Self::ServersRegister { replica_id, address } => Ok(server_manager::register::Req { replica_id, address }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<server_manager::deregister::Req> for Request {
+    fn try_into_proto(self) -> Result<server_manager::deregister::Req> {
+        match self {
+            Self::ServersDeregister { replica_id } => Ok(server_manager::deregister::Req { replica_id }),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
+impl TryIntoProto<server::version::Req> for Request {
+    fn try_into_proto(self) -> Result<server::version::Req> {
+        match self {
+            Self::ServerVersion => Ok(server::version::Req {}),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
@@ -285,15 +316,23 @@ impl TryIntoProto<authentication::token::create::Req> for Credentials {
 
 impl TryFromProto<connection::open::Res> for Response {
     fn try_from_proto(proto: connection::open::Res) -> Result<Self> {
-        let mut database_infos = Vec::new();
-        for database_info_proto in proto.databases_all.expect("Expected databases data").databases {
-            database_infos.push(DatabaseInfo::try_from_proto(database_info_proto)?);
+        let mut servers = Vec::new();
+        for server_proto in
+            proto.servers_all.ok_or(ConnectionError::MissingResponseField { field: "servers_all" })?.servers
+        {
+            servers.push(ServerReplica::try_from_proto(server_proto)?);
         }
         Ok(Self::ConnectionOpen {
-            connection_id: Uuid::from_slice(proto.connection_id.expect("Expected connection id").id.as_slice())
-                .unwrap(),
+            connection_id: Uuid::from_slice(
+                proto
+                    .connection_id
+                    .ok_or(ConnectionError::MissingResponseField { field: "connection_id" })?
+                    .id
+                    .as_slice(),
+            )
+            .expect("Expected connection id creation"),
             server_duration_millis: proto.server_duration_millis,
-            databases: database_infos,
+            servers,
         })
     }
 }
@@ -301,8 +340,27 @@ impl TryFromProto<connection::open::Res> for Response {
 impl TryFromProto<server_manager::all::Res> for Response {
     fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
         let server_manager::all::Res { servers } = proto;
-        let servers = servers.into_iter().map(|server| server.address.parse()).try_collect()?;
+        let servers = servers.into_iter().map(|server| ServerReplica::try_from_proto(server)).try_collect()?;
         Ok(Self::ServersAll { servers })
+    }
+}
+
+impl TryFromProto<server_manager::register::Res> for Response {
+    fn try_from_proto(_proto: server_manager::register::Res) -> Result<Self> {
+        Ok(Self::ServersRegister)
+    }
+}
+
+impl TryFromProto<server_manager::deregister::Res> for Response {
+    fn try_from_proto(_proto: server_manager::deregister::Res) -> Result<Self> {
+        Ok(Self::ServersDeregister)
+    }
+}
+
+impl TryFromProto<server::version::Res> for Response {
+    fn try_from_proto(proto: server::version::Res) -> Result<Self> {
+        let server::version::Res { distribution, version } = proto;
+        Ok(Self::ServerVersion { server_version: ServerVersion { distribution, version } })
     }
 }
 
@@ -331,7 +389,11 @@ impl FromProto<database_manager::contains::Res> for Response {
 
 impl TryFromProto<database_manager::create::Res> for Response {
     fn try_from_proto(proto: database_manager::create::Res) -> Result<Self> {
-        Ok(Self::DatabaseCreate { database: DatabaseInfo::try_from_proto(proto.database.unwrap())? })
+        Ok(Self::DatabaseCreate {
+            database: DatabaseInfo::try_from_proto(
+                proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
+            )?,
+        })
     }
 }
 

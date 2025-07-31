@@ -21,7 +21,7 @@ use std::{
     cmp::max,
     collections::VecDeque,
     fs::{File, OpenOptions},
-    io::{BufRead, BufWriter, Read, Write},
+    io::BufRead,
     marker::PhantomData,
     path::Path,
 };
@@ -73,14 +73,14 @@ impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
                             return if self.buffer.is_empty() {
                                 Ok(None)
                             } else {
-                                Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength))
+                                Err(MigrationError::CannotDecodeImportedConceptLength.into())
                             };
                         }
-                        Err(_) => return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength)),
+                        Err(_) => return Err(MigrationError::CannotDecodeImportedConceptLength.into()),
                         Ok(_) => continue,
                     }
                 } else {
-                    return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength));
+                    return Err(MigrationError::CannotDecodeImportedConceptLength.into());
                 }
             }
         }
@@ -107,12 +107,12 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
             let to_read = max(required, Self::BUF_CAPACITY);
             match self.try_read_more(to_read) {
                 Ok(bytes_read) if bytes_read >= required => {}
-                _ => return Some(Err(Error::Migration(MigrationError::CannotDecodeImportedConcept))),
+                _ => return Some(Err(MigrationError::CannotDecodeImportedConcept.into())),
             }
         }
 
         let mut message_buf = self.get_message_buf(message_len);
-        Some(M::decode(&mut message_buf).map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept)))
+        Some(M::decode(&mut message_buf).map_err(|_| MigrationError::CannotDecodeImportedConcept.into()))
     }
 }
 

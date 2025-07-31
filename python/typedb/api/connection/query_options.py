@@ -30,7 +30,7 @@ from typedb.native_driver_wrapper import query_options_new, \
 
 class QueryOptions(NativeWrapper[NativeOptions]):
     """
-    TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour
+    TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour
     for executed queries.
 
     Options could be specified either as constructor arguments or using

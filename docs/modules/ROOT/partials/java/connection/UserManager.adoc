@@ -11,11 +11,11 @@ Provides access to all user management methods.
 
 [source,java]
 ----
-java.util.Set<User> all()
-                 throws TypeDBDriverException
+default java.util.Set<User> all()
+                         throws TypeDBDriverException
 ----
 
-Retrieves all users which exist on the TypeDB server. 
+Retrieves all users which exist on the TypeDB server, using default strong consistency. See <<#_all_com_typedb_driver_api_ConsistencyLevel,``all(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -29,13 +29,79 @@ Retrieves all users which exist on the TypeDB server.
 driver.users().all();
 ----
 
+[#_UserManager_all_ConsistencyLevel]
+==== all
+
+[source,java]
+----
+java.util.Set<User> all​(ConsistencyLevel consistencyLevel)
+                 throws TypeDBDriverException
+----
+
+Retrieves all users which exist on the TypeDB server. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`java.util.Set<User>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().all(ConsistencyLevel.Strong);
+----
+
 [#_UserManager_contains_java_lang_String]
 ==== contains
 
 [source,java]
 ----
 @CheckReturnValue
-boolean contains​(java.lang.String username)
+default boolean contains​(java.lang.String username)
+                  throws TypeDBDriverException
+----
+
+Checks if a user with the given name exists., using default strong consistency. See <<#_contains_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``contains(String, ConsistencyLevel)``>> for more details and options. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The username to be checked a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().contains(username);
+----
+
+[#_UserManager_contains_java_lang_String_ConsistencyLevel]
+==== contains
+
+[source,java]
+----
+@CheckReturnValue
+boolean contains​(java.lang.String username,
+                 ConsistencyLevel consistencyLevel)
           throws TypeDBDriverException
 ----
 
@@ -48,7 +114,8 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| `java.lang.String`
+a| `username` a| The username to be checked a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
 |===
 
 [caption=""]
@@ -59,7 +126,7 @@ a| `username` a| The user name to be checked a| `java.lang.String`
 .Code examples
 [source,java]
 ----
-driver.users().contains(username);
+driver.users().contains(username, ConsistencyLevel.Strong);
 ----
 
 [#_UserManager_create_java_lang_String_java_lang_String]
@@ -102,11 +169,11 @@ driver.users().create(username, password);
 [source,java]
 ----
 @CheckReturnValue
-User get​(java.lang.String username)
-  throws TypeDBDriverException
+default User get​(java.lang.String username)
+          throws TypeDBDriverException
 ----
 
-Retrieves a user with the given name. 
+Retrieves a user with the given name, using default strong consistency. See <<#_get_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``get(String, ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -129,17 +196,52 @@ a| `username` a| The name of the user to retrieve a| `java.lang.String`
 driver.users().get(username);
 ----
 
-[#_UserManager_getCurrentUser_]
-==== getCurrentUser
+[#_UserManager_get_java_lang_String_ConsistencyLevel]
+==== get
 
 [source,java]
 ----
 @CheckReturnValue
-User getCurrentUser()
-             throws TypeDBDriverException
+User get​(java.lang.String username,
+         ConsistencyLevel consistencyLevel)
+  throws TypeDBDriverException
 ----
 
-Retrieves the name of the user who opened the current connection. 
+Retrieves a user with the given name. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`User`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().get(username, ConsistencyLevel.Strong);
+----
+
+[#_UserManager_getCurrent_]
+==== getCurrent
+
+[source,java]
+----
+@CheckReturnValue
+default User getCurrent()
+                     throws TypeDBDriverException
+----
+
+Retrieves the name of the user who opened the current connection, using default strong consistency. See <<#_getCurrent_com_typedb_driver_api_ConsistencyLevel,``getCurrent(ConsistencyLevel)``>> for more details and options.
 
 
 [caption=""]
@@ -150,7 +252,40 @@ Retrieves the name of the user who opened the current connection.
 .Code examples
 [source,java]
 ----
-driver.users().getCurrentUsername();
+driver.users().getCurrent();
+----
+
+[#_UserManager_getCurrent_ConsistencyLevel]
+==== getCurrent
+
+[source,java]
+----
+@CheckReturnValue
+User getCurrent​(ConsistencyLevel consistencyLevel)
+             throws TypeDBDriverException
+----
+
+Retrieves the name of the user who opened the current connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`User`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().getCurrent(ConsistencyLevel.Strong);
 ----
 
 // end::methods[]

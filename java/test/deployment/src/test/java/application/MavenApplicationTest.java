@@ -37,7 +37,7 @@ public class MavenApplicationTest {
         Driver driver = TypeDB.driver(
                 TypeDB.DEFAULT_ADDRESS,
                 new Credentials("admin", "password"),
-                new DriverOptions(false, null)
+                new DriverOptions().tlsEnabled(false)
         );
         if (driver.databases().contains(DB_NAME)) {
             driver.databases().get(DB_NAME).delete();
