@@ -56,7 +56,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-    public static DriverOptions driverOptions = new DriverOptions();
+    public static DriverOptions driverOptions = new DriverOptions().tlsEnabled(false);
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
@@ -124,7 +124,7 @@ public abstract class ConnectionStepsBase {
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
         backgroundDriver.close();
-        driverOptions = new DriverOptions();
+        driverOptions = new DriverOptions().tlsEnabled(false);
     }
 
     void cleanupTransactions() {

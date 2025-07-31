@@ -130,12 +130,12 @@ driver.users.get(username)
 driver.users.get(username, ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_get_current_user_consistency_level_ConsistencyLevel_None]
-==== get_current_user
+[#_UserManager_get_current_consistency_level_ConsistencyLevel_None]
+==== get_current
 
 [source,python]
 ----
-get_current_user(consistency_level: ConsistencyLevel | None = None) -> User | None
+get_current(consistency_level: ConsistencyLevel | None = None) -> User | None
 ----
 
 Retrieves the name of the user who opened the current connection.
@@ -157,8 +157,8 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 .Code examples
 [source,python]
 ----
-driver.users.get_current_user()
-driver.users.get_current_user(ConsistencyLevel.Strong())
+driver.users.get_current()
+driver.users.get_current(ConsistencyLevel.Strong())
 ----
 
 // end::methods[]

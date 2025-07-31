@@ -44,7 +44,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Before
     public synchronized void before() {
-        driverOptions = driverOptions.isTlsEnabled(true).tlsRootCAPath(Optional.of(System.getenv("ROOT_CA")));
+        driverOptions = driverOptions.tlsEnabled(true).tlsRootCAPath(Optional.of(System.getenv("ROOT_CA")));
         super.before();
     }
 

@@ -25,7 +25,7 @@ use std::{
 use tonic::transport::{Certificate, ClientTlsConfig};
 
 // When changing these numbers, also update docs in DriverOptions
-const DEFAULT_IS_TLS_ENABLED: bool = false;
+const DEFAULT_TLS_ENABLED: bool = true;
 const DEFAULT_TLS_CONFIG: Option<ClientTlsConfig> = None;
 const DEFAULT_TLS_ROOT_CA_PATH: Option<PathBuf> = None;
 const DEFAULT_USE_REPLICATION: bool = true;
@@ -39,13 +39,14 @@ const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
 /// # Examples
 ///
 /// ```rust
-/// let options = DriverOptions::new().is_tls_enabled(true).tls_root_ca(Some(&path_to_ca)).unwrap();
+/// let options = DriverOptions::new().tls_enabled(true).tls_root_ca(Some(&path_to_ca)).unwrap();
 /// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {
     /// Specifies whether the connection to TypeDB must be done over TLS.
-    /// Defaults to false.
-    pub is_tls_enabled: bool,
+    /// WARNING: Setting this to false will make the driver sending passwords as plaintext.
+    /// Defaults to true.
+    pub tls_enabled: bool,
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
     /// or it should be limited to a single configured address.
     /// Defaults to true.
@@ -75,19 +76,19 @@ impl DriverOptions {
     }
 
     /// Specifies whether the connection to TypeDB must be done over TLS.
-    pub fn is_tls_enabled(self, is_tls_enabled: bool) -> Self {
-        Self { is_tls_enabled, ..self }
+    pub fn tls_enabled(self, tls_enabled: bool) -> Self {
+        Self { tls_enabled, ..self }
     }
 
     /// Specifies the root CA used in the TLS config for server certificates authentication.
-    /// Uses system roots if None is set. See [`Self::is_tls_enabled`] to enable or disable TLS.
+    /// Uses system roots if None is set. See [`Self::tls_enabled`] to enable or disable TLS.
     pub fn tls_root_ca(mut self, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
         self.set_tls_root_ca(tls_root_ca)?;
         Ok(self)
     }
 
     /// Specifies the root CA used in the TLS config for server certificates authentication.
-    /// Uses system roots if None is set. See [`Self::is_tls_enabled`] to enable or disable TLS.
+    /// Uses system roots if None is set. See [`Self::tls_enabled`] to enable or disable TLS.
     pub fn set_tls_root_ca(&mut self, tls_root_ca: Option<&Path>) -> crate::Result {
         let tls_config = if let Some(tls_root_ca) = tls_root_ca {
             self.tls_root_ca = Some(tls_root_ca.to_path_buf());
@@ -141,7 +142,7 @@ impl DriverOptions {
 impl Default for DriverOptions {
     fn default() -> Self {
         Self {
-            is_tls_enabled: DEFAULT_IS_TLS_ENABLED,
+            tls_enabled: DEFAULT_TLS_ENABLED,
             use_replication: DEFAULT_USE_REPLICATION,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
             replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,

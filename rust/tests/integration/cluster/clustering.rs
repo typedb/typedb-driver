@@ -55,7 +55,7 @@ fn primary_reelection_read_query() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new(),
+            DriverOptions::new().tls_enabled(false),
         )
         .await
         .unwrap();
@@ -71,7 +71,7 @@ fn primary_reelection_read_query() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new(),
+            DriverOptions::new().tls_enabled(false),
         )
         .await
         .unwrap();
@@ -129,7 +129,7 @@ fn primary_reelection_read_query() {
 //         let driver = TypeDBDriver::new(
 //             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
 //             Credentials::new(USERNAME, PASSWORD),
-//             DriverOptions::new(),
+//             DriverOptions::new().tls_enabled(false),
 //         )
 //             .await
 //             .unwrap();
@@ -187,7 +187,7 @@ async fn remove_test_database() {
     let driver = TypeDBDriver::new(
         Addresses::try_from_addresses_str(ADDRESSES.iter()).unwrap(),
         Credentials::new(USERNAME, PASSWORD),
-        DriverOptions::new(),
+        DriverOptions::new().tls_enabled(false),
     )
     .await
     .unwrap();

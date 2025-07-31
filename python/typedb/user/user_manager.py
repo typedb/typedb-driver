@@ -25,7 +25,7 @@ from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null
 from typedb.native_driver_wrapper import users_contains, users_create, users_all, users_get, \
-    users_get_current_user, user_iterator_next, TypeDBDriverExceptionNative
+    users_get_current, user_iterator_next, TypeDBDriverExceptionNative
 from typedb.user.user import _User
 
 if TYPE_CHECKING:
@@ -61,9 +61,9 @@ class _UserManager(UserManager):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def get_current_user(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
+    def get_current(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
         try:
-            if user := users_get_current_user(self.native_driver, ConsistencyLevel.native_value(consistency_level)):
+            if user := users_get_current(self.native_driver, ConsistencyLevel.native_value(consistency_level)):
                 return _User(user, self)
             return None
         except TypeDBDriverExceptionNative as e:

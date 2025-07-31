@@ -107,14 +107,14 @@ pub extern "C" fn users_get(
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_get_current_user(
+pub extern "C" fn users_get_current(
     driver: *const TypeDBDriver,
     consistency_level: *const ConsistencyLevel,
 ) -> *mut User {
     let users = borrow(driver).users();
     let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => users.get_current_user_with_consistency(consistency_level),
-        None => users.get_current_user(),
+        Some(consistency_level) => users.get_current_with_consistency(consistency_level),
+        None => users.get_current(),
     };
     try_release_optional(result.transpose())
 }

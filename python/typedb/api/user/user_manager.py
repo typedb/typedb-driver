@@ -80,7 +80,7 @@ class UserManager(ABC):
         pass
 
     @abstractmethod
-    def get_current_user(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
+    def get_current(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[User]:
         """
         Retrieves the name of the user who opened the current connection.
 
@@ -91,8 +91,8 @@ class UserManager(ABC):
         ---------
         ::
 
-           driver.users.get_current_user()
-           driver.users.get_current_user(ConsistencyLevel.Strong())
+           driver.users.get_current()
+           driver.users.get_current(ConsistencyLevel.Strong())
         """
         pass
 

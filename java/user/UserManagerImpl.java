@@ -33,7 +33,7 @@ import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
 import static com.typedb.driver.jni.typedb_driver.users_get;
-import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
+import static com.typedb.driver.jni.typedb_driver.users_get_current;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
@@ -74,9 +74,9 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public User getCurrentUser(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         try {
-            com.typedb.driver.jni.User user = users_get_current_user(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel));
+            com.typedb.driver.jni.User user = users_get_current(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel));
             if (user != null) return new UserImpl(user, this);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {

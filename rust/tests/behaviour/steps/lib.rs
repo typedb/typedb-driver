@@ -485,7 +485,7 @@ impl Context {
         let driver_options = self
             .driver_options()
             .unwrap_or_default()
-            .is_tls_enabled(true)
+            .tls_enabled(true)
             .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }

@@ -28,13 +28,13 @@ Produces a new ``DriverOptions`` object.
 DriverOptions options = DriverOptions();
 ----
 
-[#_DriverOptions_isTlsEnabled_]
-==== isTlsEnabled
+[#_DriverOptions_tlsEnabled_]
+==== tlsEnabled
 
 [source,java]
 ----
 @CheckReturnValue
-public java.lang.Boolean isTlsEnabled()
+public java.lang.Boolean tlsEnabled()
 ----
 
 Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB must be done over TLS. 
@@ -48,15 +48,15 @@ Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifi
 .Code examples
 [source,java]
 ----
-options.isTlsEnabled();
+options.tlsEnabled();
 ----
 
-[#_DriverOptions_isTlsEnabled_boolean]
-==== isTlsEnabled
+[#_DriverOptions_tlsEnabled_boolean]
+==== tlsEnabled
 
 [source,java]
 ----
-public DriverOptions isTlsEnabled​(boolean isTlsEnabled)
+public DriverOptions tlsEnabled​(boolean tlsEnabled)
 ----
 
 Explicitly sets whether the connection to TypeDB must be done over TLS. 
@@ -68,7 +68,7 @@ Explicitly sets whether the connection to TypeDB must be done over TLS.
 [options="header"]
 |===
 |Name |Description |Type
-a| `isTlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
+a| `tlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
 |===
 
 [caption=""]
@@ -79,7 +79,7 @@ a| `isTlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| 
 .Code examples
 [source,java]
 ----
-options.isTlsEnabled(true);
+options.tlsEnabled(true);
 ----
 
 [#_DriverOptions_primaryFailoverRetries_]

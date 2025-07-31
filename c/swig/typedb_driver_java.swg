@@ -108,8 +108,8 @@
 %nojavaexception driver_primary_replica;
 
 %nojavaexception driver_options_new;
-%nojavaexception driver_options_set_is_tls_enabled;
-%nojavaexception driver_options_get_is_tls_enabled;
+%nojavaexception driver_options_set_tls_enabled;
+%nojavaexception driver_options_get_tls_enabled;
 %nojavaexception driver_options_set_tls_root_ca_path;
 %nojavaexception driver_options_get_tls_root_ca_path;
 %nojavaexception driver_options_has_tls_root_ca_path;

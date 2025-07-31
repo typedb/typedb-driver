@@ -201,6 +201,10 @@ error_messages! { ConnectionError
         38: "Invalid encryption used: either all or none addresses must use 'https': {addresses}.",
     AddressTranslationWithoutTranslation { addresses: Addresses } =
         39: "Specified addresses do not contain address translation: {addresses}.",
+    NoServerConnection { accessed_address: Address } =
+        40: "No server connection to {accessed_address}",
+    ServerIsNotInitialised =
+        41: "Server is not yet initialized.",
 }
 
 error_messages! { ConceptError
@@ -320,14 +324,17 @@ impl Error {
     fn try_extracting_connection_error(_status: &Status, code: &str) -> Option<ConnectionError> {
         match code {
             "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "SRV16" => Some(ConnectionError::ServerIsNotInitialised {}),
+            // TODO: Add a branch for ClusterReplicaNotPrimary
             _ => None,
         }
     }
 
     fn from_message(message: &str) -> Self {
-        if is_rst_stream(message) {
+        if is_rst_stream(message) || is_tcp_connect_error(message) {
             Self::Connection(ConnectionError::ServerConnectionFailedNetworking { error: message.to_owned() })
         } else {
+            println!("Error Other from message: {message}");
             Self::Other(message.to_owned())
         }
     }
@@ -405,6 +412,7 @@ impl From<ServerError> for Error {
 
 impl From<Status> for Error {
     fn from(status: Status) -> Self {
+        println!("ERROR FROM STATUS: {status:?}");
         if let Ok(details) = status.check_error_details() {
             if let Some(bad_request) = details.bad_request() {
                 Self::Connection(ConnectionError::ServerConnectionFailedWithError {
@@ -421,6 +429,7 @@ impl From<Status> for Error {
                     Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
                 }
             } else {
+                println!("From message!: {status:?}");
                 Self::from_message(status.message())
             }
         } else {
@@ -434,7 +443,10 @@ impl From<Status> for Error {
                 Code::Unimplemented => {
                     Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
                 }
-                _ => Self::from_message(status.message()),
+                _ => {
+                    println!("From message ELSE!: {status:?}");
+                    Self::from_message(status.message())
+                }
             }
         }
     }
@@ -443,6 +455,15 @@ impl From<Status> for Error {
 fn is_rst_stream(message: &str) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
     message.contains("Received Rst Stream")
+}
+
+fn is_tcp_connect_error(message: &str) -> bool {
+    // No TCP connection
+    message.contains("tcp connect error")
+}
+
+fn is_uninitialised(message: &str) -> bool {
+    message.contains("Not yet initialised")
 }
 
 impl From<http::uri::InvalidUri> for Error {

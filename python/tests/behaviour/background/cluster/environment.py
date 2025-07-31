@@ -35,7 +35,7 @@ def before_all(context: Context):
 
 def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context, scenario)
-    context.driver_options.is_tls_enabled = True
+    context.driver_options.tls_enabled = True
     context.driver_options.tls_root_ca_path = context.tls_root_ca_path
 
 

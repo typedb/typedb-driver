@@ -213,7 +213,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject user_iterator_next;
 
 %newobject users_all;
-%newobject users_get_current_user;
+%newobject users_get_current;
 %newobject users_get;
 %newobject user_get_name;
 %delobject user_delete;

@@ -25,7 +25,7 @@ import com.typedb.driver.common.Validator;
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static com.typedb.driver.jni.typedb_driver.driver_options_get_is_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_enabled;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_replica_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_root_ca_path;
@@ -33,7 +33,7 @@ import static com.typedb.driver.jni.typedb_driver.driver_options_get_use_replica
 import static com.typedb.driver.jni.typedb_driver.driver_options_has_replica_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_has_tls_root_ca_path;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_is_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_enabled;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_replica_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_root_ca_path;
@@ -61,26 +61,27 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.isTlsEnabled();
+     * options.tlsEnabled();
      * </pre>
      */
     @CheckReturnValue
-    public Boolean isTlsEnabled() {
-        return driver_options_get_is_tls_enabled(nativeObject);
+    public Boolean tlsEnabled() {
+        return driver_options_get_tls_enabled(nativeObject);
     }
 
     /**
      * Explicitly sets whether the connection to TypeDB must be done over TLS.
+     * WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to true.
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.isTlsEnabled(true);
+     * options.tlsEnabled(true);
      * </pre>
      *
-     * @param isTlsEnabled Whether the connection to TypeDB must be done over TLS.
+     * @param tlsEnabled Whether the connection to TypeDB must be done over TLS.
      */
-    public DriverOptions isTlsEnabled(boolean isTlsEnabled) {
-        driver_options_set_is_tls_enabled(nativeObject, isTlsEnabled);
+    public DriverOptions tlsEnabled(boolean tlsEnabled) {
+        driver_options_set_tls_enabled(nativeObject, tlsEnabled);
         return this;
     }
 
@@ -135,8 +136,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
 
     /**
      * Explicitly sets whether the connection to TypeDB can use cluster replicas provided by the server
-     * or it should be limited to a single configured address.
-     * Defaults to true.
+     * or it should be limited to a single configured address. Defaults to true.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -167,8 +167,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
 
     /**
      * Explicitly sets the limit on the number of attempts to redirect a strongly consistent request to another
-     * primary replica in case of a failure due to the change of replica roles.
-     * Defaults to 1.
+     * primary replica in case of a failure due to the change of replica roles. Defaults to 1.
      *
      * <h3>Examples</h3>
      * <pre>

@@ -20,8 +20,8 @@ from typing import Optional
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_negative
-from typedb.native_driver_wrapper import driver_options_get_is_tls_enabled, driver_options_get_tls_root_ca_path, \
-    driver_options_has_tls_root_ca_path, driver_options_new, driver_options_set_is_tls_enabled, \
+from typedb.native_driver_wrapper import driver_options_get_tls_enabled, driver_options_get_tls_root_ca_path, \
+    driver_options_has_tls_root_ca_path, driver_options_new, driver_options_set_tls_enabled, \
     driver_options_set_tls_root_ca_path, driver_options_get_use_replication, driver_options_set_use_replication, \
     driver_options_get_primary_failover_retries, driver_options_set_primary_failover_retries, \
     driver_options_get_replica_discovery_attempts, driver_options_set_replica_discovery_attempts, \
@@ -44,15 +44,15 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     """
 
     def __init__(self, *,
-                 is_tls_enabled: Optional[bool] = None,
+                 tls_enabled: Optional[bool] = None,
                  tls_root_ca_path: Optional[str] = None,
                  use_replication: Optional[bool] = None,
                  primary_failover_retries: Optional[int] = None,
                  replica_discovery_attempts: Optional[int] = None,
                  ):
         super().__init__(driver_options_new())
-        if is_tls_enabled is not None:
-            self.is_tls_enabled = is_tls_enabled
+        if tls_enabled is not None:
+            self.tls_enabled = tls_enabled
         if tls_root_ca_path is not None:
             self.tls_root_ca_path = tls_root_ca_path
         if use_replication is not None:
@@ -67,16 +67,17 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
-    def is_tls_enabled(self) -> bool:
+    def tls_enabled(self) -> bool:
         """
         Returns the value set for the TLS flag in this ``DriverOptions`` object.
         Specifies whether the connection to TypeDB must be done over TLS.
+        WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to True.
         """
-        return driver_options_get_is_tls_enabled(self.native_object)
+        return driver_options_get_tls_enabled(self.native_object)
 
-    @is_tls_enabled.setter
-    def is_tls_enabled(self, is_tls_enabled: bool):
-        driver_options_set_is_tls_enabled(self.native_object, is_tls_enabled)
+    @tls_enabled.setter
+    def tls_enabled(self, tls_enabled: bool):
+        driver_options_set_tls_enabled(self.native_object, tls_enabled)
 
     @property
     def tls_root_ca_path(self) -> Optional[str]:
@@ -97,7 +98,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         """
         Returns the value set for the replication usage flag in this ``DriverOptions`` object.
         Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-        or it should be limited to a single configured address.
+        or it should be limited to a single configured address. Defaults to True.
         """
         return driver_options_get_use_replication(self.native_object)
 
@@ -110,7 +111,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         """
         Returns the value set for the primary failover retries limit in this ``DriverOptions`` object.
         Limits the number of attempts to redirect a strongly consistent request to another
-        primary replica in case of a failure due to the change of replica roles.
+        primary replica in case of a failure due to the change of replica roles. Defaults to 1.
         """
         return driver_options_get_primary_failover_retries(self.native_object)
 

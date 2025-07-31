@@ -53,7 +53,7 @@ pub(super) fn open_callcred_channel(
     driver_options: DriverOptions,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
     let mut builder = Channel::builder(address.into_uri());
-    if driver_options.is_tls_enabled {
+    if driver_options.tls_enabled {
         let tls_config = driver_options
             .get_tls_config()
             .cloned()

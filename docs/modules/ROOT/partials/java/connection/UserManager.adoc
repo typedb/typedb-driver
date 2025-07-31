@@ -231,17 +231,17 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 driver.users().get(username, ConsistencyLevel.Strong);
 ----
 
-[#_UserManager_getCurrentUser_]
-==== getCurrentUser
+[#_UserManager_getCurrent_]
+==== getCurrent
 
 [source,java]
 ----
 @CheckReturnValue
-default User getCurrentUser()
+default User getCurrent()
                      throws TypeDBDriverException
 ----
 
-Retrieves the name of the user who opened the current connection, using default strong consistency. See <<#_getCurrentUser_com_typedb_driver_api_ConsistencyLevel,``getCurrentUser(ConsistencyLevel)``>> for more details and options. 
+Retrieves the name of the user who opened the current connection, using default strong consistency. See <<#_getCurrent_com_typedb_driver_api_ConsistencyLevel,``getCurrent(ConsistencyLevel)``>> for more details and options.
 
 
 [caption=""]
@@ -252,16 +252,16 @@ Retrieves the name of the user who opened the current connection, using default 
 .Code examples
 [source,java]
 ----
-driver.users().getCurrentUser();
+driver.users().getCurrent();
 ----
 
-[#_UserManager_getCurrentUser_ConsistencyLevel]
-==== getCurrentUser
+[#_UserManager_getCurrent_ConsistencyLevel]
+==== getCurrent
 
 [source,java]
 ----
 @CheckReturnValue
-User getCurrentUser​(ConsistencyLevel consistencyLevel)
+User getCurrent​(ConsistencyLevel consistencyLevel)
              throws TypeDBDriverException
 ----
 
@@ -285,7 +285,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().getCurrentUser(ConsistencyLevel.Strong);
+driver.users().getCurrent(ConsistencyLevel.Strong);
 ----
 
 // end::methods[]

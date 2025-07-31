@@ -39,16 +39,18 @@ pub extern "C" fn driver_options_drop(driver_options: *mut DriverOptions) {
 }
 
 /// Explicitly sets whether the connection to TypeDB must be done over TLS.
+/// WARNING: Setting this to false will make the driver sending passwords as plaintext.
+/// Defaults to true.
 #[no_mangle]
-pub extern "C" fn driver_options_set_is_tls_enabled(options: *mut DriverOptions, is_tls_enabled: bool) {
-    borrow_mut(options).is_tls_enabled = is_tls_enabled;
+pub extern "C" fn driver_options_set_tls_enabled(options: *mut DriverOptions, tls_enabled: bool) {
+    borrow_mut(options).tls_enabled = tls_enabled;
 }
 
 /// Returns the value set for the TLS flag in this <code>DriverOptions</code> object.
-/// Specifies whether the connection to TypeDB must be done over TLS. Defaults to false.
+/// Specifies whether the connection to TypeDB must be done over TLS.
 #[no_mangle]
-pub extern "C" fn driver_options_get_is_tls_enabled(options: *const DriverOptions) -> bool {
-    borrow(options).is_tls_enabled
+pub extern "C" fn driver_options_get_tls_enabled(options: *const DriverOptions) -> bool {
+    borrow(options).tls_enabled
 }
 
 /// Specifies the root CA used in the TLS config for server certificates authentication.

@@ -116,16 +116,16 @@ public interface UserManager {
 
     /**
      * Retrieves the name of the user who opened the current connection, using default strong consistency.
-     * See {@link #getCurrentUser(ConsistencyLevel)} for more details and options.
+     * See {@link #getCurrent(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().getCurrentUser();
+     * driver.users().getCurrent();
      * </pre>
      */
     @CheckReturnValue
-    default User getCurrentUser() throws TypeDBDriverException {
-        return getCurrentUser(null);
+    default User getCurrent() throws TypeDBDriverException {
+        return getCurrent(null);
     }
 
     /**
@@ -133,13 +133,13 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().getCurrentUser(ConsistencyLevel.Strong);
+     * driver.users().getCurrent(ConsistencyLevel.Strong);
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
      */
     @CheckReturnValue
-    User getCurrentUser(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
+    User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
      * Creates a user with the given name &amp; password.
