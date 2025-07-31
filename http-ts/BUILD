@@ -110,6 +110,7 @@ checkstyle_test(
         "**/*.md",
         "pnpm-lock.yaml",
         "tsup.config.ts",
+        ".npmrc",
         "LICENSE",
         "docs/**/*",
         "dist/**/*",
