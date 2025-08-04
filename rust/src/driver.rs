@@ -256,6 +256,7 @@ impl TypeDBDriver {
     /// Updates address translation of the driver. This lets you actualize new translation
     /// information without recreating the driver from scratch. Useful after registering new
     /// replicas requiring address translation.
+    /// This operation will update existing connections using the provided addresses.
     ///
     /// # Arguments
     ///
@@ -264,10 +265,12 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap())
+    #[cfg_attr(feature = "sync", doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap());")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap()).await;")]
     /// ```
-    pub fn update_address_translation(&self, addresses: Addresses) -> Result {
-        self.server_manager.update_address_translation(addresses)
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn update_address_translation(&self, addresses: Addresses) -> Result {
+        self.server_manager.update_address_translation(addresses).await
     }
 
     /// Opens a transaction with default options.

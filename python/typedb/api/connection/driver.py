@@ -172,6 +172,7 @@ class Driver(ABC):
         Updates address translation of the driver. This lets you actualize new translation
         information without recreating the driver from scratch. Useful after registering new
         replicas requiring address translation.
+        This operation will update existing connections using the provided addresses.
 
         :param address_translation: The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
         :return:

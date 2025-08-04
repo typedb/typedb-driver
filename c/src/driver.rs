@@ -241,6 +241,7 @@ pub extern "C" fn driver_deregister_replica(driver: *const TypeDBDriver, replica
 /// Updates address translation of the driver. This lets you actualize new translation
 /// information without recreating the driver from scratch. Useful after registering new
 /// replicas requiring address translation.
+/// This operation will update existing connections using the provided addresses.
 ///
 /// @param public_addresses A null-terminated array holding the replica addresses on for connection.
 /// @param private_addresses A null-terminated array holding the private replica addresses, configured on the server side.

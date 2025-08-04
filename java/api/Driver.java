@@ -176,6 +176,7 @@ public interface Driver extends AutoCloseable {
      * Updates address translation of the driver. This lets you actualize new translation
      * information without recreating the driver from scratch. Useful after registering new
      * replicas requiring address translation.
+     * This operation will update existing connections using the provided addresses.
      *
      * <h3>Examples</h3>
      * <pre>
