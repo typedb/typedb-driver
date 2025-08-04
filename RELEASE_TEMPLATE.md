@@ -46,9 +46,20 @@ Available through https://pypi.org
 pip install typedb-driver=={version}
 ```
 
+### HTTP Typescript driver
+
+[//]: # (TODO: Update docs link)
+
+NPM package: https://www.npmjs.com/package/typedb-driver-http
+Documentation: https://typedb.com/docs/drivers/
+
+```
+npm install typedb-driver-http@{version}
+```
+
 [//]: # (TODO: Please remove the unreleased drivers manually. Commenting them out in Markdown looks scary)
 
-### NodeJS driver
+### NodeJS GRPC driver
 
 NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/drivers/nodejs/overview
