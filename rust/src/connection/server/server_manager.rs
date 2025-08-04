@@ -392,6 +392,7 @@ impl ServerManager {
         &self,
         source_replicas: impl IntoIterator<Item = ServerReplica>,
     ) -> Result<ServerReplica> {
+        // TODO: Add retries with sleeps in between? Maybe replica_discovery_attempts should work / be used differently
         println!("SEEK");
         self.execute_on_any(source_replicas, |replica_connection| async {
             self.seek_primary_replica(replica_connection).await
