@@ -184,6 +184,12 @@ error_messages! { ConnectionError
         32: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
         33: "Didn't receive any server responses for the database export command.",
+    AbsentTlsConfigForTlsConnection =
+        34: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
+    TlsConnectionWithoutHttps =
+        35: "TLS connections can only be enabled when connecting to HTTPS endpoints, for example using 'https://<ip>:port'. Please modify the address, or disable TLS (WARNING: this will send passwords over plaintext).",
+    NonTlsConnectionWithHttps =
+        36: "Connecting to an https endpoint requires enabling TLS in driver options.",
 }
 
 error_messages! { ConceptError

@@ -53,7 +53,7 @@ def create_driver(context, host="localhost", port=None, username=None, password=
     if password is None:
         password = "password"
     credentials = Credentials(username, password)
-    return TypeDB.driver(address=f"{host}:{port}", credentials=credentials, driver_options=DriverOptions())
+    return TypeDB.driver(address=f"{host}:{port}", credentials=credentials, driver_options=DriverOptions(is_tls_enabled=False))
 
 
 def after_scenario(context: Context, scenario):

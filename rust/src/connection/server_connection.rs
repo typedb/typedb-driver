@@ -66,6 +66,8 @@ impl ServerConnection {
         driver_lang: &str,
         driver_version: &str,
     ) -> crate::Result<(Self, Vec<DatabaseInfo>)> {
+        Self::validate_tls(&address, &driver_options)?;
+
         let username = credentials.username().to_string();
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
@@ -323,6 +325,25 @@ impl ServerConnection {
             Response::UsersDelete => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
+    }
+
+    fn validate_tls(address: &Address, driver_options: &DriverOptions) -> crate::Result {
+        match driver_options.is_tls_enabled() {
+            true => {
+                if driver_options.tls_config().is_none() {
+                    return Err(ConnectionError::AbsentTlsConfigForTlsConnection {}.into());
+                }
+                if !address.is_https() {
+                    return Err(ConnectionError::TlsConnectionWithoutHttps {}.into());
+                }
+            }
+            false => {
+                if address.is_https() {
+                    return Err(ConnectionError::NonTlsConnectionWithHttps {}.into());
+                }
+            }
+        }
+        Ok(())
     }
 }
 

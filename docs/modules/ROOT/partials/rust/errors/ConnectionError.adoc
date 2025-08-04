@@ -8,6 +8,7 @@
 [options="header"]
 |===
 |Variant
+a| `AbsentTlsConfigForTlsConnection`
 a| `AddressTranslationMismatch`
 a| `BrokenPipe`
 a| `ClusterAllNodesFailed`
@@ -23,6 +24,7 @@ a| `InvalidResponseField`
 a| `ListsNotImplemented`
 a| `MissingPort`
 a| `MissingResponseField`
+a| `NonTlsConnectionWithHttps`
 a| `QueryStreamNoResponse`
 a| `RPCMethodUnavailable`
 a| `SSLCertificateNotValidated`
@@ -30,6 +32,7 @@ a| `ServerConnectionFailed`
 a| `ServerConnectionFailedStatusError`
 a| `ServerConnectionFailedWithError`
 a| `ServerConnectionIsClosed`
+a| `TlsConnectionWithoutHttps`
 a| `TokenCredentialInvalid`
 a| `TransactionIsClosed`
 a| `TransactionIsClosedWithErrors`
