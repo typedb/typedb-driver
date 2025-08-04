@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.4.0
+cargo add typedb-driver@3.4.4
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.4.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.4.4/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.4.0</version>
+        <version>3.4.4</version>
     </dependency>
 </dependencies>
 ```
@@ -42,66 +42,109 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==3.4.0
+pip install typedb-driver==3.4.4
 ```
 
+### HTTP Typescript driver
+
+[//]: # (TODO: Update docs link)
+
+NPM package: https://www.npmjs.com/package/typedb-driver-http
+Documentation: https://typedb.com/docs/drivers/
+
+```
+npm install typedb-driver-http@3.4.4
+```
 
 ## New Features
-- **Introduce file-based database export and import**
-  Introduce interfaces to export databases into schema definition and data files and to import databases using these files. Database import supports files exported from both TypeDB 2.x and TypeDB 3.x.
+
+- **Typescript HTTP driver**
+
+  Add a relatively slim typescript driver based on our HTTP API, adapted from code used for this purpose in `typedb-studio`.
+
+  This driver is published to `npm` under the name `typedb-driver-http` through the same process as the old `nodejs` driver.
+
+
+- **Typescript HTTP driver docs generation**
   
-  Both operations are blocking and may take a significant amount of time to execute for large databases. Use parallel connections to continue operating with the server and its other databases.
+  Introduce docs generation for the Typescript HTTP driver, based on the existing strategy for the NodeJS driver.
   
-  Usage examples in Rust:
-  ```rust
-  // export
-  let db = driver.databases().get(db_name).await.unwrap();
-  db.export_to_file(schema_file_path, data_file_path).await.unwrap();
+  We divide the docs into:
   
-  // import
-  let schema = read_to_string(schema_file_path).unwrap();
-  driver.databases().import_from_file(db_name2, schema, data_file_path).await.unwrap();
-  ```
+  - Connection
+  - Response
+  - Concept
+  - Query Structure
   
-  Usage examples in Python:
-  ```py
-  # export
-  database = driver.databases.get(db_name)
-  database.export_to_file(schema_file_path, data_file_path)
+  within each section, static functions are grouped into a specific `Static Functions` section.
   
-  # import
-  with open(schema_file_path, 'r', encoding='utf-8') as f:
-      schema = f.read()
-  driver.databases.import_from_file(db_name2, schema, data_file_path)
-  ```
+  Additionally, `QueryConstraints`, `QueryVertices` in query structure; and `DriverParams` in connection are used as sub-categories (that is, `DriverParams`, `DriverParamsBasic`, and `DriverParamsTranslated` are all grouped under `DriverParams`).
   
-  Usage examples in Java:
-  ```java
-  // export
-  Database database = driver.databases().get(dbName);
-  database.exportToFile(schemaFilePath, dataFilePath);
-  
-  // import
-  String schema = Files.readString(Path.of(schemaFilePath));
-  driver.databases().importFromFile(dbName2, schema, dataFilePath);
-  ```
+  We also implement functionality for handling:
+  - type aliases
+  - indexable properties (e.g. `[varName: string]: Concept`)
   
   
 
 ## Bugs Fixed
-- **Handle "Unexpected response type for remote procedure call: Close" on query stream opening**
-  Fix a rare `InternalError` returned by mistake when a client sends a query request while the transaction is being closed. Now, an expected "The transaction is closed and no further operation is allowed." error is returned instead.
-  
-  Additionally, wait for specific transaction responses in `rollback`, `commit`, and `query` to solidify the protocol and ensure that the server acts as expected.
-  
-  
+
 
 ## Code Refactors
 
 
 ## Other Improvements
+- **Enforce explicit https addresses for TLS connections**
+  Drivers return explicit error messages when connection addresses and TLS options are mismatched. TLS connections require addresses to have `https`. Non-TLS connections require addresses not to have `https`.  
+  
+  
+- **Enable TLS by default in Python**
+  
+  We want to enable a secure-by-default setting in TypeDB Drivers. In Java and Rust, `DriverOptions` have to be explicitly set, and there are no defaults. However, Python features a disabled TLS default. While this is compatible with TypeDB CE, it's an insecure default & not compatible with TypeDB Cloud without explicitly enabling it.
+  
+  Instead, we set the default to TLS being __enabled__ in Python. This means when using an insecure, plaintext connection the user must explicitly set it, and is more likely to become aware of the plaintext communication.
+  
+  
+- **Ensure PNPM config in CI matches config locally**
+  
+  We add an `.npmrc` file to ensure the PNPM config in local machines and CI match so that installation succeeds in CI.
+  
+  
+- **Install PNPM deps in CI release pipeline**
+  
+  The release pipeline in CI now correctly installs PNPM dependencies for the HTTP TS driver.
+  
+  
+- **Make the HTTP TypeScript driver dual-module (CJS+ESM)**
+  
+  The HTTP TypeScript driver is now dual-module, offering both CommonJS and ES Module support.
+  
+  
+- **Set HTTP Typescript driver dependencies as dev dependencies**
+  
+  We set all dependencies of the Typescript HTTP driver as dev dependencies, as they aren't required at runtime.
+  
+  
+- **Rename docs antora module**
+  
+  We rename the docs antora module used to host the generated driver references from `api-ref` to `external-typedb-driver`, to support refactoring in the typedb docs repository.
+  
+- **Revert the HTTP driver to a CommonJS package**
+  
+  We convert `typedb-driver-http` back into using `commonjs`. This allows us to also revert `import`/`export` syntax to not require file extensions.
+  
+  
+- **Correct the package and tsconfig for HTTP driver**
+  
+  We fix issues in `package.json` that prevented `typedb-driver-http` from being used correctly
+  
+  
+- **Fix CircleCI release configuration for HTTP driver**
+  
+  We fix a typo that made the CircleCI release configuration invalid.
 
-- **Update zlib dependency**
-  Support build on Apple Clang 17+ by updating dependencies (details: https://github.com/typedb/typedb-dependencies/pull/577). 
   
-  
+- **Use release version of typedb server artifact**
+
+- **Update to latest typedb server artifact**
+
+    
