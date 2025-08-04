@@ -93,6 +93,7 @@ impl ServerManager {
         .await?;
         let address_translation = addresses.address_translation();
 
+        println!("INIT REPLICA CONNECTIONS: {:?}", source_connections);
         let server_manager = Self {
             configured_addresses: addresses,
             replicas: RwLock::new(replicas),
@@ -164,8 +165,10 @@ impl ServerManager {
         let replica_addresses: HashSet<Address> =
             replicas.into_iter().map(|replica| replica.private_address().clone()).collect();
         let mut replica_connections = self.write_replica_connections();
+        println!("UPDATE REPLICA CONNECTIONS. BEFORE: {:?}", replica_connections);
         replica_connections.retain(|address, _| replica_addresses.contains(address));
         replica_connections.extend(new_replica_connections);
+        println!("UPDATE REPLICA CONNECTIONS. AFTER: {:?}", replica_connections);
 
         if replica_connections.is_empty() {
             Err(self.server_connection_failed_err(connection_errors))
@@ -196,7 +199,9 @@ impl ServerManager {
     ) -> Result<ServerConnection> {
         let replica_connection = self.new_replica_connection(public_address).await?;
         let mut replica_connections = self.write_replica_connections();
+        println!("RECORD NEW REPLICA CONNECTION. BEFORE: {:?}", replica_connections);
         replica_connections.insert(private_address, replica_connection.clone());
+        println!("RECORD NEW REPLICA CONNECTION. AFTER: {:?}", replica_connections);
         Ok(replica_connection)
     }
 
@@ -260,7 +265,7 @@ impl ServerManager {
                 }
                 let private_address =
                     self.read_address_translation().to_private(&address).unwrap_or_else(|| address.clone());
-                self.execute_on(&address, &private_address, false, &task).await
+                self.execute_on(&address, &private_address, &task).await
             }
         }
     }
@@ -282,7 +287,7 @@ impl ServerManager {
         for x in 0..=retries {
             println!("Retry {x} on {primary_replica:?}");
             let private_address = primary_replica.private_address().clone();
-            match self.execute_on(primary_replica.address(), &private_address, false, &task).await {
+            match self.execute_on(primary_replica.address(), &private_address, &task).await {
                 Err(Error::Connection(connection_error)) => {
                     let replicas_without_old_primary = self.replicas().into_iter().filter(|replica| {
                         println!("REPLICAS: Filter out? {private_address:?} vs mine {:?}", replica.private_address());
@@ -348,7 +353,7 @@ impl ServerManager {
             }
             // TODO: If we only use eventual consistency, we won't ever reconnect to disconnected /
             // new replicas. We need to think how to update the connections in this case.
-            match self.execute_on(replica.address(), replica.private_address(), true, &task).await {
+            match self.execute_on(replica.address(), replica.private_address(), &task).await {
                 Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
                     return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
                 }
@@ -368,7 +373,6 @@ impl ServerManager {
         &self,
         public_address: &Address,
         private_address: &Address,
-        require_connected: bool,
         task: &F,
     ) -> Result<R>
     where
@@ -378,14 +382,7 @@ impl ServerManager {
         let existing_connection = { self.read_replica_connections().get(private_address).cloned() };
         let replica_connection = match existing_connection {
             Some(replica_connection) => replica_connection,
-            None => match require_connected {
-                false => self.record_new_replica_connection(public_address.clone(), private_address.clone()).await?,
-                true => {
-                    println!("Tried executing on {public_address}, private address {private_address}, but there is no connection to this replica.");
-                    debug!("Tried executing on {public_address}, private address {private_address}, but there is no connection to this replica.");
-                    return Err(ConnectionError::NoServerConnection { accessed_address: public_address.clone() }.into());
-                }
-            },
+            None => self.record_new_replica_connection(public_address.clone(), private_address.clone()).await?,
         };
         task(replica_connection).await
     }

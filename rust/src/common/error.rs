@@ -201,10 +201,8 @@ error_messages! { ConnectionError
         38: "Invalid encryption used: either all or none addresses must use 'https': {addresses}.",
     AddressTranslationWithoutTranslation { addresses: Addresses } =
         39: "Specified addresses do not contain address translation: {addresses}.",
-    NoServerConnection { accessed_address: Address } =
-        40: "No server connection to {accessed_address}",
     ServerIsNotInitialised =
-        41: "Server is not yet initialized.",
+        40: "Server is not yet initialized.",
 }
 
 error_messages! { ConceptError
