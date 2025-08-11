@@ -128,6 +128,14 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn servers_get(&self) -> Result<ServerReplica> {
+        match self.request(Request::ServersGet).await? {
+            Response::ServersGet { server } => Ok(server),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn servers_register(&self, replica_id: u64, address: String) -> Result {
         match self.request(Request::ServersRegister { replica_id, address }).await? {
             Response::ServersRegister => Ok(()),

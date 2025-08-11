@@ -64,6 +64,15 @@ impl TryIntoProto<server_manager::all::Req> for Request {
     }
 }
 
+impl TryIntoProto<server_manager::get::Req> for Request {
+    fn try_into_proto(self) -> Result<server_manager::get::Req> {
+        match self {
+            Self::ServersGet => Ok(server_manager::get::Req {}),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
+        }
+    }
+}
+
 impl TryIntoProto<server_manager::register::Req> for Request {
     fn try_into_proto(self) -> Result<server_manager::register::Req> {
         match self {
@@ -342,6 +351,15 @@ impl TryFromProto<server_manager::all::Res> for Response {
         let server_manager::all::Res { servers } = proto;
         let servers = servers.into_iter().map(|server| ServerReplica::try_from_proto(server)).try_collect()?;
         Ok(Self::ServersAll { servers })
+    }
+}
+
+impl TryFromProto<server_manager::get::Res> for Response {
+    fn try_from_proto(proto: server_manager::get::Res) -> Result<Self> {
+        let server_manager::get::Res { server } = proto;
+        let server =
+            ServerReplica::try_from_proto(server.ok_or(ConnectionError::MissingResponseField { field: "server" })?)?;
+        Ok(Self::ServersGet { server })
     }
 }
 

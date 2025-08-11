@@ -201,6 +201,8 @@ impl TypeDBDriver {
         self.server_manager.fetch_replicas().await
     }
 
+    // TODO: Add servers_get call for a specific server. How to design it?
+
     /// Retrieves the server's primary replica, if exists.
     ///
     /// # Examples
@@ -265,8 +267,14 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap());")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap()).await;")]
+    #[cfg_attr(
+        feature = "sync",
+        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap());"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap()).await;"
+    )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn update_address_translation(&self, addresses: Addresses) -> Result {

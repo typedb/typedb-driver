@@ -369,12 +369,7 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn execute_on<F, P, R>(
-        &self,
-        public_address: &Address,
-        private_address: &Address,
-        task: &F,
-    ) -> Result<R>
+    async fn execute_on<F, P, R>(&self, public_address: &Address, private_address: &Address, task: &F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,

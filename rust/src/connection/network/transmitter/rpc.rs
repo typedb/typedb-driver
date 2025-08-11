@@ -115,6 +115,7 @@ impl RPCTransmitter {
             }
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
+            Request::ServersGet => rpc.servers_get(request.try_into_proto()?).await.and_then(Response::try_from_proto),
             Request::ServersRegister { .. } => {
                 rpc.servers_register(request.try_into_proto()?).await.and_then(Response::try_from_proto)
             }
