@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api.database;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -27,12 +28,18 @@ public interface Database {
 
     /**
      * The database name as a string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.name()
+     * </pre>
      */
     @CheckReturnValue
     String name();
 
     /**
-     * A full schema text as a valid TypeQL define query string.
+     * A full schema text as a valid TypeQL define query string, using default strong consistency.
+     * See {@link #schema(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -40,10 +47,26 @@ public interface Database {
      * </pre>
      */
     @CheckReturnValue
-    String schema() throws TypeDBDriverException;
+    default String schema() throws TypeDBDriverException {
+        return schema(null);
+    }
 
     /**
-     * The types in the schema as a valid TypeQL define query string.
+     * A full schema text as a valid TypeQL define query string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.schema(ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    @CheckReturnValue
+    String schema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
+
+    /**
+     * The types in the schema as a valid TypeQL define query string, using default strong consistency.
+     * See {@link #typeSchema(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -51,11 +74,27 @@ public interface Database {
      * </pre>
      */
     @CheckReturnValue
-    String typeSchema() throws TypeDBDriverException;
+    default String typeSchema() throws TypeDBDriverException {
+        return typeSchema(null);
+    }
 
     /**
-     * Export a database into a schema definition and a data files saved to the disk.
+     * The types in the schema as a valid TypeQL define query string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.typeSchema(ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    @CheckReturnValue
+    String typeSchema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
+
+    /**
+     * Export a database into a schema definition and a data files saved to the disk, using default strong consistency.
      * This is a blocking operation and may take a significant amount of time depending on the database size.
+     * See {@link #exportToFile(String, String, ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -65,7 +104,24 @@ public interface Database {
      * @param schemaFilePath The path to the schema definition file to be created
      * @param dataFilePath   The path to the data file to be created
      */
-    void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException;
+    default void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException {
+        exportToFile(schemaFilePath, dataFilePath, null);
+    }
+
+    /**
+     * Export a database into a schema definition and a data files saved to the disk.
+     * This is a blocking operation and may take a significant amount of time depending on the database size.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.exportToFile("schema.typeql", "data.typedb", ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param schemaFilePath   The path to the schema definition file to be created
+     * @param dataFilePath     The path to the data file to be created
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    void exportToFile(String schemaFilePath, String dataFilePath, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
      * Deletes this database.
@@ -76,71 +132,4 @@ public interface Database {
      * </pre>
      */
     void delete() throws TypeDBDriverException;
-
-//    /**
-//     * Set of <code>Replica</code> instances for this database.
-//     * <b>Only works in TypeDB Cloud / Enterprise</b>
-//     *
-//     * <h3>Examples</h3>
-//     * <pre>
-//     * database.replicas()
-//     * </pre>
-//     */
-//    @CheckReturnValue
-//    Set<? extends Replica> replicas();
-//
-//    /**
-//     * Returns the primary replica for this database.
-//     * <b>Only works in TypeDB Cloud / Enterprise</b>
-//     *
-//     * <h3>Examples</h3>
-//     * <pre>
-//     * database.primaryReplica()
-//     * </pre>
-//     */
-//    @CheckReturnValue
-//    Optional<? extends Replica> primaryReplica();
-//
-//    /**
-//     * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
-//     * <b>Only works in TypeDB Cloud / Enterprise</b>
-//     *
-//     * <h3>Examples</h3>
-//     * <pre>
-//     * database.preferredReplica()
-//     * </pre>
-//     */
-//    @CheckReturnValue
-//    Optional<? extends Replica> preferredReplica();
-//
-//    /**
-//     * The metadata and state of an individual raft replica of a database.
-//     */
-//    interface Replica {
-//
-//        /**
-//         * The server hosting this replica
-//         */
-//        @CheckReturnValue
-//        String server();
-//
-//        /**
-//         * Checks whether this is the primary replica of the raft cluster.
-//         */
-//        @CheckReturnValue
-//        boolean isPrimary();
-//
-//        /**
-//         * Checks whether this is the preferred replica of the raft cluster.
-//         * If true, Operations which can be run on any replica will prefer to use this replica.
-//         */
-//        @CheckReturnValue
-//        boolean isPreferred();
-//
-//        /**
-//         * The raft protocol ‘term’ of this replica.
-//         */
-//        @CheckReturnValue
-//        long term();
-//    }
 }

@@ -21,10 +21,11 @@ pip3 install typedb-driver
 ```
 3. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
 4. In your python program, import from `typedb.driver` (see [Example usage](#example-usage) or `tests/integration` for examples):
+
 ```py
 from typedb.driver import *
 
-driver = TypeDB.driver(address=TypeDB.DEFAULT_ADDRESS, ...)
+driver = TypeDB.driver(addresses=TypeDB.DEFAULT_ADDRESS, ...)
 ```
 
 ## Example usage

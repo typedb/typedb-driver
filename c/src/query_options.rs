@@ -19,7 +19,7 @@
 
 use typedb_driver::QueryOptions;
 
-use super::memory::{borrow, borrow_mut, free, release};
+use crate::common::memory::{borrow, borrow_mut, free, release};
 
 /// Produces a new <code>QueryOptions</code> object.
 #[no_mangle]
@@ -33,7 +33,7 @@ pub extern "C" fn query_options_drop(options: *mut QueryOptions) {
     free(options);
 }
 
-/// Explicitly set the "include instance types" flag.
+/// Explicitly setsthe "include instance types" flag.
 /// If set, specifies if types should be included in instance structs returned in ConceptRow answers.
 /// This option allows reducing the amount of unnecessary data transmitted.
 #[no_mangle]
@@ -55,7 +55,7 @@ pub extern "C" fn query_options_has_include_instance_types(options: *const Query
     borrow(options).include_instance_types.is_some()
 }
 
-/// Explicitly set the prefetch size.
+/// Explicitly setsthe prefetch size.
 /// If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
 /// Increasing this may increase performance for queries with a huge number of answers, as it can
 /// reduce the number of network round-trips at the cost of more resources on the server side.

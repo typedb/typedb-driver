@@ -1,7 +1,7 @@
 [#_QueryOptions]
 === QueryOptions
 
-TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
+TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
 
 Options could be specified either as constructor arguments or using properties assignment.
 

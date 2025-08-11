@@ -49,7 +49,7 @@ int main() {
 
     bool success = false;
 
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    connection = driver_new_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
     if (FAILED()) goto cleanup;
 
     databaseManager = database_manager_new(connection);

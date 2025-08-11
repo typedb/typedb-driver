@@ -26,7 +26,7 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class ConnectionStepsCommunity extends ConnectionStepsBase {
@@ -45,14 +45,13 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
         super.after();
     }
 
-    @Override
     Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions) {
         return TypeDB.driver(address, credentials, driverOptions);
     }
 
     @Override
     Driver createDefaultTypeDBDriver() {
-        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, DEFAULT_CONNECTION_SETTINGS);
+        return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, driverOptions);
     }
 
     @When("typedb starts")
@@ -67,24 +66,24 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
         Credentials credentials = new Credentials(username, password);
-        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, DEFAULT_CONNECTION_SETTINGS));
+        mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, driverOptions));
     }
 
     @When("connection opens with a wrong host{may_error}")
     public void connection_opens_with_a_wrong_host(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                TypeDB.DEFAULT_ADDRESS.replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(
-                TypeDB.DEFAULT_ADDRESS.replace("localhost", "surely-not-localhost"),
+                TypeDB.DEFAULT_ADDRESS.replace("127.0.0.1", "surely-not-localhost"),
                 DEFAULT_CREDENTIALS,
-                DEFAULT_CONNECTION_SETTINGS
+                driverOptions
         ));
     }
 
@@ -95,20 +94,62 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
     }
 
     @Override
-    @Given("connection is open: {bool}")
+    @Then("connection is open: {bool}")
     public void connection_is_open(boolean isOpen) {
         super.connection_is_open(isOpen);
     }
 
     @Override
-    @Given("connection has {integer} database(s)")
+    @Then("connection contains distribution{may_error}")
+    public void connection_contains_distribution(Parameters.MayError mayError) {
+        super.connection_contains_distribution(mayError);
+    }
+
+    @Override
+    @Then("connection contains version{may_error}")
+    public void connection_contains_version(Parameters.MayError mayError) {
+        super.connection_contains_version(mayError);
+    }
+
+    @Override
+    @Then("connection has {integer} replica(s)")
+    public void connection_has_count_replicas(int count) {
+        super.connection_has_count_replicas(count);
+    }
+
+    @Override
+    @Then("connection contains primary replica")
+    public void connection_contains_primary_replica() {
+        super.connection_contains_primary_replica();
+    }
+
+    @Override
+    @Then("connection has {integer} database(s)")
     public void connection_has_count_databases(int count) {
         super.connection_has_count_databases(count);
     }
 
     @Override
-    @Given("connection has {integer} user(s)")
+    @Then("connection has {integer} user(s)")
     public void connection_has_count_users(int count) {
         super.connection_has_count_users(count);
+    }
+
+    @Override
+    @When("set driver option use_replication to: {bool}")
+    public void set_driver_option_use_replication_to(boolean value) {
+        super.set_driver_option_use_replication_to(value);
+    }
+
+    @Override
+    @When("set driver option primary_failover_retries to: {integer}")
+    public void set_driver_option_primary_failover_retries_to(int value) {
+        super.set_driver_option_primary_failover_retries_to(value);
+    }
+
+    @Override
+    @When("set driver option replica_discovery_attempts to: {integer}")
+    public void set_driver_option_replica_discovery_attempts_to(int value) {
+        super.set_driver_option_replica_discovery_attempts_to(value);
     }
 }

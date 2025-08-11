@@ -1,0 +1,22 @@
+[#_Strong]
+=== Strong
+
+The strongest consistency level. Always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
+
+// tag::methods[]
+[#_Strong_native_object_]
+==== native_object
+
+[source,python]
+----
+native_object()
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+// end::methods[]
+

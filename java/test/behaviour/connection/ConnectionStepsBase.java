@@ -25,14 +25,13 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -41,13 +40,13 @@ import java.util.stream.Stream;
 
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "password";
     public static final Credentials DEFAULT_CREDENTIALS = new Credentials(ADMIN_USERNAME, ADMIN_PASSWORD);
-    public static final DriverOptions DEFAULT_CONNECTION_SETTINGS = new DriverOptions(false, null);
-    public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     public static Driver driver;
@@ -57,6 +56,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
+    public static DriverOptions driverOptions = new DriverOptions().tlsEnabled(false);
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
@@ -124,6 +124,7 @@ public abstract class ConnectionStepsBase {
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
         backgroundDriver.close();
+        driverOptions = new DriverOptions().tlsEnabled(false);
     }
 
     void cleanupTransactions() {
@@ -144,11 +145,9 @@ public abstract class ConnectionStepsBase {
         backgroundTransactions.clear();
     }
 
-    abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
-
     abstract Driver createDefaultTypeDBDriver();
 
-    public static void initTransactionOptionsIfNeeded() { // TODO: Implement steps
+    public static void initTransactionOptionsIfNeeded() {
         if (transactionOptions.isEmpty()) {
             transactionOptions = Optional.of(new TransactionOptions());
         }
@@ -173,11 +172,45 @@ public abstract class ConnectionStepsBase {
         assertEquals(isOpen, driver != null && driver.isOpen());
     }
 
+    void connection_contains_distribution(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getDistribution().isEmpty());
+        });
+    }
+
+    void connection_contains_version(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getVersion().isEmpty());
+        });
+    }
+
+    void connection_has_count_replicas(int count) {
+        assertEquals(driver.replicas().size(), count);
+    }
+
+    void connection_contains_primary_replica() {
+        assertTrue(driver.primaryReplica().isPresent());
+    }
+
     void connection_has_count_databases(int count) {
         assertEquals(count, driver.databases().all().size());
     }
 
     void connection_has_count_users(int count) {
         assertEquals(count, driver.users().all().size());
+    }
+
+    void set_driver_option_use_replication_to(boolean value) {
+        driverOptions = driverOptions.useReplication(value);
+    }
+
+    void set_driver_option_primary_failover_retries_to(int value) {
+        driverOptions = driverOptions.primaryFailoverRetries(value);
+    }
+
+    void set_driver_option_replica_discovery_attempts_to(int value) {
+        driverOptions = driverOptions.replicaDiscoveryAttempts(value);
     }
 }
