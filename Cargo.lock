@@ -2738,6 +2738,7 @@ dependencies = [
  "maybe-async",
  "prost",
  "regex",
+ "serde",
  "serde_json",
  "serial_test",
  "smol",
