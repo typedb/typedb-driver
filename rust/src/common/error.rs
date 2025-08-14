@@ -197,8 +197,8 @@ error_messages! { ConnectionError
         36: "Could not execute a readonly operation on a non-primary replica '{address}'. It is either a version compatibility issue or a bug.",
     NoAvailableReplicas { configured_addresses: Addresses } =
         37: "Could not connect: no available replicas read from addresses {configured_addresses}.",
-    HttpHttpsMismatch { addresses: Addresses } =
-        38: "Invalid encryption used: either all or none addresses must use 'https': {addresses}.",
+    InvalidAddressWithScheme { addresses: Addresses } =
+        38: "Invalid address format: a scheme was found in one or more addresses. Please provide addresses as 'host:port'. Use driver options to configure TLS. Addresses: {addresses}.",
     AddressTranslationWithoutTranslation { addresses: Addresses } =
         39: "Specified addresses do not contain address translation: {addresses}.",
     ServerIsNotInitialised =

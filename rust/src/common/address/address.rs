@@ -19,7 +19,7 @@
 
 use std::{fmt, str::FromStr};
 
-use http::Uri;
+use http::{uri::PathAndQuery, Uri};
 
 use crate::{
     common::{Error, Result},
@@ -32,7 +32,7 @@ pub struct Address {
 }
 
 impl Address {
-    const DEFAULT_SCHEME: &'static str = "http";
+    const DEFAULT_PATH: &'static str = "/";
 
     pub(crate) fn into_uri(self) -> Uri {
         self.uri
@@ -42,14 +42,17 @@ impl Address {
         self.uri.scheme()
     }
 
-    pub(crate) fn is_https(&self) -> bool {
-        self.uri_scheme().map_or(false, |scheme| scheme == &http::uri::Scheme::HTTPS)
+    pub(crate) fn has_scheme(&self) -> bool {
+        self.uri_scheme().is_some()
     }
 
     pub(crate) fn with_scheme(&self, scheme: http::uri::Scheme) -> Self {
         let mut parts = self.uri.clone().into_parts();
         parts.scheme = Some(scheme);
-        Self { uri: Uri::from_parts(parts).expect("Valid URI after scheme change") }
+        if parts.path_and_query.is_none() {
+            parts.path_and_query = Some(PathAndQuery::from_static(Self::DEFAULT_PATH));
+        }
+        Self { uri: Uri::from_parts(parts).expect("Expected valid URI after scheme change") }
     }
 }
 
@@ -57,11 +60,7 @@ impl FromStr for Address {
     type Err = Error;
 
     fn from_str(address: &str) -> Result<Self> {
-        let uri = if address.contains("://") {
-            address.parse::<Uri>()?
-        } else {
-            format!("{}://{}", Self::DEFAULT_SCHEME, address).parse::<Uri>()?
-        };
+        let uri = address.parse::<Uri>()?;
         if uri.port().is_none() {
             return Err(Error::Connection(ConnectionError::MissingPort { address: address.to_owned() }));
         }

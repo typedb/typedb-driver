@@ -31,26 +31,14 @@ impl ServerReplica {
         Self { private_address, public_address: None, replica_status }
     }
 
-    pub(crate) fn translate_address(
-        &mut self,
-        connection_scheme: &http::uri::Scheme,
-        address_translation: &AddressTranslation,
-    ) {
+    pub(crate) fn translate_address(&mut self, address_translation: &AddressTranslation) {
         if let Some(translated) = address_translation.to_public(self.private_address()) {
             self.public_address = Some(translated);
-        } else if let Some(scheme) = self.address().uri_scheme() {
-            if scheme != connection_scheme {
-                self.public_address = Some(self.address().with_scheme(connection_scheme.clone()));
-            }
         }
     }
 
-    pub(crate) fn translated(
-        mut self,
-        connection_scheme: &http::uri::Scheme,
-        address_translation: &AddressTranslation,
-    ) -> Self {
-        self.translate_address(connection_scheme, address_translation);
+    pub(crate) fn translated(mut self, address_translation: &AddressTranslation) -> Self {
+        self.translate_address(address_translation);
         self
     }
 

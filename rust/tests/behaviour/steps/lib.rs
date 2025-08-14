@@ -477,8 +477,7 @@ impl Context {
         password: &str,
     ) -> TypeDBResult<TypeDBDriver> {
         assert!(self.is_cluster, "Only cluster drivers are available in this mode");
-        let https_addresses = addresses.iter().map(|address| format!("https://{address}"));
-        let addresses = Addresses::try_from_addresses_str(https_addresses).expect("Expected addresses");
+        let addresses = Addresses::try_from_addresses_str(addresses).expect("Expected addresses");
 
         let credentials = Credentials::new(username, password);
         assert!(self.tls_root_ca.is_some(), "Root CA is expected for cluster tests!");

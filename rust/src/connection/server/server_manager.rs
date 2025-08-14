@@ -46,7 +46,6 @@ pub(crate) struct ServerManager {
     configured_addresses: Addresses,
     replicas: RwLock<HashSet<ServerReplica>>,
     replica_connections: RwLock<HashMap<Address, ServerConnection>>,
-    connection_scheme: http::uri::Scheme,
     address_translation: RwLock<AddressTranslation>,
 
     background_runtime: Arc<BackgroundRuntime>,
@@ -72,18 +71,14 @@ impl ServerManager {
             return Err(ConnectionError::MultipleAddressesForNoReplicationMode { addresses: addresses.clone() }.into());
         }
 
-        let is_https = addresses.addresses().all(|address| address.is_https());
-        let is_http = addresses.addresses().all(|address| !address.is_https());
-        if !is_https && !is_http {
-            return Err(ConnectionError::HttpHttpsMismatch { addresses: addresses.clone() }.into());
+        let has_scheme = addresses.addresses().any(|address| address.has_scheme());
+        if has_scheme {
+            return Err(ConnectionError::InvalidAddressWithScheme { addresses: addresses.clone() }.into());
         }
-
-        let connection_scheme = if is_https { http::uri::Scheme::HTTPS } else { http::uri::Scheme::HTTP };
 
         let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
             &addresses,
-            &connection_scheme,
             credentials.clone(),
             driver_options.clone(),
             driver_lang.as_ref(),
@@ -98,7 +93,6 @@ impl ServerManager {
             configured_addresses: addresses,
             replicas: RwLock::new(replicas),
             replica_connections: RwLock::new(source_connections),
-            connection_scheme,
             address_translation: RwLock::new(address_translation),
             background_runtime,
             credentials,
@@ -399,9 +393,7 @@ impl ServerManager {
     async fn seek_primary_replica(&self, replica_connection: ServerConnection) -> Result<ServerReplica> {
         let address_translation = self.read_address_translation().clone();
         println!("SEEK PRIMARY REPLICA");
-        let replicas =
-            Self::fetch_replicas_from_connection(&replica_connection, &address_translation, &self.connection_scheme)
-                .await?;
+        let replicas = Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await?;
         println!("WRITE NEW PRIMARY");
         *self.replicas.write().expect("Expected replicas write lock") = replicas;
         if let Some(replica) = self.primary_replica() {
@@ -416,7 +408,6 @@ impl ServerManager {
     async fn fetch_replicas_from_addresses(
         background_runtime: Arc<BackgroundRuntime>,
         addresses: &Addresses,
-        connection_scheme: &http::uri::Scheme,
         credentials: Credentials,
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
@@ -440,8 +431,7 @@ impl ServerManager {
             match replica_connection {
                 Ok((replica_connection, replicas)) => {
                     debug!("Fetched replicas from configured address '{address}': {replicas:?}");
-                    let translated_replicas =
-                        Self::translate_replicas(replicas, connection_scheme, &address_translation);
+                    let translated_replicas = Self::translate_replicas(replicas, &address_translation);
                     if use_replication {
                         let mut source_connections = HashMap::with_capacity(translated_replicas.len());
                         source_connections.insert(address.clone(), replica_connection);
@@ -484,12 +474,8 @@ impl ServerManager {
     pub(crate) async fn fetch_replicas(&self) -> Result<HashSet<ServerReplica>> {
         let replicas = self
             .execute(ConsistencyLevel::Strong, |replica_connection| {
-                let connection_scheme = self.connection_scheme.clone();
                 let address_translation = self.read_address_translation().clone();
-                async move {
-                    Self::fetch_replicas_from_connection(&replica_connection, &address_translation, &connection_scheme)
-                        .await
-                }
+                async move { Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await }
             })
             .await?;
         *self.replicas.write().expect("Expected replicas write lock") = replicas.clone();
@@ -500,20 +486,15 @@ impl ServerManager {
     async fn fetch_replicas_from_connection(
         replica_connection: &ServerConnection,
         address_translation: &AddressTranslation,
-        connection_scheme: &http::uri::Scheme,
     ) -> Result<HashSet<ServerReplica>> {
-        replica_connection
-            .servers_all()
-            .await
-            .map(|replicas| Self::translate_replicas(replicas, connection_scheme, address_translation))
+        replica_connection.servers_all().await.map(|replicas| Self::translate_replicas(replicas, address_translation))
     }
 
     fn translate_replicas(
         replicas: impl IntoIterator<Item = ServerReplica>,
-        connection_scheme: &http::uri::Scheme,
         address_translation: &AddressTranslation,
     ) -> HashSet<ServerReplica> {
-        replicas.into_iter().map(|replica| replica.translated(connection_scheme, address_translation)).collect()
+        replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
     }
 
     fn server_connection_failed_err(&self, errors: HashMap<Address, Error>) -> Error {
