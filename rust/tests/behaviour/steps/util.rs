@@ -23,28 +23,14 @@ use std::{
     env, fs,
     fs::File,
     io::{Read, Write},
-    iter, mem,
     ops::Deref,
     path::{Path, PathBuf},
 };
 
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use cucumber::{
-    gherkin::{Feature, Step},
-    given, then, when, StatsWriter, World,
-};
-use futures::{
-    future::{try_join_all, Either},
-    stream::{self, StreamExt},
-};
-use itertools::Itertools;
+use cucumber::{gherkin::Step, given, then, when, StatsWriter};
 use macro_rules_attribute::apply;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptRow, JSON},
-    concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
-    DatabaseManager, Error, Result as TypeDBResult,
-};
+use typedb_driver::{answer::JSON, Result as TypeDBResult};
 use uuid::Uuid;
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};

@@ -115,6 +115,16 @@ impl RPCTransmitter {
             }
 
             Request::ServersAll => rpc.servers_all(request.try_into_proto()?).await.and_then(Response::try_from_proto),
+            Request::ServersGet => rpc.servers_get(request.try_into_proto()?).await.and_then(Response::try_from_proto),
+            Request::ServersRegister { .. } => {
+                rpc.servers_register(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
+            Request::ServersDeregister { .. } => {
+                rpc.servers_deregister(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
+            Request::ServerVersion => {
+                rpc.server_version(request.try_into_proto()?).await.and_then(Response::try_from_proto)
+            }
 
             Request::DatabasesAll => {
                 rpc.databases_all(request.try_into_proto()?).await.and_then(Response::try_from_proto)
@@ -143,7 +153,7 @@ impl RPCTransmitter {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseExport { .. } => {
-                let mut response_source = rpc.database_export(request.try_into_proto()?).await?;
+                let response_source = rpc.database_export(request.try_into_proto()?).await?;
                 Ok(Response::DatabaseExportStream { response_source })
             }
 

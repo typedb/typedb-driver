@@ -17,9 +17,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
-from typedb.api.connection.database import DatabaseManager
+from typedb.api.connection.consistency_level import ConsistencyLevel
+from typedb.api.database.database_manager import DatabaseManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null
@@ -36,17 +37,24 @@ class _DatabaseManager(DatabaseManager):
     def __init__(self, native_driver: NativeDriver):
         self.native_driver = native_driver
 
-    def get(self, name: str) -> _Database:
-        require_non_null(name, "name")
+    def all(self, consistency_level: Optional[ConsistencyLevel] = None) -> list[_Database]:
         try:
-            return _Database(databases_get(self.native_driver, name))
+            databases = databases_all(self.native_driver, ConsistencyLevel.native_value(consistency_level))
+            return list(map(_Database, IteratorWrapper(databases, database_iterator_next)))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def contains(self, name: str) -> bool:
+    def contains(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> bool:
         require_non_null(name, "name")
         try:
-            return databases_contains(self.native_driver, name)
+            return databases_contains(self.native_driver, name, ConsistencyLevel.native_value(consistency_level))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e) from None
+
+    def get(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> _Database:
+        require_non_null(name, "name")
+        try:
+            return _Database(databases_get(self.native_driver, name, ConsistencyLevel.native_value(consistency_level)))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
@@ -63,11 +71,5 @@ class _DatabaseManager(DatabaseManager):
         require_non_null(data_file_path, "data_file_path")
         try:
             databases_import_from_file(self.native_driver, name, schema, data_file_path)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def all(self) -> list[_Database]:
-        try:
-            return list(map(_Database, IteratorWrapper(databases_all(self.native_driver), database_iterator_next)))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

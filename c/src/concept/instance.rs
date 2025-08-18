@@ -22,7 +22,7 @@ use std::ptr::null_mut;
 use typedb_driver::concept::Concept;
 
 use super::concept::{borrow_as_attribute, borrow_as_entity, borrow_as_relation};
-use crate::memory::release;
+use crate::common::memory::release;
 
 /// Retrieves the type which this ``Entity`` belongs to.
 #[no_mangle]

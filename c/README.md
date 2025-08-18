@@ -22,13 +22,13 @@ Code examples can be found in the [integration tests](https://github.com/typedb/
 
 Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
-Driver *driver_open_core(const char *address);
+Driver *driver_new_core(const char *address);
 ``` 
 
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    Driver *driver = driver_open_core("127.0.0.1:1729");
+    Driver *driver = driver_new_core("127.0.0.1:1729");
     DatabaseManager* databaseManager = database_manager_new(driver);
     databases_create(databaseManager, dbName);
     Database* database = databases_get(databaseManager, dbName);
