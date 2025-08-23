@@ -18,7 +18,7 @@ the [API Reference](https://typedb.com/docs/reference/http-drivers/typescript).
 npm install typedb-driver-http
 ```
 
-2. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is
+2. Make sure a [TypeDB Server](https://typedb.com/docs/home/install/) is
    running.
 3. Use TypeDB Driver in your program:
 

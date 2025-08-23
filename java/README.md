@@ -1,10 +1,10 @@
 # TypeDB Java Driver
 
 ## Driver Architecture
-To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/core-concepts/drivers/overview).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Java, refer to the [API Reference](https://typedb.com/docs/drivers/java/api-reference).
+To learn about the methods available for executing queries and retrieving their answers using Java, refer to the [API Reference](https://typedb.com/docs/reference/typedb-grpc-drivers/java).
 
 ## Import TypeDB Driver for Java through Maven
 
@@ -25,15 +25,13 @@ To learn about the methods available for executing queries and retrieving their 
 </dependencies>
 ```
 
-Further documentation: https://typedb.com/docs/drivers/java/overview
-
 ## Build TypeDB Driver for Java from Source
 
 > Note: You don't need to compile TypeDB Driver from source if you just want to use it in your code. See the _"Import TypeDB Driver for Java"_ section above.
 
 1. Make sure you have the following dependencies installed on your machine:
     - Java JDK 11 or higher
-    - [Bazel](https://docs.bazel.build/versions/master/install.html)
+    - [Bazel via Bazelisk](https://docs.bazel.build/versions/master/install.html)
 
 2. Build the JAR:
 

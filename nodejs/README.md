@@ -4,7 +4,7 @@
 In the meantime, please us the `http-ts` node driver instead.**
 
 ## Driver Architecture
-To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server, refer to the [Drivers Overview](https://typedb.com/docs/core-concepts/drivers/overview).
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using NodeJS, refer to the [API Reference](https://typedb.com/docs/drivers/nodejs/api-reference).

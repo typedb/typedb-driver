@@ -3,7 +3,7 @@
 ## Driver Architecture
 
 To learn about the mechanism that TypeDB drivers use set up communication with databases running on the TypeDB Server,
-refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+refer to the [Drivers Overview](https://typedb.com/docs/core-concepts/drivers/overview).
 
 The TypeDB Rust Driver provides a fully async API that supports multiple async runtimes or a synchronous interface gated
 by the `sync` feature.
@@ -11,7 +11,7 @@ by the `sync` feature.
 ## API Reference
 
 To learn about the methods available for executing queries and retrieving their answers using Rust, refer to
-the [API Reference](https://typedb.com/docs/drivers/rust/api-reference).
+the [API Reference](https://typedb.com/docs/reference/typedb-grpc-drivers/rust).
 
 ## Install TypeDB Rust Driver through Cargo
 
@@ -21,7 +21,7 @@ the [API Reference](https://typedb.com/docs/drivers/rust/api-reference).
 cargo add typedb-driver
 ```
 
-2. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is
+2. Make sure a [TypeDB Server](https://typedb.com/docs/home/install/) is
    running.
 3. Use TypeDB Driver in your program (see [Example usage](#example-usage) or `tests/integration` for examples):
 
@@ -36,7 +36,7 @@ let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap(
 > Note: You don't need to compile TypeDB Driver from source if you just want to use it in your code. See the _"
 Quickstart"_ section above.
 
-1. Make sure you have [Bazel](https://docs.bazel.build/versions/master/install.html) installed on your machine.
+1. Make sure you have [Bazel via Bazelisk](https://docs.bazel.build/versions/master/install.html) installed on your machine.
 
 2. Build the library:
 

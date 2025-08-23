@@ -1,4 +1,4 @@
-Documentation: https://typedb.com/docs/drivers/overview
+Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 
 ## Distribution
 

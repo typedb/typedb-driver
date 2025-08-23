@@ -3,12 +3,12 @@
 ## Driver Architecture
 
 To learn about the mechanism that TypeDB drivers use to set up communication with databases running on the TypeDB
-Server, refer to the [Drivers Overview](https://typedb.com/docs/drivers/overview).
+Server, refer to the [Drivers Overview](https://typedb.com/docs/core-concepts/drivers/overview).
 
 ## API Reference
 
 To learn about the methods available for executing queries and retrieving their answers using Python, refer to
-the [API Reference](https://typedb.com/docs/drivers/python/api-reference).
+the [API Reference](https://typedb.com/docs/reference/typedb-grpc-drivers/python).
 
 ## Install TypeDB Python Driver through Pip
 1. Install `typedb-driver` using `pip`:
@@ -19,7 +19,8 @@ pip install typedb-driver
 ```
 pip3 install typedb-driver
 ```
-3. Make sure the [TypeDB Server](https://docs.typedb.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
+3. Make sure a [TypeDB Server](https://typedb.com/docs/home/install/) is
+   running.
 4. In your python program, import from `typedb.driver` (see [Example usage](#example-usage) or `tests/integration` for examples):
 ```py
 from typedb.driver import *
