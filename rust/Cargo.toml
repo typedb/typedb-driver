@@ -16,6 +16,11 @@
 
 [dev-dependencies]
 
+	[dev-dependencies.rand]
+		features = ["alloc", "default", "getrandom", "libc", "rand_chacha", "small_rng", "std", "std_rng"]
+		version = "0.8.5"
+		default-features = false
+
 	[dev-dependencies.smol]
 		features = []
 		version = "1.3.0"

@@ -71,7 +71,10 @@ rust_library(
 rust_test(
     name = "typedb_driver_unit_tests",
     crate = ":typedb_driver",
-    deps = ["@crates//:serde_json"],
+    deps = [
+        "@crates//:rand",
+        "@crates//:serde_json",
+    ],
 )
 
 assemble_crate(
