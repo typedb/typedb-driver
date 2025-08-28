@@ -69,6 +69,11 @@
 		version = "0.4.27"
 		default-features = false
 
+	[dependencies.serde]
+		features = ["alloc", "default", "derive", "rc", "serde_derive", "std"]
+		version = "1.0.219"
+		default-features = false
+
 	[dependencies.tokio-stream]
 		features = ["default", "net", "time"]
 		version = "0.1.17"

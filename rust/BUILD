@@ -37,6 +37,7 @@ typedb_driver_deps = [
     "@crates//:itertools",
     "@crates//:log",
     "@crates//:prost",
+    "@crates//:serde",
     "@crates//:tokio",
     "@crates//:tokio-stream",
     "@crates//:tonic",
