@@ -288,8 +288,7 @@ mod test {
 
     #[test]
     fn serialize() {
-        let ser = serde_json::to_value(sample_json())
-        .unwrap();
+        let ser = serde_json::to_value(sample_json()).unwrap();
         let value = json!( { "array": [true, "string"], "number": 123.4 });
         assert_eq!(ser, value);
     }
