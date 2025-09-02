@@ -59,7 +59,8 @@ export type FunctionReturnStructure =
     { tag: "reduce", reducers: Reducer[] }
 
 export type VariableAnnotations =
-    { tag: "concept", annotations: Type[] } |
+    { tag: "thing", annotations: Type[] } |
+    { tag: "type", annotations: Type[] } |
     { tag: "value", valueTypes: ValueType[] };
 
 export interface PipelineAnnotations {
@@ -70,7 +71,7 @@ export interface PipelineAnnotations {
 
 export interface FunctionAnnotations {
     arguments: VariableAnnotations[],
-    returned: VariableAnnotations[],
+    returns: { tag: "single" | "stream", annotations: VariableAnnotations[] },
     body: PipelineAnnotations,
 }
 
