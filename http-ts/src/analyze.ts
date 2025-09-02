@@ -33,7 +33,7 @@ type ConjunctionIndex = number;
 export type PipelineStage =
     { tag: "match",  block: ConjunctionIndex } |
     { tag: "insert",  block: ConjunctionIndex } |
-    { tag: "delete",  block: ConjunctionIndex, deleted_variables: VariableId[] } |
+    { tag: "delete",  block: ConjunctionIndex, deletedVariables: VariableId[] } |
     { tag: "put",  block: ConjunctionIndex } |
     { tag: "update",  block: ConjunctionIndex } |
     { tag: "select",  variables: VariableId[] } |
@@ -47,7 +47,7 @@ export type PipelineStage =
 export interface FunctionStructure {
     arguments: VariableId[],
     body: PipelineStructure,
-    return_operation: FunctionReturnStructure,
+    "return": FunctionReturnStructure,
 }
 
 export type Reducer = { reducer: string, variable: VariableId[] };
@@ -60,7 +60,7 @@ export type FunctionReturnStructure =
 
 export type VariableAnnotations =
     { tag: "concept", annotations: Type[] } |
-    { tag: "value", value_types: ValueType[] };
+    { tag: "value", valueTypes: ValueType[] };
 
 export interface PipelineAnnotations {
     annotationsByConjunction: {
@@ -77,4 +77,4 @@ export interface FunctionAnnotations {
 export type FetchAnnotations =
     { tag:  "list", elements: FetchAnnotations[] } |
     { tag :  "object", "fields": { key: string, value: FetchAnnotations }[] } |
-    { tag : "value", types: ValueType[] };
+    { tag : "value", valueTypes: ValueType[] };
