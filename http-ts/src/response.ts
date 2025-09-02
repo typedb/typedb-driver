@@ -99,7 +99,7 @@ export interface AnalyzeResponse {
     annotations: {
         preamble: FunctionAnnotations[],
         query: PipelineAnnotations,
-        fetch: FetchAnnotations,
+        fetch: FetchAnnotations | null,
     }
 }
 

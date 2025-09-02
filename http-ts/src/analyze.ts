@@ -64,7 +64,7 @@ export type VariableAnnotations =
 
 export interface PipelineAnnotations {
     annotationsByConjunction: {
-        variableAnnotations: {[name: VariableId]: VariableAnnotations }[]
+        variableAnnotations: {[name: VariableId]: VariableAnnotations }
     }[]
 }
 
@@ -75,6 +75,8 @@ export interface FunctionAnnotations {
 }
 
 export type FetchAnnotations =
-    { tag:  "list", elements: FetchAnnotations[] } |
-    { tag :  "object", "fields": { key: string, value: FetchAnnotations }[] } |
+    { tag:  "list", elements: FetchAnnotations } |
+    { tag : "object", "fields": FetchAnnotationFieldEntry[] } |
     { tag : "value", valueTypes: ValueType[] };
+
+export type FetchAnnotationFieldEntry = FetchAnnotations & { key: string };

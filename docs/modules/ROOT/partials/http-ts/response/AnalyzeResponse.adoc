@@ -1,0 +1,15 @@
+[#_AnalyzeResponse]
+=== AnalyzeResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `annotations` a| `FetchAnnotations` a| 
+a| `structure` a| `FunctionStructure` a| 
+|===
+// end::properties[]
+
