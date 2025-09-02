@@ -77,7 +77,7 @@ export interface FunctionAnnotations {
 
 export type FetchAnnotations =
     { tag:  "list", elements: FetchAnnotations } |
-    { tag : "object", "fields": FetchAnnotationFieldEntry[] } |
+    { tag : "object", "possibleFields": FetchAnnotationFieldEntry[] } |
     { tag : "value", valueTypes: ValueType[] };
 
 export type FetchAnnotationFieldEntry = FetchAnnotations & { key: string };
