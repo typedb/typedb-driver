@@ -47,7 +47,7 @@ export type PipelineStage =
 export interface FunctionStructure {
     arguments: VariableId[],
     body: PipelineStructure,
-    "return": FunctionReturnStructure,
+    returns: FunctionReturnStructure,
 }
 
 export type Reducer = { reducer: string, variable: VariableId[] };
@@ -77,7 +77,7 @@ export interface FunctionAnnotations {
 
 export type FetchAnnotations =
     { tag:  "list", elements: FetchAnnotations } |
-    { tag : "object", "possibleFields": FetchAnnotationFieldEntry[] } |
+    { tag : "object", possibleFields: FetchAnnotationFieldEntry[] } |
     { tag : "value", valueTypes: ValueType[] };
 
 export type FetchAnnotationFieldEntry = FetchAnnotations & { key: string };
