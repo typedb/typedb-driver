@@ -20,6 +20,13 @@
 import { Database, User } from "./index";
 import { Concept } from "./concept";
 import { QueryStructure } from "./query-structure";
+import {
+    FetchAnnotations,
+    FunctionAnnotations,
+    FunctionStructure,
+    PipelineAnnotations,
+    PipelineStructure
+} from "./analyze";
 
 export interface SignInResponse {
     token: string;
@@ -83,6 +90,18 @@ export interface ConceptDocumentsQueryResponse extends QueryResponseBase {
 }
 
 export type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse;
+
+export interface AnalyzeResponse {
+    structure: {
+        preamble: FunctionStructure[],
+        query: PipelineStructure,
+    }
+    annotations: {
+        preamble: FunctionAnnotations[],
+        query: PipelineAnnotations,
+        fetch: FetchAnnotations | null,
+    }
+}
 
 export type ApiOkResponse<OK_RES = {}> = { ok: OK_RES };
 
