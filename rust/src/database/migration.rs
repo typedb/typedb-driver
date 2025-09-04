@@ -48,6 +48,7 @@ pub struct ProtoMessageIterator<M: Message + Default, R: BufRead> {
 
 impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
     const BUF_CAPACITY: usize = 8 * 1024;
+    // prost's length delimiters take up to 10 bytes
     const MAX_LENGTH_DELIMITER_LEN: usize = 10;
 
     pub fn new(reader: R) -> Self {
