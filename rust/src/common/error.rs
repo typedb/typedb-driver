@@ -318,9 +318,9 @@ impl Error {
         }
     }
 
-    fn from_message(message: &str) -> Self {
+    fn from_message(message: String) -> Self {
         // TODO: Consider converting some of the messages to connection errors
-        Self::Other(message.to_owned())
+        Self::Other(message)
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
@@ -406,7 +406,7 @@ impl From<Status> for Error {
 
                 Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
             } else {
-                Self::from_message(status.message())
+                Self::from_message(concat_source_messages(&status))
             }
         } else {
             if status.code() == Code::Unavailable {
@@ -422,7 +422,7 @@ impl From<Status> for Error {
             } else if status.code() == Code::Unimplemented {
                 Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
             } else {
-                Self::from_message(status.message())
+                Self::from_message(concat_source_messages(&status))
             }
         }
     }
@@ -431,6 +431,18 @@ impl From<Status> for Error {
 fn is_rst_stream(status: &Status) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
     status.message().contains("Received Rst Stream")
+}
+
+fn concat_source_messages(status: &Status) -> String {
+    let mut errors = String::new();
+    errors.push_str(status.message());
+    let mut err: Option<&dyn std::error::Error> = status.source();
+    while let Some(e) = err {
+        errors.push_str(": ");
+        errors.push_str(e.to_string().as_str());
+        err = e.source();
+    }
+    errors
 }
 
 impl From<http::uri::InvalidUri> for Error {
