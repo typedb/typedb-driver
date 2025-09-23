@@ -100,9 +100,9 @@ export function isApiError(err: any): err is ApiError {
 export type ApiResponse<OK_RES = {} | null> = ApiOkResponse<OK_RES> | ApiErrorResponse;
 
 export function isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES> {
-    return "ok" in res;
+    return typeof res === "object" && "ok" in res;
 }
 
 export function isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse {
-    return "err" in res;
+    return typeof res === "object" && "err" in res;
 }
