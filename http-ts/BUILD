@@ -106,6 +106,7 @@ checkstyle_test(
         "tool/**/*",
     ]),
     exclude = glob([
+        ".npmrc",
         "**/*.json",
         "**/*.md",
         "pnpm-lock.yaml",
