@@ -20,13 +20,12 @@
 use std::{fmt, fmt::Formatter, sync::Arc};
 
 use crossbeam::channel::Sender as SyncOneshotSender;
-use itertools::Either;
 use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 
 use crate::{
     common::{RequestID, Result},
-    error::{ConnectionError, InternalError},
+    error::InternalError,
     Error,
 };
 

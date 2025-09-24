@@ -55,12 +55,12 @@
 
 	[dependencies.tokio]
 		features = ["bytes", "default", "fs", "full", "io-std", "io-util", "libc", "macros", "mio", "net", "parking_lot", "process", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "time", "tokio-macros"]
-		version = "1.45.0"
+		version = "1.46.0"
 		default-features = false
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "38f66a1cc4db3b7a301676f50800e9530ac5c8a3"
+		rev = "55ed1423598425fa5ad56c7b7ca417a05d05dac3"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
@@ -86,7 +86,7 @@
 
 	[dependencies.uuid]
 		features = ["default", "fast-rng", "rng", "serde", "std", "v4"]
-		version = "1.16.0"
+		version = "1.17.0"
 		default-features = false
 
 	[dependencies.prost]
@@ -128,6 +128,10 @@
 		features = ["alloc", "crossbeam-channel", "crossbeam-deque", "crossbeam-epoch", "crossbeam-queue", "default", "std"]
 		version = "0.8.4"
 		default-features = false
+
+[[test]]
+	path = "tests/integration/cluster/clustering.rs"
+	name = "test_clustering"
 
 [[test]]
 	path = "tests/integration/example.rs"

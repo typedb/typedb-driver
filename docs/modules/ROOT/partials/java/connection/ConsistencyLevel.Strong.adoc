@@ -1,0 +1,66 @@
+[#_ConsistencyLevel_Strong]
+=== ConsistencyLevel.Strong
+
+*Package*: `com.typedb.driver.api`
+
+Strongest consistency, always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
+
+// tag::methods[]
+[#_ConsistencyLevel_Strong_nativeValue_]
+==== nativeValue
+
+[source,java]
+----
+public com.typedb.driver.jni.ConsistencyLevel nativeValue()
+----
+
+
+
+[caption=""]
+.Returns
+`public com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_Strong_nativeValue_ConsistencyLevel]
+==== nativeValue
+
+[source,java]
+----
+public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyLevel consistencyLevel)
+----
+
+
+
+[caption=""]
+.Returns
+`public static com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_Strong_of_com_typedb_driver_jni_ConsistencyLevel]
+==== of
+
+[source,java]
+----
+public static ConsistencyLevel of​(com.typedb.driver.jni.ConsistencyLevel nativeValue)
+----
+
+
+
+[caption=""]
+.Returns
+`public static ConsistencyLevel`
+
+[#_ConsistencyLevel_Strong_toString_]
+==== toString
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+// end::methods[]
+
