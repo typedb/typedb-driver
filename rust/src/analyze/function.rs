@@ -18,7 +18,7 @@
  */
 
 use typedb_protocol::analyze::res::query_structure;
-use crate::analyze::{Context, FromPipelineProto, vec_from_proto};
+use crate::analyze::vec_from_proto;
 use crate::analyze::conjunction::{Reducer, Variable};
 use crate::analyze::pipeline::PipelineStructure;
 
@@ -29,14 +29,14 @@ pub struct FunctionStructure {
     body: PipelineStructure,
 }
 
-impl From<query_structure::FunctionStructure> for FunctionStructure {
-    fn from(value: query_structure::FunctionStructure) -> Self {
-        let protocol_pipeline = value.body.expect("expected function body");
-        let context = Context::build(&protocol_pipeline);
-        let body = PipelineStructure::from_proto(&context, protocol_pipeline);
-        let arguments = vec_from_proto(&context, value.arguments);
-        let returns = ReturnOperation::from_proto(&context, value.returns.expect("expected function return"));
-        Self { arguments, returns, body, }
+impl TryFrom<query_structure::FunctionStructure> for FunctionStructure {
+    type Error = crate::analyze::TryFromError;
+
+	fn try_from(value: query_structure::FunctionStructure) -> Result<Self, Self::Error> {
+        let body = PipelineStructure::try_from(value.body.ok_or("expected function body")?)?;
+        let returns = ReturnOperation::try_from(value.returns.ok_or("expected function return")?)?;
+        let arguments = vec_from_proto(value.arguments)?;
+        Ok(Self { arguments, returns, body })
     }
 }
 
@@ -48,18 +48,19 @@ pub enum ReturnOperation {
     Reduce { reducers: Vec<Reducer> },
 }
 
-impl FromPipelineProto<query_structure::function_structure::Returns> for ReturnOperation {
-    fn from_proto(context: &Context, value: query_structure::function_structure::Returns) -> Self {
+impl TryFrom<query_structure::function_structure::Returns> for ReturnOperation {
+    type Error = crate::analyze::TryFromError;
+
+	fn try_from(value: query_structure::function_structure::Returns) -> Result<Self, Self::Error> {
         use typedb_protocol::analyze::res::query_structure::function_structure::Returns;
-        use crate::analyze;
-        match value {
+        let returns = match value {
             Returns::Stream(stream) => {
-                Self::Stream {variables: analyze::vec_from_proto(context, stream.variables) }
+                Self::Stream {variables: vec_from_proto(stream.variables)? }
             }
             Returns::Single(single) => {
                 Self::Single {
                     selector: single.selector,
-                    variables: analyze::vec_from_proto(context, single.variables)
+                    variables: vec_from_proto(single.variables)?
                 }
             }
             Returns::Check(_check) => {
@@ -67,9 +68,10 @@ impl FromPipelineProto<query_structure::function_structure::Returns> for ReturnO
             },
             Returns::Reduce(reduce) => {
                 Self::Reduce {
-                    reducers: analyze::vec_from_proto(context, reduce.reducers)
+                    reducers: vec_from_proto(reduce.reducers)?
                 }
             }
-        }
+        };
+        Ok(returns)
     }
 }
