@@ -36,6 +36,7 @@ use crate::{
     info::UserInfo,
     Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
+use crate::analyze::AnalyzeResponse;
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -154,6 +155,7 @@ pub(super) enum TransactionResponse {
     Commit,
     Rollback,
     Query(QueryResponse),
+    Analyze(AnalyzeResponse),
     Close,
 }
 
