@@ -397,6 +397,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                     Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res" }.into())
                 }
             },
+            Some(transaction::res::Res::AnalyzeRes(analyze_resp)) => todo!(),
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }

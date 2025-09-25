@@ -17,27 +17,24 @@
  * under the License.
  */
 
-#![deny(elided_lifetimes_in_paths)]
-#![deny(unused_must_use)]
 
-pub use self::{
-    common::{
-        box_stream, error, info, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result, TransactionOptions,
-        TransactionType, IID,
-    },
-    connection::{Credentials, DriverOptions},
-    database::{Database, DatabaseManager},
-    driver::TypeDBDriver,
-    transaction::Transaction,
-    user::{User, UserManager},
-};
+#[derive(Debug)]
+pub struct AnalyzeResponse {
+    structure: QueryStructure,
+    annotations: QueryAnnotations,
+}
 
-pub mod analyze;
-pub mod answer;
-mod common;
-pub mod concept;
-mod connection;
-mod database;
-pub mod driver;
-pub mod transaction;
-mod user;
+#[derive(Debug)]
+pub struct QueryStructure {
+    query: PipelineStructure,
+    preamble: FunctionStructure,
+}
+
+#[derive(Debug)]
+pub struct PipelineStructure { }
+
+#[derive(Debug)]
+pub struct FunctionStructure { }
+
+#[derive(Debug)]
+pub struct QueryAnnotations { }
