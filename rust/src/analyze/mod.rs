@@ -17,6 +17,17 @@
  * under the License.
  */
 
+use std::collections::HashMap;
+use std::fmt::format;
+use futures::StreamExt;
+use itertools::Itertools;
+use crate::analyze::pipeline::PipelineStructure;
+use typedb_protocol::analyze::res as protocol;
+use function::FunctionStructure;
+
+pub mod pipeline;
+pub mod conjunction;
+pub mod function;
 
 #[derive(Debug)]
 pub struct AnalyzeResponse {
@@ -30,11 +41,42 @@ pub struct QueryStructure {
     preamble: FunctionStructure,
 }
 
-#[derive(Debug)]
-pub struct PipelineStructure { }
-
-#[derive(Debug)]
-pub struct FunctionStructure { }
+impl From<protocol::QueryStructure> for QueryStructure {
+    fn from(value: protocol::QueryStructure) -> Self {
+        let query = value.query.expect("Expected query structure").into();
+        let preamble = value.preamble.into_iter().map(|f| f.into()).collect();
+        Self { query, preamble }
+    }
+}
 
 #[derive(Debug)]
 pub struct QueryAnnotations { }
+
+// Helpers
+pub(crate) struct Context {
+    variable_names: HashMap<typedb_protocol::conjunction_structure::Variable, String>,
+}
+
+impl Context {
+    const UNNAMED: &'static str = "_";
+    pub(crate) fn var_name(&self, variable: &typedb_protocol::conjunction_structure::Variable) -> Option<String> {
+        self.variable_names.get(variable).cloned()
+    }
+}
+
+impl Context {
+    fn build(pipeline_structure: &protocol::query_structure::PipelineStructure) -> Self {
+        let variable_names = pipeline_structure.variable_info.iter().cloned().map(|(id,name)| {
+            (typedb_protocol::conjunction_structure::Variable { id }, name)
+        }).collect();
+        Self { variable_names }
+    }
+}
+
+pub trait FromPipelineProto<T> {
+    fn from_proto(context: &Context, value: T) -> Self;
+}
+
+fn vec_from_proto<From, To: FromPipelineProto<From>>(context: &Context, protocol_vec: Vec<From>) -> Vec<To> {
+    protocol_vec.into_iter().map(|x| To::from_proto(context, x)).collect()
+}
