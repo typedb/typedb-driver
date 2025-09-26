@@ -19,8 +19,8 @@
 
 use typedb_protocol::analyze::res::query_structure;
 use typedb_protocol::conjunction_structure;
-use typedb_protocol::conjunction_structure::StructureConstraint;
-use crate::analyze::vec_from_proto;
+use typedb_protocol::conjunction_structure::{StructureConstraint, StructureVertex};
+use crate::analyze::{enum_from_proto, expect_try_into, vec_from_proto};
 use crate::concept;
 
 #[derive(Debug)]
@@ -43,6 +43,18 @@ impl TryFrom<typedb_protocol::ConjunctionStructure> for Conjunction {
 pub enum ConstraintExactness {
     Exact,
     Subtypes,
+}
+
+impl TryFrom<conjunction_structure::structure_constraint::ConstraintExactness> for ConstraintExactness {
+    type Error = crate::analyze::TryFromError;
+
+    fn try_from(value: conjunction_structure::structure_constraint::ConstraintExactness) -> Result<Self, Self::Error> {
+        use conjunction_structure::structure_constraint::ConstraintExactness as ExactnessProto;
+        match value {
+            ExactnessProto::Exact => Ok(ConstraintExactness::Exact),
+            ExactnessProto::Subtypes => Ok(ConstraintExactness::Subtypes),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -140,90 +152,101 @@ impl TryFrom<conjunction_structure::StructureConstraint> for Constraint {
         use conjunction_structure::{structure_constraint as constraint_proto, structure_constraint::{Constraint as ConstraintProto}};
         let constraint = match value.constraint.ok_or("expected constraint")? {
             ConstraintProto::Or(constraint_proto::Or { branches }) => {
-                Constraint::Or { branches: vec_from_proto(branches)? }
+                let branches = branches
+                    .iter()
+                    .map(|branch| ConjunctionID(*branch as usize))
+                    .collect();
+                Constraint::Or { branches }
             }
             ConstraintProto::Not(constraint_proto::Not { conjunction }) => {
-                constraint_proto::Not { conjunction: conjunction.try_into()? }
+                Constraint::Not { conjunction: ConjunctionID(conjunction as usize) }
             }
             ConstraintProto::Try(constraint_proto::Try { conjunction }) => {
-                constraint_proto::Try { conjunction: conjunction.try_into()? }
+                Constraint::Try { conjunction: ConjunctionID(conjunction as usize) }
             }
             ConstraintProto::Isa(constraint_proto::Isa { thing: instance, r#type, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Isa {
-                    instance: instance.try_into()?,
-                    r#type: r#type.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    instance: expect_try_into(instance)?,
+                    r#type: expect_try_into(r#type)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?,
                 }
             }
             ConstraintProto::Has(constraint_proto::Has { owner, attribute, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Has {
-                    owner: owner.try_into()?,
-                    attribute: attribute.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    owner: expect_try_into(owner)?,
+                    attribute: expect_try_into(attribute)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Links(constraint_proto::Links { relation, player, role, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Links {
-                    relation: relation.try_into()?,
-                    player: player.try_into()?,
-                    role: role.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    relation: expect_try_into(relation)?,
+                    player: expect_try_into(player)?,
+                    role: expect_try_into(role)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Kind(constraint_proto::Kind { kind, r#type }) => {
-                Constraint::Kind { kind, r#type: r#type.try_into()? }
+                Constraint::Kind { kind, r#type: expect_try_into(r#type)? }
             }
             ConstraintProto::Sub(constraint_proto::Sub { subtype, supertype, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Sub {
-                    subtype: subtype.try_into()?,
-                    supertype: supertype.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    subtype: expect_try_into(subtype)?,
+                    supertype: expect_try_into(supertype)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Owns(constraint_proto::Owns { owner, attribute, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Owns {
-                    owner: owner.try_into()?,
-                    attribute: attribute.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    owner: expect_try_into(owner)?,
+                    attribute: expect_try_into(attribute)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Relates(constraint_proto::Relates { relation, role, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Relates {
-                    relation: relation.try_into()?,
-                    role: role.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    relation: expect_try_into(relation)?,
+                    role: expect_try_into(role)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Plays(constraint_proto::Plays { player, role, exactness }) => {
+                let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Plays {
-                    player: player.try_into()?,
-                    role: role.try_into()?,
-                    exactness: ConstraintExactness::try_from(exactness)?
+                    player: expect_try_into(player)?,
+                    role: expect_try_into(role)?,
+                    exactness: ConstraintExactness::try_from(exactness_proto)?
                 }
             }
             ConstraintProto::Value(constraint_proto::Value { attribute_type, value_type }) => {
                 Constraint::Value {
-                    attribute_type: attribute_type.try_into()?,
+                    attribute_type: expect_try_into(attribute_type)?,
                     value_type,
                 }
             }
             ConstraintProto::Label(constraint_proto::Label { r#type, label }) => {
                 Constraint::Label {
-                    r#type: r#type.try_into()?,
+                    r#type: expect_try_into(r#type)?,
                     label,
                 }
             }
             ConstraintProto::Comparison(constraint_proto::Comparison { lhs, rhs, comparator }) => {
-                let comparator = conjunction_structure::structure_constraint::comparison::Comparator::try_from(comparator)?;
+                let comparator = enum_from_proto::<conjunction_structure::structure_constraint::comparison::Comparator>(comparator)?;
                 Constraint::Comparison {
-                    lhs: lhs.try_into()?,
-                    rhs: rhs.try_into()?,
+                    lhs: expect_try_into(lhs)?,
+                    rhs: expect_try_into(rhs)?,
                     comparator: comparator.as_str_name().to_owned(),
                 }
             }
             ConstraintProto::Expression(constraint_proto::Expression { assigned, arguments, text }) => {
                 Constraint::Expression {
-                    assigned: assigned.try_into()?,
+                    assigned: vec_from_proto(assigned)?,
                     arguments: vec_from_proto(arguments)?,
                     text,
                 }
@@ -237,13 +260,13 @@ impl TryFrom<conjunction_structure::StructureConstraint> for Constraint {
             }
             ConstraintProto::Is(constraint_proto::Is { lhs, rhs }) => {
                 Constraint::Is {
-                    lhs: lhs.try_into()?,
-                    rhs: rhs.try_into()?,
+                    lhs: expect_try_into(lhs)?,
+                    rhs: expect_try_into(rhs)?,
                 }
             }
             ConstraintProto::Iid(constraint_proto::Iid { concept, iid }) => {
                 Constraint::Iid {
-                    concept: concept.try_into()?,
+                    concept: expect_try_into(concept)?,
                     iid,
                 }
             }
@@ -267,14 +290,38 @@ impl TryFrom<conjunction_structure::Variable> for Variable {
 pub enum ConstraintVertex {
     Variable(Variable),
     Label(LabelVertex),
-    Iid(String),
     Value(concept::Value),
+}
+
+impl TryFrom<conjunction_structure::StructureVertex> for ConstraintVertex {
+    type Error = crate::analyze::TryFromError;
+
+    fn try_from(value: conjunction_structure::StructureVertex) -> Result<Self, Self::Error> {
+        use conjunction_structure::structure_vertex::Vertex;
+        match value.vertex.ok_or("Expected vertex")? {
+            Vertex::Variable(variable) => Ok(ConstraintVertex::Variable(variable.try_into()?)),
+            Vertex::Label(label) => Ok(ConstraintVertex::Label(LabelVertex::try_from(label)?)),
+            Vertex::Value(value) => Ok(ConstraintVertex::Value(value.try_into()?)),
+        }
+    }
 }
 
 #[derive(Debug)]
 pub enum LabelVertex {
-    Resolve(concept::Concept),
+    Resolved(concept::Concept),
     Unresolved(String),
+}
+
+impl TryFrom<conjunction_structure::structure_vertex::Label> for LabelVertex {
+    type Error = crate::analyze::TryFromError;
+
+    fn try_from(value: conjunction_structure::structure_vertex::Label) -> Result<Self, Self::Error> {
+        use conjunction_structure::structure_vertex::label::Label as LabelProto;
+        match value.label.ok_or("Expected label")? {
+            LabelProto::Resolved(concept) => Ok(LabelVertex::Resolved(concept.try_into()?)),
+            LabelProto::FailedInference(label) => Ok(LabelVertex::Unresolved(label.try_into()?)),
+        }
+    }
 }
 
 #[derive(Debug)]
