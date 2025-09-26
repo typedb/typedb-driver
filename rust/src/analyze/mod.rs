@@ -18,51 +18,43 @@
  */
 
 use futures::StreamExt;
-use crate::analyze::pipeline::PipelineStructure;
-use typedb_protocol::analyze::res as protocol;
-use function::FunctionStructure;
 
-pub mod pipeline;
+use crate::analyze::{
+    conjunction::{Reducer, Variable},
+    pipeline::PipelineStructure,
+};
+
 pub mod conjunction;
-pub mod function;
+pub mod pipeline;
 
 pub type TryFromError = &'static str;
 
 #[derive(Debug)]
 pub struct AnalyzeResponse {
-    structure: QueryStructure,
-    annotations: QueryAnnotations,
+    pub structure: QueryStructure,
+    pub annotations: QueryAnnotations,
 }
 
 #[derive(Debug)]
 pub struct QueryStructure {
-    query: PipelineStructure,
-    preamble: Vec<FunctionStructure>,
-}
-
-impl TryFrom<protocol::QueryStructure> for QueryStructure {
-    type Error = TryFromError;
-
-	fn try_from(value: protocol::QueryStructure) -> Result<Self, Self::Error> {
-        let query = value.query.ok_or("Expected query structure")?.try_into()?;
-        let preamble = vec_from_proto(value.preamble)?;
-        Ok(Self { query, preamble })
-    }
+    pub query: PipelineStructure,
+    pub preamble: Vec<FunctionStructure>,
 }
 
 #[derive(Debug)]
-pub struct QueryAnnotations { }
-
-// helpers
-fn vec_from_proto<Src, Dst>(protocol_vec: Vec<Src>) -> Result<Vec<Dst>, TryFromError>
-where Dst: TryFrom<Src, Error = TryFromError> {
-    protocol_vec.into_iter().map(|x| Dst::try_from(x)).collect()
+pub struct FunctionStructure {
+    pub arguments: Vec<Variable>,
+    pub returns: ReturnOperation,
+    pub body: PipelineStructure,
 }
 
-pub(super) fn expect_try_into<Src, Dst: TryFrom<Src, Error = TryFromError>>(x: Option<Src>) -> Result<Dst, TryFromError> {
-    x.ok_or_else(|| format!("Expected {}", std::any::type_name::<Dst>()))?.try_into()
+#[derive(Debug)]
+pub enum ReturnOperation {
+    Stream { variables: Vec<Variable> },
+    Single { selector: String, variables: Vec<Variable> },
+    Check {},
+    Reduce { reducers: Vec<Reducer> },
 }
 
-pub(super)fn enum_from_proto<T: TryFrom<i32, Error = prost::UnknownEnumValue>>(as_i32: i32) -> Result<T, TryFromError> {
-    T::try_from(as_i32).map_err(|_| "Unknown enum value for proto enum")
-}
+#[derive(Debug)]
+pub struct QueryAnnotations {}

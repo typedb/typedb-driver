@@ -25,6 +25,7 @@ use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
 
 use crate::{
+    analyze::AnalyzeResponse,
     answer::{
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
@@ -36,7 +37,6 @@ use crate::{
     info::UserInfo,
     Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
-use crate::analyze::AnalyzeResponse;
 
 #[derive(Debug)]
 pub(super) enum Request {

@@ -116,6 +116,14 @@ macro_rules! error_messages {
     };
 }
 
+error_messages! { AnalyzeError
+    code: "ANZ", type: "Analyze Error",
+    MissingResponseField { field: &'static str } =
+        1: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
+    UnknownEnumValue { enum_name: &'static str, value: i32 } =
+        2: "Value '{value}' is out of bounds for enum '{enum_name}'. This is either a version compatibility issue or a bug.",
+}
+
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
@@ -277,6 +285,7 @@ impl fmt::Debug for ServerError {
 /// Represents errors encountered during operation.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Error {
+    Analyze(AnalyzeError),
     Connection(ConnectionError),
     Concept(ConceptError),
     Migration(MigrationError),
@@ -288,6 +297,7 @@ pub enum Error {
 impl Error {
     pub fn code(&self) -> String {
         match self {
+            Self::Analyze(error) => error.format_code(),
             Self::Connection(error) => error.format_code(),
             Self::Concept(error) => error.format_code(),
             Self::Migration(error) => error.format_code(),
@@ -299,6 +309,7 @@ impl Error {
 
     pub fn message(&self) -> String {
         match self {
+            Self::Analyze(error) => error.message(),
             Self::Connection(error) => error.message(),
             Self::Concept(error) => error.message(),
             Self::Migration(error) => error.message(),
@@ -341,6 +352,7 @@ impl Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Analyze(error) => write!(f, "{error}"),
             Self::Connection(error) => write!(f, "{error}"),
             Self::Concept(error) => write!(f, "{error}"),
             Self::Migration(error) => write!(f, "{error}"),
@@ -354,6 +366,7 @@ impl fmt::Display for Error {
 impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
+            Self::Analyze(error) => Some(error),
             Self::Connection(error) => Some(error),
             Self::Concept(error) => Some(error),
             Self::Migration(error) => Some(error),
@@ -361,6 +374,12 @@ impl StdError for Error {
             Self::Server(_) => None,
             Self::Other(_) => None,
         }
+    }
+}
+
+impl From<AnalyzeError> for Error {
+    fn from(error: AnalyzeError) -> Self {
+        Self::Analyze(error)
     }
 }
 

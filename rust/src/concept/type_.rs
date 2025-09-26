@@ -21,6 +21,14 @@ use std::fmt::{Debug, Display, Formatter};
 
 use super::ValueType;
 
+#[derive(Clone, Debug, PartialEq)]
+pub enum Type {
+    EntityType(EntityType),
+    RelationType(RelationType),
+    AttributeType(AttributeType),
+    RoleType(RoleType),
+}
+
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
 #[derive(Clone, Debug, PartialEq, Eq)]
