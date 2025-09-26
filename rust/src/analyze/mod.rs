@@ -54,7 +54,15 @@ impl TryFrom<protocol::QueryStructure> for QueryStructure {
 pub struct QueryAnnotations { }
 
 // helpers
-fn vec_from_proto<Src, To>(protocol_vec: Vec<Src>) -> Result<Vec<To>, TryFromError>
-where To: TryFrom<Src, Error = TryFromError> {
-    protocol_vec.into_iter().map(|x| To::try_from(x)).collect()
+fn vec_from_proto<Src, Dst>(protocol_vec: Vec<Src>) -> Result<Vec<Dst>, TryFromError>
+where Dst: TryFrom<Src, Error = TryFromError> {
+    protocol_vec.into_iter().map(|x| Dst::try_from(x)).collect()
+}
+
+pub(super) fn expect_try_into<Src, Dst: TryFrom<Src, Error = TryFromError>>(x: Option<Src>) -> Result<Dst, TryFromError> {
+    x.ok_or_else(|| format!("Expected {}", std::any::type_name::<Dst>()))?.try_into()
+}
+
+pub(super)fn enum_from_proto<T: TryFrom<i32, Error = prost::UnknownEnumValue>>(as_i32: i32) -> Result<T, TryFromError> {
+    T::try_from(as_i32).map_err(|_| "Unknown enum value for proto enum")
 }
