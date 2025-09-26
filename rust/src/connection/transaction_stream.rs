@@ -78,8 +78,8 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
-    pub(crate) fn force_close(&self) {
-        self.transaction_transmitter.force_close();
+    pub(crate) fn force_close(&self)  -> impl Promise<'static, Result<()>> {
+        self.transaction_transmitter.force_close()
     }
 
     pub(crate) fn type_(&self) -> TransactionType {

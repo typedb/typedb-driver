@@ -78,7 +78,8 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         return transaction_is_open(self.native_object)
 
     def on_close(self, function: callable):
-        transaction_on_close(self.native_object, _Transaction.TransactionOnClose(function).__disown__())
+        callback = _Transaction.TransactionOnClose(function)
+        transaction_on_close(self.native_object, callback.__disown__())
 
     class TransactionOnClose(TransactionCallbackDirector):
 
@@ -87,7 +88,16 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             self._function = function
 
         def callback(self, error: NativeError) -> None:
-            self._function(TypeDBException(error_code(error), error_message(error)))
+            try:
+                if error:
+                     self._function(TypeDBException(error_code(error), error_message(error)))
+                else:
+                    self._function(None)
+            except Exception as e:
+                # WARNING: SWIG will not propagate any errors (including syntax!) to the user without more work so we can at least log
+                import sys
+                print("Error invoking onclose callback: ", e, file=sys.stderr)
+                raise e
 
     def commit(self):
         try:
@@ -104,7 +114,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
     def close(self):
         if self._native_object.thisown:
-            transaction_force_close(self._native_object)
+            void_promise_resolve(transaction_force_close(self._native_object))
 
     def __enter__(self):
         return self

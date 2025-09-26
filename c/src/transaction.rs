@@ -66,8 +66,8 @@ pub extern "C" fn transaction_close(txn: *mut Transaction) {
 
 /// Forcibly closes this transaction. To be used in exceptional cases.
 #[no_mangle]
-pub extern "C" fn transaction_force_close(txn: *mut Transaction) {
-    borrow_mut(txn).force_close();
+pub extern "C" fn transaction_force_close(txn: *mut Transaction) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow_mut(txn).force_close())))
 }
 
 /// Commits the changes made via this transaction to the TypeDB database.

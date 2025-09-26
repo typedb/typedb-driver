@@ -133,7 +133,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     public void close() throws TypeDBDriverException {
         if (nativeObject.isOwned()) {
             try {
-                transaction_force_close(nativeObject);
+                transaction_force_close(nativeObject).get();
             } catch (com.typedb.driver.jni.Error error) {
                 throw new TypeDBDriverException(error);
             } finally {

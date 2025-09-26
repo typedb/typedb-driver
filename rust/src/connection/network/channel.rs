@@ -22,7 +22,6 @@ use std::sync::{Arc, RwLock};
 use tonic::{
     body::BoxBody,
     client::GrpcService,
-    metadata::MetadataValue,
     service::{
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,

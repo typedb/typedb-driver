@@ -20,12 +20,12 @@
 use std::sync::Arc;
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use log::{debug, trace, warn};
+use log::{debug, trace};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, server_manager, transaction,
+    connection, database, database_manager, migration, server_manager, transaction,
     type_db_client::TypeDbClient as GRPC, user, user_manager,
 };
 

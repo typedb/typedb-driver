@@ -18,7 +18,6 @@
  */
 
 use std::{
-    collections::{HashMap, HashSet},
     fmt,
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -31,10 +30,10 @@ use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
 use crate::{
-    common::{address::Address, RequestID},
+    common::address::Address,
     connection::{
         database::{export_stream::DatabaseExportStream, import_stream::DatabaseImportStream},
-        message::{DatabaseImportRequest, Request, Response, TransactionRequest, TransactionResponse},
+        message::{DatabaseImportRequest, Request, Response, TransactionRequest},
         network::transmitter::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
@@ -43,7 +42,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, TransactionOptions, TransactionType, User,
+    Credentials, DriverOptions, TransactionOptions, TransactionType,
 };
 
 #[derive(Clone)]

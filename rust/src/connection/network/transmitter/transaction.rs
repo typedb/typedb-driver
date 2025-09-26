@@ -46,11 +46,10 @@ use tokio::{
 };
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
-use uuid::Uuid;
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
-use super::response_sink::{ImmediateHandler, ResponseSink, StreamResponse};
+use super::response_sink::{ResponseSink, StreamResponse};
 use crate::{
     common::{
         box_promise,
@@ -59,10 +58,9 @@ use crate::{
         Callback, Promise, RequestID, Result,
     },
     connection::{
-        message::{QueryResponse, Request, Response, TransactionRequest, TransactionResponse},
+        message::{QueryResponse, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
-        server_connection::LatencyTracker,
     },
     Error,
 };
@@ -71,7 +69,7 @@ pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
     is_open: Arc<AtomicCell<bool>>,
     error: Arc<RwLock<Option<Error>>>,
-    on_close_register_sink: UnboundedSender<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
+    on_close_register_sink: UnboundedSender<(Box<dyn FnOnce(Option<Error>) + Send + Sync>, UnboundedSender<()>)>,
     shutdown_sink: UnboundedSender<()>,
     // runtime is alive as long as the transaction transmitter is alive:
     background_runtime: Arc<BackgroundRuntime>,
@@ -79,7 +77,11 @@ pub(in crate::connection) struct TransactionTransmitter {
 
 impl Drop for TransactionTransmitter {
     fn drop(&mut self) {
-        self.force_close();
+        // TODO: in the async context, this now returns a promise... do we care?
+        // ---> Basically, this is now a network round trip operation and can take time
+        // ---> Decision 1: should drop be blocking like this
+        // ---> Decision 2: if it should, we need to use async drop for async contexts? or poll?
+        let _ = self.force_close();
     }
 }
 
@@ -118,15 +120,52 @@ impl TransactionTransmitter {
         &self.shutdown_sink
     }
 
-    pub(in crate::connection) fn force_close(&self) {
+    #[cfg(not(feature = "sync"))]
+    pub(in crate::connection) fn force_close(&self) -> impl Promise<'static, Result<()>> {
         if self.is_open.compare_exchange(true, false).is_ok() {
+            let (closed_sink, mut closed_source) = unbounded_async();
+            let close_notifier_callback = Box::new(move |error | {
+                closed_sink.send(()).unwrap();
+            });
+            self.on_close(close_notifier_callback);
             *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
             self.shutdown_sink.send(()).ok();
+            box_promise(async move {
+                closed_source.await.ok();
+                Ok(())
+            })
+        } else {
+            box_promise(async move {
+                Ok(())
+            })
+        }
+    }
+
+    #[cfg(feature = "sync")]
+    pub(in crate::connection) fn force_close(&self) -> impl Promise<'static, Result<()>> {
+        if self.is_open.compare_exchange(true, false).is_ok() {
+            let (closed_sink, closed_source) = oneshot();
+            let close_notifier_callback = Box::new(move |error| {
+                closed_sink.send(()).unwrap();
+            });
+            self.on_close(close_notifier_callback);
+            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
+            self.shutdown_sink.send(()).ok();
+            box_promise(move || {
+                closed_source.recv().ok();
+                Ok(())
+            })
+        } else {
+            box_promise(move || {
+                Ok(())
+            })
         }
     }
 
     pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
-        self.on_close_register_sink.send(Box::new(callback)).ok();
+        let (sender, mut sink) = unbounded_async();
+        self.on_close_register_sink.send((Box::new(callback), sender)).ok();
+        sink.blocking_recv().expect("Did not receive on_close registration success signal");
     }
 
     #[cfg(not(feature = "sync"))]
@@ -230,7 +269,10 @@ impl TransactionTransmitter {
         response_source: Streaming<transaction::Server>,
         is_open: Arc<AtomicCell<bool>>,
         error: Arc<RwLock<Option<Error>>>,
-        on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
+        on_close_callback_source: UnboundedReceiver<(
+            Box<dyn FnOnce(Option<Error>) + Send + Sync>,
+            UnboundedSender<()>,
+        )>,
         callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
@@ -244,22 +286,20 @@ impl TransactionTransmitter {
         };
         tokio::task::spawn_blocking({
             let collector = collector.clone();
-            move || {
-                Self::dispatch_loop(queue_source, request_sink, collector, on_close_callback_source, shutdown_signal)
-            }
+            move || Self::sync_dispatch_loop(queue_source, request_sink, collector, shutdown_signal)
         });
-        tokio::spawn(Self::listen_loop(response_source, collector, shutdown_sink));
+        tokio::spawn(Self::async_listen_loop(response_source, collector, on_close_callback_source, shutdown_sink));
     }
 
-    fn dispatch_loop(
+    const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
+
+    fn sync_dispatch_loop(
         mut request_source: UnboundedReceiver<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
         request_sink: UnboundedSender<transaction::Client>,
         mut collector: ResponseCollector,
-        mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(Option<Error>) + Send + Sync>>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
         const MAX_GRPC_MESSAGE_LEN: usize = 1_000_000;
-        const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
 
         let mut request_buffer = TransactionRequestBuffer::default();
         loop {
@@ -269,11 +309,8 @@ impl TransactionTransmitter {
                 }
                 break;
             }
-            if let Ok(callback) = on_close_callback_source.try_recv() {
-                collector.on_close.write().unwrap().push(callback)
-            }
             // sleep, then take all messages off the request queue and dispatch them
-            sleep(DISPATCH_INTERVAL);
+            sleep(Self::DISPATCH_INTERVAL);
             while let Ok(recv) = request_source.try_recv() {
                 let (request, callback) = recv;
                 let request = request.into_proto();
@@ -291,17 +328,31 @@ impl TransactionTransmitter {
         }
     }
 
-    async fn listen_loop(
+    async fn async_listen_loop(
         mut grpc_source: Streaming<transaction::Server>,
         collector: ResponseCollector,
+        mut on_close_callback_source: UnboundedReceiver<(
+            Box<dyn FnOnce(Option<Error>) + Send + Sync>,
+            UnboundedSender<()>,
+        )>,
         shutdown_sink: UnboundedSender<()>,
     ) {
         loop {
-            match grpc_source.next().await {
-                Some(Ok(message)) => collector.collect(message).await,
-                Some(Err(status)) => break collector.close_with_error(status.into()).await,
-                None => break collector.close().await,
-            }
+            let result = tokio::select! { biased;
+                message = grpc_source.next() => {
+                    match message {
+                        Some(Ok(message)) => collector.collect(message).await,
+                        Some(Err(status)) => break collector.close_with_error(status.into()).await,
+                        None => break collector.close().await
+                    }
+                }
+                callback_option = on_close_callback_source.recv() => {
+                    if let Some((callback, recorded_signal)) = callback_option {
+                        collector.on_close.write().unwrap().push(callback);
+                        recorded_signal.send(()).expect("Failed to signal back that on_close callback was recorded.")
+                    }
+                }
+            };
         }
         shutdown_sink.send(()).ok();
     }
@@ -438,8 +489,8 @@ impl ResponseCollector {
         for (_, listener) in listeners.drain() {
             listener.finish(Ok(TransactionResponse::Close));
         }
-        let callbacks = std::mem::take(&mut *self.on_close.write().unwrap());
-        for callback in callbacks {
+        let on_close_callbacks = std::mem::take(&mut *self.on_close.write().unwrap());
+        for callback in on_close_callbacks {
             let (response_sink, response) = oneshot_async();
             self.callback_handler_sink.send((Box::new(move || callback(None)), response_sink)).unwrap();
             response.await.ok();

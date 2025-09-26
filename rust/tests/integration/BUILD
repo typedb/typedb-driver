@@ -43,6 +43,24 @@ rust_test(
     ],
 )
 
+rust_test(
+    name = "test_driver",
+    srcs = ["driver.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:itertools",
+        "@crates//:regex",
+        "@crates//:serde_json",
+        "@crates//:serial_test",
+        "@crates//:smol",
+        "@crates//:tokio",
+        "@crates//:uuid",
+    ],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

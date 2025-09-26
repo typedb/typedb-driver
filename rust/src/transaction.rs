@@ -104,10 +104,11 @@ impl Transaction {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.force_close()
+    #[cfg_attr(feature = "sync", doc = "transaction.force_close().resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.force_close().await")]
     /// ```
-    pub fn force_close(&self) {
-        self.transaction_stream.force_close();
+    pub fn force_close(&self) ->  impl Promise<'static, Result<()>> {
+        self.transaction_stream.force_close()
     }
 
     /// Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.

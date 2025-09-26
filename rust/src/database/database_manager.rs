@@ -21,12 +21,11 @@
 use std::future::Future;
 use std::{
     collections::HashMap,
-    io::{BufReader, BufWriter, Cursor, Read},
+    io::{BufReader},
     path::Path,
     sync::{Arc, RwLock},
 };
 
-use prost::{decode_length_delimiter, Message};
 use typedb_protocol::migration::Item;
 
 use super::Database;
