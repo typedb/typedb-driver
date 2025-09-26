@@ -156,7 +156,7 @@ pub async fn transaction_commits(context: &mut Context, may_error: params::MayEr
 #[apply(generic_step)]
 #[step(expr = "transaction closes")]
 pub async fn transaction_closes(context: &mut Context) {
-    context.take_transaction().force_close();
+    context.take_transaction().close().await.ok();
 }
 
 #[apply(generic_step)]

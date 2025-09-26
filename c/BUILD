@@ -46,7 +46,7 @@ rust_static_library(
         "@crates//:chrono",
         "@crates//:itertools",
         "@crates//:env_logger",
-        "@crates//:log",
+        "@crates//:tracing",
     ],
     tags = ["crate-name=typedb_driver_clib"],
 )

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{collections::HashSet, fs::File, io::Read};
+use std::io::Read;
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{

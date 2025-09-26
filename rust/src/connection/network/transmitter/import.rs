@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ops::Deref, sync::Arc, thread::sleep, time::Duration};
+use std::{sync::Arc, thread::sleep, time::Duration};
 
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]

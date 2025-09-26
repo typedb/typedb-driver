@@ -19,6 +19,8 @@
 
 use std::{fmt, pin::Pin};
 
+use tracing::debug;
+
 use crate::{
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
@@ -76,6 +78,7 @@ impl Transaction {
         options: QueryOptions,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
+        debug!("Transaction submitting query: {}", query);
         self.transaction_stream.query(query, options)
     }
 
@@ -84,7 +87,8 @@ impl Transaction {
         self.type_
     }
 
-    /// Registers a callback function which will be executed when this transaction is closed.
+    /// Registers a callback function which will be executed when this transaction is closed
+    /// returns a resolvable promise that must be awaited otherwise the callback may not be registered
     ///
     /// # Arguments
     ///
@@ -95,19 +99,23 @@ impl Transaction {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
+    pub fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'_, Result<()>> {
         self.transaction_stream.on_close(callback)
     }
 
-    /// Closes the transaction.
+    /// Closes the transaction and returns a resolvable promise
     ///
     /// # Examples
     ///
     /// ```rust
-    /// transaction.force_close()
+    #[cfg_attr(feature = "sync", doc = "transaction.close().resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.close().await")]
     /// ```
-    pub fn force_close(&self) {
-        self.transaction_stream.force_close();
+    pub fn close(&self) -> impl Promise<'_, Result<()>> {
+        self.transaction_stream.close()
     }
 
     /// Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.

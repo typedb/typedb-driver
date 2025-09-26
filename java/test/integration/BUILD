@@ -31,9 +31,32 @@ typedb_java_test(
         "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
         "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
         "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
-#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
     },
     test_class = "com.typedb.driver.test.integration.ExampleTest",
+    deps = [
+        # Internal dependencies
+        "//java:driver-java",
+        "//java/api",
+        "//java/common",
+
+        # External dependencies from @typedb
+        "@maven//:org_slf4j_slf4j_api",
+#        "@maven//:com_typedb_typedb_runner",
+    ],
+)
+
+typedb_java_test(
+    name = "test-driver",
+    srcs = ["DriverTest.java"],
+    server_artifacts = {
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
+#        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
+    },
+    test_class = "com.typedb.driver.test.integration.DriverTest",
     deps = [
         # Internal dependencies
         "//java:driver-java",

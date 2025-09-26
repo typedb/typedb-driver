@@ -19,9 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{
-    DatabaseManager, Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver,
-};
+use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -60,14 +58,14 @@ pub extern "C" fn transaction_query(
 
 /// Closes the transaction and frees the native rust object.
 #[no_mangle]
-pub extern "C" fn transaction_close(txn: *mut Transaction) {
+pub extern "C" fn transaction_submit_close(txn: *mut Transaction) {
     free(txn);
 }
 
 /// Forcibly closes this transaction. To be used in exceptional cases.
 #[no_mangle]
-pub extern "C" fn transaction_force_close(txn: *mut Transaction) {
-    borrow_mut(txn).force_close();
+pub extern "C" fn transaction_close(txn: *mut Transaction) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow_mut(txn).close())))
 }
 
 /// Commits the changes made via this transaction to the TypeDB database.
@@ -100,7 +98,9 @@ pub extern "C" fn transaction_on_close(
     txn: *const Transaction,
     callback_id: usize,
     callback: extern "C" fn(usize, *mut Error),
-) {
-    borrow(txn)
-        .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut())));
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(
+        borrow(txn)
+            .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut()))),
+    )))
 }
