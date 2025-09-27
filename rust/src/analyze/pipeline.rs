@@ -17,12 +17,16 @@
  * under the License.
  */
 
+use std::collections::HashMap;
+
 use crate::analyze::conjunction::{Conjunction, ConjunctionID, Reducer, Variable};
 
 #[derive(Debug)]
 pub struct PipelineStructure {
     pub conjunctions: Vec<Conjunction>,
     pub stages: Vec<PipelineStage>,
+    pub variable_names: HashMap<Variable, String>,
+    pub outputs: Vec<Variable>,
 }
 
 #[derive(Debug)]
@@ -38,11 +42,11 @@ pub enum PipelineStage {
     Offset { offset: u64 },
     Limit { limit: u64 },
     Distinct,
-    Reduce { reducers: Vec<ReduceAssignment>, groupby: Vec<Variable> },
+    Reduce { reducers: Vec<ReduceAssign>, groupby: Vec<Variable> },
 }
 
 #[derive(Debug)]
-pub struct ReduceAssignment {
+pub struct ReduceAssign {
     pub assigned: Variable,
     pub reducer: Reducer,
 }

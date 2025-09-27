@@ -223,3 +223,262 @@ async fn file_write(context: &mut Context, file_name: String, step: &Step) {
     let path = context.get_full_file_path(&file_name);
     write_file(path, data.as_bytes());
 }
+
+#[cfg(debug_assertions)]
+pub mod functor_encoding {
+    use itertools::Itertools;
+
+    type FunctorContext = PipelineStructure;
+
+    pub trait FunctorEncoded {
+        fn encode_as_functor(&self, context: &FunctorContext) -> String;
+    }
+
+    pub mod functor_macros {
+        macro_rules! encode_args {
+            ($context:ident, { $( $arg:ident, )* } )   => {
+                {
+                    let arr: Vec<&dyn FunctorEncoded> = vec![ $($arg,)* ];
+                    arr.into_iter().map(|s| s.encode_as_functor($context)).join(", ")
+                }
+            }
+        }
+        macro_rules! encode_functor_impl {
+            ($context:ident, $func:ident $args:tt) => {
+                std::format!("{}({})", std::stringify!($func), functor_macros::encode_args!($context, $args))
+            };
+        }
+
+        macro_rules! add_ignored_fields {
+            ($qualified:path { $( $arg:ident, )* }) => {
+                $qualified { $( $arg, )* .. }
+            };
+        }
+
+        macro_rules! encode_functor {
+            ($context:ident, $what:ident as struct $struct_name:ident  $fields:tt) => {
+                functor_macros::encode_functor!($context, $what => [ $struct_name => $struct_name $fields, ])
+            };
+            ($context:ident, $what:ident as struct $struct_name:ident $fields:tt named $renamed:ident ) => {
+                functor_macros::encode_functor!($context, $what => [ $struct_name => $renamed $fields, ])
+            };
+            ($context:ident, $what:ident as enum $enum_name:ident [ $($variant:ident $fields:tt |)* ]) => {
+                functor_macros::encode_functor!($context, $what => [ $( $enum_name::$variant => $variant $fields ,)* ])
+            };
+            ($context:ident, $what:ident => [ $($qualified:path => $func:ident $fields:tt, )* ]) => {
+                match $what {
+                    $( functor_macros::add_ignored_fields!($qualified $fields) => {
+                        functor_macros::encode_functor_impl!($context, $func $fields)
+                    })*
+                }
+            };
+        }
+
+        macro_rules! impl_functor_for_impl {
+            ($which:ident => |$self:ident, $context:ident| $block:block) => {
+                impl FunctorEncoded for $which {
+                    fn encode_as_functor($self: &Self, $context: &FunctorContext) -> String {
+                        $block
+                    }
+                }
+            };
+        }
+
+        macro_rules! impl_functor_for {
+            (struct $struct_name:ident $fields:tt) => {
+                functor_macros::impl_functor_for!(struct $struct_name $fields named $struct_name);
+            };
+            (struct $struct_name:ident $fields:tt named $renamed:ident) => {
+                functor_macros::impl_functor_for_impl!($struct_name => |self, context| {
+                    functor_macros::encode_functor!(context, self as struct $struct_name $fields named $renamed)
+                });
+            };
+            (enum $enum_name:ident [ $($func:ident $fields:tt |)* ]) => {
+                functor_macros::impl_functor_for_impl!($enum_name => |self, context| {
+                    functor_macros::encode_functor!(context, self as enum $enum_name [ $($func $fields |)* ])
+                });
+            };
+            (primitive $primitive:ident) => {
+                functor_macros::impl_functor_for_impl!($primitive => |self, _context| { self.to_string() });
+            };
+        }
+        pub(crate) use add_ignored_fields;
+        pub(crate) use encode_args;
+        pub(crate) use encode_functor;
+        pub(crate) use encode_functor_impl;
+        pub(crate) use impl_functor_for;
+        pub(crate) use impl_functor_for_impl;
+    }
+
+    functor_macros::impl_functor_for!(primitive String);
+    functor_macros::impl_functor_for!(primitive u64);
+    impl<T: FunctorEncoded> FunctorEncoded for Vec<T> {
+        fn encode_as_functor(&self, context: &FunctorContext) -> String {
+            std::format!("[{}]", self.iter().map(|v| v.encode_as_functor(context)).join(", "))
+        }
+    }
+
+    impl<T: FunctorEncoded> FunctorEncoded for Option<T> {
+        fn encode_as_functor(&self, context: &FunctorContext) -> String {
+            self.as_ref().map(|inner| inner.encode_as_functor(context)).unwrap_or("<NONE>".to_owned())
+        }
+    }
+
+    use typedb_driver::{
+        analyze::{
+            conjunction::{
+                Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, LabelVertex, Reducer,
+                Variable,
+            },
+            pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
+            FunctionStructure, QueryStructure, ReturnOperation,
+        },
+        concept::Value,
+    };
+
+    use crate::util::functor_encoding::functor_macros::{encode_functor, encode_functor_impl};
+
+    functor_macros::impl_functor_for!(struct ReduceAssign { assigned, reducer,  } named ReduceAssign);
+    functor_macros::impl_functor_for!(struct Reducer { reducer, arguments, } named Reducer);
+    functor_macros::impl_functor_for!(enum PipelineStage [
+        Match { block, } |
+        Insert { block, } |
+        Delete { deleted_variables, block, } |
+        Put { block, } |
+        Update { block, } |
+        Select { variables, } |
+        Sort { variables, } |
+        Offset { offset, } |
+        Limit { limit, } |
+        Require { variables, } |
+        Distinct { } |
+        Reduce { reducers, groupby, } | // TODO
+    ]);
+
+    macro_rules! encode_functor_impl_exactness {
+        ($context:ident, $exactness:ident, $variant:ident $exactVariant:ident $fields:tt ) => {
+            match $exactness {
+                ConstraintExactness::Exact => encode_functor_impl!($context, $exactVariant $fields),
+                ConstraintExactness::Subtypes => encode_functor_impl!($context, $variant $fields),
+            }
+        };
+    }
+    impl FunctorEncoded for Constraint {
+        fn encode_as_functor(self: &Self, context: &FunctorContext) -> String {
+            match self {
+                Self::Isa { instance, r#type, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Isa IsaExact { instance, r#type, })
+                }
+                Self::Has { owner, attribute, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Has HasExact { owner, attribute, })
+                }
+                Self::Links { relation, player, role, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Links LinksExact { relation, player, role, } )
+                }
+                Self::Sub { subtype, supertype, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Sub SubExact { subtype, supertype, }  )
+                }
+                Self::Owns { owner, attribute, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Owns OwnsExact { owner, attribute, }  )
+                }
+                Self::Relates { relation, role, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Relates RelatesExact { relation, role, } )
+                }
+                Self::Plays { player, role, exactness } => {
+                    encode_functor_impl_exactness!(context, exactness, Plays PlaysExact { player, role, } )
+                }
+                Self::FunctionCall { name, assigned, arguments } => {
+                    encode_functor_impl!(context, FunctionCall { name, assigned, arguments })
+                }
+                Self::Expression { text, assigned, arguments } => {
+                    encode_functor_impl!(context, Expression { text, assigned, arguments })
+                }
+                Self::Is { lhs, rhs } => {
+                    encode_functor_impl!(context, Is { lhs, rhs })
+                }
+                Self::Iid { concept, iid } => {
+                    let iid_str = format!("0x{}", iid.iter().map(|x| format!("{:02X}", x)).join(""));
+                    let iid_ref = &iid_str;
+                    encode_functor_impl!(context, Iid { concept, iid_ref })
+                }
+                Self::Comparison { lhs, rhs, comparator } => {
+                    encode_functor_impl!(context, Comparison { lhs, rhs, comparator })
+                }
+                Self::Kind { kind, r#type } => {
+                    let kind_str = kind.name().to_owned();
+                    let kind_ref = &kind_str;
+                    encode_functor_impl!(context, Kind { kind_ref, r#type })
+                }
+                Self::Label { r#type, label } => {
+                    encode_functor_impl!(context, Label { r#type, label })
+                }
+                Self::Value { attribute_type, value_type } => {
+                    let value_type_sr = value_type.name().to_owned();
+                    let value_type_ref = &value_type_sr;
+                    encode_functor_impl!(context, Value { attribute_type, value_type_ref })
+                }
+                Self::Or { branches } => {
+                    encode_functor_impl!(context, Or { branches })
+                }
+                Self::Not { conjunction } => {
+                    encode_functor_impl!(context, Not { conjunction })
+                }
+                Self::Try { conjunction } => {
+                    encode_functor_impl!(context, Try { conjunction })
+                }
+            }
+        }
+    }
+
+    functor_macros::impl_functor_for_impl!(ConstraintVertex => |self, context| {
+        match self {
+            ConstraintVertex::Variable(id) => { id.encode_as_functor(context) }
+            ConstraintVertex::Label(LabelVertex::Resolved(r#type)) => { r#type.label().to_owned().encode_as_functor(context) }
+            ConstraintVertex::Label(LabelVertex::Unresolved(label))=> { label.encode_as_functor(context) }
+            ConstraintVertex::Value(v) => {
+                match v {
+                    Value::String(s) => std::format!("\"{}\"", s.to_string()),
+                    other => other.to_string(),
+                }
+            }
+        }
+    });
+    //
+    macro_rules! impl_functor_for_multi {
+        (|$self:ident, $context:ident| [ $( $type_name:ident => $block:block )* ]) => {
+            $ (functor_macros::impl_functor_for_impl!($type_name => |$self, $context| $block); )*
+        };
+    }
+    impl_functor_for_multi!(|self, context| [
+        Variable =>  { format!("${}", context.variable_names.get(self).as_ref().map(|v| v.as_str()).unwrap_or("_")) }
+        ConjunctionID => { context.conjunctions[self.0 as usize].encode_as_functor(context) }
+        Conjunction => { let Conjunction { constraints } = self; constraints.encode_as_functor(context) }
+        PipelineStructure => { let pipeline = &self.stages; functor_macros::encode_functor_impl!(self, Pipeline { pipeline, }) }
+        FunctionStructure => {
+            let FunctionStructure { arguments, returns, body } = self;
+            let context = body;
+            functor_macros::encode_functor_impl!(context, Function { arguments, returns, body, })
+        }
+        SortVariable => {
+            let Self { order, variable } = self;
+            match order {
+                SortOrder::Ascending => functor_macros::encode_functor_impl!(context, Asc { variable, }),
+                SortOrder::Descending => functor_macros::encode_functor_impl!(context, Desc { variable, }),
+            }
+        }
+    ]);
+    //
+    functor_macros::impl_functor_for!(enum ReturnOperation [
+        Stream { variables, } |
+        Single { selector, variables, }  |
+        Check { }  |
+        Reduce {} |
+    ]);
+
+    pub fn encode_query_structure_as_functor(structure: &QueryStructure) -> (String, Vec<String>) {
+        let pipeline = &structure.query;
+        let query = pipeline.encode_as_functor(pipeline);
+        let preamble = structure.preamble.iter().map(|func| func.encode_as_functor(&func.body)).collect();
+        (query, preamble)
+    }
+}

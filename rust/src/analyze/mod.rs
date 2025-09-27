@@ -30,7 +30,7 @@ pub mod pipeline;
 pub type TryFromError = &'static str;
 
 #[derive(Debug)]
-pub struct AnalyzeResponse {
+pub struct AnalyzedQuery {
     pub structure: QueryStructure,
     pub annotations: QueryAnnotations,
 }

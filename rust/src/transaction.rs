@@ -22,6 +22,7 @@ use std::{fmt, pin::Pin};
 use tracing::debug;
 
 use crate::{
+    analyze::AnalyzedQuery,
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
@@ -80,6 +81,22 @@ impl Transaction {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);
         self.transaction_stream.query(query, options)
+    }
+
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` — The TypeQL query to be executed
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.analyze_query(query)
+    /// ```
+    pub fn analyze_query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<AnalyzedQuery>> {
+        let query = query.as_ref();
+        self.transaction_stream.analyze(query)
     }
 
     /// Retrieves the transaction’s type (READ or WRITE).
