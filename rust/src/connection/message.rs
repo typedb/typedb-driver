@@ -25,7 +25,7 @@ use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
 
 use crate::{
-    analyze::AnalyzeResponse,
+    analyze::AnalyzedQuery,
     answer::{
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
@@ -145,6 +145,7 @@ pub(super) enum TransactionRequest {
     Open { database: String, transaction_type: TransactionType, options: TransactionOptions, network_latency: Duration },
     Commit,
     Rollback,
+    Analyze { query: String },
     Query(QueryRequest),
     Stream { request_id: RequestID },
 }
@@ -155,7 +156,7 @@ pub(super) enum TransactionResponse {
     Commit,
     Rollback,
     Query(QueryResponse),
-    Analyze(AnalyzeResponse),
+    Analyze(AnalyzedQuery),
     Close,
 }
 

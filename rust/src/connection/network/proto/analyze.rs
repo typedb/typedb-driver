@@ -38,8 +38,8 @@ use crate::{
             Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, LabelVertex, Reducer,
             Variable,
         },
-        pipeline::{PipelineStage, PipelineStructure, ReduceAssignment, SortOrder, SortVariable},
-        FunctionStructure, QueryStructure, ReturnOperation,
+        pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
+        AnalyzedQuery, FunctionStructure, QueryAnnotations, QueryStructure, ReturnOperation,
     },
     common::Result,
     concept,
@@ -64,19 +64,31 @@ fn enum_from_proto<T: TryFrom<i32, Error = prost::UnknownEnumValue>>(as_i32: i32
         .map_err(|_| AnalyzeError::UnknownEnumValue { enum_name: std::any::type_name::<T>(), value: as_i32 }.into())
 }
 
+impl TryFromProto<typedb_protocol::analyze::Res> for AnalyzedQuery {
+    fn try_from_proto(value: typedb_protocol::analyze::Res) -> Result<Self> {
+        let typedb_protocol::analyze::Res { structure, annotations } = value;
+        let structure = expect_try_into(structure, "analyze.Res.structure")?;
+        let annotations = expect_try_into(annotations, "analyze.Res.annotations")?;
+        Ok(Self { structure, annotations })
+    }
+}
+
+// Structure
 impl TryFromProto<analyze_proto::QueryStructure> for QueryStructure {
     fn try_from_proto(value: analyze_proto::QueryStructure) -> Result<Self> {
-        let query = expect_try_into(value.query, "QueryStructure.query")?;
-        let preamble = vec_from_proto(value.preamble)?;
+        let analyze_proto::QueryStructure { query, preamble } = value;
+        let query = expect_try_into(query, "QueryStructure.query")?;
+        let preamble = vec_from_proto(preamble)?;
         Ok(Self { query, preamble })
     }
 }
 
 impl TryFromProto<query_structure::FunctionStructure> for FunctionStructure {
     fn try_from_proto(value: query_structure::FunctionStructure) -> Result<Self> {
-        let body = expect_try_into(value.body, "FunctionStructure.body")?;
-        let returns = expect_try_into(value.returns, "FunctionStructure.returns")?;
-        let arguments = vec_from_proto(value.arguments)?;
+        let query_structure::FunctionStructure { body, returns, arguments } = value;
+        let body = expect_try_into(body, "FunctionStructure.body")?;
+        let returns = expect_try_into(returns, "FunctionStructure.returns")?;
+        let arguments = vec_from_proto(arguments)?;
         Ok(Self { arguments, returns, body })
     }
 }
@@ -98,9 +110,12 @@ impl TryFromProto<query_structure::function_structure::Returns> for ReturnOperat
 
 impl TryFromProto<query_structure::PipelineStructure> for PipelineStructure {
     fn try_from_proto(value: query_structure::PipelineStructure) -> Result<Self> {
-        let conjunctions = vec_from_proto(value.conjunctions)?;
-        let stages = vec_from_proto(value.stages)?;
-        Ok(Self { conjunctions, stages })
+        let query_structure::PipelineStructure { conjunctions, stages, variable_info, outputs } = value;
+        let conjunctions = vec_from_proto(conjunctions)?;
+        let stages = vec_from_proto(stages)?;
+        let variable_names = variable_info.into_iter().map(|(k, v)| (Variable(k), v.name)).collect();
+        let outputs = vec_from_proto(outputs)?;
+        Ok(Self { conjunctions, stages, variable_names, outputs })
     }
 }
 
@@ -141,7 +156,7 @@ impl TryFromProto<pipeline_structure::PipelineStage> for PipelineStage {
     }
 }
 
-impl TryFromProto<pipeline_structure::pipeline_stage::reduce::ReduceAssign> for ReduceAssignment {
+impl TryFromProto<pipeline_structure::pipeline_stage::reduce::ReduceAssign> for ReduceAssign {
     fn try_from_proto(value: pipeline_structure::pipeline_stage::reduce::ReduceAssign) -> Result<Self> {
         Ok(Self {
             assigned: expect_try_into(value.assigned, "ReduceAssign.assigned")?,
@@ -152,7 +167,7 @@ impl TryFromProto<pipeline_structure::pipeline_stage::reduce::ReduceAssign> for 
 
 impl TryFromProto<query_structure::Reducer> for Reducer {
     fn try_from_proto(value: query_structure::Reducer) -> Result<Self> {
-        Ok(Self { variables: vec_from_proto(value.variables)?, reducer: value.reducer })
+        Ok(Self { arguments: vec_from_proto(value.variables)?, reducer: value.reducer })
     }
 }
 
@@ -336,5 +351,13 @@ impl TryFromProto<conjunction_structure::structure_constraint::ConstraintExactne
 impl TryFromProto<conjunction_structure::Variable> for Variable {
     fn try_from_proto(value: conjunction_structure::Variable) -> Result<Self> {
         Ok(Self(value.id))
+    }
+}
+
+// Annotations
+
+impl TryFromProto<typedb_protocol::analyze::res::QueryAnnotations> for QueryAnnotations {
+    fn try_from_proto(_value: typedb_protocol::analyze::res::QueryAnnotations) -> Result<Self> {
+        Ok(Self {}) // TODO
     }
 }

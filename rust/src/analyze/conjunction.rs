@@ -124,7 +124,7 @@ pub enum Constraint {
     },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
 
 #[derive(Debug)]
@@ -142,6 +142,6 @@ pub enum LabelVertex {
 
 #[derive(Debug)]
 pub struct Reducer {
-    pub variables: Vec<Variable>,
+    pub arguments: Vec<Variable>,
     pub reducer: String,
 }

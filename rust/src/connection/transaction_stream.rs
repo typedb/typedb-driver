@@ -24,6 +24,7 @@ use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
+    analyze::AnalyzedQuery,
     answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
@@ -105,6 +106,13 @@ impl TransactionStream {
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
         let promise = self.single(TransactionRequest::Rollback);
         promisify! { require_transaction_response!(resolve!(promise), Rollback) }
+    }
+
+    pub(crate) fn analyze(&self, query: &str) -> impl Promise<'static, Result<AnalyzedQuery>> {
+        let promise = self.single(TransactionRequest::Analyze { query: query.to_owned() });
+        promisify! {
+            require_transaction_response!(resolve!(promise), Analyze(_))
+        }
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
