@@ -47,6 +47,7 @@ use crate::{
     connection::network::proto::TryFromProto,
     error::AnalyzeError,
 };
+use crate::analyze::conjunction::Comparator;
 
 pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -264,7 +265,7 @@ impl TryFromProto<conjunction_structure::StructureConstraint> for Constraint {
                 Constraint::Comparison {
                     lhs: expect_try_into(lhs, "structure_constraint::Comparison.lhs")?,
                     rhs: expect_try_into(rhs, "structure_constraint::Comparison.rhs")?,
-                    comparator: comparator.as_str_name().to_owned(),
+                    comparator: Comparator::try_from_proto(comparator)?,
                 }
             }
             ConstraintProto::Expression(constraint_proto::Expression { assigned, arguments, text }) => {
@@ -296,6 +297,32 @@ impl TryFromProto<conjunction_structure::StructureConstraint> for Constraint {
 impl TryFromProto<typedb_protocol::ConjunctionStructure> for Conjunction {
     fn try_from_proto(proto: ConjunctionStructure) -> Result<Self> {
         Ok(Self { constraints: vec_from_proto(proto.constraints)? })
+    }
+}
+
+impl TryFromProto<conjunction_structure::structure_constraint::comparison::Comparator> for Comparator {
+    fn try_from_proto(value: conjunction_structure::structure_constraint::comparison::Comparator) -> Result<Self> {
+        use conjunction_structure::structure_constraint::comparison::Comparator as ComparatorProto;
+        Ok(match value {
+            ComparatorProto::Equal => Comparator::Equal,
+            ComparatorProto::NotEqual => Comparator::NotEqual,
+            ComparatorProto::Less => Comparator::LessThan,
+            ComparatorProto::LessOrEqual => Comparator::LessOrEqual,
+            ComparatorProto::Greater => Comparator::Greater,
+            ComparatorProto::GreaterOrEqual => Comparator::GreaterOrEqual,
+            ComparatorProto::Like => Comparator::Like,
+            ComparatorProto::Contains => Comparator::Contains,
+        })
+    }
+}
+
+impl TryFromProto<conjunction_structure::structure_constraint::ConstraintExactness> for ConstraintExactness {
+    fn try_from_proto(value: conjunction_structure::structure_constraint::ConstraintExactness) -> Result<Self> {
+        use conjunction_structure::structure_constraint::ConstraintExactness as ConstraintExactnessProto;
+        Ok(match value {
+            ConstraintExactnessProto::Exact => ConstraintExactness::Exact,
+            ConstraintExactnessProto::Subtypes => ConstraintExactness::Subtypes,
+        })
     }
 }
 
@@ -335,16 +362,6 @@ impl TryFromProto<conjunction_structure::StructureVertex> for ConstraintVertex {
             Some(Vertex::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
             None => Err(AnalyzeError::MissingResponseField { field: "StructureVertex.vertex" }.into()),
         }
-    }
-}
-
-impl TryFromProto<conjunction_structure::structure_constraint::ConstraintExactness> for ConstraintExactness {
-    fn try_from_proto(value: conjunction_structure::structure_constraint::ConstraintExactness) -> Result<Self> {
-        use conjunction_structure::structure_constraint::ConstraintExactness as ConstraintExactnessProto;
-        Ok(match value {
-            ConstraintExactnessProto::Exact => ConstraintExactness::Exact,
-            ConstraintExactnessProto::Subtypes => ConstraintExactness::Subtypes,
-        })
     }
 }
 

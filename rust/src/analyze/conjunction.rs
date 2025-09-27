@@ -97,7 +97,7 @@ pub enum Constraint {
     Comparison {
         lhs: ConstraintVertex,
         rhs: ConstraintVertex,
-        comparator: String,
+        comparator: Comparator,
     },
     Kind {
         kind: concept::Kind,
@@ -144,4 +144,31 @@ pub enum LabelVertex {
 pub struct Reducer {
     pub arguments: Vec<Variable>,
     pub reducer: String,
+}
+
+#[derive(Debug)]
+pub enum Comparator {
+    Equal,
+    NotEqual,
+    LessThan,
+    LessOrEqual,
+    Greater,
+    GreaterOrEqual,
+    Like,
+    Contains
+}
+
+impl Comparator {
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            Comparator::Equal => "==",
+            Comparator::NotEqual => "!=",
+            Comparator::LessThan => "<",
+            Comparator::LessOrEqual => "<=",
+            Comparator::Greater => ">",
+            Comparator::GreaterOrEqual => ">=",
+            Comparator::Like => "Like",
+            Comparator::Contains => "Contains",
+        }
+    }
 }
