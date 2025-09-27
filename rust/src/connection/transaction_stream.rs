@@ -115,9 +115,20 @@ impl TransactionStream {
     }
 
     pub(crate) fn analyze(&self, query: &str) -> impl Promise<'static, Result<AnalyzedQuery>> {
-        let promise = self.single(TransactionRequest::Analyze { query: query.to_owned() });
+        let stream = self.stream(TransactionRequest::Analyze { query: query.to_owned() });
         promisify! {
-            require_transaction_response!(resolve!(promise), Analyze(_))
+            let mut stream = stream?;
+            #[cfg(feature = "sync")]
+            let response = stream.next();
+
+            #[cfg(not(feature = "sync"))]
+            let response: Option<Result<TransactionResponse>> = stream.next().await;
+
+            match response {
+                None => Err(ConnectionError::AnalyzeQueryNoResponse.into()),
+                Some(Ok(TransactionResponse::Analyze(analyzed_query))) => Ok(analyzed_query),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+            }
         }
     }
 

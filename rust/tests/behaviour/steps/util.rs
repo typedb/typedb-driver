@@ -224,6 +224,7 @@ async fn file_write(context: &mut Context, file_name: String, step: &Step) {
     write_file(path, data.as_bytes());
 }
 
+
 #[cfg(debug_assertions)]
 pub mod functor_encoding {
     use itertools::Itertools;
@@ -324,18 +325,9 @@ pub mod functor_encoding {
         }
     }
 
-    use typedb_driver::{
-        analyze::{
-            conjunction::{
-                Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, LabelVertex, Reducer,
-                Variable,
-            },
-            pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
-            FunctionStructure, QueryStructure, ReturnOperation,
-        },
-        concept::Value,
-    };
-
+    use typedb_driver::analyze::{conjunction::{Constraint, Conjunction, ConjunctionID, ConstraintVertex, LabelVertex, Reducer, Variable}, FunctionStructure, pipeline::{PipelineStructure, PipelineStage, SortVariable, SortOrder, ReduceAssign}, QueryStructure, ReturnOperation};
+    use typedb_driver::analyze::conjunction::{Comparator, ConstraintExactness};
+    use typedb_driver::concept::Value;
     use crate::util::functor_encoding::functor_macros::{encode_functor, encode_functor_impl};
 
     functor_macros::impl_functor_for!(struct ReduceAssign { assigned, reducer,  } named ReduceAssign);
@@ -366,65 +358,65 @@ pub mod functor_encoding {
     impl FunctorEncoded for Constraint {
         fn encode_as_functor(self: &Self, context: &FunctorContext) -> String {
             match self {
-                Self::Isa { instance, r#type, exactness } => {
+                Self::Isa  { instance, r#type, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Isa IsaExact { instance, r#type, })
                 }
-                Self::Has { owner, attribute, exactness } => {
+                Self::Has { owner, attribute, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Has HasExact { owner, attribute, })
                 }
-                Self::Links { relation, player, role, exactness } => {
+                Self::Links  { relation, player, role, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Links LinksExact { relation, player, role, } )
                 }
-                Self::Sub { subtype, supertype, exactness } => {
+                Self::Sub  { subtype, supertype, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Sub SubExact { subtype, supertype, }  )
                 }
-                Self::Owns { owner, attribute, exactness } => {
+                Self::Owns  { owner, attribute, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Owns OwnsExact { owner, attribute, }  )
                 }
-                Self::Relates { relation, role, exactness } => {
+                Self::Relates  { relation, role, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Relates RelatesExact { relation, role, } )
                 }
-                Self::Plays { player, role, exactness } => {
+                Self::Plays  { player, role, exactness }  => {
                     encode_functor_impl_exactness!(context, exactness, Plays PlaysExact { player, role, } )
                 }
-                Self::FunctionCall { name, assigned, arguments } => {
-                    encode_functor_impl!(context, FunctionCall { name, assigned, arguments })
+                Self::FunctionCall  { name, assigned, arguments, }  => {
+                    encode_functor_impl!(context, FunctionCall { name, assigned, arguments, })
                 }
-                Self::Expression { text, assigned, arguments } => {
-                    encode_functor_impl!(context, Expression { text, assigned, arguments })
+                Self::Expression  { text, assigned, arguments, }  => {
+                    encode_functor_impl!(context, Expression { text, assigned, arguments, })
                 }
-                Self::Is { lhs, rhs } => {
-                    encode_functor_impl!(context, Is { lhs, rhs })
+                Self::Is  { lhs, rhs, }  => {
+                    encode_functor_impl!(context, Is { lhs, rhs, })
                 }
-                Self::Iid { concept, iid } => {
+                Self::Iid  { concept, iid, }  => {
                     let iid_str = format!("0x{}", iid.iter().map(|x| format!("{:02X}", x)).join(""));
                     let iid_ref = &iid_str;
-                    encode_functor_impl!(context, Iid { concept, iid_ref })
+                    encode_functor_impl!(context, Iid { concept, iid_ref, })
                 }
-                Self::Comparison { lhs, rhs, comparator } => {
-                    encode_functor_impl!(context, Comparison { lhs, rhs, comparator })
+                Self::Comparison  { lhs, rhs, comparator, }  => {
+                    encode_functor_impl!(context, Comparison { lhs, rhs, comparator, })
                 }
-                Self::Kind { kind, r#type } => {
+                Self::Kind  { kind, r#type, }  => {
                     let kind_str = kind.name().to_owned();
                     let kind_ref = &kind_str;
-                    encode_functor_impl!(context, Kind { kind_ref, r#type })
+                    encode_functor_impl!(context, Kind { kind_ref, r#type, })
                 }
-                Self::Label { r#type, label } => {
-                    encode_functor_impl!(context, Label { r#type, label })
+                Self::Label  { r#type, label, }  => {
+                    encode_functor_impl!(context, Label { r#type, label, })
                 }
-                Self::Value { attribute_type, value_type } => {
+                Self::Value  { attribute_type, value_type, }  => {
                     let value_type_sr = value_type.name().to_owned();
                     let value_type_ref = &value_type_sr;
-                    encode_functor_impl!(context, Value { attribute_type, value_type_ref })
+                    encode_functor_impl!(context, Value { attribute_type, value_type_ref, })
                 }
-                Self::Or { branches } => {
-                    encode_functor_impl!(context, Or { branches })
+                Self::Or  { branches, }  => {
+                    encode_functor_impl!(context, Or { branches, })
                 }
-                Self::Not { conjunction } => {
-                    encode_functor_impl!(context, Not { conjunction })
+                Self::Not  { conjunction, }  => {
+                    encode_functor_impl!(context, Not { conjunction, })
                 }
-                Self::Try { conjunction } => {
-                    encode_functor_impl!(context, Try { conjunction })
+                Self::Try  { conjunction, }  => {
+                    encode_functor_impl!(context, Try { conjunction, })
                 }
             }
         }
@@ -451,6 +443,7 @@ pub mod functor_encoding {
     }
     impl_functor_for_multi!(|self, context| [
         Variable =>  { format!("${}", context.variable_names.get(self).as_ref().map(|v| v.as_str()).unwrap_or("_")) }
+        Comparator =>  { format!("{}", self.symbol()) }
         ConjunctionID => { context.conjunctions[self.0 as usize].encode_as_functor(context) }
         Conjunction => { let Conjunction { constraints } = self; constraints.encode_as_functor(context) }
         PipelineStructure => { let pipeline = &self.stages; functor_macros::encode_functor_impl!(self, Pipeline { pipeline, }) }
