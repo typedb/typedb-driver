@@ -117,6 +117,7 @@ struct TransactionCallbackDirector {
 %{
 #include <memory>
 #include <iostream>
+#include <mutex>
 #include <unordered_map>
 
 class ThreadSafeTransactionCallbacks {
