@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-mod driver;
 
 // EXAMPLE START MARKER
 use std::time::Duration;

@@ -131,7 +131,7 @@ impl TransactionTransmitter {
             *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
             self.shutdown_sink.send(()).ok();
             box_promise(async move {
-                closed_source.await.ok();
+                closed_source.recv().await;
                 Ok(())
             })
         } else {
