@@ -100,7 +100,7 @@ commands:
         type: string
     steps:
       - run: |
-          brew install python@3.9
+#          brew install python@3.9
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -149,7 +149,7 @@ commands:
     steps:
       - install-brew-rosetta
       - run: |
-          /usr/local/bin/brew install python@3.9
+#          /usr/local/bin/brew install python@3.9
           tool/test/start-community-server.sh
           /usr/local/bin/python3.9 -m pip install wheel 
           /usr/local/bin/python3.9 -m pip install pip==21.3.1
