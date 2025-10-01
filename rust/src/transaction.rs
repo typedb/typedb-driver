@@ -95,7 +95,7 @@ impl Transaction {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
+    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
         self.transaction_stream.on_close(callback)
     }
 
@@ -107,7 +107,7 @@ impl Transaction {
     #[cfg_attr(feature = "sync", doc = "transaction.force_close().resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.force_close().await")]
     /// ```
-    pub fn force_close(&self) ->  impl Promise<'static, Result<()>> {
+    pub fn force_close(&self) ->  impl Promise<'_, Result<()>> {
         self.transaction_stream.force_close()
     }
 

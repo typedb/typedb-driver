@@ -36,34 +36,26 @@ use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
-use tokio::{
-    select,
-    sync::{
-        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
-    },
-    time::{sleep_until, Instant},
-};
+use tokio::{select, sync::{
+    mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+    oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+}, task, time::{sleep_until, Instant}};
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::{ResponseSink, StreamResponse};
-use crate::{
-    common::{
-        box_promise,
-        error::ConnectionError,
-        stream::{NetworkStream, Stream},
-        Callback, Promise, RequestID, Result,
-    },
-    connection::{
-        message::{QueryResponse, TransactionRequest, TransactionResponse},
-        network::proto::{FromProto, IntoProto, TryFromProto},
-        runtime::BackgroundRuntime,
-    },
-    Error,
-};
+use crate::{common::{
+    box_promise,
+    error::ConnectionError,
+    stream::{NetworkStream, Stream},
+    Callback, Promise, RequestID, Result,
+}, connection::{
+    message::{QueryResponse, TransactionRequest, TransactionResponse},
+    network::proto::{FromProto, IntoProto, TryFromProto},
+    runtime::BackgroundRuntime,
+}, resolve, Error};
 
 pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
@@ -77,11 +69,10 @@ pub(in crate::connection) struct TransactionTransmitter {
 
 impl Drop for TransactionTransmitter {
     fn drop(&mut self) {
-        // TODO: in the async context, this now returns a promise... do we care?
-        // ---> Basically, this is now a network round trip operation and can take time
-        // ---> Decision 1: should drop be blocking like this
-        // ---> Decision 2: if it should, we need to use async drop for async contexts? or poll?
-        let _ = self.force_close();
+        // fire and forget shutdown
+        if self.is_open.compare_exchange(true, false).is_ok() {
+            self.shutdown_sink.send(()).ok();
+        }
     }
 }
 
@@ -124,13 +115,15 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn force_close(&self) -> impl Promise<'static, Result<()>> {
         if self.is_open.compare_exchange(true, false).is_ok() {
             let (closed_sink, mut closed_source) = unbounded_async();
-            let close_notifier_callback = Box::new(move |error | {
+            let close_notifier_callback = Box::new(move |error| {
                 closed_sink.send(()).unwrap();
             });
-            self.on_close(close_notifier_callback);
+            let on_close_submit_promise = self.on_close(close_notifier_callback);
             *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
-            self.shutdown_sink.send(()).ok();
+            let shutdown_sink = self.shutdown_sink.clone();
             box_promise(async move {
+                resolve!(on_close_submit_promise);
+                shutdown_sink.send(()).ok();
                 closed_source.recv().await;
                 Ok(())
             })
@@ -142,13 +135,13 @@ impl TransactionTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn force_close(&self) -> impl Promise<'static, Result<()>> {
+    pub(in crate::connection) fn force_close(&self) -> impl Promise<'_, Result<()>> {
         if self.is_open.compare_exchange(true, false).is_ok() {
             let (closed_sink, closed_source) = oneshot();
             let close_notifier_callback = Box::new(move |error| {
                 closed_sink.send(()).unwrap();
             });
-            self.on_close(close_notifier_callback);
+            resolve!(self.on_close(close_notifier_callback));
             *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
             self.shutdown_sink.send(()).ok();
             box_promise(move || {
@@ -162,10 +155,22 @@ impl TransactionTransmitter {
         }
     }
 
-    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
+    #[cfg(not(feature = "sync"))]
+    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
         let (sender, mut sink) = unbounded_async();
         self.on_close_register_sink.send((Box::new(callback), sender)).ok();
-        sink.blocking_recv().expect("Did not receive on_close registration success signal");
+        box_promise(async move {
+            sink.recv().await.expect("Did not receive on_close registration success signal");
+        })
+    }
+
+    #[cfg(feature = "sync")]
+    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
+        let (sender, mut sink) = unbounded_async();
+        self.on_close_register_sink.send((Box::new(callback), sender)).ok();
+        box_promise(move || {
+            sink.blocking_recv().expect("Did not receive on_close registration success signal");
+        })
     }
 
     #[cfg(not(feature = "sync"))]
