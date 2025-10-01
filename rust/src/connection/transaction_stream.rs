@@ -78,7 +78,7 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
-    pub(crate) fn force_close(&self)  -> impl Promise<'_, Result<()>> {
+    pub(crate) fn force_close(&self) -> impl Promise<'_, Result<()>> {
         promisify! {
             resolve!(self.transaction_transmitter.force_close())
         }
@@ -92,7 +92,10 @@ impl TransactionStream {
         self.options
     }
 
-    pub(crate) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
+    pub(crate) fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'static, ()> {
         self.transaction_transmitter.on_close(callback)
     }
 

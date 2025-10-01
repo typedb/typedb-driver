@@ -107,7 +107,7 @@ impl Transaction {
     #[cfg_attr(feature = "sync", doc = "transaction.force_close().resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.force_close().await")]
     /// ```
-    pub fn force_close(&self) ->  impl Promise<'_, Result<()>> {
+    pub fn force_close(&self) -> impl Promise<'_, Result<()>> {
         self.transaction_stream.force_close()
     }
 

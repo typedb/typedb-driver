@@ -21,7 +21,7 @@
 use std::future::Future;
 use std::{
     collections::HashMap,
-    io::{BufReader},
+    io::BufReader,
     path::Path,
     sync::{Arc, RwLock},
 };

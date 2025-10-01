@@ -21,15 +21,12 @@ use std::{
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
-    }
-    ,
+    },
     time::Instant,
 };
 
 use serial_test::serial;
-use typedb_driver::{
-    Credentials, DriverOptions, TransactionType, TypeDBDriver,
-};
+use typedb_driver::{Credentials, DriverOptions, TransactionType, TypeDBDriver};
 
 // EXAMPLE END MARKER
 

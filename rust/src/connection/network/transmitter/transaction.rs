@@ -36,26 +36,35 @@ use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
-use tokio::{select, sync::{
-    mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-    oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
-}, task, time::{sleep_until, Instant}};
+use tokio::{
+    select,
+    sync::{
+        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+    },
+    task,
+    time::{sleep_until, Instant},
+};
 use tonic::Streaming;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::{ResponseSink, StreamResponse};
-use crate::{common::{
-    box_promise,
-    error::ConnectionError,
-    stream::{NetworkStream, Stream},
-    Callback, Promise, RequestID, Result,
-}, connection::{
-    message::{QueryResponse, TransactionRequest, TransactionResponse},
-    network::proto::{FromProto, IntoProto, TryFromProto},
-    runtime::BackgroundRuntime,
-}, resolve, Error};
+use crate::{
+    common::{
+        box_promise,
+        error::ConnectionError,
+        stream::{NetworkStream, Stream},
+        Callback, Promise, RequestID, Result,
+    },
+    connection::{
+        message::{QueryResponse, TransactionRequest, TransactionResponse},
+        network::proto::{FromProto, IntoProto, TryFromProto},
+        runtime::BackgroundRuntime,
+    },
+    resolve, Error,
+};
 
 pub(in crate::connection) struct TransactionTransmitter {
     request_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
@@ -128,9 +137,7 @@ impl TransactionTransmitter {
                 Ok(())
             })
         } else {
-            box_promise(async move {
-                Ok(())
-            })
+            box_promise(async move { Ok(()) })
         }
     }
 
@@ -149,14 +156,15 @@ impl TransactionTransmitter {
                 Ok(())
             })
         } else {
-            box_promise(move || {
-                Ok(())
-            })
+            box_promise(move || Ok(()))
         }
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
+    pub(in crate::connection) fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'static, ()> {
         let (sender, mut sink) = unbounded_async();
         self.on_close_register_sink.send((Box::new(callback), sender)).ok();
         box_promise(async move {
@@ -165,7 +173,10 @@ impl TransactionTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
+    pub(in crate::connection) fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'static, ()> {
         let (sender, mut sink) = unbounded_async();
         self.on_close_register_sink.send((Box::new(callback), sender)).ok();
         box_promise(move || {
@@ -289,10 +300,12 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
+        println!("... Rust spawning sync dispatch loop");
         tokio::task::spawn_blocking({
             let collector = collector.clone();
             move || Self::sync_dispatch_loop(queue_source, request_sink, collector, shutdown_signal)
         });
+        println!("... Rust spawning async listen loop");
         tokio::spawn(Self::async_listen_loop(response_source, collector, on_close_callback_source, shutdown_sink));
     }
 
@@ -310,7 +323,7 @@ impl TransactionTransmitter {
         loop {
             if let Ok(_) = shutdown_signal.try_recv() {
                 if !request_buffer.is_empty() {
-                    request_sink.send(request_buffer.take()).unwrap();
+                    request_sink.send(request_buffer.take()).ok();
                 }
                 break;
             }
@@ -323,12 +336,12 @@ impl TransactionTransmitter {
                     collector.register(request.req_id.clone().into(), callback);
                 }
                 if request_buffer.len() + request.encoded_len() > MAX_GRPC_MESSAGE_LEN {
-                    request_sink.send(request_buffer.take()).unwrap();
+                    request_sink.send(request_buffer.take()).ok();
                 }
                 request_buffer.push(request);
             }
             if !request_buffer.is_empty() {
-                request_sink.send(request_buffer.take()).unwrap();
+                request_sink.send(request_buffer.take()).ok();
             }
         }
     }

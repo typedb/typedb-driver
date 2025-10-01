@@ -260,12 +260,16 @@ impl ServerConnection {
                 let open_latency =
                     Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
                 self.latency_tracker.update_latency(open_latency);
+                println!("Rust received transaction open response & is opening transmitter");
 
                 let transmitter =
                     TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
+                println!("  --> Rust created transmitter");
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
+                println!("  --> Rust created transaction stream");
                 self.shutdown_senders.lock().unwrap().push(transmitter_shutdown_sink);
+                println!("  --> Rust created pushed shutdown sender transmitter shutdown sink");
                 Ok(transaction_stream)
             }
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
