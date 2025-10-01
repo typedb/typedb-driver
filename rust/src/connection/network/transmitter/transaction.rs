@@ -78,10 +78,7 @@ pub(in crate::connection) struct TransactionTransmitter {
 
 impl Drop for TransactionTransmitter {
     fn drop(&mut self) {
-        // fire and forget shutdown
-        if self.is_open.compare_exchange(true, false).is_ok() {
-            self.shutdown_sink.send(()).ok();
-        }
+        self.submit_close();
     }
 }
 
@@ -121,42 +118,49 @@ impl TransactionTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn force_close(&self) -> impl Promise<'static, Result<()>> {
-        if self.is_open.compare_exchange(true, false).is_ok() {
-            let (closed_sink, mut closed_source) = unbounded_async();
-            let close_notifier_callback = Box::new(move |error| {
-                closed_sink.send(()).unwrap();
-            });
-            let on_close_submit_promise = self.on_close(close_notifier_callback);
-            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
-            let shutdown_sink = self.shutdown_sink.clone();
-            box_promise(async move {
-                resolve!(on_close_submit_promise);
-                shutdown_sink.send(()).ok();
+    pub(in crate::connection) fn close(&self) -> impl Promise<'_, Result<()>> {
+        box_promise(async move {
+            if self.is_open.compare_exchange(true, false).is_ok() {
+                let (closed_sink, mut closed_source) = unbounded_async();
+                let close_notifier_callback = Box::new(move |error| {
+                    closed_sink.send(()).unwrap();
+                });
+                let on_close_submit_promise = self.on_close(close_notifier_callback);
+                let result = resolve!(on_close_submit_promise);
+                *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
+                self.shutdown_sink.send(()).ok();
                 closed_source.recv().await;
                 Ok(())
-            })
-        } else {
-            box_promise(async move { Ok(()) })
-        }
+            } else {
+                Ok(())
+            }
+        })
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn force_close(&self) -> impl Promise<'_, Result<()>> {
-        if self.is_open.compare_exchange(true, false).is_ok() {
-            let (closed_sink, closed_source) = oneshot();
-            let close_notifier_callback = Box::new(move |error| {
-                closed_sink.send(()).unwrap();
-            });
-            resolve!(self.on_close(close_notifier_callback));
-            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
-            self.shutdown_sink.send(()).ok();
-            box_promise(move || {
+    pub(in crate::connection) fn close(&self) -> impl Promise<'_, Result<()>> {
+        box_promise(move || {
+            if self.is_open.compare_exchange(true, false).is_ok() {
+                let (closed_sink, closed_source) = oneshot();
+                let close_notifier_callback = Box::new(move |error| {
+                    closed_sink.send(()).unwrap();
+                });
+                let result = resolve!(self.on_close(close_notifier_callback));
+                *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
+                self.shutdown_sink.send(()).ok();
                 closed_source.recv().ok();
                 Ok(())
-            })
-        } else {
-            box_promise(move || Ok(()))
+            } else {
+                Ok(())
+            }
+        })
+    }
+
+    // fire and forget close - here for symmetry
+    // callers should use 'drop()' instead
+    fn submit_close(&mut self) {
+        if self.is_open.compare_exchange(true, false).is_ok() {
+            self.shutdown_sink.send(()).ok();
         }
     }
 
@@ -164,11 +168,12 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn on_close(
         &self,
         callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
-    ) -> impl Promise<'static, ()> {
-        let (sender, mut sink) = unbounded_async();
-        self.on_close_register_sink.send((Box::new(callback), sender)).ok();
+    ) -> impl Promise<'_, Result<()>> {
         box_promise(async move {
+            let (sender, mut sink) = unbounded_async();
+            self.on_close_register_sink.send((Box::new(callback), sender)).ok();
             sink.recv().await.expect("Did not receive on_close registration success signal");
+            Ok(())
         })
     }
 
@@ -176,11 +181,12 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn on_close(
         &self,
         callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
-    ) -> impl Promise<'static, ()> {
-        let (sender, mut sink) = unbounded_async();
-        self.on_close_register_sink.send((Box::new(callback), sender)).ok();
+    ) -> impl Promise<'_, Result<()>> {
         box_promise(move || {
+            let (sender, mut sink) = unbounded_async();
+            self.on_close_register_sink.send((Box::new(callback), sender)).ok();
             sink.blocking_recv().expect("Did not receive on_close registration success signal");
+            Ok(())
         })
     }
 

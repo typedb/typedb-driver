@@ -63,7 +63,7 @@ struct Type {};
 %dropproxy(QueryOptions, query_options)
 
 #define typedb_driver_drop driver_close
-#define transaction_drop transaction_close
+#define transaction_drop transaction_submit_close
 #define database_drop database_close
 
 %dropproxy(TypeDBDriver, typedb_driver)
@@ -196,11 +196,11 @@ static void transaction_callback_execute(size_t ID, Error* error) {
 %ignore transaction_on_close;
 %inline %{
 #include <atomic>
-void transaction_on_close_register(const Transaction* transaction, TransactionCallbackDirector* handler) {
+VoidPromise* transaction_on_close_register(const Transaction* transaction, TransactionCallbackDirector* handler) {
     static std::atomic_size_t nextID;
     std::size_t ID = nextID.fetch_add(1);
     ThreadSafeTransactionCallbacks::insert(ID, handler);
-    transaction_on_close(transaction, ID, &transaction_callback_execute);
+    return transaction_on_close(transaction, ID, &transaction_callback_execute);
 }
 %}
 

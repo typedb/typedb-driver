@@ -23,7 +23,7 @@ from hamcrest import *
 from typedb.driver import *
 
 
-class TestExample(TestCase):
+class TestDriver(TestCase):
 
     def setUp(self):
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:

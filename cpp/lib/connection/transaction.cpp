@@ -77,13 +77,16 @@ bool Transaction::isOpen() const {
     return transactionNative != nullptr && _native::transaction_is_open(transactionNative.get());
 }
 
-void Transaction::close() {
-    if (transactionNative != nullptr) _native::transaction_close(transactionNative.release());
+void Transaction::submitClose() {
+    if (transactionNative != nullptr) _native::transaction_submit_close(transactionNative.release());
 }
 
-void Transaction::forceClose() {
+void Transaction::close() {
     CHECK_NATIVE(transactionNative);
-    _native::transaction_force_close(transactionNative.release());
+    VoidFuture p = _native::transaction_close(transactionNative.release());
+    DriverException::check_and_throw();
+    p.wait();
+    DriverException::check_and_throw();
 }
 
 void Transaction::commit() {

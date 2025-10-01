@@ -30,7 +30,7 @@ from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
     transaction_commit, \
-    transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
+    transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
     query_answer_promise_resolve, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
@@ -79,7 +79,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
     def on_close(self, function: callable):
         callback = _Transaction.TransactionOnClose(function)
-        transaction_on_close(self.native_object, callback.__disown__())
+        void_promise_resolve(transaction_on_close(self.native_object, callback.__disown__()))
 
     class TransactionOnClose(TransactionCallbackDirector):
 
@@ -114,7 +114,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
 
     def close(self):
         if self._native_object.thisown:
-            void_promise_resolve(transaction_force_close(self._native_object))
+            void_promise_resolve(transaction_close(self._native_object))
 
     def __enter__(self):
         return self

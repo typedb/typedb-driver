@@ -67,9 +67,10 @@ fn transaction_callback() {
             move |error| {
                 clone.store(true, Ordering::SeqCst);
             }
-        }));
+        })).await;
 
-        drop(transaction); // TODO: drop isn't blocking... so we need to spin? or is there an alternative?
+        transaction.close().await;
+        drop(transaction);
 
         while !close_called.load(Ordering::Acquire) {
             // Yield the current time slice to the OS scheduler.

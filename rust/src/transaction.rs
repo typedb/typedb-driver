@@ -95,20 +95,20 @@ impl Transaction {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'static, ()> {
+    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'_, Result<()>> {
         self.transaction_stream.on_close(callback)
     }
 
-    /// Closes the transaction.
+    /// Closes the transaction and returns a resolvable promise
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.force_close().resolve()")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.force_close().await")]
+    #[cfg_attr(feature = "sync", doc = "transaction.close().resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.close().await")]
     /// ```
-    pub fn force_close(&self) -> impl Promise<'_, Result<()>> {
-        self.transaction_stream.force_close()
+    pub fn close(&self) -> impl Promise<'_, Result<()>> {
+        self.transaction_stream.close()
     }
 
     /// Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.

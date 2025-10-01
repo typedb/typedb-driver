@@ -78,10 +78,9 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
-    pub(crate) fn force_close(&self) -> impl Promise<'_, Result<()>> {
-        promisify! {
-            resolve!(self.transaction_transmitter.force_close())
-        }
+    pub(crate) fn close(&self) -> impl Promise<'_, Result<()>> {
+        // TODO: do we want to resolve and re-emit a promise?
+        self.transaction_transmitter.close()
     }
 
     pub(crate) fn type_(&self) -> TransactionType {
@@ -95,7 +94,7 @@ impl TransactionStream {
     pub(crate) fn on_close(
         &self,
         callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
-    ) -> impl Promise<'static, ()> {
+    ) -> impl Promise<'_, Result<()>> {
         self.transaction_transmitter.on_close(callback)
     }
 
