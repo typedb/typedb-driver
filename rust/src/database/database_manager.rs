@@ -27,6 +27,7 @@ use std::{
 };
 
 use typedb_protocol::migration::Item;
+use tracing::{info, debug, error};
 
 use super::Database;
 use crate::{

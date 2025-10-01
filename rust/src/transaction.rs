@@ -19,6 +19,8 @@
 
 use std::{fmt, pin::Pin};
 
+use tracing::debug;
+
 use crate::{
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
@@ -76,6 +78,7 @@ impl Transaction {
         options: QueryOptions,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
+        debug!("Transaction submitting query: {}", query);
         self.transaction_stream.query(query, options)
     }
 

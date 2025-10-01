@@ -21,6 +21,7 @@ use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
+use tracing::trace;
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
@@ -78,11 +79,6 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
-    pub(crate) fn close(&self) -> impl Promise<'_, Result<()>> {
-        // TODO: do we want to resolve and re-emit a promise?
-        self.transaction_transmitter.close()
-    }
-
     pub(crate) fn type_(&self) -> TransactionType {
         self.type_
     }
@@ -98,20 +94,35 @@ impl TransactionStream {
         self.transaction_transmitter.on_close(callback)
     }
 
+    pub(crate) fn close(&self) -> impl Promise<'_, Result<()>> {
+        trace!("TransactionStream: close() called");
+        // TODO: do we want to resolve and re-emit a promise?
+        self.transaction_transmitter.close()
+    }
+
     pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
+        trace!("TransactionStream: commit() called");
         let promise = self.single(TransactionRequest::Commit);
         promisify! {
             let _this = self; // move into the promise so the stream isn't dropped until the promise is resolved
-            require_transaction_response!(resolve!(promise), Commit)
+            let resolved = resolve!(promise);
+            trace!("TransactionStream: commit() promise resolved");
+            require_transaction_response!(resolved, Commit)
         }
     }
 
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
+        trace!("TransactionStream: rollback() called");
         let promise = self.single(TransactionRequest::Rollback);
-        promisify! { require_transaction_response!(resolve!(promise), Rollback) }
+        promisify! {
+            let resolved = resolve!(promise);
+            trace!("TransactionStream: rollback() promise resolved");
+            require_transaction_response!(resolved, Rollback) 
+        }
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
+        trace!("TransactionStream: query() called with query: {}", query);
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
             let mut stream = stream?;
@@ -120,6 +131,8 @@ impl TransactionStream {
             let header = stream.next();
             #[cfg(not(feature = "sync"))]
             let header: Option<Result<QueryResponse>> = stream.next().await;
+
+            trace!("TransactionStream: query() initial header received: {:?}", header);
 
             let header = match header {
                 None => return Err(ConnectionError::QueryStreamNoResponse.into()),
