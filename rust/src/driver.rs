@@ -115,7 +115,6 @@ impl TypeDBDriver {
         credentials: Credentials,
         driver_options: DriverOptions,
     ) -> Result<Self> {
-        Self::init_logging();
         debug!("Creating new TypeDB driver connection to {}", address.as_ref());
         Self::new_with_description(address, credentials, driver_options, Self::DRIVER_LANG).await
     }
@@ -150,6 +149,8 @@ impl TypeDBDriver {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
+        Self::init_logging();
+
         debug!("Initializing TypeDB driver with description: {}", driver_lang.as_ref());
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
