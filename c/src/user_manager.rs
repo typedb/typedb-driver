@@ -26,7 +26,6 @@ use super::{
     iterator::{iterator_next, CIterator},
     memory::{borrow, free, string_view},
 };
-use crate::{error::try_release_string, memory::release_string};
 
 /// Iterator over a set of <code>User</code>s
 pub struct UserIterator(CIterator<User>);

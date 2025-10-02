@@ -25,7 +25,7 @@ use std::{
 };
 
 use env_logger::Env;
-use tracing::{debug, trace, warn};
+use tracing::{debug, warn};
 use typedb_driver::{Error, Result};
 
 use super::memory::{free, release_arc, release_optional, release_string};

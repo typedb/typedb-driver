@@ -60,7 +60,7 @@ pub(super) fn open_callcred_channel(
             driver_options.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
         builder = builder.tls_config(tls_config)?;
     }
-    builder = builder.keep_alive_while_idle(true);
+    builder = builder.keep_alive_while_idle(true).http2_keep_alive_interval(Duration::from_secs(10));
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credentials));
     Ok((CallCredChannel::new(channel, CredentialInjector::new(call_credentials.clone())), call_credentials))

@@ -29,7 +29,7 @@ use typedb_driver::{
 use super::{
     concept::ConceptIterator,
     iterator::CIterator,
-    memory::{borrow, free, release, release_optional, release_string, string_view},
+    memory::{borrow, free, release, release_string, string_view},
 };
 use crate::{
     common::StringIterator,

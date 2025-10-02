@@ -114,7 +114,6 @@ impl TransactionStream {
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
-        trace!("TransactionStream: query() called with query: {}", query);
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
             let mut stream = stream?;

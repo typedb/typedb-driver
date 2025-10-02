@@ -87,7 +87,8 @@ impl Transaction {
         self.type_
     }
 
-    /// Registers a callback function which will be executed when this transaction is closed.
+    /// Registers a callback function which will be executed when this transaction is closed
+    /// returns a resolvable promise that must be awaited otherwise the callback may not be registered
     ///
     /// # Arguments
     ///

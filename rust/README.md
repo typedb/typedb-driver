@@ -337,6 +337,8 @@ The logging level can be controlled through environment variables with the follo
 
 The logging is scoped to the `typedb_driver` package only, so it won't affect other loggers like Tonic or other dependencies. This means you can control TypeDB driver logging independently from your application's other logging.
 
+If you want to track the memory exchanges between Rust and the C layer, you can set `TYPEDB_DRIVER_CLIB_LOG` to TRACE.
+
 ### Supported Log Levels
 
 - `error` - Only error messages
