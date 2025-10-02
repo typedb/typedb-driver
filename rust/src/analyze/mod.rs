@@ -23,9 +23,11 @@ use crate::analyze::{
     conjunction::{Reducer, Variable},
     pipeline::PipelineStructure,
 };
+use crate::analyze::annotations::{FetchAnnotations, FunctionAnnotations, PipelineAnnotations};
 
 pub mod conjunction;
 pub mod pipeline;
+pub mod annotations;
 
 pub type TryFromError = &'static str;
 
@@ -57,4 +59,8 @@ pub enum ReturnOperation {
 }
 
 #[derive(Debug)]
-pub struct QueryAnnotations {}
+pub struct QueryAnnotations {
+    pub query: PipelineAnnotations,
+    pub preamble: Vec<FunctionAnnotations>,
+    pub fetch: Option<FetchAnnotations>,
+}

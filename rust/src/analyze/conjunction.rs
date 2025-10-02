@@ -22,7 +22,7 @@ use crate::{
     concept::{type_, ValueType},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct ConjunctionID(pub usize);
 
 #[derive(Debug)]
