@@ -166,6 +166,10 @@ impl RPCTransmitter {
                 trace!("RPCTransmitter.send_request.rpc.transaction(req) finished");
                 let next = response_source.next();
                 trace!("RPCTransmitter.send_request received next() {:?}", next);
+                // ---> ADD THIS LINE <---
+                // Yield control to the Tokio scheduler. This allows the runtime's
+                // background I/O task to read the pending response from the network socket.
+                tokio::task::yield_now().await;
                 match next.await {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
