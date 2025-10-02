@@ -17,11 +17,16 @@
  * under the License.
  */
 
-use std::{fmt, fmt::Formatter, sync::Arc};
-use std::fmt::Debug;
+use std::{
+    fmt,
+    fmt::{Debug, Formatter},
+    sync::Arc,
+};
+
 use crossbeam::channel::Sender as SyncOneshotSender;
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 use tracing::{debug, error};
+
 use crate::{
     common::{RequestID, Result},
     error::InternalError,
@@ -95,7 +100,9 @@ impl<T: Debug> ResponseSink<T> {
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("send_continuable... {err} FROM request id {request_id}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => {
+                debug!("send_continuable... {err} FROM request id {request_id}")
+            }
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }

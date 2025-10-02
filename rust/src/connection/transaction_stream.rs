@@ -117,7 +117,7 @@ impl TransactionStream {
         promisify! {
             let resolved = resolve!(promise);
             trace!("TransactionStream: rollback() promise resolved");
-            require_transaction_response!(resolved, Rollback) 
+            require_transaction_response!(resolved, Rollback)
         }
     }
 

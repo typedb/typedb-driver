@@ -24,8 +24,8 @@ use std::{
 };
 
 use itertools::Itertools;
-use tracing::{info, error, debug, trace};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter, fmt as tracing_fmt};
+use tracing::{debug, error, info, trace};
+use tracing_subscriber::{fmt as tracing_fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use crate::{
     common::{
@@ -55,18 +55,18 @@ impl TypeDBDriver {
     pub const DEFAULT_ADDRESS: &'static str = "localhost:1729";
 
     /// Initialize logging configuration for the TypeDB driver.
-    /// 
+    ///
     /// This function sets up tracing with the following priority:
     /// 1. TYPEDB_DRIVER_LOG environment variable (if set)
     /// 2. RUST_LOG environment variable (if set)
     /// 3. Default level (INFO)
-    /// 
+    ///
     /// The logging is initialized only once using a static flag to prevent
     /// multiple initializations in applications that create multiple drivers.
     pub fn init_logging() {
         use std::sync::Once;
         static INIT: Once = Once::new();
-        
+
         INIT.call_once(|| {
             // Try to get log level from TYPEDB_DRIVER_LOG first, then RUST_LOG
             let env_filter = if let Ok(typedb_log_level) = std::env::var("TYPEDB_DRIVER_LOG") {
@@ -79,10 +79,8 @@ impl TypeDBDriver {
             };
 
             // Initialize the tracing subscriber
-            if let Err(e) = tracing_subscriber::registry()
-                .with(env_filter)
-                .with(tracing_fmt::layer().with_target(false))
-                .try_init()
+            if let Err(e) =
+                tracing_subscriber::registry().with(env_filter).with(tracing_fmt::layer().with_target(false)).try_init()
             {
                 eprintln!("Failed to initialize logging: {}", e);
             }
@@ -154,7 +152,7 @@ impl TypeDBDriver {
         debug!("Initializing TypeDB driver with description: {}", driver_lang.as_ref());
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;
-        
+
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         trace!("Created background runtime");
 
@@ -274,7 +272,7 @@ impl TypeDBDriver {
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
-        
+
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
         let transaction_stream = database
             .run_failsafe(|database| async move {
@@ -284,7 +282,7 @@ impl TypeDBDriver {
                 res
             })
             .await?;
-        
+
         debug!("Successfully opened transaction for database: {}", database_name);
         Ok(Transaction::new(transaction_stream))
     }
@@ -305,12 +303,12 @@ impl TypeDBDriver {
         let result =
             self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
         let close_result = self.background_runtime.force_close().and(result);
-        
+
         match &close_result {
             Ok(_) => debug!("Successfully closed TypeDB driver connection"),
             Err(e) => error!("Failed to close TypeDB driver connection: {}", e),
         }
-        
+
         close_result
     }
 

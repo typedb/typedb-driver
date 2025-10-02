@@ -168,7 +168,8 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
                 let (sender, receiver) = unbounded_async();
                 sender.send(transaction_req)?;
                 trace!("Submitting into grpc and awaiting response...");
-                let res = this.grpc
+                let res = this
+                    .grpc
                     .transaction(UnboundedReceiverStream::new(receiver))
                     .map_ok(|stream| Response::new((sender, stream.into_inner())))
                     .map(|r| Ok(r?.into_inner()))

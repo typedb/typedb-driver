@@ -19,9 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{
-    Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver,
-};
+use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
@@ -103,6 +101,6 @@ pub extern "C" fn transaction_on_close(
 ) -> *mut VoidPromise {
     release(VoidPromise(Box::new(
         borrow(txn)
-        .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut())))
+            .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut()))),
     )))
 }

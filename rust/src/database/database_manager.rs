@@ -26,8 +26,8 @@ use std::{
     sync::{Arc, RwLock},
 };
 
+use tracing::{debug, error, info};
 use typedb_protocol::migration::Item;
-use tracing::{info, debug, error};
 
 use super::Database;
 use crate::{

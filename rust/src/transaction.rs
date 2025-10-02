@@ -98,7 +98,10 @@ impl Transaction {
     /// ```rust
     /// transaction.on_close(function)
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) -> impl Promise<'_, Result<()>> {
+    pub fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'_, Result<()>> {
         self.transaction_stream.on_close(callback)
     }
 

@@ -62,12 +62,14 @@ fn transaction_callback() {
 
         let close_called = Arc::new(AtomicBool::new(false));
         let transaction = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
-        transaction.on_close(Box::new({
-            let clone = close_called.clone();
-            move |error| {
-                clone.store(true, Ordering::SeqCst);
-            }
-        })).await;
+        transaction
+            .on_close(Box::new({
+                let clone = close_called.clone();
+                move |error| {
+                    clone.store(true, Ordering::SeqCst);
+                }
+            }))
+            .await;
 
         transaction.close().await;
         drop(transaction);
