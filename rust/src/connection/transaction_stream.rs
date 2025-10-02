@@ -36,6 +36,8 @@ use crate::{
     error::{ConnectionError, InternalError},
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
+use crate::connection::message::AnalyzeResponse;
+use crate::error::{AnalyzeError, ServerError};
 
 macro_rules! require_transaction_response {
     ($response:expr, $variant:ident(_)) => {
@@ -126,8 +128,14 @@ impl TransactionStream {
 
             match response {
                 None => Err(ConnectionError::AnalyzeQueryNoResponse.into()),
-                Some(Ok(TransactionResponse::Analyze(analyzed_query))) => Ok(analyzed_query),
-                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+                Some(Ok(TransactionResponse::Analyze(response))) => {
+                    match response {
+                        AnalyzeResponse::Ok(analyzed) => Ok(analyzed),
+                        AnalyzeResponse::Err(error) => Err(error.into()),
+                    }
+                }
+                Some(Ok(other)) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+                Some(Err(err)) => Err(err),
             }
         }
     }

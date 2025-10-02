@@ -18,9 +18,9 @@
  */
 
 use typedb_protocol::{
-    analyze::{
-        res as analyze_proto,
-        res::{
+    analyze::res::{
+        analyzed_query as analyze_proto,
+        analyzed_query::{
             query_structure,
             query_structure::{
                 pipeline_structure, pipeline_structure::pipeline_stage::sort::sort_variable::SortDirection,
@@ -42,12 +42,14 @@ use crate::{
         AnalyzedQuery, FunctionStructure, QueryAnnotations, QueryStructure, ReturnOperation,
     },
     common::Result,
-    concept,
     concept::{type_, Kind, Value},
     connection::network::proto::TryFromProto,
     error::AnalyzeError,
 };
 use crate::analyze::conjunction::Comparator;
+use crate::connection::message::AnalyzeResponse;
+use crate::connection::network::proto::FromProto;
+use crate::error::ServerError;
 
 pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -65,9 +67,26 @@ fn enum_from_proto<T: TryFrom<i32, Error = prost::UnknownEnumValue>>(as_i32: i32
         .map_err(|_| AnalyzeError::UnknownEnumValue { enum_name: std::any::type_name::<T>(), value: as_i32 }.into())
 }
 
-impl TryFromProto<typedb_protocol::analyze::Res> for AnalyzedQuery {
-    fn try_from_proto(value: typedb_protocol::analyze::Res) -> Result<Self> {
-        let typedb_protocol::analyze::Res { structure, annotations } = value;
+impl TryFromProto<typedb_protocol::analyze::Res> for AnalyzeResponse {
+    fn try_from_proto(proto: typedb_protocol::analyze::Res) -> Result<Self> {
+        expect_try_into(proto.result, "analyze.Res.result")
+    }
+}
+
+impl TryFromProto<typedb_protocol::analyze::res::Result> for AnalyzeResponse {
+    fn try_from_proto(proto: typedb_protocol::analyze::res::Result) -> Result<Self> {
+        use typedb_protocol::analyze::res::Result as ResultProto;
+        let result = match proto {
+            ResultProto::Ok(analyzed_query) => AnalyzeResponse::Ok(AnalyzedQuery::try_from_proto(analyzed_query)?),
+            ResultProto::Err(err)  => AnalyzeResponse::Err(ServerError::from_proto(err)),
+        };
+        Ok(result)
+    }
+}
+
+impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuery {
+    fn try_from_proto(value: typedb_protocol::analyze::res::AnalyzedQuery) -> Result<Self> {
+        let typedb_protocol::analyze::res::AnalyzedQuery { structure, annotations } = value;
         let structure = expect_try_into(structure, "analyze.Res.structure")?;
         let annotations = expect_try_into(annotations, "analyze.Res.annotations")?;
         Ok(Self { structure, annotations })
@@ -96,7 +115,7 @@ impl TryFromProto<query_structure::FunctionStructure> for FunctionStructure {
 
 impl TryFromProto<query_structure::function_structure::Returns> for ReturnOperation {
     fn try_from_proto(value: query_structure::function_structure::Returns) -> Result<Self> {
-        use typedb_protocol::analyze::res::query_structure::function_structure::Returns;
+        use analyze_proto::query_structure::function_structure::Returns;
         let returns = match value {
             Returns::Stream(stream) => Self::Stream { variables: vec_from_proto(stream.variables)? },
             Returns::Single(single) => {
@@ -373,8 +392,8 @@ impl TryFromProto<conjunction_structure::Variable> for Variable {
 
 // Annotations
 
-impl TryFromProto<typedb_protocol::analyze::res::QueryAnnotations> for QueryAnnotations {
-    fn try_from_proto(_value: typedb_protocol::analyze::res::QueryAnnotations) -> Result<Self> {
+impl TryFromProto<analyze_proto::QueryAnnotations> for QueryAnnotations {
+    fn try_from_proto(_value: analyze_proto::QueryAnnotations) -> Result<Self> {
         Ok(Self {}) // TODO
     }
 }
