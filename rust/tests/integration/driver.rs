@@ -17,16 +17,13 @@
  * under the License.
  */
 
-use std::{
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
 };
 
 use serial_test::serial;
 use typedb_driver::{Credentials, DriverOptions, TransactionType, TypeDBDriver};
-
 
 async fn cleanup() {
     let driver = TypeDBDriver::new(

@@ -22,8 +22,7 @@ use std::{ffi::c_char, path::Path};
 use typedb_driver::Database;
 
 use super::{
-    error::{try_release_string, unwrap_void}
-    ,
+    error::{try_release_string, unwrap_void},
     memory::{borrow, release_string},
 };
 use crate::memory::{decrement_arc, string_view, take_arc};
