@@ -82,7 +82,7 @@ impl RPCTransmitter {
         self.request_sink.send((request, ResponseSink::AsyncOneShot(response_sink)))?;
         trace!("RPCTransmitter::request_async submitted request, going to wait");
         let res = response.await?;
-        trace!("RPCTransmitter::request_blocking received res: {:?}", res);
+        trace!("RPCTransmitter::request_async received res: {:?}", res);
         res
     }
 
@@ -163,10 +163,9 @@ impl RPCTransmitter {
                 let open_request_id = RequestID::from(req.req_id.clone());
                 trace!("RPCTransmitter.send_request sending transaction request");
                 let (request_sink, mut response_source) = rpc.transaction(req).await?;
-                // ---> ADD THIS LINE <---
-                // Yield control to the Tokio scheduler. This allows the runtime's
-                // background I/O task to read the pending response from the network socket.
-                tokio::task::yield_now().await;
+
+                // diagnostic
+                drop(request_sink);
 
                 trace!("RPCTransmitter.send_request.rpc.transaction(req) finished");
                 let next = response_source.next();
@@ -175,13 +174,16 @@ impl RPCTransmitter {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
                             Ok(TransactionResponse::Open { server_duration_millis }) => {
-                                Ok(Response::TransactionStream {
-                                    open_request_id,
-                                    request_sink,
-                                    response_source,
-                                    server_duration_millis,
-                                })
+                                trace!("Received transaction response open message");
+                                Err(Error::Connection(ConnectionError::BrokenPipe))
                             }
+                            //     Ok(Response::TransactionStream {
+                            //         open_request_id,
+                            //         request_sink,
+                            //         response_source,
+                            //         server_duration_millis,
+                            //     })
+                            // }
                             Err(error) => Err(error),
                             Ok(other) => Err(Error::Connection(ConnectionError::UnexpectedResponse {
                                 response: format!("{other:?}"),
