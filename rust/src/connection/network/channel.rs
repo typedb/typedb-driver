@@ -58,7 +58,7 @@ pub(super) fn open_callcred_channel(
         builder = builder.tls_config(tls_config)?;
     }
     builder = builder
-        .http2_keep_alive_interval(Duration::from_secs(3))
+        .http2_keep_alive_interval(Duration::from_secs(10))
         .keep_alive_while_idle(true);
     let channel = builder.connect_lazy();
     let call_credentials = Arc::new(CallCredentials::new(credentials));
