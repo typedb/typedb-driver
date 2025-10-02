@@ -156,9 +156,16 @@ pub(super) enum TransactionResponse {
     Commit,
     Rollback,
     Query(QueryResponse),
-    Analyze(AnalyzedQuery),
+    Analyze(AnalyzeResponse),
     Close,
 }
+
+#[derive(Debug)]
+pub(super) enum AnalyzeResponse {
+    Ok(AnalyzedQuery),
+    Err(ServerError),
+}
+
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {

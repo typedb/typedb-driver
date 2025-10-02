@@ -37,6 +37,7 @@ use crate::{
     info::UserInfo,
     Credentials,
 };
+use crate::connection::message::AnalyzeResponse;
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
@@ -400,7 +401,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                 }
             },
             Some(transaction::res::Res::AnalyzeRes(analyze_resp)) => {
-                Ok(TransactionResponse::Analyze(AnalyzedQuery::try_from_proto(analyze_resp)?))
+                Ok(TransactionResponse::Analyze(AnalyzeResponse::try_from_proto(analyze_resp)?))
             }
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
