@@ -164,9 +164,6 @@ impl RPCTransmitter {
                 trace!("RPCTransmitter.send_request sending transaction request");
                 let (request_sink, mut response_source) = rpc.transaction(req).await?;
 
-                // diagnostic
-                drop(request_sink);
-
                 trace!("RPCTransmitter.send_request.rpc.transaction(req) finished");
                 let next = response_source.next();
                 trace!("RPCTransmitter.send_request received next() {:?}", next);
@@ -174,16 +171,13 @@ impl RPCTransmitter {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
                             Ok(TransactionResponse::Open { server_duration_millis }) => {
-                                trace!("Received transaction response open message");
-                                Err(Error::Connection(ConnectionError::BrokenPipe))
+                                Ok(Response::TransactionStream {
+                                    open_request_id,
+                                    request_sink,
+                                    response_source,
+                                    server_duration_millis,
+                                })
                             }
-                            //     Ok(Response::TransactionStream {
-                            //         open_request_id,
-                            //         request_sink,
-                            //         response_source,
-                            //         server_duration_millis,
-                            //     })
-                            // }
                             Err(error) => Err(error),
                             Ok(other) => Err(Error::Connection(ConnectionError::UnexpectedResponse {
                                 response: format!("{other:?}"),
