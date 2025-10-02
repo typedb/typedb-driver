@@ -21,6 +21,7 @@ use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
+use tracing::trace;
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
@@ -78,10 +79,6 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
-    pub(crate) fn force_close(&self) {
-        self.transaction_transmitter.force_close();
-    }
-
     pub(crate) fn type_(&self) -> TransactionType {
         self.type_
     }
@@ -90,8 +87,15 @@ impl TransactionStream {
         self.options
     }
 
-    pub(crate) fn on_close(&self, callback: impl FnOnce(Option<Error>) + Send + Sync + 'static) {
+    pub(crate) fn on_close(
+        &self,
+        callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
+    ) -> impl Promise<'_, Result<()>> {
         self.transaction_transmitter.on_close(callback)
+    }
+
+    pub(crate) fn close(&self) -> impl Promise<'_, Result<()>> {
+        self.transaction_transmitter.close()
     }
 
     pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
@@ -104,7 +108,9 @@ impl TransactionStream {
 
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
         let promise = self.single(TransactionRequest::Rollback);
-        promisify! { require_transaction_response!(resolve!(promise), Rollback) }
+        promisify! {
+            require_transaction_response!(resolve!(promise), Rollback)
+        }
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {

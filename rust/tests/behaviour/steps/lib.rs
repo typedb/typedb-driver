@@ -234,13 +234,13 @@ impl Context {
 
     pub async fn cleanup_transactions(&mut self) {
         while let Some(transaction) = self.try_take_transaction() {
-            transaction.force_close();
+            transaction.close().await.ok();
         }
     }
 
     pub async fn cleanup_background_transactions(&mut self) {
         while let Some(background_transaction) = self.try_take_background_transaction() {
-            background_transaction.force_close();
+            background_transaction.close().await.ok();
         }
     }
 

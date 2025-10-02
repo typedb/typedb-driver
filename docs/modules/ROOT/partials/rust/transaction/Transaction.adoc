@@ -8,6 +8,48 @@
 A transaction with a TypeDB database.
 
 // tag::methods[]
+[#_struct_Transaction_close_]
+==== close
+
+[source,rust]
+----
+pub fn close(&self) -> impl Promise<'_, Result<()>>
+----
+
+Closes the transaction and returns a resolvable promise
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Promise<'_, Result<()>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.close().await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.close().resolve()
+----
+
+--
+====
+
 [#_struct_Transaction_commit_]
 ==== commit
 
@@ -50,30 +92,6 @@ transaction.commit()
 --
 ====
 
-[#_struct_Transaction_force_close_]
-==== force_close
-
-[source,rust]
-----
-pub fn force_close(&self)
-----
-
-Closes the transaction.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-null
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-transaction.force_close()
-----
-
 [#_struct_Transaction_is_open_]
 ==== is_open
 
@@ -106,10 +124,10 @@ transaction.close()
 pub fn on_close(
     &self,
     callback: impl FnOnce(Option<Error>) + Send + Sync + 'static,
-)
+) -> impl Promise<'_, Result<()>>
 ----
 
-Registers a callback function which will be executed when this transaction is closed.
+Registers a callback function which will be executed when this transaction is closed returns a resolvable promise that must be awaited otherwise the callback may not be registered
 
 [caption=""]
 .Input parameters
@@ -124,7 +142,7 @@ a| `function` a|  — The callback function. a|
 .Returns
 [source,rust]
 ----
-null
+impl Promise<'_, Result<()>>
 ----
 
 [caption=""]

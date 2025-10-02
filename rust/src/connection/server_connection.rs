@@ -18,7 +18,6 @@
  */
 
 use std::{
-    collections::{HashMap, HashSet},
     fmt,
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -31,10 +30,10 @@ use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
 use crate::{
-    common::{address::Address, RequestID},
+    common::address::Address,
     connection::{
         database::{export_stream::DatabaseExportStream, import_stream::DatabaseImportStream},
-        message::{DatabaseImportRequest, Request, Response, TransactionRequest, TransactionResponse},
+        message::{DatabaseImportRequest, Request, Response, TransactionRequest},
         network::transmitter::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
@@ -43,7 +42,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, TransactionOptions, TransactionType, User,
+    Credentials, DriverOptions, TransactionOptions, TransactionType,
 };
 
 #[derive(Clone)]
@@ -261,7 +260,6 @@ impl ServerConnection {
                 let open_latency =
                     Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
                 self.latency_tracker.update_latency(open_latency);
-
                 let transmitter =
                     TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();

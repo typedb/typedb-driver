@@ -21,7 +21,7 @@ use std::{collections::HashSet, error::Error as StdError, fmt};
 
 use itertools::Itertools;
 use tonic::{Code, Status};
-use tonic_types::{ErrorDetails, ErrorInfo, StatusExt};
+use tonic_types::StatusExt;
 
 use super::{address::Address, RequestID};
 

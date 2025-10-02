@@ -19,13 +19,13 @@
 
 use std::ffi::c_char;
 
-use typedb_driver::{Database, TypeDBDriver, User, UserManager};
+use typedb_driver::User;
 
 use super::{
     error::unwrap_void,
     memory::{borrow, free, release_string, string_view},
 };
-use crate::memory::{take_arc, take_ownership};
+use crate::memory::take_ownership;
 
 /// Frees the native rust <code>User</code> object.
 #[no_mangle]

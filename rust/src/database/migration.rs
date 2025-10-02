@@ -20,7 +20,7 @@
 use std::{
     cmp::max,
     fs::{File, OpenOptions},
-    io::{BufRead, Read, Write},
+    io::BufRead,
     marker::PhantomData,
     path::Path,
 };

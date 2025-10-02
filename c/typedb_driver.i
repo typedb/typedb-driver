@@ -17,6 +17,7 @@
  * under the License.
  */
 
+%module(threads=1) typedb_driver
 %module(directors="1") typedb_driver
 %{
 extern "C" {
@@ -62,7 +63,7 @@ struct Type {};
 %dropproxy(QueryOptions, query_options)
 
 #define typedb_driver_drop driver_close
-#define transaction_drop transaction_close
+#define transaction_drop transaction_submit_close
 #define database_drop database_close
 
 %dropproxy(TypeDBDriver, typedb_driver)
@@ -116,12 +117,75 @@ struct TransactionCallbackDirector {
 %{
 #include <memory>
 #include <iostream>
+#include <mutex>
 #include <unordered_map>
-static std::unordered_map<size_t, TransactionCallbackDirector*> transactionOnCloseCallbacks {};
+
+class ThreadSafeTransactionCallbacks {
+private:
+    // 1. The static map to protect
+    static std::unordered_map<size_t, TransactionCallbackDirector*> s_transactionOnCloseCallbacks;
+
+    // 2. The static mutex to manage access
+    static std::mutex s_mutex;
+
+public:
+    // Delete copy/move constructors and assignment operators
+    // to prevent accidental copying of the singleton-like structure
+    ThreadSafeTransactionCallbacks(const ThreadSafeTransactionCallbacks&) = delete;
+    ThreadSafeTransactionCallbacks& operator=(const ThreadSafeTransactionCallbacks&) = delete;
+
+    // --- Core Operations ---
+
+    /**
+     * @brief Inserts a key-value pair into the map in a thread-safe manner.
+     */
+    static void insert(size_t key, TransactionCallbackDirector* value) {
+        // Lock the mutex for the duration of this scope
+        std::lock_guard<std::mutex> lock(s_mutex);
+
+        // Thread-safe insertion
+        s_transactionOnCloseCallbacks[key] = value;
+    }
+
+    /**
+     * @brief Retrieves a value associated with a key in a thread-safe manner.
+     * @returns The value pointer, or nullptr if the key is not found.
+     */
+    static TransactionCallbackDirector* find(size_t key) {
+        // Lock the mutex for the duration of this scope
+        std::lock_guard<std::mutex> lock(s_mutex);
+
+        // Thread-safe lookup
+        auto it = s_transactionOnCloseCallbacks.find(key);
+        if (it != s_transactionOnCloseCallbacks.end()) {
+            return it->second;
+        }
+        return nullptr; // Return nullptr if not found
+    }
+
+    /**
+     * @brief Removes a key-value pair from the map in a thread-safe manner.
+     */
+    static void remove(size_t key) {
+        // Lock the mutex for the duration of this scope
+        std::lock_guard<std::mutex> lock(s_mutex);
+
+        // Thread-safe removal
+        s_transactionOnCloseCallbacks.erase(key);
+    }
+
+    // Add other necessary map operations (e.g., size(), contains(), clear()) here...
+};
+
+// Initialize the static members
+std::unordered_map<size_t, TransactionCallbackDirector*> ThreadSafeTransactionCallbacks::s_transactionOnCloseCallbacks;
+std::mutex ThreadSafeTransactionCallbacks::s_mutex;
+
 static void transaction_callback_execute(size_t ID, Error* error) {
     try {
-        transactionOnCloseCallbacks.at(ID)->callback(error);
-        transactionOnCloseCallbacks.erase(ID);
+        auto cb = ThreadSafeTransactionCallbacks::find(ID);
+        cb->callback(error);
+        ThreadSafeTransactionCallbacks::remove(ID);
     } catch (std::exception const& e) {
         std::cerr << "[ERROR] " << e.what() << std::endl;
     }
@@ -132,11 +196,11 @@ static void transaction_callback_execute(size_t ID, Error* error) {
 %ignore transaction_on_close;
 %inline %{
 #include <atomic>
-void transaction_on_close_register(const Transaction* transaction, TransactionCallbackDirector* handler) {
+VoidPromise* transaction_on_close_register(const Transaction* transaction, TransactionCallbackDirector* handler) {
     static std::atomic_size_t nextID;
     std::size_t ID = nextID.fetch_add(1);
-    transactionOnCloseCallbacks.insert({ID, handler});
-    transaction_on_close(transaction, ID, &transaction_callback_execute);
+    ThreadSafeTransactionCallbacks::insert(ID, handler);
+    return transaction_on_close(transaction, ID, &transaction_callback_execute);
 }
 %}
 

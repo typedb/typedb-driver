@@ -25,6 +25,7 @@ use tokio::{
         oneshot::channel as oneshot_async,
     },
 };
+use tracing::trace;
 use typedb_protocol::{transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
@@ -100,9 +101,15 @@ impl RPCTransmitter {
             request = request_source.recv() => request,
             _ = shutdown_signal.recv() => None,
         } {
+            trace!("RPC dispatcher loop received request {:?}", request);
             let rpc = rpc.clone();
             tokio::spawn(async move {
                 let response = Self::send_request(rpc, request).await;
+                trace!(
+                    "RPC dispatcher loop received response, will send into response {:?} into sink {:?}",
+                    response,
+                    response_sink
+                );
                 response_sink.finish(response);
             });
         }

@@ -17,16 +17,19 @@
  * under the License.
  */
 
-use std::{fmt, fmt::Formatter, sync::Arc};
+use std::{
+    fmt,
+    fmt::{Debug, Formatter},
+    sync::Arc,
+};
 
 use crossbeam::channel::Sender as SyncOneshotSender;
-use itertools::Either;
-use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
+use tracing::{debug, error};
 
 use crate::{
     common::{RequestID, Result},
-    error::{ConnectionError, InternalError},
+    error::InternalError,
     Error,
 };
 
@@ -59,7 +62,7 @@ pub(super) enum StreamResponse<T> {
     Continue(RequestID),
 }
 
-impl<T> ResponseSink<T> {
+impl<T: Debug> ResponseSink<T> {
     pub(super) fn finish(self, response: Result<T>) {
         let result = match self {
             Self::ImmediateOneShot(handler) => {
@@ -71,7 +74,7 @@ impl<T> ResponseSink<T> {
             Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("ResponseSink::finish - {err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
@@ -83,7 +86,7 @@ impl<T> ResponseSink<T> {
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("ResponseSink::send_result - {err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
@@ -95,7 +98,9 @@ impl<T> ResponseSink<T> {
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => {
+                debug!("ResponseSink::send_continuable - {err}")
+            }
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
