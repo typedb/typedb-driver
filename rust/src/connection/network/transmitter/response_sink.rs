@@ -64,7 +64,6 @@ pub(super) enum StreamResponse<T> {
 
 impl<T: Debug> ResponseSink<T> {
     pub(super) fn finish(self, response: Result<T>) {
-        let as_str = format!("{:?}", response);
         let result = match self {
             Self::ImmediateOneShot(handler) => {
                 handler.run(response);
@@ -75,20 +74,19 @@ impl<T: Debug> ResponseSink<T> {
             Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("finish... {err} FROM {as_str}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("ResponseSink::finish - {err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
     }
 
     pub(super) fn send_result(&self, response: Result<T>) {
-        let as_str = format!("{:?}", response);
         let result = match self {
             Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError)) => debug!("send_result... {err} FROM {as_str}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("ResponseSink::send_result - {err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
@@ -96,12 +94,12 @@ impl<T: Debug> ResponseSink<T> {
 
     pub(super) fn send_continuable(&self, request_id: RequestID) {
         let result = match self {
-            Self::Streamed(sink) => sink.send(StreamResponse::Continue(request_id.clone())).map_err(Error::from),
+            Self::Streamed(sink) => sink.send(StreamResponse::Continue(request_id)).map_err(Error::from),
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
             Err(Error::Internal(err @ InternalError::SendError)) => {
-                debug!("send_continuable... {err} FROM request id {request_id}")
+                debug!("ResponseSink::send_continuable - {err}")
             }
             Err(err) => error!("{err}"),
             Ok(()) => (),

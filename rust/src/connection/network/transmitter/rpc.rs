@@ -80,7 +80,6 @@ impl RPCTransmitter {
         let (response_sink, response) = oneshot_async();
         trace!("RPCTransmitter::request_async sending request into sink");
         self.request_sink.send((request, ResponseSink::AsyncOneShot(response_sink)))?;
-        trace!("RPCTransmitter::request_async submitted request, going to wait");
         let res = response.await?;
         trace!("RPCTransmitter::request_async received res: {:?}", res);
         res
@@ -90,7 +89,6 @@ impl RPCTransmitter {
         let (response_sink, response) = oneshot_blocking();
         trace!("RPCTransmitter::request_blocking sending request into sink");
         self.request_sink.send((request, ResponseSink::BlockingOneShot(response_sink)))?;
-        trace!("RPCTransmitter::request_blocking submitted request, going to block");
         let res = response.recv()?;
         trace!("RPCTransmitter::request_blocking received res: {:?}", res);
         res
@@ -165,12 +163,8 @@ impl RPCTransmitter {
             Request::Transaction(transaction_request) => {
                 let req = transaction_request.into_proto();
                 let open_request_id = RequestID::from(req.req_id.clone());
-                trace!("RPCTransmitter.send_request sending transaction request");
                 let (request_sink, mut response_source) = rpc.transaction(req).await?;
-
-                trace!("RPCTransmitter.send_request.rpc.transaction(req) finished");
                 let next = response_source.next();
-                trace!("RPCTransmitter.send_request received next() {:?}", next);
                 match next.await {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
