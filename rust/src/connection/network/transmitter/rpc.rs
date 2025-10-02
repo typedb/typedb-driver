@@ -18,6 +18,7 @@
  */
 
 use futures::StreamExt;
+use log::trace;
 use tokio::{
     select,
     sync::{
@@ -77,14 +78,22 @@ impl RPCTransmitter {
 
     pub(in crate::connection) async fn request_async(&self, request: Request) -> Result<Response> {
         let (response_sink, response) = oneshot_async();
+        trace!("RPCTransmitter::request_async sending request into sink");
         self.request_sink.send((request, ResponseSink::AsyncOneShot(response_sink)))?;
-        response.await?
+        trace!("RPCTransmitter::request_async submitted request, going to wait");
+        let res = response.await?;
+        trace!("RPCTransmitter::request_blocking received res: {:?}", res);
+        res
     }
 
     pub(in crate::connection) fn request_blocking(&self, request: Request) -> Result<Response> {
         let (response_sink, response) = oneshot_blocking();
+        trace!("RPCTransmitter::request_blocking sending request into sink");
         self.request_sink.send((request, ResponseSink::BlockingOneShot(response_sink)))?;
-        response.recv()?
+        trace!("RPCTransmitter::request_blocking submitted request, going to block");
+        let res = response.recv()?;
+        trace!("RPCTransmitter::request_blocking received res: {:?}", res);
+        res
     }
 
     pub(in crate::connection) fn force_close(&self) -> Result {
@@ -100,9 +109,11 @@ impl RPCTransmitter {
             request = request_source.recv() => request,
             _ = shutdown_signal.recv() => None,
         } {
+            trace!("RPC dispatcher loop received request {:?}", request);
             let rpc = rpc.clone();
             tokio::spawn(async move {
                 let response = Self::send_request(rpc, request).await;
+                trace!("RPC dispatcher loop received response, will send into response {:?} into sink {:?}", response, response_sink);
                 response_sink.finish(response);
             });
         }
@@ -150,8 +161,12 @@ impl RPCTransmitter {
             Request::Transaction(transaction_request) => {
                 let req = transaction_request.into_proto();
                 let open_request_id = RequestID::from(req.req_id.clone());
+                trace!("RPCTransmitter.send_request sending transaction request");
                 let (request_sink, mut response_source) = rpc.transaction(req).await?;
-                match response_source.next().await {
+                trace!("RPCTransmitter.send_request.rpc.transaction(req) finished");
+                let next = response_source.next();
+                trace!("RPCTransmitter.send_request received next() {:?}", next);
+                match next.await {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
                             Ok(TransactionResponse::Open { server_duration_millis }) => {

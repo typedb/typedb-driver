@@ -278,7 +278,10 @@ impl TypeDBDriver {
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
         let transaction_stream = database
             .run_failsafe(|database| async move {
-                database.connection().open_transaction(database.name(), transaction_type, options).await
+                trace!("Running failsafe task to open transaction on database connection");
+                let res = database.connection().open_transaction(database.name(), transaction_type, options).await;
+                trace!("  --> Finished running task to open transaction on database connection with result {:?}", res);
+                res
             })
             .await?;
         

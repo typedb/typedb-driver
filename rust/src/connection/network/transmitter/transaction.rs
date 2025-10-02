@@ -46,6 +46,7 @@ use tokio::{
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
+use tracing::trace;
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
@@ -306,12 +307,12 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
-        println!("... Rust spawning sync dispatch loop");
+        trace!("... Rust spawning sync dispatch loop");
         tokio::task::spawn_blocking({
             let collector = collector.clone();
             move || Self::sync_dispatch_loop(queue_source, request_sink, collector, shutdown_signal)
         });
-        println!("... Rust spawning async listen loop");
+        trace!("... Rust spawning async listen loop");
         tokio::spawn(Self::async_listen_loop(response_source, collector, on_close_callback_source, shutdown_sink));
     }
 
