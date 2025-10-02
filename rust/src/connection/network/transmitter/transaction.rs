@@ -306,7 +306,7 @@ impl TransactionTransmitter {
             on_close: Default::default(),
             callback_handler_sink,
         };
-        tokio::task::spawn_blocking({
+        task::spawn_blocking({
             let collector = collector.clone();
             move || Self::sync_dispatch_loop(queue_source, request_sink, collector, shutdown_signal)
         });

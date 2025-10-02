@@ -95,29 +95,21 @@ impl TransactionStream {
     }
 
     pub(crate) fn close(&self) -> impl Promise<'_, Result<()>> {
-        trace!("TransactionStream: close() called");
-        // TODO: do we want to resolve and re-emit a promise?
         self.transaction_transmitter.close()
     }
 
     pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
-        trace!("TransactionStream: commit() called");
         let promise = self.single(TransactionRequest::Commit);
         promisify! {
             let _this = self; // move into the promise so the stream isn't dropped until the promise is resolved
-            let resolved = resolve!(promise);
-            trace!("TransactionStream: commit() promise resolved");
-            require_transaction_response!(resolved, Commit)
+            require_transaction_response!(resolve!(promise), Commit)
         }
     }
 
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
-        trace!("TransactionStream: rollback() called");
         let promise = self.single(TransactionRequest::Rollback);
         promisify! {
-            let resolved = resolve!(promise);
-            trace!("TransactionStream: rollback() promise resolved");
-            require_transaction_response!(resolved, Rollback)
+            require_transaction_response!(resolve!(promise), Rollback)
         }
     }
 
@@ -131,8 +123,6 @@ impl TransactionStream {
             let header = stream.next();
             #[cfg(not(feature = "sync"))]
             let header: Option<Result<QueryResponse>> = stream.next().await;
-
-            trace!("TransactionStream: query() initial header received: {:?}", header);
 
             let header = match header {
                 None => return Err(ConnectionError::QueryStreamNoResponse.into()),

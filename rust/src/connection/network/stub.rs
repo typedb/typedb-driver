@@ -64,12 +64,12 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn renew_token(&mut self) -> Result {
         if let Some(call_credentials) = &self.call_credentials {
-            trace!("Renewing token...");
+            debug!("Renewing token...");
             call_credentials.reset_token();
             let request = call_credentials.credentials().clone().try_into_proto()?;
             let token = self.grpc.authentication_token_create(request).await?.into_inner().token;
             call_credentials.set_token(token);
-            trace!("Token renewed");
+            debug!("Token renewed");
         }
         Ok(())
     }
@@ -167,14 +167,12 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
                 sender.send(transaction_req)?;
-                trace!("Submitting into grpc and awaiting response...");
                 let res = this
                     .grpc
                     .transaction(UnboundedReceiverStream::new(receiver))
                     .map_ok(|stream| Response::new((sender, stream.into_inner())))
                     .map(|r| Ok(r?.into_inner()))
                     .await;
-                trace!("... received response {:?}", res);
                 res
             })
         })

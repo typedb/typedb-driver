@@ -78,20 +78,14 @@ impl RPCTransmitter {
 
     pub(in crate::connection) async fn request_async(&self, request: Request) -> Result<Response> {
         let (response_sink, response) = oneshot_async();
-        trace!("RPCTransmitter::request_async sending request into sink");
         self.request_sink.send((request, ResponseSink::AsyncOneShot(response_sink)))?;
-        let res = response.await?;
-        trace!("RPCTransmitter::request_async received res: {:?}", res);
-        res
+        response.await?
     }
 
     pub(in crate::connection) fn request_blocking(&self, request: Request) -> Result<Response> {
         let (response_sink, response) = oneshot_blocking();
-        trace!("RPCTransmitter::request_blocking sending request into sink");
         self.request_sink.send((request, ResponseSink::BlockingOneShot(response_sink)))?;
-        let res = response.recv()?;
-        trace!("RPCTransmitter::request_blocking received res: {:?}", res);
-        res
+        response.recv()?
     }
 
     pub(in crate::connection) fn force_close(&self) -> Result {
@@ -164,8 +158,7 @@ impl RPCTransmitter {
                 let req = transaction_request.into_proto();
                 let open_request_id = RequestID::from(req.req_id.clone());
                 let (request_sink, mut response_source) = rpc.transaction(req).await?;
-                let next = response_source.next();
-                match next.await {
+                match response_source.next().await {
                     Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
                         match TransactionResponse::try_from_proto(res) {
                             Ok(TransactionResponse::Open { server_duration_millis }) => {

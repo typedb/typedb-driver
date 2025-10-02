@@ -2874,6 +2874,7 @@ dependencies = [
  "env_logger",
  "itertools 0.10.5",
  "log",
+ "tracing",
  "typedb-driver",
 ]
 

@@ -57,7 +57,8 @@ impl TypeDBDriver {
     /// Initialize logging configuration for the TypeDB driver.
     ///
     /// This function sets up tracing with the following priority:
-    /// 1. TYPEDB_DRIVER_LOG environment variable (if set)
+    /// 1. TYPEDB_DRIVER_LOG environment variable (if set). Use TYPEDB_DRIVER_CLIB_LOG to see memory exchanges
+    /// 1.  environment variable (if set)
     /// 2. RUST_LOG environment variable (if set)
     /// 3. Default level (INFO)
     ///
@@ -68,14 +69,19 @@ impl TypeDBDriver {
         static INIT: Once = Once::new();
 
         INIT.call_once(|| {
-            // Try to get log level from TYPEDB_DRIVER_LOG first, then RUST_LOG
+            let clib_level = if let Ok(typedb_driver_clib_log) = std::env::var("TYPEDB_DRIVER_CLIB_LOG") {
+                typedb_driver_clib_log
+            } else {
+                "info".to_owned()
+            };
+            // Try to get log level from TYPEDB_DRIVER_LOG first
             let env_filter = if let Ok(typedb_log_level) = std::env::var("TYPEDB_DRIVER_LOG") {
-                EnvFilter::new(&format!("typedb_driver={}", typedb_log_level))
+                EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", typedb_log_level, clib_level))
             } else if let Ok(rust_log) = std::env::var("RUST_LOG") {
                 // If RUST_LOG is set, use it but scope it to typedb_driver only
-                EnvFilter::new(&format!("typedb_driver={}", rust_log))
+                EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", rust_log, clib_level))
             } else {
-                EnvFilter::new("typedb_driver=info")
+                EnvFilter::new(&format!("typedb_driver=info,typedb_driver_clib={}", clib_level))
             };
 
             // Initialize the tracing subscriber
@@ -154,7 +160,6 @@ impl TypeDBDriver {
         let address: Address = id.parse()?;
 
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        trace!("Created background runtime");
 
         debug!("Establishing server connection to {}", address);
         let (server_connection, database_info) = ServerConnection::new(
@@ -276,9 +281,7 @@ impl TypeDBDriver {
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
         let transaction_stream = database
             .run_failsafe(|database| async move {
-                trace!("Running failsafe task to open transaction on database connection");
                 let res = database.connection().open_transaction(database.name(), transaction_type, options).await;
-                trace!("  --> Finished running task to open transaction on database connection with result {:?}", res);
                 res
             })
             .await?;

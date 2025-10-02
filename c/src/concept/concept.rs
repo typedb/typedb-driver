@@ -24,7 +24,7 @@ use typedb_driver::{
     box_stream,
     concept::{
         value::{Decimal, Duration, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Attribute, Concept, Entity, Relation, Value,
     },
 };
 
