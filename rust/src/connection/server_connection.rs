@@ -118,6 +118,7 @@ impl ServerConnection {
         if !self.background_runtime.is_open() {
             return Err(ConnectionError::ServerConnectionIsClosed.into());
         }
+        trace!("ServerConnection::request");
         self.request_transmitter.request(request).await
     }
 
@@ -125,6 +126,7 @@ impl ServerConnection {
         if !self.background_runtime.is_open() {
             return Err(ConnectionError::ServerConnectionIsClosed.into());
         }
+        trace!("ServerConnection::request_blocking");
         self.request_transmitter.request_blocking(request)
     }
 

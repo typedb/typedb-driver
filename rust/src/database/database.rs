@@ -31,9 +31,8 @@ use std::{
 };
 
 use itertools::Itertools;
-use log::{debug, error};
 use prost::Message;
-
+use tracing::{debug, error};
 use crate::{
     common::{
         address::Address,

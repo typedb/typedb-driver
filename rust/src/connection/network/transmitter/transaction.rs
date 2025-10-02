@@ -32,7 +32,6 @@ use futures::StreamExt;
 use futures::TryStreamExt;
 #[cfg(feature = "sync")]
 use itertools::Itertools;
-use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
@@ -46,7 +45,7 @@ use tokio::{
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
-use tracing::trace;
+use tracing::{debug, error, trace};
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]

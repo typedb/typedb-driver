@@ -18,7 +18,6 @@
  */
 
 use futures::StreamExt;
-use log::trace;
 use tokio::{
     select,
     sync::{
@@ -26,6 +25,7 @@ use tokio::{
         oneshot::channel as oneshot_async,
     },
 };
+use tracing::trace;
 use typedb_protocol::{transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
