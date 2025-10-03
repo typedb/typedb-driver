@@ -999,6 +999,14 @@ pub async fn get_answers_of_typeql_analyze_query(context: &mut Context, step: &S
 }
 
 #[apply(generic_step)]
+#[step(expr = r"typeql analyze query{may_error}")]
+async fn typeql_analyze_query_may_error(context: &mut Context, may_error: params::MayError, step: &Step) {
+    context.cleanup_answers().await;
+    let result = run_analyze_query(context.transaction(), step.docstring().unwrap()).await;
+    may_error.check(result);
+}
+
+#[apply(generic_step)]
 #[step(expr = r"analyzed query pipeline structure is:")]
 pub async fn analyzed_query_pipeline_structure_is(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
