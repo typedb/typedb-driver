@@ -35,10 +35,9 @@ use crate::{
     assert_err, generic_step, params,
     params::check_boolean,
     util,
-    util::{functor_encoding::encode_query_structure_as_functor, iter_table, list_contains_json, parse_json},
+    util::{iter_table, list_contains_json, parse_json},
     BehaviourTestOptionalError, Context,
 };
-use crate::util::functor_encoding::{encode_fetch_annotations_as_functor, encode_query_annotations_as_functor};
 
 pub(crate) async fn run_query(
     transaction: &Transaction,
@@ -49,13 +48,6 @@ pub(crate) async fn run_query(
         None => transaction.query(query).await,
         Some(options) => transaction.query_with_options(query, options).await,
     }
-}
-
-pub(crate) async fn run_analyze_query(
-    transaction: &Transaction,
-    query: impl AsRef<str>,
-) -> TypeDBResult<AnalyzedQuery> {
-    transaction.analyze_query(query).await
 }
 
 fn get_collected_column_names(concept_row: &ConceptRow) -> Vec<String> {
@@ -989,91 +981,4 @@ pub async fn answer_contains_document(
         list_contains_json(&concept_documents, &expected_document),
         &format!("Concept documents: {:?}", concept_documents),
     );
-}
-
-#[apply(generic_step)]
-#[step(expr = r"get answers of typeql analyze query")]
-pub async fn get_answers_of_typeql_analyze_query(context: &mut Context, step: &Step) {
-    context.cleanup_answers().await;
-    context.set_analyzed(run_analyze_query(context.transaction(), step.docstring().unwrap()).await).unwrap();
-}
-
-#[apply(generic_step)]
-#[step(expr = r"typeql analyze query{may_error}")]
-async fn typeql_analyze_query_may_error(context: &mut Context, may_error: params::MayError, step: &Step) {
-    context.cleanup_answers().await;
-    let result = run_analyze_query(context.transaction(), step.docstring().unwrap()).await;
-    may_error.check(result);
-}
-
-#[apply(generic_step)]
-#[step(expr = r"analyzed query pipeline structure is:")]
-pub async fn analyzed_query_pipeline_structure_is(context: &mut Context, step: &Step) {
-    let expected_functor = step.docstring().unwrap();
-    let analyzed = context.get_analyzed().unwrap();
-    let (actual_functor, _preamble) = encode_query_structure_as_functor(&analyzed);
-    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
-}
-
-#[apply(generic_step)]
-#[step(expr = r"analyzed query preamble contains:")]
-async fn analyzed_query_preamble_contains(context: &mut Context, step: &Step) {
-    let expected_functor = step.docstring().unwrap();
-    let analyzed = context.get_analyzed().unwrap();
-    let (_pipeline, preamble_functors) = encode_query_structure_as_functor(&analyzed);
-
-    assert!(
-        preamble_functors.iter().any(|actual_functor| {
-            normalize_functor_for_compare(actual_functor) == normalize_functor_for_compare(expected_functor)
-        }),
-        "Looking for\n\t{}\nin any of:\n\t{}",
-        normalize_functor_for_compare(expected_functor),
-        preamble_functors.iter().map(|s| normalize_functor_for_compare(s)).join("\n\t")
-    );
-}
-
-#[apply(generic_step)]
-#[step(expr = r"analyzed query pipeline annotations are:")]
-async fn analyzed_query_annotations_is(context: &mut Context, step: &Step) {
-    let expected_functor = step.docstring().unwrap();
-    let analyzed = context.get_analyzed().unwrap();
-    let (actual_functor, _preamble) = encode_query_annotations_as_functor(&analyzed);
-    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
-}
-
-#[apply(generic_step)]
-#[step(expr = r"analyzed preamble annotations contains:")]
-async fn analyzed_preamble_annotations_contains(context: &mut Context, step: &Step) {
-    let expected_functor = step.docstring().unwrap();
-    let analyzed = context.get_analyzed().unwrap();
-    let (_pipeline, preamble_functors) = encode_query_annotations_as_functor(&analyzed);
-
-    assert!(
-        preamble_functors.iter().any(|actual_functor| {
-            normalize_functor_for_compare(actual_functor) == normalize_functor_for_compare(expected_functor)
-        }),
-        "Looking for\n\t{}\nin any of:\n\t{}",
-        normalize_functor_for_compare(expected_functor),
-        preamble_functors.iter().map(|s| normalize_functor_for_compare(s)).join("\n\t")
-    );
-}
-
-#[apply(generic_step)]
-#[step(expr = r"analyzed fetch annotations are:")]
-async fn analyzed_fetch_annotations_are(context: &mut Context, step: &Step) {
-    let expected_functor = step.docstring().unwrap();
-    let analyzed = context.get_analyzed().unwrap();
-    let actual_functor = encode_fetch_annotations_as_functor(&analyzed);
-
-    assert_eq!(
-        normalize_functor_for_compare(&actual_functor),
-        normalize_functor_for_compare(expected_functor)
-    );
-}
-
-
-fn normalize_functor_for_compare(functor: &String) -> String {
-    let mut normalized = functor.to_lowercase();
-    normalized.retain(|c| !c.is_whitespace());
-    normalized
 }

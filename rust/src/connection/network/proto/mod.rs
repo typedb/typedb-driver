@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use crate::{analyze::TryFromError, Result};
+use crate::Result;
 
 mod analyze;
 mod common;

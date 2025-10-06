@@ -18,14 +18,14 @@
  */
 
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     vec::Vec,
 };
-use std::collections::HashMap;
 
-use crate::analyze::conjunction::Variable;
-use crate::concept::type_::Type;
-use crate::concept::ValueType;
+use crate::{
+    analyze::conjunction::Variable,
+    concept::{type_::Type, ValueType},
+};
 
 #[derive(Debug)]
 pub struct PipelineAnnotations {
@@ -61,6 +61,5 @@ pub struct ConjunctionAnnotations {
 pub enum VariableAnnotations {
     Thing(Vec<Type>),
     Type(Vec<Type>),
-    Value(ValueType)
+    Value(ValueType),
 }
-

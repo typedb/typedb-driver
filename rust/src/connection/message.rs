@@ -166,7 +166,6 @@ pub(super) enum AnalyzeResponse {
     Err(ServerError),
 }
 
-
 #[derive(Debug)]
 pub(super) enum QueryRequest {
     Query { query: String, options: QueryOptions },
