@@ -18,36 +18,42 @@
  */
 
 use std::collections::HashMap;
-use typedb_protocol::{analyze::res::{
-    analyzed_query as analyze_proto,
-    analyzed_query::{
-        query_structure,
-        query_structure::pipeline_structure
+
+use typedb_protocol::{
+    analyze::res::{
+        analyzed_query as analyze_proto,
+        analyzed_query::{
+            query_annotations::{fetch_annotations::Node, variable_annotations::Annotations},
+            query_structure,
+            query_structure::pipeline_structure,
+        },
     },
-}, conjunction_structure, conjunction_structure::StructureConstraint, ConjunctionStructure};
-use typedb_protocol::analyze::res::analyzed_query::query_annotations::fetch_annotations::Node;
-use typedb_protocol::analyze::res::analyzed_query::query_annotations::variable_annotations::Annotations;
+    conjunction_structure,
+    conjunction_structure::StructureConstraint,
+    ConjunctionStructure,
+};
 
 use crate::{
     analyze::{
+        annotations::{
+            ConjunctionAnnotations, FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations,
+            PipelineAnnotations, VariableAnnotations,
+        },
         conjunction::{
-            Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, Reducer,
-            Variable,
+            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
+            Reducer, Variable,
         },
         pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
         AnalyzedQuery, FunctionStructure, QueryAnnotations, QueryStructure, ReturnOperation,
     },
     common::Result,
-    concept::{type_, Kind, Value},
-    connection::network::proto::TryFromProto,
-    error::AnalyzeError,
+    concept::{type_, Kind, Value, ValueType},
+    connection::{
+        message::AnalyzeResponse,
+        network::proto::{FromProto, TryFromProto},
+    },
+    error::{AnalyzeError, ServerError},
 };
-use crate::analyze::annotations::{ConjunctionAnnotations, FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations, PipelineAnnotations, VariableAnnotations};
-use crate::analyze::conjunction::{Comparator, NamedRole};
-use crate::concept::ValueType;
-use crate::connection::message::AnalyzeResponse;
-use crate::connection::network::proto::FromProto;
-use crate::error::ServerError;
 
 pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -76,7 +82,7 @@ impl TryFromProto<typedb_protocol::analyze::res::Result> for AnalyzeResponse {
         use typedb_protocol::analyze::res::Result as ResultProto;
         let result = match proto {
             ResultProto::Ok(analyzed_query) => AnalyzeResponse::Ok(AnalyzedQuery::try_from_proto(analyzed_query)?),
-            ResultProto::Err(err)  => AnalyzeResponse::Err(ServerError::from_proto(err)),
+            ResultProto::Err(err) => AnalyzeResponse::Err(ServerError::from_proto(err)),
         };
         Ok(result)
     }
@@ -391,7 +397,7 @@ impl TryFromProto<analyze_proto::QueryAnnotations> for QueryAnnotations {
         let query = expect_try_into(proto.query, "QueryAnnotations.query")?;
         let preamble = vec_from_proto(proto.preamble)?;
         let fetch = proto.fetch.map(|fetch| FetchAnnotations::try_from_proto(fetch)).transpose()?;
-        Ok(Self { query, preamble, fetch})
+        Ok(Self { query, preamble, fetch })
     }
 }
 
@@ -414,11 +420,17 @@ impl TryFromProto<analyze_proto::query_annotations::PipelineAnnotations> for Pip
     }
 }
 
-impl TryFromProto<analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations> for ConjunctionAnnotations {
-    fn try_from_proto(proto: analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations) -> Result<Self> {
-        let variable_annotations = proto.variable_annotations.into_iter().map(|(id, annotations_proto)| {
-            Ok((Variable(id), VariableAnnotations::try_from_proto(annotations_proto)?))
-        }).collect::<Result<HashMap<_,_>>>()?;
+impl TryFromProto<analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations>
+    for ConjunctionAnnotations
+{
+    fn try_from_proto(
+        proto: analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations,
+    ) -> Result<Self> {
+        let variable_annotations = proto
+            .variable_annotations
+            .into_iter()
+            .map(|(id, annotations_proto)| Ok((Variable(id), VariableAnnotations::try_from_proto(annotations_proto)?)))
+            .collect::<Result<HashMap<_, _>>>()?;
         Ok(Self { variable_annotations })
     }
 }
@@ -434,7 +446,7 @@ impl TryFromProto<analyze_proto::query_annotations::VariableAnnotations> for Var
             Annotations::ValueAnnotations(value_type) => {
                 let value_type_proto = value_type.value_type.ok_or_else(|| {
                     crate::Error::Analyze(AnalyzeError::MissingResponseField {
-                        field: "Value.value_type in VariableAnnotations::ValueAnnotations"
+                        field: "Value.value_type in VariableAnnotations::ValueAnnotations",
                     })
                 })?;
                 Self::Value(ValueType::from_proto(value_type_proto))
@@ -450,17 +462,15 @@ impl TryFromProto<analyze_proto::query_annotations::FetchAnnotations> for FetchA
         })?;
         let fetch_annotations = match unwrapped {
             Node::Object(object) => {
-                let fields = object.annotations.into_iter().map(|(key, annotations)| {
-                    Ok((key, FetchAnnotations::try_from_proto(annotations)?))
-                }).collect::<Result<HashMap<_,_>>>()?;
+                let fields = object
+                    .annotations
+                    .into_iter()
+                    .map(|(key, annotations)| Ok((key, FetchAnnotations::try_from_proto(annotations)?)))
+                    .collect::<Result<HashMap<_, _>>>()?;
                 FetchAnnotations::Object(fields)
             }
-            Node::List(elements) => {
-                FetchAnnotations::List(Box::new(FetchAnnotations::try_from_proto(*elements)?))
-            }
-            Node::Leaf(leaf) => {
-                FetchAnnotations::Leaf(vec_from_proto(leaf.annotations)?)
-            }
+            Node::List(elements) => FetchAnnotations::List(Box::new(FetchAnnotations::try_from_proto(*elements)?)),
+            Node::Leaf(leaf) => FetchAnnotations::Leaf(vec_from_proto(leaf.annotations)?),
         };
         Ok(fetch_annotations)
     }

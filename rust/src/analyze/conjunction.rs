@@ -133,7 +133,7 @@ pub enum ConstraintVertex {
     Label(type_::Type),
     Value(concept::Value),
     NamedRole(NamedRole),
-    Unresolved(String) // Error condition
+    Unresolved(String), // Error condition
 }
 
 #[derive(Debug)]
@@ -157,7 +157,7 @@ pub enum Comparator {
     Greater,
     GreaterOrEqual,
     Like,
-    Contains
+    Contains,
 }
 
 impl Comparator {

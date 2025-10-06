@@ -83,11 +83,12 @@ impl Transaction {
         self.transaction_stream.query(query, options)
     }
 
-    /// Performs a TypeQL query in this transaction.
+    /// Analyzes a TypeQL query in this transaction,
+    /// returning the translated structure & inferred types.
     ///
     /// # Arguments
     ///
-    /// * `query` — The TypeQL query to be executed
+    /// * `query` — The TypeQL query to be analyzed
     ///
     /// # Examples
     ///

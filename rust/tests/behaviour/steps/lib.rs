@@ -37,6 +37,7 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
+    analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction, TransactionOptions,
     TypeDBDriver,
@@ -47,6 +48,7 @@ use crate::{
     util::{create_temp_dir, TempDir},
 };
 
+mod analyze;
 mod connection;
 mod params;
 mod query;
@@ -530,7 +532,6 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
-use typedb_driver::analyze::AnalyzedQuery;
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,

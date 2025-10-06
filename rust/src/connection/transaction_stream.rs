@@ -32,12 +32,10 @@ use crate::{
         stream::{BoxStream, Stream},
         Promise, Result,
     },
-    connection::message::{QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
-    error::{ConnectionError, InternalError},
+    connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
+    error::{AnalyzeError, ConnectionError, InternalError, ServerError},
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
-use crate::connection::message::AnalyzeResponse;
-use crate::error::{AnalyzeError, ServerError};
 
 macro_rules! require_transaction_response {
     ($response:expr, $variant:ident(_)) => {

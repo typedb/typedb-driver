@@ -17,17 +17,15 @@
  * under the License.
  */
 
-use futures::StreamExt;
-
 use crate::analyze::{
+    annotations::{FetchAnnotations, FunctionAnnotations, PipelineAnnotations},
     conjunction::{Reducer, Variable},
     pipeline::PipelineStructure,
 };
-use crate::analyze::annotations::{FetchAnnotations, FunctionAnnotations, PipelineAnnotations};
 
+pub mod annotations;
 pub mod conjunction;
 pub mod pipeline;
-pub mod annotations;
 
 pub type TryFromError = &'static str;
 

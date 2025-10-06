@@ -26,18 +26,16 @@ use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    analyze::AnalyzedQuery,
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{
-        DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
+        AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
         TransactionRequest, TransactionResponse,
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
     Credentials,
 };
-use crate::connection::message::AnalyzeResponse;
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
