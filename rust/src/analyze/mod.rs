@@ -18,7 +18,7 @@
  */
 
 use crate::analyze::{
-    annotations::{FetchAnnotations, FunctionAnnotations, PipelineAnnotations},
+    annotations::QueryAnnotations,
     conjunction::{Reducer, Variable},
     pipeline::PipelineStructure,
 };
@@ -54,11 +54,4 @@ pub enum ReturnOperation {
     Single { selector: String, variables: Vec<Variable> },
     Check {},
     Reduce { reducers: Vec<Reducer> },
-}
-
-#[derive(Debug)]
-pub struct QueryAnnotations {
-    pub query: PipelineAnnotations,
-    pub preamble: Vec<FunctionAnnotations>,
-    pub fetch: Option<FetchAnnotations>,
 }

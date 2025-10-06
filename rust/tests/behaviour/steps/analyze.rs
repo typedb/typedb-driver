@@ -20,10 +20,14 @@
 use cucumber::gherkin::Step;
 use itertools::Itertools;
 use macro_rules_attribute::apply;
-use typedb_driver::{analyze::AnalyzedQuery, Transaction, Result as TypeDBResult};
-use crate::{Context, params, generic_step};
-use crate::analyze::functor_encoding::{encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor};
-// use functor_encoding::{encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor};
+use typedb_driver::{analyze::AnalyzedQuery, Result as TypeDBResult, Transaction};
+
+use crate::{
+    analyze::functor_encoding::{
+        encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor,
+    },
+    generic_step, params, Context,
+};
 
 pub(crate) async fn run_analyze_query(
     transaction: &Transaction,
@@ -106,10 +110,7 @@ async fn analyzed_fetch_annotations_are(context: &mut Context, step: &Step) {
     let analyzed = context.get_analyzed().unwrap();
     let actual_functor = encode_fetch_annotations_as_functor(&analyzed);
 
-    assert_eq!(
-        normalize_functor_for_compare(&actual_functor),
-        normalize_functor_for_compare(expected_functor)
-    );
+    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
 fn normalize_functor_for_compare(functor: &String) -> String {
@@ -118,11 +119,10 @@ fn normalize_functor_for_compare(functor: &String) -> String {
     normalized
 }
 
-
-
 #[cfg(debug_assertions)]
 pub mod functor_encoding {
     use std::collections::HashMap;
+
     use itertools::Itertools;
 
     struct FunctorContext<'a> {
@@ -217,9 +217,15 @@ pub mod functor_encoding {
 
     impl<K: FunctorEncoded, V: FunctorEncoded> FunctorEncoded for HashMap<K, V> {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
-            std::format!("{{ {} }}", self.iter().map(|(k, v)| {
-                std::format!("{}: {}", k.encode_as_functor(context), v.encode_as_functor(context))
-            }).sorted_by(|a,b| a.cmp(b)).join(", "))
+            std::format!(
+                "{{ {} }}",
+                self.iter()
+                    .map(|(k, v)| {
+                        std::format!("{}: {}", k.encode_as_functor(context), v.encode_as_functor(context))
+                    })
+                    .sorted_by(|a, b| a.cmp(b))
+                    .join(", ")
+            )
         }
     }
 
@@ -235,12 +241,23 @@ pub mod functor_encoding {
         }
     }
 
-    use typedb_driver::analyze::{AnalyzedQuery, conjunction::{Constraint, Conjunction, ConjunctionID, ConstraintVertex, Reducer, Variable}, FunctionStructure, pipeline::{PipelineStructure, PipelineStage, SortVariable, SortOrder, ReduceAssign}, ReturnOperation};
-    use typedb_driver::analyze::annotations::{FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations, PipelineAnnotations, VariableAnnotations};
-    use typedb_driver::analyze::conjunction::{Comparator, ConstraintExactness, NamedRole};
-    use typedb_driver::concept::type_::Type;
-    use typedb_driver::concept::{Value, ValueType};
     use functor_macros::encode_functor_impl;
+    use typedb_driver::{
+        analyze::{
+            annotations::{
+                FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations, PipelineAnnotations,
+                VariableAnnotations,
+            },
+            conjunction::{
+                Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
+                Reducer, Variable,
+            },
+            pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
+            AnalyzedQuery, FunctionStructure, ReturnOperation,
+        },
+        concept::{type_::Type, Value, ValueType},
+    };
+
     use crate::analyze::functor_encoding::functor_macros::{impl_functor_for, impl_functor_for_impl};
 
     impl_functor_for!(struct ReduceAssign { assigned, reducer,  } named ReduceAssign);
@@ -257,7 +274,7 @@ pub mod functor_encoding {
         Limit { limit, } |
         Require { variables, } |
         Distinct { } |
-        Reduce { reducers, groupby, } | // TODO
+        Reduce { reducers, groupby, } |
     ]);
 
     macro_rules! encode_functor_impl_exactness {
@@ -271,64 +288,64 @@ pub mod functor_encoding {
     impl FunctorEncoded for Constraint {
         fn encode_as_functor<'a>(self: &Self, context: &FunctorContext<'a>) -> String {
             match self {
-                Self::Isa  { instance, r#type, exactness }  => {
+                Self::Isa { instance, r#type, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Isa IsaExact { instance, r#type, })
                 }
-                Self::Has { owner, attribute, exactness }  => {
+                Self::Has { owner, attribute, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Has HasExact { owner, attribute, })
                 }
-                Self::Links  { relation, player, role, exactness }  => {
+                Self::Links { relation, player, role, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Links LinksExact { relation, player, role, } )
                 }
-                Self::Sub  { subtype, supertype, exactness }  => {
+                Self::Sub { subtype, supertype, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Sub SubExact { subtype, supertype, }  )
                 }
-                Self::Owns  { owner, attribute, exactness }  => {
+                Self::Owns { owner, attribute, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Owns OwnsExact { owner, attribute, }  )
                 }
-                Self::Relates  { relation, role, exactness }  => {
+                Self::Relates { relation, role, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Relates RelatesExact { relation, role, } )
                 }
-                Self::Plays  { player, role, exactness }  => {
+                Self::Plays { player, role, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Plays PlaysExact { player, role, } )
                 }
-                Self::FunctionCall  { name, assigned, arguments, }  => {
+                Self::FunctionCall { name, assigned, arguments } => {
                     encode_functor_impl!(context, FunctionCall { name, assigned, arguments, })
                 }
-                Self::Expression  { text, assigned, arguments, }  => {
+                Self::Expression { text, assigned, arguments } => {
                     encode_functor_impl!(context, Expression { text, assigned, arguments, })
                 }
-                Self::Is  { lhs, rhs, }  => {
+                Self::Is { lhs, rhs } => {
                     encode_functor_impl!(context, Is { lhs, rhs, })
                 }
-                Self::Iid  { concept, iid, }  => {
+                Self::Iid { concept, iid } => {
                     let iid_str = format!("0x{}", iid.iter().map(|x| format!("{:02X}", x)).join(""));
                     let iid_ref = &iid_str;
                     encode_functor_impl!(context, Iid { concept, iid_ref, })
                 }
-                Self::Comparison  { lhs, rhs, comparator, }  => {
+                Self::Comparison { lhs, rhs, comparator } => {
                     encode_functor_impl!(context, Comparison { lhs, rhs, comparator, })
                 }
-                Self::Kind  { kind, r#type, }  => {
+                Self::Kind { kind, r#type } => {
                     let kind_str = kind.name().to_owned();
                     let kind_ref = &kind_str;
                     encode_functor_impl!(context, Kind { kind_ref, r#type, })
                 }
-                Self::Label  { r#type, label, }  => {
+                Self::Label { r#type, label } => {
                     encode_functor_impl!(context, Label { r#type, label, })
                 }
-                Self::Value  { attribute_type, value_type, }  => {
+                Self::Value { attribute_type, value_type } => {
                     let value_type_sr = value_type.name().to_owned();
                     let value_type_ref = &value_type_sr;
                     encode_functor_impl!(context, Value { attribute_type, value_type_ref, })
                 }
-                Self::Or  { branches, }  => {
+                Self::Or { branches } => {
                     encode_functor_impl!(context, Or { branches, })
                 }
-                Self::Not  { conjunction, }  => {
+                Self::Not { conjunction } => {
                     encode_functor_impl!(context, Not { conjunction, })
                 }
-                Self::Try  { conjunction, }  => {
+                Self::Try { conjunction } => {
                     encode_functor_impl!(context, Try { conjunction, })
                 }
             }
@@ -391,10 +408,16 @@ pub mod functor_encoding {
     pub fn encode_query_structure_as_functor(analyzed: &AnalyzedQuery) -> (String, Vec<String>) {
         let context = FunctorContext { structure: &analyzed.structure.query, annotations: &analyzed.annotations.query };
         let query = analyzed.structure.query.encode_as_functor(&context);
-        let preamble = analyzed.structure.preamble.iter().zip(analyzed.annotations.preamble.iter()).map(|(func, anno)| {
-            let context = FunctorContext { structure: &func.body, annotations: &anno.body };
-            func.encode_as_functor(&context)
-        }).collect();
+        let preamble = analyzed
+            .structure
+            .preamble
+            .iter()
+            .zip(analyzed.annotations.preamble.iter())
+            .map(|(func, anno)| {
+                let context = FunctorContext { structure: &func.body, annotations: &anno.body };
+                func.encode_as_functor(&context)
+            })
+            .collect();
         (query, preamble)
     }
 
@@ -403,22 +426,30 @@ pub mod functor_encoding {
     pub fn encode_query_annotations_as_functor(analyzed: &AnalyzedQuery) -> (String, Vec<String>) {
         let context = FunctorContext { structure: &analyzed.structure.query, annotations: &analyzed.annotations.query };
         let query = analyzed.annotations.query.encode_as_functor(&context);
-        let preamble = analyzed.annotations.preamble.iter().zip(analyzed.structure.preamble.iter())
+        let preamble = analyzed
+            .annotations
+            .preamble
+            .iter()
+            .zip(analyzed.structure.preamble.iter())
             .map(|(annotations, structure)| {
                 let context = FunctorContext { structure: &structure.body, annotations: &annotations.body };
                 annotations.encode_as_functor(&context)
-            }).collect();
+            })
+            .collect();
         (query, preamble)
     }
 
     impl FunctorEncoded for PipelineAnnotations {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
-            let encoded_stages = context.structure.stages.iter().map(|stage| {
-                match stage {
+            let encoded_stages = context
+                .structure
+                .stages
+                .iter()
+                .map(|stage| match stage {
                     PipelineStage::Match { block } => {
                         let block = &BlockAnnotationToEncode(block.0);
                         encode_functor_impl!(context, Match { block, })
-                    },
+                    }
                     PipelineStage::Insert { block } => {
                         let block = &BlockAnnotationToEncode(block.0);
                         encode_functor_impl!(context, Insert { block, })
@@ -427,25 +458,25 @@ pub mod functor_encoding {
                         let block = &BlockAnnotationToEncode(block.0);
                         encode_functor_impl!(context, Delete { block, })
                     }
-                    PipelineStage::Put { block }  => {
+                    PipelineStage::Put { block } => {
                         let block = &BlockAnnotationToEncode(block.0);
                         encode_functor_impl!(context, Put { block, })
-                    },
-                    PipelineStage::Update { block } =>  {
+                    }
+                    PipelineStage::Update { block } => {
                         let block = &BlockAnnotationToEncode(block.0);
                         encode_functor_impl!(context, Update { block, })
                     }
-                    PipelineStage::Select { .. } => encode_functor_impl!(context, Select { }),
-                    PipelineStage::Sort { .. } => encode_functor_impl!(context, Sort { }),
-                    PipelineStage::Offset { .. }  => encode_functor_impl!(context, Offset { }),
-                    PipelineStage::Limit { .. } => encode_functor_impl!(context, Limit { }),
-                    PipelineStage::Require { .. } => encode_functor_impl!(context, Require { }),
-                    PipelineStage::Distinct => encode_functor_impl!(context, Select { }),
-                    PipelineStage::Reduce { .. } => encode_functor_impl!(context, Reduce { }),
-                }
-            }).collect::<Vec<_>>();
+                    PipelineStage::Select { .. } => encode_functor_impl!(context, Select {}),
+                    PipelineStage::Sort { .. } => encode_functor_impl!(context, Sort {}),
+                    PipelineStage::Offset { .. } => encode_functor_impl!(context, Offset {}),
+                    PipelineStage::Limit { .. } => encode_functor_impl!(context, Limit {}),
+                    PipelineStage::Require { .. } => encode_functor_impl!(context, Require {}),
+                    PipelineStage::Distinct => encode_functor_impl!(context, Select {}),
+                    PipelineStage::Reduce { .. } => encode_functor_impl!(context, Reduce {}),
+                })
+                .collect::<Vec<_>>();
             let encoded_stages_ref = &encoded_stages;
-            encode_functor_impl!(context, Pipeline { encoded_stages_ref, })// Not ideal to encode the elements again
+            encode_functor_impl!(context, Pipeline { encoded_stages_ref, }) // Not ideal to encode the elements again
         }
     }
 
@@ -473,20 +504,15 @@ pub mod functor_encoding {
     impl FunctorEncoded for BlockAnnotationToEncode {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
             let mut elements = vec![SubBlockAnnotation::Trunk { conjunction: TrunkAnnotationToEncode(self.0) }];
-            elements.extend(context.structure.conjunctions[self.0].constraints.iter()
-                .filter_map(|c| match c {
-                    Constraint::Or { branches } => {
-                        let branches = branches.iter().copied().map_into().collect();
-                        Some(SubBlockAnnotation::Or { branches })
-                    },
-                    Constraint::Not { conjunction } => {
-                        Some(SubBlockAnnotation::Not { conjunction: (*conjunction).into() })
-                    },
-                    Constraint::Try { conjunction } => {
-                        Some(SubBlockAnnotation::Try { conjunction: (*conjunction).into() })
-                    },
-                    _ => None,
-                }));
+            elements.extend(context.structure.conjunctions[self.0].constraints.iter().filter_map(|c| match c {
+                Constraint::Or { branches } => {
+                    let branches = branches.iter().copied().map_into().collect();
+                    Some(SubBlockAnnotation::Or { branches })
+                }
+                Constraint::Not { conjunction } => Some(SubBlockAnnotation::Not { conjunction: (*conjunction).into() }),
+                Constraint::Try { conjunction } => Some(SubBlockAnnotation::Try { conjunction: (*conjunction).into() }),
+                _ => None,
+            }));
             elements.encode_as_functor(context)
         }
     }
@@ -501,22 +527,15 @@ pub mod functor_encoding {
 
     // Fetch
     pub fn encode_fetch_annotations_as_functor(analyzed: &AnalyzedQuery) -> String {
-        let context = FunctorContext {
-            structure: &analyzed.structure.query,
-            annotations: &analyzed.annotations.query
-        };
+        let context = FunctorContext { structure: &analyzed.structure.query, annotations: &analyzed.annotations.query };
         analyzed.annotations.fetch.encode_as_functor(&context)
     }
 
     impl FunctorEncoded for FetchAnnotations {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
             match self {
-                FetchAnnotations::Leaf(value_types) => {
-                    value_types.encode_as_functor(context)
-                }
-                FetchAnnotations::Object(possible_fields) => {
-                    possible_fields.encode_as_functor(context)
-                }
+                FetchAnnotations::Leaf(value_types) => value_types.encode_as_functor(context),
+                FetchAnnotations::Object(possible_fields) => possible_fields.encode_as_functor(context),
                 FetchAnnotations::List(elements) => {
                     let elements_as_ref = elements.as_ref();
                     encode_functor_impl!(context, List { elements_as_ref, })
@@ -525,4 +544,3 @@ pub mod functor_encoding {
         }
     }
 }
-

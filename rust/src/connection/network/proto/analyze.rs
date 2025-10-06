@@ -37,14 +37,14 @@ use crate::{
     analyze::{
         annotations::{
             ConjunctionAnnotations, FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations,
-            PipelineAnnotations, VariableAnnotations,
+            PipelineAnnotations, QueryAnnotations, VariableAnnotations,
         },
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
             Reducer, Variable,
         },
         pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
-        AnalyzedQuery, FunctionStructure, QueryAnnotations, QueryStructure, ReturnOperation,
+        AnalyzedQuery, FunctionStructure, QueryStructure, ReturnOperation,
     },
     common::Result,
     concept::{type_, Kind, Value, ValueType},

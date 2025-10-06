@@ -17,10 +17,7 @@
  * under the License.
  */
 
-use std::{
-    collections::{BTreeMap, HashMap},
-    vec::Vec,
-};
+use std::{collections::HashMap, vec::Vec};
 
 use crate::{
     analyze::conjunction::Variable,
@@ -28,8 +25,10 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub struct PipelineAnnotations {
-    pub conjunction_annotations: Vec<ConjunctionAnnotations>,
+pub struct QueryAnnotations {
+    pub query: PipelineAnnotations,
+    pub preamble: Vec<FunctionAnnotations>,
+    pub fetch: Option<FetchAnnotations>,
 }
 
 #[derive(Debug)]
@@ -50,6 +49,11 @@ pub enum FetchAnnotations {
     List(Box<FetchAnnotations>),
     Leaf(Vec<ValueType>),
     Object(HashMap<String, FetchAnnotations>),
+}
+
+#[derive(Debug)]
+pub struct PipelineAnnotations {
+    pub conjunction_annotations: Vec<ConjunctionAnnotations>,
 }
 
 #[derive(Debug)]
