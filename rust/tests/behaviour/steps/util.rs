@@ -340,9 +340,9 @@ pub mod functor_encoding {
         }
     }
 
-    use typedb_driver::analyze::{AnalyzedQuery, conjunction::{Constraint, Conjunction, ConjunctionID, ConstraintVertex, LabelVertex, Reducer, Variable}, FunctionStructure, pipeline::{PipelineStructure, PipelineStage, SortVariable, SortOrder, ReduceAssign}, QueryStructure, ReturnOperation};
+    use typedb_driver::analyze::{AnalyzedQuery, conjunction::{Constraint, Conjunction, ConjunctionID, ConstraintVertex, Reducer, Variable}, FunctionStructure, pipeline::{PipelineStructure, PipelineStage, SortVariable, SortOrder, ReduceAssign}, QueryStructure, ReturnOperation};
     use typedb_driver::analyze::annotations::{FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations, PipelineAnnotations, VariableAnnotations};
-    use typedb_driver::analyze::conjunction::{Comparator, ConstraintExactness};
+    use typedb_driver::analyze::conjunction::{Comparator, ConstraintExactness, NamedRole};
     use typedb_driver::concept::type_::Type;
     use typedb_driver::concept::{Value, ValueType};
     use crate::util::functor_encoding::functor_macros::{encode_functor, encode_functor_impl};
@@ -442,8 +442,9 @@ pub mod functor_encoding {
     functor_macros::impl_functor_for_impl!(ConstraintVertex => |self, context| {
         match self {
             ConstraintVertex::Variable(id) => { id.encode_as_functor(context) }
-            ConstraintVertex::Label(LabelVertex::Resolved(r#type)) => { r#type.encode_as_functor(context) }
-            ConstraintVertex::Label(LabelVertex::Unresolved(label))=> { label.encode_as_functor(context) }
+            ConstraintVertex::Label(type_) => { type_.encode_as_functor(context) }
+            ConstraintVertex::Unresolved(label) => { label.encode_as_functor(context) }
+            ConstraintVertex::NamedRole(NamedRole { name,.. }) => { name.encode_as_functor(context) }
             ConstraintVertex::Value(v) => {
                 match v {
                     Value::String(s) => std::format!("\"{}\"", s.to_string()),

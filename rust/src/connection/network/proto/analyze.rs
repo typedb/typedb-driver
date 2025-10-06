@@ -31,7 +31,7 @@ use typedb_protocol::analyze::res::analyzed_query::query_annotations::variable_a
 use crate::{
     analyze::{
         conjunction::{
-            Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, LabelVertex, Reducer,
+            Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, Reducer,
             Variable,
         },
         pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
@@ -43,7 +43,7 @@ use crate::{
     error::AnalyzeError,
 };
 use crate::analyze::annotations::{ConjunctionAnnotations, FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations, PipelineAnnotations, VariableAnnotations};
-use crate::analyze::conjunction::Comparator;
+use crate::analyze::conjunction::{Comparator, NamedRole};
 use crate::concept::ValueType;
 use crate::connection::message::AnalyzeResponse;
 use crate::connection::network::proto::FromProto;
@@ -356,17 +356,11 @@ impl TryFromProto<pipeline_structure::pipeline_stage::sort::SortVariable> for So
     }
 }
 
-impl TryFromProto<conjunction_structure::structure_vertex::Label> for LabelVertex {
-    fn try_from_proto(value: conjunction_structure::structure_vertex::Label) -> Result<Self> {
-        use conjunction_structure::structure_vertex::label::Label as LabelProto;
-        match value.label {
-            Some(LabelProto::Unresolved(label)) => Ok(LabelVertex::Unresolved(label)),
-            Some(LabelProto::Resolved(type_proto)) => {
-                let type_ = type_::Type::try_from_proto(type_proto)?;
-                Ok(LabelVertex::Resolved(type_))
-            }
-            None => Err(AnalyzeError::MissingResponseField { field: "LabelVertex.label" }.into()),
-        }
+impl TryFromProto<conjunction_structure::structure_vertex::NamedRole> for NamedRole {
+    fn try_from_proto(proto: conjunction_structure::structure_vertex::NamedRole) -> Result<Self> {
+        let variable = expect_try_into(proto.variable, "NamedRole.variable")?;
+        let name = proto.name;
+        Ok(NamedRole { variable, name })
     }
 }
 
@@ -375,8 +369,10 @@ impl TryFromProto<conjunction_structure::StructureVertex> for ConstraintVertex {
         use conjunction_structure::structure_vertex::Vertex;
         match value.vertex {
             Some(Vertex::Variable(variable)) => Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?)),
-            Some(Vertex::Label(label)) => Ok(ConstraintVertex::Label(LabelVertex::try_from_proto(label)?)),
+            Some(Vertex::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
             Some(Vertex::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
+            Some(Vertex::NamedRole(role)) => Ok(ConstraintVertex::NamedRole(NamedRole::try_from_proto(role)?)),
+            Some(Vertex::Unresolved(label)) => Ok(ConstraintVertex::Unresolved(label)),
             None => Err(AnalyzeError::MissingResponseField { field: "StructureVertex.vertex" }.into()),
         }
     }

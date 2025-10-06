@@ -130,14 +130,16 @@ pub struct Variable(pub u32);
 #[derive(Debug)]
 pub enum ConstraintVertex {
     Variable(Variable),
-    Label(LabelVertex),
+    Label(type_::Type),
     Value(concept::Value),
+    NamedRole(NamedRole),
+    Unresolved(String) // Error condition
 }
 
 #[derive(Debug)]
-pub enum LabelVertex {
-    Resolved(type_::Type),
-    Unresolved(String),
+pub struct NamedRole {
+    pub variable: Variable,
+    pub name: String,
 }
 
 #[derive(Debug)]
