@@ -39,14 +39,12 @@ pub(crate) async fn run_analyze_query(
 #[apply(generic_step)]
 #[step(expr = r"get answers of typeql analyze query")]
 pub async fn get_answers_of_typeql_analyze_query(context: &mut Context, step: &Step) {
-    context.cleanup_answers().await;
     context.set_analyzed(run_analyze_query(context.transaction(), step.docstring().unwrap()).await).unwrap();
 }
 
 #[apply(generic_step)]
 #[step(expr = r"typeql analyze query{may_error}")]
 async fn typeql_analyze_query_may_error(context: &mut Context, may_error: params::MayError, step: &Step) {
-    context.cleanup_answers().await;
     let result = run_analyze_query(context.transaction(), step.docstring().unwrap()).await;
     may_error.check(result);
 }
