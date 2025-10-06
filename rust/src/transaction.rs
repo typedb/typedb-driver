@@ -96,8 +96,7 @@ impl Transaction {
     /// transaction.analyze_query(query)
     /// ```
     pub fn analyze_query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<AnalyzedQuery>> {
-        let query = query.as_ref();
-        self.transaction_stream.analyze(query)
+        self.transaction_stream.analyze(query.as_ref())
     }
 
     /// Retrieves the transaction’s type (READ or WRITE).
