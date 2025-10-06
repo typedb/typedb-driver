@@ -20,6 +20,7 @@
 use std::{fmt, pin::Pin};
 
 use crate::{
+    analyze::AnalyzedQuery,
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
@@ -77,6 +78,22 @@ impl Transaction {
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         self.transaction_stream.query(query, options)
+    }
+
+    /// Analyzes a TypeQL query in this transaction,
+    /// returning the translated structure & inferred types.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` — The TypeQL query to be analyzed
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.analyze_query(query)
+    /// ```
+    pub fn analyze_query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<AnalyzedQuery>> {
+        self.transaction_stream.analyze(query.as_ref())
     }
 
     /// Retrieves the transaction’s type (READ or WRITE).

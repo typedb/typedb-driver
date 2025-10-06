@@ -29,7 +29,7 @@ use crate::{
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{
-        DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
+        AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
         TransactionRequest, TransactionResponse,
     },
     error::{ConnectionError, InternalError, ServerError},
@@ -186,6 +186,7 @@ impl IntoProto<transaction::Req> for TransactionRequest {
             }
             Self::Commit => transaction::req::Req::CommitReq(transaction::commit::Req {}),
             Self::Rollback => transaction::req::Req::RollbackReq(transaction::rollback::Req {}),
+            Self::Analyze { query } => transaction::req::Req::AnalyzeReq(typedb_protocol::analyze::Req { query }),
             Self::Query(query_request) => transaction::req::Req::QueryReq(query_request.into_proto()),
             Self::Stream { request_id: req_id } => {
                 request_id = Some(req_id);
@@ -397,6 +398,9 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                     Err(ConnectionError::MissingResponseField { field: "transaction.res.query.initial_res.res" }.into())
                 }
             },
+            Some(transaction::res::Res::AnalyzeRes(analyze_resp)) => {
+                Ok(TransactionResponse::Analyze(AnalyzeResponse::try_from_proto(analyze_resp)?))
+            }
             None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }

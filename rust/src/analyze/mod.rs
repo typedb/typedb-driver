@@ -17,27 +17,39 @@
  * under the License.
  */
 
-use crate::Result;
+use crate::analyze::{
+    annotations::QueryAnnotations,
+    conjunction::Variable,
+    pipeline::{PipelineStructure, Reducer},
+};
 
-mod analyze;
-mod common;
-mod concept;
-mod database;
-mod message;
-mod user;
+pub mod annotations;
+pub mod conjunction;
+pub mod pipeline;
 
-pub(super) trait IntoProto<Proto> {
-    fn into_proto(self) -> Proto;
+#[derive(Debug)]
+pub struct AnalyzedQuery {
+    pub structure: QueryStructure,
+    pub annotations: QueryAnnotations,
 }
 
-pub(super) trait TryIntoProto<Proto> {
-    fn try_into_proto(self) -> Result<Proto>;
+#[derive(Debug)]
+pub struct QueryStructure {
+    pub query: PipelineStructure,
+    pub preamble: Vec<FunctionStructure>,
 }
 
-pub(super) trait FromProto<Proto> {
-    fn from_proto(proto: Proto) -> Self;
+#[derive(Debug)]
+pub struct FunctionStructure {
+    pub arguments: Vec<Variable>,
+    pub returns: ReturnOperation,
+    pub body: PipelineStructure,
 }
 
-pub(super) trait TryFromProto<Proto>: Sized {
-    fn try_from_proto(proto: Proto) -> Result<Self>;
+#[derive(Debug)]
+pub enum ReturnOperation {
+    Stream { variables: Vec<Variable> },
+    Single { selector: String, variables: Vec<Variable> },
+    Check {},
+    Reduce { reducers: Vec<Reducer> },
 }

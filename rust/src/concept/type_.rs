@@ -21,6 +21,25 @@ use std::fmt::{Debug, Display, Formatter};
 
 use super::ValueType;
 
+#[derive(Clone, Debug, PartialEq)]
+pub enum Type {
+    EntityType(EntityType),
+    RelationType(RelationType),
+    AttributeType(AttributeType),
+    RoleType(RoleType),
+}
+
+impl Type {
+    pub fn label(&self) -> &str {
+        match self {
+            Type::EntityType(entity_type) => entity_type.label(),
+            Type::RelationType(relation_type) => relation_type.label(),
+            Type::AttributeType(attribute_type) => attribute_type.label(),
+            Type::RoleType(role_type) => role_type.label(),
+        }
+    }
+}
+
 /// Entity types represent the classification of independent objects in the data model
 /// of the business domain.
 #[derive(Clone, Debug, PartialEq, Eq)]

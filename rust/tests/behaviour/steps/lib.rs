@@ -37,6 +37,7 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
+    analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction, TransactionOptions,
     TypeDBDriver,
@@ -47,6 +48,7 @@ use crate::{
     util::{create_temp_dir, TempDir},
 };
 
+mod analyze;
 mod connection;
 mod params;
 mod query;
@@ -105,6 +107,7 @@ pub struct Context {
     pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
+    pub analyzed: Option<AnalyzedQuery>,
     pub answer: Option<QueryAnswer>,
     pub answer_type: Option<QueryAnswerType>,
     pub answer_query_type: Option<QueryType>,
@@ -328,6 +331,15 @@ impl Context {
         }
     }
 
+    pub fn set_analyzed(&mut self, analyzed: TypeDBResult<AnalyzedQuery>) -> TypeDBResult {
+        self.analyzed = Some(analyzed?);
+        Ok(())
+    }
+
+    pub fn get_analyzed(&mut self) -> Option<&AnalyzedQuery> {
+        self.analyzed.as_ref()
+    }
+
     pub fn set_answer(&mut self, answer: TypeDBResult<QueryAnswer>) -> TypeDBResult {
         let answer = answer?;
         self.answer_query_type = Some(answer.get_query_type());
@@ -489,6 +501,7 @@ impl Default for Context {
             transactions: VecDeque::new(),
             background_transactions: VecDeque::new(),
             temp_dir: None,
+            analyzed: None,
             answer: None,
             answer_type: None,
             answer_query_type: None,

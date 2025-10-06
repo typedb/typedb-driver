@@ -24,14 +24,15 @@ use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
+    analyze::AnalyzedQuery,
     answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
         stream::{BoxStream, Stream},
         Promise, Result,
     },
-    connection::message::{QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
-    error::{ConnectionError, InternalError},
+    connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
+    error::{AnalyzeError, ConnectionError, InternalError, ServerError},
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
@@ -105,6 +106,30 @@ impl TransactionStream {
     pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
         let promise = self.single(TransactionRequest::Rollback);
         promisify! { require_transaction_response!(resolve!(promise), Rollback) }
+    }
+
+    pub(crate) fn analyze(&self, query: &str) -> impl Promise<'static, Result<AnalyzedQuery>> {
+        let stream = self.stream(TransactionRequest::Analyze { query: query.to_owned() });
+        promisify! {
+            let mut stream = stream?;
+            #[cfg(feature = "sync")]
+            let response = stream.next();
+
+            #[cfg(not(feature = "sync"))]
+            let response: Option<Result<TransactionResponse>> = stream.next().await;
+
+            match response {
+                None => Err(ConnectionError::AnalyzeQueryNoResponse.into()),
+                Some(Ok(TransactionResponse::Analyze(response))) => {
+                    match response {
+                        AnalyzeResponse::Ok(analyzed) => Ok(analyzed),
+                        AnalyzeResponse::Err(error) => Err(error.into()),
+                    }
+                }
+                Some(Ok(other)) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+                Some(Err(err)) => Err(err),
+            }
+        }
     }
 
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
