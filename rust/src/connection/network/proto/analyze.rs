@@ -360,7 +360,7 @@ impl TryFromProto<conjunction_structure::structure_vertex::Label> for LabelVerte
     fn try_from_proto(value: conjunction_structure::structure_vertex::Label) -> Result<Self> {
         use conjunction_structure::structure_vertex::label::Label as LabelProto;
         match value.label {
-            Some(LabelProto::FailedInference(label)) => Ok(LabelVertex::Unresolved(label)),
+            Some(LabelProto::Unresolved(label)) => Ok(LabelVertex::Unresolved(label)),
             Some(LabelProto::Resolved(type_proto)) => {
                 let type_ = type_::Type::try_from_proto(type_proto)?;
                 Ok(LabelVertex::Resolved(type_))
