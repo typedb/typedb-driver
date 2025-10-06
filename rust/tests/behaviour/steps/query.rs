@@ -24,7 +24,6 @@ use futures::{future::join_all, StreamExt, TryStreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    analyze::AnalyzedQuery,
     answer::{ConceptRow, QueryAnswer, JSON},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
