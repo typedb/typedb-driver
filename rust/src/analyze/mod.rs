@@ -19,8 +19,8 @@
 
 use crate::analyze::{
     annotations::QueryAnnotations,
-    conjunction::{Reducer, Variable},
-    pipeline::PipelineStructure,
+    conjunction::Variable,
+    pipeline::{PipelineStructure, Reducer},
 };
 
 pub mod annotations;

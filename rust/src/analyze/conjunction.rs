@@ -143,12 +143,6 @@ pub struct NamedRole {
 }
 
 #[derive(Debug)]
-pub struct Reducer {
-    pub arguments: Vec<Variable>,
-    pub reducer: String,
-}
-
-#[derive(Debug)]
 pub enum Comparator {
     Equal,
     NotEqual,
