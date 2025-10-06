@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use crate::analyze::conjunction::{Conjunction, ConjunctionID, Reducer, Variable};
+use crate::analyze::conjunction::{Conjunction, ConjunctionID, Variable};
 
 #[derive(Debug)]
 pub struct PipelineStructure {
@@ -49,6 +49,12 @@ pub enum PipelineStage {
 pub struct ReduceAssign {
     pub assigned: Variable,
     pub reducer: Reducer,
+}
+
+#[derive(Debug)]
+pub struct Reducer {
+    pub arguments: Vec<Variable>,
+    pub reducer: String,
 }
 
 #[derive(Debug)]
