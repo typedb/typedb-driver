@@ -41,9 +41,9 @@ use crate::{
         },
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
-            Reducer, Variable,
+            Variable,
         },
-        pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
+        pipeline::{PipelineStage, PipelineStructure, ReduceAssign, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, FunctionStructure, QueryStructure, ReturnOperation,
     },
     common::Result,

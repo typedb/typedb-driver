@@ -27,8 +27,6 @@ pub mod annotations;
 pub mod conjunction;
 pub mod pipeline;
 
-pub type TryFromError = &'static str;
-
 #[derive(Debug)]
 pub struct AnalyzedQuery {
     pub structure: QueryStructure,

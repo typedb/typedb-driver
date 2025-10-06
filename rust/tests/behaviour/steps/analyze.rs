@@ -250,9 +250,9 @@ pub mod functor_encoding {
             },
             conjunction::{
                 Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
-                Reducer, Variable,
+                Variable,
             },
-            pipeline::{PipelineStage, PipelineStructure, ReduceAssign, SortOrder, SortVariable},
+            pipeline::{PipelineStage, PipelineStructure, Reducer, ReduceAssign, SortOrder, SortVariable},
             AnalyzedQuery, FunctionStructure, ReturnOperation,
         },
         concept::{type_::Type, Value, ValueType},
