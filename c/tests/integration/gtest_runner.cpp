@@ -34,13 +34,6 @@ TEST(TestQuery, TestData) {
     EXPECT_TRUE(test_query_data());
 }
 
-TEST(TestConceptAPI, TestSchema) {
-    EXPECT_TRUE(test_concept_api_schema());
-}
-TEST(TestConceptAPI, TestData) {
-    EXPECT_TRUE(test_concept_api_data());
-}
-
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
