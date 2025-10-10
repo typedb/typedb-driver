@@ -850,22 +850,22 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [development, master, "3.0", "test-clib-deployment-3.x"]
+              only: [development, master, "3.0"]
 
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [development, master, "3.0", "test-clib-deployment-3.x"]
+              only: [development, master, "3.0"]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [development, master, "3.0", "test-clib-deployment-3.x"]
+              only: [development, master, "3.0"]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [development, master, "3.0", "test-clib-deployment-3.x"]
+              only: [development, master, "3.0"]
 
       - deploy-snapshot-windows-x86_64:
           filters:
@@ -875,7 +875,7 @@ workflows:
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [development, master, "3.0", "test-clib-deployment-3.x"]
+              only: [development, master, "3.0"]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -897,7 +897,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, "3.0", "test-clib-deployment-3.x"]
+              only: [master, "3.0"]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -906,7 +906,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, "3.0", "test-clib-deployment-3.x"]
+              only: [master, "3.0"]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -915,7 +915,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, "3.0", "test-clib-deployment-3.x"]
+              only: [master, "3.0"]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -924,7 +924,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, "3.0", "test-clib-deployment-3.x"]
+              only: [master, "3.0"]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
