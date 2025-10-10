@@ -46,7 +46,7 @@ function server_start() {
     --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
     --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
     --diagnostics.monitoring.port=${1}1732 \
-    --development-mode.enable=true
+    --development-mode.enabled=true
 }
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
