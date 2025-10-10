@@ -28,31 +28,27 @@
 bool test_database_management() {
     const char databaseName[] = "test_database_management";
 
-    Driver* driver = NULL;
-    DatabaseManager* databaseManager = NULL;
+    TypeDBDriver* driver = NULL;
 
     bool success = false;
 
-    driver = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databaseManager = database_manager_new(driver);
+    delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(databaseManager, databaseName);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    if (!databases_contains(databaseManager, databaseName)) {
+    if (!databases_contains(driver, databaseName)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
 
     bool foundDB = false;
-    DatabaseIterator* it = databases_all(databaseManager);
-    Database* database = NULL;
+    DatabaseIterator* it = databases_all(driver);
+    const Database* database = NULL;
     while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
         foundDB = foundDB || (0 == strcmp(databaseName, name));
@@ -68,156 +64,186 @@ bool test_database_management() {
 
     success = true;
 cleanup:
-    delete_database_if_exists(databaseManager, databaseName);
+    delete_database_if_exists(driver, databaseName);
     check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
+    driver_close(driver);
     return success;
 }
 
 bool test_query_schema() {
     const char databaseName[] = "test_query_schema";
 
-    Connection* connection = NULL;
-    DatabaseManager* databaseManager = NULL;
-    Session* session = NULL;
+    TypeDBDriver* driver = NULL;
+
+    TransactionOptions* tx_opts = NULL;
     Transaction* transaction = NULL;
-    Options* opts = NULL;
+    QueryOptions* query_opts = NULL;
 
     bool success = false;
 
     // Set up connection & database
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databaseManager = database_manager_new(connection);
+    delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(databaseManager, databaseName);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(databaseManager, databaseName);
+    tx_opts = transaction_options_new();
     if (FAILED()) goto cleanup;
-
-    opts = options_new();
+    query_opts = query_options_new();
     if (FAILED()) goto cleanup;
 
     // test schema queries
     {
-        session = session_new(databaseManager, databaseName, Schema, opts);
+        transaction = transaction_new(driver, databaseName, Schema, tx_opts);
         if (FAILED()) goto cleanup;
 
-        transaction = transaction_new(session, Write, opts);
-        if (FAILED()) goto cleanup;
-
-        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
-        if (FAILED()) goto cleanup;
-
-        ConceptMapIterator* it = query_get(transaction, "match $t sub thing; get;", opts);
-        ConceptMap* conceptMap;
-        bool foundName = false;
-        while (NULL != (conceptMap = concept_map_iterator_next(it))) {
-            Concept* concept = concept_map_get(conceptMap, "t");
-            char* label = thing_type_get_label(concept);
-            foundName = foundName || (0 == strcmp(label, "name"));
-            string_free(label);
-            concept_drop(concept);
-            concept_map_drop(conceptMap);
+        {
+            QueryAnswerPromise* define_promise = transaction_query(transaction, "define attribute name, value string;", query_opts);
+            if (FAILED()) goto cleanup;
+            QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
+            if (FAILED()) goto cleanup;
+            success = query_answer_is_ok(define_answer);
+            query_answer_drop(define_answer);
+            if (!success) {
+                goto cleanup;
+            }
         }
-        concept_map_iterator_drop(it);
 
-        void_promise_resolve(transaction_commit(transaction));
-        transaction = NULL;
+        {
+            QueryAnswerPromise* query_promise = transaction_query(transaction, "match $t sub $_;", query_opts);
+            if (FAILED()) goto cleanup;
+            QueryAnswer* query_answer = query_answer_promise_resolve(query_promise);
+            if (FAILED()) goto cleanup;
+            if (!query_answer_is_concept_row_stream(query_answer)) {
+                success = false;
+                query_answer_drop(query_answer);
+                goto cleanup;
+            }
 
-        if (!foundName) {
-            fprintf(stderr, "Did not find type \'name\' in query result.\n");
-            goto cleanup;
+            ConceptRowIterator* it = query_answer_into_rows(query_answer);
+            if (FAILED()) goto cleanup;
+            ConceptRow* conceptRow;
+            bool foundName = false;
+            while (NULL != (conceptRow = concept_row_iterator_next(it))) {
+                Concept* concept = concept_row_get(conceptRow, "t");
+                char* label = concept_get_label(concept);
+                foundName = foundName || (0 == strcmp(label, "name"));
+                string_free(label);
+                concept_drop(concept);
+                concept_row_drop(conceptRow);
+            }
+            concept_row_iterator_drop(it);
+
+            void_promise_resolve(transaction_commit(transaction));
+            transaction = NULL;
+
+            if (!foundName) {
+                fprintf(stderr, "Did not find type \'name\' in query result.\n");
+                goto cleanup;
+            }
         }
     }
     success = true;
 
 cleanup:
     transaction_close(transaction);
-    session_close(session);
-    options_drop(opts);
+    transaction_options_drop(tx_opts);
+    query_options_drop(query_opts);
 
-    delete_database_if_exists(databaseManager, databaseName);
+    delete_database_if_exists(driver, databaseName);
     check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
+    driver_close(driver);
     return success;
 }
 
 bool test_query_data() {
     const char databaseName[] = "test_query_data";
 
-    Connection* connection = NULL;
-    DatabaseManager* databaseManager = NULL;
-    Session* session = NULL;
+    TypeDBDriver* driver = NULL;
+    TransactionOptions* tx_opts = NULL;
+    QueryOptions* query_opts = NULL;
     Transaction* transaction = NULL;
-    Options* opts = NULL;
 
     bool success = false;
 
     // Set up connection & database
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databaseManager = database_manager_new(connection);
+    delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(databaseManager, databaseName);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(databaseManager, databaseName);
+    tx_opts = transaction_options_new();
     if (FAILED()) goto cleanup;
-
-    opts = options_new();
+    query_opts = query_options_new();
     if (FAILED()) goto cleanup;
 
     // Set up schema
     {
-        session = session_new(databaseManager, databaseName, Schema, opts);
+
+        transaction = transaction_new(driver, databaseName, Schema, tx_opts);
         if (FAILED()) goto cleanup;
 
-        transaction = transaction_new(session, Write, opts);
-        if (FAILED()) goto cleanup;
 
-        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
+        QueryAnswerPromise* define_promise = transaction_query(transaction, "define attribute name, value string;", query_opts);
         if (FAILED()) goto cleanup;
+        QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
+        if (FAILED()) goto cleanup;
+        success = query_answer_is_ok(define_answer);
+        query_answer_drop(define_answer);
+        if (!success) {
+            goto cleanup;
+        }
 
         void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
-
-        session_close(session);
-        session = NULL;
+        if (FAILED()) goto cleanup;
     }
 
     {
-        session = session_new(databaseManager, databaseName, Data, opts);
+        transaction = transaction_new(driver, databaseName, Write, tx_opts);
         if (FAILED()) goto cleanup;
-
-        transaction = transaction_new(session, Write, opts);
+        QueryAnswerPromise* insert_promise = transaction_query(transaction, "insert $n isa name == \"John\";", query_opts);
         if (FAILED()) goto cleanup;
-
-        ConceptMapIterator* insertResult = query_insert(transaction, "insert $n \"John\" isa name;", opts);
+        QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
         if (FAILED()) goto cleanup;
-        else concept_map_iterator_drop(insertResult);
+        if (!query_answer_is_concept_row_stream(insert_answer)) {
+            success = false;
+            query_answer_drop(insert_answer);
+            goto cleanup;
+        }
+        ConceptRowIterator* insert_result = query_answer_into_rows(insert_answer);
+        if (FAILED()) goto cleanup;
+        else concept_row_iterator_drop(insert_result);
 
-        ConceptMapIterator* it = query_get(transaction, "match $n isa name; get;", opts);
-        ConceptMap* conceptMap;
+
+        QueryAnswerPromise* match_promise = transaction_query(transaction, "match $n isa name;", query_opts);
+        QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
+        if (FAILED()) goto cleanup;
+        if (!query_answer_is_concept_row_stream(match_answer)) {
+            success = false;
+            query_answer_drop(match_answer);
+            goto cleanup;
+        }
+        ConceptRowIterator* it = query_answer_into_rows(match_answer);
+        ConceptRow* conceptRow;
         bool foundJohn = false;
-        while (NULL != (conceptMap = concept_map_iterator_next(it))) {
-            Concept* concept = concept_map_get(conceptMap, "n");
-            Concept* asValue = attribute_get_value(concept);
-            char* attr = value_get_string(asValue);
+        while (NULL != (conceptRow = concept_row_iterator_next(it))) {
+            Concept* concept = concept_row_get(conceptRow, "n");
+            char* attr = concept_get_string(concept);
             foundJohn = foundJohn || (0 == strcmp(attr, "John"));
             string_free(attr);
-            concept_drop(asValue);
             concept_drop(concept);
-            concept_map_drop(conceptMap);
+            concept_row_drop(conceptRow);
         }
-        concept_map_iterator_drop(it);
+        concept_row_iterator_drop(it);
 
         void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
@@ -231,209 +257,13 @@ bool test_query_data() {
     success = true;
 
 cleanup:
-    transaction_close(transaction);
-    session_close(session);
-    options_drop(opts);
+    if (NULL != transaction) transaction_close(transaction);
+    transaction_options_drop(tx_opts);
+    query_options_drop(query_opts);
 
-    delete_database_if_exists(databaseManager, databaseName);
+    delete_database_if_exists(driver, databaseName);
     check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
-    return success;
-}
 
-bool test_concept_api_schema() {
-    const char databaseName[] = "test_concept_api";
-
-    Connection* connection = NULL;
-    DatabaseManager* databaseManager = NULL;
-    Session* session = NULL;
-    Transaction* transaction = NULL;
-    Options* opts = NULL;
-
-    bool success = false;
-
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
-    if (FAILED()) goto cleanup;
-
-    databaseManager = database_manager_new(connection);
-    if (FAILED()) goto cleanup;
-
-    delete_database_if_exists(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    databases_create(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    opts = options_new();
-    if (FAILED()) goto cleanup;
-
-    // test schema api
-    {
-        session = session_new(databaseManager, databaseName, Schema, opts);
-        if (FAILED()) goto cleanup;
-
-        transaction = transaction_new(session, Write, opts);
-        if (FAILED()) goto cleanup;
-        {
-            Concept* definedNameType =
-                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
-            if (FAILED()) goto cleanup;
-            else concept_drop(definedNameType);
-        }
-
-        {
-            ConceptIterator* it = NULL;
-            Concept* nameType = NULL;
-            Concept* rootAttributeType = NULL;
-            bool foundName = false;
-            if (NULL != (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))) &&
-                NULL != (rootAttributeType = concepts_get_root_attribute_type()) &&
-                NULL != (it = (attribute_type_get_subtypes(transaction, rootAttributeType, Transitive)))) {
-                Concept* concept;
-                while (NULL != (concept = concept_iterator_next(it))) {
-                    char* label = thing_type_get_label(concept);
-                    foundName = foundName || (0 == strcmp(label, "name"));
-                    string_free(label);
-                    concept_drop(concept);
-                }
-            }
-            concept_iterator_drop(it);
-            concept_drop(rootAttributeType);
-            concept_drop(nameType);
-
-            void_promise_resolve(transaction_commit(transaction));
-            transaction = NULL;
-            if (!foundName) {
-                fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
-                goto cleanup;
-            }
-        }
-    }
-
-    success = true;
-
-cleanup:
-    transaction_close(transaction);
-    session_close(session);
-    options_drop(opts);
-
-    delete_database_if_exists(databaseManager, databaseName);
-    check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
-    return success;
-}
-
-bool test_concept_api_data() {
-    const char databaseName[] = "test_concept_api";
-
-    Connection* connection = NULL;
-    DatabaseManager* databaseManager = NULL;
-    Session* session = NULL;
-    Transaction* transaction = NULL;
-    Options* opts = NULL;
-
-    Concept* nameType = NULL;
-
-    bool success = false;
-
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
-    if (FAILED()) goto cleanup;
-
-    databaseManager = database_manager_new(connection);
-    if (FAILED()) goto cleanup;
-
-    delete_database_if_exists(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    databases_create(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    opts = options_new();
-    if (FAILED()) goto cleanup;
-
-    // Set up schema
-    {
-        session = session_new(databaseManager, databaseName, Schema, opts);
-        if (FAILED()) goto cleanup;
-
-        transaction = transaction_new(session, Write, opts);
-        if (FAILED()) goto cleanup;
-
-        {
-            Concept* definedNameType =
-                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
-            if (FAILED()) goto cleanup;
-            else concept_drop(definedNameType);
-        }
-
-        void_promise_resolve(transaction_commit(transaction));
-        transaction = NULL;
-
-        session_close(session);
-        session = NULL;
-    }
-
-    // Test data API
-    {
-        session = session_new(databaseManager, databaseName, Data, opts);
-        if (FAILED()) goto cleanup;
-
-        transaction = transaction_new(session, Write, opts);
-        if (FAILED()) goto cleanup;
-        if (NULL == (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))))
-            goto cleanup;
-        {
-            Concept* valueOfJohn = NULL;
-            Concept* insertedJohn = NULL;
-            bool success =
-                NULL != (valueOfJohn = value_new_string("John")) &&
-                NULL !=
-                    (insertedJohn = concept_promise_resolve(attribute_type_put(transaction, nameType, valueOfJohn)));
-            concept_drop(insertedJohn);
-            concept_drop(valueOfJohn);
-            if (!success) goto cleanup;
-        }
-
-        bool foundJohn = false;
-        {
-            ConceptIterator* it = attribute_type_get_instances(transaction, nameType, Transitive);
-            if (FAILED()) goto cleanup;
-
-            Concept* concept;
-            while (NULL != (concept = concept_iterator_next(it))) {
-                Concept* asValue = attribute_get_value(concept);
-                char* attr = value_get_string(asValue);
-                foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-                string_free(attr);
-                concept_drop(asValue);
-                concept_drop(concept);
-            }
-            concept_iterator_drop(it);
-        }
-
-        void_promise_resolve(transaction_commit(transaction));
-        transaction = NULL;
-
-        if (!foundJohn) {
-            fprintf(stderr, "Did not find inserted name \'John\' in query result.\n");
-            goto cleanup;
-        }
-    }
-
-    success = true;
-
-cleanup:
-    concept_drop(nameType);
-
-    transaction_close(transaction);
-    session_close(session);
-    options_drop(opts);
-
-    delete_database_if_exists(databaseManager, databaseName);
-    check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
+    driver_close(driver);
     return success;
 }
