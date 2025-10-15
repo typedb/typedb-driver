@@ -57,40 +57,4 @@ Documentation: https://typedb.com/docs/drivers/
 npm install typedb-driver-http@{version}
 ```
 
-[//]: # (TODO: Please remove the unreleased drivers manually. Commenting them out in Markdown looks scary)
-
-### NodeJS GRPC driver
-
-NPM package: https://www.npmjs.com/package/typedb-driver
-Documentation: https://typedb.com/docs/drivers/nodejs/overview
-
-```
-npm install typedb-driver@{version}
-```
-
-### C# driver
-
-NuGet package: https://www.nuget.org/packages/TypeDB.Driver
-Documentation: https://typedb.com/docs/drivers/csharp/overview
-
-```xml
-<ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="{version}" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="{version}" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="{version}" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="{version}" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="{version}" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="{version}" />
-</ItemGroup>
-```
-
-### C++ driver
-
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:{version}
-Documentation: https://typedb.com/docs/drivers/cpp/overview
-
-### C driver
-
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:{version}
-
 { release notes }
