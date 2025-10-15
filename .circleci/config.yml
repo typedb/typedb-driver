@@ -135,11 +135,11 @@ commands:
       - install-pip-requirements
       - run: |
           tool/test/start-community-server.sh
-          python3.9 -m pip install wheel 
-          python3.9 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          python3 -m pip install wheel 
+          python3 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 5
           pushd python/tests/deployment/
-            python3.9 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+            python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
           tool/test/stop-community-server.sh
           exit $TEST_SUCCESS
@@ -827,9 +827,6 @@ jobs:
           bazel-arch: amd64
       - run: |
           apt update -y && apt install -y software-properties-common
-          add-apt-repository -y ppa:deadsnakes/ppa
-          apt update -y && apt install -y python3.9 python3.9-distutils python3-pip software-properties-common
-          python3.9 -m pip install -U cffi
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @typedb_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
@@ -895,7 +892,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, "3.0"]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -904,7 +901,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, "3.0"]
+              only: [master]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -913,7 +910,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, "3.0"]
+              only: [master]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -922,7 +919,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, "3.0"]
+              only: [master]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
@@ -932,7 +929,7 @@ workflows:
 #      - test-snapshot-windows-x86_64:
 #          filters:
 #            branches:
-#              only: [master, "3.0"]
+#              only: [master]
 #          requires:
 #            - deploy-snapshot-windows-x86_64
 #            - deploy-snapshot-any
@@ -942,7 +939,7 @@ workflows:
 #      - test-snapshot-any:
 #          filters:
 #            branches:
-#              only: [master, "3.0"]
+#              only: [master]
 #          requires:
 #            - deploy-snapshot-any
 
