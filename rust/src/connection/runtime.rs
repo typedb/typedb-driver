@@ -23,7 +23,6 @@ use crossbeam::{
     atomic::AtomicCell,
     channel::{bounded as bounded_blocking, unbounded, Sender},
 };
-use log::error;
 use tokio::{
     runtime,
     sync::{
@@ -31,6 +30,7 @@ use tokio::{
         oneshot::Sender as AsyncOneshotSender,
     },
 };
+use tracing::error;
 
 use crate::common::{Callback, Result};
 

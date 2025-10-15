@@ -20,12 +20,12 @@
 use std::sync::Arc;
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use log::{debug, trace, warn};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
+use tracing::{debug, trace};
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, server_manager, transaction,
+    connection, database, database_manager, migration, server_manager, transaction,
     type_db_client::TypeDbClient as GRPC, user, user_manager,
 };
 
@@ -64,12 +64,12 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     async fn renew_token(&mut self) -> Result {
         if let Some(call_credentials) = &self.call_credentials {
-            trace!("Renewing token...");
+            debug!("Renewing token...");
             call_credentials.reset_token();
             let request = call_credentials.credentials().clone().try_into_proto()?;
             let token = self.grpc.authentication_token_create(request).await?.into_inner().token;
             call_credentials.set_token(token);
-            trace!("Token renewed");
+            debug!("Token renewed");
         }
         Ok(())
     }

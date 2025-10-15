@@ -42,6 +42,8 @@ typedb_driver_deps = [
     "@crates//:tokio-stream",
     "@crates//:tonic",
     "@crates//:tonic-types",
+    "@crates//:tracing",
+    "@crates//:tracing-subscriber",
     "@crates//:uuid",
     "@typedb_protocol//grpc/rust:typedb_protocol",
 ]

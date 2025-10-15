@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 // EXAMPLE START MARKER
 use std::time::Duration;
 
@@ -43,7 +44,11 @@ async fn cleanup() {
     .await
     .unwrap();
     if driver.databases().contains("typedb").await.unwrap() {
-        driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
+        println!("Confirmed DB contains, going to get...");
+        let db = driver.databases().get("typedb").await.unwrap();
+        println!("Got DB");
+        db.delete().await.unwrap();
+        println!("Deleted db");
     }
 }
 

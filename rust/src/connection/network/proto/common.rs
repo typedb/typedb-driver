@@ -19,7 +19,7 @@
 
 use typedb_protocol::{
     options::{Query as QueryOptionsProto, Transaction as TransactionOptionsProto},
-    transaction, Options,
+    transaction,
 };
 
 use super::{IntoProto, TryFromProto};

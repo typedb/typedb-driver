@@ -25,7 +25,7 @@ use std::{
 };
 
 use env_logger::Env;
-use log::{trace, warn};
+use tracing::{debug, warn};
 use typedb_driver::{Error, Result};
 
 use super::memory::{free, release_arc, release_optional, release_string};
@@ -90,7 +90,7 @@ pub(super) fn unwrap_void(result: Result) {
 }
 
 fn record_error(err: Error) {
-    trace!("Encountered error {err} in typedb-driver-rust");
+    debug!("Encountered error {err} in typedb-driver-rust");
     LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(err));
 }
 

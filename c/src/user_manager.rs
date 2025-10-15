@@ -19,14 +19,13 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{box_stream, TypeDBDriver, User, UserManager};
+use typedb_driver::{box_stream, TypeDBDriver, User};
 
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
     iterator::{iterator_next, CIterator},
-    memory::{borrow, free, release, string_view},
+    memory::{borrow, free, string_view},
 };
-use crate::{error::try_release_string, memory::release_string};
 
 /// Iterator over a set of <code>User</code>s
 pub struct UserIterator(CIterator<User>);

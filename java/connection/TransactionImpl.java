@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
 import static com.typedb.driver.jni.typedb_driver.transaction_commit;
-import static com.typedb.driver.jni.typedb_driver.transaction_force_close;
+import static com.typedb.driver.jni.typedb_driver.transaction_close;
 import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
 import static com.typedb.driver.jni.typedb_driver.transaction_new;
 import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
@@ -102,7 +102,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         try {
             TransactionOnClose callback = new TransactionOnClose(function);
             callbacks.add(callback);
-            transaction_on_close(nativeObject, callback.released());
+            transaction_on_close(nativeObject, callback.released()).get();
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
@@ -133,7 +133,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     public void close() throws TypeDBDriverException {
         if (nativeObject.isOwned()) {
             try {
-                transaction_force_close(nativeObject);
+                transaction_close(nativeObject).get();
             } catch (com.typedb.driver.jni.Error error) {
                 throw new TypeDBDriverException(error);
             } finally {

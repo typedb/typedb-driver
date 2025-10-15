@@ -32,6 +32,27 @@ Result
 driver.force_close()
 ----
 
+[#_struct_TypeDBDriver_init_logging_]
+==== init_logging
+
+[source,rust]
+----
+pub fn init_logging()
+----
+
+Initialize logging configuration for the TypeDB driver.
+
+This function sets up tracing with the following priority:
+
+The logging is initialized only once using a static flag to prevent multiple initializations in applications that create multiple drivers.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+null
+----
+
 [#_struct_TypeDBDriver_is_open_]
 ==== is_open
 
