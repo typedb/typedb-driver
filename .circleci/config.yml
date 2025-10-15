@@ -43,7 +43,7 @@ executors:
   mac-arm64:
     macos:
       xcode: "16.4.0"
-    resource_class: macos.m4pro.medium
+    resource_class: m4pro.medium
     working_directory: ~/typedb-driver
 
   win-x86_64:
