@@ -150,7 +150,7 @@ bool test_query_schema() {
     success = true;
 
 cleanup:
-    transaction_close(transaction);
+    if (NULL != transaction) transaction_close(transaction);
     transaction_options_drop(tx_opts);
     query_options_drop(query_opts);
 
