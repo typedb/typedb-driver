@@ -23,6 +23,8 @@
 #include <typedb_driver.h>
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
+const char* TYPEDB_CORE_USERNAME = "admin";
+const char* TYPEDB_CORE_PASSWORD = "password";
 const char* DRIVER_LANG = "c";
 
 
@@ -40,25 +42,34 @@ bool check_error_may_print(const char* filename, int lineno) {
 }
 
 #define FAILED() check_error_may_print(__FILE__, __LINE__)
+TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password) {
+    DriverOptions* options = NULL;
+    Credentials* creds = credentials_new(username, password);
+    if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+    options = driver_options_new(false, NULL);;
+    if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+    TypeDBDriver* driver = driver_open_with_description(address, creds, options, DRIVER_LANG);
+cleanup:
+    driver_options_drop(options);
+    credentials_drop(creds);
+
+    return driver;
+}
 
 int main() {
     const char databaseName[] = "test_assembly_clib";
 
-    Connection* connection = NULL;
-    DatabaseManager* databaseManager = NULL;
+   TypeDBDriver* driver = NULL;
 
     bool success = false;
 
-    connection = driver_open_core(TYPEDB_CORE_ADDRESS, DRIVER_LANG);
+    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databaseManager = database_manager_new(connection);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(databaseManager, databaseName);
-    if (FAILED()) goto cleanup;
-
-    if (!databases_contains(databaseManager, databaseName)) {
+    if (!databases_contains(driver, databaseName)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
@@ -66,8 +77,7 @@ int main() {
     success = true;
 cleanup:
     check_error_may_print(__FILE__, __LINE__);
-    database_manager_drop(databaseManager);
-    driver_close(connection);
+    driver_close(driver);
 
     printf("Success: %s\n", success ? "true" : "false");
     return success ? 0 : 1;

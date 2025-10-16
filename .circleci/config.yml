@@ -529,7 +529,7 @@ jobs:
 
       - deploy-maven-jni-snapshot-unix
 
-#      - deploy-clib-snapshot-unix
+      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-linux:
 #          target-arch: arm64
 
@@ -551,7 +551,7 @@ jobs:
 
       - deploy-maven-jni-snapshot-unix
 
-#      - deploy-clib-snapshot-unix
+      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-linux:
 #          target-arch: x86_64
 
@@ -575,7 +575,7 @@ jobs:
 
 #      - run: brew install cmake
 
-#      - deploy-clib-snapshot-unix
+      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-mac:
 #          target-arch: arm64
 
@@ -599,7 +599,7 @@ jobs:
 
 #      - run: brew install cmake
 
-#      - deploy-clib-snapshot-unix
+      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-mac:
 #          target-arch: x86_64
 
@@ -620,8 +620,8 @@ jobs:
 
       - run: .circleci\windows\java\deploy_snapshot.bat
 
-#      - run: .circleci\windows\clib\deploy_snapshot.bat
-#      - run: .circleci\windows\clib\test_assembly.bat
+      - run: .circleci\windows\clib\deploy_snapshot.bat
+      - run: .circleci\windows\clib\test_assembly.bat
 
 #      - run: .circleci\windows\cpp\deploy_snapshot.bat
 #      - run: .circleci\windows\cpp\test_assembly.bat
@@ -728,7 +728,7 @@ jobs:
           bazel-arch: arm64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-#      - deploy-clib-release-unix
+      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 
 #      - install-libicu-linux
@@ -742,7 +742,7 @@ jobs:
           bazel-arch: amd64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-#      - deploy-clib-release-unix
+      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 
 #      - install-libicu-linux
@@ -756,7 +756,7 @@ jobs:
           bazel-arch: arm64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-#      - deploy-clib-release-unix
+      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 #      - deploy-dotnet-runtime-release-unix
 
@@ -769,7 +769,7 @@ jobs:
           bazel-arch: amd64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-#      - deploy-clib-release-unix
+      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 #      - deploy-dotnet-runtime-release-unix
 
@@ -781,7 +781,7 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\deploy_release.bat
       - run: .circleci\windows\java\deploy_release.bat
-#      - run: .circleci\windows\clib\deploy_release.bat
+      - run: .circleci\windows\clib\deploy_release.bat
 #      - run: .circleci\windows\cpp\deploy_release.bat
 #      - run: .circleci\windows\csharp\deploy_release.bat
 

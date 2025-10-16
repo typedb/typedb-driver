@@ -57,4 +57,8 @@ Documentation: https://typedb.com/docs/drivers/
 npm install typedb-driver-http@{version}
 ```
 
+### C driver
+
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:{version}
+
 { release notes }

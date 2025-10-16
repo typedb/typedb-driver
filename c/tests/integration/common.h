@@ -18,7 +18,11 @@
  */
 
 extern const char* TYPEDB_CORE_ADDRESS;
+extern const char* TYPEDB_CORE_USERNAME;
+extern const char* TYPEDB_CORE_PASSWORD;
 
 bool check_error_may_print(const char* filename, int lineno);
 
-void delete_database_if_exists(DatabaseManager* databaseManager, const char* name);
+TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password);
+
+void delete_database_if_exists(TypeDBDriver* driver, const char* name);
