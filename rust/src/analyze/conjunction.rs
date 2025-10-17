@@ -18,8 +18,8 @@
  */
 
 use std::collections::HashMap;
-use crate::{concept, IID};
-use crate::analyze::VariableAnnotations;
+
+use crate::{analyze::VariableAnnotations, concept, IID};
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
