@@ -18,12 +18,14 @@
  */
 
 use std::collections::HashMap;
-use crate::analyze::{
-    conjunction::Variable,
-    pipeline::{Pipeline, Reducer},
+
+use crate::{
+    analyze::{
+        conjunction::Variable,
+        pipeline::{Pipeline, Reducer},
+    },
+    concept::{type_::Type, ValueType},
 };
-use crate::concept::type_::Type;
-use crate::concept::ValueType;
 
 pub mod conjunction;
 pub mod pipeline;

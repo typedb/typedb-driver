@@ -19,29 +19,25 @@
 
 use std::collections::HashMap;
 
-use typedb_protocol::{
-    analyze::res::analyzed_query as analyze_proto,
-    conjunction as conjunction_proto,
-};
+use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, conjunction as conjunction_proto};
 
 use crate::{
     analyze::{
-        AnalyzedQuery,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
             Variable,
         },
-        Function, pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable}, ReturnOperation,
+        pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
+        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, VariableAnnotations,
     },
     common::Result,
-    concept::{Kind, type_, Value, ValueType},
+    concept::{type_, Kind, Value, ValueType},
     connection::{
         message::AnalyzeResponse,
         network::proto::{FromProto, TryFromProto},
     },
     error::{AnalyzeError, ServerError},
 };
-use crate::analyze::{Fetch, FetchLeaf, VariableAnnotations};
 
 pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -82,7 +78,7 @@ impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuer
         Ok(Self {
             query: expect_try_into(query, "AnalyzedQuery.query")?,
             preamble: vec_from_proto(preamble)?,
-            fetch: fetch.map(|f| Fetch::try_from_proto(f)).transpose()?
+            fetch: fetch.map(|f| Fetch::try_from_proto(f)).transpose()?,
         })
     }
 }
@@ -97,13 +93,17 @@ impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuer
 
 impl TryFromProto<analyze_proto::Function> for Function {
     fn try_from_proto(proto: analyze_proto::Function) -> Result<Self> {
-        let analyze_proto::Function { body, arguments, return_operation, arguments_annotations, return_annotations } = proto;
+        let analyze_proto::Function { body, arguments, return_operation, arguments_annotations, return_annotations } =
+            proto;
         Ok(Self {
             argument_variables: vec_from_proto(arguments)?,
-            return_operation: expect_try_into(return_operation.and_then(|r| r.return_operation), "Function.return_operation")?,
+            return_operation: expect_try_into(
+                return_operation.and_then(|r| r.return_operation),
+                "Function.return_operation",
+            )?,
             body: expect_try_into(body, "Function.body")?,
             argument_annotations: vec_from_proto(arguments_annotations)?,
-            return_annotations: vec_from_proto(return_annotations)?
+            return_annotations: vec_from_proto(return_annotations)?,
         })
     }
 }
@@ -274,8 +274,7 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
                 Constraint::Label { r#type: expect_try_into(r#type, "structure_constraint::Label.type")?, label }
             }
             ConstraintProto::Comparison(constraint_proto::Comparison { lhs, rhs, comparator }) => {
-                let comparator =
-                    enum_from_proto::<constraint_proto::comparison::Comparator>(comparator)?;
+                let comparator = enum_from_proto::<constraint_proto::comparison::Comparator>(comparator)?;
                 Constraint::Comparison {
                     lhs: expect_try_into(lhs, "structure_constraint::Comparison.lhs")?,
                     rhs: expect_try_into(rhs, "structure_constraint::Comparison.rhs")?,
@@ -300,9 +299,10 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
                 lhs: expect_try_into(lhs, "structure_constraint::Is.lhs")?,
                 rhs: expect_try_into(rhs, "structure_constraint::Is.rhs")?,
             },
-            ConstraintProto::Iid(constraint_proto::Iid { concept, iid }) => {
-                Constraint::Iid { concept: expect_try_into(concept, "structure_constraint::Iid.concept")?, iid: iid.into() }
-            }
+            ConstraintProto::Iid(constraint_proto::Iid { concept, iid }) => Constraint::Iid {
+                concept: expect_try_into(concept, "structure_constraint::Iid.concept")?,
+                iid: iid.into(),
+            },
         };
         Ok(constraint)
     }
@@ -315,10 +315,7 @@ impl TryFromProto<typedb_protocol::Conjunction> for Conjunction {
             .into_iter()
             .map(|(id, annotations_proto)| Ok((Variable(id), VariableAnnotations::try_from_proto(annotations_proto)?)))
             .collect::<Result<HashMap<_, _>>>()?;
-        Ok(Self {
-            constraints: vec_from_proto(proto.constraints)?,
-            variable_annotations,
-        })
+        Ok(Self { constraints: vec_from_proto(proto.constraints)?, variable_annotations })
     }
 }
 
@@ -400,7 +397,6 @@ impl TryFromProto<conjunction_proto::Variable> for Variable {
 //     }
 // }
 
-
 impl TryFromProto<conjunction_proto::VariableAnnotations> for VariableAnnotations {
     fn try_from_proto(proto: conjunction_proto::VariableAnnotations) -> Result<Self> {
         use conjunction_proto::variable_annotations::Annotations as AnnotationsProto;
@@ -425,9 +421,9 @@ impl TryFromProto<conjunction_proto::VariableAnnotations> for VariableAnnotation
 impl TryFromProto<analyze_proto::Fetch> for Fetch {
     fn try_from_proto(proto: analyze_proto::Fetch) -> Result<Self> {
         use analyze_proto::fetch::Node as NodeProto;
-        let unwrapped = proto.node.ok_or_else(|| {
-            crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "Fetch.node" })
-        })?;
+        let unwrapped = proto
+            .node
+            .ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "Fetch.node" }))?;
         let fetch_annotations = match unwrapped {
             NodeProto::Object(object) => {
                 let fields = object
