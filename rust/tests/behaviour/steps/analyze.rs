@@ -319,7 +319,7 @@ pub mod functor_encoding {
                     encode_functor_impl!(context, Is { lhs, rhs, })
                 }
                 Self::Iid { concept, iid } => {
-                    let iid_str = format!("0x{}", iid.to_string());
+                    let iid_str = iid.to_string();
                     let iid_ref = &iid_str;
                     encode_functor_impl!(context, Iid { concept, iid_ref, })
                 }
