@@ -17,26 +17,28 @@
  * under the License.
  */
 
-use crate::{
-    concept,
-    concept::{type_, ValueType},
-};
+use std::collections::HashMap;
+use crate::{concept, IID};
+use crate::analyze::VariableAnnotations;
 
+#[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct ConjunctionID(pub usize);
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Conjunction {
     pub constraints: Vec<Constraint>,
+    pub variable_annotations: HashMap<Variable, VariableAnnotations>,
 }
 
-#[derive(Debug)]
+#[repr(C)]
+#[derive(Debug, Clone)]
 pub enum ConstraintExactness {
     Exact,
     Subtypes,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Constraint {
     Isa {
         instance: ConstraintVertex,
@@ -92,7 +94,7 @@ pub enum Constraint {
     },
     Iid {
         concept: ConstraintVertex,
-        iid: Vec<u8>,
+        iid: IID,
     },
     Comparison {
         lhs: ConstraintVertex,
@@ -109,7 +111,7 @@ pub enum Constraint {
     },
     Value {
         attribute_type: ConstraintVertex,
-        value_type: ValueType,
+        value_type: concept::ValueType,
     },
 
     // Nested patterns are now constraints too
@@ -127,22 +129,23 @@ pub enum Constraint {
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ConstraintVertex {
     Variable(Variable),
-    Label(type_::Type),
+    Label(concept::type_::Type),
     Value(concept::Value),
     NamedRole(NamedRole),
     Unresolved(String), // Error condition
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct NamedRole {
     pub variable: Variable,
     pub name: String,
 }
 
-#[derive(Debug)]
+#[repr(C)]
+#[derive(Debug, Clone)]
 pub enum Comparator {
     Equal,
     NotEqual,
