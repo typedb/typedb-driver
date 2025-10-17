@@ -21,15 +21,15 @@ use std::collections::HashMap;
 
 use crate::analyze::conjunction::{Conjunction, ConjunctionID, Variable};
 
-#[derive(Debug)]
-pub struct PipelineStructure {
+#[derive(Debug, Clone)]
+pub struct Pipeline {
     pub conjunctions: Vec<Conjunction>,
     pub stages: Vec<PipelineStage>,
     pub variable_names: HashMap<Variable, String>,
     pub outputs: Vec<Variable>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum PipelineStage {
     Match { block: ConjunctionID },
     Insert { block: ConjunctionID },
@@ -42,28 +42,29 @@ pub enum PipelineStage {
     Offset { offset: u64 },
     Limit { limit: u64 },
     Distinct,
-    Reduce { reducers: Vec<ReduceAssign>, groupby: Vec<Variable> },
+    Reduce { reducers: Vec<ReduceAssignment>, groupby: Vec<Variable> },
 }
 
-#[derive(Debug)]
-pub struct ReduceAssign {
+#[derive(Debug, Clone)]
+pub struct ReduceAssignment {
     pub assigned: Variable,
     pub reducer: Reducer,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Reducer {
     pub arguments: Vec<Variable>,
     pub reducer: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SortVariable {
     pub variable: Variable,
     pub order: SortOrder,
 }
 
-#[derive(Debug)]
+#[repr(C)]
+#[derive(Debug, Clone)]
 pub enum SortOrder {
     Ascending,
     Descending,

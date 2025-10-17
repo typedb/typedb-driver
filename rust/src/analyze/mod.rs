@@ -17,39 +17,56 @@
  * under the License.
  */
 
+use std::collections::HashMap;
 use crate::analyze::{
-    annotations::QueryAnnotations,
     conjunction::Variable,
-    pipeline::{PipelineStructure, Reducer},
+    pipeline::{Pipeline, Reducer},
 };
+use crate::concept::type_::Type;
+use crate::concept::ValueType;
 
-pub mod annotations;
 pub mod conjunction;
 pub mod pipeline;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AnalyzedQuery {
-    pub structure: QueryStructure,
-    pub annotations: QueryAnnotations,
+    pub query: Pipeline,
+    pub preamble: Vec<Function>,
+    pub fetch: Option<Fetch>,
 }
 
-#[derive(Debug)]
-pub struct QueryStructure {
-    pub query: PipelineStructure,
-    pub preamble: Vec<FunctionStructure>,
+#[derive(Debug, Clone)]
+pub struct Function {
+    pub argument_variables: Vec<Variable>,
+    pub return_operation: ReturnOperation,
+    pub body: Pipeline,
+    pub argument_annotations: Vec<VariableAnnotations>,
+    pub return_annotations: Vec<VariableAnnotations>,
 }
 
-#[derive(Debug)]
-pub struct FunctionStructure {
-    pub arguments: Vec<Variable>,
-    pub returns: ReturnOperation,
-    pub body: PipelineStructure,
-}
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ReturnOperation {
     Stream { variables: Vec<Variable> },
     Single { selector: String, variables: Vec<Variable> },
     Check {},
     Reduce { reducers: Vec<Reducer> },
+}
+
+#[derive(Debug, Clone)]
+pub enum Fetch {
+    List(Box<Fetch>),
+    Leaf(FetchLeaf),
+    Object(HashMap<String, Fetch>),
+}
+
+#[derive(Debug, Clone)]
+pub struct FetchLeaf {
+    pub annotations: Vec<ValueType>,
+}
+
+#[derive(Debug, Clone)]
+pub enum VariableAnnotations {
+    Thing(Vec<Type>),
+    Type(Vec<Type>),
+    Value(ValueType),
 }

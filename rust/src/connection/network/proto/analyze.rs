@@ -20,40 +20,28 @@
 use std::collections::HashMap;
 
 use typedb_protocol::{
-    analyze::res::{
-        analyzed_query as analyze_proto,
-        analyzed_query::{
-            query_annotations::{fetch_annotations::Node, variable_annotations::Annotations},
-            query_structure,
-            query_structure::pipeline_structure,
-        },
-    },
-    conjunction_structure,
-    conjunction_structure::StructureConstraint,
-    ConjunctionStructure,
+    analyze::res::analyzed_query as analyze_proto,
+    conjunction as conjunction_proto,
 };
 
 use crate::{
     analyze::{
-        annotations::{
-            ConjunctionAnnotations, FetchAnnotations, FunctionAnnotations, FunctionReturnAnnotations,
-            PipelineAnnotations, QueryAnnotations, VariableAnnotations,
-        },
+        AnalyzedQuery,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
             Variable,
         },
-        pipeline::{PipelineStage, PipelineStructure, ReduceAssign, Reducer, SortOrder, SortVariable},
-        AnalyzedQuery, FunctionStructure, QueryStructure, ReturnOperation,
+        Function, pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable}, ReturnOperation,
     },
     common::Result,
-    concept::{type_, Kind, Value, ValueType},
+    concept::{Kind, type_, Value, ValueType},
     connection::{
         message::AnalyzeResponse,
         network::proto::{FromProto, TryFromProto},
     },
     error::{AnalyzeError, ServerError},
 };
+use crate::analyze::{Fetch, FetchLeaf, VariableAnnotations};
 
 pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -90,51 +78,54 @@ impl TryFromProto<typedb_protocol::analyze::res::Result> for AnalyzeResponse {
 
 impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuery {
     fn try_from_proto(value: typedb_protocol::analyze::res::AnalyzedQuery) -> Result<Self> {
-        let typedb_protocol::analyze::res::AnalyzedQuery { structure, annotations } = value;
-        let structure = expect_try_into(structure, "analyze.Res.structure")?;
-        let annotations = expect_try_into(annotations, "analyze.Res.annotations")?;
-        Ok(Self { structure, annotations })
+        let typedb_protocol::analyze::res::AnalyzedQuery { query, preamble, fetch } = value;
+        Ok(Self {
+            query: expect_try_into(query, "AnalyzedQuery.query")?,
+            preamble: vec_from_proto(preamble)?,
+            fetch: fetch.map(|f| Fetch::try_from_proto(f)).transpose()?
+        })
     }
 }
 
-// Structure
-impl TryFromProto<analyze_proto::QueryStructure> for QueryStructure {
-    fn try_from_proto(value: analyze_proto::QueryStructure) -> Result<Self> {
-        let analyze_proto::QueryStructure { query, preamble } = value;
-        let query = expect_try_into(query, "QueryStructure.query")?;
-        let preamble = vec_from_proto(preamble)?;
-        Ok(Self { query, preamble })
+//
+// impl TryFromProto<analyze_proto::Fetch> for Fetch {
+//     fn try_from_proto(value: analyze_proto::Fetch) -> Result<Self> {
+//         Ok(Self { annotations: expect_try_into(value.fetch, "Fetch.annotations")? })
+//     }
+// }
+//
+
+impl TryFromProto<analyze_proto::Function> for Function {
+    fn try_from_proto(proto: analyze_proto::Function) -> Result<Self> {
+        let analyze_proto::Function { body, arguments, return_operation, arguments_annotations, return_annotations } = proto;
+        Ok(Self {
+            argument_variables: vec_from_proto(arguments)?,
+            return_operation: expect_try_into(return_operation.and_then(|r| r.return_operation), "Function.return_operation")?,
+            body: expect_try_into(body, "Function.body")?,
+            argument_annotations: vec_from_proto(arguments_annotations)?,
+            return_annotations: vec_from_proto(return_annotations)?
+        })
     }
 }
 
-impl TryFromProto<query_structure::FunctionStructure> for FunctionStructure {
-    fn try_from_proto(value: query_structure::FunctionStructure) -> Result<Self> {
-        let query_structure::FunctionStructure { body, returns, arguments } = value;
-        let body = expect_try_into(body, "FunctionStructure.body")?;
-        let returns = expect_try_into(returns, "FunctionStructure.returns")?;
-        let arguments = vec_from_proto(arguments)?;
-        Ok(Self { arguments, returns, body })
-    }
-}
-
-impl TryFromProto<query_structure::function_structure::Returns> for ReturnOperation {
-    fn try_from_proto(value: query_structure::function_structure::Returns) -> Result<Self> {
-        use analyze_proto::query_structure::function_structure::Returns;
+impl TryFromProto<analyze_proto::function::return_operation::ReturnOperation> for ReturnOperation {
+    fn try_from_proto(value: analyze_proto::function::return_operation::ReturnOperation) -> Result<Self> {
+        use analyze_proto::function::return_operation::ReturnOperation as ReturnProto;
         let returns = match value {
-            Returns::Stream(stream) => Self::Stream { variables: vec_from_proto(stream.variables)? },
-            Returns::Single(single) => {
+            ReturnProto::Stream(stream) => Self::Stream { variables: vec_from_proto(stream.variables)? },
+            ReturnProto::Single(single) => {
                 Self::Single { selector: single.selector, variables: vec_from_proto(single.variables)? }
             }
-            Returns::Check(_check) => Self::Check {},
-            Returns::Reduce(reduce) => Self::Reduce { reducers: vec_from_proto(reduce.reducers)? },
+            ReturnProto::Check(_check) => Self::Check {},
+            ReturnProto::Reduce(reduce) => Self::Reduce { reducers: vec_from_proto(reduce.reducers)? },
         };
         Ok(returns)
     }
 }
 
-impl TryFromProto<query_structure::PipelineStructure> for PipelineStructure {
-    fn try_from_proto(value: query_structure::PipelineStructure) -> Result<Self> {
-        let query_structure::PipelineStructure { conjunctions, stages, variable_info, outputs } = value;
+impl TryFromProto<analyze_proto::Pipeline> for Pipeline {
+    fn try_from_proto(value: analyze_proto::Pipeline) -> Result<Self> {
+        let analyze_proto::Pipeline { conjunctions, stages, variable_info, outputs } = value;
         let conjunctions = vec_from_proto(conjunctions)?;
         let stages = vec_from_proto(stages)?;
         let variable_names = variable_info.into_iter().map(|(k, v)| (Variable(k), v.name)).collect();
@@ -143,9 +134,9 @@ impl TryFromProto<query_structure::PipelineStructure> for PipelineStructure {
     }
 }
 
-impl TryFromProto<pipeline_structure::PipelineStage> for PipelineStage {
-    fn try_from_proto(value: pipeline_structure::PipelineStage) -> Result<Self> {
-        use pipeline_structure::{pipeline_stage as stage_proto, pipeline_stage::Stage as StageProto};
+impl TryFromProto<analyze_proto::pipeline::PipelineStage> for PipelineStage {
+    fn try_from_proto(value: analyze_proto::pipeline::PipelineStage) -> Result<Self> {
+        use analyze_proto::pipeline::{pipeline_stage as stage_proto, pipeline_stage::Stage as StageProto};
         let unwrapped = value.stage.ok_or_else(|| {
             crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "PipelineStage.stage" })
         })?;
@@ -180,8 +171,8 @@ impl TryFromProto<pipeline_structure::PipelineStage> for PipelineStage {
     }
 }
 
-impl TryFromProto<pipeline_structure::pipeline_stage::reduce::ReduceAssign> for ReduceAssign {
-    fn try_from_proto(value: pipeline_structure::pipeline_stage::reduce::ReduceAssign) -> Result<Self> {
+impl TryFromProto<analyze_proto::pipeline::pipeline_stage::reduce::ReduceAssign> for ReduceAssignment {
+    fn try_from_proto(value: analyze_proto::pipeline::pipeline_stage::reduce::ReduceAssign) -> Result<Self> {
         Ok(Self {
             assigned: expect_try_into(value.assigned, "ReduceAssign.assigned")?,
             reducer: expect_try_into(value.reducer, "ReduceAssign.reducer")?,
@@ -189,15 +180,15 @@ impl TryFromProto<pipeline_structure::pipeline_stage::reduce::ReduceAssign> for 
     }
 }
 
-impl TryFromProto<query_structure::Reducer> for Reducer {
-    fn try_from_proto(value: query_structure::Reducer) -> Result<Self> {
+impl TryFromProto<analyze_proto::Reducer> for Reducer {
+    fn try_from_proto(value: analyze_proto::Reducer) -> Result<Self> {
         Ok(Self { arguments: vec_from_proto(value.variables)?, reducer: value.reducer })
     }
 }
 
-impl TryFromProto<conjunction_structure::StructureConstraint> for Constraint {
-    fn try_from_proto(value: StructureConstraint) -> Result<Self> {
-        use conjunction_structure::{
+impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
+    fn try_from_proto(value: conjunction_proto::StructureConstraint) -> Result<Self> {
+        use conjunction_proto::{
             structure_constraint as constraint_proto, structure_constraint::Constraint as ConstraintProto,
         };
         let unwrapped = value.constraint.ok_or_else(|| {
@@ -284,7 +275,7 @@ impl TryFromProto<conjunction_structure::StructureConstraint> for Constraint {
             }
             ConstraintProto::Comparison(constraint_proto::Comparison { lhs, rhs, comparator }) => {
                 let comparator =
-                    enum_from_proto::<conjunction_structure::structure_constraint::comparison::Comparator>(comparator)?;
+                    enum_from_proto::<constraint_proto::comparison::Comparator>(comparator)?;
                 Constraint::Comparison {
                     lhs: expect_try_into(lhs, "structure_constraint::Comparison.lhs")?,
                     rhs: expect_try_into(rhs, "structure_constraint::Comparison.rhs")?,
@@ -310,22 +301,30 @@ impl TryFromProto<conjunction_structure::StructureConstraint> for Constraint {
                 rhs: expect_try_into(rhs, "structure_constraint::Is.rhs")?,
             },
             ConstraintProto::Iid(constraint_proto::Iid { concept, iid }) => {
-                Constraint::Iid { concept: expect_try_into(concept, "structure_constraint::Iid.concept")?, iid }
+                Constraint::Iid { concept: expect_try_into(concept, "structure_constraint::Iid.concept")?, iid: iid.into() }
             }
         };
         Ok(constraint)
     }
 }
 
-impl TryFromProto<typedb_protocol::ConjunctionStructure> for Conjunction {
-    fn try_from_proto(proto: ConjunctionStructure) -> Result<Self> {
-        Ok(Self { constraints: vec_from_proto(proto.constraints)? })
+impl TryFromProto<typedb_protocol::Conjunction> for Conjunction {
+    fn try_from_proto(proto: typedb_protocol::Conjunction) -> Result<Self> {
+        let variable_annotations = proto
+            .variable_annotations
+            .into_iter()
+            .map(|(id, annotations_proto)| Ok((Variable(id), VariableAnnotations::try_from_proto(annotations_proto)?)))
+            .collect::<Result<HashMap<_, _>>>()?;
+        Ok(Self {
+            constraints: vec_from_proto(proto.constraints)?,
+            variable_annotations,
+        })
     }
 }
 
-impl TryFromProto<conjunction_structure::structure_constraint::comparison::Comparator> for Comparator {
-    fn try_from_proto(value: conjunction_structure::structure_constraint::comparison::Comparator) -> Result<Self> {
-        use conjunction_structure::structure_constraint::comparison::Comparator as ComparatorProto;
+impl TryFromProto<conjunction_proto::structure_constraint::comparison::Comparator> for Comparator {
+    fn try_from_proto(value: conjunction_proto::structure_constraint::comparison::Comparator) -> Result<Self> {
+        use conjunction_proto::structure_constraint::comparison::Comparator as ComparatorProto;
         Ok(match value {
             ComparatorProto::Equal => Comparator::Equal,
             ComparatorProto::NotEqual => Comparator::NotEqual,
@@ -339,9 +338,9 @@ impl TryFromProto<conjunction_structure::structure_constraint::comparison::Compa
     }
 }
 
-impl TryFromProto<conjunction_structure::structure_constraint::ConstraintExactness> for ConstraintExactness {
-    fn try_from_proto(value: conjunction_structure::structure_constraint::ConstraintExactness) -> Result<Self> {
-        use conjunction_structure::structure_constraint::ConstraintExactness as ConstraintExactnessProto;
+impl TryFromProto<conjunction_proto::structure_constraint::ConstraintExactness> for ConstraintExactness {
+    fn try_from_proto(value: conjunction_proto::structure_constraint::ConstraintExactness) -> Result<Self> {
+        use conjunction_proto::structure_constraint::ConstraintExactness as ConstraintExactnessProto;
         Ok(match value {
             ConstraintExactnessProto::Exact => ConstraintExactness::Exact,
             ConstraintExactnessProto::Subtypes => ConstraintExactness::Subtypes,
@@ -349,9 +348,9 @@ impl TryFromProto<conjunction_structure::structure_constraint::ConstraintExactne
     }
 }
 
-impl TryFromProto<pipeline_structure::pipeline_stage::sort::SortVariable> for SortVariable {
-    fn try_from_proto(value: pipeline_structure::pipeline_stage::sort::SortVariable) -> Result<Self> {
-        use pipeline_structure::pipeline_stage::sort::sort_variable::SortDirection;
+impl TryFromProto<analyze_proto::pipeline::pipeline_stage::sort::SortVariable> for SortVariable {
+    fn try_from_proto(value: analyze_proto::pipeline::pipeline_stage::sort::SortVariable) -> Result<Self> {
+        use analyze_proto::pipeline::pipeline_stage::sort::sort_variable::SortDirection;
         Ok(Self {
             variable: expect_try_into(value.variable, "SortVariable.variable")?,
             order: match enum_from_proto(value.direction)? {
@@ -362,17 +361,17 @@ impl TryFromProto<pipeline_structure::pipeline_stage::sort::SortVariable> for So
     }
 }
 
-impl TryFromProto<conjunction_structure::structure_vertex::NamedRole> for NamedRole {
-    fn try_from_proto(proto: conjunction_structure::structure_vertex::NamedRole) -> Result<Self> {
+impl TryFromProto<conjunction_proto::structure_vertex::NamedRole> for NamedRole {
+    fn try_from_proto(proto: conjunction_proto::structure_vertex::NamedRole) -> Result<Self> {
         let variable = expect_try_into(proto.variable, "NamedRole.variable")?;
         let name = proto.name;
         Ok(NamedRole { variable, name })
     }
 }
 
-impl TryFromProto<conjunction_structure::StructureVertex> for ConstraintVertex {
-    fn try_from_proto(value: conjunction_structure::StructureVertex) -> Result<Self> {
-        use conjunction_structure::structure_vertex::Vertex;
+impl TryFromProto<conjunction_proto::StructureVertex> for ConstraintVertex {
+    fn try_from_proto(value: conjunction_proto::StructureVertex) -> Result<Self> {
+        use conjunction_proto::structure_vertex::Vertex;
         match value.vertex {
             Some(Vertex::Variable(variable)) => Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?)),
             Some(Vertex::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
@@ -384,66 +383,34 @@ impl TryFromProto<conjunction_structure::StructureVertex> for ConstraintVertex {
     }
 }
 
-impl TryFromProto<conjunction_structure::Variable> for Variable {
-    fn try_from_proto(value: conjunction_structure::Variable) -> Result<Self> {
+impl TryFromProto<conjunction_proto::Variable> for Variable {
+    fn try_from_proto(value: conjunction_proto::Variable) -> Result<Self> {
         Ok(Self(value.id))
     }
 }
 
-// Annotations
+// // Annotations
+//
+// impl TryFromProto<analyze_proto::QueryAnnotations> for QueryAnnotations {
+//     fn try_from_proto(proto: analyze_proto::QueryAnnotations) -> Result<Self> {
+//         let query = expect_try_into(proto.query, "QueryAnnotations.query")?;
+//         let preamble = vec_from_proto(proto.preamble)?;
+//         let fetch = proto.fetch.map(|fetch| FetchAnnotations::try_from_proto(fetch)).transpose()?;
+//         Ok(Self { query, preamble, fetch })
+//     }
+// }
 
-impl TryFromProto<analyze_proto::QueryAnnotations> for QueryAnnotations {
-    fn try_from_proto(proto: analyze_proto::QueryAnnotations) -> Result<Self> {
-        let query = expect_try_into(proto.query, "QueryAnnotations.query")?;
-        let preamble = vec_from_proto(proto.preamble)?;
-        let fetch = proto.fetch.map(|fetch| FetchAnnotations::try_from_proto(fetch)).transpose()?;
-        Ok(Self { query, preamble, fetch })
-    }
-}
 
-impl TryFromProto<analyze_proto::query_annotations::FunctionAnnotations> for FunctionAnnotations {
-    fn try_from_proto(proto: analyze_proto::query_annotations::FunctionAnnotations) -> Result<Self> {
-        let arguments = vec_from_proto(proto.arguments)?;
-        let returns_types = vec_from_proto(proto.returns)?;
-        let returns = match proto.returns_stream {
-            true => FunctionReturnAnnotations::Stream(returns_types),
-            false => FunctionReturnAnnotations::Single(returns_types),
-        };
-        let body = expect_try_into(proto.body, "FunctionAnnotations.body")?;
-        Ok(Self { arguments, returns, body })
-    }
-}
-
-impl TryFromProto<analyze_proto::query_annotations::PipelineAnnotations> for PipelineAnnotations {
-    fn try_from_proto(proto: analyze_proto::query_annotations::PipelineAnnotations) -> Result<Self> {
-        Ok(Self { conjunction_annotations: vec_from_proto(proto.conjunctions)? })
-    }
-}
-
-impl TryFromProto<analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations>
-    for ConjunctionAnnotations
-{
-    fn try_from_proto(
-        proto: analyze_proto::query_annotations::pipeline_annotations::ConjunctionAnnotations,
-    ) -> Result<Self> {
-        let variable_annotations = proto
-            .variable_annotations
-            .into_iter()
-            .map(|(id, annotations_proto)| Ok((Variable(id), VariableAnnotations::try_from_proto(annotations_proto)?)))
-            .collect::<Result<HashMap<_, _>>>()?;
-        Ok(Self { variable_annotations })
-    }
-}
-
-impl TryFromProto<analyze_proto::query_annotations::VariableAnnotations> for VariableAnnotations {
-    fn try_from_proto(proto: analyze_proto::query_annotations::VariableAnnotations) -> Result<Self> {
+impl TryFromProto<conjunction_proto::VariableAnnotations> for VariableAnnotations {
+    fn try_from_proto(proto: conjunction_proto::VariableAnnotations) -> Result<Self> {
+        use conjunction_proto::variable_annotations::Annotations as AnnotationsProto;
         let unwrapped = proto.annotations.ok_or_else(|| {
             crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "VariableAnnotations.annotations" })
         })?;
         Ok(match unwrapped {
-            Annotations::Thing(types) => Self::Thing(vec_from_proto(types.types)?),
-            Annotations::Type(types) => Self::Type(vec_from_proto(types.types)?),
-            Annotations::ValueAnnotations(value_type) => {
+            AnnotationsProto::Thing(types) => Self::Thing(vec_from_proto(types.types)?),
+            AnnotationsProto::Type(types) => Self::Type(vec_from_proto(types.types)?),
+            AnnotationsProto::ValueAnnotations(value_type) => {
                 let value_type_proto = value_type.value_type.ok_or_else(|| {
                     crate::Error::Analyze(AnalyzeError::MissingResponseField {
                         field: "Value.value_type in VariableAnnotations::ValueAnnotations",
@@ -455,23 +422,30 @@ impl TryFromProto<analyze_proto::query_annotations::VariableAnnotations> for Var
     }
 }
 
-impl TryFromProto<analyze_proto::query_annotations::FetchAnnotations> for FetchAnnotations {
-    fn try_from_proto(proto: analyze_proto::query_annotations::FetchAnnotations) -> Result<Self> {
+impl TryFromProto<analyze_proto::Fetch> for Fetch {
+    fn try_from_proto(proto: analyze_proto::Fetch) -> Result<Self> {
+        use analyze_proto::fetch::Node as NodeProto;
         let unwrapped = proto.node.ok_or_else(|| {
-            crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "FetchAnnotations.node" })
+            crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "Fetch.node" })
         })?;
         let fetch_annotations = match unwrapped {
-            Node::Object(object) => {
+            NodeProto::Object(object) => {
                 let fields = object
-                    .annotations
+                    .fetch
                     .into_iter()
-                    .map(|(key, annotations)| Ok((key, FetchAnnotations::try_from_proto(annotations)?)))
+                    .map(|(key, annotations)| Ok((key, Fetch::try_from_proto(annotations)?)))
                     .collect::<Result<HashMap<_, _>>>()?;
-                FetchAnnotations::Object(fields)
+                Fetch::Object(fields)
             }
-            Node::List(elements) => FetchAnnotations::List(Box::new(FetchAnnotations::try_from_proto(*elements)?)),
-            Node::Leaf(leaf) => FetchAnnotations::Leaf(vec_from_proto(leaf.annotations)?),
+            NodeProto::List(elements) => Fetch::List(Box::new(Fetch::try_from_proto(*elements)?)),
+            NodeProto::Leaf(leaf) => Fetch::Leaf(FetchLeaf::try_from_proto(leaf)?),
         };
         Ok(fetch_annotations)
+    }
+}
+
+impl TryFromProto<analyze_proto::fetch::Leaf> for FetchLeaf {
+    fn try_from_proto(proto: analyze_proto::fetch::Leaf) -> Result<Self> {
+        Ok(FetchLeaf { annotations: vec_from_proto(proto.annotations)? })
     }
 }
