@@ -23,6 +23,7 @@ use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, Transa
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
+use crate::analyze::AnalyzedQueryPromise;
 
 /// Opens a transaction to perform read or write queries on the database connected to the session.
 ///
@@ -53,6 +54,20 @@ pub extern "C" fn transaction_query(
 ) -> *mut QueryAnswerPromise {
     release(QueryAnswerPromise::new(Box::new(
         borrow(transaction).query_with_options(string_view(query), *borrow(options)),
+    )))
+}
+
+/// Analyzes a TypeQL query in the transaction.
+///
+/// @param transaction The <code>Transaction</code> to analyze the query within.
+/// @param query The query string.
+#[no_mangle]
+pub extern "C" fn transaction_analyze(
+    transaction: *mut Transaction,
+    query: *const c_char,
+) -> *mut AnalyzedQueryPromise {
+    release(AnalyzedQueryPromise::new(Box::new(
+        borrow(transaction).analyze(string_view(query)),
     )))
 }
 

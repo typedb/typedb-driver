@@ -42,10 +42,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -318,5 +315,30 @@ public class ExampleTest {
 
         System.out.println("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");
     }
+
+    @Test
+    public void fiddle() {
+        assertTrue(false); // TODO: Delete this test. It's just to try things on the go
+        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
+//            driver.databases().create("typedb");
+            try (Transaction transaction = driver.transaction("java-equality-tests", Transaction.Type.READ)) {
+                QueryAnswer entityAnswer = transaction.query("match entity $x;").resolve();
+
+                // Collect concept rows that represent the answer as a table
+                List<ConceptRow> entityRows = entityAnswer.asConceptRows().stream().collect(Collectors.toList());
+                assertEquals(entityRows.size(), 1);
+                ConceptRow entityRow = entityRows.get(0);
+
+                HashSet<Concept> xHashSet =new HashSet<>();
+                xHashSet.add(entityRow.get("x").get());
+                assertTrue(xHashSet.contains(entityRow.get("x").get()));
+//
+//                TreeSet<Concept> xTreeSet = new TreeSet<>();
+//                xTreeSet.add(entityRow.get("x").get());
+//                assertTrue(xTreeSet.contains(entityRow.get("x").get()));
+            }
+        }
+    }
+
 }
 // EXAMPLE END MARKER

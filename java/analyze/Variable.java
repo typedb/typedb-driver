@@ -17,19 +17,18 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod connection;
-mod database;
-mod database_manager;
-mod error;
-mod iterator;
-mod memory;
-mod promise;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
-mod user_manager;
-mod analyze;
+package com.typedb.driver.analyze;
+
+import com.typedb.driver.common.NativeObject;
+
+import java.util.Optional;
+
+public class Variable extends NativeObject<com.typedb.driver.jni.Variable> {
+    Variable(com.typedb.driver.jni.Variable nativeObject) {
+        super(nativeObject);
+    }
+
+    public Optional<String> getName(Pipeline pipeline) {
+        return Optional.ofNullable(com.typedb.driver.jni.typedb_driver.variable_get_name(pipeline.nativeObject, nativeObject));
+    }
+}

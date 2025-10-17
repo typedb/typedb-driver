@@ -91,6 +91,33 @@ struct Type {};
 
 %dropproxy(QueryAnswer, query_answer)
 
+%dropproxy(AnalyzedQuery, analyzed_query)
+%dropproxy(Conjunction, conjunction)
+%dropproxy(ConjunctionID, conjunction_id)
+%dropproxy(ConstraintWithSpan, constraint_with_span)
+%dropproxy(ConstraintVertex, constraint_vertex)
+%dropproxy(Fetch, fetch)
+%dropproxy(Function, function)
+%dropproxy(Pipeline, pipeline)
+%dropproxy(PipelineStage, pipeline_stage)
+%dropproxy(ReduceAssignment, reduce_assignment)
+%dropproxy(ReturnOperation, return_operation)
+%dropproxy(Reducer, reducer)
+%dropproxy(SortVariable, sort_variable)
+%dropproxy(VariableAnnotations, variable_annotations)
+%dropproxy(Variable, variable)
+
+%dropproxy(ConjunctionIDIterator, conjunction_id_iterator)
+%dropproxy(ConstraintWithSpanIterator, constraint_with_span_iterator)
+%dropproxy(ConstraintVertexIterator, constraint_vertex_iterator)
+%dropproxy(FunctionIterator, function_iterator)
+%dropproxy(PipelineStageIterator, pipeline_stage_iterator)
+%dropproxy(ReduceAssignmentIterator, reduce_assignment_iterator)
+%dropproxy(ReducerIterator, reducer_iterator)
+%dropproxy(SortVariableIterator, sort_variable_iterator)
+%dropproxy(VariableAnnotationsIterator, variable_annotations_iterator)
+%dropproxy(VariableIterator, variable_iterator)
+
 %define %promiseproxy(Type, function_prefix)
 struct Type {};
 %newobject function_prefix ## _resolve;
@@ -99,6 +126,7 @@ struct Type {};
 %delobject function_prefix ## _drop;
 %enddef
 
+%promiseproxy(AnalyzedQueryPromise, analyzed_query_promise)
 %promiseproxy(BoolPromise, bool_promise)
 %promiseproxy(ConceptPromise, concept_promise)
 %promiseproxy(StringPromise, string_promise)
@@ -257,6 +285,20 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject databases_all;
 %newobject databases_get;
 
+%newobject analyzed_query_get_pipeline;
+%newobject pipeline_stages;
+%newobject pipeline_stage_get_block;
+%newobject pipeline_stage_delete_get_deleted_variables;
+%newobject pipeline_stage_reduce_get_reducer_assignments;
+%newobject pipeline_stage_sort_get_sort_variables;
+%newobject pipeline_stage_reduce_get_groupby;
+%newobject sort_variable_get_variable;
+%newobject reduce_assignment_get_assigned;
+%newobject reduce_assignment_get_reducer;
+%newobject reducer_get_name;
+%newobject reducer_get_arguments;
+
+
 %newobject get_last_error;
 %newobject error_code;
 %newobject error_message;
@@ -270,6 +312,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject string_iterator_next;
 %newobject string_and_opt_value_iterator_next;
 %newobject user_iterator_next;
+%newobject variable_iterator_next;
 
 %newobject transaction_new;
 %newobject transaction_query;

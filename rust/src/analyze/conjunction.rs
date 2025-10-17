@@ -46,8 +46,8 @@ pub enum ConstraintExactness {
 
 #[derive(Debug, Clone)]
 pub struct ConstraintSpan {
-    pub(crate) begin: usize,
-    pub(crate) end: usize,
+    pub begin: usize,
+    pub end: usize,
 }
 
 #[derive(Debug, Clone)]

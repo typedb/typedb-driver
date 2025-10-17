@@ -17,19 +17,27 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod connection;
-mod database;
-mod database_manager;
-mod error;
-mod iterator;
-mod memory;
-mod promise;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
-mod user_manager;
-mod analyze;
+package com.typedb.driver.analyze;
+
+import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.jni.typedb_driver;
+
+import java.util.stream.Stream;
+
+public class Reducer extends NativeObject<com.typedb.driver.jni.Reducer> {
+
+    protected Reducer(com.typedb.driver.jni.Reducer nativeObject) {
+        super(nativeObject);
+    }
+
+    public String name() {
+        return typedb_driver.reducer_get_name(nativeObject);
+    }
+
+    public Stream<Variable> arguments() {
+        return new NativeIterator<com.typedb.driver.jni.Variable>(
+                typedb_driver.reducer_get_arguments(nativeObject)
+        ).stream().map(Variable::new);
+    }
+}

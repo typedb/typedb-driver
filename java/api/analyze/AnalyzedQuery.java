@@ -17,19 +17,9 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod connection;
-mod database;
-mod database_manager;
-mod error;
-mod iterator;
-mod memory;
-mod promise;
-mod query_options;
-mod transaction;
-mod transaction_options;
-mod user;
-mod user_manager;
-mod analyze;
+package com.typedb.driver.api.analyze;
+
+
+public interface AnalyzedQuery {
+  // TODO: Do we still want this api / impl split?
+}

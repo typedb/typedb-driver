@@ -39,6 +39,7 @@ java_library(
         "//java/common",
         "//java/concept",
         "//java/user",
+        "//java/analyze",
         "//java:typedb_driver_jni",
     ],
 )

@@ -48,6 +48,7 @@ rust_static_library(
         "@crates//:env_logger",
         "@crates//:tracing",
     ],
+    proc_macro_deps = ["@crates//:paste"],
     tags = ["crate-name=typedb_driver_clib"],
 )
 
