@@ -92,7 +92,7 @@ pub enum Constraint {
     },
     Expression {
         text: String,
-        assigned: Vec<ConstraintVertex>,
+        assigned: ConstraintVertex,
         arguments: Vec<ConstraintVertex>,
     },
     Is {

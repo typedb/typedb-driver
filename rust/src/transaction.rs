@@ -93,9 +93,9 @@ impl Transaction {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.analyze_query(query)
+    /// transaction.analyze(query)
     /// ```
-    pub fn analyze_query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<AnalyzedQuery>> {
+    pub fn analyze(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<AnalyzedQuery>> {
         self.transaction_stream.analyze(query.as_ref())
     }
 

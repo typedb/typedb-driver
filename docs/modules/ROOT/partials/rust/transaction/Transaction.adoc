@@ -8,12 +8,12 @@
 A transaction with a TypeDB database.
 
 // tag::methods[]
-[#_struct_Transaction_analyze_query_query_impl_AsRef_str_]
-==== analyze_query
+[#_struct_Transaction_analyze_query_impl_AsRef_str_]
+==== analyze
 
 [source,rust]
 ----
-pub fn analyze_query(
+pub fn analyze(
     &self,
     query: impl AsRef<str>,
 ) -> impl Promise<'static, Result<AnalyzedQuery>>
@@ -41,7 +41,7 @@ impl Promise<'static, Result<AnalyzedQuery>>
 .Code examples
 [source,rust]
 ----
-transaction.analyze_query(query)
+transaction.analyze(query)
 ----
 
 [#_struct_Transaction_close_]

@@ -33,7 +33,7 @@ pub(crate) async fn run_analyze_query(
     transaction: &Transaction,
     query: impl AsRef<str>,
 ) -> TypeDBResult<AnalyzedQuery> {
-    transaction.analyze_query(query).await
+    transaction.analyze(query).await
 }
 
 #[apply(generic_step)]

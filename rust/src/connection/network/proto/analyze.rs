@@ -292,7 +292,9 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
             }
             ConstraintProto::Expression(constraint_proto::Expression { assigned, arguments, text }) => {
                 Constraint::Expression {
-                    assigned: vec_from_proto(assigned)?,
+                    assigned: vec_from_proto(assigned)?.first().cloned().ok_or_else(|| {
+                        AnalyzeError::MissingResponseField { field: "Expression.assigned was an empty array" }
+                    })?,
                     arguments: vec_from_proto(arguments)?,
                     text,
                 }
