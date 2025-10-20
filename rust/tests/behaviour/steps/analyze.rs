@@ -26,7 +26,7 @@ use crate::{
     analyze::functor_encoding::{
         encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor,
     },
-    Context, generic_step, params,
+    generic_step, params, Context,
 };
 
 pub(crate) async fn run_analyze_query(
@@ -117,6 +117,7 @@ fn normalize_functor_for_compare(functor: &String) -> String {
     normalized
 }
 
+#[rustfmt::skip]
 #[cfg(debug_assertions)]
 pub mod functor_encoding {
     use std::collections::HashMap;
