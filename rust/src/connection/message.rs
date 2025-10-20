@@ -176,7 +176,7 @@ pub(super) enum QueryResponse {
     Ok(QueryType),
     ConceptRowsHeader(ConceptRowHeader),
     ConceptDocumentsHeader(ConceptDocumentHeader),
-    StreamConceptRows(Vec<Vec<Option<Concept>>>),
+    StreamConceptRows(Vec<(Vec<Option<Concept>>, Vec<u8>)>),
     StreamConceptDocuments(Vec<Option<Node>>),
     Error(ServerError),
 }

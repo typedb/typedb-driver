@@ -55,7 +55,7 @@ use crate::{
     Error, Result,
 };
 
-impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
+impl TryFromProto<ConceptRowProto> for (Vec<Option<Concept>>, Vec<u8>) {
     fn try_from_proto(proto: ConceptRowProto) -> Result<Self> {
         let mut row = Vec::new();
         for entry in proto.row {
@@ -68,7 +68,8 @@ impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
                 }
             }
         }
-        Ok(row)
+        let involved_blocks = proto.involved_blocks;
+        Ok((row, involved_blocks))
     }
 }
 

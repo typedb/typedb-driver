@@ -186,8 +186,8 @@ impl TransactionStream {
                         match result {
                             Ok(QueryResponse::StreamConceptRows(rows)) => {
                                 stream_iter(rows.into_iter().map({
-                                    move |row| {
-                                        Ok(ConceptRow::new(header.clone(), row))
+                                    move |(row, involved_blocks)| {
+                                        Ok(ConceptRow::new(header.clone(), row, involved_blocks))
                                     }
                                 }))
                             }
