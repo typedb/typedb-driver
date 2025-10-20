@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+Holds a representation of the function, and the result of type-inference for each variable.
+
 [caption=""]
 .Fields
 // tag::properties[]

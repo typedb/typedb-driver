@@ -1,6 +1,8 @@
 [#_enum_VariableAnnotations]
 === VariableAnnotations
 
+The category of a variable, and the possible types determined by type-inference.
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

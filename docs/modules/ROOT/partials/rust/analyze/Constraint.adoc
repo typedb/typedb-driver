@@ -1,6 +1,8 @@
 [#_enum_Constraint]
 === Constraint
 
+The constraints making up a conjunction.
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

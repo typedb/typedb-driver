@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``
+
 [caption=""]
 .Fields
 // tag::properties[]

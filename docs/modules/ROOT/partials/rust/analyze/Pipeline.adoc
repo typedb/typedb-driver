@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+A representation of a query pipeline.
+
 [caption=""]
 .Fields
 // tag::properties[]
@@ -16,7 +18,7 @@
 a| `conjunctions` a| `Vec<Conjunction>` a| 
 a| `outputs` a| `Vec<Variable>` a| 
 a| `stages` a| `Vec<PipelineStage>` a| 
-a| `variable_names` a| `HashMap<Variable, String>` a| 
+a| `variable_info` a| `HashMap<Variable, VariableInfo>` a| 
 |===
 // end::properties[]
 

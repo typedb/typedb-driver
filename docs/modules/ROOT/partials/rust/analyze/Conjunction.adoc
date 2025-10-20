@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+A representation of the constraints involved in the query, and types inferred for each variable.
+
 [caption=""]
 .Fields
 // tag::properties[]
