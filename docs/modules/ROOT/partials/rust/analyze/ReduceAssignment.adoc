@@ -1,0 +1,20 @@
+[#_struct_ReduceAssignment]
+=== ReduceAssignment
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `assigned` a| `Variable` a| 
+a| `reducer` a| `Reducer` a| 
+|===
+// end::properties[]
+

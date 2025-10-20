@@ -1,0 +1,23 @@
+[#_struct_Function]
+=== Function
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `argument_annotations` a| `Vec<VariableAnnotations>` a| 
+a| `argument_variables` a| `Vec<Variable>` a| 
+a| `body` a| `Pipeline` a| 
+a| `return_annotations` a| `Vec<VariableAnnotations>` a| 
+a| `return_operation` a| `ReturnOperation` a| 
+|===
+// end::properties[]
+

@@ -1,0 +1,20 @@
+[#_struct_Conjunction]
+=== Conjunction
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `constraints` a| `Vec<Constraint>` a| 
+a| `variable_annotations` a| `HashMap<Variable, VariableAnnotations>` a| 
+|===
+// end::properties[]
+

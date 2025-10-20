@@ -1,0 +1,23 @@
+[#_struct_Variable]
+=== Variable
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `Hash`
+* `PartialEq`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `0` a| `u32` a| 
+|===
+// end::properties[]
+

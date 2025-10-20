@@ -1,0 +1,16 @@
+[#_enum_VariableAnnotations]
+=== VariableAnnotations
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Thing(Vec<Type>)`
+a| `Type(Vec<Type>)`
+a| `Value(ValueType)`
+|===
+// end::enum_constants[]
+

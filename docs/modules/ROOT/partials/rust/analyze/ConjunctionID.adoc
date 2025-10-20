@@ -1,0 +1,20 @@
+[#_struct_ConjunctionID]
+=== ConjunctionID
+
+*Implements traits:*
+
+* `Clone`
+* `Copy`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `0` a| `usize` a| 
+|===
+// end::properties[]
+

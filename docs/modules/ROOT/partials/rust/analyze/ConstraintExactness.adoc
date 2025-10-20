@@ -1,0 +1,15 @@
+[#_enum_ConstraintExactness]
+=== ConstraintExactness
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Exact = 0`
+a| `Subtypes = 1`
+|===
+// end::enum_constants[]
+

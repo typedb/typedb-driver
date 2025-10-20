@@ -1,0 +1,20 @@
+[#_struct_Reducer]
+=== Reducer
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `arguments` a| `Vec<Variable>` a| 
+a| `reducer` a| `String` a| 
+|===
+// end::properties[]
+

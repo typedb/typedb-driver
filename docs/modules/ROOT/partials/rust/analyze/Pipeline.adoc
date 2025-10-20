@@ -1,0 +1,22 @@
+[#_struct_Pipeline]
+=== Pipeline
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conjunctions` a| `Vec<Conjunction>` a| 
+a| `outputs` a| `Vec<Variable>` a| 
+a| `stages` a| `Vec<PipelineStage>` a| 
+a| `variable_names` a| `HashMap<Variable, String>` a| 
+|===
+// end::properties[]
+

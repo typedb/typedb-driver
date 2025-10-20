@@ -1,0 +1,21 @@
+[#_struct_AnalyzedQuery]
+=== AnalyzedQuery
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `fetch` a| `Option<Fetch>` a| 
+a| `preamble` a| `Vec<Function>` a| 
+a| `query` a| `Pipeline` a| 
+|===
+// end::properties[]
+

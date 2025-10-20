@@ -1,0 +1,18 @@
+[#_enum_ConstraintVertex]
+=== ConstraintVertex
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Label(Type)`
+a| `NamedRole(NamedRole)`
+a| `Unresolved(String)`
+a| `Value(Value)`
+a| `Variable(Variable)`
+|===
+// end::enum_constants[]
+
