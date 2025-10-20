@@ -30,6 +30,8 @@ use crate::{
 pub mod conjunction;
 pub mod pipeline;
 
+/// An <code>AnalyzedQuery</code> contains the server's representation of the query and preamble functions;
+/// as well as the result of types inferred for each variable by type-inference.
 #[derive(Debug, Clone)]
 pub struct AnalyzedQuery {
     pub query: Pipeline,
@@ -37,6 +39,7 @@ pub struct AnalyzedQuery {
     pub fetch: Option<Fetch>,
 }
 
+/// Holds a representation of the function, and the result of type-inference for each variable.
 #[derive(Debug, Clone)]
 pub struct Function {
     pub argument_variables: Vec<Variable>,
@@ -46,6 +49,7 @@ pub struct Function {
     pub return_annotations: Vec<VariableAnnotations>,
 }
 
+/// A representation of the return operation of the function
 #[derive(Debug, Clone)]
 pub enum ReturnOperation {
     Stream { variables: Vec<Variable> },
@@ -54,6 +58,7 @@ pub enum ReturnOperation {
     Reduce { reducers: Vec<Reducer> },
 }
 
+/// A representation of the <code>fetch</code> stage of a query
 #[derive(Debug, Clone)]
 pub enum Fetch {
     List(Box<Fetch>),
@@ -66,6 +71,7 @@ pub struct FetchLeaf {
     pub annotations: Vec<ValueType>,
 }
 
+/// The category of a variable, and the possible types determined by type-inference.
 #[derive(Debug, Clone)]
 pub enum VariableAnnotations {
     Thing(Vec<Type>),

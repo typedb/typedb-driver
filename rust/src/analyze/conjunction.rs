@@ -21,16 +21,22 @@ use std::collections::HashMap;
 
 use crate::{analyze::VariableAnnotations, concept, IID};
 
+/// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
+/// Used as indirection in the representation of a pipeline.
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct ConjunctionID(pub usize);
 
+/// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
 pub struct Conjunction {
     pub constraints: Vec<Constraint>,
     pub variable_annotations: HashMap<Variable, VariableAnnotations>,
 }
 
+/// Tells apart exact variants of constraints from the ones allowing subtype-polymorphism.
+/// e.g. <code>isa!</code> would be represented as an <code>Constraint::Isa</code>
+/// with its exactness field <code>ConstraintExactness::Exact</code>.
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub enum ConstraintExactness {
@@ -38,6 +44,7 @@ pub enum ConstraintExactness {
     Subtypes,
 }
 
+/// The constraints making up a conjunction.
 #[derive(Debug, Clone)]
 pub enum Constraint {
     Isa {
@@ -126,24 +133,38 @@ pub enum Constraint {
     },
 }
 
+/// Uniquely identifies a variable in a <code>Pipeline</code>pipeline.
+/// Its name (if any) can be retrieved from the <code>variable_names</code> field in <code>Pipeline</code>
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
 
+/// The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query.
+/// A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
+///
+/// * A <code>Variable</code> is a vertex the query must match and return.
+/// * A <code>Label</code> uniquely identifies a type
+/// * A <code>Value</code> represents a primitive value literal in TypeDB.
+/// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
+/// * An <code>UnresolvedTypeLabel</code> is a label which could not be resolved by type inference.
+/// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
+/// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
 #[derive(Debug, Clone)]
 pub enum ConstraintVertex {
     Variable(Variable),
     Label(concept::type_::Type),
     Value(concept::Value),
     NamedRole(NamedRole),
-    Unresolved(String), // Error condition
+    UnresolvedTypeLabel(String), // Error condition
 }
 
+/// A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
 #[derive(Debug, Clone)]
 pub struct NamedRole {
     pub variable: Variable,
     pub name: String,
 }
 
+/// A representation of the comparator used in a comparison constraint.
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub enum Comparator {

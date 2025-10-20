@@ -357,7 +357,7 @@ pub mod functor_encoding {
         match self {
             ConstraintVertex::Variable(id) => { id.encode_as_functor(context) }
             ConstraintVertex::Label(type_) => { type_.encode_as_functor(context) }
-            ConstraintVertex::Unresolved(label) => { label.encode_as_functor(context) }
+            ConstraintVertex::UnresolvedTypeLabel(label) => { label.encode_as_functor(context) }
             ConstraintVertex::NamedRole(NamedRole { name,.. }) => { name.encode_as_functor(context) }
             ConstraintVertex::Value(v) => {
                 match v {
@@ -374,7 +374,7 @@ pub mod functor_encoding {
         };
     }
     impl_functor_for_multi!(|self, context| [
-        Variable =>  { format!("${}", context.structure.variable_names.get(self).as_ref().map(|v| v.as_str()).unwrap_or("_")) }
+        Variable =>  { format!("${}", context.structure.variable_name(self).unwrap_or("_")) }
         Type => { self.label().to_owned().encode_as_functor(context) }
         Comparator =>  { format!("{}", self.symbol()) }
         ConjunctionID => { context.structure.conjunctions[self.0].encode_as_functor(context) }

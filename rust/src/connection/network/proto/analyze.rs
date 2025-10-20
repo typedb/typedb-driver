@@ -27,7 +27,7 @@ use crate::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
             Variable,
         },
-        pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
+        pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable, VariableInfo},
         AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, VariableAnnotations,
     },
     common::Result,
@@ -128,9 +128,18 @@ impl TryFromProto<analyze_proto::Pipeline> for Pipeline {
         let analyze_proto::Pipeline { conjunctions, stages, variable_info, outputs } = value;
         let conjunctions = vec_from_proto(conjunctions)?;
         let stages = vec_from_proto(stages)?;
-        let variable_names = variable_info.into_iter().map(|(k, v)| (Variable(k), v.name)).collect();
+        let variable_info = variable_info
+            .into_iter()
+            .map(|(k, v)| Ok((Variable(k), VariableInfo::try_from_proto(v)?)))
+            .collect::<Result<HashMap<_, _>>>()?;
         let outputs = vec_from_proto(outputs)?;
-        Ok(Self { conjunctions, stages, variable_names, outputs })
+        Ok(Self { conjunctions, stages, variable_info, outputs })
+    }
+}
+
+impl TryFromProto<analyze_proto::pipeline::VariableInfo> for VariableInfo {
+    fn try_from_proto(proto: analyze_proto::pipeline::VariableInfo) -> Result<Self> {
+        Ok(Self { name: proto.name })
     }
 }
 
@@ -374,7 +383,7 @@ impl TryFromProto<conjunction_proto::StructureVertex> for ConstraintVertex {
             Some(Vertex::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
             Some(Vertex::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
             Some(Vertex::NamedRole(role)) => Ok(ConstraintVertex::NamedRole(NamedRole::try_from_proto(role)?)),
-            Some(Vertex::Unresolved(label)) => Ok(ConstraintVertex::Unresolved(label)),
+            Some(Vertex::Unresolved(label)) => Ok(ConstraintVertex::UnresolvedTypeLabel(label)),
             None => Err(AnalyzeError::MissingResponseField { field: "StructureVertex.vertex" }.into()),
         }
     }

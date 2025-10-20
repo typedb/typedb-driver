@@ -21,14 +21,28 @@ use std::collections::HashMap;
 
 use crate::analyze::conjunction::{Conjunction, ConjunctionID, Variable};
 
+/// A representation of a query pipeline.
 #[derive(Debug, Clone)]
 pub struct Pipeline {
     pub conjunctions: Vec<Conjunction>,
     pub stages: Vec<PipelineStage>,
-    pub variable_names: HashMap<Variable, String>,
+    pub variable_info: HashMap<Variable, VariableInfo>,
     pub outputs: Vec<Variable>,
 }
 
+impl Pipeline {
+    pub fn variable_name(&self, variable: &Variable) -> Option<&str> {
+        self.variable_info.get(variable).map(|v| v.name.as_str())
+    }
+}
+
+/// Holds information about variables in a <code>Pipeline</code>.
+#[derive(Debug, Clone)]
+pub struct VariableInfo {
+    pub name: String,
+}
+
+/// Representation of a stage in a <code>Pipeline</code>.
 #[derive(Debug, Clone)]
 pub enum PipelineStage {
     Match { block: ConjunctionID },
@@ -45,24 +59,31 @@ pub enum PipelineStage {
     Reduce { reducers: Vec<ReduceAssignment>, groupby: Vec<Variable> },
 }
 
+/// Representation of an assignment from a reduction in a <code>PipelineStage::Reduce</code>,
+/// such as <code>reduce $c = sum($x);</code>
 #[derive(Debug, Clone)]
 pub struct ReduceAssignment {
     pub assigned: Variable,
     pub reducer: Reducer,
 }
 
+/// Representation of a reducer used either in a <code>PipelineStage::Reduce</code>
+/// or in a function's <code>ReturnOperation</code>.
 #[derive(Debug, Clone)]
 pub struct Reducer {
     pub arguments: Vec<Variable>,
     pub reducer: String,
 }
 
+/// The variable being sorted on and the ordering of the sort, as used in a <code>PipelineStage::Sort</code>,
+///  e.g. <code>sort $v desc</code>
 #[derive(Debug, Clone)]
 pub struct SortVariable {
     pub variable: Variable,
     pub order: SortOrder,
 }
 
+/// The order of a variable being sorted on in a <code>PipelineStage::Sort</code>
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub enum SortOrder {
