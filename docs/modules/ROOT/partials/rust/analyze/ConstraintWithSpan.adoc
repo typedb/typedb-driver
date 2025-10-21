@@ -1,5 +1,5 @@
-[#_struct_VariableAnnotations]
-=== VariableAnnotations
+[#_struct_ConstraintWithSpan]
+=== ConstraintWithSpan
 
 *Implements traits:*
 
@@ -13,7 +13,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `types` a| `TypeAnnotations` a| 
+a| `constraint` a| `Constraint` a| 
+a| `span` a| `ConstraintSpan` a| 
 |===
 // end::properties[]
 

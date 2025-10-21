@@ -12,7 +12,6 @@ The answer to a TypeDB query is a set of concepts which satisfy the <code>Constr
 |Variant
 a| `Label(Type)`
 a| `NamedRole(NamedRole)`
-a| `UnresolvedTypeLabel(String)`
 a| `Value(Value)`
 a| `Variable(Variable)`
 |===

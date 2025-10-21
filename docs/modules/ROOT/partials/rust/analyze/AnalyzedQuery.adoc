@@ -18,6 +18,7 @@ An ``AnalyzedQuery`` contains the server’s representation of the query and pre
 a| `fetch` a| `Option<Fetch>` a| 
 a| `preamble` a| `Vec<Function>` a| 
 a| `query` a| `Pipeline` a| 
+a| `source` a| `String` a| 
 |===
 // end::properties[]
 

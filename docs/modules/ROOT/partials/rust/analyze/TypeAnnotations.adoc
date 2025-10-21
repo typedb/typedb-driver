@@ -1,0 +1,18 @@
+[#_enum_TypeAnnotations]
+=== TypeAnnotations
+
+The category of a variable, and the possible types determined by type-inference.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Thing(Vec<Type>)`
+a| `Type(Vec<Type>)`
+a| `Value(ValueType)`
+|===
+// end::enum_constants[]
+
