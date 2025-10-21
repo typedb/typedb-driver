@@ -84,14 +84,6 @@ impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuer
     }
 }
 
-//
-// impl TryFromProto<analyze_proto::Fetch> for Fetch {
-//     fn try_from_proto(value: analyze_proto::Fetch) -> Result<Self> {
-//         Ok(Self { annotations: expect_try_into(value.fetch, "Fetch.annotations")? })
-//     }
-// }
-//
-
 impl TryFromProto<analyze_proto::Function> for Function {
     fn try_from_proto(proto: analyze_proto::Function) -> Result<Self> {
         let analyze_proto::Function { body, arguments, return_operation, arguments_annotations, return_annotations } =
