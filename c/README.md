@@ -1,6 +1,7 @@
 # TypeDB C Driver
 The TypeDB C driver provides C bindings to the rust driver. 
 It also serves as the base on which the other wrapper drivers are built.
+It is not very ergonomic to be used directly as a C driver. That is future work.
 
 ## Usage
 The driver is distributed as an archive containing the headers & a shared library.
@@ -22,16 +23,19 @@ Code examples can be found in the [integration tests](https://github.com/typedb/
 
 Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
-Driver *driver_open_core(const char *address);
+struct TypeDBDriver *driver_open(const char *address,
+                                 const struct Credentials *credentials,
+                                 const struct DriverOptions *driver_options);
 ``` 
 
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    Driver *driver = driver_open_core("127.0.0.1:1729");
-    DatabaseManager* databaseManager = database_manager_new(driver);
-    databases_create(databaseManager, dbName);
-    Database* database = databases_get(databaseManager, dbName);
+    DriverOptions* options = driver_options_new(false, NULL);;;
+    Credentials* creds = credentials_new(username, password);
+    TypeDBDriver* driver = driver_open(address, creds, options);
+    databases_create(driver, dbName);
+    Database* database = databases_get(driver, dbName);
     char* gotName = database_name(database);
     assert(0 == strcmp(gotName, dbName));
     ...
@@ -46,7 +50,6 @@ Types which have `*_close` methods will be freed on close.
     ...
     string_free(gotName);
     database_close(database);
-    database_manager_drop(databaseManager);
     driver_close(connection);
 ```
 
@@ -68,7 +71,7 @@ if (check_error()) {
 Iterators can be forwarded with the `*_iterator_next` method,
 which returns `NULL` when the end has been reached.
 ```c
-    DatabaseIterator* it = databases_all(databaseManager);
+    DatabaseIterator* it = databases_all(driver);
     Database* database = NULL;
     while (NULL != (database = database_iterator_next(it))) {
         ...

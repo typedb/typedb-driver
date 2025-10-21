@@ -20,7 +20,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-#include "c/tests/integration/tests.h"
+#include "c/tests/integration/test_driver.h"
 }
 
 TEST(TestDatabaseManagement, TestDatabaseManagement) {
