@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, conjunction as conjunction_proto};
+use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, analyzed_conjunction as conjunction_proto};
 
 use crate::{
     analyze::{
@@ -38,8 +38,9 @@ use crate::{
     },
     error::{AnalyzeError, ServerError},
 };
+use crate::analyze::TypeAnnotations;
 
-pub(super) fn expect_try_into<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
+pub(super) fn expect_try_from_proto<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
 }
 
@@ -57,7 +58,7 @@ fn enum_from_proto<T: TryFrom<i32, Error = prost::UnknownEnumValue>>(as_i32: i32
 
 impl TryFromProto<typedb_protocol::analyze::Res> for AnalyzeResponse {
     fn try_from_proto(proto: typedb_protocol::analyze::Res) -> Result<Self> {
-        expect_try_into(proto.result, "analyze.Res.result")
+        expect_try_from_proto(proto.result, "analyze.Res.result")
     }
 }
 
@@ -74,9 +75,10 @@ impl TryFromProto<typedb_protocol::analyze::res::Result> for AnalyzeResponse {
 
 impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuery {
     fn try_from_proto(value: typedb_protocol::analyze::res::AnalyzedQuery) -> Result<Self> {
-        let typedb_protocol::analyze::res::AnalyzedQuery { query, preamble, fetch } = value;
+        let typedb_protocol::analyze::res::AnalyzedQuery { source, query, preamble, fetch } = value;
         Ok(Self {
-            query: expect_try_into(query, "AnalyzedQuery.query")?,
+            source,
+            query: expect_try_from_proto(query, "AnalyzedQuery.query")?,
             preamble: vec_from_proto(preamble)?,
             fetch: fetch.map(|f| Fetch::try_from_proto(f)).transpose()?,
         })
@@ -97,11 +99,11 @@ impl TryFromProto<analyze_proto::Function> for Function {
             proto;
         Ok(Self {
             argument_variables: vec_from_proto(arguments)?,
-            return_operation: expect_try_into(
+            return_operation: expect_try_from_proto(
                 return_operation.and_then(|r| r.return_operation),
                 "Function.return_operation",
             )?,
-            body: expect_try_into(body, "Function.body")?,
+            body: expect_try_from_proto(body, "Function.body")?,
             argument_annotations: vec_from_proto(arguments_annotations)?,
             return_annotations: vec_from_proto(return_annotations)?,
         })
@@ -183,8 +185,8 @@ impl TryFromProto<analyze_proto::pipeline::PipelineStage> for PipelineStage {
 impl TryFromProto<analyze_proto::pipeline::pipeline_stage::reduce::ReduceAssign> for ReduceAssignment {
     fn try_from_proto(value: analyze_proto::pipeline::pipeline_stage::reduce::ReduceAssign) -> Result<Self> {
         Ok(Self {
-            assigned: expect_try_into(value.assigned, "ReduceAssign.assigned")?,
-            reducer: expect_try_into(value.reducer, "ReduceAssign.reducer")?,
+            assigned: expect_try_from_proto(value.assigned, "ReduceAssign.assigned")?,
+            reducer: expect_try_from_proto(value.reducer, "ReduceAssign.reducer")?,
         })
     }
 }
@@ -195,10 +197,10 @@ impl TryFromProto<analyze_proto::Reducer> for Reducer {
     }
 }
 
-impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
-    fn try_from_proto(value: conjunction_proto::StructureConstraint) -> Result<Self> {
+impl TryFromProto<conjunction_proto::Constraint> for Constraint {
+    fn try_from_proto(value: conjunction_proto::Constraint) -> Result<Self> {
         use conjunction_proto::{
-            structure_constraint as constraint_proto, structure_constraint::Constraint as ConstraintProto,
+            constraint as constraint_proto, constraint::Constraint as ConstraintProto,
         };
         let unwrapped = value.constraint.ok_or_else(|| {
             crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "StructureConstraint.constraint" })
@@ -217,76 +219,76 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
             ConstraintProto::Isa(constraint_proto::Isa { thing: instance, r#type, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Isa {
-                    instance: expect_try_into(instance, "structure_constraint::Isa.instance")?,
-                    r#type: expect_try_into(r#type, "structure_constraint::Isa.type")?,
+                    instance: expect_try_from_proto(instance, "structure_constraint::Isa.instance")?,
+                    r#type: expect_try_from_proto(r#type, "structure_constraint::Isa.type")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Has(constraint_proto::Has { owner, attribute, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Has {
-                    owner: expect_try_into(owner, "structure_constraint::Has.owner")?,
-                    attribute: expect_try_into(attribute, "structure_constraint::Has.attribute")?,
+                    owner: expect_try_from_proto(owner, "structure_constraint::Has.owner")?,
+                    attribute: expect_try_from_proto(attribute, "structure_constraint::Has.attribute")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Links(constraint_proto::Links { relation, player, role, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Links {
-                    relation: expect_try_into(relation, "structure_constraint::Links.relation")?,
-                    player: expect_try_into(player, "structure_constraint::Links.player")?,
-                    role: expect_try_into(role, "structure_constraint::Links.role")?,
+                    relation: expect_try_from_proto(relation, "structure_constraint::Links.relation")?,
+                    player: expect_try_from_proto(player, "structure_constraint::Links.player")?,
+                    role: expect_try_from_proto(role, "structure_constraint::Links.role")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Kind(constraint_proto::Kind { kind, r#type }) => Constraint::Kind {
                 kind: Kind::try_from_proto(kind)?,
-                r#type: expect_try_into(r#type, "structure_constraint::Kind.kind")?,
+                r#type: expect_try_from_proto(r#type, "structure_constraint::Kind.kind")?,
             },
             ConstraintProto::Sub(constraint_proto::Sub { subtype, supertype, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Sub {
-                    subtype: expect_try_into(subtype, "structure_constraint::Sub.subtype")?,
-                    supertype: expect_try_into(supertype, "structure_constraint::Sub.supertype")?,
+                    subtype: expect_try_from_proto(subtype, "structure_constraint::Sub.subtype")?,
+                    supertype: expect_try_from_proto(supertype, "structure_constraint::Sub.supertype")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Owns(constraint_proto::Owns { owner, attribute, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Owns {
-                    owner: expect_try_into(owner, "structure_constraint::Owns.owner")?,
-                    attribute: expect_try_into(attribute, "structure_constraint::Owns.attribute")?,
+                    owner: expect_try_from_proto(owner, "structure_constraint::Owns.owner")?,
+                    attribute: expect_try_from_proto(attribute, "structure_constraint::Owns.attribute")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Relates(constraint_proto::Relates { relation, role, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Relates {
-                    relation: expect_try_into(relation, "structure_constraint::Relates.relation")?,
-                    role: expect_try_into(role, "structure_constraint::Relates.role")?,
+                    relation: expect_try_from_proto(relation, "structure_constraint::Relates.relation")?,
+                    role: expect_try_from_proto(role, "structure_constraint::Relates.role")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Plays(constraint_proto::Plays { player, role, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Plays {
-                    player: expect_try_into(player, "structure_constraint::Plays.player")?,
-                    role: expect_try_into(role, "structure_constraint::Plays.role")?,
+                    player: expect_try_from_proto(player, "structure_constraint::Plays.player")?,
+                    role: expect_try_from_proto(role, "structure_constraint::Plays.role")?,
                     exactness: ConstraintExactness::try_from_proto(exactness_proto)?,
                 }
             }
             ConstraintProto::Value(constraint_proto::Value { attribute_type, value_type }) => Constraint::Value {
-                attribute_type: expect_try_into(attribute_type, "structure_constraint::Value.attribute_type")?,
-                value_type: expect_try_into(value_type, "structure_constraint::Value.value_type")?,
+                attribute_type: expect_try_from_proto(attribute_type, "structure_constraint::Value.attribute_type")?,
+                value_type: expect_try_from_proto(value_type, "structure_constraint::Value.value_type")?,
             },
             ConstraintProto::Label(constraint_proto::Label { r#type, label }) => {
-                Constraint::Label { r#type: expect_try_into(r#type, "structure_constraint::Label.type")?, label }
+                Constraint::Label { r#type: expect_try_from_proto(r#type, "structure_constraint::Label.type")?, label }
             }
             ConstraintProto::Comparison(constraint_proto::Comparison { lhs, rhs, comparator }) => {
                 let comparator = enum_from_proto::<constraint_proto::comparison::Comparator>(comparator)?;
                 Constraint::Comparison {
-                    lhs: expect_try_into(lhs, "structure_constraint::Comparison.lhs")?,
-                    rhs: expect_try_into(rhs, "structure_constraint::Comparison.rhs")?,
+                    lhs: expect_try_from_proto(lhs, "structure_constraint::Comparison.lhs")?,
+                    rhs: expect_try_from_proto(rhs, "structure_constraint::Comparison.rhs")?,
                     comparator: Comparator::try_from_proto(comparator)?,
                 }
             }
@@ -307,11 +309,11 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
                 }
             }
             ConstraintProto::Is(constraint_proto::Is { lhs, rhs }) => Constraint::Is {
-                lhs: expect_try_into(lhs, "structure_constraint::Is.lhs")?,
-                rhs: expect_try_into(rhs, "structure_constraint::Is.rhs")?,
+                lhs: expect_try_from_proto(lhs, "structure_constraint::Is.lhs")?,
+                rhs: expect_try_from_proto(rhs, "structure_constraint::Is.rhs")?,
             },
             ConstraintProto::Iid(constraint_proto::Iid { concept, iid }) => Constraint::Iid {
-                concept: expect_try_into(concept, "structure_constraint::Iid.concept")?,
+                concept: expect_try_from_proto(concept, "structure_constraint::Iid.concept")?,
                 iid: iid.into(),
             },
         };
@@ -319,8 +321,8 @@ impl TryFromProto<conjunction_proto::StructureConstraint> for Constraint {
     }
 }
 
-impl TryFromProto<typedb_protocol::Conjunction> for Conjunction {
-    fn try_from_proto(proto: typedb_protocol::Conjunction) -> Result<Self> {
+impl TryFromProto<typedb_protocol::AnalyzedConjunction> for Conjunction {
+    fn try_from_proto(proto: typedb_protocol::AnalyzedConjunction) -> Result<Self> {
         let variable_annotations = proto
             .variable_annotations
             .into_iter()
@@ -330,9 +332,9 @@ impl TryFromProto<typedb_protocol::Conjunction> for Conjunction {
     }
 }
 
-impl TryFromProto<conjunction_proto::structure_constraint::comparison::Comparator> for Comparator {
-    fn try_from_proto(value: conjunction_proto::structure_constraint::comparison::Comparator) -> Result<Self> {
-        use conjunction_proto::structure_constraint::comparison::Comparator as ComparatorProto;
+impl TryFromProto<conjunction_proto::constraint::comparison::Comparator> for Comparator {
+    fn try_from_proto(value: conjunction_proto::constraint::comparison::Comparator) -> Result<Self> {
+        use conjunction_proto::constraint::comparison::Comparator as ComparatorProto;
         Ok(match value {
             ComparatorProto::Equal => Comparator::Equal,
             ComparatorProto::NotEqual => Comparator::NotEqual,
@@ -346,9 +348,9 @@ impl TryFromProto<conjunction_proto::structure_constraint::comparison::Comparato
     }
 }
 
-impl TryFromProto<conjunction_proto::structure_constraint::ConstraintExactness> for ConstraintExactness {
-    fn try_from_proto(value: conjunction_proto::structure_constraint::ConstraintExactness) -> Result<Self> {
-        use conjunction_proto::structure_constraint::ConstraintExactness as ConstraintExactnessProto;
+impl TryFromProto<conjunction_proto::constraint::ConstraintExactness> for ConstraintExactness {
+    fn try_from_proto(value: conjunction_proto::constraint::ConstraintExactness) -> Result<Self> {
+        use conjunction_proto::constraint::ConstraintExactness as ConstraintExactnessProto;
         Ok(match value {
             ConstraintExactnessProto::Exact => ConstraintExactness::Exact,
             ConstraintExactnessProto::Subtypes => ConstraintExactness::Subtypes,
@@ -360,7 +362,7 @@ impl TryFromProto<analyze_proto::pipeline::pipeline_stage::sort::SortVariable> f
     fn try_from_proto(value: analyze_proto::pipeline::pipeline_stage::sort::SortVariable) -> Result<Self> {
         use analyze_proto::pipeline::pipeline_stage::sort::sort_variable::SortDirection;
         Ok(Self {
-            variable: expect_try_into(value.variable, "SortVariable.variable")?,
+            variable: expect_try_from_proto(value.variable, "SortVariable.variable")?,
             order: match enum_from_proto(value.direction)? {
                 SortDirection::Asc => SortOrder::Ascending,
                 SortDirection::Desc => SortOrder::Descending,
@@ -369,23 +371,23 @@ impl TryFromProto<analyze_proto::pipeline::pipeline_stage::sort::SortVariable> f
     }
 }
 
-impl TryFromProto<conjunction_proto::structure_vertex::NamedRole> for NamedRole {
-    fn try_from_proto(proto: conjunction_proto::structure_vertex::NamedRole) -> Result<Self> {
-        let variable = expect_try_into(proto.variable, "NamedRole.variable")?;
+impl TryFromProto<conjunction_proto::constraint_vertex::NamedRole> for NamedRole {
+    fn try_from_proto(proto: conjunction_proto::constraint_vertex::NamedRole) -> Result<Self> {
+        let variable = expect_try_from_proto(proto.variable, "NamedRole.variable")?;
         let name = proto.name;
         Ok(NamedRole { variable, name })
     }
 }
 
-impl TryFromProto<conjunction_proto::StructureVertex> for ConstraintVertex {
-    fn try_from_proto(value: conjunction_proto::StructureVertex) -> Result<Self> {
-        use conjunction_proto::structure_vertex::Vertex;
+impl TryFromProto<conjunction_proto::ConstraintVertex> for ConstraintVertex {
+    fn try_from_proto(value: conjunction_proto::ConstraintVertex) -> Result<Self> {
+        use conjunction_proto::constraint_vertex::Vertex as VertexProto;
         match value.vertex {
-            Some(Vertex::Variable(variable)) => Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?)),
-            Some(Vertex::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
-            Some(Vertex::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
-            Some(Vertex::NamedRole(role)) => Ok(ConstraintVertex::NamedRole(NamedRole::try_from_proto(role)?)),
-            Some(Vertex::Unresolved(label)) => Ok(ConstraintVertex::UnresolvedTypeLabel(label)),
+            Some(VertexProto::Variable(variable)) => Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?)),
+            Some(VertexProto::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
+            Some(VertexProto::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
+            Some(VertexProto::NamedRole(role)) => Ok(ConstraintVertex::NamedRole(NamedRole::try_from_proto(role)?)),
+            Some(VertexProto::Unresolved(label)) => Ok(ConstraintVertex::UnresolvedTypeLabel(label)),
             None => Err(AnalyzeError::MissingResponseField { field: "StructureVertex.vertex" }.into()),
         }
     }
@@ -397,24 +399,21 @@ impl TryFromProto<conjunction_proto::Variable> for Variable {
     }
 }
 
-// // Annotations
-//
-// impl TryFromProto<analyze_proto::QueryAnnotations> for QueryAnnotations {
-//     fn try_from_proto(proto: analyze_proto::QueryAnnotations) -> Result<Self> {
-//         let query = expect_try_into(proto.query, "QueryAnnotations.query")?;
-//         let preamble = vec_from_proto(proto.preamble)?;
-//         let fetch = proto.fetch.map(|fetch| FetchAnnotations::try_from_proto(fetch)).transpose()?;
-//         Ok(Self { query, preamble, fetch })
-//     }
-// }
+// Annotations
 
 impl TryFromProto<conjunction_proto::VariableAnnotations> for VariableAnnotations {
     fn try_from_proto(proto: conjunction_proto::VariableAnnotations) -> Result<Self> {
+        Ok(Self {
+            is_optional: proto.is_optional,
+            types: expect_try_from_proto(proto.annotations, "VariableAnnotations.annotations")?,
+        })
+    }
+}
+
+impl TryFromProto<conjunction_proto::variable_annotations::Annotations> for TypeAnnotations {
+    fn try_from_proto(proto: conjunction_proto::variable_annotations::Annotations) -> Result<Self> {
         use conjunction_proto::variable_annotations::Annotations as AnnotationsProto;
-        let unwrapped = proto.annotations.ok_or_else(|| {
-            crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "VariableAnnotations.annotations" })
-        })?;
-        Ok(match unwrapped {
+        Ok(match proto {
             AnnotationsProto::Thing(types) => Self::Thing(vec_from_proto(types.types)?),
             AnnotationsProto::Type(types) => Self::Type(vec_from_proto(types.types)?),
             AnnotationsProto::ValueAnnotations(value_type) => {

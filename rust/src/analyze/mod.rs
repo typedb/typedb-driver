@@ -34,6 +34,7 @@ pub mod pipeline;
 /// as well as the result of types inferred for each variable by type-inference.
 #[derive(Debug, Clone)]
 pub struct AnalyzedQuery {
+    pub source: String,
     pub query: Pipeline,
     pub preamble: Vec<Function>,
     pub fetch: Option<Fetch>,
@@ -71,9 +72,15 @@ pub struct FetchLeaf {
     pub annotations: Vec<ValueType>,
 }
 
+#[derive(Debug, Clone)]
+pub struct VariableAnnotations {
+    pub(crate) is_optional: bool, // TODO: Make pub when we know this is correct
+    pub types: TypeAnnotations,
+}
+
 /// The category of a variable, and the possible types determined by type-inference.
 #[derive(Debug, Clone)]
-pub enum VariableAnnotations {
+pub enum TypeAnnotations {
     Thing(Vec<Type>),
     Type(Vec<Type>),
     Value(ValueType),

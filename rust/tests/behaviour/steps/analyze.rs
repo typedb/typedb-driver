@@ -257,7 +257,7 @@ pub mod functor_encoding {
         },
         concept::{type_::Type, Value, ValueType},
     };
-    use typedb_driver::analyze::{Fetch, FetchLeaf, VariableAnnotations};
+    use typedb_driver::analyze::{Fetch, FetchLeaf, TypeAnnotations, VariableAnnotations};
 
     use crate::analyze::functor_encoding::functor_macros::{impl_functor_for, impl_functor_for_impl};
 
@@ -503,7 +503,6 @@ pub mod functor_encoding {
     }
 
     enum SubBlockAnnotation {
-        Trunk { conjunction: TrunkAnnotationToEncode },
         Or { branches: Vec<BlockAnnotationToEncode> },
         Not { conjunction: BlockAnnotationToEncode },
         Try { conjunction: BlockAnnotationToEncode },
@@ -511,8 +510,8 @@ pub mod functor_encoding {
 
     impl FunctorEncoded for BlockAnnotationToEncode {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
-            let mut elements = vec![SubBlockAnnotation::Trunk { conjunction: TrunkAnnotationToEncode(self.0) }];
-            elements.extend(context.structure.conjunctions[self.0].constraints.iter().filter_map(|c| match c {
+            let trunk = TrunkAnnotationToEncode(self.0);
+            let subpatterns = context.structure.conjunctions[self.0].constraints.iter().filter_map(|c| match c {
                 Constraint::Or { branches } => {
                     let branches = branches.iter().copied().map_into().collect();
                     Some(SubBlockAnnotation::Or { branches })
@@ -520,16 +519,20 @@ pub mod functor_encoding {
                 Constraint::Not { conjunction } => Some(SubBlockAnnotation::Not { conjunction: (*conjunction).into() }),
                 Constraint::Try { conjunction } => Some(SubBlockAnnotation::Try { conjunction: (*conjunction).into() }),
                 _ => None,
-            }));
-            elements.encode_as_functor(context)
+            }).collect::<Vec<SubBlockAnnotation>>();
+            let (trunk_ref, subpatterns_ref) = (&trunk, &subpatterns);
+            encode_functor_impl!(context, And { trunk_ref, subpatterns_ref, })
         }
     }
 
-    impl_functor_for!(enum SubBlockAnnotation [ Trunk { conjunction, } | Or { branches, } | Not { conjunction, } | Try { conjunction, } | ]);
-    impl_functor_for!(enum VariableAnnotations [ Thing (annotations,) | Type (annotations,) | Value (value_types,) | ]);
+    impl_functor_for!(enum SubBlockAnnotation [ Or { branches, } | Not { conjunction, } | Try { conjunction, } | ]);
+    impl_functor_for!(enum TypeAnnotations [ Thing (annotations,) | Type (annotations,) | Value (value_types,) | ]);
     impl_functor_for_multi!(|self, context| [
         TrunkAnnotationToEncode => {
             context.structure.conjunctions[self.0].variable_annotations.encode_as_functor(context)
+        }
+        VariableAnnotations => {
+            self.types.encode_as_functor(context)
         }
     ]);
 
