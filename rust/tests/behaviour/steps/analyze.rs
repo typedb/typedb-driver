@@ -258,6 +258,7 @@ pub mod functor_encoding {
         concept::{type_::Type, Value, ValueType},
     };
     use typedb_driver::analyze::{Fetch, FetchLeaf, TypeAnnotations, VariableAnnotations};
+    use typedb_driver::analyze::conjunction::ConstraintWithSpan;
 
     use crate::analyze::functor_encoding::functor_macros::{impl_functor_for, impl_functor_for_impl};
 
@@ -357,7 +358,6 @@ pub mod functor_encoding {
         match self {
             ConstraintVertex::Variable(id) => { id.encode_as_functor(context) }
             ConstraintVertex::Label(type_) => { type_.encode_as_functor(context) }
-            ConstraintVertex::UnresolvedTypeLabel(label) => { label.encode_as_functor(context) }
             ConstraintVertex::NamedRole(NamedRole { name,.. }) => { name.encode_as_functor(context) }
             ConstraintVertex::Value(v) => {
                 match v {
@@ -379,6 +379,7 @@ pub mod functor_encoding {
         Comparator =>  { format!("{}", self.symbol()) }
         ConjunctionID => { context.structure.conjunctions[self.0].encode_as_functor(context) }
         Conjunction => { let Conjunction { constraints, .. } = self; constraints.encode_as_functor(context) }
+        ConstraintWithSpan => { self.constraint.encode_as_functor(context) }
         Pipeline => { let pipeline = &self.stages; encode_functor_impl!(context, Pipeline { pipeline, }) }
         Function => {
             let Function { argument_variables, return_operation, body, .. } = self;
@@ -511,14 +512,16 @@ pub mod functor_encoding {
     impl FunctorEncoded for BlockAnnotationToEncode {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
             let trunk = TrunkAnnotationToEncode(self.0);
-            let subpatterns = context.structure.conjunctions[self.0].constraints.iter().filter_map(|c| match c {
-                Constraint::Or { branches } => {
-                    let branches = branches.iter().copied().map_into().collect();
-                    Some(SubBlockAnnotation::Or { branches })
+            let subpatterns = context.structure.conjunctions[self.0].constraints.iter().filter_map(|c| {
+                match &c.constraint {
+                    Constraint::Or { branches } => {
+                        let branches = branches.iter().copied().map_into().collect();
+                        Some(SubBlockAnnotation::Or { branches })
+                    }
+                    Constraint::Not { conjunction } => Some(SubBlockAnnotation::Not { conjunction: (*conjunction).into() }),
+                    Constraint::Try { conjunction } => Some(SubBlockAnnotation::Try { conjunction: (*conjunction).into() }),
+                    _ => None,
                 }
-                Constraint::Not { conjunction } => Some(SubBlockAnnotation::Not { conjunction: (*conjunction).into() }),
-                Constraint::Try { conjunction } => Some(SubBlockAnnotation::Try { conjunction: (*conjunction).into() }),
-                _ => None,
             }).collect::<Vec<SubBlockAnnotation>>();
             let (trunk_ref, subpatterns_ref) = (&trunk, &subpatterns);
             encode_functor_impl!(context, And { trunk_ref, subpatterns_ref, })

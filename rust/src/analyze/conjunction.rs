@@ -30,7 +30,7 @@ pub struct ConjunctionID(pub usize);
 /// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
 pub struct Conjunction {
-    pub constraints: Vec<Constraint>,
+    pub constraints: Vec<ConstraintWithSpan>,
     pub variable_annotations: HashMap<Variable, VariableAnnotations>,
 }
 
@@ -42,6 +42,18 @@ pub struct Conjunction {
 pub enum ConstraintExactness {
     Exact,
     Subtypes,
+}
+
+#[derive(Debug, Clone)]
+pub struct ConstraintSpan {
+    pub(crate) begin: usize,
+    pub(crate) end: usize,
+}
+
+#[derive(Debug, Clone)]
+pub struct ConstraintWithSpan {
+    pub constraint: Constraint,
+    pub span: ConstraintSpan,
 }
 
 /// The constraints making up a conjunction.
@@ -154,7 +166,6 @@ pub enum ConstraintVertex {
     Label(concept::type_::Type),
     Value(concept::Value),
     NamedRole(NamedRole),
-    UnresolvedTypeLabel(String), // Error condition
 }
 
 /// A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.

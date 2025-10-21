@@ -24,11 +24,11 @@ use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, analyzed_co
 use crate::{
     analyze::{
         conjunction::{
-            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex, NamedRole,
-            Variable,
+            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
+            ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable, VariableInfo},
-        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, VariableAnnotations,
+        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     common::Result,
     concept::{type_, Kind, Value, ValueType},
@@ -38,7 +38,6 @@ use crate::{
     },
     error::{AnalyzeError, ServerError},
 };
-use crate::analyze::TypeAnnotations;
 
 pub(super) fn expect_try_from_proto<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)
@@ -197,15 +196,24 @@ impl TryFromProto<analyze_proto::Reducer> for Reducer {
     }
 }
 
-impl TryFromProto<conjunction_proto::Constraint> for Constraint {
-    fn try_from_proto(value: conjunction_proto::Constraint) -> Result<Self> {
-        use conjunction_proto::{
-            constraint as constraint_proto, constraint::Constraint as ConstraintProto,
-        };
-        let unwrapped = value.constraint.ok_or_else(|| {
-            crate::Error::Analyze(AnalyzeError::MissingResponseField { field: "StructureConstraint.constraint" })
-        })?;
-        let constraint = match unwrapped {
+impl TryFromProto<conjunction_proto::Constraint> for ConstraintWithSpan {
+    fn try_from_proto(proto: conjunction_proto::Constraint) -> Result<Self> {
+        let constraint = expect_try_from_proto(proto.constraint, "Constraint.constraint")?;
+        let span = expect_try_from_proto(proto.span, "Constraint.span")?;
+        Ok(Self { constraint, span })
+    }
+}
+
+impl TryFromProto<conjunction_proto::constraint::ConstraintSpan> for ConstraintSpan {
+    fn try_from_proto(proto: conjunction_proto::constraint::ConstraintSpan) -> Result<Self> {
+        Ok(Self { begin: proto.begin as usize, end: proto.end as usize })
+    }
+}
+
+impl TryFromProto<conjunction_proto::constraint::Constraint> for Constraint {
+    fn try_from_proto(proto: conjunction_proto::constraint::Constraint) -> Result<Self> {
+        use conjunction_proto::{constraint as constraint_proto, constraint::Constraint as ConstraintProto};
+        let constraint = match proto {
             ConstraintProto::Or(constraint_proto::Or { branches }) => {
                 let branches = branches.iter().map(|branch| ConjunctionID(*branch as usize)).collect();
                 Constraint::Or { branches }
@@ -294,9 +302,7 @@ impl TryFromProto<conjunction_proto::Constraint> for Constraint {
             }
             ConstraintProto::Expression(constraint_proto::Expression { assigned, arguments, text }) => {
                 Constraint::Expression {
-                    assigned: vec_from_proto(assigned)?.first().cloned().ok_or_else(|| {
-                        AnalyzeError::MissingResponseField { field: "Expression.assigned was an empty array" }
-                    })?,
+                    assigned: expect_try_from_proto(assigned, "Expression.assigned")?,
                     arguments: vec_from_proto(arguments)?,
                     text,
                 }
@@ -383,11 +389,12 @@ impl TryFromProto<conjunction_proto::ConstraintVertex> for ConstraintVertex {
     fn try_from_proto(value: conjunction_proto::ConstraintVertex) -> Result<Self> {
         use conjunction_proto::constraint_vertex::Vertex as VertexProto;
         match value.vertex {
-            Some(VertexProto::Variable(variable)) => Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?)),
+            Some(VertexProto::Variable(variable)) => {
+                Ok(ConstraintVertex::Variable(Variable::try_from_proto(variable)?))
+            }
             Some(VertexProto::Label(type_)) => Ok(ConstraintVertex::Label(type_::Type::try_from_proto(type_)?)),
             Some(VertexProto::Value(value)) => Ok(ConstraintVertex::Value(Value::try_from_proto(value)?)),
             Some(VertexProto::NamedRole(role)) => Ok(ConstraintVertex::NamedRole(NamedRole::try_from_proto(role)?)),
-            Some(VertexProto::Unresolved(label)) => Ok(ConstraintVertex::UnresolvedTypeLabel(label)),
             None => Err(AnalyzeError::MissingResponseField { field: "StructureVertex.vertex" }.into()),
         }
     }
