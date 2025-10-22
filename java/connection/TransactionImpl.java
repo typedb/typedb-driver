@@ -19,10 +19,12 @@
 
 package com.typedb.driver.connection;
 
+import com.typedb.driver.analyze.AnalyzedQueryImpl;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Promise;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
+import static com.typedb.driver.jni.typedb_driver.transaction_analyze;
 import static com.typedb.driver.jni.typedb_driver.transaction_commit;
 import static com.typedb.driver.jni.typedb_driver.transaction_close;
 import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
@@ -91,6 +94,16 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         Validator.requireNonNull(query, "query");
         try {
             return Promise.map(transaction_query(nativeObject, query, options.nativeObject), QueryAnswerImpl::of);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public Promise<? extends AnalyzedQuery> analyze(String query) throws TypeDBDriverException {
+        Validator.requireNonNull(query, "query");
+        try {
+            return Promise.map(transaction_analyze(nativeObject, query), AnalyzedQueryImpl::new);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

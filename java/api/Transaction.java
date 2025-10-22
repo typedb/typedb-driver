@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api;
 
+import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.Promise;
 
@@ -80,6 +81,19 @@ public interface Transaction extends AutoCloseable {
      */
     @CheckReturnValue
     Promise<? extends QueryAnswer> query(String query, QueryOptions options) throws com.typedb.driver.common.exception.TypeDBDriverException;
+
+    /**
+     * Analayze a TypeQL query in this transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.analyze("match $x isa person;");
+     * </pre>
+     *
+     * @param query The query to analyze.
+     */
+    @CheckReturnValue
+    Promise<? extends AnalyzedQuery> analyze(String query) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Registers a callback function which will be executed when this transaction is closed.

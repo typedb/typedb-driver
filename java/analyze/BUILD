@@ -15,40 +15,31 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//java/test/behaviour/query/language:__subpackages__"])
+package(default_visibility = ["//visibility:public"])
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "steps",
-    srcs = [
-        "QuerySteps.java",
-        "AnalyzeSteps.java",
-    ],
-    visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//java/test/behaviour/connection/database:steps",
-        "//java/test/behaviour/connection/transaction:steps",
-    ],
+    name = "analyze",
+    srcs = glob(["*.java"], exclude=["test/**"]),
     deps = [
-        # Package dependencies
+        # Internal dependencies
+        "//java/api:api",
+        "//java/common:common",
+        "//java/concept",
 
-        "//java/analyze",
-        "//java/api",
-        "//java/common",
-        "//java/test/behaviour/config:parameters",
-        "//java/test/behaviour/connection:steps-base",
-        "//java/test/behaviour/util",
-        "//java/test/behaviour/util:functor-encoder",
-
-        # External dependencies from Maven
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
+        "//java:typedb_driver_jni",
+    ],
+    runtime_deps = [
+        "@maven//:ch_qos_logback_logback_classic",
+        "@maven//:ch_qos_logback_logback_core",
+        "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
+    size = "small",
 )
