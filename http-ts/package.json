@@ -1,10 +1,21 @@
 {
-  "name": "typedb-driver-http",
+  "name": "@typedb/driver-http",
   "version": "0.0.0",
   "description": "TypeDB HTTP Driver",
-  "author": "TypeDB",
+  "author": "TypeDB Community <community@typedb.com>",
   "license": "Apache-2.0",
   "homepage": "https://typedb.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typedb/typedb-driver"
+  },
+  "bugs": {
+    "url": "https://github.com/typedb/typedb-driver/issues"
+  },
+  "keywords": [
+    "database",
+    "typedb"
+  ],
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -16,14 +27,6 @@
       "require": "./dist/index.cjs"
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/typedb/typedb-driver"
-  },
-  "keywords": [
-    "database",
-    "typedb"
-  ],
   "scripts": {
     "build:dev": "tsc",
     "build": "tsup",
