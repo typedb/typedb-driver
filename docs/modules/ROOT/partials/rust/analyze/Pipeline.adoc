@@ -1,0 +1,24 @@
+[#_struct_Pipeline]
+=== Pipeline
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+A representation of a query pipeline.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conjunctions` a| `Vec<Conjunction>` a| 
+a| `outputs` a| `Vec<Variable>` a| 
+a| `stages` a| `Vec<PipelineStage>` a| 
+a| `variable_info` a| `HashMap<Variable, VariableInfo>` a| 
+|===
+// end::properties[]
+

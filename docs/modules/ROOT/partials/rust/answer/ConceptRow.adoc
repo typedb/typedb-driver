@@ -137,6 +137,30 @@ Result<Option<&Concept>>
 concept_row.get_position(column_index)
 ----
 
+[#_struct_ConceptRow_get_involved_blocks_]
+==== get_involved_blocks
+
+[source,rust]
+----
+pub fn get_involved_blocks(&self) -> impl Iterator<Item = ConjunctionID> + '_
+----
+
+Retrieve the ``ConjunctionID``s of ``Conjunction`` that answered this row.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Iterator<Item = ConjunctionID> + '_
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_involved_blocks()
+----
+
 [#_struct_ConceptRow_get_query_type_]
 ==== get_query_type
 

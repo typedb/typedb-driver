@@ -1,0 +1,20 @@
+[#_struct_ConstraintWithSpan]
+=== ConstraintWithSpan
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `constraint` a| `Constraint` a| 
+a| `span` a| `Option<ConstraintSpan>` a| 
+|===
+// end::properties[]
+

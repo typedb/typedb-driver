@@ -25,7 +25,9 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::{answer::QueryType, common::Result, concept::Concept, error::ConceptError};
+use crate::{
+    analyze::conjunction::ConjunctionID, answer::QueryType, common::Result, concept::Concept, error::ConceptError,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct ConceptRowHeader {
@@ -46,11 +48,12 @@ impl ConceptRowHeader {
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
+    involved_blocks: Vec<u8>,
 }
 
 impl ConceptRow {
-    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>) -> Self {
-        Self { header, row }
+    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>, involved_blocks: Vec<u8>) -> Self {
+        Self { header, involved_blocks, row }
     }
 
     /// Retrieve the row column names (shared by all elements in this stream).
@@ -73,6 +76,23 @@ impl ConceptRow {
     /// ```
     pub fn get_query_type(&self) -> QueryType {
         self.header.query_type
+    }
+
+    /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_involved_blocks()
+    /// ```
+    pub fn get_involved_blocks(&self) -> impl Iterator<Item = ConjunctionID> + '_ {
+        (0..self.involved_blocks.len())
+            .filter(|index| {
+                let index = index / 8;
+                let mask = 1 << (index % 8);
+                self.involved_blocks[index] & mask != 0
+            })
+            .map(ConjunctionID)
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if

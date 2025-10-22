@@ -1,0 +1,18 @@
+[#_enum_Fetch]
+=== Fetch
+
+A representation of the <code>fetch</code> stage of a query
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Leaf(FetchLeaf)`
+a| `List(Box<Fetch>)`
+a| `Object(HashMap<String, Fetch>)`
+|===
+// end::enum_constants[]
+

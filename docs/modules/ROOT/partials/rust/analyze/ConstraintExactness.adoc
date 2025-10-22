@@ -1,0 +1,17 @@
+[#_enum_ConstraintExactness]
+=== ConstraintExactness
+
+Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. <code>isa!</code> would be represented as an <code>Constraint::Isa</code> with its exactness field <code>ConstraintExactness::Exact</code>.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Exact = 0`
+a| `Subtypes = 1`
+|===
+// end::enum_constants[]
+

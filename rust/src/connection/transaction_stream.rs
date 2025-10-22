@@ -25,14 +25,15 @@ use tracing::trace;
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
+    analyze::AnalyzedQuery,
     answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
         stream::{BoxStream, Stream},
         Promise, Result,
     },
-    connection::message::{QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
-    error::{ConnectionError, InternalError},
+    connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
+    error::{AnalyzeError, ConnectionError, InternalError, ServerError},
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
@@ -113,6 +114,30 @@ impl TransactionStream {
         }
     }
 
+    pub(crate) fn analyze(&self, query: &str) -> impl Promise<'static, Result<AnalyzedQuery>> {
+        let stream = self.stream(TransactionRequest::Analyze { query: query.to_owned() });
+        promisify! {
+            let mut stream = stream?;
+            #[cfg(feature = "sync")]
+            let response = stream.next();
+
+            #[cfg(not(feature = "sync"))]
+            let response: Option<Result<TransactionResponse>> = stream.next().await;
+
+            match response {
+                None => Err(ConnectionError::AnalyzeNoResponse.into()),
+                Some(Ok(TransactionResponse::Analyze(response))) => {
+                    match response {
+                        AnalyzeResponse::Ok(analyzed) => Ok(analyzed),
+                        AnalyzeResponse::Err(error) => Err(error.into()),
+                    }
+                }
+                Some(Ok(other)) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
+                Some(Err(err)) => Err(err),
+            }
+        }
+    }
+
     pub(crate) fn query(&self, query: &str, options: QueryOptions) -> impl Promise<'static, Result<QueryAnswer>> {
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
         promisify! {
@@ -161,8 +186,8 @@ impl TransactionStream {
                         match result {
                             Ok(QueryResponse::StreamConceptRows(rows)) => {
                                 stream_iter(rows.into_iter().map({
-                                    move |row| {
-                                        Ok(ConceptRow::new(header.clone(), row))
+                                    move |(row, involved_blocks)| {
+                                        Ok(ConceptRow::new(header.clone(), row, involved_blocks))
                                     }
                                 }))
                             }

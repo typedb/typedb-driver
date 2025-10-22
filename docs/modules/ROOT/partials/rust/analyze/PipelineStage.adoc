@@ -1,0 +1,27 @@
+[#_enum_PipelineStage]
+=== PipelineStage
+
+Representation of a stage in a <code>Pipeline</code>.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Delete`
+a| `Distinct`
+a| `Insert`
+a| `Limit`
+a| `Match`
+a| `Offset`
+a| `Put`
+a| `Reduce`
+a| `Require`
+a| `Select`
+a| `Sort`
+a| `Update`
+|===
+// end::enum_constants[]
+
