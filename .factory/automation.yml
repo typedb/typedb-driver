@@ -145,20 +145,20 @@ build:
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS
 
-#    test-c-integration:
-#      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-#      dependencies:
-#        - build
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
-#          bazel test //c/tests/integration:test-driver --test_output=errors &&
-#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-community-server.sh
-#        exit $TEST_SUCCESS
+    test-c-integration:
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        tool/test/start-community-server.sh &&
+          bazel test //c/tests/integration:test-driver --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-community-server.sh
+        exit $TEST_SUCCESS
 
     test-java-integration:
       image: typedb-ubuntu-22.04

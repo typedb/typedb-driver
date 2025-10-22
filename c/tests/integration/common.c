@@ -23,6 +23,8 @@
 #include "common.h"
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
+const char* TYPEDB_CORE_USERNAME = "admin";
+const char* TYPEDB_CORE_PASSWORD = "password";
 const char* DRIVER_LANG = "c";
 
 bool check_error_may_print(const char* filename, int lineno) {
@@ -38,9 +40,27 @@ bool check_error_may_print(const char* filename, int lineno) {
     } else return false;
 }
 
-void delete_database_if_exists(DatabaseManager* databaseManager, const char* name) {
-    if (NULL != databaseManager && databases_contains(databaseManager, name)) {
-        Database* database = databases_get(databaseManager, name);
-        database_delete(database);
+void delete_database_if_exists(TypeDBDriver* driver, const char* name) {
+    if (driver == NULL) return;
+    bool contains = databases_contains(driver, name);
+    if (check_error_may_print(__FILE__, __LINE__)) return;
+    if (contains) {
+        const Database* db = databases_get(driver, name);
+        if (check_error_may_print(__FILE__, __LINE__)) return;
+        database_delete(db);
     }
+}
+
+TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password) {
+    DriverOptions* options = NULL;
+    Credentials* creds = credentials_new(username, password);
+    if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+    options = driver_options_new(false, NULL);;
+    if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+    TypeDBDriver* driver = driver_open_with_description(address, creds, options, DRIVER_LANG);
+cleanup:
+    driver_options_drop(options);
+    credentials_drop(creds);
+
+    return driver;
 }

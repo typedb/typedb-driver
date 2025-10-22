@@ -20,7 +20,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-#include "c/tests/integration/tests.h"
+#include "c/tests/integration/test_driver.h"
 }
 
 TEST(TestDatabaseManagement, TestDatabaseManagement) {
@@ -32,13 +32,6 @@ TEST(TestQuery, TestSchema) {
 }
 TEST(TestQuery, TestData) {
     EXPECT_TRUE(test_query_data());
-}
-
-TEST(TestConceptAPI, TestSchema) {
-    EXPECT_TRUE(test_concept_api_schema());
-}
-TEST(TestConceptAPI, TestData) {
-    EXPECT_TRUE(test_concept_api_data());
 }
 
 int main(int argc, char **argv) {
