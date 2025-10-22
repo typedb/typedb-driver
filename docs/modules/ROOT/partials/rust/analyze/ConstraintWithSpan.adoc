@@ -14,7 +14,7 @@
 |===
 |Name |Type |Description
 a| `constraint` a| `Constraint` a| 
-a| `span` a| `ConstraintSpan` a| 
+a| `span` a| `Option<ConstraintSpan>` a| 
 |===
 // end::properties[]
 

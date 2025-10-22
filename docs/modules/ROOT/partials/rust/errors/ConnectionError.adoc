@@ -10,7 +10,7 @@
 |Variant
 a| `AbsentTlsConfigForTlsConnection`
 a| `AddressTranslationMismatch`
-a| `AnalyzeQueryNoResponse`
+a| `AnalyzeNoResponse`
 a| `BrokenPipe`
 a| `ClusterAllNodesFailed`
 a| `ClusterReplicaNotPrimary`
