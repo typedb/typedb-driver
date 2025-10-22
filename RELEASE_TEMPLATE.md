@@ -50,11 +50,11 @@ pip install typedb-driver=={version}
 
 [//]: # (TODO: Update docs link)
 
-NPM package: https://www.npmjs.com/package/typedb-driver-http
+NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/drivers/
 
 ```
-npm install typedb-driver-http@{version}
+npm install @typedb/driver-http@{version}
 ```
 
 ### C driver
