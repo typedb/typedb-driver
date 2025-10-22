@@ -198,8 +198,8 @@ error_messages! { ConnectionError
         35: "TLS connections can only be enabled when connecting to HTTPS endpoints, for example using 'https://<ip>:port'. Please modify the address, or disable TLS (WARNING: this will send passwords over plaintext).",
     NonTlsConnectionWithHttps =
         36: "Connecting to an https endpoint requires enabling TLS in driver options.",
-    AnalyzeQueryNoResponse =
-        37: "Didn't receive any server responses for the analyze query.",
+    AnalyzeNoResponse =
+        37: "Didn't receive any server responses for the analyze request.",
 }
 
 error_messages! { ConceptError

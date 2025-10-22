@@ -125,7 +125,7 @@ impl TransactionStream {
             let response: Option<Result<TransactionResponse>> = stream.next().await;
 
             match response {
-                None => Err(ConnectionError::AnalyzeQueryNoResponse.into()),
+                None => Err(ConnectionError::AnalyzeNoResponse.into()),
                 Some(Ok(TransactionResponse::Analyze(response))) => {
                     match response {
                         AnalyzeResponse::Ok(analyzed) => Ok(analyzed),
