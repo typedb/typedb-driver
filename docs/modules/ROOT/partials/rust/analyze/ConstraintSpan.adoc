@@ -1,0 +1,8 @@
+[#_struct_ConstraintSpan]
+=== ConstraintSpan
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+

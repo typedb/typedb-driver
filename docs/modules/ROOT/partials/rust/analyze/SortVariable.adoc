@@ -1,0 +1,22 @@
+[#_struct_SortVariable]
+=== SortVariable
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `order` a| `SortOrder` a| 
+a| `variable` a| `Variable` a| 
+|===
+// end::properties[]
+

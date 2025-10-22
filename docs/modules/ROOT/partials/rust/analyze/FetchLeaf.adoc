@@ -1,0 +1,19 @@
+[#_struct_FetchLeaf]
+=== FetchLeaf
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `annotations` a| `Vec<ValueType>` a| 
+|===
+// end::properties[]
+

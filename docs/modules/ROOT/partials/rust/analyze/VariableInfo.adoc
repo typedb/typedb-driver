@@ -1,0 +1,21 @@
+[#_struct_VariableInfo]
+=== VariableInfo
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+Holds information about variables in a ``Pipeline``.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `String` a| 
+|===
+// end::properties[]
+

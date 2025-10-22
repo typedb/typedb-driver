@@ -1,0 +1,22 @@
+[#_struct_NamedRole]
+=== NamedRole
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `String` a| 
+a| `variable` a| `Variable` a| 
+|===
+// end::properties[]
+

@@ -10,10 +10,10 @@ Kind represents the base of a defined type to describe its capabilities. For exa
 [options="header"]
 |===
 |Variant
-a| `Attribute`
-a| `Entity`
-a| `Relation`
-a| `Role`
+a| `Attribute = 1`
+a| `Entity = 0`
+a| `Relation = 2`
+a| `Role = 3`
 |===
 // end::enum_constants[]
 

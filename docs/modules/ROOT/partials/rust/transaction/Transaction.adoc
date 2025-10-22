@@ -8,6 +8,42 @@
 A transaction with a TypeDB database.
 
 // tag::methods[]
+[#_struct_Transaction_analyze_query_impl_AsRef_str_]
+==== analyze
+
+[source,rust]
+----
+pub fn analyze(
+    &self,
+    query: impl AsRef<str>,
+) -> impl Promise<'static, Result<AnalyzedQuery>>
+----
+
+Analyzes a TypeQL query in this transaction, returning the translated structure &amp; inferred types.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a|  — The TypeQL query to be analyzed a| `impl AsRef<str>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Promise<'static, Result<AnalyzedQuery>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.analyze(query)
+----
+
 [#_struct_Transaction_close_]
 ==== close
 
