@@ -34,19 +34,6 @@ thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
 }
 
-/// Enables logging in the TypeDB driver.
-#[no_mangle]
-pub extern "C" fn init_logging() {
-    static INIT: Once = Once::new();
-    
-    INIT.call_once(|| {
-        const ENV_VAR: &str = "TYPEDB_DRIVER_LOG_LEVEL";
-        if let Err(err) = env_logger::try_init_from_env(Env::new().filter(ENV_VAR)) {
-            warn!("Failed to initialize logging: {}", err);
-        }
-    });
-}
-
 fn ok_record<T>(result: Result<T>) -> Option<T> {
     match result {
         Ok(value) => Some(value),

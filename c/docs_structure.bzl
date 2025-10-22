@@ -27,7 +27,6 @@ dir_mapping = {
     "replica": "connection",
     "user": "connection",
     "database": "connection",
-    "init_logging": "connection",
 
     "session" : "session",
     "options": "session",
@@ -84,7 +83,6 @@ dir_mapping = {
 force_file = {
     "check_error" : "error",
     "get_last_error" : "error",
-    "init_logging" : "connection",
 
     "boolpromise" : "primitives",
     "voidpromise" : "primitives",

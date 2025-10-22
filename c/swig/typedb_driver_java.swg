@@ -79,8 +79,6 @@
     }
 }
 
-%nojavaexception init_logging;
-
 %nojavaexception transaction_options_new;
 %nojavaexception transaction_options_get_transaction_timeout_millis;
 %nojavaexception transaction_options_set_transaction_timeout_millis;

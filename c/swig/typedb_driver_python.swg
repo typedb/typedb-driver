@@ -107,6 +107,4 @@ static PyObject* PyExc_TypeDBDriverError;
 
 %pythoncode %{
     TypeDBDriverExceptionNative = native_driver_python.TypeDBDriverExceptionNative
-
-    native_driver_python.init_logging()
 %}

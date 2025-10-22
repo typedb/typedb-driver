@@ -26,10 +26,6 @@ using namespace TypeDB;
 
 namespace TypeDB {
 
-void Driver::initLogging() {
-    _native::init_logging();
-}
-
 Driver Driver::coreDriver(const std::string& address) {
     auto p = _native::connection_open_core(address.c_str());
     DriverException::check_and_throw();

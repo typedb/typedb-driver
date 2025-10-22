@@ -30,11 +30,6 @@ namespace TypeDB.Driver.Common
     {
         public readonly T NativeObject;
 
-        static NativeObjectWrapper()
-        {
-            Pinvoke.typedb_driver.init_logging();
-        }
-
         protected NativeObjectWrapper(T? nativeObject)
         {
             NativeObject = nativeObject ?? throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
