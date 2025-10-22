@@ -53,7 +53,7 @@ pub struct ConstraintSpan {
 #[derive(Debug, Clone)]
 pub struct ConstraintWithSpan {
     pub constraint: Constraint,
-    pub span: ConstraintSpan,
+    pub span: Option<ConstraintSpan>,
 }
 
 /// The constraints making up a conjunction.

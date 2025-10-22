@@ -191,7 +191,7 @@ impl TryFromProto<analyze_proto::Reducer> for Reducer {
 impl TryFromProto<conjunction_proto::Constraint> for ConstraintWithSpan {
     fn try_from_proto(proto: conjunction_proto::Constraint) -> Result<Self> {
         let constraint = expect_try_from_proto(proto.constraint, "Constraint.constraint")?;
-        let span = expect_try_from_proto(proto.span, "Constraint.span")?;
+        let span = proto.span.map(ConstraintSpan::try_from_proto).transpose()?;
         Ok(Self { constraint, span })
     }
 }
