@@ -73,6 +73,7 @@ rust_shared_library(
         "@crates//:itertools",
         "@crates//:env_logger",
         "@crates//:log",
+        "@crates//:tracing",
     ],
     tags = ["crate-name=typedb_driver_clib"],
 )
