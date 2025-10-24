@@ -154,7 +154,7 @@ public abstract class FunctorEncoder {
                     return makeFunctor(
                             "Expression",
                             expression.text(),
-                            encodeList(Stream.of(expression.assigned()).map(this::encode)),
+                            this.encode(expression.assigned()),
                             encodeList(expression.arguments().map(this::encode))
                     );
                 }
@@ -195,7 +195,7 @@ public abstract class FunctorEncoder {
                     Constraint.Or or = constraint.asOr();
                     Stream<String> branchesEncoded = or.branches().map(conjunctionID -> {
                         Conjunction conjunction = pipeline.conjunction(conjunctionID).get();
-                        return makeFunctor("Conjunction", encode(conjunction));
+                        return encode(conjunction);
                     });
                     return makeFunctor("Or", encodeList(branchesEncoded));
                 }
