@@ -17,27 +17,12 @@
  * under the License.
  */
 
-package com.typedb.driver.analyze;
-
-import com.typedb.driver.common.NativeIterator;
-import com.typedb.driver.common.NativeObject;
-import com.typedb.driver.jni.typedb_driver;
+package com.typedb.driver.api.analyze;
 
 import java.util.stream.Stream;
 
-public class Reducer extends NativeObject<com.typedb.driver.jni.Reducer> {
+public interface Reducer {
+    String name();
 
-    protected Reducer(com.typedb.driver.jni.Reducer nativeObject) {
-        super(nativeObject);
-    }
-
-    public String name() {
-        return typedb_driver.reducer_get_name(nativeObject);
-    }
-
-    public Stream<Variable> arguments() {
-        return new NativeIterator<com.typedb.driver.jni.Variable>(
-                typedb_driver.reducer_get_arguments(nativeObject)
-        ).stream().map(Variable::new);
-    }
+    Stream<com.typedb.driver.jni.Variable> arguments();
 }

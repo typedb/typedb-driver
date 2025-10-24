@@ -36,10 +36,10 @@ java_library(
     deps = [
         # Internal dependencies
         "//java/api",
+        "//java/analyze",
         "//java/common",
         "//java/concept",
         "//java/user",
-        "//java/analyze",
         "//java:typedb_driver_jni",
     ],
 )

@@ -13,7 +13,7 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `constraint` a| `Constraint` a| 
+a| `constraint` a| `ConstraintImpl` a|
 a| `span` a| `Option<ConstraintSpan>` a| 
 |===
 // end::properties[]

@@ -19,11 +19,12 @@
 
 package com.typedb.driver.analyze;
 
+import com.typedb.driver.api.analyze.ConstraintVertex;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.jni.typedb_driver;
 
-public class ConstraintVertex extends NativeObject<com.typedb.driver.jni.ConstraintVertex> {
-    public ConstraintVertex(com.typedb.driver.jni.ConstraintVertex nativeObject) {
+public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
+    public ConstraintVertexImpl(com.typedb.driver.jni.ConstraintVertex nativeObject) {
         super(nativeObject);
     }
 
@@ -43,11 +44,11 @@ public class ConstraintVertex extends NativeObject<com.typedb.driver.jni.Constra
         return typedb_driver.constraint_vertex_is_named_role(nativeObject);
     }
 
-    public Variable asVariable() {
+    public com.typedb.driver.jni.Variable asVariable() {
         if (!isVariable()) {
             throw new IllegalStateException("ConstraintVertex is not a Variable");
         }
-        return new Variable(typedb_driver.constraint_vertex_as_variable(nativeObject));
+        return typedb_driver.constraint_vertex_as_variable(nativeObject);
     }
 
     public com.typedb.driver.api.concept.type.Type asLabel() {
@@ -64,12 +65,11 @@ public class ConstraintVertex extends NativeObject<com.typedb.driver.jni.Constra
         return new com.typedb.driver.concept.value.ValueImpl(typedb_driver.constraint_vertex_as_value(nativeObject));
     }
 
-
-    public Variable asNamedRoleGetVariable() {
+    public com.typedb.driver.jni.Variable asNamedRoleGetVariable() {
         if (!isNamedRole()) {
             throw new IllegalStateException("ConstraintVertex is not a Value");
         }
-        return new Variable(typedb_driver.constraint_vertex_as_named_role_get_variable(nativeObject));
+        return typedb_driver.constraint_vertex_as_named_role_get_variable(nativeObject);
     }
 
     public String asNamedRoleGetName() {

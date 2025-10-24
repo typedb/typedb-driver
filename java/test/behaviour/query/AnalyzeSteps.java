@@ -1,7 +1,6 @@
 package com.typedb.driver.test.behaviour.query;
 
-import com.typedb.driver.analyze.AnalyzedQueryImpl;
-import com.typedb.driver.analyze.Pipeline;
+import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.FunctorEncoder;
 import io.cucumber.java.en.Then;
@@ -16,11 +15,11 @@ import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx
 import static org.junit.Assert.assertTrue;
 
 public class AnalyzeSteps {
-    private static AnalyzedQueryImpl analyzedQuery;
+    private static AnalyzedQuery analyzedQuery;
     @When("get answers of typeql analyze")
     public void get_answers_of_typeql_analyze(String query) {
         analyzedQuery = null;
-        analyzedQuery = (AnalyzedQueryImpl)tx().analyze(query).resolve();
+        analyzedQuery = tx().analyze(query).resolve();
     }
 
     @Then("typeql analyze{may_error}")

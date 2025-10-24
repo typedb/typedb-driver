@@ -19,6 +19,7 @@
 
 package com.typedb.driver.analyze;
 
+import com.typedb.driver.api.analyze.VariableAnnotations;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
@@ -27,8 +28,8 @@ import com.typedb.driver.jni.VariableAnnotationsVariant;
 
 import java.util.stream.Stream;
 
-public class VariableAnnotations extends NativeObject<com.typedb.driver.jni.VariableAnnotations> {
-    protected VariableAnnotations(com.typedb.driver.jni.VariableAnnotations nativeObject) {
+public class VariableAnnotationsImpl extends NativeObject<com.typedb.driver.jni.VariableAnnotations> implements VariableAnnotations {
+    protected VariableAnnotationsImpl(com.typedb.driver.jni.VariableAnnotations nativeObject) {
         super(nativeObject);
     }
 

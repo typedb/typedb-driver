@@ -17,13 +17,25 @@
  * under the License.
  */
 
-package com.typedb.driver.analyze;
+package com.typedb.driver.api.analyze;
 
-import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.api.concept.type.Type;
 
-public class ConjunctionID extends NativeObject<com.typedb.driver.jni.ConjunctionID> {
+import java.util.stream.Stream;
 
-    protected ConjunctionID(com.typedb.driver.jni.ConjunctionID nativeObject) {
-        super(nativeObject);
-    }
+public interface VariableAnnotations {
+    com.typedb.driver.jni.VariableAnnotationsVariant variant();
+
+    boolean isThing();
+
+    boolean isType();
+
+    boolean isValue();
+
+    Stream<? extends Type> asThing();
+
+    Stream<? extends Type> asType();
+
+    Stream<String> asValue();
+
 }

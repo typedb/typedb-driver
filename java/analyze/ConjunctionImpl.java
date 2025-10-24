@@ -19,33 +19,26 @@
 
 package com.typedb.driver.analyze;
 
+import com.typedb.driver.api.analyze.Conjunction;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
 
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-public class Pipeline extends NativeObject<com.typedb.driver.jni.Pipeline> {
-
-    public Pipeline(com.typedb.driver.jni.Pipeline nativeObject) {
+public class ConjunctionImpl extends NativeObject<com.typedb.driver.jni.Conjunction> implements Conjunction {
+    protected ConjunctionImpl(com.typedb.driver.jni.Conjunction nativeObject) {
         super(nativeObject);
     }
 
-    public Stream<PipelineStage> stages() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stages(nativeObject)).stream().map(PipelineStage::of);
+    public Stream<ConstraintImpl> constraints() {
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_constraints(nativeObject)).stream().map(ConstraintImpl::of);
     }
 
-    public Optional<String> getVariableName(Variable variable) {
-        return Optional.ofNullable(com.typedb.driver.jni.typedb_driver.variable_get_name(nativeObject, variable.nativeObject));
+    public Stream<com.typedb.driver.jni.Variable> annotated_variables() {
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_annotated_variables(nativeObject)).stream();
     }
 
-    public Optional<Conjunction> conjunction(ConjunctionID conjunctionID) {
-        com.typedb.driver.jni.Conjunction nativeConjunction = com.typedb.driver.jni.typedb_driver.pipeline_get_conjunction(nativeObject, conjunctionID.nativeObject);
-        if (nativeConjunction == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new Conjunction(nativeConjunction));
-        }
+    public VariableAnnotationsImpl variable_annotations(com.typedb.driver.jni.Variable variable) {
+        return new VariableAnnotationsImpl(com.typedb.driver.jni.typedb_driver.conjunction_get_variable_annotations(nativeObject, variable));
     }
 }

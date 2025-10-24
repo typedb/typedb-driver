@@ -145,7 +145,7 @@ concept_row.get_position(column_index)
 pub fn get_involved_blocks(&self) -> impl Iterator<Item = ConjunctionID> + '_
 ----
 
-Retrieve the ``ConjunctionID``s of ``Conjunction`` that answered this row.
+Retrieve the ``ConjunctionIDImpl``s of ``ConjunctionImpl`` that answered this row.
 
 [caption=""]
 .Returns

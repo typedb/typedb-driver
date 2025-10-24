@@ -16,7 +16,7 @@ a| `FunctionCall`
 a| `Has`
 a| `Iid`
 a| `Is`
-a| `Isa`
+a| `IsaImpl`
 a| `Kind`
 a| `Label`
 a| `Links`

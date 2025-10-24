@@ -17,18 +17,27 @@
  * under the License.
  */
 
-package com.typedb.driver.analyze;
+package com.typedb.driver.api.analyze;
 
-import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.api.concept.type.Type;
+import com.typedb.driver.api.concept.value.Value;
 
-import java.util.Optional;
+public interface ConstraintVertex {
+    boolean isVariable();
 
-public class Variable extends NativeObject<com.typedb.driver.jni.Variable> {
-    Variable(com.typedb.driver.jni.Variable nativeObject) {
-        super(nativeObject);
-    }
+    boolean isLabel();
 
-    public Optional<String> getName(Pipeline pipeline) {
-        return Optional.ofNullable(com.typedb.driver.jni.typedb_driver.variable_get_name(pipeline.nativeObject, nativeObject));
-    }
+    boolean isValue();
+
+    boolean isNamedRole();
+
+    com.typedb.driver.jni.Variable asVariable();
+
+    Type asLabel();
+
+    Value asValue();
+
+    com.typedb.driver.jni.Variable asNamedRoleGetVariable();
+
+    String asNamedRoleGetName();
 }

@@ -1,6 +1,14 @@
 package com.typedb.driver.test.behaviour.util;
 
-import com.typedb.driver.analyze.*;
+import com.typedb.driver.api.analyze.Conjunction;
+import com.typedb.driver.api.analyze.Constraint;
+import com.typedb.driver.api.analyze.ConstraintVertex;
+import com.typedb.driver.api.analyze.Fetch;
+import com.typedb.driver.api.analyze.Function;
+import com.typedb.driver.api.analyze.Pipeline;
+import com.typedb.driver.api.analyze.PipelineStage;
+import com.typedb.driver.api.analyze.Reducer;
+import com.typedb.driver.api.analyze.VariableAnnotations;
 import com.typedb.driver.api.concept.Concept;
 
 import com.typedb.driver.jni.ConstraintExactness;
@@ -28,13 +36,14 @@ public abstract class FunctorEncoder {
     }
 
     public static String normalizeForCompare(String functor) {
-        return functor.toLowerCase().replaceAll("\\s+","");
+        return functor.toLowerCase().replaceAll("\\s+", "");
     }
 
     // The few common ones
-    public String encode(Variable variable) {
+    public String encode(com.typedb.driver.jni.Variable variable) {
         return "$" + pipeline.getVariableName(variable).orElse("_");
     }
+
     public static class StructureEncoder extends FunctorEncoder {
         public StructureEncoder(Pipeline pipeline) {
             super(pipeline);
@@ -260,6 +269,7 @@ public abstract class FunctorEncoder {
         public String encode(Pipeline pipeline) {
             return makeFunctor("Pipeline", encodeList(pipeline.stages().map(this::encode)));
         }
+
         public String encode(PipelineStage stage) {
             switch (stage.getVariant()) {
                 case Match:
@@ -273,7 +283,7 @@ public abstract class FunctorEncoder {
                 case Update:
                     return makeFunctor("Update", encode(pipeline.conjunction(stage.asUpdate().block()).get()));
                 case Delete:
-                    return makeFunctor("Delete",encode(pipeline.conjunction(stage.asDelete().block()).get()));
+                    return makeFunctor("Delete", encode(pipeline.conjunction(stage.asDelete().block()).get()));
                 case Select:
                     return makeFunctor("Select");
                 case Sort:
@@ -314,13 +324,14 @@ public abstract class FunctorEncoder {
                 switch (constraint.variant()) {
                     case Or:
                         return FunctorEncoder.makeFunctor(
-                            "Or", FunctorEncoder.encodeList(constraint.asOr().branches().map(b -> encode(pipeline.conjunction(b).get())))
+                                "Or", FunctorEncoder.encodeList(constraint.asOr().branches().map(b -> encode(pipeline.conjunction(b).get())))
                         );
                     case Not:
                         return FunctorEncoder.makeFunctor("Not", encode(pipeline.conjunction(constraint.asNot().conjunction()).get()));
                     case Try:
                         return FunctorEncoder.makeFunctor("Try", encode(pipeline.conjunction(constraint.asNot().conjunction()).get()));
-                    default: return null;
+                    default:
+                        return null;
                 }
             }).filter(Objects::nonNull);
             return FunctorEncoder.makeFunctor("And", trunk, FunctorEncoder.encodeList(branches));
@@ -329,9 +340,9 @@ public abstract class FunctorEncoder {
         public String encode(Function func) {
             String returnStreamOrSingle = func.return_operation().variant() == ReturnOperationVariant.StreamReturn ? "Stream" : "Single";
             return FunctorEncoder.makeFunctor("Function",
-                FunctorEncoder.encodeList(func.argument_annotations().map(this::encode)),
-                FunctorEncoder.makeFunctor(returnStreamOrSingle, FunctorEncoder.encodeList(func.return_annotations().map(this::encode))),
-                encode(func.body())
+                    FunctorEncoder.encodeList(func.argument_annotations().map(this::encode)),
+                    FunctorEncoder.makeFunctor(returnStreamOrSingle, FunctorEncoder.encodeList(func.return_annotations().map(this::encode))),
+                    encode(func.body())
             );
         }
 
@@ -342,7 +353,7 @@ public abstract class FunctorEncoder {
                 case List:
                     return FunctorEncoder.makeFunctor("List", encode(fetch.asListGetElement()));
                 case Object:
-                    Stream<String>  fields = fetch.asObjectGetAvailableFields().map(field -> field + ":" + encode(fetch.asObjectGetField(field)));
+                    Stream<String> fields = fetch.asObjectGetAvailableFields().map(field -> field + ":" + encode(fetch.asObjectGetField(field)));
                     return "{" + fields.sorted().collect(Collectors.joining(",")) + "}";
                 default:
                     throw new IllegalArgumentException("Unhandled Fetch variant");

@@ -22,10 +22,10 @@ package com.typedb.driver.api.analyze;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface AnalyzedQuery {
-    Pipeline pipeline();
+public interface Pipeline {
+    Stream<? extends PipelineStage> stages();
 
-    Stream<? extends Function> preamble();
+    Optional<String> getVariableName(com.typedb.driver.jni.Variable variable);
 
-    Optional<? extends Fetch> fetch();
+    Optional<? extends Conjunction> conjunction(com.typedb.driver.jni.ConjunctionID conjunctionID);
 }

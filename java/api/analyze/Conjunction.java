@@ -19,13 +19,10 @@
 
 package com.typedb.driver.api.analyze;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface AnalyzedQuery {
-    Pipeline pipeline();
-
-    Stream<? extends Function> preamble();
-
-    Optional<? extends Fetch> fetch();
+public interface Conjunction {
+    Stream<? extends Constraint> constraints();
+    Stream<com.typedb.driver.jni.Variable> annotated_variables();
+    VariableAnnotations variable_annotations(com.typedb.driver.jni.Variable variable);
 }

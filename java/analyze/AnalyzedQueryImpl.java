@@ -32,15 +32,15 @@ public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.Analyz
         super(nativeObject);
     }
 
-    public Pipeline pipeline() {
-        return new Pipeline(typedb_driver.analyzed_query_pipeline(nativeObject));
+    public PipelineImpl pipeline() {
+        return new PipelineImpl(typedb_driver.analyzed_query_pipeline(nativeObject));
     }
 
-    public Stream<Function> preamble() {
-        return new NativeIterator<>(typedb_driver.analyzed_preamble(nativeObject)).stream().map(Function::new);
+    public Stream<FunctionImpl> preamble() {
+        return new NativeIterator<>(typedb_driver.analyzed_preamble(nativeObject)).stream().map(FunctionImpl::new);
     }
 
-    public Optional<Fetch> fetch() {
-        return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(Fetch::new);
+    public Optional<FetchImpl> fetch() {
+        return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(FetchImpl::new);
     }
 }

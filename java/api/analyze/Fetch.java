@@ -19,13 +19,17 @@
 
 package com.typedb.driver.api.analyze;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface AnalyzedQuery {
-    Pipeline pipeline();
+public interface Fetch {
 
-    Stream<? extends Function> preamble();
+    com.typedb.driver.jni.FetchVariant variant();
 
-    Optional<? extends Fetch> fetch();
+    Fetch asListGetElement();
+
+    Stream<String> asLeafGetAnnotations();
+
+    Stream<String> asObjectGetAvailableFields();
+
+    Fetch asObjectGetField(String field);
 }

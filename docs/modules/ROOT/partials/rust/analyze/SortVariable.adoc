@@ -16,7 +16,7 @@ The variable being sorted on and the ordering of the sort, as used in a ``Pipeli
 |===
 |Name |Type |Description
 a| `order` a| `SortOrder` a| 
-a| `variable` a| `Variable` a| 
+a| `variable` a| `VariableImpl` a|
 |===
 // end::properties[]
 

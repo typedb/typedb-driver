@@ -19,25 +19,26 @@
 
 package com.typedb.driver.analyze;
 
+import com.typedb.driver.api.analyze.Reducer;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.jni.typedb_driver;
 
 import java.util.stream.Stream;
 
-public class Conjunction extends NativeObject<com.typedb.driver.jni.Conjunction> {
-    protected Conjunction(com.typedb.driver.jni.Conjunction nativeObject) {
+public class ReducerImpl extends NativeObject<com.typedb.driver.jni.Reducer> implements Reducer {
+
+    protected ReducerImpl(com.typedb.driver.jni.Reducer nativeObject) {
         super(nativeObject);
     }
 
-    public Stream<Constraint> constraints() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_constraints(nativeObject)).stream().map(Constraint::of);
+    public String name() {
+        return typedb_driver.reducer_get_name(nativeObject);
     }
 
-    public Stream<Variable> annotated_variables() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_annotated_variables(nativeObject)).stream().map(Variable::new);
-    }
-
-    public VariableAnnotations variable_annotations(Variable variable) {
-        return new VariableAnnotations(com.typedb.driver.jni.typedb_driver.conjunction_get_variable_annotations(nativeObject, variable.nativeObject));
+    public Stream<com.typedb.driver.jni.Variable> arguments() {
+        return new NativeIterator<>(
+                typedb_driver.reducer_get_arguments(nativeObject)
+        ).stream();
     }
 }
