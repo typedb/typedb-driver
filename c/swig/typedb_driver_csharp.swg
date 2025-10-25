@@ -134,8 +134,6 @@
     }
 %}
 
-%noexception init_logging;
-
 /* simple getters do not throw */
 %noexception options_new;
 %noexception options_get_infer;
