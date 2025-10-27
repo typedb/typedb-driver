@@ -177,6 +177,7 @@
 %nojavaexception concept_row_get_column_names;
 %nojavaexception concept_row_get_concepts;
 %nojavaexception concept_row_get_query_type;
+%nojavaexception concept_row_involved_blocks;
 %nojavaexception concept_row_to_string;
 
 %nojavaexception query_answer_get_query_type;

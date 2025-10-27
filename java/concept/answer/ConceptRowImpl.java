@@ -27,6 +27,7 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.jni.ConjunctionID;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -38,6 +39,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_row_get_concepts;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_index;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_query_type;
 import static com.typedb.driver.jni.typedb_driver.concept_row_to_string;
+import static com.typedb.driver.jni.typedb_driver.concept_row_involved_blocks;
 
 public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRow> implements ConceptRow {
     private int hash = 0;
@@ -87,6 +89,11 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     @Override
     public Stream<Concept> concepts() {
         return new NativeIterator<>(concept_row_get_concepts(nativeObject)).stream().map(ConceptImpl::of);
+    }
+
+    @Override
+    public Stream<ConjunctionID> involvedBlocks() {
+        return new NativeIterator<>(concept_row_involved_blocks(nativeObject)).stream();
     }
 
     @Override

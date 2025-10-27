@@ -37,6 +37,7 @@ use crate::{
     error::{try_release, try_release_optional},
     memory::take_ownership,
 };
+use crate::analyze::ConjunctionIDIterator;
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
@@ -144,6 +145,13 @@ pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *
 #[no_mangle]
 pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
     try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())
+}
+
+/// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.
+#[no_mangle]
+pub extern "C" fn concept_row_involved_blocks(concept_row: *const ConceptRow) -> *mut ConjunctionIDIterator {
+    let iter = borrow(concept_row).clone().get_involved_blocks_cloned();
+    release(ConjunctionIDIterator(CIterator(box_stream(iter))))
 }
 
 /// Checks whether the provided <code>ConceptRow</code> objects are equal

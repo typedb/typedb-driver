@@ -95,6 +95,19 @@ impl ConceptRow {
             .map(ConjunctionID)
     }
 
+    /// Like <code>ConceptRow::get_involved_blocks</code> but clones the underlying data.
+    /// Meant for simpler lifetimes over FFI.
+    pub fn get_involved_blocks_cloned(&self) -> impl Iterator<Item = ConjunctionID> + 'static {
+        let involved_blocks = self.involved_blocks.clone();
+        (0..self.involved_blocks.len())
+        .filter(move |index| {
+            let index = index / 8;
+            let mask = 1 << (index % 8);
+            involved_blocks[index] & mask != 0
+        })
+        .map(ConjunctionID)
+    }
+
     /// Retrieves a concept for a given variable. Returns an empty optional if
     /// the variable name has an empty answer. Returns an error if the variable name is not present.
     ///
