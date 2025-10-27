@@ -23,14 +23,14 @@ import java.util.stream.Stream;
 
 public interface Conjunction {
     /**
-     * Returns a stream of constraints that make up this conjunction.
+     * The <code>Constraint</code>s in the conjunction.
      *
      * @return stream of constraints
      */
     Stream<? extends Constraint> constraints();
 
     /**
-     * Returns a stream of variables that have annotations in this conjunction.
+     * The variables that have annotations in this conjunction.
      *
      * @return stream of annotated variables
      */
@@ -40,7 +40,7 @@ public interface Conjunction {
      * Gets the annotations for a specific variable in this conjunction.
      *
      * @param variable the variable to get annotations for
-     * @return the variable annotations
+     * @return the annotations
      */
     VariableAnnotations variable_annotations(com.typedb.driver.jni.Variable variable);
 }

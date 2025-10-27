@@ -23,172 +23,165 @@ import com.typedb.driver.jni.typedb_driver;
 
 import java.util.stream.Stream;
 
+/**
+ * A representation of a TypeQL constraint.
+ */
 public interface Constraint {
+    /**
+     * Gets the variant of this constraint.
+     *
+     * @return the constraint variant
+     */
     com.typedb.driver.jni.ConstraintVariant variant();
 
     boolean isIsa();
-
     boolean isHas();
-
     boolean isLinks();
-
     boolean isSub();
-
     boolean isOwns();
-
     boolean isRelates();
-
     boolean isPlays();
-
     boolean isFunctionCall();
-
     boolean isExpression();
-
     boolean isIs();
-
     boolean isIid();
-
     boolean isComparison();
-
     boolean isKindOf();
-
     boolean isLabel();
-
     boolean isValue();
-
     boolean isOr();
-
     boolean isNot();
-
     boolean isTry();
 
     Isa asIsa();
-
     Has asHas();
-
     Links asLinks();
-
     Sub asSub();
-
     Owns asOwns();
-
     Relates asRelates();
-
     Plays asPlays();
-
     FunctionCall asFunctionCall();
-
     Expression asExpression();
-
     Is asIs();
-
     Iid asIid();
-
     Comparison asComparison();
-
     Kind asKindOf();
-
     Label asLabel();
-
     Value asValue();
-
     Or asOr();
-
     Not asNot();
-
     Try asTry();
 
+    /**
+     * Represents an "isa" constraint: <instance> isa(!) <type>
+     */
     interface Isa extends Constraint {
         ConstraintVertex instance();
-
         ConstraintVertex type();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a "has" constraint: <owner> has <attribute>
+     */
     interface Has extends Constraint {
         ConstraintVertex owner();
-
         ConstraintVertex attribute();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a "links" constraint: <relation> links (<role>: <player>)
+     */
     interface Links extends Constraint {
         ConstraintVertex relation();
-
         ConstraintVertex player();
-
         ConstraintVertex role();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a "sub" constraint: <subtype> sub(!) <supertype>
+     */
     interface Sub extends Constraint {
         ConstraintVertex subtype();
-
         ConstraintVertex supertype();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents an "owns" constraint: <owner> owns <attribute>
+     */
     interface Owns extends Constraint {
         ConstraintVertex owner();
-
         ConstraintVertex attribute();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a "relates" constraint: <relation> relates <role>
+     */
     interface Relates extends Constraint {
         ConstraintVertex relation();
-
         ConstraintVertex role();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a "plays" constraint: <player> plays <role>
+     */
     interface Plays extends Constraint {
         ConstraintVertex player();
-
         ConstraintVertex role();
-
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
+    /**
+     * Represents a function call: let <assigned> = name(<arguments>)
+     * e.g., let $x, $y = my_function($a, $b);
+     */
     interface FunctionCall extends Constraint {
         String name();
-
         Stream<? extends ConstraintVertex> arguments();
-
         Stream<? extends ConstraintVertex> assigned();
     }
 
+    /**
+     * Represents an expression: let <assigned> = <expression>
+     * e.g., let $x = $y + 5;
+     * Here, arguments will be `[$y]`
+     */
     interface Expression extends Constraint {
         String text();
-
         Stream<? extends ConstraintVertex> arguments();
-
         ConstraintVertex assigned();
     }
 
+    /**
+     * Represents an "is" constraint: <lhs> is <rhs>
+     * e.g., $x is $y
+     */
     interface Is extends Constraint {
         ConstraintVertex lhs();
-
         ConstraintVertex rhs();
     }
 
+    /**
+     * Represents an IID constraint: <concept> iid <iid>
+     * e.g., `$y iid 0x1f0005000000000000012f`
+     */
     interface Iid extends Constraint {
         ConstraintVertex variable();
-
         String iid();
     }
 
+    /**
+     * Represents a comparison: <lhs> <comparator> <rhs>
+     * e.g., `$x < 5`
+     */
     interface Comparison extends Constraint {
         ConstraintVertex lhs();
-
         ConstraintVertex rhs();
-
         com.typedb.driver.jni.Comparator comparator();
 
         static String comparatorName(com.typedb.driver.jni.Comparator comparator) {
@@ -196,33 +189,61 @@ public interface Constraint {
         }
     }
 
+    /**
+     * Represents a kind constraint: <kind> <type>
+     * e.g., `entity person`
+     */
     interface Kind extends Constraint {
         com.typedb.driver.jni.Kind kind();
-
         ConstraintVertex type();
     }
 
+    /**
+     * Represents a label constraint: <type> label <label>
+     * e.g., `$t label person`
+     */
     interface Label extends Constraint {
         ConstraintVertex variable();
-
         String label();
     }
 
+    /**
+     * Represents a value constraint: <attribute_type> value <value_type>
+     * e.g., `$t value string`
+     */
     interface Value extends Constraint {
         ConstraintVertex attributeType();
 
         String valueType();
     }
 
+    /**
+     * Represents an "or" constraint: { <branches[0]> } or { <branches[1]> } [or ...]
+     */
     interface Or extends Constraint {
+        /**
+         * Index into <code>Pipeline.conjunctions</code>
+         */
         Stream<? extends com.typedb.driver.jni.ConjunctionID> branches();
     }
 
+    /**
+     * Represents a "not" constraint: not { <conjunction> }
+     */
     interface Not extends Constraint {
+        /**
+         * Index into <code>Pipeline.conjunctions</code>
+         */
         com.typedb.driver.jni.ConjunctionID conjunction();
     }
 
+    /**
+     * Represents a "try" constraint: try { <conjunction> }
+     */
     interface Try extends Constraint {
+        /**
+         * Index into <code>Pipeline.conjunctions</code>
+         */
         com.typedb.driver.jni.ConjunctionID conjunction();
     }
 }

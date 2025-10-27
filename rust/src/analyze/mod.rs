@@ -38,9 +38,9 @@ pub struct AnalyzedQuery {
     pub source: String,
     /// A representation of the query as a <code>Pipeline</code>
     pub query: Pipeline,
-    /// A representation of the <code>Function</code>s in the preambele of the query
+    /// A representation of the <code>Function</code>s in the preamble of the query
     pub preamble: Vec<Function>,
-    /// A representation of the <code>Fetch</code> stage of the query.
+    /// A representation of the <code>Fetch</code> stage of the query, if it has one
     pub fetch: Option<Fetch>,
 }
 
@@ -63,11 +63,13 @@ pub struct Function {
 #[derive(Debug, Clone)]
 pub enum ReturnOperation {
     /// Indicates the function returns a stream of concepts.
+    /// e.g. <code>return { $x, $y };</code>
     Stream {
         /// The <code>Variables</code> in the returned row.
         variables: Vec<Variable>
     },
     /// Indicates the function returns a single row of the specified <code>Variables</code>.
+    /// e.g. <code>return first $x, $y;</code>
     Single {
         /// Determines how the operation used to select the row.
         selector: String,
@@ -75,10 +77,12 @@ pub enum ReturnOperation {
         variables: Vec<Variable>
     },
     /// Indicates the function returns a boolean - true if the body had answers, false otherwise.
+    /// e.g. <code>return check;</code>
     Check {},
     /// Indicates the function returns an aggregation over the rows in the body.
     Reduce {
         /// The <code>Reducers</code>s used to compute the aggregations.
+        /// e.g. <code>return count($x), sum($y);</code>
         reducers: Vec<Reducer>
     },
 }

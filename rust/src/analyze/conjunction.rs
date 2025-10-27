@@ -30,7 +30,7 @@ pub struct ConjunctionID(pub usize);
 /// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
 pub struct Conjunction {
-    /// The <code>Constraints</code> in the conjunction.
+    /// The <code>Constraint</code>s in the conjunction.
     pub constraints: Vec<ConstraintWithSpan>,
     /// The annotations of each variable in the conjunction.
     pub variable_annotations: HashMap<Variable, VariableAnnotations>,
@@ -67,87 +67,114 @@ pub struct ConstraintWithSpan {
 /// A representation of a TypeQL constraint.
 #[derive(Debug, Clone)]
 pub enum Constraint {
+    /// <instance> isa(!) <type>
     Isa {
         instance: ConstraintVertex,
         r#type: ConstraintVertex,
         exactness: ConstraintExactness,
     },
+    /// <owner> has <attribute>
     Has {
         owner: ConstraintVertex,
         attribute: ConstraintVertex,
         exactness: ConstraintExactness,
     },
+    /// <relation> links (<role>: <player>)
     Links {
         relation: ConstraintVertex,
         player: ConstraintVertex,
         role: ConstraintVertex,
         exactness: ConstraintExactness,
     },
-
+    /// <subtype> sub(!) <supertype>
     Sub {
         subtype: ConstraintVertex,
         supertype: ConstraintVertex,
         exactness: ConstraintExactness,
     },
+    /// <owner> owns <attribute>
     Owns {
         owner: ConstraintVertex,
         attribute: ConstraintVertex,
         exactness: ConstraintExactness,
     },
+    /// <relation> relates <role>
     Relates {
         relation: ConstraintVertex,
         role: ConstraintVertex,
         exactness: ConstraintExactness,
     },
+    /// <player> plays <role>
     Plays {
         player: ConstraintVertex,
         role: ConstraintVertex,
         exactness: ConstraintExactness,
     },
-
+    /// let <assigned> = name(<arguments>)
+    /// e.g. let $x, $y = my_function($a, $b);
     FunctionCall {
         name: String,
         assigned: Vec<ConstraintVertex>,
         arguments: Vec<ConstraintVertex>,
     },
+    /// let <assigned> = <expression>
+    /// e.g. let $x = $y + 5;
+    /// Here, arguments will be `[$y]`
     Expression {
         text: String,
         assigned: ConstraintVertex,
         arguments: Vec<ConstraintVertex>,
     },
+    /// <lhs> is <rhs>
+    /// $x is $y
     Is {
         lhs: ConstraintVertex,
         rhs: ConstraintVertex,
     },
+    /// <concept> iid <iid>
+    /// e.g. `$y iid 0x1f0005000000000000012f`
     Iid {
         concept: ConstraintVertex,
         iid: IID,
     },
+    /// <lhs> <comparator> <rhs>
+    /// e.g. `$x < 5`
     Comparison {
         lhs: ConstraintVertex,
         rhs: ConstraintVertex,
         comparator: Comparator,
     },
+    /// <kind> <type>
+    /// e.g. `entity person`
     Kind {
         kind: concept::Kind,
         r#type: ConstraintVertex,
     },
+    /// <type> label <label>
+    /// e.g. `$t label person`
     Label {
         r#type: ConstraintVertex,
         label: String,
     },
+    /// <attribute_type> value <value_type>
+    /// e.g. $t value string
     Value {
         attribute_type: ConstraintVertex,
         value_type: concept::ValueType,
     },
-
+    /// { <branches[0]> } or { <branches[1]> } [or ...]
     Or {
+        /// Index into <code>Pipeline.conjunctions</code>
         branches: Vec<ConjunctionID>,
     },
+    /// not { <conjunction> }
     Not {
+        /// Index into <code>Pipeline.conjunctions</code>
         conjunction: ConjunctionID,
     },
+    /// try { <conjunction> }
     Try {
+        /// Index into <code>Pipeline.conjunctions</code>
         conjunction: ConjunctionID,
     },
 }
@@ -164,7 +191,6 @@ pub struct Variable(pub u32);
 /// * A <code>Label</code> uniquely identifies a type
 /// * A <code>Value</code> represents a primitive value literal in TypeDB.
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
-/// * An <code>UnresolvedTypeLabel</code> is a label which could not be resolved by type inference.
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
 #[derive(Debug, Clone)]

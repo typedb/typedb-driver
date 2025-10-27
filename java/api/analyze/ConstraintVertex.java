@@ -22,22 +22,78 @@ package com.typedb.driver.api.analyze;
 import com.typedb.driver.api.concept.type.Type;
 import com.typedb.driver.api.concept.value.Value;
 
+/**
+ * The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query.
+ * A ConstraintVertex is either a variable, or some identifier of the concept.
+ * A <code>Variable</code> is a vertex the query must match and return.
+ * A <code>Label</code> uniquely identifies a type
+ * A <code>Value</code> represents a primitive value literal in TypeDB.
+ * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
+ */
 public interface ConstraintVertex {
+    /**
+     * Checks if this vertex is a variable.
+     *
+     * @return true if this vertex is a variable
+     */
     boolean isVariable();
 
+    /**
+     * Checks if this vertex is a label.
+     *
+     * @return true if this vertex is a label
+     */
     boolean isLabel();
 
+    /**
+     * Checks if this vertex is a value.
+     *
+     * @return true if this vertex is a value
+     */
     boolean isValue();
 
+    /**
+     * Checks if this vertex is a named role.
+     *
+     * @return true if this vertex is a named role
+     */
     boolean isNamedRole();
 
+    /**
+     * Down-casts this variable to a vertex.
+     *
+     * @return the variable
+     */
     com.typedb.driver.jni.Variable asVariable();
 
+    /**
+     * Down-casts this vertex to a type label.
+     *
+     * @return the type representation of this vertex
+     * @throws IllegalStateException if this vertex is not a label
+     */
     Type asLabel();
 
+    /**
+     * Down-casts this vertex to a value.
+     *
+     * @return the value representation of this vertex
+     */
     Value asValue();
 
+    /**
+     * Down-casts the variable as a NamedRoleVertex and gets the associated variable.
+     * This is an internal variable injected to handle ambiguity in role-names.
+     *
+     * @return the variable associated with this named role
+     */
     com.typedb.driver.jni.Variable asNamedRoleGetVariable();
 
+    /**
+     * Down-casts the variable as a NamedRoleVertex and gets the associated name
+     * This is the role label specified by the user in a <code>Links</code> constraint.
+     *
+     * @return the name of this named role
+     */
     String asNamedRoleGetName();
 }
