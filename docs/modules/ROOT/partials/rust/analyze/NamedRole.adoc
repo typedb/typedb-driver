@@ -16,7 +16,7 @@ A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple r
 |===
 |Name |Type |Description
 a| `name` a| `String` a| 
-a| `variable` a| `VariableImpl` a|
+a| `variable` a| `Variable` a| 
 |===
 // end::properties[]
 

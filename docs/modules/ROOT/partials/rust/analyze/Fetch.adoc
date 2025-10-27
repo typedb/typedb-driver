@@ -1,7 +1,7 @@
 [#_enum_Fetch]
 === Fetch
 
-A representation of the <code>fetch</code> stage of a query
+A representation of the ‘fetch’ stage of a query
 
 [caption=""]
 .Enum variants

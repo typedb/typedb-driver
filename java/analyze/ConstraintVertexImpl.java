@@ -20,6 +20,7 @@
 package com.typedb.driver.analyze;
 
 import com.typedb.driver.api.analyze.ConstraintVertex;
+import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.jni.typedb_driver;
 
@@ -58,7 +59,7 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         return com.typedb.driver.concept.ConceptImpl.of(typedb_driver.constraint_vertex_as_label(nativeObject)).asType();
     }
 
-    public com.typedb.driver.api.concept.value.Value asValue() {
+    public Value asValue() {
         if (!isValue()) {
             throw new IllegalStateException("ConstraintVertex is not a Value");
         }

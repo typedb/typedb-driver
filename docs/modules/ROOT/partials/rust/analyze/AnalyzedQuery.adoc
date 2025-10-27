@@ -15,10 +15,10 @@ An ``AnalyzedQuery`` contains the server’s representation of the query and pre
 [options="header"]
 |===
 |Name |Type |Description
-a| `fetch` a| `Option<Fetch>` a| 
-a| `preamble` a| `Vec<Function>` a| 
-a| `query` a| `Pipeline` a| 
-a| `source` a| `String` a| 
+a| `fetch` a| `Option<Fetch>` a| A representation of the ``Fetch`` stage of the query, if it has one
+a| `preamble` a| `Vec<Function>` a| A representation of the ``Function``s in the preamble of the query
+a| `query` a| `Pipeline` a| A representation of the query as a ``Pipeline``
+a| `source` a| `String` a| The original TypeQL query string
 |===
 // end::properties[]
 

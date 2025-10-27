@@ -15,8 +15,8 @@ Representation of an assignment from a reduction in a ``PipelineStage::Reduce``,
 [options="header"]
 |===
 |Name |Type |Description
-a| `assigned` a| `VariableImpl` a|
-a| `reducer` a| `ReducerImpl` a|
+a| `assigned` a| `Variable` a| 
+a| `reducer` a| `Reducer` a| 
 |===
 // end::properties[]
 

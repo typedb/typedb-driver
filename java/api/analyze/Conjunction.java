@@ -21,6 +21,9 @@ package com.typedb.driver.api.analyze;
 
 import java.util.stream.Stream;
 
+/**
+ * A representation of the constraints involved in the query, and types inferred for each variable.
+ */
 public interface Conjunction {
     /**
      * The <code>Constraint</code>s in the conjunction.

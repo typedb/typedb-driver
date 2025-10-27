@@ -6,3 +6,17 @@
 * `Clone`
 * `Debug`
 
+The span of a constraint in the ``source`` of the ``AnalyzedQuery``.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `begin` a| `usize` a| The offset of the first character in the span
+a| `end` a| `usize` a| The offset of the last character in the span
+|===
+// end::properties[]
+

@@ -15,10 +15,30 @@ A representation of a query pipeline.
 [options="header"]
 |===
 |Name |Type |Description
-a| `conjunctions` a| `Vec<Conjunction>` a| 
-a| `outputs` a| `Vec<Variable>` a| 
-a| `stages` a| `Vec<PipelineStage>` a| 
-a| `variable_info` a| `HashMap<Variable, VariableInfo>` a| 
+a| `conjunctions` a| `Vec<Conjunction>` a| A flattened list of conjunctions in the pipeline. The actual logical structure can be reconstructed from the ``Constraint``s within the conjunction.
+a| `outputs` a| `Vec<Variable>` a| The variables available at the end of a pipeline
+a| `stages` a| `Vec<PipelineStage>` a| The stages making up the pipeline
+a| `variable_info` a| `HashMap<Variable, VariableInfo>` a| General information about a variable, such as its name.
 |===
 // end::properties[]
+
+// tag::methods[]
+[#_struct_Pipeline_variable_name_]
+==== variable_name
+
+[source,rust]
+----
+pub fn variable_name(&self, variable: &Variable) -> Option<&str>
+----
+
+Retrieves the name of a variable, if it has one.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
+----
+
+// end::methods[]
 

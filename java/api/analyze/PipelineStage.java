@@ -21,6 +21,9 @@ package com.typedb.driver.api.analyze;
 
 import java.util.stream.Stream;
 
+/**
+ *  Representation of a stage in a <code>Pipeline</code>.
+ */
 public interface PipelineStage {
     com.typedb.driver.jni.PipelineStageVariant getVariant();
 

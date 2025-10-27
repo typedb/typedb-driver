@@ -13,7 +13,7 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `types` a| `TypeAnnotations` a| 
+a| `types` a| `TypeAnnotations` a| The ``TypeAnnotations`` of this variable.
 |===
 // end::properties[]
 
