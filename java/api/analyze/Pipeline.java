@@ -22,10 +22,25 @@ package com.typedb.driver.api.analyze;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * A representation of a query pipeline.
+ */
 public interface Pipeline {
+    /**
+     * @return A stream of the stages making up the pipeline
+     */
     Stream<? extends PipelineStage> stages();
 
+    /**
+     * Gets the name of the specified variable, if it has one.
+     *
+     * @return the name, if any
+     */
     Optional<String> getVariableName(com.typedb.driver.jni.Variable variable);
 
+    /**
+     * @param conjunctionID The ConjunctionID of the conjunction to retrieve
+     * @return The corresponding <code>Conjunction</code> instance
+     */
     Optional<? extends Conjunction> conjunction(com.typedb.driver.jni.ConjunctionID conjunctionID);
 }

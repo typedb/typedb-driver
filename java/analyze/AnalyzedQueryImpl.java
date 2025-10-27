@@ -41,6 +41,6 @@ public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.Analyz
     }
 
     public Optional<FetchImpl> fetch() {
-        return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(FetchImpl::new);
+        return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(FetchImpl::of);
     }
 }

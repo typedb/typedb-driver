@@ -21,15 +21,52 @@ package com.typedb.driver.api.analyze;
 
 import java.util.stream.Stream;
 
+/**
+ * A representation of the 'fetch' stage of a query
+  */
 public interface Fetch {
-
+    /**
+     * @return The variant. One of `List, Leaf, Object`
+     */
     com.typedb.driver.jni.FetchVariant variant();
 
+    /**
+     * @return The element of a <code>List</code> of <code>Fetch</code> documents.
+     */
     Fetch asListGetElement();
 
-    Stream<String> asLeafGetAnnotations();
+    /**
+     * A mapping of string keys to <code>Fetch</code> documents.
+     */
+    interface FetchObject {
+        /**
+         * @return The available keys of this <code>Fetch</code> document.
+         */
+        Stream<String> keys();
+        /**
+         * @return The <code>Fetch</code> object for the given key.
+         */
+        Fetch get(String key);
+    }
 
-    Stream<String> asObjectGetAvailableFields();
+    /**
+     * A <code>List</code> of <code>Fetch</code> documents.
+     */
+    interface FetchList {
 
-    Fetch asObjectGetField(String field);
+        /**
+         * @return The element of the list
+         */
+        Fetch element();
+    }
+
+    /**
+     * The leaf of a Fetch object. Holds information on the value it can hold.
+     */
+    interface FetchLeaf {
+        /**
+         * @return The possible <code>ValueType</code>s.
+         */
+        Stream<String> annotations();
+    }
 }

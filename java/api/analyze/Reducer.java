@@ -21,8 +21,19 @@ package com.typedb.driver.api.analyze;
 
 import java.util.stream.Stream;
 
+/**
+ * Representation of a reducer used either in a <code>PipelineStage::Reduce</code>
+ * or in a function's <code>ReturnOperation</code>.
+ */
 public interface Reducer {
+    /**
+     *
+     * @return The reduce operation applied
+     */
     String name();
 
+    /**
+     * @return The arguments to the reducer.
+     */
     Stream<com.typedb.driver.jni.Variable> arguments();
 }

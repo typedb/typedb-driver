@@ -87,7 +87,7 @@ pub enum ReturnOperation {
     },
 }
 
-/// A representation of the <code>fetch</code> stage of a query
+/// A representation of the 'fetch' stage of a query
 #[derive(Debug, Clone)]
 pub enum Fetch {
     /// Indicates the value is a list of <code>Fetch</code> documents.
@@ -115,10 +115,10 @@ pub struct VariableAnnotations {
 /// The category of a variable, and the possible types determined by type-inference.
 #[derive(Debug, Clone)]
 pub enum TypeAnnotations {
-    /// Indicates the variable holds instances, of any of the specified <code>Type</code>s.
+    /// Indicates the variable holds instances of any of the specified <code>Type</code>s.
     Thing(Vec<Type>),
-    /// Indicates the variable holds types, of any of the specified <code>Type</code>s.
+    /// Indicates the variable holds types of any of the specified <code>Type</code>s.
     Type(Vec<Type>),
-    /// Indicates the variable holds values, of any of the specified <code>ValueType</code>s.
+    /// Indicates the variable holds values of any of the specified <code>ValueType</code>s.
     Value(ValueType),
 }
