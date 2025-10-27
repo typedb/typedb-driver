@@ -1,0 +1,50 @@
+[#_AnalyzedQuery]
+=== AnalyzedQuery
+
+*Package*: `com.typedb.driver.api.analyze`
+
+// tag::methods[]
+[#_AnalyzedQuery_fetch_]
+==== fetch
+
+[source,java]
+----
+java.util.Optional<? extends Fetch> fetch()
+----
+
+A representation of the ``Fetch`` stage of the query, if it has one
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Fetch>`
+
+[#_AnalyzedQuery_pipeline_]
+==== pipeline
+
+[source,java]
+----
+Pipeline pipeline()
+----
+
+A representation of the query as a ``Pipeline``
+
+[caption=""]
+.Returns
+`Pipeline`
+
+[#_AnalyzedQuery_preamble_]
+==== preamble
+
+[source,java]
+----
+java.util.stream.Stream<? extends Function> preamble()
+----
+
+A representation of the ``Function``s in the preambele of the query
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Function>`
+
+// end::methods[]
+

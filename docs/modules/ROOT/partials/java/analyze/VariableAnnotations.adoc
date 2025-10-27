@@ -1,0 +1,106 @@
+[#_VariableAnnotations]
+=== VariableAnnotations
+
+*Package*: `com.typedb.driver.api.analyze`
+
+// tag::methods[]
+[#_VariableAnnotations_asThing_]
+==== asThing
+
+[source,java]
+----
+java.util.stream.Stream<? extends Type> asThing()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Type>`
+
+[#_VariableAnnotations_asType_]
+==== asType
+
+[source,java]
+----
+java.util.stream.Stream<? extends Type> asType()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Type>`
+
+[#_VariableAnnotations_asValue_]
+==== asValue
+
+[source,java]
+----
+java.util.stream.Stream<java.lang.String> asValue()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<java.lang.String>`
+
+[#_VariableAnnotations_isThing_]
+==== isThing
+
+[source,java]
+----
+boolean isThing()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_VariableAnnotations_isType_]
+==== isType
+
+[source,java]
+----
+boolean isType()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_VariableAnnotations_isValue_]
+==== isValue
+
+[source,java]
+----
+boolean isValue()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_VariableAnnotations_variant_]
+==== variant
+
+[source,java]
+----
+com.typedb.driver.jni.VariableAnnotationsVariant variant()
+----
+
+The variant indicates whether this is a thing variable, type variable, or value variable.
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.VariableAnnotationsVariant`
+
+// end::methods[]
+

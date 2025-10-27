@@ -1,0 +1,38 @@
+[#_PipelineStage_ReduceStage_ReduceAssignment]
+=== PipelineStage.ReduceStage.ReduceAssignment
+
+*Package*: `com.typedb.driver.api.analyze`
+
+An assignment of a reducer to a variable
+
+// tag::methods[]
+[#_PipelineStage_ReduceStage_ReduceAssignment_assigned_]
+==== assigned
+
+[source,java]
+----
+com.typedb.driver.jni.Variable assigned()
+----
+
+The variable being assigned to
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.Variable`
+
+[#_PipelineStage_ReduceStage_ReduceAssignment_reducer_]
+==== reducer
+
+[source,java]
+----
+Reducer reducer()
+----
+
+The reducer being applied
+
+[caption=""]
+.Returns
+`Reducer`
+
+// end::methods[]
+
