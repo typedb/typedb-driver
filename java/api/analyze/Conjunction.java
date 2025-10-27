@@ -22,7 +22,25 @@ package com.typedb.driver.api.analyze;
 import java.util.stream.Stream;
 
 public interface Conjunction {
+    /**
+     * Returns a stream of constraints that make up this conjunction.
+     *
+     * @return stream of constraints
+     */
     Stream<? extends Constraint> constraints();
+
+    /**
+     * Returns a stream of variables that have annotations in this conjunction.
+     *
+     * @return stream of annotated variables
+     */
     Stream<com.typedb.driver.jni.Variable> annotated_variables();
+
+    /**
+     * Gets the annotations for a specific variable in this conjunction.
+     *
+     * @param variable the variable to get annotations for
+     * @return the variable annotations
+     */
     VariableAnnotations variable_annotations(com.typedb.driver.jni.Variable variable);
 }

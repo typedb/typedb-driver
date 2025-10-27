@@ -24,13 +24,19 @@ use crate::analyze::conjunction::{Conjunction, ConjunctionID, Variable};
 /// A representation of a query pipeline.
 #[derive(Debug, Clone)]
 pub struct Pipeline {
+    /// A flattened list of conjunctions in the pipeline.
+    /// The actual logical structure can be reconstructed from the <code>Constraint</code>s within the conjunction.
     pub conjunctions: Vec<Conjunction>,
+    /// The stages making up the pipeline
     pub stages: Vec<PipelineStage>,
+    /// General information about a variable, such as its name.
     pub variable_info: HashMap<Variable, VariableInfo>,
+    /// The variables available at the end of a pipeline
     pub outputs: Vec<Variable>,
 }
 
 impl Pipeline {
+    /// Retrieves the name of a variable, if it has one.
     pub fn variable_name(&self, variable: &Variable) -> Option<&str> {
         self.variable_info.get(variable).map(|v| v.name.as_str())
     }
@@ -39,6 +45,7 @@ impl Pipeline {
 /// Holds information about variables in a <code>Pipeline</code>.
 #[derive(Debug, Clone)]
 pub struct VariableInfo {
+    /// The name of the variable, if any.
     pub name: String,
 }
 
@@ -71,7 +78,9 @@ pub struct ReduceAssignment {
 /// or in a function's <code>ReturnOperation</code>.
 #[derive(Debug, Clone)]
 pub struct Reducer {
+    /// The arguments to the reducer.
     pub arguments: Vec<Variable>,
+    /// The reduce operation applied
     pub reducer: String,
 }
 

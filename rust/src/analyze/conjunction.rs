@@ -30,7 +30,9 @@ pub struct ConjunctionID(pub usize);
 /// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
 pub struct Conjunction {
+    /// The <code>Constraints</code> in the conjunction.
     pub constraints: Vec<ConstraintWithSpan>,
+    /// The annotations of each variable in the conjunction.
     pub variable_annotations: HashMap<Variable, VariableAnnotations>,
 }
 
@@ -40,13 +42,19 @@ pub struct Conjunction {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub enum ConstraintExactness {
+    /// Indicates the constraint matches exactly the specified type - e.g. `isa!` or `sub!`
     Exact,
+    /// Indicates the constraint matches the specified type and its subtypes - e.g. `isa!` or `sub!`
     Subtypes,
 }
 
+/// The span of a constraint in the <code>source</code> of the <code>AnalyzedQuery</code>.
 #[derive(Debug, Clone)]
 pub struct ConstraintSpan {
+    /// The offset of the first character in the span
     pub begin: usize,
+    // TODO: Is this the offset of the last character, or after the last character?
+    /// The offset of the last character in the span
     pub end: usize,
 }
 
@@ -56,7 +64,7 @@ pub struct ConstraintWithSpan {
     pub span: Option<ConstraintSpan>,
 }
 
-/// The constraints making up a conjunction.
+/// A representation of a TypeQL constraint.
 #[derive(Debug, Clone)]
 pub enum Constraint {
     Isa {
@@ -133,7 +141,6 @@ pub enum Constraint {
         value_type: concept::ValueType,
     },
 
-    // Nested patterns are now constraints too
     Or {
         branches: Vec<ConjunctionID>,
     },
@@ -190,6 +197,7 @@ pub enum Comparator {
 }
 
 impl Comparator {
+    /// The symbol representing the comparator in TypeQL
     pub fn symbol(&self) -> &'static str {
         match self {
             Comparator::Equal => "==",

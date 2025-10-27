@@ -22,6 +22,9 @@ package com.typedb.driver.api.analyze;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+
+/// An <code>AnalyzedQuery</code> contains the server's representation of the query and preamble functions;
+/// as well as the result of types inferred for each variable by type-inference.
 public interface AnalyzedQuery {
     Pipeline pipeline();
 
