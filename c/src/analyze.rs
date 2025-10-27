@@ -486,13 +486,13 @@ pub extern "C" fn variable_annotations_value(annotations: *const VariableAnnotat
 }
 
 #[no_mangle]
-pub extern "C" fn constraint_span_begin(constraint: *const ConstraintWithSpan) -> u64 {
-    borrow(constraint).span.as_ref().map_or(0, |c| c.begin) as u64
+pub extern "C" fn constraint_span_begin(constraint: *const ConstraintWithSpan) -> i64 {
+    borrow(constraint).span.as_ref().map_or(0, |c| c.begin) as i64
 }
 
 #[no_mangle]
-pub extern "C" fn constraint_span_end(constraint: *const ConstraintWithSpan) -> u64 {
-    borrow(constraint).span.as_ref().map_or(0, |c| c.end) as u64
+pub extern "C" fn constraint_span_end(constraint: *const ConstraintWithSpan) -> i64 {
+    borrow(constraint).span.as_ref().map_or(0, |c| c.end) as i64
 }
 
 #[no_mangle]

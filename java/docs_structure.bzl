@@ -16,6 +16,21 @@
 # under the License.
 
 dir_mapping = {
+    "AnalyzedQuery.adoc": "analyze",
+    "Conjunction.adoc": "analyze",
+    "Constraint.adoc": "analyze",
+    "ConstraintVertex.adoc": "analyze",
+    "Fetch.adoc": "analyze",
+    "Function.adoc": "analyze",
+    "Pipeline.adoc": "analyze",
+    "PipelineStage.adoc": "analyze",
+    "ReduceAssignment.adoc": "analyze",
+    "Reducer.adoc": "analyze",
+    "ReturnOperation.adoc": "analyze",
+    "SortOrder.adoc": "analyze",
+    "SortVariable.adoc": "analyze",
+    "TypeAnnotations.adoc": "analyze",
+    "VariableAnnotations.adoc": "analyze",
     "ConceptRow.adoc": "answer",
     "ConceptRowIterator.adoc": "answer",
     "ConceptDocumentIterator.adoc": "answer",

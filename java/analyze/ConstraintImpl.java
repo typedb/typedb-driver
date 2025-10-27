@@ -80,6 +80,32 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         }
     }
 
+    public SpanImpl span() {
+        return new SpanImpl(
+            com.typedb.driver.jni.typedb_driver.constraint_span_begin(nativeObject),
+            com.typedb.driver.jni.typedb_driver.constraint_span_end(nativeObject)
+        );
+    }
+
+    public static class SpanImpl implements Span {
+        long begin;
+        long end;
+        SpanImpl(long begin, long end) {
+            this.begin = begin;
+            this.end = end;
+        }
+
+        @Override
+        public long begin() {
+            return begin;
+        }
+
+        @Override
+        public long end() {
+            return end;
+        }
+    }
+
     public com.typedb.driver.jni.ConstraintVariant variant() {
         return com.typedb.driver.jni.typedb_driver.constraint_variant(nativeObject);
     }

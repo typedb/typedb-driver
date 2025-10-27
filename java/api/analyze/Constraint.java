@@ -34,6 +34,13 @@ public interface Constraint {
      */
     com.typedb.driver.jni.ConstraintVariant variant();
 
+    /**
+     * Gets the span of this constraint.
+     *
+     * @return the constraint span
+     */
+    Span span();
+
     boolean isIsa();
     boolean isHas();
     boolean isLinks();
@@ -245,5 +252,19 @@ public interface Constraint {
          * Index into <code>Pipeline.conjunctions</code>
          */
         com.typedb.driver.jni.ConjunctionID conjunction();
+    }
+
+    /**
+     * The span of a constraint in the source query
+     */
+    interface Span {
+        /**
+         * @return The offset of the first character.
+         */
+        long begin();
+        /**
+         * @return The offset of the last character.
+         */
+        long end();
     }
 }
