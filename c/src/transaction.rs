@@ -22,8 +22,10 @@ use std::{ffi::c_char, ptr::null_mut};
 use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
-use crate::{answer::QueryAnswerPromise, error::try_release, memory::string_view, promise::VoidPromise};
-use crate::analyze::AnalyzedQueryPromise;
+use crate::{
+    analyze::AnalyzedQueryPromise, answer::QueryAnswerPromise, error::try_release, memory::string_view,
+    promise::VoidPromise,
+};
 
 /// Opens a transaction to perform read or write queries on the database connected to the session.
 ///
@@ -66,9 +68,7 @@ pub extern "C" fn transaction_analyze(
     transaction: *mut Transaction,
     query: *const c_char,
 ) -> *mut AnalyzedQueryPromise {
-    release(AnalyzedQueryPromise::new(Box::new(
-        borrow(transaction).analyze(string_view(query)),
-    )))
+    release(AnalyzedQueryPromise::new(Box::new(borrow(transaction).analyze(string_view(query)))))
 }
 
 /// Closes the transaction and frees the native rust object.

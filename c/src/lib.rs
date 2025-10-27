@@ -17,6 +17,7 @@
  * under the License.
  */
 
+mod analyze;
 mod answer;
 mod common;
 mod concept;
@@ -32,4 +33,3 @@ mod transaction;
 mod transaction_options;
 mod user;
 mod user_manager;
-mod analyze;

@@ -17,19 +17,35 @@
  * under the License.
  */
 
-use std::ffi::c_char;
-use std::ptr::{addr_of_mut, null_mut};
-use typedb_driver::analyze::{AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations};
-use typedb_driver::{box_stream, BoxPromise, Promise};
-use typedb_driver::analyze::conjunction::{Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex, ConstraintWithSpan, Variable};
-use typedb_driver::analyze::pipeline::{PipelineStage, Pipeline, Reducer, ReduceAssignment, SortOrder, SortVariable};
-use crate::error::{try_release};
-use crate::iterator::{CIterator, iterator_next};
-use crate::memory::{borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership};
+use std::{
+    ffi::c_char,
+    ptr::{addr_of_mut, null_mut},
+};
+
 use paste::paste;
-use typedb_driver::concept::{AttributeType, Concept, Kind, type_::Type, ValueType};
-use crate::common::StringIterator;
-use crate::concept::ConceptIterator;
+use typedb_driver::{
+    analyze::{
+        conjunction::{
+            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
+            ConstraintWithSpan, Variable,
+        },
+        pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
+        AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
+    },
+    box_stream,
+    concept::{type_::Type, AttributeType, Concept, Kind, ValueType},
+    BoxPromise, Promise,
+};
+
+use crate::{
+    common::StringIterator,
+    concept::ConceptIterator,
+    error::try_release,
+    iterator::{iterator_next, CIterator},
+    memory::{
+        borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership,
+    },
+};
 
 // Iterators, promises & enums
 pub struct AnalyzedQueryPromise(BoxPromise<'static, typedb_driver::Result<AnalyzedQuery>>);
@@ -109,7 +125,7 @@ enum ConstraintVariant {
 enum VariableAnnotationsVariant {
     ThingAnnotations,
     TypeAnnotations,
-    ValueAnnotations
+    ValueAnnotations,
 }
 
 #[repr(C)]
@@ -167,17 +183,15 @@ pub extern "C" fn fetch_leaf_annotations(fetch: *const Fetch) -> *mut StringIter
             let iter = leaf.annotations.clone().into_iter().map(|a| Ok(a.name().to_owned()));
             release(StringIterator(CIterator(box_stream(iter))))
         }
-        _ => unreachable!("Expected Fetch to be Leaf variant")
+        _ => unreachable!("Expected Fetch to be Leaf variant"),
     }
 }
 
 #[no_mangle]
 pub extern "C" fn fetch_list_element(fetch: *const Fetch) -> *mut Fetch {
     match borrow(fetch) {
-        Fetch::List(element) => {
-            release((**element).clone())
-        }
-        _ => unreachable!("Expected Fetch to be List variant")
+        Fetch::List(element) => release((**element).clone()),
+        _ => unreachable!("Expected Fetch to be List variant"),
     }
 }
 
@@ -188,17 +202,15 @@ pub extern "C" fn fetch_object_fields(fetch: *const Fetch) -> *mut StringIterato
             let iter = map.keys().cloned().collect::<Vec<_>>().clone().into_iter().map(Ok);
             release(StringIterator(CIterator(box_stream(iter))))
         }
-        _ => unreachable!("Expected Fetch to be Object variant")
+        _ => unreachable!("Expected Fetch to be Object variant"),
     }
 }
 
 #[no_mangle]
 pub extern "C" fn fetch_object_get_field(fetch: *const Fetch, field: *const c_char) -> *mut Fetch {
     match borrow(fetch) {
-        Fetch::Object(map) => {
-            release_optional(map.get(string_view(field)).cloned())
-        }
-        _ => unreachable!("Expected Fetch to be Object variant")
+        Fetch::Object(map) => release_optional(map.get(string_view(field)).cloned()),
+        _ => unreachable!("Expected Fetch to be Object variant"),
     }
 }
 
@@ -234,7 +246,7 @@ pub extern "C" fn return_operation_stream_variables(return_operation: *const Ret
         ReturnOperation::Stream { variables, .. } => {
             release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
         }
-        _ => unreachable!("Expected ReturnOperation to be Stream")
+        _ => unreachable!("Expected ReturnOperation to be Stream"),
     }
 }
 
@@ -244,17 +256,15 @@ pub extern "C" fn return_operation_single_variables(return_operation: *const Ret
         ReturnOperation::Single { variables, .. } => {
             release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
         }
-        _ => unreachable!("Expected ReturnOperation to be Single")
+        _ => unreachable!("Expected ReturnOperation to be Single"),
     }
 }
 
 #[no_mangle]
 pub extern "C" fn return_operation_single_selector(return_operation: *const ReturnOperation) -> *mut c_char {
     match borrow(return_operation) {
-        ReturnOperation::Single { selector, .. } => {
-            release_string(selector.clone())
-        }
-        _ => unreachable!("Expected ReturnOperation to be Single")
+        ReturnOperation::Single { selector, .. } => release_string(selector.clone()),
+        _ => unreachable!("Expected ReturnOperation to be Single"),
     }
 }
 
@@ -264,7 +274,7 @@ pub extern "C" fn return_operation_reducers(return_operation: *const ReturnOpera
         ReturnOperation::Reduce { reducers } => {
             release(ReducerIterator(CIterator(box_stream(reducers.iter().cloned()))))
         }
-        _ => unreachable!("Expected ReturnOperation to be Reducer")
+        _ => unreachable!("Expected ReturnOperation to be Reducer"),
     }
 }
 
@@ -368,7 +378,9 @@ pub extern "C" fn pipeline_stage_reduce_get_groupby(stage: *const PipelineStage)
 }
 
 #[no_mangle]
-pub extern "C" fn pipeline_stage_reduce_get_reducer_assignments(stage: *const PipelineStage) -> *mut ReduceAssignmentIterator {
+pub extern "C" fn pipeline_stage_reduce_get_reducer_assignments(
+    stage: *const PipelineStage,
+) -> *mut ReduceAssignmentIterator {
     let PipelineStage::Reduce { reducers, .. } = borrow(stage) else { unreachable!("Expected Reduce stage") };
     release(ReduceAssignmentIterator(CIterator(box_stream(reducers.iter().cloned()))))
 }
@@ -409,7 +421,10 @@ pub extern "C" fn variable_get_name(pipeline_structure: *const Pipeline, variabl
 }
 
 #[no_mangle]
-pub extern "C" fn pipeline_get_conjunction(pipeline: *const Pipeline, conjunction_id: *const ConjunctionID) -> *mut Conjunction {
+pub extern "C" fn pipeline_get_conjunction(
+    pipeline: *const Pipeline,
+    conjunction_id: *const ConjunctionID,
+) -> *mut Conjunction {
     release_optional(borrow(pipeline).conjunctions.get(borrow(conjunction_id).0).cloned())
 }
 
@@ -425,7 +440,10 @@ pub extern "C" fn conjunction_get_annotated_variables(conjunction: *const Conjun
 }
 
 #[no_mangle]
-pub extern "C" fn conjunction_get_variable_annotations(conjunction: *const Conjunction, variable: *const Variable) -> *mut VariableAnnotations {
+pub extern "C" fn conjunction_get_variable_annotations(
+    conjunction: *const Conjunction,
+    variable: *const Variable,
+) -> *mut VariableAnnotations {
     release_optional(borrow(conjunction).variable_annotations.get(borrow(variable)).cloned())
 }
 
@@ -441,18 +459,18 @@ pub extern "C" fn variable_annotations_variant(annotations: *const VariableAnnot
 #[no_mangle]
 pub extern "C" fn variable_annotations_thing(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
     match &borrow(annotations).types {
-        TypeAnnotations::Thing(annotations) => {
-            release(ConceptIterator(CIterator(box_stream(annotations.clone().into_iter().map(|t| Ok(type_to_concept(t)))))))
-        }
+        TypeAnnotations::Thing(annotations) => release(ConceptIterator(CIterator(box_stream(
+            annotations.clone().into_iter().map(|t| Ok(type_to_concept(t))),
+        )))),
         _ => unreachable!("Expected variable to have thing annotations"),
     }
 }
 #[no_mangle]
 pub extern "C" fn variable_annotations_type(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
     match &borrow(annotations).types {
-        TypeAnnotations::Type(annotations) => {
-            release(ConceptIterator(CIterator(box_stream(annotations.clone().into_iter().map(|t| Ok(type_to_concept(t)))))))
-        }
+        TypeAnnotations::Type(annotations) => release(ConceptIterator(CIterator(box_stream(
+            annotations.clone().into_iter().map(|t| Ok(type_to_concept(t))),
+        )))),
         _ => unreachable!("Expected variable to have type annotations"),
     }
 }
@@ -686,7 +704,9 @@ pub extern "C" fn constraint_function_call_get_name(constraint: *const Constrain
 }
 
 #[no_mangle]
-pub extern "C" fn constraint_function_call_get_assigned(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertexIterator {
+pub extern "C" fn constraint_function_call_get_assigned(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertexIterator {
     let Constraint::FunctionCall { assigned, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be FunctionCall");
     };
@@ -694,7 +714,9 @@ pub extern "C" fn constraint_function_call_get_assigned(constraint: *const Const
 }
 
 #[no_mangle]
-pub extern "C" fn constraint_function_call_get_arguments(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertexIterator {
+pub extern "C" fn constraint_function_call_get_arguments(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertexIterator {
     let Constraint::FunctionCall { arguments, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be FunctionCall");
     };
@@ -718,7 +740,9 @@ pub extern "C" fn constraint_expression_get_assigned(constraint: *const Constrai
 }
 
 #[no_mangle]
-pub extern "C" fn constraint_expression_get_arguments(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertexIterator {
+pub extern "C" fn constraint_expression_get_arguments(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertexIterator {
     let Constraint::Expression { arguments, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Expression");
     };
@@ -858,7 +882,6 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
     release(conjunction.clone())
 }
 
-
 // ConstraintVertex accessors
 #[no_mangle]
 pub extern "C" fn constraint_vertex_is_variable(vertex: *const ConstraintVertex) -> bool {
@@ -891,7 +914,7 @@ pub extern "C" fn constraint_vertex_as_variable(vertex: *const ConstraintVertex)
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_label(vertex: *const ConstraintVertex) -> *mut Concept {
     let as_concept = match borrow(vertex) {
-        ConstraintVertex::Label(t) => { type_to_concept(t.clone()) },
+        ConstraintVertex::Label(t) => type_to_concept(t.clone()),
         _ => unreachable!(),
     };
     release(as_concept)
