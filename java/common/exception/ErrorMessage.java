@@ -121,7 +121,7 @@ public abstract class ErrorMessage {
         public static final Analyze INVALID_RETURN_OPERATION_CASTING =
                 new Analyze(3, "Invalid return operation conversion from '%s' to '%s'.");
 
-        public static final Analyze INVALID_FETCH_CAST =
+        public static final Analyze INVALID_FETCH_CASTING =
                 new Analyze(4, "Invalid fetch conversion from '%s' to '%s'.");
 
         private static final String codePrefix = "JAN";

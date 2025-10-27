@@ -368,11 +368,11 @@ public abstract class FunctorEncoder {
         public String encode(Fetch fetch) {
             switch (fetch.variant()) {
                 case Leaf:
-                    return FunctorEncoder.encodeList(fetch.asLeafGetAnnotations());
+                    return FunctorEncoder.encodeList(fetch.asLeaf().annotations());
                 case List:
-                    return FunctorEncoder.makeFunctor("List", encode(fetch.asListGetElement()));
+                    return FunctorEncoder.makeFunctor("List", encode(fetch.asList().element()));
                 case Object:
-                    Stream<String> fields = fetch.asObjectGetAvailableFields().map(field -> field + ":" + encode(fetch.asObjectGetField(field)));
+                    Stream<String> fields = fetch.asObject().keys().map(field -> field + ":" + encode(fetch.asObject().get(field)));
                     return "{" + fields.sorted().collect(Collectors.joining(",")) + "}";
                 default:
                     throw new IllegalArgumentException("Unhandled Fetch variant");

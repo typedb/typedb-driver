@@ -31,9 +31,19 @@ public interface Fetch {
     com.typedb.driver.jni.FetchVariant variant();
 
     /**
-     * @return The element of a <code>List</code> of <code>Fetch</code> documents.
+     * Down-casts this <code>Fetch</code> as a <code>FetchLeaf</code> variant
      */
-    Fetch asListGetElement();
+    FetchLeaf asLeaf();
+
+    /**
+     * Down-casts this <code>Fetch</code> as a <code>FetchList</code> variant
+     */
+    FetchList asList();
+
+    /**
+     * Down-casts this <code>Fetch</code> as a <code>FetchObject</code> variant
+     */
+    FetchObject asObject();
 
     /**
      * A mapping of string keys to <code>Fetch</code> documents.

@@ -26,6 +26,9 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.stream.Stream;
 
+import static com.typedb.driver.common.exception.ErrorMessage.Analyze.INVALID_FETCH_CASTING;
+import static com.typedb.driver.common.util.Objects.className;
+
 public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch> implements Fetch {
     protected FetchImpl(com.typedb.driver.jni.Fetch fetch) {
         super(fetch);
@@ -34,11 +37,11 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
     public static FetchImpl of(com.typedb.driver.jni.Fetch nativeObject) {
         switch (com.typedb.driver.jni.typedb_driver.fetch_variant(nativeObject)) {
             case Leaf:
-                new FetchImpl.FetchLeafImpl(nativeObject);
+                return new FetchImpl.FetchLeafImpl(nativeObject);
             case List:
-                new FetchImpl.FetchListImpl(nativeObject);
+                return new FetchImpl.FetchListImpl(nativeObject);
             case Object:
-                new FetchImpl.FetchObjectImpl(nativeObject);
+                return new FetchImpl.FetchObjectImpl(nativeObject);
             default:
                 throw new TypeDBDriverException("Unrecognised Fetch variant", null);
         }
@@ -48,9 +51,29 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
         return com.typedb.driver.jni.typedb_driver.fetch_variant(nativeObject);
     }
 
-    public static class FetchLeafImpl extends NativeObject<com.typedb.driver.jni.Fetch> implements Fetch.FetchLeaf {
+    @Override
+    public FetchLeafImpl asLeaf() {
+        throw new TypeDBDriverException(INVALID_FETCH_CASTING, className(this.getClass()), className(Fetch.FetchLeaf.class));
+    }
+
+    @Override
+    public FetchListImpl asList() {
+        throw new TypeDBDriverException(INVALID_FETCH_CASTING, className(this.getClass()), className(Fetch.FetchList.class));
+    }
+
+    @Override
+    public FetchObjectImpl asObject() {
+        throw new TypeDBDriverException(INVALID_FETCH_CASTING, className(this.getClass()), className(Fetch.FetchObject.class));
+    }
+
+    public static class FetchLeafImpl extends FetchImpl implements Fetch.FetchLeaf {
         protected FetchLeafImpl(com.typedb.driver.jni.Fetch nativeObject) {
             super(nativeObject);
+        }
+
+        @Override
+        public FetchLeafImpl asLeaf() {
+            return this;
         }
 
         @Override
@@ -59,9 +82,14 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
         }
     }
 
-    public static class FetchListImpl extends NativeObject<com.typedb.driver.jni.Fetch> implements Fetch.FetchList {
+    public static class FetchListImpl extends FetchImpl implements Fetch.FetchList {
         protected FetchListImpl(com.typedb.driver.jni.Fetch nativeObject) {
             super(nativeObject);
+        }
+
+        @Override
+        public FetchListImpl asList() {
+            return this;
         }
 
         @Override
@@ -70,10 +98,15 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
         }
     }
 
-    public static class FetchObjectImpl extends NativeObject<com.typedb.driver.jni.Fetch> implements Fetch.FetchObject {
+    public static class FetchObjectImpl extends FetchImpl implements Fetch.FetchObject {
 
         protected FetchObjectImpl(com.typedb.driver.jni.Fetch nativeObject) {
             super(nativeObject);
+        }
+
+        @Override
+        public FetchObjectImpl asObject() {
+            return this;
         }
 
         @Override
