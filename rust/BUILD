@@ -35,7 +35,6 @@ typedb_driver_deps = [
     "@crates//:futures",
     "@crates//:http",
     "@crates//:itertools",
-    "@crates//:log",
     "@crates//:prost",
     "@crates//:serde",
     "@crates//:tokio",
