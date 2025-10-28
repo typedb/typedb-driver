@@ -27,7 +27,7 @@ import com.typedb.driver.jni.typedb_driver;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.AnalyzedQuery> implements AnalyzedQuery { // TODO: implements AnalyzedQuery
+public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.AnalyzedQuery> implements AnalyzedQuery {
     public AnalyzedQueryImpl(com.typedb.driver.jni.AnalyzedQuery nativeObject) {
         super(nativeObject);
     }

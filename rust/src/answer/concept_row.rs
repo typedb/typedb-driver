@@ -78,7 +78,7 @@ impl ConceptRow {
         self.header.query_type
     }
 
-    /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.
+    /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
     ///
     /// # Examples
     ///

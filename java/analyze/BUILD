@@ -30,11 +30,7 @@ java_library(
 
         "//java:typedb_driver_jni",
     ],
-    runtime_deps = [
-        "@maven//:ch_qos_logback_logback_classic",
-        "@maven//:ch_qos_logback_logback_core",
-        "@maven//:io_netty_netty_tcnative_boringssl_static",
-    ],
+    runtime_deps = [],
 )
 
 checkstyle_test(
