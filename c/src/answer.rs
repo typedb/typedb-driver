@@ -147,7 +147,7 @@ pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_i
     try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())
 }
 
-/// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.
+/// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
 #[no_mangle]
 pub extern "C" fn concept_row_involved_blocks(concept_row: *const ConceptRow) -> *mut ConjunctionIDIterator {
     let iter = borrow(concept_row).clone().get_involved_blocks_cloned();

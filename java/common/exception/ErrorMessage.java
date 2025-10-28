@@ -128,6 +128,9 @@ public abstract class ErrorMessage {
         public static final Analyze INVALID_FETCH_CASTING =
                 new Analyze(5, "Invalid fetch conversion from '%s' to '%s'.");
 
+        public static final Analyze INVALID_VARIABLE_ANNOTATIONS_CASTING =
+                new Analyze(6, "Invalid VariableAnnotations conversion from '%s' to '%s'.");
+
         private static final String codePrefix = "JAN";
         private static final String messagePrefix = "Analyze Error";
 

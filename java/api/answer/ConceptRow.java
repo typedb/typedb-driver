@@ -86,7 +86,7 @@ public interface ConceptRow {
     Optional<Concept> getIndex(long columnIndex) throws TypeDBDriverException;
 
     /**
-     * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.     *
+     * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
      */
     Stream<com.typedb.driver.jni.ConjunctionID> involvedBlocks();
 
