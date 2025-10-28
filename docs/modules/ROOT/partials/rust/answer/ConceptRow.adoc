@@ -161,6 +161,25 @@ impl Iterator<Item = ConjunctionID> + '_
 concept_row.get_involved_blocks()
 ----
 
+[#_struct_ConceptRow_get_involved_blocks_cloned_]
+==== get_involved_blocks_cloned
+
+[source,rust]
+----
+pub fn get_involved_blocks_cloned(
+    &self,
+) -> impl Iterator<Item = ConjunctionID> + 'static
+----
+
+Like ``ConceptRow::get_involved_blocks`` but clones the underlying data. Meant for simpler lifetimes over FFI.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Iterator<Item = ConjunctionID> + 'static
+----
+
 [#_struct_ConceptRow_get_query_type_]
 ==== get_query_type
 

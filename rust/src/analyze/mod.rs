@@ -66,7 +66,7 @@ pub enum ReturnOperation {
     /// e.g. <code>return { $x, $y };</code>
     Stream {
         /// The <code>Variables</code> in the returned row.
-        variables: Vec<Variable>
+        variables: Vec<Variable>,
     },
     /// Indicates the function returns a single row of the specified <code>Variables</code>.
     /// e.g. <code>return first $x, $y;</code>
@@ -74,7 +74,7 @@ pub enum ReturnOperation {
         /// Determines how the operation used to select the row.
         selector: String,
         /// The <code>Variables</code> in the returned row.
-        variables: Vec<Variable>
+        variables: Vec<Variable>,
     },
     /// Indicates the function returns a boolean - true if the body had answers, false otherwise.
     /// e.g. <code>return check;</code>
@@ -83,7 +83,7 @@ pub enum ReturnOperation {
     Reduce {
         /// The <code>Reducers</code>s used to compute the aggregations.
         /// e.g. <code>return count($x), sum($y);</code>
-        reducers: Vec<Reducer>
+        reducers: Vec<Reducer>,
     },
 }
 
@@ -101,7 +101,7 @@ pub enum Fetch {
 /// Holds typing information about a leaf value in a <code>Fetch</code> document.
 #[derive(Debug, Clone)]
 pub struct FetchLeaf {
-   /// The <code>ValueType</code> this value can be.
+    /// The <code>ValueType</code> this value can be.
     pub annotations: Vec<ValueType>,
 }
 

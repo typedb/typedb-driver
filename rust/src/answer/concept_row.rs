@@ -100,12 +100,12 @@ impl ConceptRow {
     pub fn get_involved_blocks_cloned(&self) -> impl Iterator<Item = ConjunctionID> + 'static {
         let involved_blocks = self.involved_blocks.clone();
         (0..self.involved_blocks.len())
-        .filter(move |index| {
-            let index = index / 8;
-            let mask = 1 << (index % 8);
-            involved_blocks[index] & mask != 0
-        })
-        .map(ConjunctionID)
+            .filter(move |index| {
+                let index = index / 8;
+                let mask = 1 << (index % 8);
+                involved_blocks[index] & mask != 0
+            })
+            .map(ConjunctionID)
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if

@@ -32,12 +32,12 @@ use super::{
     memory::{borrow, free, release, release_string, string_view},
 };
 use crate::{
+    analyze::ConjunctionIDIterator,
     common::StringIterator,
     concept::ConceptRowIterator,
     error::{try_release, try_release_optional},
     memory::take_ownership,
 };
-use crate::analyze::ConjunctionIDIterator;
 
 /// Promise object representing the result of an asynchronous operation.
 /// Use \ref query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.

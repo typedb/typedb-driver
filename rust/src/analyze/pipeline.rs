@@ -56,25 +56,25 @@ pub enum PipelineStage {
     /// e.g. `match $f isa friendship, links (friend: $x, friend: $y)`
     Match {
         /// The index into <code>Pipeline.conjunctions</code>
-        block: ConjunctionID
+        block: ConjunctionID,
     },
     /// insert <block>
     /// e.g. `insert $f isa friendship, links (friend: $x, friend: $y)`
     Insert {
         /// The index into <code>Pipeline.conjunctions</code>
-        block: ConjunctionID
+        block: ConjunctionID,
     },
     /// put <block>
     /// e.g. `put $f isa friendship, links (friend: $x, friend: $y)`
     Put {
         /// The index into <code>Pipeline.conjunctions</code>
-        block: ConjunctionID
+        block: ConjunctionID,
     },
     /// update <block>
     /// e.g. `update $owner has name "John"`
     Update {
         /// The index into <code>Pipeline.conjunctions</code>
-        block: ConjunctionID
+        block: ConjunctionID,
     },
     /// delete
     ///     <block>;
@@ -89,7 +89,7 @@ pub enum PipelineStage {
         /// The index into <code>Pipeline.conjunctions</code>
         block: ConjunctionID,
         /// The variables for which the unified concepts are to be deleted.
-        deleted_variables: Vec<Variable>
+        deleted_variables: Vec<Variable>,
     },
     /// select <variables>
     /// e.g. `select $x, $y`
