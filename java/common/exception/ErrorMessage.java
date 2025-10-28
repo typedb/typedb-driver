@@ -115,14 +115,18 @@ public abstract class ErrorMessage {
     public static class Analyze extends ErrorMessage {
         public static final Analyze INVALID_CONSTRAINT_CASTING =
                 new Analyze(1, "Invalid constraint conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_CONSTRAINT_VERTEX_CASTING =
+                new Analyze(2, "Invalid constraint vertex conversion from '%s' to '%s'.");
+
         public static final Analyze INVALID_STAGE_CASTING =
-                new Analyze(2, "Invalid stage conversion from '%s' to '%s'.");
+                new Analyze(3, "Invalid stage conversion from '%s' to '%s'.");
 
         public static final Analyze INVALID_RETURN_OPERATION_CASTING =
-                new Analyze(3, "Invalid return operation conversion from '%s' to '%s'.");
+                new Analyze(4, "Invalid return operation conversion from '%s' to '%s'.");
 
         public static final Analyze INVALID_FETCH_CASTING =
-                new Analyze(4, "Invalid fetch conversion from '%s' to '%s'.");
+                new Analyze(5, "Invalid fetch conversion from '%s' to '%s'.");
 
         private static final String codePrefix = "JAN";
         private static final String messagePrefix = "Analyze Error";

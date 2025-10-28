@@ -22,8 +22,12 @@ package com.typedb.driver.analyze;
 import com.typedb.driver.api.analyze.ConstraintVertex;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.jni.ConstraintVertexVariant;
 import com.typedb.driver.jni.typedb_driver;
+
+import static com.typedb.driver.common.exception.ErrorMessage.Analyze.INVALID_CONSTRAINT_VERTEX_CASTING;
+import static com.typedb.driver.common.util.Objects.className;
 
 public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
     public ConstraintVertexImpl(com.typedb.driver.jni.ConstraintVertex nativeObject) {
@@ -52,35 +56,35 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
 
     public com.typedb.driver.jni.Variable asVariable() {
         if (!isVariable()) {
-            throw new IllegalStateException("ConstraintVertex is not a Variable");
+            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.VariableVertex);
         }
         return typedb_driver.constraint_vertex_as_variable(nativeObject);
     }
 
     public com.typedb.driver.api.concept.type.Type asLabel() {
         if (!isLabel()) {
-            throw new IllegalStateException("ConstraintVertex is not a Label");
+            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.LabelVertex);
         }
         return com.typedb.driver.concept.ConceptImpl.of(typedb_driver.constraint_vertex_as_label(nativeObject)).asType();
     }
 
     public Value asValue() {
         if (!isValue()) {
-            throw new IllegalStateException("ConstraintVertex is not a Value");
+            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.ValueVertex);
         }
         return new com.typedb.driver.concept.value.ValueImpl(typedb_driver.constraint_vertex_as_value(nativeObject));
     }
 
     public com.typedb.driver.jni.Variable asNamedRoleGetVariable() {
         if (!isNamedRole()) {
-            throw new IllegalStateException("ConstraintVertex is not a Value");
+            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
         return typedb_driver.constraint_vertex_as_named_role_get_variable(nativeObject);
     }
 
     public String asNamedRoleGetName() {
         if (!isNamedRole()) {
-            throw new IllegalStateException("ConstraintVertex is not a Value");
+            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
         return typedb_driver.constraint_vertex_as_named_role_get_name(nativeObject);
     }
