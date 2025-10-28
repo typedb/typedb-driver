@@ -53,8 +53,7 @@ pub enum ConstraintExactness {
 pub struct ConstraintSpan {
     /// The offset of the first character in the span
     pub begin: usize,
-    // TODO: Is this the offset of the last character, or after the last character?
-    /// The offset of the last character in the span
+    /// The offset after the last character in the span
     pub end: usize,
 }
 

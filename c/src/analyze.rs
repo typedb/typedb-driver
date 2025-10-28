@@ -324,8 +324,6 @@ pub extern "C" fn function_return_annotations(function: *const Function) -> *mut
     release(VariableAnnotationsIterator(CIterator(box_stream(iter))))
 }
 
-// TODO: Get stuff from the other branch
-
 // Stages
 /// Returns an iterator over the stages making up the <code>Pipeline</code>
 #[no_mangle]
@@ -575,7 +573,7 @@ pub extern "C" fn constraint_span_begin(constraint: *const ConstraintWithSpan) -
     borrow(constraint).span.as_ref().map_or(0, |c| c.begin) as i64
 }
 
-/// The offset of the last character of the specified constraint in the source query .
+/// The offset after the last character of the specified constraint in the source query .
 #[no_mangle]
 pub extern "C" fn constraint_span_end(constraint: *const ConstraintWithSpan) -> i64 {
     borrow(constraint).span.as_ref().map_or(0, |c| c.end) as i64

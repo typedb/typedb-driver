@@ -323,7 +323,7 @@ public interface Constraint {
         long begin();
 
         /**
-         * @return The offset of the last character.
+         * @return The offset after the last character.
          */
         long end();
     }
