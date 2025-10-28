@@ -22,7 +22,6 @@ use std::{
     ptr::{addr_of_mut, null_mut},
 };
 
-use paste::paste;
 use typedb_driver::{
     analyze::{
         conjunction::{

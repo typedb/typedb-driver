@@ -29,11 +29,6 @@ features = {}
 		version = "0.4.27"
 		default-features = false
 
-	[dependencies.paste]
-		features = []
-		version = "1.0.15"
-		default-features = false
-
 	[dependencies.typedb-driver]
 		path = "../rust"
 		features = ["sync"]
