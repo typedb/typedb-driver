@@ -28,14 +28,14 @@ public interface AnalyzedQuery {
     /**
      * A representation of the query as a <code>Pipeline</code>
      *
-     * @return the query as a pipeline of operations
+     * @return the <code>Pipeline</code> representing the query.
      */
     Pipeline pipeline();
 
     /**
      * A representation of the <code>Function</code>s in the preamble of the query
      *
-     * @return stream of function definitions
+     * @return stream of the analyzed functions in the preamble.
      */
     Stream<? extends Function> preamble();
 
