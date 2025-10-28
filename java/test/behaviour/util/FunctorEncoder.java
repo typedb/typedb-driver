@@ -325,7 +325,7 @@ public abstract class FunctorEncoder {
         private String encode(VariableAnnotations variableAnnotations) {
             switch (variableAnnotations.variant()) {
                 case InstanceAnnotations:
-                    return FunctorEncoder.makeFunctor("Thing", FunctorEncoder.encodeList(variableAnnotations.asInstance().map(Concept::getLabel)));
+                    return FunctorEncoder.makeFunctor("Instance", FunctorEncoder.encodeList(variableAnnotations.asInstance().map(Concept::getLabel)));
                 case TypeAnnotations:
                     return FunctorEncoder.makeFunctor("Type", FunctorEncoder.encodeList(variableAnnotations.asType().map(Concept::getLabel)));
                 case ValueAnnotations:
