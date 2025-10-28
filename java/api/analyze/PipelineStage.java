@@ -26,37 +26,58 @@ import java.util.stream.Stream;
  */
 public interface PipelineStage {
     /**
-     *
      * @return the pipeline stage variant
      */
     com.typedb.driver.jni.PipelineStageVariant getVariant();
 
     // Type check methods
     boolean isMatch();
+
     boolean isInsert();
+
     boolean isPut();
+
     boolean isUpdate();
+
     boolean isDelete();
+
     boolean isSelect();
+
     boolean isSort();
+
     boolean isRequire();
+
     boolean isOffset();
+
     boolean isLimit();
+
     boolean isDistinct();
+
     boolean isReduce();
 
     // Conversion methods
     MatchStage asMatch();
+
     InsertStage asInsert();
+
     PutStage asPut();
+
     UpdateStage asUpdate();
+
     DeleteStage asDelete();
+
     SelectStage asSelect();
+
     SortStage asSort();
+
     RequireStage asRequire();
+
     OffsetStage asOffset();
+
     LimitStage asLimit();
+
     DistinctStage asDistinct();
+
     ReduceStage asReduce();
 
     /**

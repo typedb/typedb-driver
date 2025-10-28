@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 /**
  * A representation of the 'fetch' stage of a query
-  */
+ */
 public interface Fetch {
     /**
      * @return The variant. One of `List, Leaf, Object`
@@ -53,6 +53,7 @@ public interface Fetch {
          * @return The available keys of this <code>Fetch</code> document.
          */
         Stream<String> keys();
+
         /**
          * @return The <code>Fetch</code> object for the given key.
          */

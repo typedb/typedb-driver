@@ -40,7 +40,7 @@ A representation of the query as a ``Pipeline``
 java.util.stream.Stream<? extends Function> preamble()
 ----
 
-A representation of the ``Function``s in the preambele of the query
+A representation of the ``Function``s in the preamble of the query
 
 [caption=""]
 .Returns

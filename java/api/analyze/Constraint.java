@@ -42,41 +42,75 @@ public interface Constraint {
     Span span();
 
     boolean isIsa();
+
     boolean isHas();
+
     boolean isLinks();
+
     boolean isSub();
+
     boolean isOwns();
+
     boolean isRelates();
+
     boolean isPlays();
+
     boolean isFunctionCall();
+
     boolean isExpression();
+
     boolean isIs();
+
     boolean isIid();
+
     boolean isComparison();
+
     boolean isKindOf();
+
     boolean isLabel();
+
     boolean isValue();
+
     boolean isOr();
+
     boolean isNot();
+
     boolean isTry();
 
     Isa asIsa();
+
     Has asHas();
+
     Links asLinks();
+
     Sub asSub();
+
     Owns asOwns();
+
     Relates asRelates();
+
     Plays asPlays();
+
     FunctionCall asFunctionCall();
+
     Expression asExpression();
+
     Is asIs();
+
     Iid asIid();
+
     Comparison asComparison();
+
     Kind asKindOf();
+
     Label asLabel();
+
     Value asValue();
+
     Or asOr();
+
     Not asNot();
+
     Try asTry();
 
     /**
@@ -84,7 +118,9 @@ public interface Constraint {
      */
     interface Isa extends Constraint {
         ConstraintVertex instance();
+
         ConstraintVertex type();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -93,7 +129,9 @@ public interface Constraint {
      */
     interface Has extends Constraint {
         ConstraintVertex owner();
+
         ConstraintVertex attribute();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -102,8 +140,11 @@ public interface Constraint {
      */
     interface Links extends Constraint {
         ConstraintVertex relation();
+
         ConstraintVertex player();
+
         ConstraintVertex role();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -112,7 +153,9 @@ public interface Constraint {
      */
     interface Sub extends Constraint {
         ConstraintVertex subtype();
+
         ConstraintVertex supertype();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -121,7 +164,9 @@ public interface Constraint {
      */
     interface Owns extends Constraint {
         ConstraintVertex owner();
+
         ConstraintVertex attribute();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -130,7 +175,9 @@ public interface Constraint {
      */
     interface Relates extends Constraint {
         ConstraintVertex relation();
+
         ConstraintVertex role();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -139,7 +186,9 @@ public interface Constraint {
      */
     interface Plays extends Constraint {
         ConstraintVertex player();
+
         ConstraintVertex role();
+
         com.typedb.driver.jni.ConstraintExactness exactness();
     }
 
@@ -149,7 +198,9 @@ public interface Constraint {
      */
     interface FunctionCall extends Constraint {
         String name();
+
         Stream<? extends ConstraintVertex> arguments();
+
         Stream<? extends ConstraintVertex> assigned();
     }
 
@@ -160,7 +211,9 @@ public interface Constraint {
      */
     interface Expression extends Constraint {
         String text();
+
         Stream<? extends ConstraintVertex> arguments();
+
         ConstraintVertex assigned();
     }
 
@@ -170,6 +223,7 @@ public interface Constraint {
      */
     interface Is extends Constraint {
         ConstraintVertex lhs();
+
         ConstraintVertex rhs();
     }
 
@@ -179,6 +233,7 @@ public interface Constraint {
      */
     interface Iid extends Constraint {
         ConstraintVertex variable();
+
         String iid();
     }
 
@@ -188,7 +243,9 @@ public interface Constraint {
      */
     interface Comparison extends Constraint {
         ConstraintVertex lhs();
+
         ConstraintVertex rhs();
+
         com.typedb.driver.jni.Comparator comparator();
 
         static String comparatorName(com.typedb.driver.jni.Comparator comparator) {
@@ -202,6 +259,7 @@ public interface Constraint {
      */
     interface Kind extends Constraint {
         com.typedb.driver.jni.Kind kind();
+
         ConstraintVertex type();
     }
 
@@ -211,6 +269,7 @@ public interface Constraint {
      */
     interface Label extends Constraint {
         ConstraintVertex variable();
+
         String label();
     }
 
@@ -262,6 +321,7 @@ public interface Constraint {
          * @return The offset of the first character.
          */
         long begin();
+
         /**
          * @return The offset of the last character.
          */

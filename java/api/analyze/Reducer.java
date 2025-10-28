@@ -27,7 +27,6 @@ import java.util.stream.Stream;
  */
 public interface Reducer {
     /**
-     *
      * @return The reduce operation applied
      */
     String name();

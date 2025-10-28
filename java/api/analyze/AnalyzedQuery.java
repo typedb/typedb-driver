@@ -34,7 +34,7 @@ public interface AnalyzedQuery {
     Pipeline pipeline();
 
     /**
-     * A representation of the <code>Function</code>s in the preambele of the query
+     * A representation of the <code>Function</code>s in the preamble of the query
      *
      * @return stream of function definitions
      */
