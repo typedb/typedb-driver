@@ -4,12 +4,12 @@
 *Package*: `com.typedb.driver.api.analyze`
 
 // tag::methods[]
-[#_VariableAnnotations_asThing_]
-==== asThing
+[#_VariableAnnotations_asInstance_]
+==== asInstance
 
 [source,java]
 ----
-java.util.stream.Stream<? extends Type> asThing()
+java.util.stream.Stream<? extends Type> asInstance()
 ----
 
 
@@ -46,12 +46,12 @@ java.util.stream.Stream<java.lang.String> asValue()
 .Returns
 `java.util.stream.Stream<java.lang.String>`
 
-[#_VariableAnnotations_isThing_]
-==== isThing
+[#_VariableAnnotations_isInstance_]
+==== isInstance
 
 [source,java]
 ----
-boolean isThing()
+boolean isInstance()
 ----
 
 
@@ -96,7 +96,7 @@ boolean isValue()
 com.typedb.driver.jni.VariableAnnotationsVariant variant()
 ----
 
-The variant indicates whether this is a thing variable, type variable, or value variable.
+The variant indicates whether this is an instance variable, type variable, or value variable.
 
 [caption=""]
 .Returns
