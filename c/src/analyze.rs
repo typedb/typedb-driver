@@ -134,7 +134,7 @@ enum ConstraintVertexVariant {
 
 #[repr(C)]
 enum VariableAnnotationsVariant {
-    ThingAnnotations,
+    InstanceAnnotations,
     TypeAnnotations,
     ValueAnnotations,
 }
@@ -522,22 +522,22 @@ pub extern "C" fn conjunction_get_variable_annotations(
 #[no_mangle]
 pub extern "C" fn variable_annotations_variant(annotations: *const VariableAnnotations) -> VariableAnnotationsVariant {
     match &borrow(annotations).types {
-        TypeAnnotations::Thing(_) => VariableAnnotationsVariant::ThingAnnotations,
+        TypeAnnotations::Instance(_) => VariableAnnotationsVariant::InstanceAnnotations,
         TypeAnnotations::Type(_) => VariableAnnotationsVariant::TypeAnnotations,
         TypeAnnotations::Value(_) => VariableAnnotationsVariant::ValueAnnotations,
     }
 }
 
-/// Unwraps the <code>VariableAnnotations</code> instance as annotations for a Thing variable,
+/// Unwraps the <code>VariableAnnotations</code> instance as annotations for an Instance variable,
 ///  and returns the possible types of the instances the variable may hold.
-/// Will panic if the variable is not a Thing variable.
+/// Will panic if the variable is not an Instance variable.
 #[no_mangle]
-pub extern "C" fn variable_annotations_thing(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
+pub extern "C" fn variable_annotations_instance(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
     match &borrow(annotations).types {
-        TypeAnnotations::Thing(annotations) => release(ConceptIterator(CIterator(box_stream(
+        TypeAnnotations::Instance(annotations) => release(ConceptIterator(CIterator(box_stream(
             annotations.clone().into_iter().map(|t| Ok(type_to_concept(t))),
         )))),
-        _ => unreachable!("Expected variable to have thing annotations"),
+        _ => unreachable!("Expected variable to have instance annotations"),
     }
 }
 

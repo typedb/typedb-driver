@@ -116,7 +116,7 @@ pub struct VariableAnnotations {
 #[derive(Debug, Clone)]
 pub enum TypeAnnotations {
     /// Indicates the variable holds instances of any of the specified <code>Type</code>s.
-    Thing(Vec<Type>),
+    Instance(Vec<Type>),
     /// Indicates the variable holds types of any of the specified <code>Type</code>s.
     Type(Vec<Type>),
     /// Indicates the variable holds values of any of the specified <code>ValueType</code>s.

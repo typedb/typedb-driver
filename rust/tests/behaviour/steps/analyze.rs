@@ -529,7 +529,7 @@ pub mod functor_encoding {
     }
 
     impl_functor_for!(enum SubBlockAnnotation [ Or { branches, } | Not { conjunction, } | Try { conjunction, } | ]);
-    impl_functor_for!(enum TypeAnnotations [ Thing (annotations,) | Type (annotations,) | Value (value_types,) | ]);
+    impl_functor_for!(enum TypeAnnotations [ Instance (annotations,) | Type (annotations,) | Value (value_types,) | ]);
     impl_functor_for_multi!(|self, context| [
         TrunkAnnotationToEncode => {
             context.structure.conjunctions[self.0].variable_annotations.encode_as_functor(context)

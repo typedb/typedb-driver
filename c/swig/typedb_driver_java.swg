@@ -314,7 +314,7 @@
 %nojavaexception return_operation_reducers;
 
 %nojavaexception variable_annotations_variant;
-%nojavaexception variable_annotations_thing;
+%nojavaexception variable_annotations_instance;
 %nojavaexception variable_annotations_type;
 %nojavaexception variable_annotations_value;
 

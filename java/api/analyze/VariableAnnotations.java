@@ -25,14 +25,14 @@ import java.util.stream.Stream;
 
 public interface VariableAnnotations {
     /**
-     * The variant indicates whether this is a thing variable, type variable, or value variable.
+     * The variant indicates whether this is an instance variable, type variable, or value variable.
      */
     com.typedb.driver.jni.VariableAnnotationsVariant variant();
 
     /**
      * @return true if this variable is an Instance variable
      */
-    boolean isThing();
+    boolean isInstance();
 
     /**
      * @return true if this variable is a Type variable
@@ -47,7 +47,7 @@ public interface VariableAnnotations {
     /*
      * @return the possible <code>Type</code>s of instances this variable can hold.
      */
-    Stream<? extends Type> asThing();
+    Stream<? extends Type> asInstance();
 
     /*
      * @return the possible <code>Type</code>s of types this variable can hold.

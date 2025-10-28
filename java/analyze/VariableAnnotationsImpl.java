@@ -40,8 +40,8 @@ public class VariableAnnotationsImpl extends NativeObject<com.typedb.driver.jni.
         return com.typedb.driver.jni.typedb_driver.variable_annotations_variant(nativeObject);
     }
 
-    public boolean isThing() {
-        return variant() == VariableAnnotationsVariant.ThingAnnotations;
+    public boolean isInstance() {
+        return variant() == VariableAnnotationsVariant.InstanceAnnotations;
     }
 
     public boolean isType() {
@@ -52,11 +52,11 @@ public class VariableAnnotationsImpl extends NativeObject<com.typedb.driver.jni.
         return variant() == VariableAnnotationsVariant.ValueAnnotations;
     }
 
-    public Stream<Type> asThing() {
-        if (!isThing()) {
-            throw new TypeDBDriverException(INVALID_VARIABLE_ANNOTATIONS_CASTING, variant(), VariableAnnotationsVariant.ThingAnnotations);
+    public Stream<Type> asInstance() {
+        if (!isInstance()) {
+            throw new TypeDBDriverException(INVALID_VARIABLE_ANNOTATIONS_CASTING, variant(), VariableAnnotationsVariant.InstanceAnnotations);
         }
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.variable_annotations_thing(nativeObject)).stream().map(ConceptImpl::of).map(ConceptImpl::asType);
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.variable_annotations_instance(nativeObject)).stream().map(ConceptImpl::of).map(ConceptImpl::asType);
     }
 
     public Stream<Type> asType() {
