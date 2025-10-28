@@ -24,8 +24,8 @@ use std::{
     sync::Arc,
 };
 
-use env_logger::Env;
 use tracing::{debug, warn};
+use tracing_subscriber::{fmt as tracing_fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 use typedb_driver::{Error, Result};
 
 use super::memory::{free, release_arc, release_optional, release_string};
@@ -35,12 +35,41 @@ thread_local! {
 }
 
 /// Enables logging in the TypeDB driver.
+///
+///  This function sets up tracing with the following priority:
+///  1. TYPEDB_DRIVER_LOG environment variable (if set). Use TYPEDB_DRIVER_CLIB_LOG to see memory exchanges
+///  2. RUST_LOG environment variable (if set)
+///  3. Default level (INFO)
+///
+///  The logging is initialized only once using a static flag to prevent
+///  multiple initializations in applications that create multiple drivers.
 #[no_mangle]
 pub extern "C" fn init_logging() {
-    const ENV_VAR: &str = "TYPEDB_DRIVER_LOG_LEVEL";
-    if let Err(err) = env_logger::try_init_from_env(Env::new().filter(ENV_VAR)) {
-        warn!("{err}");
-    }
+    use std::sync::Once;
+    static INIT: Once = Once::new();
+    INIT.call_once(|| {
+        let clib_level = if let Ok(typedb_driver_clib_log) = std::env::var("TYPEDB_DRIVER_CLIB_LOG") {
+            typedb_driver_clib_log
+        } else {
+            "info".to_owned()
+        };
+        // Try to get log level from TYPEDB_DRIVER_LOG first
+        let env_filter = if let Ok(typedb_log_level) = std::env::var("TYPEDB_DRIVER_LOG") {
+            EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", typedb_log_level, clib_level))
+        } else if let Ok(rust_log) = std::env::var("RUST_LOG") {
+            // If RUST_LOG is set, use it but scope it to typedb_driver only
+            EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", rust_log, clib_level))
+        } else {
+            EnvFilter::new(&format!("typedb_driver=info,typedb_driver_clib={}", clib_level))
+        };
+
+        // Initialize the tracing subscriber
+        if let Err(e) =
+            tracing_subscriber::registry().with(env_filter).with(tracing_fmt::layer().with_target(false)).try_init()
+        {
+            eprintln!("Failed to initialize logging: {}", e);
+        }
+    });
 }
 
 fn ok_record<T>(result: Result<T>) -> Option<T> {
