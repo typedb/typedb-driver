@@ -228,21 +228,25 @@ pub extern "C" fn fetch_object_get_field(fetch: *const Fetch, field: *const c_ch
 }
 
 // Functions
+/// A representation of the <code>Pipeline</code> which forms the body of the function.
 #[no_mangle]
 pub extern "C" fn function_body(function: *const Function) -> *mut Pipeline {
     release(borrow(function).body.clone())
 }
 
+/// Returns the <code>Variable</code>s which are the arguments of the function.
 #[no_mangle]
 pub extern "C" fn function_argument_variables(function: *const Function) -> *mut VariableIterator {
     release(VariableIterator(CIterator(box_stream(borrow(function).argument_variables.clone().into_iter()))))
 }
 
+/// A representation of the <code>ReturnOperation</code> of the function.
 #[no_mangle]
 pub extern "C" fn function_return_operation(function: *const Function) -> *mut ReturnOperation {
     release(borrow(function).return_operation.clone())
 }
 
+/// Returns the variant of the <code>ReturnOperation</code>.
 #[no_mangle]
 pub extern "C" fn return_operation_variant(return_operation: *const ReturnOperation) -> ReturnOperationVariant {
     match borrow(return_operation) {
@@ -299,12 +303,14 @@ pub extern "C" fn return_operation_reducers(return_operation: *const ReturnOpera
     }
 }
 
+/// Returns the inferred type for each argument of the function.
 #[no_mangle]
 pub extern "C" fn function_argument_annotations(function: *const Function) -> *mut VariableAnnotationsIterator {
     let iter = borrow(function).argument_annotations.clone().into_iter();
     release(VariableAnnotationsIterator(CIterator(box_stream(iter))))
 }
 
+/// Returns the inferred type for each concept returned by the function.
 #[no_mangle]
 pub extern "C" fn function_return_annotations(function: *const Function) -> *mut VariableAnnotationsIterator {
     let iter = borrow(function).return_annotations.clone().into_iter();
@@ -314,12 +320,14 @@ pub extern "C" fn function_return_annotations(function: *const Function) -> *mut
 // TODO: Get stuff from the other branch
 
 // Stages
+/// Returns an iterator over the stages making up the <code>Pipeline</code>
 #[no_mangle]
 pub extern "C" fn pipeline_stages(pipeline: *const Pipeline) -> *mut PipelineStageIterator {
     release(PipelineStageIterator(CIterator(box_stream(borrow(pipeline).stages.iter().cloned()))))
 }
 
 // Stage field accessors
+/// Returns the variant of the <code>Pipeline</code> stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_variant(stage: *const PipelineStage) -> PipelineStageVariant {
     match borrow(stage) {
@@ -425,41 +433,55 @@ pub extern "C" fn pipeline_stage_reduce_get_reducer_assignments(
     release(ReduceAssignmentIterator(CIterator(box_stream(reducers.iter().cloned()))))
 }
 
+/// Returns the variable being sorted on.
 #[no_mangle]
 pub extern "C" fn sort_variable_get_variable(sort_variable: *const SortVariable) -> *mut Variable {
     release(borrow(sort_variable).variable.clone())
 }
 
+/// Returns the sort order for the variable being sorted on.
 #[no_mangle]
 pub extern "C" fn sort_variable_get_order(sort_variable: *const SortVariable) -> SortOrder {
     borrow(sort_variable).order.clone()
 }
 
+/// The variable being assigned to in this ReduceAssignment.
+/// e.g. `$c` in <code>$c = sum($x)</code>
 #[no_mangle]
 pub extern "C" fn reduce_assignment_get_assigned(reduce_assignment: *const ReduceAssignment) -> *mut Variable {
     release(borrow(reduce_assignment).assigned.clone())
 }
 
+/// The reducer applied in this ReduceAssignment.
+/// e.g. `sum($x)` in <code>$c = sum($x)</code>
 #[no_mangle]
 pub extern "C" fn reduce_assignment_get_reducer(reduce_assignment: *const ReduceAssignment) -> *mut Reducer {
     release(borrow(reduce_assignment).reducer.clone())
 }
 
+/// The name of the operation applied by this Reducer.
+/// e.g. `sum` in <code>sum($x)</code>
 #[no_mangle]
 pub extern "C" fn reducer_get_name(reducer: *const Reducer) -> *mut c_char {
     release_string(borrow(reducer).reducer.clone())
 }
 
+/// The arguments to this Reducer.
+/// e.g. `$x` in <code>sum($x)</code>
 #[no_mangle]
 pub extern "C" fn reducer_get_arguments(reducer: *const Reducer) -> *mut VariableIterator {
     release(VariableIterator(CIterator(box_stream(borrow(reducer).arguments.iter().cloned()))))
 }
 
+/// Returns the name of the specified variable if it has one, and null otherwise.
+/// The <code>Pipeline</code> must be the one that contains the variable.
 #[no_mangle]
 pub extern "C" fn variable_get_name(pipeline_structure: *const Pipeline, variable: *const Variable) -> *mut c_char {
     release_optional_string(borrow(pipeline_structure).variable_name(borrow(variable)).map(str::to_owned))
 }
 
+/// Returns the <code>Conjunction</code> corresponding to the ConjunctionID.
+/// The <code>Pipeline</code> must be the one that contains the Conjunction & ConjunctionID.
 #[no_mangle]
 pub extern "C" fn pipeline_get_conjunction(
     pipeline: *const Pipeline,
@@ -468,17 +490,20 @@ pub extern "C" fn pipeline_get_conjunction(
     release_optional(borrow(pipeline).conjunctions.get(borrow(conjunction_id).0).cloned())
 }
 
+/// Returns the <code>Constraint</code>s in the given conjunction.
 #[no_mangle]
 pub extern "C" fn conjunction_get_constraints(conjunction: *const Conjunction) -> *mut ConstraintWithSpanIterator {
     release(ConstraintWithSpanIterator(CIterator(box_stream(borrow(conjunction).constraints.clone().into_iter()))))
 }
 
+/// Returns the variables in the current conjunction for which type annotations are available
 #[no_mangle]
 pub extern "C" fn conjunction_get_annotated_variables(conjunction: *const Conjunction) -> *mut VariableIterator {
     let iter = borrow(conjunction).variable_annotations.keys().cloned().collect::<Vec<_>>().into_iter();
     release(VariableIterator(CIterator(box_stream(iter))))
 }
 
+/// Returns the inferred types for the specified variable in the specified conjunction.
 #[no_mangle]
 pub extern "C" fn conjunction_get_variable_annotations(
     conjunction: *const Conjunction,
@@ -487,6 +512,8 @@ pub extern "C" fn conjunction_get_variable_annotations(
     release_optional(borrow(conjunction).variable_annotations.get(borrow(variable)).cloned())
 }
 
+/// Returns the variant of the specified VariableAnnotations.
+/// This tells us whether the variable holds an instance, a type or a raw value.
 #[no_mangle]
 pub extern "C" fn variable_annotations_variant(annotations: *const VariableAnnotations) -> VariableAnnotationsVariant {
     match &borrow(annotations).types {
@@ -535,16 +562,19 @@ pub extern "C" fn variable_annotations_value(annotations: *const VariableAnnotat
     }
 }
 
+/// The offset of the first character of the specified constraint in the source query .
 #[no_mangle]
 pub extern "C" fn constraint_span_begin(constraint: *const ConstraintWithSpan) -> i64 {
     borrow(constraint).span.as_ref().map_or(0, |c| c.begin) as i64
 }
 
+/// The offset of the last character of the specified constraint in the source query .
 #[no_mangle]
 pub extern "C" fn constraint_span_end(constraint: *const ConstraintWithSpan) -> i64 {
     borrow(constraint).span.as_ref().map_or(0, |c| c.end) as i64
 }
 
+/// The variant of the specified constraint
 #[no_mangle]
 pub extern "C" fn constraint_variant(constraint: *const ConstraintWithSpan) -> ConstraintVariant {
     match &borrow(constraint).constraint {
@@ -1068,6 +1098,7 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
 }
 
 // ConstraintVertex accessors
+
 #[no_mangle]
 pub extern "C" fn constraint_vertex_is_variable(vertex: *const ConstraintVertex) -> bool {
     matches!(borrow(vertex), ConstraintVertex::Variable(_))
@@ -1088,6 +1119,8 @@ pub extern "C" fn constraint_vertex_is_named_role(vertex: *const ConstraintVerte
     matches!(borrow(vertex), ConstraintVertex::NamedRole(_))
 }
 
+/// Unwraps the <code>ConstraintVertex</code> instance as a Variable.
+///  Will panic if the instance is not a Variable variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_variable(vertex: *const ConstraintVertex) -> *mut Variable {
     match borrow(vertex) {
@@ -1096,6 +1129,8 @@ pub extern "C" fn constraint_vertex_as_variable(vertex: *const ConstraintVertex)
     }
 }
 
+/// Unwraps the <code>ConstraintVertex</code> instance as a Label.
+/// Will panic if the instance is not a Label variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_label(vertex: *const ConstraintVertex) -> *mut Concept {
     let as_concept = match borrow(vertex) {
@@ -1105,6 +1140,8 @@ pub extern "C" fn constraint_vertex_as_label(vertex: *const ConstraintVertex) ->
     release(as_concept)
 }
 
+/// Unwraps the <code>ConstraintVertex</code> instance as a Value.
+/// Will panic if the instance is not a Value variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_value(vertex: *const ConstraintVertex) -> *mut Concept {
     match borrow(vertex) {
@@ -1113,6 +1150,11 @@ pub extern "C" fn constraint_vertex_as_value(vertex: *const ConstraintVertex) ->
     }
 }
 
+/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role-type variable.
+/// e.g. for `$_ links (name: $_);`, a variable is introduced in place of name.
+/// This is needed since a role-name does not uniquely identify a role-type
+///  (Different role-types belonging to different relation types may share the same name)
+/// Will panic if the instance is not a NamedRole variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_named_role_get_variable(vertex: *const ConstraintVertex) -> *mut Variable {
     match borrow(vertex) {
@@ -1121,6 +1163,8 @@ pub extern "C" fn constraint_vertex_as_named_role_get_variable(vertex: *const Co
     }
 }
 
+/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role name.
+/// Will panic if the instance is not a NamedRole variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_named_role_get_name(vertex: *const ConstraintVertex) -> *mut c_char {
     match borrow(vertex) {
