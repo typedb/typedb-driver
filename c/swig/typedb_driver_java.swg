@@ -269,11 +269,7 @@
 %nojavaexception constraint_not_get_conjunction;
 %nojavaexception constraint_try_get_conjunction;
 
-%nojavaexception constraint_vertex_is_variable;
-%nojavaexception constraint_vertex_is_label;
-%nojavaexception constraint_vertex_is_value;
-%nojavaexception constraint_vertex_is_named_role;
-%nojavaexception constraint_vertex_is_unresolved_label;
+%nojavaexception constraint_vertex_variant;
 %nojavaexception constraint_vertex_as_variable;
 %nojavaexception constraint_vertex_as_label;
 %nojavaexception constraint_vertex_as_value;

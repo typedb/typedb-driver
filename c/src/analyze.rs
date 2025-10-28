@@ -125,6 +125,14 @@ enum ConstraintVariant {
 }
 
 #[repr(C)]
+enum ConstraintVertexVariant {
+    VariableVertex,
+    LabelVertex,
+    ValueVertex,
+    NamedRoleVertex,
+}
+
+#[repr(C)]
 enum VariableAnnotationsVariant {
     ThingAnnotations,
     TypeAnnotations,
@@ -1097,25 +1105,15 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
 }
 
 // ConstraintVertex accessors
-
+///
 #[no_mangle]
-pub extern "C" fn constraint_vertex_is_variable(vertex: *const ConstraintVertex) -> bool {
-    matches!(borrow(vertex), ConstraintVertex::Variable(_))
-}
-
-#[no_mangle]
-pub extern "C" fn constraint_vertex_is_label(vertex: *const ConstraintVertex) -> bool {
-    matches!(borrow(vertex), ConstraintVertex::Label(_))
-}
-
-#[no_mangle]
-pub extern "C" fn constraint_vertex_is_value(vertex: *const ConstraintVertex) -> bool {
-    matches!(borrow(vertex), ConstraintVertex::Value(_))
-}
-
-#[no_mangle]
-pub extern "C" fn constraint_vertex_is_named_role(vertex: *const ConstraintVertex) -> bool {
-    matches!(borrow(vertex), ConstraintVertex::NamedRole(_))
+pub extern "C" fn constraint_vertex_variant(vertex: *const ConstraintVertex) -> ConstraintVertexVariant {
+    match borrow(vertex) {
+        ConstraintVertex::Variable(_) => ConstraintVertexVariant::VariableVertex,
+        ConstraintVertex::Label(_) => ConstraintVertexVariant::LabelVertex,
+        ConstraintVertex::Value(_) => ConstraintVertexVariant::ValueVertex,
+        ConstraintVertex::NamedRole(_) => ConstraintVertexVariant::NamedRoleVertex,
+    }
 }
 
 /// Unwraps the <code>ConstraintVertex</code> instance as a Variable.

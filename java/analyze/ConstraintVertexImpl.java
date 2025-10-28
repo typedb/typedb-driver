@@ -22,6 +22,7 @@ package com.typedb.driver.analyze;
 import com.typedb.driver.api.analyze.ConstraintVertex;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.jni.ConstraintVertexVariant;
 import com.typedb.driver.jni.typedb_driver;
 
 public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
@@ -29,20 +30,24 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         super(nativeObject);
     }
 
+    public com.typedb.driver.jni.ConstraintVertexVariant variant() {
+        return typedb_driver.constraint_vertex_variant(nativeObject);
+    }
+
     public boolean isVariable() {
-        return typedb_driver.constraint_vertex_is_variable(nativeObject);
+        return variant() == ConstraintVertexVariant.VariableVertex;
     }
 
     public boolean isLabel() {
-        return typedb_driver.constraint_vertex_is_label(nativeObject);
+        return variant() == ConstraintVertexVariant.LabelVertex;
     }
 
     public boolean isValue() {
-        return typedb_driver.constraint_vertex_is_value(nativeObject);
+        return variant() == ConstraintVertexVariant.ValueVertex;
     }
 
     public boolean isNamedRole() {
-        return typedb_driver.constraint_vertex_is_named_role(nativeObject);
+        return variant() == ConstraintVertexVariant.NamedRoleVertex;
     }
 
     public com.typedb.driver.jni.Variable asVariable() {
