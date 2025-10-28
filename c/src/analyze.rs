@@ -67,9 +67,13 @@ pub struct SortVariableIterator(pub CIterator<SortVariable>);
 pub struct ReduceAssignmentIterator(pub CIterator<ReduceAssignment>);
 
 pub struct ConstraintWithSpanIterator(pub CIterator<ConstraintWithSpan>);
+
 pub struct ConstraintVertexIterator(pub CIterator<ConstraintVertex>);
+
 pub struct ConjunctionIDIterator(pub CIterator<ConjunctionID>);
+
 pub struct FunctionIterator(pub CIterator<Function>);
+
 pub struct VariableAnnotationsIterator(pub CIterator<VariableAnnotations>);
 
 #[repr(C)]
@@ -167,6 +171,7 @@ pub extern "C" fn analyzed_fetch(analyzed_query: *const AnalyzedQuery) -> *mut F
     release_optional(borrow(analyzed_query).fetch.clone())
 }
 
+/// Returns the variant of the <code>Fetch</code> instance.
 #[no_mangle]
 pub extern "C" fn fetch_variant(fetch: *const Fetch) -> FetchVariant {
     match borrow(fetch) {
@@ -176,6 +181,8 @@ pub extern "C" fn fetch_variant(fetch: *const Fetch) -> FetchVariant {
     }
 }
 
+/// Unwraps the <code>Fetch</code> instance as a Leaf variant, and returns an iterator over possible value types.
+/// Will panic if the instance is not a Leaf variant.
 #[no_mangle]
 pub extern "C" fn fetch_leaf_annotations(fetch: *const Fetch) -> *mut StringIterator {
     match borrow(fetch) {
@@ -187,6 +194,8 @@ pub extern "C" fn fetch_leaf_annotations(fetch: *const Fetch) -> *mut StringIter
     }
 }
 
+/// Unwraps the <code>Fetch</code> instance as a List variant, and returns the <code>Fetch</code> for an element of the list.
+/// Will panic if the instance is not a List variant.
 #[no_mangle]
 pub extern "C" fn fetch_list_element(fetch: *const Fetch) -> *mut Fetch {
     match borrow(fetch) {
@@ -195,6 +204,8 @@ pub extern "C" fn fetch_list_element(fetch: *const Fetch) -> *mut Fetch {
     }
 }
 
+/// Unwraps the <code>Fetch</code> instance as an Object variant, and returns the available fields.
+/// Will panic if the instance is not an Object variant.
 #[no_mangle]
 pub extern "C" fn fetch_object_fields(fetch: *const Fetch) -> *mut StringIterator {
     match borrow(fetch) {
@@ -206,6 +217,8 @@ pub extern "C" fn fetch_object_fields(fetch: *const Fetch) -> *mut StringIterato
     }
 }
 
+/// Unwraps the <code>Fetch</code> instance as an Object variant, and returns the value of the specified field.
+/// Will panic if the instance is not an Object variant.
 #[no_mangle]
 pub extern "C" fn fetch_object_get_field(fetch: *const Fetch, field: *const c_char) -> *mut Fetch {
     match borrow(fetch) {
@@ -240,6 +253,8 @@ pub extern "C" fn return_operation_variant(return_operation: *const ReturnOperat
     }
 }
 
+/// Unwraps the <code>ReturnOperation</code> instance as a Stream variant, and returns the returned variables.
+/// Will panic if the instance is not a Stream variant.
 #[no_mangle]
 pub extern "C" fn return_operation_stream_variables(return_operation: *const ReturnOperation) -> *mut VariableIterator {
     match borrow(return_operation) {
@@ -250,6 +265,8 @@ pub extern "C" fn return_operation_stream_variables(return_operation: *const Ret
     }
 }
 
+/// Unwraps the <code>ReturnOperation</code> instance as a Single variant, and returns the returned variables.
+/// Will panic if the instance is not a Single variant.
 #[no_mangle]
 pub extern "C" fn return_operation_single_variables(return_operation: *const ReturnOperation) -> *mut VariableIterator {
     match borrow(return_operation) {
@@ -260,6 +277,8 @@ pub extern "C" fn return_operation_single_variables(return_operation: *const Ret
     }
 }
 
+/// Unwraps the <code>ReturnOperation</code> instance as a Single variant, and returns the selector applied.
+/// Will panic if the instance is not a Single variant.
 #[no_mangle]
 pub extern "C" fn return_operation_single_selector(return_operation: *const ReturnOperation) -> *mut c_char {
     match borrow(return_operation) {
@@ -268,6 +287,8 @@ pub extern "C" fn return_operation_single_selector(return_operation: *const Retu
     }
 }
 
+/// Unwraps the <code>ReturnOperation</code> instance as a Reduce variant, and returns the reducers applied.
+/// Will panic if the instance is not a Reduce variant.
 #[no_mangle]
 pub extern "C" fn return_operation_reducers(return_operation: *const ReturnOperation) -> *mut ReducerIterator {
     match borrow(return_operation) {
@@ -317,6 +338,8 @@ pub extern "C" fn pipeline_stage_variant(stage: *const PipelineStage) -> Pipelin
     }
 }
 
+/// Returns the block of the pipeline stage - this is the <code>ConjunctionID</code> of the root conjunction.
+/// Will panic if the stage does not have a block.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_get_block(stage: *const PipelineStage) -> *mut ConjunctionID {
     match borrow(stage) {
@@ -335,48 +358,65 @@ pub extern "C" fn pipeline_stage_get_block(stage: *const PipelineStage) -> *mut 
     }
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Delete stage, and returns the variables deleted.
+/// Will panic if the stage is not a Delete.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_delete_get_deleted_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Delete { deleted_variables, .. } = borrow(stage) else { unreachable!("Expected Delete stage") };
     release(VariableIterator(CIterator(box_stream(deleted_variables.iter().cloned()))))
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Select stage, and returns the variables selected.
+/// Will panic if the stage is not a Select.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_select_get_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Select { variables, .. } = borrow(stage) else { unreachable!("Expected Select stage") };
     release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Require stage, and returns the required variables.
+/// Will panic if the stage is not a Require stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_require_get_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Require { variables, .. } = borrow(stage) else { unreachable!("Expected Require stage") };
     release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as an Offset stage, and returns the offset applied.
+/// Will panic if the stage is not an Offset stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_offset_get_offset(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Offset { offset, .. } = borrow(stage) else { unreachable!("Expected Offset stage") };
     (*offset as i64)
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Limit stage, and returns the limit applied.
+/// Will panic if the stage is not a Limit stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_limit_get_limit(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Limit { limit, .. } = borrow(stage) else { unreachable!("Expected Limit stage") };
     (*limit as i64)
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Sort stage, and returns the <code>SortVariable</code>.
+/// Will panic if the stage is not a Sort stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_sort_get_sort_variables(stage: *const PipelineStage) -> *mut SortVariableIterator {
     let PipelineStage::Sort { variables, .. } = borrow(stage) else { unreachable!("Expected Sort stage") };
     release(SortVariableIterator(CIterator(box_stream(variables.iter().cloned()))))
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Reduce stage, and returns the variables being grouped on.
+/// Will panic if the stage is not a Reduce stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_reduce_get_groupby(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Reduce { groupby, .. } = borrow(stage) else { unreachable!("Expected Reduce stage") };
     release(VariableIterator(CIterator(box_stream(groupby.iter().cloned()))))
 }
 
+/// Unwraps the <code>PipelineStage</code> instance as a Reduce stage,
+///  and returns the reducers applied and the variables their results are assigned to.
+/// Will panic if the stage is not a Reduce stage.
 #[no_mangle]
 pub extern "C" fn pipeline_stage_reduce_get_reducer_assignments(
     stage: *const PipelineStage,
@@ -456,6 +496,9 @@ pub extern "C" fn variable_annotations_variant(annotations: *const VariableAnnot
     }
 }
 
+/// Unwraps the <code>VariableAnnotations</code> instance as annotations for a Thing variable,
+///  and returns the possible types of the instances the variable may hold.
+/// Will panic if the variable is not a Thing variable.
 #[no_mangle]
 pub extern "C" fn variable_annotations_thing(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
     match &borrow(annotations).types {
@@ -465,6 +508,10 @@ pub extern "C" fn variable_annotations_thing(annotations: *const VariableAnnotat
         _ => unreachable!("Expected variable to have thing annotations"),
     }
 }
+
+/// Unwraps the <code>VariableAnnotations</code> instance as annotations for a Type variable,
+///  and returns the possible types the variable may be.
+/// Will panic if the variable is not a Type variable.
 #[no_mangle]
 pub extern "C" fn variable_annotations_type(annotations: *const VariableAnnotations) -> *mut ConceptIterator {
     match &borrow(annotations).types {
@@ -475,6 +522,9 @@ pub extern "C" fn variable_annotations_type(annotations: *const VariableAnnotati
     }
 }
 
+/// Unwraps the <code>VariableAnnotations</code> instance as annotations for a Value variable,
+///  and returns the possible ValueTypes the value may be.
+/// Will panic if the variable is not a Value variable.
 #[no_mangle]
 pub extern "C" fn variable_annotations_value(annotations: *const VariableAnnotations) -> *mut StringIterator {
     match &borrow(annotations).types {
@@ -519,6 +569,9 @@ pub extern "C" fn constraint_variant(constraint: *const ConstraintWithSpan) -> C
     }
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Isa` constraint,
+///  and returns the instance vertex.
+/// Will panic if the Constraint is not an Isa constraint.
 #[no_mangle]
 pub extern "C" fn constraint_isa_get_instance(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Isa { instance, .. } = &borrow(constraint).constraint else {
@@ -527,6 +580,9 @@ pub extern "C" fn constraint_isa_get_instance(constraint: *const ConstraintWithS
     release(instance.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Isa` constraint,
+///  and returns the type vertex.
+/// Will panic if the Constraint is not an Isa constraint.
 #[no_mangle]
 pub extern "C" fn constraint_isa_get_type(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Isa { r#type: type_, .. } = &borrow(constraint).constraint else {
@@ -535,6 +591,9 @@ pub extern "C" fn constraint_isa_get_type(constraint: *const ConstraintWithSpan)
     release(type_.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Has` constraint,
+/// and returns the owner vertex.
+/// Will panic if the Constraint is not a Has constraint.
 #[no_mangle]
 pub extern "C" fn constraint_has_get_owner(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Has { owner, .. } = &borrow(constraint).constraint else {
@@ -543,6 +602,9 @@ pub extern "C" fn constraint_has_get_owner(constraint: *const ConstraintWithSpan
     release(owner.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Has` constraint,
+/// and returns the attribute vertex.
+/// Will panic if the Constraint is not a Has constraint.
 #[no_mangle]
 pub extern "C" fn constraint_has_get_attribute(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Has { attribute, .. } = &borrow(constraint).constraint else {
@@ -551,6 +613,9 @@ pub extern "C" fn constraint_has_get_attribute(constraint: *const ConstraintWith
     release(attribute.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Links` constraint,
+/// and returns the relation vertex.
+/// Will panic if the Constraint is not a Links constraint.
 #[no_mangle]
 pub extern "C" fn constraint_links_get_relation(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Links { relation, .. } = &borrow(constraint).constraint else {
@@ -559,6 +624,9 @@ pub extern "C" fn constraint_links_get_relation(constraint: *const ConstraintWit
     release(relation.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Links` constraint,
+/// and returns the player vertex.
+/// Will panic if the Constraint is not a Links constraint.
 #[no_mangle]
 pub extern "C" fn constraint_links_get_player(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Links { player, .. } = &borrow(constraint).constraint else {
@@ -567,6 +635,9 @@ pub extern "C" fn constraint_links_get_player(constraint: *const ConstraintWithS
     release(player.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Links` constraint,
+/// and returns the role vertex.
+/// Will panic if the Constraint is not a Links constraint.
 #[no_mangle]
 pub extern "C" fn constraint_links_get_role(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Links { role, .. } = &borrow(constraint).constraint else {
@@ -575,6 +646,9 @@ pub extern "C" fn constraint_links_get_role(constraint: *const ConstraintWithSpa
     release(role.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Sub` constraint,
+/// and returns the subtype vertex.
+/// Will panic if the Constraint is not a Sub constraint.
 #[no_mangle]
 pub extern "C" fn constraint_sub_get_subtype(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Sub { subtype, .. } = &borrow(constraint).constraint else {
@@ -583,6 +657,9 @@ pub extern "C" fn constraint_sub_get_subtype(constraint: *const ConstraintWithSp
     release(subtype.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Sub` constraint,
+/// and returns the supertype vertex.
+/// Will panic if the Constraint is not a Sub constraint.
 #[no_mangle]
 pub extern "C" fn constraint_sub_get_supertype(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Sub { supertype, .. } = &borrow(constraint).constraint else {
@@ -591,6 +668,9 @@ pub extern "C" fn constraint_sub_get_supertype(constraint: *const ConstraintWith
     release(supertype.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Owns` constraint,
+/// and returns the owner-type vertex.
+/// Will panic if the Constraint is not an Owns constraint.
 #[no_mangle]
 pub extern "C" fn constraint_owns_get_owner(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Owns { owner, .. } = &borrow(constraint).constraint else {
@@ -599,6 +679,9 @@ pub extern "C" fn constraint_owns_get_owner(constraint: *const ConstraintWithSpa
     release(owner.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Owns` constraint,
+/// and returns the attribute-type vertex.
+/// Will panic if the Constraint is not an Owns constraint.
 #[no_mangle]
 pub extern "C" fn constraint_owns_get_attribute(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Owns { attribute, .. } = &borrow(constraint).constraint else {
@@ -607,6 +690,9 @@ pub extern "C" fn constraint_owns_get_attribute(constraint: *const ConstraintWit
     release(attribute.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Relates` constraint,
+/// and returns the relation-type vertex.
+/// Will panic if the Constraint is not a Relates constraint.
 #[no_mangle]
 pub extern "C" fn constraint_relates_get_relation(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Relates { relation, .. } = &borrow(constraint).constraint else {
@@ -615,6 +701,9 @@ pub extern "C" fn constraint_relates_get_relation(constraint: *const ConstraintW
     release(relation.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Relates` constraint,
+/// and returns the role-type vertex.
+/// Will panic if the Constraint is not a Relates constraint.
 #[no_mangle]
 pub extern "C" fn constraint_relates_get_role(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Relates { role, .. } = &borrow(constraint).constraint else {
@@ -623,6 +712,9 @@ pub extern "C" fn constraint_relates_get_role(constraint: *const ConstraintWithS
     release(role.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Plays` constraint,
+/// and returns the player type vertex.
+/// Will panic if the Constraint is not a Plays constraint.
 #[no_mangle]
 pub extern "C" fn constraint_plays_get_player(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Plays { player, .. } = &borrow(constraint).constraint else {
@@ -631,6 +723,9 @@ pub extern "C" fn constraint_plays_get_player(constraint: *const ConstraintWithS
     release(player.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Plays` constraint,
+/// and returns the role-type vertex.
+/// Will panic if the Constraint is not a Plays constraint.
 #[no_mangle]
 pub extern "C" fn constraint_plays_get_role(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Plays { role, .. } = &borrow(constraint).constraint else {
@@ -639,6 +734,9 @@ pub extern "C" fn constraint_plays_get_role(constraint: *const ConstraintWithSpa
     release(role.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Isa` constraint,
+/// and returns the exactness of the type match.
+/// Will panic if the Constraint is not an Isa constraint.
 #[no_mangle]
 pub extern "C" fn constraint_isa_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Isa { exactness, .. } = &borrow(constraint).constraint else {
@@ -647,6 +745,10 @@ pub extern "C" fn constraint_isa_get_exactness(constraint: *const ConstraintWith
     exactness.clone()
 }
 
+/// (FUTURE-USE: Currently always ConstraintExactness::Subtypes)
+/// Unwraps the <code>Constraint</code> instance as a `Has` constraint,
+/// and returns the exactness of the attribute match.
+/// Will panic if the Constraint is not a Has constraint.
 #[no_mangle]
 pub extern "C" fn constraint_has_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Has { exactness, .. } = &borrow(constraint).constraint else {
@@ -655,6 +757,10 @@ pub extern "C" fn constraint_has_get_exactness(constraint: *const ConstraintWith
     exactness.clone()
 }
 
+/// (FUTURE-USE: Currently always ConstraintExactness::Subtypes)
+/// Unwraps the <code>Constraint</code> instance as a `Links` constraint,
+/// and returns the exactness of the role-type match.
+/// Will panic if the Constraint is not a Links constraint.
 #[no_mangle]
 pub extern "C" fn constraint_links_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Links { exactness, .. } = &borrow(constraint).constraint else {
@@ -663,6 +769,11 @@ pub extern "C" fn constraint_links_get_exactness(constraint: *const ConstraintWi
     exactness.clone()
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Sub` constraint,
+/// and returns the exactness of the subtype match.
+/// If Exact (i.e. `sub!`), only the immediate subtype is returned
+/// else, (i.e. `sub`) the type itself and all subtypes are returned.
+/// Will panic if the Constraint is not a Sub constraint.
 #[no_mangle]
 pub extern "C" fn constraint_sub_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Sub { exactness, .. } = &borrow(constraint).constraint else {
@@ -671,6 +782,8 @@ pub extern "C" fn constraint_sub_get_exactness(constraint: *const ConstraintWith
     exactness.clone()
 }
 
+/// (FUTURE-USE: Currently always ConstraintExactness::Subtypes)
+/// Will panic if the Constraint is not an Owns constraint.
 #[no_mangle]
 pub extern "C" fn constraint_owns_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Owns { exactness, .. } = &borrow(constraint).constraint else {
@@ -679,6 +792,9 @@ pub extern "C" fn constraint_owns_get_exactness(constraint: *const ConstraintWit
     exactness.clone()
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Relates` constraint,
+/// and returns the exactness of the relation match.
+/// Will panic if the Constraint is not a Relates constraint.
 #[no_mangle]
 pub extern "C" fn constraint_relates_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Relates { exactness, .. } = &borrow(constraint).constraint else {
@@ -687,6 +803,7 @@ pub extern "C" fn constraint_relates_get_exactness(constraint: *const Constraint
     exactness.clone()
 }
 
+/// (FUTURE-USE: Currently always ConstraintExactness::Subtypes)
 #[no_mangle]
 pub extern "C" fn constraint_plays_get_exactness(constraint: *const ConstraintWithSpan) -> ConstraintExactness {
     let Constraint::Plays { exactness, .. } = &borrow(constraint).constraint else {
@@ -695,6 +812,9 @@ pub extern "C" fn constraint_plays_get_exactness(constraint: *const ConstraintWi
     exactness.clone()
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `FunctionCall` constraint,
+/// and returns the function name.
+/// Will panic if the Constraint is not a FunctionCall constraint.
 #[no_mangle]
 pub extern "C" fn constraint_function_call_get_name(constraint: *const ConstraintWithSpan) -> *mut c_char {
     let Constraint::FunctionCall { name, .. } = &borrow(constraint).constraint else {
@@ -703,6 +823,9 @@ pub extern "C" fn constraint_function_call_get_name(constraint: *const Constrain
     release_string(name.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `FunctionCall` constraint,
+/// and returns the variables assigned by the function call.
+/// Will panic if the Constraint is not a FunctionCall constraint.
 #[no_mangle]
 pub extern "C" fn constraint_function_call_get_assigned(
     constraint: *const ConstraintWithSpan,
@@ -713,6 +836,9 @@ pub extern "C" fn constraint_function_call_get_assigned(
     release(ConstraintVertexIterator(CIterator(box_stream(assigned.clone().into_iter()))))
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `FunctionCall` constraint,
+/// and returns the variables passed as arguments to the function call .
+/// Will panic if the Constraint is not a FunctionCall constraint.
 #[no_mangle]
 pub extern "C" fn constraint_function_call_get_arguments(
     constraint: *const ConstraintWithSpan,
@@ -723,6 +849,9 @@ pub extern "C" fn constraint_function_call_get_arguments(
     release(ConstraintVertexIterator(CIterator(box_stream(arguments.clone().into_iter()))))
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Expression` constraint,
+/// and returns the expression text.
+/// Will panic if the Constraint is not an Expression constraint.
 #[no_mangle]
 pub extern "C" fn constraint_expression_get_text(constraint: *const ConstraintWithSpan) -> *mut c_char {
     let Constraint::Expression { text, .. } = &borrow(constraint).constraint else {
@@ -731,6 +860,9 @@ pub extern "C" fn constraint_expression_get_text(constraint: *const ConstraintWi
     release_string(text.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Expression` constraint,
+/// and returns the variable assigned by the expression.
+/// Will panic if the Constraint is not an Expression constraint.
 #[no_mangle]
 pub extern "C" fn constraint_expression_get_assigned(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Expression { assigned, .. } = &borrow(constraint).constraint else {
@@ -739,6 +871,10 @@ pub extern "C" fn constraint_expression_get_assigned(constraint: *const Constrai
     release(assigned.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Expression` constraint,
+/// and returns the expression arguments -
+/// These are any variables used in the right-hand side of the expression.
+/// Will panic if the Constraint is not an Expression constraint.
 #[no_mangle]
 pub extern "C" fn constraint_expression_get_arguments(
     constraint: *const ConstraintWithSpan,
@@ -749,6 +885,9 @@ pub extern "C" fn constraint_expression_get_arguments(
     release(ConstraintVertexIterator(CIterator(box_stream(arguments.iter().cloned()))))
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Is` constraint,
+/// and returns the left-hand side vertex.
+/// Will panic if the Constraint is not an Is constraint.
 #[no_mangle]
 pub extern "C" fn constraint_is_get_lhs(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Is { lhs, .. } = &borrow(constraint).constraint else {
@@ -757,6 +896,9 @@ pub extern "C" fn constraint_is_get_lhs(constraint: *const ConstraintWithSpan) -
     release(lhs.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Is` constraint,
+/// and returns the right-hand side vertex.
+/// Will panic if the Constraint is not an Is constraint.
 #[no_mangle]
 pub extern "C" fn constraint_is_get_rhs(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Is { rhs, .. } = &borrow(constraint).constraint else {
@@ -765,6 +907,9 @@ pub extern "C" fn constraint_is_get_rhs(constraint: *const ConstraintWithSpan) -
     release(rhs.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Iid` constraint,
+/// and returns the concept (variable) the iid applies to.
+/// Will panic if the Constraint is not an Iid constraint.
 #[no_mangle]
 pub extern "C" fn constraint_iid_get_variable(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Iid { concept, .. } = &borrow(constraint).constraint else {
@@ -773,6 +918,9 @@ pub extern "C" fn constraint_iid_get_variable(constraint: *const ConstraintWithS
     release(concept.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Iid` constraint,
+/// and returns the iid value as a string.
+/// Will panic if the Constraint is not an Iid constraint.
 #[no_mangle]
 pub extern "C" fn constraint_iid_get_iid(constraint: *const ConstraintWithSpan) -> *mut c_char {
     let Constraint::Iid { iid, .. } = &borrow(constraint).constraint else {
@@ -781,6 +929,9 @@ pub extern "C" fn constraint_iid_get_iid(constraint: *const ConstraintWithSpan) 
     release_string(iid.to_string())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Comparison` constraint,
+/// and returns the left-hand side vertex.
+/// Will panic if the Constraint is not a Comparison constraint.
 #[no_mangle]
 pub extern "C" fn constraint_comparison_get_lhs(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Comparison { lhs, .. } = &borrow(constraint).constraint else {
@@ -789,6 +940,9 @@ pub extern "C" fn constraint_comparison_get_lhs(constraint: *const ConstraintWit
     release(lhs.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Comparison` constraint,
+/// and returns the right-hand side vertex.
+/// Will panic if the Constraint is not a Comparison constraint.
 #[no_mangle]
 pub extern "C" fn constraint_comparison_get_rhs(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Comparison { rhs, .. } = &borrow(constraint).constraint else {
@@ -797,6 +951,9 @@ pub extern "C" fn constraint_comparison_get_rhs(constraint: *const ConstraintWit
     release(rhs.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Comparison` constraint,
+/// and returns the comparator used in the comparison.
+/// Will panic if the Constraint is not a Comparison constraint.
 #[no_mangle]
 pub extern "C" fn constraint_comparison_get_comparator(constraint: *const ConstraintWithSpan) -> Comparator {
     let Constraint::Comparison { comparator, .. } = &borrow(constraint).constraint else {
@@ -805,11 +962,15 @@ pub extern "C" fn constraint_comparison_get_comparator(constraint: *const Constr
     comparator.clone()
 }
 
+/// Unwraps the <code>Comparator</code> and returns its name (or symbol).
 #[no_mangle]
 pub extern "C" fn comparator_get_name(comparator: Comparator) -> *mut c_char {
     release_string(comparator.symbol().to_owned())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Kind` constraint,
+/// and returns the `Kind` of the type-vertex.
+/// Will panic if the Constraint is not a Kind constraint.
 #[no_mangle]
 pub extern "C" fn constraint_kind_get_kind(constraint: *const ConstraintWithSpan) -> Kind {
     let Constraint::Kind { kind, .. } = &borrow(constraint).constraint else {
@@ -818,6 +979,9 @@ pub extern "C" fn constraint_kind_get_kind(constraint: *const ConstraintWithSpan
     kind.clone()
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Kind` constraint,
+/// and returns the associated type vertex.
+/// Will panic if the Constraint is not a Kind constraint.
 #[no_mangle]
 pub extern "C" fn constraint_kind_get_type(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Kind { r#type: type_, .. } = &borrow(constraint).constraint else {
@@ -826,6 +990,9 @@ pub extern "C" fn constraint_kind_get_type(constraint: *const ConstraintWithSpan
     release(type_.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Label` constraint,
+/// and returns the type-vertex the label applies to.
+/// Will panic if the Constraint is not a Label constraint.
 #[no_mangle]
 pub extern "C" fn constraint_label_get_variable(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Label { r#type: type_, .. } = &borrow(constraint).constraint else {
@@ -834,6 +1001,9 @@ pub extern "C" fn constraint_label_get_variable(constraint: *const ConstraintWit
     release(type_.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Label` constraint,
+/// and returns the label string.
+/// Will panic if the Constraint is not a Label constraint.
 #[no_mangle]
 pub extern "C" fn constraint_label_get_label(constraint: *const ConstraintWithSpan) -> *mut c_char {
     let Constraint::Label { label, .. } = &borrow(constraint).constraint else {
@@ -842,6 +1012,9 @@ pub extern "C" fn constraint_label_get_label(constraint: *const ConstraintWithSp
     release_string(label.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Value` constraint,
+/// and returns the attribute type vertex.
+/// Will panic if the Constraint is not a Value constraint.
 #[no_mangle]
 pub extern "C" fn constraint_value_get_attribute_type(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
     let Constraint::Value { attribute_type, .. } = &borrow(constraint).constraint else {
@@ -850,6 +1023,9 @@ pub extern "C" fn constraint_value_get_attribute_type(constraint: *const Constra
     release(attribute_type.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Value` constraint,
+/// and returns the specified ValueType as a string.
+/// Will panic if the Constraint is not a Value constraint.
 #[no_mangle]
 pub extern "C" fn constraint_value_get_value_type(constraint: *const ConstraintWithSpan) -> *mut c_char {
     let Constraint::Value { value_type, .. } = &borrow(constraint).constraint else {
@@ -858,6 +1034,9 @@ pub extern "C" fn constraint_value_get_value_type(constraint: *const ConstraintW
     release_string(value_type.name().to_owned())
 }
 
+/// Unwraps the <code>Constraint</code> instance as an `Or` constraint,
+/// and returns the <code>ConjunctionID</code>s of the conjunction in each of the branches.
+/// Will panic if the Constraint is not an Or constraint.
 #[no_mangle]
 pub extern "C" fn constraint_or_get_branches(constraint: *const ConstraintWithSpan) -> *mut ConjunctionIDIterator {
     let Constraint::Or { branches, .. } = &borrow(constraint).constraint else {
@@ -866,6 +1045,9 @@ pub extern "C" fn constraint_or_get_branches(constraint: *const ConstraintWithSp
     release(ConjunctionIDIterator(CIterator(box_stream(branches.clone().into_iter()))))
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Not` constraint,
+/// and returns the <code>ConjunctionID</code> of the negated conjunction.
+/// Will panic if the Constraint is not a Not constraint.
 #[no_mangle]
 pub extern "C" fn constraint_not_get_conjunction(constraint: *const ConstraintWithSpan) -> *mut ConjunctionID {
     let Constraint::Not { conjunction, .. } = &borrow(constraint).constraint else {
@@ -874,6 +1056,9 @@ pub extern "C" fn constraint_not_get_conjunction(constraint: *const ConstraintWi
     release(conjunction.clone())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `Try` constraint,
+/// and returns the <code>ConjunctionID</code> of the optionally matched conjunction.
+/// Will panic if the Constraint is not a Try constraint.
 #[no_mangle]
 pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWithSpan) -> *mut ConjunctionID {
     let Constraint::Try { conjunction, .. } = &borrow(constraint).constraint else {
@@ -944,33 +1129,12 @@ pub extern "C" fn constraint_vertex_as_named_role_get_name(vertex: *const Constr
     }
 }
 
-macro_rules! iterator_methods {
-    ($($type_prefix:ident $fun_prefix:ident)*) => {
-        paste! {$(
-            #[doc=concat!("Forwards the <code>" , stringify!([<$type_prefix Iterator>]), "</code> and returns the next <code>", stringify!($type_prefix), "</code> if it exists, or null if there are no more elements.")]
-            #[no_mangle]
-            pub extern "C" fn [<$fun_prefix _iterator_next>](it: *mut [<$type_prefix Iterator>]) -> *mut $type_prefix {
-                unsafe { iterator_next(addr_of_mut!((*it).0)) }
-            }
-
-            #[doc=concat!("Frees the native rust <code>", stringify!([<$type_prefix Iterator>]), "</code> object.")]
-            #[no_mangle]
-            pub extern "C" fn [<$fun_prefix _iterator_drop>](it: *mut [<$type_prefix Iterator>]) {
-                free(it);
-            }
-        )*}
-    };
-}
-
-iterator_methods! {
-    // Use and then copy expansion.
-}
-
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]
 #[no_mangle]
 pub extern "C" fn function_iterator_next(it: *mut FunctionIterator) -> *mut Function {
     unsafe { iterator_next(addr_of_mut!((*it).0)) }
 }
+
 #[doc = "Frees the native rust <code>FunctionIterator</code> object."]
 #[no_mangle]
 pub extern "C" fn function_iterator_drop(it: *mut FunctionIterator) {
@@ -988,6 +1152,7 @@ pub extern "C" fn conjunction_id_iterator_next(it: *mut ConjunctionIDIterator) -
 pub extern "C" fn conjunction_id_iterator_drop(it: *mut ConjunctionIDIterator) {
     free(it);
 }
+
 #[doc = "Forwards the <code>ConstraintWithSpanIterator</code> and returns the next <code>ConstraintWithSpan</code> if it exists, or null if there are no more elements."]
 #[no_mangle]
 pub extern "C" fn constraint_with_span_iterator_next(it: *mut ConstraintWithSpanIterator) -> *mut ConstraintWithSpan {
@@ -1082,22 +1247,6 @@ pub extern "C" fn variable_iterator_next(it: *mut VariableIterator) -> *mut Vari
 #[no_mangle]
 pub extern "C" fn variable_iterator_drop(it: *mut VariableIterator) {
     free(it);
-}
-
-macro_rules! drop_methods {
-    ($($type_name:ident $fun_prefix:ident)*) => {
-        paste! {$(
-            #[doc=concat!("Frees the native rust <code>", stringify!($type_name), "</code> object.")]
-            #[no_mangle]
-            pub extern "C" fn [<$fun_prefix _drop>](obj: *mut $type_name) {
-                free(obj);
-            }
-        )*}
-    };
-}
-
-drop_methods! {
-    // Use and then copy expansion.
 }
 
 #[doc = "Frees the native rust <code>AnalyzedQuery</code> object."]
