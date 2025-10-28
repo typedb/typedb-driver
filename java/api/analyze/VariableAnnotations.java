@@ -58,5 +58,4 @@ public interface VariableAnnotations {
      * @return the possible <code>ValueType</code>s of values this variable can hold.
      */
     Stream<String> asValue();
-
 }

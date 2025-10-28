@@ -33,7 +33,6 @@ java_library(
     ],
 )
 
-
 java_library(
     name = "functor-encoder",
     srcs = ["FunctorEncoder.java"],
