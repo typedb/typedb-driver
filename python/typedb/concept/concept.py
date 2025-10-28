@@ -128,7 +128,7 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
     def try_get_date(self) -> Optional[date]:
         if self.is_type() or not self.is_date():
             return None
-        return date.fromtimestamp(concept_get_date_as_seconds(self.native_object))
+        return Datetime.utcfromtimestamp(concept_get_date_as_seconds(self.native_object), 0).date
 
     def try_get_datetime(self) -> Optional[Datetime]:
         if self.is_type() or not self.is_datetime():
