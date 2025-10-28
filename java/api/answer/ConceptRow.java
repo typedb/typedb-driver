@@ -88,7 +88,7 @@ public interface ConceptRow {
     /**
      * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
      */
-    Stream<com.typedb.driver.jni.ConjunctionID> involvedBlocks();
+    Stream<com.typedb.driver.jni.ConjunctionID> involvedConjunctions();
 
     /**
      * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.

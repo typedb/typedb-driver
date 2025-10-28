@@ -137,15 +137,17 @@ Result<Option<&Concept>>
 concept_row.get_position(column_index)
 ----
 
-[#_struct_ConceptRow_get_involved_blocks_]
-==== get_involved_blocks
+[#_struct_ConceptRow_get_involved_conjunctions_]
+==== get_involved_conjunctions
 
 [source,rust]
 ----
-pub fn get_involved_blocks(&self) -> impl Iterator<Item = ConjunctionID> + '_
+pub fn get_involved_conjunctions(
+    &self,
+) -> impl Iterator<Item = ConjunctionID> + '_
 ----
 
-Retrieve the ``ConjunctionID``s of ``Conjunction`` that answered this row.
+Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
 
 [caption=""]
 .Returns
@@ -158,20 +160,20 @@ impl Iterator<Item = ConjunctionID> + '_
 .Code examples
 [source,rust]
 ----
-concept_row.get_involved_blocks()
+concept_row.get_involved_conjunctions()
 ----
 
-[#_struct_ConceptRow_get_involved_blocks_cloned_]
-==== get_involved_blocks_cloned
+[#_struct_ConceptRow_get_involved_conjunctions_cloned_]
+==== get_involved_conjunctions_cloned
 
 [source,rust]
 ----
-pub fn get_involved_blocks_cloned(
+pub fn get_involved_conjunctions_cloned(
     &self,
 ) -> impl Iterator<Item = ConjunctionID> + 'static
 ----
 
-Like ``ConceptRow::get_involved_blocks`` but clones the underlying data. Meant for simpler lifetimes over FFI.
+Like ``ConceptRow::get_involved_conjunctions`` but clones the underlying data. Meant for simpler lifetimes over FFI.
 
 [caption=""]
 .Returns
