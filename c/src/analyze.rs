@@ -270,7 +270,7 @@ pub extern "C" fn return_operation_variant(return_operation: *const ReturnOperat
 pub extern "C" fn return_operation_stream_variables(return_operation: *const ReturnOperation) -> *mut VariableIterator {
     match borrow(return_operation) {
         ReturnOperation::Stream { variables, .. } => {
-            release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
+            release(VariableIterator(CIterator(box_stream(variables.clone().into_iter()))))
         }
         _ => unreachable!("Expected ReturnOperation to be Stream"),
     }
@@ -282,7 +282,7 @@ pub extern "C" fn return_operation_stream_variables(return_operation: *const Ret
 pub extern "C" fn return_operation_single_variables(return_operation: *const ReturnOperation) -> *mut VariableIterator {
     match borrow(return_operation) {
         ReturnOperation::Single { variables, .. } => {
-            release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
+            release(VariableIterator(CIterator(box_stream(variables.clone().into_iter()))))
         }
         _ => unreachable!("Expected ReturnOperation to be Single"),
     }
@@ -304,7 +304,7 @@ pub extern "C" fn return_operation_single_selector(return_operation: *const Retu
 pub extern "C" fn return_operation_reducers(return_operation: *const ReturnOperation) -> *mut ReducerIterator {
     match borrow(return_operation) {
         ReturnOperation::Reduce { reducers } => {
-            release(ReducerIterator(CIterator(box_stream(reducers.iter().cloned()))))
+            release(ReducerIterator(CIterator(box_stream(reducers.clone().into_iter()))))
         }
         _ => unreachable!("Expected ReturnOperation to be Reducer"),
     }
@@ -328,7 +328,7 @@ pub extern "C" fn function_return_annotations(function: *const Function) -> *mut
 /// Returns an iterator over the stages making up the <code>Pipeline</code>
 #[no_mangle]
 pub extern "C" fn pipeline_stages(pipeline: *const Pipeline) -> *mut PipelineStageIterator {
-    release(PipelineStageIterator(CIterator(box_stream(borrow(pipeline).stages.iter().cloned()))))
+    release(PipelineStageIterator(CIterator(box_stream(borrow(pipeline).stages.clone().into_iter()))))
 }
 
 // Stage field accessors
@@ -376,7 +376,7 @@ pub extern "C" fn pipeline_stage_get_block(stage: *const PipelineStage) -> *mut 
 #[no_mangle]
 pub extern "C" fn pipeline_stage_delete_get_deleted_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Delete { deleted_variables, .. } = borrow(stage) else { unreachable!("Expected Delete stage") };
-    release(VariableIterator(CIterator(box_stream(deleted_variables.iter().cloned()))))
+    release(VariableIterator(CIterator(box_stream(deleted_variables.clone().into_iter()))))
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Select stage, and returns the variables selected.
@@ -384,7 +384,7 @@ pub extern "C" fn pipeline_stage_delete_get_deleted_variables(stage: *const Pipe
 #[no_mangle]
 pub extern "C" fn pipeline_stage_select_get_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Select { variables, .. } = borrow(stage) else { unreachable!("Expected Select stage") };
-    release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
+    release(VariableIterator(CIterator(box_stream(variables.clone().into_iter()))))
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Require stage, and returns the required variables.
@@ -392,7 +392,7 @@ pub extern "C" fn pipeline_stage_select_get_variables(stage: *const PipelineStag
 #[no_mangle]
 pub extern "C" fn pipeline_stage_require_get_variables(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Require { variables, .. } = borrow(stage) else { unreachable!("Expected Require stage") };
-    release(VariableIterator(CIterator(box_stream(variables.iter().cloned()))))
+    release(VariableIterator(CIterator(box_stream(variables.clone().into_iter()))))
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as an Offset stage, and returns the offset applied.
@@ -416,7 +416,7 @@ pub extern "C" fn pipeline_stage_limit_get_limit(stage: *const PipelineStage) ->
 #[no_mangle]
 pub extern "C" fn pipeline_stage_sort_get_sort_variables(stage: *const PipelineStage) -> *mut SortVariableIterator {
     let PipelineStage::Sort { variables, .. } = borrow(stage) else { unreachable!("Expected Sort stage") };
-    release(SortVariableIterator(CIterator(box_stream(variables.iter().cloned()))))
+    release(SortVariableIterator(CIterator(box_stream(variables.clone().into_iter()))))
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Reduce stage, and returns the variables being grouped on.
@@ -424,7 +424,7 @@ pub extern "C" fn pipeline_stage_sort_get_sort_variables(stage: *const PipelineS
 #[no_mangle]
 pub extern "C" fn pipeline_stage_reduce_get_groupby(stage: *const PipelineStage) -> *mut VariableIterator {
     let PipelineStage::Reduce { groupby, .. } = borrow(stage) else { unreachable!("Expected Reduce stage") };
-    release(VariableIterator(CIterator(box_stream(groupby.iter().cloned()))))
+    release(VariableIterator(CIterator(box_stream(groupby.clone().into_iter()))))
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Reduce stage,
@@ -435,7 +435,7 @@ pub extern "C" fn pipeline_stage_reduce_get_reducer_assignments(
     stage: *const PipelineStage,
 ) -> *mut ReduceAssignmentIterator {
     let PipelineStage::Reduce { reducers, .. } = borrow(stage) else { unreachable!("Expected Reduce stage") };
-    release(ReduceAssignmentIterator(CIterator(box_stream(reducers.iter().cloned()))))
+    release(ReduceAssignmentIterator(CIterator(box_stream(reducers.clone().into_iter()))))
 }
 
 /// Returns the variable being sorted on.
@@ -475,7 +475,7 @@ pub extern "C" fn reducer_get_name(reducer: *const Reducer) -> *mut c_char {
 /// e.g. `$x` in <code>sum($x)</code>
 #[no_mangle]
 pub extern "C" fn reducer_get_arguments(reducer: *const Reducer) -> *mut VariableIterator {
-    release(VariableIterator(CIterator(box_stream(borrow(reducer).arguments.iter().cloned()))))
+    release(VariableIterator(CIterator(box_stream(borrow(reducer).arguments.clone().into_iter()))))
 }
 
 /// Returns the name of the specified variable if it has one, and null otherwise.
@@ -917,7 +917,7 @@ pub extern "C" fn constraint_expression_get_arguments(
     let Constraint::Expression { arguments, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Expression");
     };
-    release(ConstraintVertexIterator(CIterator(box_stream(arguments.iter().cloned()))))
+    release(ConstraintVertexIterator(CIterator(box_stream(arguments.clone().into_iter()))))
 }
 
 /// Unwraps the <code>Constraint</code> instance as an `Is` constraint,
