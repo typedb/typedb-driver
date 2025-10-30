@@ -268,7 +268,7 @@ public abstract class FunctorEncoder {
                 case CheckReturn:
                     return makeFunctor("Check");
                 case ReduceReturn:
-                    return makeFunctor("Single", encodeList(returnOperation.asReduce().reducers().map(this::encode)));
+                    return makeFunctor("Reducer", encodeList(returnOperation.asReduce().reducers().map(this::encode)));
                 default:
                     throw new IllegalArgumentException("Unhandled return operation variant", null);
             }

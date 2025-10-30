@@ -36,6 +36,7 @@ from typedb.native_driver_wrapper import (
     return_operation_single_variables,
     return_operation_reducers,
 
+    reducer_iterator_next,
     variable_iterator_next,
     variable_annotations_iterator_next,
 )
@@ -47,6 +48,7 @@ from typedb.api.analyze.function import (
 
 from typedb.analyze.pipeline import _Pipeline
 from typedb.analyze.variable_annotations import _VariableAnnotations
+from typedb.analyze.reducer import _Reducer
 
 if TYPE_CHECKING:
     from typedb.api.analyze.pipeline import Pipeline
@@ -188,4 +190,5 @@ class _ReturnOperationReduce(_ReturnOperation, ReturnOperationReduce):
         return self
 
     def reducers(self) -> Iterator["Reducer"]:
-        raise NotImplementedError
+        iterator = IteratorWrapper(return_operation_reducers(self.native_object), reducer_iterator_next)
+        return map(_Reducer, iterator)

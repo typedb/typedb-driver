@@ -185,7 +185,7 @@ def _encode_sort_variable(self, encoder: FunctorEncoder) -> str:
     return encoder.make_functor(order, self.variable().encode_as_functor(encoder))
 
 
-def _encode_reduce_assignment(self, encoder: FunctorEncoder) -> str:
+def _encode_reduce_assignment(self: ReduceStage.ReduceAssignment, encoder: FunctorEncoder) -> str:
     return encoder.make_functor(
         "ReduceAssign",
         self.assigned().encode_as_functor(encoder),
@@ -193,7 +193,7 @@ def _encode_reduce_assignment(self, encoder: FunctorEncoder) -> str:
     )
 
 
-def _encode_reducer(self, encoder: FunctorEncoder) -> str:
+def _encode_reducer(self: Reducer, encoder: FunctorEncoder) -> str:
     return encoder.make_functor("Reducer", self.name(), self.arguments())
 
 
