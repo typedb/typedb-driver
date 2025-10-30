@@ -96,7 +96,6 @@ dir_mapping = {
     "ValueGroup.adoc": "answer",
     "Promise.adoc": "answer",
     "Concept.adoc": "concept",
-    ".DS_Store": "concept",
     "TypeDB.adoc": "connection",
     "DriverOptions.adoc": "connection",
     "Credentials.adoc": "connection",

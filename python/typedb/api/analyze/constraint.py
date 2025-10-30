@@ -54,6 +54,11 @@ from typedb.native_driver_wrapper import (
     GreaterOrEqual as NativeGreaterOrEqual,
     Like as NativeLike,
     Contains as NativeContains,
+
+    Entity as NativeEntity,
+    Relation as NativeRelation,
+    Attribute as NativeAttribute,
+    Role as NativeRole,
 )
 
 if TYPE_CHECKING:
@@ -98,6 +103,14 @@ class ConstraintVariant(IntEnum):
     Or = NativeOr
     Not = NativeNot
     Try = NativeTry
+
+class KindVariant(IntEnum):
+    Entity = NativeEntity
+    Relation = NativeRelation
+    Attribute = NativeAttribute
+    Role = NativeRole
+
+
 
 
 class Constraint(ABC):
