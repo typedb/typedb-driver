@@ -14,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import sys
 
 from behave import *
 from hamcrest import *
@@ -34,6 +33,7 @@ def step_impl(context: Context):
     context.analyzed = None
     context.analyzed = context.tx().analyze(context.text).resolve()
 
+
 @step("typeql analyze{may_error:MayError}")
 def step_impl(context, may_error: MayError):
     may_error.check(lambda: context.tx().analyze(context.text).resolve())
@@ -48,6 +48,7 @@ def step_impl(context: Context):
         is_(equal_to(normalize_functor_for_compare(context.text)))
     )
 
+
 @step("analyzed query preamble contains")
 def step_impl(context):
     expected_functor = normalize_functor_for_compare(context.text)
@@ -57,6 +58,7 @@ def step_impl(context):
     ]
     preamble_functors = [normalize_functor_for_compare(f) for f in preamble_functors_unnormalized]
     assert_that(preamble_functors, has_item(expected_functor))
+
 
 @step("analyzed query pipeline annotations are")
 def step_impl(context):
