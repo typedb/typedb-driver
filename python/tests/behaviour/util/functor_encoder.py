@@ -37,7 +37,12 @@ class FunctorEncoder:
         return f"{name}({args})"
 
     def _may_encode(self, e: any) -> str:
-        return e if isinstance(e, str) else e.encode_as_functor(self)
+        if isinstance(e, str):
+            return e
+        elif isinstance(e, list) or isinstance(e, map):
+            return self.encode_as_list(e)
+        else:
+            return e.encode_as_functor(self)
 
     def encode_as_list(self, elements: Iterable[any]) -> str:
         return "[" + ", ".join(map(self._may_encode, elements)) + "]"
@@ -108,14 +113,11 @@ def _encode_constraint(constraint: Constraint, encoder: FunctorEncoder) -> str:
 
     elif constraint.is_function_call():
         fc = constraint.as_function_call()
-        assigned = encoder.encode_as_list(fc.assigned())
-        args = encoder.encode_as_list(fc.arguments())
-        return encoder.make_functor("FunctionCall", fc.name(), assigned, args)
+        return encoder.make_functor("FunctionCall", fc.name(), fc.assigned(), fc.arguments())
 
     elif constraint.is_expression():
         ex = constraint.as_expression()
-        args = encoder.encode_as_list(ex.arguments())
-        return encoder.make_functor("Expression", ex.text(), ex.assigned(), args)
+        return encoder.make_functor("Expression", ex.text(), ex.assigned(), ex.arguments())
 
     elif constraint.is_is():
         is_ = constraint.as_is()
@@ -145,8 +147,7 @@ def _encode_constraint(constraint: Constraint, encoder: FunctorEncoder) -> str:
 
     elif constraint.is_or():
         or_ = constraint.as_or()
-        branches = encoder.encode_as_list(or_.branches())
-        return encoder.make_functor("Or", branches)
+        return encoder.make_functor("Or", or_.branches())
 
     elif constraint.is_not():
         not_ = constraint.as_not()
@@ -191,27 +192,22 @@ def _encode_reduce_assignment(self, encoder: FunctorEncoder) -> str:
 
 
 def _encode_reducer(self, encoder: FunctorEncoder) -> str:
-    args = encoder.encode_as_list(self.arguments())
-    return encoder.make_functor("Reducer", self.name(), args)
+    return encoder.make_functor("Reducer", self.name(), self.arguments())
 
 
 def _encode_pipeline_stage(self: PipelineStage, encoder: FunctorEncoder) -> str:
     variant = self.variant()
     name = variant.name
     if variant in [PipelineStageVariant.Match, PipelineStageVariant.Insert, PipelineStageVariant.Put, PipelineStageVariant.Update]:
-        return encoder.make_functor(name, _encode_conjunction_id(self.block(), encoder))
+        return encoder.make_functor(name, self.block())
     elif variant == PipelineStageVariant.Delete:
-        deleted_vars = encoder.encode_as_list(self.as_delete().deleted_variables())
-        block = self.as_delete().block().encode_as_functor(encoder)
-        return encoder.make_functor(name, deleted_vars, block)
+        return encoder.make_functor(name, self.as_delete().deleted_variables(), self.as_delete().block())
     elif variant == PipelineStageVariant.Select:
-        vars_ = encoder.encode_as_list(self.as_select().variables())
-        return encoder.make_functor(name, vars_)
+        return encoder.make_functor(name, self.as_select().variables())
     elif variant == PipelineStageVariant.Sort:
-        return encoder.make_functor(name, encoder.encode_as_list(self.as_sort().variables()))
+        return encoder.make_functor(name, self.as_sort().variables())
     elif variant == PipelineStageVariant.Require:
-        vars_ = encoder.encode_as_list(self.as_require().variables())
-        return encoder.make_functor(name, vars_)
+        return encoder.make_functor(name, self.as_require().variables())
     elif variant == PipelineStageVariant.Offset:
         return encoder.make_functor(name, str(self.as_offset().offset()))
     elif variant == PipelineStageVariant.Limit:
@@ -219,27 +215,23 @@ def _encode_pipeline_stage(self: PipelineStage, encoder: FunctorEncoder) -> str:
     elif variant == PipelineStageVariant.Distinct:
         return encoder.make_functor(name)
     elif variant == PipelineStageVariant.Reduce:
-        reduce_assignments = encoder.encode_as_list(self.as_reduce().reduce_assignments())
-        group_by = encoder.encode_as_list(self.as_reduce().group_by())
-        return encoder.make_functor(name, reduce_assignments, group_by)
+        return encoder.make_functor(name, self.as_reduce().reduce_assignments(), self.as_reduce().group_by())
 
 
 def _encode_pipeline(self: Pipeline, encoder: FunctorEncoder) -> str:
-    stages = encoder.encode_as_list(self.stages())
-    return encoder.make_functor("Pipeline", stages)
+    return encoder.make_functor("Pipeline", self.stages())
 
 
 def _encode_return_operation(self: ReturnOperation, encoder: FunctorEncoder) -> str:
     variant = self.variant()
     if variant == ReturnOperationVariant.StreamReturn:
-        return encoder.make_functor("Stream", encoder.encode_as_list(self.as_stream().variables()))
+        return encoder.make_functor("Stream", self.as_stream().variables())
     elif variant == ReturnOperationVariant.SingleReturn:
-        return encoder.make_functor("Single", self.as_single().selector(),
-                             encoder.encode_as_list(self.as_single().variables()))
+        return encoder.make_functor("Single", self.as_single().selector(), self.as_single().variables())
     elif variant == ReturnOperationVariant.CheckReturn:
         return encoder.make_functor("Check", "")
     elif variant == ReturnOperationVariant.ReduceReturn:
-        return encoder.make_functor("Reduce", encoder.encode_as_list(self.as_reduce().reducers()))
+        return encoder.make_functor("Reduce", self.as_reduce().reducers())
     else:
         raise Exception(f"Unknown return-operation variant: " + variant.name)
 
@@ -247,9 +239,9 @@ def _encode_return_operation(self: ReturnOperation, encoder: FunctorEncoder) -> 
 def _encode_function(self: Function, encoder: FunctorEncoder) -> str:
     return encoder.make_functor(
         "Function",
-        encoder.encode_as_list(self.argument_variables()),
-        self.return_operation().encode_as_functor(encoder),
-        self.body().encode_as_functor(encoder)
+        self.argument_variables(),
+        self.return_operation(),
+        self.body()
     )
 
 
@@ -259,11 +251,11 @@ def _encode_type(self: Type, encoder: FunctorEncoder) -> str:
 
 def _encode_variable_annotations(self: VariableAnnotations, encoder: FunctorEncoder) -> str:
     if self.is_instance():
-        return encoder.make_functor("Instance", encoder.encode_as_list(self.as_instance()))
+        return encoder.make_functor("Instance", self.as_instance())
     elif self.is_type():
-        return encoder.make_functor("Type", encoder.encode_as_list(self.as_type()))
+        return encoder.make_functor("Type", self.as_type())
     elif self.is_value():
-        return encoder.make_functor("Value", encoder.encode_as_list(self.as_value()))
+        return encoder.make_functor("Value", self.as_value())
     else:
         raise Exception(f"Unknown VariableAnnoations variant: " + self.variant().name)
 
@@ -271,7 +263,7 @@ def _encode_variable_annotations(self: VariableAnnotations, encoder: FunctorEnco
 def _encode_subpattern_annotations(self: Constraint, encoder: FunctorEncoder) -> str:
     if self.is_or():
         branches = [_encode_conjunction_annotations(branch, encoder) for branch in self.as_or().branches()]
-        return encoder.make_functor("Or", encoder.encode_as_list(branches))
+        return encoder.make_functor("Or", branches)
     elif self.is_not():
         inner_annotations = _encode_conjunction_annotations(self.as_not().conjunction(), encoder)
         return encoder.make_functor("Not", inner_annotations)
@@ -294,7 +286,7 @@ def _encode_conjunction_annotations(self: "ConjunctionID", encoder: FunctorEncod
     return encoder.make_functor(
         "And",
         encoder.encode_as_map(((k, v) for (k, v) in trunk_annotations)),
-        encoder.encode_as_list((s for s in subpattern_annotations))
+        subpattern_annotations
     )
 
 
@@ -333,6 +325,10 @@ def _encode_fetch_annotations(self: Fetch, encoder: FunctorEncoder) -> str:
         raise Exception(f"Unknown fetch variant: " + self.variant().name)
 
 
+def _encode_iterator_wrapper(self: "IteratorWrapper", encoder: FunctorEncoder) -> str:
+    return encoder.encode_as_list(e for e in self)
+
+
 # When this file is imported, we inject the encode_as_functor implementations
 def monkey_patch_all():
     import typedb
@@ -345,13 +341,15 @@ def monkey_patch_all():
     Pipeline.encode_as_functor = _encode_pipeline
     PipelineStage.encode_as_functor = _encode_pipeline_stage
     ReturnOperation.encode_as_functor = _encode_return_operation
-    typedb.native_driver_wrapper.ConjunctionID.encode_as_functor = _encode_conjunction_id
     ReduceStage.ReduceAssignment.encode_as_functor = _encode_reduce_assignment
     Reducer.encode_as_functor = _encode_reducer
     SortStage.SortVariable.encode_as_functor = _encode_sort_variable
     Type.encode_as_functor = _encode_type
-    typedb.native_driver_wrapper.Variable.encode_as_functor = _encode_variable
     VariableAnnotations.encode_as_functor = _encode_variable_annotations
+
+    typedb.native_driver_wrapper.ConjunctionID.encode_as_functor = _encode_conjunction_id
+    typedb.common.iterator_wrapper.IteratorWrapper.encode_as_functor = _encode_iterator_wrapper
+    typedb.native_driver_wrapper.Variable.encode_as_functor = _encode_variable
 
 
 monkey_patch_all()
