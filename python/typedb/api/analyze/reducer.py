@@ -15,25 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+from __future__ import annotations
 
-package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Iterator
 
-py_library(
-    name = "steps",
-    srcs = ["query_steps.py"],
-    deps = [],
-)
+if TYPE_CHECKING:
+    pass
 
-py_library(
-    name = "analyze_steps",
-    srcs = ["analyze_steps.py"],
-    deps = ["//python/tests/behaviour/util:functor-encoder"],
-)
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
-)
+class Reducer(ABC):
+    """
+    Representation of a reducer used either in a PipelineStage::Reduce or in a function's ReturnOperation.
+    """
+
+    @abstractmethod
+    def name(self) -> str:
+        """The reduce operation applied (e.g. 'sum', 'count')."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def arguments(self) -> Iterator["Variable"]:
+        """The arguments to the reducer."""
+        raise NotImplementedError

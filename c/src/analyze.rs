@@ -141,9 +141,9 @@ enum VariableAnnotationsVariant {
 
 #[repr(C)]
 enum FetchVariant {
-    Leaf,
-    List,
-    Object,
+    LeafDocument,
+    ListDocument,
+    ObjectDocument,
 }
 
 /// Waits for and returns the result of the Analyze request.
@@ -182,9 +182,9 @@ pub extern "C" fn analyzed_fetch(analyzed_query: *const AnalyzedQuery) -> *mut F
 #[no_mangle]
 pub extern "C" fn fetch_variant(fetch: *const Fetch) -> FetchVariant {
     match borrow(fetch) {
-        Fetch::List(_) => FetchVariant::List,
-        Fetch::Leaf(_) => FetchVariant::Leaf,
-        Fetch::Object(_) => FetchVariant::Object,
+        Fetch::List(_) => FetchVariant::ListDocument,
+        Fetch::Leaf(_) => FetchVariant::LeafDocument,
+        Fetch::Object(_) => FetchVariant::ObjectDocument,
     }
 }
 

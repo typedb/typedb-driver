@@ -28,10 +28,11 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
-from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
-    transaction_commit, \
-    transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
-    query_answer_promise_resolve, \
+from typedb.analyze.analyzed_query import _AnalyzedQuery
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
+    transaction_analyze, transaction_query, \
+    transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
+    query_answer_promise_resolve, analyzed_query_promise_resolve, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 if TYPE_CHECKING:
@@ -64,6 +65,11 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
     @property
     def options(self) -> TransactionOptions:
         return self._options
+
+    def analyze(self, query: str) -> Promise[AnalyzedQuery]:
+        require_non_null(query, "query")
+        promise = transaction_analyze(self.native_object, query)
+        return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
     def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")

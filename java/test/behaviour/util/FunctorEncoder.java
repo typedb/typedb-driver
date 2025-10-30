@@ -367,11 +367,11 @@ public abstract class FunctorEncoder {
 
         public String encode(Fetch fetch) {
             switch (fetch.variant()) {
-                case Leaf:
+                case LeafDocument:
                     return FunctorEncoder.encodeList(fetch.asLeaf().annotations());
-                case List:
+                case ListDocument:
                     return FunctorEncoder.makeFunctor("List", encode(fetch.asList().element()));
-                case Object:
+                case ObjectDocument:
                     Stream<String> fields = fetch.asObject().keys().map(field -> field + ":" + encode(fetch.asObject().get(field)));
                     return "{" + fields.sorted().collect(Collectors.joining(",")) + "}";
                 default:

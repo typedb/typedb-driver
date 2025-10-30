@@ -20,6 +20,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import date
 from decimal import Decimal
+from enum import Enum
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
 from typedb.common.datetime import Datetime
@@ -38,6 +39,12 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.type import Type
     from typedb.api.concept.value.value import Value
 
+class KindVariant(Enum):
+    from typedb import native_driver_wrapper
+    Entity = native_driver_wrapper.Entity
+    Relation = native_driver_wrapper.Relation
+    Attribute = native_driver_wrapper.Attribute
+    Role = native_driver_wrapper.Role
 
 class Concept(ABC):
     STRUCT = Dict[str, Optional["Value"]]
