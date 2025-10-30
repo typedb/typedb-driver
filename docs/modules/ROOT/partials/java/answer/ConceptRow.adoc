@@ -141,5 +141,19 @@ Retrieves the executed query's type of this ``ConceptRow``. Shared between all t
 conceptRow.getQueryType();
 ----
 
+[#_ConceptRow_involvedConjunctions_]
+==== involvedConjunctions
+
+[source,java]
+----
+java.util.stream.Stream<com.typedb.driver.jni.ConjunctionID> involvedConjunctions()
+----
+
+Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.typedb.driver.jni.ConjunctionID>`
+
 // end::methods[]
 

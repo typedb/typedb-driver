@@ -1,0 +1,11 @@
+[#_Function_ReturnOperation_Check]
+=== Function.ReturnOperation.Check
+
+*Package*: `com.typedb.driver.api.analyze`
+
+*Superinterfaces:*
+
+* `Function.ReturnOperation`
+
+Indicates the function returns a boolean - true if the body had answers, false otherwise. e.g. ``return check;``
+

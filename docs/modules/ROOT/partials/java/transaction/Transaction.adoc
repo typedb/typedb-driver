@@ -8,6 +8,39 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
+[#_Transaction_analyze_java_lang_String]
+==== analyze
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends AnalyzedQuery> analyze​(java.lang.String query)
+                                  throws TypeDBDriverException
+----
+
+Analayze a TypeQL query in this transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to analyze. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends AnalyzedQuery>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.analyze("match $x isa person;");
+----
+
 [#_Transaction_close_]
 ==== close
 

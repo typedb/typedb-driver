@@ -15,8 +15,8 @@ Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a f
 [options="header"]
 |===
 |Name |Type |Description
-a| `arguments` a| `Vec<Variable>` a| 
-a| `reducer` a| `String` a| 
+a| `arguments` a| `Vec<Variable>` a| The arguments to the reducer.
+a| `reducer` a| `String` a| The reduce operation applied
 |===
 // end::properties[]
 

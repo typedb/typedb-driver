@@ -216,7 +216,7 @@ impl TryFromProto<conjunction_proto::constraint::Constraint> for Constraint {
             ConstraintProto::Try(constraint_proto::Try { conjunction }) => {
                 Constraint::Try { conjunction: ConjunctionID(conjunction as usize) }
             }
-            ConstraintProto::Isa(constraint_proto::Isa { thing: instance, r#type, exactness }) => {
+            ConstraintProto::Isa(constraint_proto::Isa { instance, r#type, exactness }) => {
                 let exactness_proto = enum_from_proto::<constraint_proto::ConstraintExactness>(exactness)?;
                 Constraint::Isa {
                     instance: expect_try_from_proto(instance, "structure_constraint::Isa.instance")?,
@@ -413,7 +413,7 @@ impl TryFromProto<conjunction_proto::variable_annotations::Annotations> for Type
     fn try_from_proto(proto: conjunction_proto::variable_annotations::Annotations) -> Result<Self> {
         use conjunction_proto::variable_annotations::Annotations as AnnotationsProto;
         Ok(match proto {
-            AnnotationsProto::Thing(types) => Self::Thing(vec_from_proto(types.types)?),
+            AnnotationsProto::Instance(types) => Self::Instance(vec_from_proto(types.types)?),
             AnnotationsProto::Type(types) => Self::Type(vec_from_proto(types.types)?),
             AnnotationsProto::ValueAnnotations(value_type) => {
                 let value_type_proto = value_type.value_type.ok_or_else(|| {

@@ -1,0 +1,66 @@
+[#_Fetch]
+=== Fetch
+
+*Package*: `com.typedb.driver.api.analyze`
+
+A representation of the 'fetch' stage of a query
+
+// tag::methods[]
+[#_Fetch_asLeaf_]
+==== asLeaf
+
+[source,java]
+----
+Fetch.FetchLeaf asLeaf()
+----
+
+Down-casts this ``Fetch`` as a ``FetchLeaf`` variant
+
+[caption=""]
+.Returns
+`Fetch.FetchLeaf`
+
+[#_Fetch_asList_]
+==== asList
+
+[source,java]
+----
+Fetch.FetchList asList()
+----
+
+Down-casts this ``Fetch`` as a ``FetchList`` variant
+
+[caption=""]
+.Returns
+`Fetch.FetchList`
+
+[#_Fetch_asObject_]
+==== asObject
+
+[source,java]
+----
+Fetch.FetchObject asObject()
+----
+
+Down-casts this ``Fetch`` as a ``FetchObject`` variant
+
+[caption=""]
+.Returns
+`Fetch.FetchObject`
+
+[#_Fetch_variant_]
+==== variant
+
+[source,java]
+----
+com.typedb.driver.jni.FetchVariant variant()
+----
+
+
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.FetchVariant`
+
+// end::methods[]
+

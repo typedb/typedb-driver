@@ -1,0 +1,11 @@
+[#_PipelineStage_DistinctStage]
+=== PipelineStage.DistinctStage
+
+*Package*: `com.typedb.driver.api.analyze`
+
+*Superinterfaces:*
+
+* `PipelineStage`
+
+Represents a "distinct" stage
+

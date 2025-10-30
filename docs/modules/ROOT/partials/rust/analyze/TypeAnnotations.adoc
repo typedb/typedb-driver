@@ -10,7 +10,7 @@ The category of a variable, and the possible types determined by type-inference.
 [options="header"]
 |===
 |Variant
-a| `Thing(Vec<Type>)`
+a| `Instance(Vec<Type>)`
 a| `Type(Vec<Type>)`
 a| `Value(ValueType)`
 |===

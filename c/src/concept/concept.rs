@@ -161,8 +161,8 @@ pub extern "C" fn string_and_opt_value_drop(string_and_opt_value: *mut StringAnd
 /// If this is an Entity or Relation Instance, returns the IID of the instance.
 /// Otherwise, returns null.
 #[no_mangle]
-pub extern "C" fn concept_try_get_iid(thing: *mut Concept) -> *mut c_char {
-    release_optional_string(borrow(thing).try_get_iid().map(|iid| iid.to_string()))
+pub extern "C" fn concept_try_get_iid(instance: *mut Concept) -> *mut c_char {
+    release_optional_string(borrow(instance).try_get_iid().map(|iid| iid.to_string()))
 }
 
 /// Retrieves the label of this <code>Concept</code>.

@@ -86,6 +86,11 @@ public interface ConceptRow {
     Optional<Concept> getIndex(long columnIndex) throws TypeDBDriverException;
 
     /**
+     * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
+     */
+    Stream<com.typedb.driver.jni.ConjunctionID> involvedConjunctions();
+
+    /**
      * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.
      *
      * <h3>Examples</h3>

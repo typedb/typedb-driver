@@ -17,6 +17,7 @@
  * under the License.
  */
 
+mod analyze;
 mod answer;
 mod common;
 mod concept;

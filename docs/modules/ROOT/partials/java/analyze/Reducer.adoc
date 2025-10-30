@@ -1,0 +1,38 @@
+[#_Reducer]
+=== Reducer
+
+*Package*: `com.typedb.driver.api.analyze`
+
+Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.
+
+// tag::methods[]
+[#_Reducer_arguments_]
+==== arguments
+
+[source,java]
+----
+java.util.stream.Stream<com.typedb.driver.jni.Variable> arguments()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+
+[#_Reducer_name_]
+==== name
+
+[source,java]
+----
+java.lang.String name()
+----
+
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+// end::methods[]
+

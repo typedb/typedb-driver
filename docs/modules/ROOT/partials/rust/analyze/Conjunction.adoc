@@ -15,8 +15,8 @@ A representation of the constraints involved in the query, and types inferred fo
 [options="header"]
 |===
 |Name |Type |Description
-a| `constraints` a| `Vec<ConstraintWithSpan>` a| 
-a| `variable_annotations` a| `HashMap<Variable, VariableAnnotations>` a| 
+a| `constraints` a| `Vec<ConstraintWithSpan>` a| The ``Constraint``s in the conjunction.
+a| `variable_annotations` a| `HashMap<Variable, VariableAnnotations>` a| The annotations of each variable in the conjunction.
 |===
 // end::properties[]
 

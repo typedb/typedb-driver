@@ -70,7 +70,7 @@
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "9d446848f69867b5d921793e6a7c77f8e035b150"
+		rev = "0cb7cd66f3e4f65a9a313a9eeaa7b3472fe41e0a"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
