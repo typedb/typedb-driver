@@ -32,9 +32,9 @@ class Reducer(ABC):
     @abstractmethod
     def name(self) -> str:
         """The reduce operation applied (e.g. 'sum', 'count')."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def arguments(self) -> Iterator["Variable"]:
         """The arguments to the reducer."""
-        raise NotImplementedError
+        pass

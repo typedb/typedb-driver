@@ -39,6 +39,7 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint import Constraint
     from typedb.api.analyze.variable_annotations import VariableAnnotations
+    from typedb.native_driver_wrapper import Variable
 
 class _Conjunction(Conjunction, NativeWrapper[NativeConjunction]):
     @property

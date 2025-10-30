@@ -40,6 +40,7 @@ from python.typedb.concept import concept_factory
 if TYPE_CHECKING:
     from typedb.api.concept.type import Type
     from typedb.api.concept.value import Value
+    from typedb.native_driver_wrapper import Variable
 
 
 class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex]):

@@ -37,7 +37,7 @@ class Conjunction(ABC):
 
         :return: an iterator over constraints
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def annotated_variables(self) -> Iterator["Variable"]:
@@ -46,7 +46,7 @@ class Conjunction(ABC):
 
         :return: an iterator over annotated variables
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def variable_annotations(self, variable: "Variable") -> "VariableAnnotations":
@@ -56,4 +56,4 @@ class Conjunction(ABC):
         :param variable: the variable to get annotations for
         :return: the variable's annotations
         """
-        raise NotImplementedError
+        pass

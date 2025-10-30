@@ -48,34 +48,34 @@ class Fetch(ABC):
 
         :return: fetch variant
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_leaf(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_list(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_object(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_leaf(self) -> "FetchLeaf":
         """Down-casts this Fetch as a FetchLeaf variant."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_list(self) -> "FetchList":
         """Down-casts this Fetch as a FetchList variant."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_object(self) -> "FetchObject":
         """Down-casts this Fetch as a FetchObject variant."""
-        raise NotImplementedError
+        pass
 
 
 class FetchObject(Fetch, ABC):
@@ -84,12 +84,12 @@ class FetchObject(Fetch, ABC):
     @abstractmethod
     def keys(self) -> Iterator[str]:
         """The available keys of this Fetch document."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get(self, key: str) -> "Fetch":
         """The Fetch object for the given key."""
-        raise NotImplementedError
+        pass
 
 
 class FetchList(Fetch, ABC):
@@ -98,7 +98,7 @@ class FetchList(Fetch, ABC):
     @abstractmethod
     def element(self) -> "Fetch":
         """The element type of the list."""
-        raise NotImplementedError
+        pass
 
 
 class FetchLeaf(Fetch, ABC):
@@ -107,4 +107,4 @@ class FetchLeaf(Fetch, ABC):
     @abstractmethod
     def annotations(self) -> Iterator[str]:
         """The possible ValueType(s) as strings."""
-        raise NotImplementedError
+        pass

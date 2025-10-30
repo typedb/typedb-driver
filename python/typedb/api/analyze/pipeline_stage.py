@@ -70,105 +70,105 @@ class PipelineStage(ABC):
     @abstractmethod
     def variant(self) -> PipelineStageVariant:
         """Return the pipeline stage variant."""
-        raise NotImplementedError
+        pass
 
     # Type check methods
     @abstractmethod
     def is_match(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_insert(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_put(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_update(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_delete(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_select(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_sort(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_require(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_offset(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_limit(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_distinct(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_reduce(self) -> bool:
-        raise NotImplementedError
+        pass
 
     # Conversion / downcast methods
     @abstractmethod
     def as_match(self) -> "PipelineStage.MatchStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_insert(self) -> "PipelineStage.InsertStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_put(self) -> "PipelineStage.PutStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_update(self) -> "PipelineStage.UpdateStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_delete(self) -> "PipelineStage.DeleteStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_select(self) -> "PipelineStage.SelectStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_sort(self) -> "PipelineStage.SortStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_require(self) -> "PipelineStage.RequireStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_offset(self) -> "PipelineStage.OffsetStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_limit(self) -> "PipelineStage.LimitStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_distinct(self) -> "PipelineStage.DistinctStage":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_reduce(self) -> "PipelineStage.ReduceStage":
-        raise NotImplementedError
+        pass
 
 
 class MatchStage(PipelineStage, ABC):
@@ -177,7 +177,7 @@ class MatchStage(PipelineStage, ABC):
     @abstractmethod
     def block(self) -> "ConjunctionID":
         """The index into Pipeline.conjunctions."""
-        raise NotImplementedError
+        pass
 
 
 class InsertStage(PipelineStage, ABC):
@@ -185,7 +185,7 @@ class InsertStage(PipelineStage, ABC):
 
     @abstractmethod
     def block(self) -> "ConjunctionID":
-        raise NotImplementedError
+        pass
 
 
 class PutStage(PipelineStage, ABC):
@@ -193,7 +193,7 @@ class PutStage(PipelineStage, ABC):
 
     @abstractmethod
     def block(self) -> "ConjunctionID":
-        raise NotImplementedError
+        pass
 
 
 class UpdateStage(PipelineStage, ABC):
@@ -201,7 +201,7 @@ class UpdateStage(PipelineStage, ABC):
 
     @abstractmethod
     def block(self) -> "ConjunctionID":
-        raise NotImplementedError
+        pass
 
 
 class DeleteStage(PipelineStage, ABC):
@@ -209,12 +209,12 @@ class DeleteStage(PipelineStage, ABC):
 
     @abstractmethod
     def block(self) -> "ConjunctionID":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def deleted_variables(self) -> Iterator["Variable"]:
         """The variables for which the unified concepts are to be deleted."""
-        raise NotImplementedError
+        pass
 
 
 class SelectStage(PipelineStage, ABC):
@@ -222,7 +222,7 @@ class SelectStage(PipelineStage, ABC):
 
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
-        raise NotImplementedError
+        pass
 
 
 class SortStage(PipelineStage, ABC):
@@ -230,7 +230,7 @@ class SortStage(PipelineStage, ABC):
 
     @abstractmethod
     def variables(self) -> Iterator["PipelineStage.SortStage.SortVariable"]:
-        raise NotImplementedError
+        pass
 
     class SortOrderVariant(IntEnum):
         Ascending = NativeAscending
@@ -241,11 +241,11 @@ class SortStage(PipelineStage, ABC):
 
         @abstractmethod
         def variable(self) -> "Variable":
-            raise NotImplementedError
+            pass
 
         @abstractmethod
         def order(self) -> "SortOrderVariant":
-            raise NotImplementedError
+            pass
 
 
 class RequireStage(PipelineStage, ABC):
@@ -253,7 +253,7 @@ class RequireStage(PipelineStage, ABC):
 
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
-        raise NotImplementedError
+        pass
 
 
 class OffsetStage(PipelineStage, ABC):
@@ -261,7 +261,7 @@ class OffsetStage(PipelineStage, ABC):
 
     @abstractmethod
     def offset(self) -> int:
-        raise NotImplementedError
+        pass
 
 
 class LimitStage(PipelineStage, ABC):
@@ -269,7 +269,7 @@ class LimitStage(PipelineStage, ABC):
 
     @abstractmethod
     def limit(self) -> int:
-        raise NotImplementedError
+        pass
 
 
 class DistinctStage(PipelineStage, ABC):
@@ -283,20 +283,20 @@ class ReduceStage(PipelineStage, ABC):
     @abstractmethod
     def group_by(self) -> Iterator["Variable"]:
         """The variables to group by."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def reduce_assignments(self) -> Iterator["ReduceStage.ReduceAssignment"]:
         """The reducer assignments."""
-        raise NotImplementedError
+        pass
 
     class ReduceAssignment(ABC):
         """An assignment of a reducer to a variable."""
 
         @abstractmethod
         def assigned(self) -> "Variable":
-            raise NotImplementedError
+            pass
 
         @abstractmethod
         def reducer(self) -> "Reducer":
-            raise NotImplementedError
+            pass

@@ -45,34 +45,34 @@ class VariableAnnotations(ABC):
     @abstractmethod
     def variant(self) -> "VariableAnnotationsVariant":
         """The variant indicates whether this is an instance variable, type variable, or value variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_instance(self) -> bool:
         """Returns True if this variable is an Instance variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_type(self) -> bool:
         """Returns True if this variable is a Type variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_value(self) -> bool:
         """Returns True if this variable is a Value variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_instance(self) -> Iterator["Type"]:
         """The possible Types of instances this variable can hold."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_type(self) -> Iterator["Type"]:
         """The possible types this variable can hold."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_value(self) -> Iterator[str]:
         """The possible ValueType(s) of values this variable can hold."""
-        raise NotImplementedError
+        pass

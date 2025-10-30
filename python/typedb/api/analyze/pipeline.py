@@ -33,7 +33,7 @@ class Pipeline(ABC):
     @abstractmethod
     def stages(self) -> Iterator["PipelineStage"]:
         """A stream/iterator of the stages making up the pipeline."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def get_variable_name(self, variable: "Variable") -> Optional[str]:
@@ -43,7 +43,7 @@ class Pipeline(ABC):
         :param variable: the variable from this pipeline
         :return: the name, if any
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def conjunction(self, conjunction_id: "ConjunctionID") -> Optional["Conjunction"]:
@@ -53,4 +53,4 @@ class Pipeline(ABC):
         :param conjunction_id: the ConjunctionID of the conjunction to retrieve
         :return: the corresponding Conjunction, if present
         """
-        raise NotImplementedError
+        pass

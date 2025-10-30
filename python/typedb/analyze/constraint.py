@@ -21,7 +21,8 @@ from typing import TYPE_CHECKING, Iterator
 
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_CONSTRAINT_CASTING, UNEXPECTED_NATIVE_VALUE
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_CONSTRAINT_CASTING, \
+    UNEXPECTED_NATIVE_VALUE
 
 from python.typedb.api.analyze.constraint import KindVariant
 from typedb.api.analyze.constraint import (
@@ -93,6 +94,7 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint import Constraint, ConstraintExactness, ConstraintVariant
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
+
 
 class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     @property
@@ -268,6 +270,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
         def end(self) -> int:
             return self._end
 
+
 class _Isa(_Constraint, Isa):
     def __init__(self, native):
         super().__init__(native)
@@ -289,6 +292,7 @@ class _Isa(_Constraint, Isa):
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_isa_get_exactness(self.native_object))
 
+
 class _Has(_Constraint, Has):
     def __init__(self, native):
         super().__init__(native)
@@ -309,6 +313,7 @@ class _Has(_Constraint, Has):
 
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_has_get_exactness(self.native_object))
+
 
 class _Links(_Constraint, Links):
     def __init__(self, native):
@@ -335,6 +340,7 @@ class _Links(_Constraint, Links):
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_links_get_exactness(self.native_object))
 
+
 class _Sub(_Constraint, Sub):
     def __init__(self, native):
         super().__init__(native)
@@ -355,6 +361,7 @@ class _Sub(_Constraint, Sub):
 
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_sub_get_exactness(self.native_object))
+
 
 class _Owns(_Constraint, Owns):
     def __init__(self, native):
@@ -377,6 +384,7 @@ class _Owns(_Constraint, Owns):
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_owns_get_exactness(self.native_object))
 
+
 class _Relates(_Constraint, Relates):
     def __init__(self, native):
         super().__init__(native)
@@ -398,6 +406,7 @@ class _Relates(_Constraint, Relates):
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_relates_get_exactness(self.native_object))
 
+
 class _Plays(_Constraint, Plays):
     def __init__(self, native):
         super().__init__(native)
@@ -418,6 +427,7 @@ class _Plays(_Constraint, Plays):
 
     def exactness(self) -> "ConstraintExactness":
         return ConstraintExactness(constraint_plays_get_exactness(self.native_object))
+
 
 class _FunctionCall(_Constraint, FunctionCall):
     def __init__(self, native):
@@ -442,6 +452,7 @@ class _FunctionCall(_Constraint, FunctionCall):
         wrapper = IteratorWrapper(native_iter, constraint_vertex_iterator_next)
         return map(lambda n: _ConstraintVertex(n), wrapper)
 
+
 class _Expression(_Constraint, Expression):
     def __init__(self, native):
         super().__init__(native)
@@ -464,6 +475,7 @@ class _Expression(_Constraint, Expression):
         native = constraint_expression_get_assigned(self.native_object)
         return _ConstraintVertex(native)
 
+
 class _Is(_Constraint, Is):
     def __init__(self, native):
         super().__init__(native)
@@ -482,6 +494,7 @@ class _Is(_Constraint, Is):
         native = constraint_is_get_rhs(self.native_object)
         return _ConstraintVertex(native)
 
+
 class _Iid(_Constraint, Iid):
     def __init__(self, native):
         super().__init__(native)
@@ -498,6 +511,7 @@ class _Iid(_Constraint, Iid):
 
     def iid(self) -> str:
         return constraint_iid_get_iid(self.native_object)
+
 
 class _Comparison(_Constraint, Comparison):
     def __init__(self, native):
@@ -524,6 +538,7 @@ class _Comparison(_Constraint, Comparison):
     def comparator_name(comparator: "Comparator") -> str:
         return comparator_get_name(comparator)
 
+
 class _KindOf(_Constraint, KindOf):
     def __init__(self, native):
         super().__init__(native)
@@ -540,6 +555,7 @@ class _KindOf(_Constraint, KindOf):
     def type(self) -> "ConstraintVertex":
         native = constraint_kind_get_type(self.native_object)
         return _ConstraintVertex(native)
+
 
 class _Label(_Constraint, Label):
     def __init__(self, native):
@@ -558,6 +574,7 @@ class _Label(_Constraint, Label):
     def label(self) -> str:
         return constraint_label_get_label(self.native_object)
 
+
 class _Value(_Constraint, Value):
     def __init__(self, native):
         super().__init__(native)
@@ -575,6 +592,7 @@ class _Value(_Constraint, Value):
     def value_type(self) -> str:
         return constraint_value_get_value_type(self.native_object)
 
+
 class _Or(_Constraint, Or):
     def __init__(self, native):
         super().__init__(native)
@@ -589,6 +607,7 @@ class _Or(_Constraint, Or):
         native_iter = constraint_or_get_branches(self.native_object)
         return IteratorWrapper(native_iter, conjunction_id_iterator_next)
 
+
 class _Not(_Constraint, Not):
     def __init__(self, native):
         super().__init__(native)
@@ -602,6 +621,7 @@ class _Not(_Constraint, Not):
     def conjunction(self) -> "ConjunctionID":
         return constraint_not_get_conjunction(self.native_object)
 
+
 class _Try(_Constraint, Try):
     def __init__(self, native):
         super().__init__(native)
@@ -614,4 +634,3 @@ class _Try(_Constraint, Try):
 
     def conjunction(self) -> "ConjunctionID":
         return constraint_try_get_conjunction(self.native_object)
-

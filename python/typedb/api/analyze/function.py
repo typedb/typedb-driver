@@ -49,84 +49,84 @@ class Function(ABC):
     @abstractmethod
     def body(self) -> "Pipeline":
         """Gets the pipeline which forms the body of the function."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def argument_variables(self) -> Iterator["Variable"]:
         """Gets the variables which are the arguments of the function."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def return_operation(self) -> "ReturnOperation":
         """Gets the return operation of the function."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def argument_annotations(self) -> Iterator["VariableAnnotations"]:
         """Gets the type annotations for each argument of the function."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def return_annotations(self) -> Iterator["VariableAnnotations"]:
         """Gets the type annotations for each concept returned by the function."""
-        raise NotImplementedError
+        pass
 
 
 class ReturnOperation(ABC):
     @abstractmethod
     def variant(self) -> "ReturnOperationVariant":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_stream(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_single(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_check(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_reduce(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_stream(self) -> "ReturnOperationStream":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_single(self) -> "ReturnOperationSingle":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_check(self) -> "ReturnOperationCheck":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_reduce(self) -> "ReturnOperationReduce":
-        raise NotImplementedError
+        pass
 
 
 class ReturnOperationStream(ReturnOperation, ABC):
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
         """Gets the variables in the returned row."""
-        raise NotImplementedError
+        pass
 
 
 class ReturnOperationSingle(ReturnOperation, ABC):
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
         """Gets the variables in the returned row."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def selector(self) -> str:
         """Gets the selector that determines how the operation selects the row."""
-        raise NotImplementedError
+        pass
 
 
 class ReturnOperationCheck(ReturnOperation, ABC):
@@ -137,4 +137,4 @@ class ReturnOperationReduce(ReturnOperation, ABC):
     @abstractmethod
     def reducers(self) -> Iterator["Reducer"]:
         """Gets the reducers used to compute the aggregations."""
-        raise NotImplementedError
+        pass

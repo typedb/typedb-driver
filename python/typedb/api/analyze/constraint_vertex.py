@@ -34,27 +34,27 @@ class ConstraintVertex(ABC):
     @abstractmethod
     def is_variable(self) -> bool:
         """Checks if this vertex is a variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_label(self) -> bool:
         """Checks if this vertex is a label."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_value(self) -> bool:
         """Checks if this vertex is a value."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_named_role(self) -> bool:
         """Checks if this vertex is a named role."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_variable(self) -> Variable:
         """Down-casts this vertex to a variable."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_label(self) -> Type:
@@ -64,23 +64,23 @@ class ConstraintVertex(ABC):
         :return: the type representation of this vertex
         :raises: IllegalStateError / appropriate exception if not a label
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_value(self) -> Value:
         """Down-casts this vertex to a value."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_named_role_get_variable(self) -> "Variable":
         """
         Down-casts the variable as a NamedRoleVertex and gets the associated variable.
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_named_role_get_name(self) -> str:
         """
         Down-casts the variable as a NamedRoleVertex and gets the associated name.
         """
-        raise NotImplementedError
+        pass

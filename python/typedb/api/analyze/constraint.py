@@ -123,157 +123,157 @@ class Constraint(ABC):
     @abstractmethod
     def variant(self) -> ConstraintVariant:
         """Gets the variant of this constraint."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def span(self) -> "Span":
         """Gets the span of this constraint in the source query."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_isa(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_has(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_links(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_sub(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_owns(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_relates(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_plays(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_function_call(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_expression(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_is(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_iid(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_comparison(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_kind_of(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_label(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_value(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_or(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_not(self) -> bool:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def is_try(self) -> bool:
-        raise NotImplementedError
+        pass
 
     # Down-cast accessors for each concrete constraint variant
     @abstractmethod
     def as_isa(self) -> "Isa":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_has(self) -> "Has":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_links(self) -> "Links":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_sub(self) -> "Sub":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_owns(self) -> "Owns":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_relates(self) -> "Relates":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_plays(self) -> "Plays":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_function_call(self) -> "FunctionCall":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_expression(self) -> "Expression":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_is(self) -> "Is":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_iid(self) -> "Iid":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_comparison(self) -> "Comparison":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_kind(self) -> "KindOf":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_label(self) -> "Label":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_value(self) -> "Value":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_or(self) -> "Or":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_not(self) -> "Not":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def as_try(self) -> "Try":
-        raise NotImplementedError
+        pass
 
     # Nested constraint subtype interfaces
 
@@ -283,15 +283,15 @@ class Isa(Constraint, ABC):
 
     @abstractmethod
     def instance(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def type(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Has(Constraint, ABC):
@@ -299,15 +299,15 @@ class Has(Constraint, ABC):
 
     @abstractmethod
     def owner(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def attribute(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Links(Constraint, ABC):
@@ -315,19 +315,19 @@ class Links(Constraint, ABC):
 
     @abstractmethod
     def relation(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def player(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def role(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Sub(Constraint, ABC):
@@ -335,15 +335,15 @@ class Sub(Constraint, ABC):
 
     @abstractmethod
     def subtype(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def supertype(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Owns(Constraint, ABC):
@@ -351,15 +351,15 @@ class Owns(Constraint, ABC):
 
     @abstractmethod
     def owner(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def attribute(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Relates(Constraint, ABC):
@@ -367,15 +367,15 @@ class Relates(Constraint, ABC):
 
     @abstractmethod
     def relation(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def role(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class Plays(Constraint, ABC):
@@ -383,15 +383,15 @@ class Plays(Constraint, ABC):
 
     @abstractmethod
     def player(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def role(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
-        raise NotImplementedError
+        pass
 
 
 class FunctionCall(Constraint, ABC):
@@ -399,15 +399,15 @@ class FunctionCall(Constraint, ABC):
 
     @abstractmethod
     def name(self) -> str:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def arguments(self) -> Iterator["ConstraintVertex"]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def assigned(self) -> Iterator["ConstraintVertex"]:
-        raise NotImplementedError
+        pass
 
 
 class Expression(Constraint, ABC):
@@ -415,15 +415,15 @@ class Expression(Constraint, ABC):
 
     @abstractmethod
     def text(self) -> str:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def arguments(self) -> Iterator["ConstraintVertex"]:
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def assigned(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
 
 class Is(Constraint, ABC):
@@ -431,11 +431,11 @@ class Is(Constraint, ABC):
 
     @abstractmethod
     def lhs(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def rhs(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
 
 class Iid(Constraint, ABC):
@@ -443,11 +443,11 @@ class Iid(Constraint, ABC):
 
     @abstractmethod
     def variable(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def iid(self) -> str:
-        raise NotImplementedError
+        pass
 
 
 class Comparison(Constraint, ABC):
@@ -455,15 +455,15 @@ class Comparison(Constraint, ABC):
 
     @abstractmethod
     def lhs(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def rhs(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def comparator(self) -> "Comparator":
-        raise NotImplementedError
+        pass
 
     @staticmethod
     def comparator_name(comparator: "Comparator") -> str:
@@ -471,7 +471,7 @@ class Comparison(Constraint, ABC):
         Returns the name of the comparator. Implementation may delegate to JNI helper.
         """
         # If a JNI helper is available it may be used here; otherwise override in concrete impl.
-        raise NotImplementedError
+        pass
 
 
 class KindOf(Constraint, ABC):
@@ -479,11 +479,11 @@ class KindOf(Constraint, ABC):
 
     @abstractmethod
     def kind(self) -> "KindOf":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def type(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
 
 class Label(Constraint, ABC):
@@ -491,11 +491,11 @@ class Label(Constraint, ABC):
 
     @abstractmethod
     def variable(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def label(self) -> str:
-        raise NotImplementedError
+        pass
 
 
 class Value(Constraint, ABC):
@@ -503,11 +503,11 @@ class Value(Constraint, ABC):
 
     @abstractmethod
     def attribute_type(self) -> "ConstraintVertex":
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def value_type(self) -> str:
-        raise NotImplementedError
+        pass
 
 
 class Or(Constraint, ABC):
@@ -518,7 +518,7 @@ class Or(Constraint, ABC):
         """
         Index into Pipeline.conjunctions
         """
-        raise NotImplementedError
+        pass
 
 
 class Not(Constraint, ABC):
@@ -529,7 +529,7 @@ class Not(Constraint, ABC):
         """
         Index into Pipeline.conjunctions
         """
-        raise NotImplementedError
+        pass
 
 
 class Try(Constraint, ABC):
@@ -540,7 +540,7 @@ class Try(Constraint, ABC):
         """
         Index into Pipeline.conjunctions
         """
-        raise NotImplementedError
+        pass
 
 
 class Span(ABC):
@@ -549,9 +549,9 @@ class Span(ABC):
     @abstractmethod
     def begin(self) -> int:
         """The offset of the first character."""
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def end(self) -> int:
         """The offset after the last character."""
-        raise NotImplementedError
+        pass

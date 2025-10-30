@@ -39,7 +39,7 @@ class AnalyzedQuery(ABC):
 
         :return: the Pipeline representing the query.
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def preamble(self) -> Iterator["Function"]:
@@ -48,7 +48,7 @@ class AnalyzedQuery(ABC):
 
         :return: an iterator over the analyzed functions in the preamble.
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def fetch(self) -> Optional["Fetch"]:
@@ -57,4 +57,4 @@ class AnalyzedQuery(ABC):
 
         :return: an Optional containing the fetch stage if present, otherwise None
         """
-        raise NotImplementedError
+        pass

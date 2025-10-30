@@ -31,7 +31,10 @@ from typedb.native_driver_wrapper import AnalyzedQuery as NativeAnalyzedQuery, \
     function_iterator_next
 
 if TYPE_CHECKING:
-    import typedb.api.analyze.pipeline.Pipeline
+    from typedb.api.analyze.pipeline.Pipeline import Pipeline
+    from typedb.api.analyze.function import Function
+    from typedb.api.analyze.Fetch import Fetch
+
 
 class _AnalyzedQuery(AnalyzedQuery, NativeWrapper[NativeAnalyzedQuery]):
     def __init__(self, analyzed_query: NativeAnalyzedQuery):
@@ -55,4 +58,3 @@ class _AnalyzedQuery(AnalyzedQuery, NativeWrapper[NativeAnalyzedQuery]):
             return None
         else:
             return _Fetch.of(native_fetch)
-
