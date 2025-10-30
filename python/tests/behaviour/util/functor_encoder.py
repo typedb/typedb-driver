@@ -26,7 +26,7 @@ from typedb.driver import (
     Type
 )
 
-from typing import Iterable, Tuple
+from typing import Iterable, Dict
 
 class FunctorEncoder:
     def __init__(self, pipeline: Pipeline):
@@ -41,15 +41,17 @@ class FunctorEncoder:
             return e
         elif isinstance(e, list) or isinstance(e, map):
             return self.encode_as_list(e)
+        elif isinstance(e, dict):
+            return self.encode_as_dict(e)
         else:
             return e.encode_as_functor(self)
 
     def encode_as_list(self, elements: Iterable[any]) -> str:
         return "[" + ", ".join(map(self._may_encode, elements)) + "]"
 
-    def encode_as_map(self, elements: Iterable[Tuple[any, any]]) -> str:
-        encoded_kv = sorted(list((self._may_encode(k), self._may_encode(v)) for (k, v) in elements))
-        return "{" + ",".join("%s : %s" %kv for kv in encoded_kv) + "}"
+    def encode_as_dict(self, elements: Dict[any, any]) -> str:
+        encoded_kv = sorted(list((self._may_encode(k), self._may_encode(v)) for (k, v) in elements.items()))
+        return "{" + ",".join("%s : %s" % kv for kv in encoded_kv) + "}"
 
 
 WHITE_SPACE_REGEX = re.compile(r'\s+')
@@ -198,7 +200,8 @@ def _encode_reducer(self, encoder: FunctorEncoder) -> str:
 def _encode_pipeline_stage(self: PipelineStage, encoder: FunctorEncoder) -> str:
     variant = self.variant()
     name = variant.name
-    if variant in [PipelineStageVariant.Match, PipelineStageVariant.Insert, PipelineStageVariant.Put, PipelineStageVariant.Update]:
+    if variant in [PipelineStageVariant.Match, PipelineStageVariant.Insert, PipelineStageVariant.Put,
+                   PipelineStageVariant.Update]:
         return encoder.make_functor(name, self.block())
     elif variant == PipelineStageVariant.Delete:
         return encoder.make_functor(name, self.as_delete().deleted_variables(), self.as_delete().block())
@@ -274,20 +277,12 @@ def _encode_subpattern_annotations(self: Constraint, encoder: FunctorEncoder) ->
         raise Exception(f"Illegal Subpattern constraint variant: " + self.variant().name)
 
 
-
 def _encode_conjunction_annotations(self: "ConjunctionID", encoder: FunctorEncoder) -> str:
     conj = encoder.pipeline.conjunction(self)
-
-    trunk_annotations = ((var, conj.variable_annotations(var)) for var in conj.annotated_variables())
-
-    subpatterns = [c for c in conj.constraints() if c.variant() in SUBPATTERN_VARIANTS]
-    subpattern_annotations = [_encode_subpattern_annotations(c, encoder) for c in subpatterns]
-
-    return encoder.make_functor(
-        "And",
-        encoder.encode_as_map(((k, v) for (k, v) in trunk_annotations)),
-        subpattern_annotations
-    )
+    trunk_annotations = {var: conj.variable_annotations(var) for var in conj.annotated_variables()}
+    subpattern_annotations = [_encode_subpattern_annotations(c, encoder)
+                              for c in conj.constraints() if c.variant() in SUBPATTERN_VARIANTS]
+    return encoder.make_functor("And", trunk_annotations, subpattern_annotations)
 
 
 def _encode_stage_annotations(self: PipelineStage, encoder: FunctorEncoder) -> str:
@@ -301,13 +296,13 @@ def _encode_stage_annotations(self: PipelineStage, encoder: FunctorEncoder) -> s
 
 def _encode_pipeline_annotations(self: Pipeline, encoder: FunctorEncoder) -> str:
     stage_annotations = [_encode_stage_annotations(s, encoder) for s in self.stages()]
-    return encoder.make_functor("Pipeline", encoder.encode_as_list((s for s in stage_annotations)))
+    return encoder.make_functor("Pipeline", stage_annotations)
 
 
 def _encode_function_annotations(self: Function, encoder: FunctorEncoder) -> str:
     argument_annotations = encoder.encode_as_list(self.argument_annotations())
     return_op_name = self.return_operation().variant().name.replace("Return", "")
-    return_annotations = encoder.make_functor(return_op_name, encoder.encode_as_list(self.return_annotations()))
+    return_annotations = encoder.make_functor(return_op_name, self.return_annotations())
     body_annotations = _encode_pipeline_annotations(self.body(), encoder)
     return encoder.make_functor("Function", argument_annotations, return_annotations, body_annotations)
 
@@ -319,8 +314,8 @@ def _encode_fetch_annotations(self: Fetch, encoder: FunctorEncoder) -> str:
         return encoder.make_functor("List", self.as_list().element().encode_as_functor(encoder))
     if self.is_object():
         as_object = self.as_object()
-        kv = [(k, self.get(k)) for k in as_object.keys()]
-        return encoder.encode_as_map(kv)
+        kv = {k: self.get(k) for k in as_object.keys()}
+        return encoder.encode_as_dict(kv)
     else:
         raise Exception(f"Unknown fetch variant: " + self.variant().name)
 
