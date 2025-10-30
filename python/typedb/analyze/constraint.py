@@ -23,7 +23,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_CONSTRAINT_CASTING, UNEXPECTED_NATIVE_VALUE
 
-from python.typedb.api.concept.concept import KindVariant
+from python.typedb.api.analyze.constraint import KindVariant
 from typedb.api.analyze.constraint import (
     Constraint, ConstraintVariant, ConstraintExactness, Comparator,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
