@@ -39,13 +39,13 @@ from typedb.native_driver_wrapper import (
     Descending as NativeDescending,
 )
 
-
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import (
         ConjunctionID,
         Variable,
     )
     from typedb.api.analyze.reducer import Reducer
+
 
 class PipelineStageVariant(IntEnum):
     Match = NativeMatch
@@ -170,33 +170,43 @@ class PipelineStage(ABC):
     def as_reduce(self) -> "PipelineStage.ReduceStage":
         raise NotImplementedError
 
+
 class MatchStage(PipelineStage, ABC):
     """Represents a 'match' stage: match <block>"""
+
     @abstractmethod
     def block(self) -> "ConjunctionID":
         """The index into Pipeline.conjunctions."""
         raise NotImplementedError
 
+
 class InsertStage(PipelineStage, ABC):
     """Represents an 'insert' stage: insert <block>"""
+
     @abstractmethod
     def block(self) -> "ConjunctionID":
         raise NotImplementedError
+
 
 class PutStage(PipelineStage, ABC):
     """Represents a 'put' stage: put <block>"""
+
     @abstractmethod
     def block(self) -> "ConjunctionID":
         raise NotImplementedError
+
 
 class UpdateStage(PipelineStage, ABC):
     """Represents an 'update' stage: update <block>"""
+
     @abstractmethod
     def block(self) -> "ConjunctionID":
         raise NotImplementedError
 
+
 class DeleteStage(PipelineStage, ABC):
     """Represents a 'delete' stage."""
+
     @abstractmethod
     def block(self) -> "ConjunctionID":
         raise NotImplementedError
@@ -206,14 +216,18 @@ class DeleteStage(PipelineStage, ABC):
         """The variables for which the unified concepts are to be deleted."""
         raise NotImplementedError
 
+
 class SelectStage(PipelineStage, ABC):
     """Represents a 'select' stage: select <variables>"""
+
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
         raise NotImplementedError
 
+
 class SortStage(PipelineStage, ABC):
     """Represents a 'sort' stage: sort <variables-and-order>"""
+
     @abstractmethod
     def variables(self) -> Iterator["PipelineStage.SortStage.SortVariable"]:
         raise NotImplementedError
@@ -224,6 +238,7 @@ class SortStage(PipelineStage, ABC):
 
     class SortVariable(ABC):
         """A variable and its sort order."""
+
         @abstractmethod
         def variable(self) -> "Variable":
             raise NotImplementedError
@@ -232,30 +247,39 @@ class SortStage(PipelineStage, ABC):
         def order(self) -> "SortOrderVariant":
             raise NotImplementedError
 
+
 class RequireStage(PipelineStage, ABC):
     """Represents a 'require' stage: require <variables>"""
+
     @abstractmethod
     def variables(self) -> Iterator["Variable"]:
         raise NotImplementedError
 
+
 class OffsetStage(PipelineStage, ABC):
     """Represents an 'offset' stage: offset <offset>"""
+
     @abstractmethod
     def offset(self) -> int:
         raise NotImplementedError
 
+
 class LimitStage(PipelineStage, ABC):
     """Represents a 'limit' stage: limit <limit>"""
+
     @abstractmethod
     def limit(self) -> int:
         raise NotImplementedError
+
 
 class DistinctStage(PipelineStage, ABC):
     """Represents a 'distinct' stage."""
     pass
 
+
 class ReduceStage(PipelineStage, ABC):
     """Represents a 'reduce' stage: reduce <reducers> groupby <groupby>"""
+
     @abstractmethod
     def group_by(self) -> Iterator["Variable"]:
         """The variables to group by."""
@@ -268,6 +292,7 @@ class ReduceStage(PipelineStage, ABC):
 
     class ReduceAssignment(ABC):
         """An assignment of a reducer to a variable."""
+
         @abstractmethod
         def assigned(self) -> "Variable":
             raise NotImplementedError

@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type import Type
     from typedb.api.concept.value import Value
 
+
 class ConstraintVertex(ABC):
     """
     The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query.

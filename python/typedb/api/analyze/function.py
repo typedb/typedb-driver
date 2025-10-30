@@ -33,6 +33,7 @@ if TYPE_CHECKING:
     from typedb.analyze.variable_annotations import VariableAnnotations
     from typedb.analyze.reducer import Reducer
 
+
 class ReturnOperationVariant(IntEnum):
     StreamReturn = NativeStreamReturn
     SingleReturn = NativeSingleReturn

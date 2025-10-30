@@ -29,10 +29,12 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     pass
 
+
 class FetchVariant(IntEnum):
     LeafDocument = NativeLeafDocument
     ListDocument = NativeListDocument
     ObjectDocument = NativeObjectDocument,
+
 
 class Fetch(ABC):
     """

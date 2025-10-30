@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from typedb.analyze.constraint import Constraint
     from typedb.analyze.variable_annotations import VariableAnnotations
 
+
 class Conjunction(ABC):
     """
     A representation of the constraints involved in the query, and types inferred for each variable.

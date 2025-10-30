@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from typedb.analyze.pipeline_stage import PipelineStage
     from typedb.analyze.conjunction import Conjunction
 
+
 class Pipeline(ABC):
     """
     A representation of a query pipeline.

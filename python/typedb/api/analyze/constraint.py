@@ -64,9 +64,11 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
 
+
 class ConstraintExactness(IntEnum):
     Exact = NativeExact
     Subtypes = NativeSubtypes
+
 
 class Comparator(IntEnum):
     Equal = NativeEqual
@@ -83,6 +85,7 @@ class Comparator(IntEnum):
 
     def __str__(self):
         return self.symbol()
+
 
 class ConstraintVariant(IntEnum):
     Isa = NativeIsa
@@ -104,13 +107,12 @@ class ConstraintVariant(IntEnum):
     Not = NativeNot
     Try = NativeTry
 
+
 class KindVariant(IntEnum):
     Entity = NativeEntity
     Relation = NativeRelation
     Attribute = NativeAttribute
     Role = NativeRole
-
-
 
 
 class Constraint(ABC):
@@ -275,6 +277,7 @@ class Constraint(ABC):
 
     # Nested constraint subtype interfaces
 
+
 class Isa(Constraint, ABC):
     """Represents an 'isa' constraint: <instance> isa(!) <type>"""
 
@@ -290,6 +293,7 @@ class Isa(Constraint, ABC):
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
 
+
 class Has(Constraint, ABC):
     """Represents a 'has' constraint: <owner> has <attribute>"""
 
@@ -304,6 +308,7 @@ class Has(Constraint, ABC):
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
+
 
 class Links(Constraint, ABC):
     """Represents a 'links' constraint: <relation> links (<role>: <player>)"""
@@ -324,6 +329,7 @@ class Links(Constraint, ABC):
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
 
+
 class Sub(Constraint, ABC):
     """Represents a 'sub' constraint: <subtype> sub(!) <supertype>"""
 
@@ -338,6 +344,7 @@ class Sub(Constraint, ABC):
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
+
 
 class Owns(Constraint, ABC):
     """Represents an 'owns' constraint: <owner> owns <attribute>"""
@@ -354,6 +361,7 @@ class Owns(Constraint, ABC):
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
 
+
 class Relates(Constraint, ABC):
     """Represents a 'relates' constraint: <relation> relates <role>"""
 
@@ -368,6 +376,7 @@ class Relates(Constraint, ABC):
     @abstractmethod
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
+
 
 class Plays(Constraint, ABC):
     """Represents a 'plays' constraint: <player> plays <role>"""
@@ -384,6 +393,7 @@ class Plays(Constraint, ABC):
     def exactness(self) -> "ConstraintExactness":
         raise NotImplementedError
 
+
 class FunctionCall(Constraint, ABC):
     """Represents a function call: let <assigned> = name(<arguments>)"""
 
@@ -398,6 +408,7 @@ class FunctionCall(Constraint, ABC):
     @abstractmethod
     def assigned(self) -> Iterator["ConstraintVertex"]:
         raise NotImplementedError
+
 
 class Expression(Constraint, ABC):
     """Represents an expression: let <assigned> = <expression>"""
@@ -414,6 +425,7 @@ class Expression(Constraint, ABC):
     def assigned(self) -> "ConstraintVertex":
         raise NotImplementedError
 
+
 class Is(Constraint, ABC):
     """Represents an 'is' constraint: <lhs> is <rhs>"""
 
@@ -425,6 +437,7 @@ class Is(Constraint, ABC):
     def rhs(self) -> "ConstraintVertex":
         raise NotImplementedError
 
+
 class Iid(Constraint, ABC):
     """Represents an IID constraint: <concept> iid <iid>"""
 
@@ -435,6 +448,7 @@ class Iid(Constraint, ABC):
     @abstractmethod
     def iid(self) -> str:
         raise NotImplementedError
+
 
 class Comparison(Constraint, ABC):
     """Represents a comparison: <lhs> <comparator> <rhs>"""
@@ -459,6 +473,7 @@ class Comparison(Constraint, ABC):
         # If a JNI helper is available it may be used here; otherwise override in concrete impl.
         raise NotImplementedError
 
+
 class KindOf(Constraint, ABC):
     """Represents a kind constraint: <kind> <type>"""
 
@@ -469,6 +484,7 @@ class KindOf(Constraint, ABC):
     @abstractmethod
     def type(self) -> "ConstraintVertex":
         raise NotImplementedError
+
 
 class Label(Constraint, ABC):
     """Represents a label constraint: <type> label <label>"""
@@ -481,6 +497,7 @@ class Label(Constraint, ABC):
     def label(self) -> str:
         raise NotImplementedError
 
+
 class Value(Constraint, ABC):
     """Represents a value constraint: <attribute_type> value <value_type>"""
 
@@ -492,6 +509,7 @@ class Value(Constraint, ABC):
     def value_type(self) -> str:
         raise NotImplementedError
 
+
 class Or(Constraint, ABC):
     """Represents an 'or' constraint: { <branches[0]> } or { <branches[1]> } [or ...]"""
 
@@ -501,6 +519,7 @@ class Or(Constraint, ABC):
         Index into Pipeline.conjunctions
         """
         raise NotImplementedError
+
 
 class Not(Constraint, ABC):
     """Represents a 'not' constraint: not { <conjunction> }"""
@@ -512,6 +531,7 @@ class Not(Constraint, ABC):
         """
         raise NotImplementedError
 
+
 class Try(Constraint, ABC):
     """Represents a 'try' constraint: try { <conjunction> }"""
 
@@ -521,6 +541,7 @@ class Try(Constraint, ABC):
         Index into Pipeline.conjunctions
         """
         raise NotImplementedError
+
 
 class Span(ABC):
     """The span of a constraint in the source query."""

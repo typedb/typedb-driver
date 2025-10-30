@@ -30,10 +30,12 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.concept.type import Type
 
+
 class VariableAnnotationsVariant(IntEnum):
     InstanceAnnotations = NativeInstanceAnnotations
     TypeAnnotations = NativeTypeAnnotations
     ValueAnnotations = NativeValueAnnotations
+
 
 class VariableAnnotations(ABC):
     """
