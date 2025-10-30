@@ -22,20 +22,6 @@ comparator() -> Comparator
 .Returns
 `Comparator`
 
-[#_Comparison_comparator_name_]
-==== comparator_name
-
-[source,python]
-----
-static comparator_name(comparator: Comparator) -> str
-----
-
-Returns the name of the comparator. Implementation may delegate to JNI helper.
-
-[caption=""]
-.Returns
-`str`
-
 [#_Comparison_lhs_]
 ==== lhs
 

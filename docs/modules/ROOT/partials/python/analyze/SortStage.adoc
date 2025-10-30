@@ -13,14 +13,14 @@ Represents a ‘sort’ stage: sort &lt;variables-and-order&gt;
 
 [source,python]
 ----
-variables() -> Iterator['PipelineStage.SortStage.SortVariable']
+variables() -> Iterator[SortVariable]
 ----
 
 
 
 [caption=""]
 .Returns
-`Iterator['PipelineStage.SortStage.SortVariable']`
+`Iterator[SortVariable]`
 
 // end::methods[]
 

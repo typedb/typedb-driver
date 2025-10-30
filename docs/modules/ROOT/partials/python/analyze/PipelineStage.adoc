@@ -9,168 +9,168 @@ Representation of a stage in a Pipeline.
 
 [source,python]
 ----
-as_delete() -> PipelineStage.DeleteStage
+as_delete() -> DeleteStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.DeleteStage`
+`DeleteStage`
 
 [#_PipelineStage_as_distinct_]
 ==== as_distinct
 
 [source,python]
 ----
-as_distinct() -> PipelineStage.DistinctStage
+as_distinct() -> DistinctStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.DistinctStage`
+`DistinctStage`
 
 [#_PipelineStage_as_insert_]
 ==== as_insert
 
 [source,python]
 ----
-as_insert() -> PipelineStage.InsertStage
+as_insert() -> InsertStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.InsertStage`
+`InsertStage`
 
 [#_PipelineStage_as_limit_]
 ==== as_limit
 
 [source,python]
 ----
-as_limit() -> PipelineStage.LimitStage
+as_limit() -> LimitStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.LimitStage`
+`LimitStage`
 
 [#_PipelineStage_as_match_]
 ==== as_match
 
 [source,python]
 ----
-as_match() -> PipelineStage.MatchStage
+as_match() -> MatchStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.MatchStage`
+`MatchStage`
 
 [#_PipelineStage_as_offset_]
 ==== as_offset
 
 [source,python]
 ----
-as_offset() -> PipelineStage.OffsetStage
+as_offset() -> OffsetStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.OffsetStage`
+`OffsetStage`
 
 [#_PipelineStage_as_put_]
 ==== as_put
 
 [source,python]
 ----
-as_put() -> PipelineStage.PutStage
+as_put() -> PutStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.PutStage`
+`PutStage`
 
 [#_PipelineStage_as_reduce_]
 ==== as_reduce
 
 [source,python]
 ----
-as_reduce() -> PipelineStage.ReduceStage
+as_reduce() -> ReduceStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.ReduceStage`
+`ReduceStage`
 
 [#_PipelineStage_as_require_]
 ==== as_require
 
 [source,python]
 ----
-as_require() -> PipelineStage.RequireStage
+as_require() -> RequireStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.RequireStage`
+`RequireStage`
 
 [#_PipelineStage_as_select_]
 ==== as_select
 
 [source,python]
 ----
-as_select() -> PipelineStage.SelectStage
+as_select() -> SelectStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.SelectStage`
+`SelectStage`
 
 [#_PipelineStage_as_sort_]
 ==== as_sort
 
 [source,python]
 ----
-as_sort() -> PipelineStage.SortStage
+as_sort() -> SortStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.SortStage`
+`SortStage`
 
 [#_PipelineStage_as_update_]
 ==== as_update
 
 [source,python]
 ----
-as_update() -> PipelineStage.UpdateStage
+as_update() -> UpdateStage
 ----
 
 
 
 [caption=""]
 .Returns
-`PipelineStage.UpdateStage`
+`UpdateStage`
 
 [#_PipelineStage_is_delete_]
 ==== is_delete

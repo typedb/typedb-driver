@@ -77,12 +77,12 @@ Checks whether this transaction is open.
 transaction.is_open()
 ----
 
-[#_Transaction_on_close_function_callable]
+[#_Transaction_on_close_function_Callable]
 ==== on_close
 
 [source,python]
 ----
-on_close(function: callable) -> None
+on_close(function: Callable) -> None
 ----
 
 Registers a callback function which will be executed when this transaction is closed.
@@ -93,7 +93,7 @@ Registers a callback function which will be executed when this transaction is cl
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `function` a| The callback function. a| `callable` a| 
+a| `function` a| The callback function. a| `Callable` a| 
 |===
 
 [caption=""]

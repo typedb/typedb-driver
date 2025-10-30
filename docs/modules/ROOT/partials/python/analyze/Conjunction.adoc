@@ -37,7 +37,7 @@ The Constraint(s) in the conjunction.
 
 [source,python]
 ----
-variable_annotations(variable: Variable) -> VariableAnnotations
+variable_annotations(variable: Variable) -> 'VariableAnnotations' | None
 ----
 
 Gets the annotations for a specific variable in this conjunction.
@@ -53,7 +53,7 @@ a| `variable` a| the variable to get annotations for a| `Variable` a|
 
 [caption=""]
 .Returns
-`VariableAnnotations`
+`'VariableAnnotations' | None`
 
 // end::methods[]
 

@@ -65,7 +65,7 @@ public interface Constraint {
 
     boolean isComparison();
 
-    boolean isKindOf();
+    boolean isKind();
 
     boolean isLabel();
 
@@ -101,7 +101,7 @@ public interface Constraint {
 
     Comparison asComparison();
 
-    Kind asKindOf();
+    Kind asKind();
 
     Label asLabel();
 

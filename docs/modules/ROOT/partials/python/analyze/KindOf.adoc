@@ -13,14 +13,14 @@ Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
 
 [source,python]
 ----
-kind() -> KindOf
+kind() -> KindVariant
 ----
 
 
 
 [caption=""]
 .Returns
-`KindOf`
+`KindVariant`
 
 [#_KindOf_type_]
 ==== type

@@ -205,7 +205,7 @@ public abstract class FunctorEncoder {
                     );
                 }
                 case KindOf: {
-                    Constraint.Kind kind = constraint.asKindOf();
+                    Constraint.Kind kind = constraint.asKind();
                     return makeFunctor("Kind", kind.kind().toString(), encode(kind.type()));
                 }
                 case Label: {
