@@ -21,7 +21,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
 
 if TYPE_CHECKING:
-    pass
+    from typedb.native_driver_wrapper import Variable
 
 
 class Reducer(ABC):

@@ -41,6 +41,7 @@ if TYPE_CHECKING:
     from typedb.api.analyze.variable_annotations import VariableAnnotations
     from typedb.native_driver_wrapper import Variable
 
+
 class _Conjunction(Conjunction, NativeWrapper[NativeConjunction]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
-from enum import IntEnum, IntEnum
+from enum import IntEnum
 
 from typedb.native_driver_wrapper import (
     comparator_get_name,
@@ -63,6 +63,7 @@ from typedb.native_driver_wrapper import (
 
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
+    from typedb.native_driver_wrapper import ConjunctionID
 
 
 class ConstraintExactness(IntEnum):
@@ -465,20 +466,12 @@ class Comparison(Constraint, ABC):
     def comparator(self) -> "Comparator":
         pass
 
-    @staticmethod
-    def comparator_name(comparator: "Comparator") -> str:
-        """
-        Returns the name of the comparator. Implementation may delegate to JNI helper.
-        """
-        # If a JNI helper is available it may be used here; otherwise override in concrete impl.
-        pass
-
 
 class KindOf(Constraint, ABC):
     """Represents a kind constraint: <kind> <type>"""
 
     @abstractmethod
-    def kind(self) -> "KindOf":
+    def kind(self) -> "KindVariant":
         pass
 
     @abstractmethod

@@ -32,6 +32,10 @@ from typedb.native_driver_wrapper import (
     variable_iterator_next,
 )
 
+if TYPE_CHECKING:
+    from typedb.native_driver_wrapper import Variable
+
+
 class _Reducer(Reducer, NativeWrapper[NativeReducer]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

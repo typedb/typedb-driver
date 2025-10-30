@@ -23,7 +23,8 @@ from typing import TYPE_CHECKING, Iterator
 
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_STAGE_CASTING, UNEXPECTED_NATIVE_VALUE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_STAGE_CASTING, \
+    UNEXPECTED_NATIVE_VALUE, NULL_NATIVE_OBJECT
 
 from typedb.api.analyze.pipeline_stage import (
     PipelineStage, PipelineStageVariant,
@@ -59,9 +60,9 @@ from typedb.native_driver_wrapper import (
     SortVariable as NativeSortVariable,
 )
 
-
 if TYPE_CHECKING:
-    pass
+    from typedb.native_driver_wrapper import ConjunctionID,Variable
+    from typedb.api.analyze.reducer import Reducer
 
 
 class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
@@ -181,6 +182,7 @@ class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
 
     def as_reduce(self):
         raise TypeDBDriverException(INVALID_STAGE_CASTING, (self.__class__.__name__, "ReduceStage"))
+
 
 class _MatchStage(MatchStage, _PipelineStage):
     def __init__(self, native):
@@ -371,7 +373,7 @@ class _ReduceStage(ReduceStage, _PipelineStage):
         native_iter = pipeline_stage_reduce_get_groupby(self.native_object)
         return IteratorWrapper(native_iter, variable_iterator_next)
 
-    def reduce_assignments(self) -> Iterator["PipelineStage.ReduceStage.ReduceAssignment"]:
+    def reduce_assignments(self) -> Iterator["ReduceStage.ReduceAssignment"]:
         native_iter = pipeline_stage_reduce_get_reducer_assignments(self.native_object)
         return map(
             _ReduceStage._ReduceAssignment,

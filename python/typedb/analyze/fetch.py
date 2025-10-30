@@ -17,8 +17,9 @@
 
 from typing import TYPE_CHECKING, Iterator, Optional
 
-from typedb.api.analyze.fetch import Fetch, FetchLeaf, FetchList, FetchObject
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, UNEXPECTED_NATIVE_VALUE, INVALID_FETCH_CASTING
+from typedb.api.analyze.fetch import Fetch, FetchLeaf, FetchList, FetchObject, FetchVariant
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, UNEXPECTED_NATIVE_VALUE, \
+    INVALID_FETCH_CASTING, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import (
@@ -28,10 +29,9 @@ from typedb.native_driver_wrapper import (
     string_iterator_next
 )
 
-from python.typedb.api.analyze.fetch import FetchVariant
-
 if TYPE_CHECKING:
-    import typedb.api.analyze.pipeline.Pipeline
+    from typedb.api.analyze.pipeline import Pipeline
+
 
 class _Fetch(Fetch, NativeWrapper[NativeFetch]):
     def __init__(self, fetch: NativeFetch):
@@ -69,13 +69,13 @@ class _Fetch(Fetch, NativeWrapper[NativeFetch]):
 
     def as_leaf(self) -> "FetchLeaf":
         # default implementation: invalid cast for this variant
-        raise TypeDBDriverException(INVALID_FETCH_CASTING, self.__class__.__name__, "Fetch.FetchLeaf")
+        raise TypeDBDriverException(INVALID_FETCH_CASTING, (self.__class__.__name__, "Fetch.FetchLeaf"))
 
     def as_list(self) -> "FetchList":
-        raise TypeDBDriverException(INVALID_FETCH_CASTING, self.__class__.__name__, "Fetch.FetchList")
+        raise TypeDBDriverException(INVALID_FETCH_CASTING, (self.__class__.__name__, "Fetch.FetchList"))
 
     def as_object(self) -> "FetchObject":
-        raise TypeDBDriverException(INVALID_FETCH_CASTING, self.__class__.__name__, "Fetch.FetchObject")
+        raise TypeDBDriverException(INVALID_FETCH_CASTING, (self.__class__.__name__, "Fetch.FetchObject"))
 
 
 class _FetchObject(FetchObject, _Fetch):
@@ -96,7 +96,7 @@ class _FetchObject(FetchObject, _Fetch):
 class _FetchList(FetchList, _Fetch):
     def is_list(self) -> bool:
         return True
-    
+
     def as_list(self) -> "FetchList":
         return self
 

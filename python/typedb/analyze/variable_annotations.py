@@ -22,9 +22,9 @@ from typing import TYPE_CHECKING, Iterator
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_VARIABLE_ANNOTATIONS_CASTING
-from typedb.concept.concept import _Concept
+from typedb.concept.concept_factory import wrap_concept
 
-from typedb.api.analyze.variable_annotations import VariableAnnotations
+from typedb.api.analyze.variable_annotations import VariableAnnotations, VariableAnnotationsVariant
 
 from typedb.native_driver_wrapper import (
     VariableAnnotations as NativeVariableAnnotations,
@@ -37,10 +37,8 @@ from typedb.native_driver_wrapper import (
     concept_iterator_next,
 )
 
-from python.typedb.concept.concept_factory import wrap_concept
-
 if TYPE_CHECKING:
-    from typedb.api.concept.type import Type
+    from typedb.api.concept.type.type import Type
 
 
 class _VariableAnnotations(VariableAnnotations, NativeWrapper[NativeVariableAnnotations]):
@@ -63,7 +61,7 @@ class _VariableAnnotations(VariableAnnotations, NativeWrapper[NativeVariableAnno
     def as_instance(self) -> Iterator["Type"]:
         if not self.is_instance():
             raise TypeDBDriverException(
-                INVALID_VARIABLE_ANNOTATIONS_CASTING, self.variant(), VariableAnnotationsVariant.INSTANCE
+                INVALID_VARIABLE_ANNOTATIONS_CASTING, (self.variant(), VariableAnnotationsVariant.InstanceAnnotations)
             )
         native_iter = variable_annotations_instance(self.native_object)
         return map(lambda x: wrap_concept(x).as_type(), IteratorWrapper(native_iter, concept_iterator_next))
@@ -71,7 +69,7 @@ class _VariableAnnotations(VariableAnnotations, NativeWrapper[NativeVariableAnno
     def as_type(self) -> Iterator["Type"]:
         if not self.is_type():
             raise TypeDBDriverException(
-                INVALID_VARIABLE_ANNOTATIONS_CASTING, self.variant(), VariableAnnotationsVariant.TYPE
+                INVALID_VARIABLE_ANNOTATIONS_CASTING, (self.variant(), VariableAnnotationsVariant.TypeAnnotations)
             )
         native_iter = variable_annotations_type(self.native_object)
         return map(lambda x: wrap_concept(x).as_type(), IteratorWrapper(native_iter, concept_iterator_next))
@@ -79,7 +77,7 @@ class _VariableAnnotations(VariableAnnotations, NativeWrapper[NativeVariableAnno
     def as_value(self) -> Iterator[str]:
         if not self.is_value():
             raise TypeDBDriverException(
-                INVALID_VARIABLE_ANNOTATIONS_CASTING, self.variant(), VariableAnnotationsVariant.VALUE
+                INVALID_VARIABLE_ANNOTATIONS_CASTING, (self.variant(), VariableAnnotationsVariant.ValueAnnotations)
             )
         native_iter = variable_annotations_value(self.native_object)
         return IteratorWrapper(native_iter, string_iterator_next)

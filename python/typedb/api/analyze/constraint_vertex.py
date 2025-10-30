@@ -21,8 +21,9 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typedb.api.concept.type import Type
-    from typedb.api.concept.value import Value
+    from typedb.api.concept.type.type import Type
+    from typedb.api.concept.value.value import Value
+    from typedb.native_driver_wrapper import Variable
 
 
 class ConstraintVertex(ABC):

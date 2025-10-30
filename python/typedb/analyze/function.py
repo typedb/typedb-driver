@@ -18,7 +18,8 @@
 from abc import ABC
 from typing import TYPE_CHECKING, Iterator
 
-from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, NULL_NATIVE_OBJECT, ILLEGAL_STATE, INVALID_RETURN_OPERATION_CASTING
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, NULL_NATIVE_OBJECT, ILLEGAL_STATE, \
+    INVALID_RETURN_OPERATION_CASTING
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import (
@@ -52,6 +53,9 @@ from typedb.analyze.reducer import _Reducer
 
 if TYPE_CHECKING:
     from typedb.api.analyze.pipeline import Pipeline
+    from typedb.analyze.variable_annotations import VariableAnnotations
+    from typedb.analyze.reducer import Reducer
+    from typedb.native_driver_wrapper import Variable
 
 
 class _Function(Function, NativeWrapper[NativeFunction]):
@@ -89,7 +93,8 @@ class _Function(Function, NativeWrapper[NativeFunction]):
         return _Function._return_operation_of(function_return_operation(self.native_object))
 
     def argument_annotations(self) -> Iterator["VariableAnnotations"]:
-        iterator = IteratorWrapper(function_argument_annotations(self.native_object), variable_annotations_iterator_next)
+        iterator = IteratorWrapper(function_argument_annotations(self.native_object),
+                                   variable_annotations_iterator_next)
         return map(_VariableAnnotations, iterator)
 
     def return_annotations(self) -> Iterator["VariableAnnotations"]:
@@ -125,16 +130,19 @@ class _ReturnOperation(ReturnOperation, NativeWrapper[NativeReturnOperation], AB
 
     # default downcasts raise
     def as_stream(self) -> "ReturnOperationStream":
-        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING, (self.__class__.__name__, "ReturnOperationStream"))
+        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING,
+                                    (self.__class__.__name__, "ReturnOperationStream"))
 
     def as_single(self) -> "ReturnOperationSingle":
-        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING, (self.__class__.__name__, "ReturnOperationSingle"))
+        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING,
+                                    (self.__class__.__name__, "ReturnOperationSingle"))
 
     def as_check(self) -> "ReturnOperationCheck":
         raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING, (self.__class__.__name__, "ReturnOperationCheck"))
 
     def as_reduce(self) -> "ReturnOperationReduce":
-        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING, (self.__class__.__name__, "ReturnOperationReduce"))
+        raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING,
+                                    (self.__class__.__name__, "ReturnOperationReduce"))
 
 
 class _ReturnOperationStream(_ReturnOperation, ReturnOperationStream):

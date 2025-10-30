@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.concept.type import Type
+    from typedb.api.concept.type.type import Type
 
 
 class VariableAnnotationsVariant(IntEnum):

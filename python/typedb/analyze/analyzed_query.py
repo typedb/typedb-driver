@@ -31,9 +31,9 @@ from typedb.native_driver_wrapper import AnalyzedQuery as NativeAnalyzedQuery, \
     function_iterator_next
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.pipeline.Pipeline import Pipeline
+    from typedb.api.analyze.pipeline import Pipeline
     from typedb.api.analyze.function import Function
-    from typedb.api.analyze.Fetch import Fetch
+    from typedb.api.analyze.fetch import Fetch
 
 
 class _AnalyzedQuery(AnalyzedQuery, NativeWrapper[NativeAnalyzedQuery]):

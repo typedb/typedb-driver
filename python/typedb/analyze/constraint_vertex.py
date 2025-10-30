@@ -19,10 +19,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from typedb.api.analyze.constraint_vertex import ConstraintVertex
+
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
-
-from typedb.api.analyze.constraint_vertex import ConstraintVertex
+from typedb.concept import concept_factory
 
 from typedb.native_driver_wrapper import (
     ConstraintVertex as NativeConstraintVertex,
@@ -35,11 +36,9 @@ from typedb.native_driver_wrapper import (
     constraint_vertex_as_named_role_get_name,
 )
 
-from python.typedb.concept import concept_factory
-
 if TYPE_CHECKING:
-    from typedb.api.concept.type import Type
-    from typedb.api.concept.value import Value
+    from typedb.api.concept.type.type import Type
+    from typedb.api.concept.value.value import Value
     from typedb.native_driver_wrapper import Variable
 
 

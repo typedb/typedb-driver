@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import IntEnum
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import TYPE_CHECKING, Iterator
 
 from typedb.native_driver_wrapper import (
     Match as NativeMatch,
@@ -40,10 +40,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import (
-        ConjunctionID,
-        Variable,
-    )
+    from typedb.native_driver_wrapper import ConjunctionID,Variable
     from typedb.api.analyze.reducer import Reducer
 
 
@@ -123,51 +120,51 @@ class PipelineStage(ABC):
 
     # Conversion / downcast methods
     @abstractmethod
-    def as_match(self) -> "PipelineStage.MatchStage":
+    def as_match(self) -> "MatchStage":
         pass
 
     @abstractmethod
-    def as_insert(self) -> "PipelineStage.InsertStage":
+    def as_insert(self) -> "InsertStage":
         pass
 
     @abstractmethod
-    def as_put(self) -> "PipelineStage.PutStage":
+    def as_put(self) -> "PutStage":
         pass
 
     @abstractmethod
-    def as_update(self) -> "PipelineStage.UpdateStage":
+    def as_update(self) -> "UpdateStage":
         pass
 
     @abstractmethod
-    def as_delete(self) -> "PipelineStage.DeleteStage":
+    def as_delete(self) -> "DeleteStage":
         pass
 
     @abstractmethod
-    def as_select(self) -> "PipelineStage.SelectStage":
+    def as_select(self) -> "SelectStage":
         pass
 
     @abstractmethod
-    def as_sort(self) -> "PipelineStage.SortStage":
+    def as_sort(self) -> "SortStage":
         pass
 
     @abstractmethod
-    def as_require(self) -> "PipelineStage.RequireStage":
+    def as_require(self) -> "RequireStage":
         pass
 
     @abstractmethod
-    def as_offset(self) -> "PipelineStage.OffsetStage":
+    def as_offset(self) -> "OffsetStage":
         pass
 
     @abstractmethod
-    def as_limit(self) -> "PipelineStage.LimitStage":
+    def as_limit(self) -> "LimitStage":
         pass
 
     @abstractmethod
-    def as_distinct(self) -> "PipelineStage.DistinctStage":
+    def as_distinct(self) -> "DistinctStage":
         pass
 
     @abstractmethod
-    def as_reduce(self) -> "PipelineStage.ReduceStage":
+    def as_reduce(self) -> "ReduceStage":
         pass
 
 
@@ -229,7 +226,7 @@ class SortStage(PipelineStage, ABC):
     """Represents a 'sort' stage: sort <variables-and-order>"""
 
     @abstractmethod
-    def variables(self) -> Iterator["PipelineStage.SortStage.SortVariable"]:
+    def variables(self) -> Iterator["SortStage.SortVariable"]:
         pass
 
     class SortOrderVariant(IntEnum):
@@ -244,7 +241,7 @@ class SortStage(PipelineStage, ABC):
             pass
 
         @abstractmethod
-        def order(self) -> "SortOrderVariant":
+        def order(self) -> "SortStage.SortOrderVariant":
             pass
 
 

@@ -32,6 +32,7 @@ if TYPE_CHECKING:
     from typedb.analyze.pipeline import Pipeline
     from typedb.analyze.variable_annotations import VariableAnnotations
     from typedb.analyze.reducer import Reducer
+    from typedb.native_driver_wrapper import Variable
 
 
 class ReturnOperationVariant(IntEnum):

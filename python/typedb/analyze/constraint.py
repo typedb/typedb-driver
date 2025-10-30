@@ -24,9 +24,8 @@ from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_CONSTRAINT_CASTING, \
     UNEXPECTED_NATIVE_VALUE
 
-from python.typedb.api.analyze.constraint import KindVariant
 from typedb.api.analyze.constraint import (
-    Constraint, ConstraintVariant, ConstraintExactness, Comparator,
+    Constraint, ConstraintVariant, ConstraintExactness, Comparator, Span, KindVariant,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
     FunctionCall, Expression, Is, Iid, Comparison, KindOf, Label, Value,
     Or, Not, Try,
@@ -92,8 +91,9 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.constraint import Constraint, ConstraintExactness, ConstraintVariant
+    from typedb.api.analyze.constraint import Constraint, ConstraintExactness, ConstraintVariant, Span
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
+    from typedb.native_driver_wrapper import ConjunctionID
 
 
 class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
@@ -242,7 +242,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Comparison"))
 
     def as_kind(self):
-        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Kind"))
+        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "KindOf"))
 
     def as_label(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Label"))
@@ -259,7 +259,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     def as_try(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Try"))
 
-    class SpanImpl:
+    class SpanImpl(Span):
         def __init__(self, begin: int, end: int):
             self._begin = begin
             self._end = end
@@ -534,10 +534,6 @@ class _Comparison(_Constraint, Comparison):
     def comparator(self) -> "Comparator":
         return Comparator(constraint_comparison_get_comparator(self.native_object))
 
-    @staticmethod
-    def comparator_name(comparator: "Comparator") -> str:
-        return comparator_get_name(comparator)
-
 
 class _KindOf(_Constraint, KindOf):
     def __init__(self, native):
@@ -549,7 +545,7 @@ class _KindOf(_Constraint, KindOf):
     def as_kind(self):
         return self
 
-    def kind(self) -> "Kind":
+    def kind(self) -> KindVariant:
         return KindVariant(constraint_kind_get_kind(self.native_object))
 
     def type(self) -> "ConstraintVertex":

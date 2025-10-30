@@ -17,8 +17,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Callable
 
+from typedb.api.analyze.analyzed_query import AnalyzedQuery
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.query_options import QueryOptions
 from typedb.api.connection.transaction import Transaction
@@ -83,13 +84,13 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             return False
         return transaction_is_open(self.native_object)
 
-    def on_close(self, function: callable):
+    def on_close(self, function: Callable):
         callback = _Transaction.TransactionOnClose(function)
         void_promise_resolve(transaction_on_close(self.native_object, callback.__disown__()))
 
     class TransactionOnClose(TransactionCallbackDirector):
 
-        def __init__(self, function: callable):
+        def __init__(self, function: Callable):
             super().__init__()
             self._function = function
 

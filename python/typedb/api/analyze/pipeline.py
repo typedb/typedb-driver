@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Iterator, Optional
 if TYPE_CHECKING:
     from typedb.analyze.pipeline_stage import PipelineStage
     from typedb.analyze.conjunction import Conjunction
+    from typedb.native_driver_wrapper import ConjunctionID, Variable
 
 
 class Pipeline(ABC):

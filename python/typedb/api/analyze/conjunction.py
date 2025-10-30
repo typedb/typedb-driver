@@ -18,11 +18,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING, Iterator, Optional
 
 if TYPE_CHECKING:
     from typedb.analyze.constraint import Constraint
     from typedb.analyze.variable_annotations import VariableAnnotations
+    from typedb.native_driver_wrapper import Variable
 
 
 class Conjunction(ABC):
@@ -49,7 +50,7 @@ class Conjunction(ABC):
         pass
 
     @abstractmethod
-    def variable_annotations(self, variable: "Variable") -> "VariableAnnotations":
+    def variable_annotations(self, variable: "Variable") -> Optional["VariableAnnotations"]:
         """
         Gets the annotations for a specific variable in this conjunction.
 
