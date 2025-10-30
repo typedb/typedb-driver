@@ -15,7 +15,7 @@ Holds information about variables in a ``Pipeline``.
 [options="header"]
 |===
 |Name |Type |Description
-a| `name` a| `String` a| 
+a| `name` a| `String` a| The name of the variable, if any.
 |===
 // end::properties[]
 

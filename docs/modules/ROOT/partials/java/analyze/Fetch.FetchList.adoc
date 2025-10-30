@@ -1,0 +1,24 @@
+[#_Fetch_FetchList]
+=== Fetch.FetchList
+
+*Package*: `com.typedb.driver.api.analyze`
+
+A ``List`` of ``Fetch`` documents.
+
+// tag::methods[]
+[#_Fetch_FetchList_element_]
+==== element
+
+[source,java]
+----
+Fetch element()
+----
+
+
+
+[caption=""]
+.Returns
+`Fetch`
+
+// end::methods[]
+

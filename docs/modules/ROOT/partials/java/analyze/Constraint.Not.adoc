@@ -1,0 +1,562 @@
+[#_Constraint_Not]
+=== Constraint.Not
+
+*Package*: `com.typedb.driver.api.analyze`
+
+*Superinterfaces:*
+
+* `Constraint`
+
+Represents a "not" constraint: not { 
+ }
+
+
+// tag::methods[]
+[#_Constraint_Not_asComparison_]
+==== asComparison
+
+[source,java]
+----
+Constraint.Comparison asComparison()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Comparison`
+
+[#_Constraint_Not_asExpression_]
+==== asExpression
+
+[source,java]
+----
+Constraint.Expression asExpression()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Expression`
+
+[#_Constraint_Not_asFunctionCall_]
+==== asFunctionCall
+
+[source,java]
+----
+Constraint.FunctionCall asFunctionCall()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.FunctionCall`
+
+[#_Constraint_Not_asHas_]
+==== asHas
+
+[source,java]
+----
+Constraint.Has asHas()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Has`
+
+[#_Constraint_Not_asIid_]
+==== asIid
+
+[source,java]
+----
+Constraint.Iid asIid()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Iid`
+
+[#_Constraint_Not_asIs_]
+==== asIs
+
+[source,java]
+----
+Constraint.Is asIs()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Is`
+
+[#_Constraint_Not_asIsa_]
+==== asIsa
+
+[source,java]
+----
+Constraint.Isa asIsa()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Isa`
+
+[#_Constraint_Not_asKindOf_]
+==== asKindOf
+
+[source,java]
+----
+Constraint.Kind asKindOf()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Kind`
+
+[#_Constraint_Not_asLabel_]
+==== asLabel
+
+[source,java]
+----
+Constraint.Label asLabel()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Label`
+
+[#_Constraint_Not_asLinks_]
+==== asLinks
+
+[source,java]
+----
+Constraint.Links asLinks()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Links`
+
+[#_Constraint_Not_asNot_]
+==== asNot
+
+[source,java]
+----
+Constraint.Not asNot()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Not`
+
+[#_Constraint_Not_asOr_]
+==== asOr
+
+[source,java]
+----
+Constraint.Or asOr()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Or`
+
+[#_Constraint_Not_asOwns_]
+==== asOwns
+
+[source,java]
+----
+Constraint.Owns asOwns()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Owns`
+
+[#_Constraint_Not_asPlays_]
+==== asPlays
+
+[source,java]
+----
+Constraint.Plays asPlays()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Plays`
+
+[#_Constraint_Not_asRelates_]
+==== asRelates
+
+[source,java]
+----
+Constraint.Relates asRelates()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Relates`
+
+[#_Constraint_Not_asSub_]
+==== asSub
+
+[source,java]
+----
+Constraint.Sub asSub()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Sub`
+
+[#_Constraint_Not_asTry_]
+==== asTry
+
+[source,java]
+----
+Constraint.Try asTry()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Try`
+
+[#_Constraint_Not_asValue_]
+==== asValue
+
+[source,java]
+----
+Constraint.Value asValue()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.Value`
+
+[#_Constraint_Not_conjunction_]
+==== conjunction
+
+[source,java]
+----
+com.typedb.driver.jni.ConjunctionID conjunction()
+----
+
+Index into ``Pipeline.conjunctions``
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.ConjunctionID`
+
+[#_Constraint_Not_isComparison_]
+==== isComparison
+
+[source,java]
+----
+boolean isComparison()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isExpression_]
+==== isExpression
+
+[source,java]
+----
+boolean isExpression()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isFunctionCall_]
+==== isFunctionCall
+
+[source,java]
+----
+boolean isFunctionCall()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isHas_]
+==== isHas
+
+[source,java]
+----
+boolean isHas()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isIid_]
+==== isIid
+
+[source,java]
+----
+boolean isIid()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isIs_]
+==== isIs
+
+[source,java]
+----
+boolean isIs()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isIsa_]
+==== isIsa
+
+[source,java]
+----
+boolean isIsa()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isKindOf_]
+==== isKindOf
+
+[source,java]
+----
+boolean isKindOf()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isLabel_]
+==== isLabel
+
+[source,java]
+----
+boolean isLabel()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isLinks_]
+==== isLinks
+
+[source,java]
+----
+boolean isLinks()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isNot_]
+==== isNot
+
+[source,java]
+----
+boolean isNot()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isOr_]
+==== isOr
+
+[source,java]
+----
+boolean isOr()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isOwns_]
+==== isOwns
+
+[source,java]
+----
+boolean isOwns()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isPlays_]
+==== isPlays
+
+[source,java]
+----
+boolean isPlays()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isRelates_]
+==== isRelates
+
+[source,java]
+----
+boolean isRelates()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isSub_]
+==== isSub
+
+[source,java]
+----
+boolean isSub()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isTry_]
+==== isTry
+
+[source,java]
+----
+boolean isTry()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_isValue_]
+==== isValue
+
+[source,java]
+----
+boolean isValue()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Not_span_]
+==== span
+
+[source,java]
+----
+Constraint.Span span()
+----
+
+Gets the span of this constraint.
+
+[caption=""]
+.Returns
+`Constraint.Span`
+
+[#_Constraint_Not_variant_]
+==== variant
+
+[source,java]
+----
+com.typedb.driver.jni.ConstraintVariant variant()
+----
+
+Gets the variant of this constraint.
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.ConstraintVariant`
+
+// end::methods[]
+

@@ -48,12 +48,12 @@ impl ConceptRowHeader {
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
-    involved_blocks: Vec<u8>,
+    involved_conjunctions: Vec<u8>,
 }
 
 impl ConceptRow {
-    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>, involved_blocks: Vec<u8>) -> Self {
-        Self { header, involved_blocks, row }
+    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>, involved_conjunctions: Vec<u8>) -> Self {
+        Self { header, involved_conjunctions, row }
     }
 
     /// Retrieve the row column names (shared by all elements in this stream).
@@ -78,19 +78,32 @@ impl ConceptRow {
         self.header.query_type
     }
 
-    /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code> that answered this row.
+    /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// concept_row.get_involved_blocks()
+    /// concept_row.get_involved_conjunctions()
     /// ```
-    pub fn get_involved_blocks(&self) -> impl Iterator<Item = ConjunctionID> + '_ {
-        (0..self.involved_blocks.len())
+    pub fn get_involved_conjunctions(&self) -> impl Iterator<Item = ConjunctionID> + '_ {
+        (0..self.involved_conjunctions.len())
             .filter(|index| {
                 let index = index / 8;
                 let mask = 1 << (index % 8);
-                self.involved_blocks[index] & mask != 0
+                self.involved_conjunctions[index] & mask != 0
+            })
+            .map(ConjunctionID)
+    }
+
+    /// Like <code>ConceptRow::get_involved_conjunctions</code> but clones the underlying data.
+    /// Meant for simpler lifetimes over FFI.
+    pub fn get_involved_conjunctions_cloned(&self) -> impl Iterator<Item = ConjunctionID> + 'static {
+        let involved_conjunctions = self.involved_conjunctions.clone();
+        (0..self.involved_conjunctions.len())
+            .filter(move |index| {
+                let index = index / 8;
+                let mask = 1 << (index % 8);
+                involved_conjunctions[index] & mask != 0
             })
             .map(ConjunctionID)
     }

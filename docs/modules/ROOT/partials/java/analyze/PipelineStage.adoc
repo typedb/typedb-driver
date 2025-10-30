@@ -1,0 +1,360 @@
+[#_PipelineStage]
+=== PipelineStage
+
+*Package*: `com.typedb.driver.api.analyze`
+
+Representation of a stage in a ``Pipeline``.
+
+// tag::methods[]
+[#_PipelineStage_asDelete_]
+==== asDelete
+
+[source,java]
+----
+PipelineStage.DeleteStage asDelete()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.DeleteStage`
+
+[#_PipelineStage_asDistinct_]
+==== asDistinct
+
+[source,java]
+----
+PipelineStage.DistinctStage asDistinct()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.DistinctStage`
+
+[#_PipelineStage_asInsert_]
+==== asInsert
+
+[source,java]
+----
+PipelineStage.InsertStage asInsert()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.InsertStage`
+
+[#_PipelineStage_asLimit_]
+==== asLimit
+
+[source,java]
+----
+PipelineStage.LimitStage asLimit()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.LimitStage`
+
+[#_PipelineStage_asMatch_]
+==== asMatch
+
+[source,java]
+----
+PipelineStage.MatchStage asMatch()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.MatchStage`
+
+[#_PipelineStage_asOffset_]
+==== asOffset
+
+[source,java]
+----
+PipelineStage.OffsetStage asOffset()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.OffsetStage`
+
+[#_PipelineStage_asPut_]
+==== asPut
+
+[source,java]
+----
+PipelineStage.PutStage asPut()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.PutStage`
+
+[#_PipelineStage_asReduce_]
+==== asReduce
+
+[source,java]
+----
+PipelineStage.ReduceStage asReduce()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.ReduceStage`
+
+[#_PipelineStage_asRequire_]
+==== asRequire
+
+[source,java]
+----
+PipelineStage.RequireStage asRequire()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.RequireStage`
+
+[#_PipelineStage_asSelect_]
+==== asSelect
+
+[source,java]
+----
+PipelineStage.SelectStage asSelect()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.SelectStage`
+
+[#_PipelineStage_asSort_]
+==== asSort
+
+[source,java]
+----
+PipelineStage.SortStage asSort()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.SortStage`
+
+[#_PipelineStage_asUpdate_]
+==== asUpdate
+
+[source,java]
+----
+PipelineStage.UpdateStage asUpdate()
+----
+
+
+
+[caption=""]
+.Returns
+`PipelineStage.UpdateStage`
+
+[#_PipelineStage_getVariant_]
+==== getVariant
+
+[source,java]
+----
+com.typedb.driver.jni.PipelineStageVariant getVariant()
+----
+
+
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.PipelineStageVariant`
+
+[#_PipelineStage_isDelete_]
+==== isDelete
+
+[source,java]
+----
+boolean isDelete()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isDistinct_]
+==== isDistinct
+
+[source,java]
+----
+boolean isDistinct()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isInsert_]
+==== isInsert
+
+[source,java]
+----
+boolean isInsert()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isLimit_]
+==== isLimit
+
+[source,java]
+----
+boolean isLimit()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isMatch_]
+==== isMatch
+
+[source,java]
+----
+boolean isMatch()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isOffset_]
+==== isOffset
+
+[source,java]
+----
+boolean isOffset()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isPut_]
+==== isPut
+
+[source,java]
+----
+boolean isPut()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isReduce_]
+==== isReduce
+
+[source,java]
+----
+boolean isReduce()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isRequire_]
+==== isRequire
+
+[source,java]
+----
+boolean isRequire()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isSelect_]
+==== isSelect
+
+[source,java]
+----
+boolean isSelect()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isSort_]
+==== isSort
+
+[source,java]
+----
+boolean isSort()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_PipelineStage_isUpdate_]
+==== isUpdate
+
+[source,java]
+----
+boolean isUpdate()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+// end::methods[]
+

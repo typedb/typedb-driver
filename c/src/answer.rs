@@ -32,6 +32,7 @@ use super::{
     memory::{borrow, free, release, release_string, string_view},
 };
 use crate::{
+    analyze::ConjunctionIDIterator,
     common::StringIterator,
     concept::ConceptRowIterator,
     error::{try_release, try_release_optional},
@@ -144,6 +145,13 @@ pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *
 #[no_mangle]
 pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
     try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())
+}
+
+/// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
+#[no_mangle]
+pub extern "C" fn concept_row_involved_conjunctions(concept_row: *const ConceptRow) -> *mut ConjunctionIDIterator {
+    let iter = borrow(concept_row).clone().get_involved_conjunctions_cloned();
+    release(ConjunctionIDIterator(CIterator(box_stream(iter))))
 }
 
 /// Checks whether the provided <code>ConceptRow</code> objects are equal

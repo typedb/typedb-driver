@@ -1,0 +1,136 @@
+[#_ConstraintVertex]
+=== ConstraintVertex
+
+*Package*: `com.typedb.driver.api.analyze`
+
+The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query. A ConstraintVertex is either a variable, or some identifier of the concept. A ``Variable`` is a vertex the query must match and return. A ``Label`` uniquely identifies a type A ``Value`` represents a primitive value literal in TypeDB. A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
+
+// tag::methods[]
+[#_ConstraintVertex_asLabel_]
+==== asLabel
+
+[source,java]
+----
+Type asLabel()
+----
+
+Down-casts this vertex to a type label.
+
+[caption=""]
+.Returns
+`Type`
+
+[#_ConstraintVertex_asNamedRoleGetName_]
+==== asNamedRoleGetName
+
+[source,java]
+----
+java.lang.String asNamedRoleGetName()
+----
+
+Down-casts the variable as a NamedRoleVertex and gets the associated name This is the role label specified by the user in a ``Links`` constraint.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_ConstraintVertex_asNamedRoleGetVariable_]
+==== asNamedRoleGetVariable
+
+[source,java]
+----
+com.typedb.driver.jni.Variable asNamedRoleGetVariable()
+----
+
+Down-casts the variable as a NamedRoleVertex and gets the associated variable. This is an internal variable injected to handle ambiguity in role-names.
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.Variable`
+
+[#_ConstraintVertex_asValue_]
+==== asValue
+
+[source,java]
+----
+Value asValue()
+----
+
+Down-casts this vertex to a value.
+
+[caption=""]
+.Returns
+`Value`
+
+[#_ConstraintVertex_asVariable_]
+==== asVariable
+
+[source,java]
+----
+com.typedb.driver.jni.Variable asVariable()
+----
+
+Down-casts this variable to a vertex.
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.Variable`
+
+[#_ConstraintVertex_isLabel_]
+==== isLabel
+
+[source,java]
+----
+boolean isLabel()
+----
+
+Checks if this vertex is a label.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_ConstraintVertex_isNamedRole_]
+==== isNamedRole
+
+[source,java]
+----
+boolean isNamedRole()
+----
+
+Checks if this vertex is a named role.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_ConstraintVertex_isValue_]
+==== isValue
+
+[source,java]
+----
+boolean isValue()
+----
+
+Checks if this vertex is a value.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_ConstraintVertex_isVariable_]
+==== isVariable
+
+[source,java]
+----
+boolean isVariable()
+----
+
+Checks if this vertex is a variable.
+
+[caption=""]
+.Returns
+`boolean`
+
+// end::methods[]
+

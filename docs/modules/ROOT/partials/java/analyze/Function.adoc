@@ -1,0 +1,80 @@
+[#_Function]
+=== Function
+
+*Package*: `com.typedb.driver.api.analyze`
+
+Holds a representation of a function, and the result of type-inference for each variable.
+
+// tag::methods[]
+[#_Function_argument_annotations_]
+==== argument_annotations
+
+[source,java]
+----
+java.util.stream.Stream<? extends VariableAnnotations> argument_annotations()
+----
+
+Gets the type annotations for each argument of the function.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends VariableAnnotations>`
+
+[#_Function_argument_variables_]
+==== argument_variables
+
+[source,java]
+----
+java.util.stream.Stream<com.typedb.driver.jni.Variable> argument_variables()
+----
+
+Gets the variables which are the arguments of the function.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+
+[#_Function_body_]
+==== body
+
+[source,java]
+----
+Pipeline body()
+----
+
+Gets the pipeline which forms the body of the function.
+
+[caption=""]
+.Returns
+`Pipeline`
+
+[#_Function_return_annotations_]
+==== return_annotations
+
+[source,java]
+----
+java.util.stream.Stream<? extends VariableAnnotations> return_annotations()
+----
+
+Gets the type annotations for each concept returned by the function.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends VariableAnnotations>`
+
+[#_Function_return_operation_]
+==== return_operation
+
+[source,java]
+----
+Function.ReturnOperation return_operation()
+----
+
+Gets the return operation of the function.
+
+[caption=""]
+.Returns
+`Function.ReturnOperation`
+
+// end::methods[]
+

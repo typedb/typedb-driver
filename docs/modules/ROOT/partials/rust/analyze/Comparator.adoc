@@ -21,3 +21,23 @@ a| `NotEqual = 1`
 |===
 // end::enum_constants[]
 
+// tag::methods[]
+[#_enum_Comparator_symbol_]
+==== symbol
+
+[source,rust]
+----
+pub fn symbol(&self) -> &'static str
+----
+
+The symbol representing the comparator in TypeQL
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&'static str
+----
+
+// end::methods[]
+
