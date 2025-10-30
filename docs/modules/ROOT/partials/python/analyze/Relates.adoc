@@ -1,0 +1,54 @@
+[#_Relates]
+=== Relates
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘relates’ constraint: &lt;relation&gt; relates &lt;role&gt;
+
+// tag::methods[]
+[#_Relates_exactness_]
+==== exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Relates_relation_]
+==== relation
+
+[source,python]
+----
+relation() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Relates_role_]
+==== role
+
+[source,python]
+----
+role() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

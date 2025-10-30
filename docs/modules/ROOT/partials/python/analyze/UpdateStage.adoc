@@ -1,0 +1,26 @@
+[#_UpdateStage]
+=== UpdateStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents an ‘update’ stage: update &lt;block&gt;
+
+// tag::methods[]
+[#_UpdateStage_block_]
+==== block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

@@ -66,6 +66,62 @@ Down-casts this ReturnOperation to a ``Stream`` return operation.
 .Returns
 `Function.ReturnOperation.Stream`
 
+[#_Function_ReturnOperation_Single_isCheck_]
+==== isCheck
+
+[source,java]
+----
+boolean isCheck()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Single_isReduce_]
+==== isReduce
+
+[source,java]
+----
+boolean isReduce()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Single_isSingle_]
+==== isSingle
+
+[source,java]
+----
+boolean isSingle()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Single_isStream_]
+==== isStream
+
+[source,java]
+----
+boolean isStream()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
 [#_Function_ReturnOperation_Single_selector_]
 ==== selector
 

@@ -3,302 +3,38 @@
 
 *Supertypes:*
 
-* `Concept`
+* `Constraint`
+
+Represents a value constraint: &lt;attribute_type&gt; value &lt;value_type&gt;
 
 // tag::methods[]
-[#_Value_as_value_]
-==== as_value
+[#_Value_attribute_type_]
+==== attribute_type
 
 [source,python]
 ----
-as_value() -> Value
+attribute_type() -> ConstraintVertex
 ----
 
-Casts the concept to ``Value``.
+
 
 [caption=""]
 .Returns
-`Value`
+`ConstraintVertex`
 
-[caption=""]
-.Code examples
-[source,python]
-----
-value.as_value()
-----
-
-[#_Value_get_]
-==== get
+[#_Value_value_type_]
+==== value_type
 
 [source,python]
 ----
-get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]
+value_type() -> str
 ----
 
-Retrieves the value which this value concept holds.
 
-[caption=""]
-.Returns
-`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get()
-----
-
-[#_Value_get_boolean_]
-==== get_boolean
-
-[source,python]
-----
-get_boolean() -> bool
-----
-
-Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_boolean()
-----
-
-[#_Value_get_date_]
-==== get_date
-
-[source,python]
-----
-get_date() -> date
-----
-
-Returns a timezone naive ``date`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`date`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_date()
-----
-
-[#_Value_get_datetime_]
-==== get_datetime
-
-[source,python]
-----
-get_datetime() -> Datetime
-----
-
-Returns a timezone naive ``datetime`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Datetime`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_datetime()
-----
-
-[#_Value_get_datetime_tz_]
-==== get_datetime_tz
-
-[source,python]
-----
-get_datetime_tz() -> Datetime
-----
-
-Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Datetime`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_datetime_tz()
-----
-
-[#_Value_get_decimal_]
-==== get_decimal
-
-[source,python]
-----
-get_decimal() -> Decimal
-----
-
-Returns a ``decimal`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Decimal`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_decimal()
-----
-
-[#_Value_get_double_]
-==== get_double
-
-[source,python]
-----
-get_double() -> float
-----
-
-Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`float`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_double()
-----
-
-[#_Value_get_duration_]
-==== get_duration
-
-[source,python]
-----
-get_duration() -> Duration
-----
-
-Returns a timezone naive ``duration`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Duration`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_duration()
-----
-
-[#_Value_get_integer_]
-==== get_integer
-
-[source,python]
-----
-get_integer() -> int
-----
-
-Returns a ``integer`` value of this value concept. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`int`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_integer()
-----
-
-[#_Value_get_string_]
-==== get_string
-
-[source,python]
-----
-get_string() -> str
-----
-
-Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
 `str`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_string()
-----
-
-[#_Value_get_struct_]
-==== get_struct
-
-[source,python]
-----
-get_struct() -> Dict[str, Value | None]
-----
-
-Returns a ``struct`` value of this value concept represented as a map from field names to values. If the value has another type, raises an exception.
-
-[caption=""]
-.Returns
-`Dict[str, Value | None]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_struct()
-----
-
-[#_Value_get_type_]
-==== get_type
-
-[source,python]
-----
-get_type() -> str
-----
-
-Retrieves the ``str`` describing the value type of this ``Value`` concept.
-
-[caption=""]
-.Returns
-`str`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.get_type()
-----
-
-[#_Value_is_value_]
-==== is_value
-
-[source,python]
-----
-is_value() -> bool
-----
-
-Checks if the concept is a ``Value``.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.is_value()
-----
 
 // end::methods[]
 

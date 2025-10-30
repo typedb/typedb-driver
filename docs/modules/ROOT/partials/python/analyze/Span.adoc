@@ -1,0 +1,36 @@
+[#_Span]
+=== Span
+
+The span of a constraint in the source query.
+
+// tag::methods[]
+[#_Span_begin_]
+==== begin
+
+[source,python]
+----
+begin() -> int
+----
+
+The offset of the first character.
+
+[caption=""]
+.Returns
+`int`
+
+[#_Span_end_]
+==== end
+
+[source,python]
+----
+end() -> int
+----
+
+The offset after the last character.
+
+[caption=""]
+.Returns
+`int`
+
+// end::methods[]
+

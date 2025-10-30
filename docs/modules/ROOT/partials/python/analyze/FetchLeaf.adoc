@@ -1,0 +1,26 @@
+[#_FetchLeaf]
+=== FetchLeaf
+
+*Supertypes:*
+
+* `Fetch`
+
+The leaf of a Fetch object. Holds information on the value it can hold.
+
+// tag::methods[]
+[#_FetchLeaf_annotations_]
+==== annotations
+
+[source,python]
+----
+annotations() -> Iterator[str]
+----
+
+The possible ValueType(s) as strings.
+
+[caption=""]
+.Returns
+`Iterator[str]`
+
+// end::methods[]
+

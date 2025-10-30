@@ -1,0 +1,134 @@
+[#_ConstraintVertex]
+=== ConstraintVertex
+
+The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query. A ConstraintVertex is either a variable, or some identifier of the concept.
+
+// tag::methods[]
+[#_ConstraintVertex_as_label_]
+==== as_label
+
+[source,python]
+----
+as_label() -> Type
+----
+
+Down-casts this vertex to a type label.
+
+[caption=""]
+.Returns
+`Type`
+
+[#_ConstraintVertex_as_named_role_get_name_]
+==== as_named_role_get_name
+
+[source,python]
+----
+as_named_role_get_name() -> str
+----
+
+Down-casts the variable as a NamedRoleVertex and gets the associated name.
+
+[caption=""]
+.Returns
+`str`
+
+[#_ConstraintVertex_as_named_role_get_variable_]
+==== as_named_role_get_variable
+
+[source,python]
+----
+as_named_role_get_variable() -> Variable
+----
+
+Down-casts the variable as a NamedRoleVertex and gets the associated variable.
+
+[caption=""]
+.Returns
+`Variable`
+
+[#_ConstraintVertex_as_value_]
+==== as_value
+
+[source,python]
+----
+as_value() -> Value
+----
+
+Down-casts this vertex to a value.
+
+[caption=""]
+.Returns
+`Value`
+
+[#_ConstraintVertex_as_variable_]
+==== as_variable
+
+[source,python]
+----
+as_variable() -> Variable
+----
+
+Down-casts this vertex to a variable.
+
+[caption=""]
+.Returns
+`Variable`
+
+[#_ConstraintVertex_is_label_]
+==== is_label
+
+[source,python]
+----
+is_label() -> bool
+----
+
+Checks if this vertex is a label.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConstraintVertex_is_named_role_]
+==== is_named_role
+
+[source,python]
+----
+is_named_role() -> bool
+----
+
+Checks if this vertex is a named role.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConstraintVertex_is_value_]
+==== is_value
+
+[source,python]
+----
+is_value() -> bool
+----
+
+Checks if this vertex is a value.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ConstraintVertex_is_variable_]
+==== is_variable
+
+[source,python]
+----
+is_variable() -> bool
+----
+
+Checks if this vertex is a variable.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

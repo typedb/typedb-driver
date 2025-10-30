@@ -1,0 +1,54 @@
+[#_FunctionCall]
+=== FunctionCall
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a function call: let &lt;assigned&gt; = name(&lt;arguments&gt;)
+
+// tag::methods[]
+[#_FunctionCall_arguments_]
+==== arguments
+
+[source,python]
+----
+arguments() -> Iterator['ConstraintVertex']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['ConstraintVertex']`
+
+[#_FunctionCall_assigned_]
+==== assigned
+
+[source,python]
+----
+assigned() -> Iterator['ConstraintVertex']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['ConstraintVertex']`
+
+[#_FunctionCall_name_]
+==== name
+
+[source,python]
+----
+name() -> str
+----
+
+
+
+[caption=""]
+.Returns
+`str`
+
+// end::methods[]
+

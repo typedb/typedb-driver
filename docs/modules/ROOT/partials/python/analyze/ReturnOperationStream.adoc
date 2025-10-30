@@ -1,0 +1,24 @@
+[#_ReturnOperationStream]
+=== ReturnOperationStream
+
+*Supertypes:*
+
+* `ReturnOperation`
+
+// tag::methods[]
+[#_ReturnOperationStream_variables_]
+==== variables
+
+[source,python]
+----
+variables() -> Iterator['Variable']
+----
+
+Gets the variables in the returned row.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

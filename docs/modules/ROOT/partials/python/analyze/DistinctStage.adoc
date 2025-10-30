@@ -1,0 +1,9 @@
+[#_DistinctStage]
+=== DistinctStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘distinct’ stage.
+

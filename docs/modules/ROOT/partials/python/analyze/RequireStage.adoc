@@ -1,0 +1,26 @@
+[#_RequireStage]
+=== RequireStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘require’ stage: require &lt;variables&gt;
+
+// tag::methods[]
+[#_RequireStage_variables_]
+==== variables
+
+[source,python]
+----
+variables() -> Iterator['Variable']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

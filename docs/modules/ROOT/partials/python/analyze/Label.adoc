@@ -1,0 +1,40 @@
+[#_Label]
+=== Label
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a label constraint: &lt;type&gt; label &lt;label&gt;
+
+// tag::methods[]
+[#_Label_label_]
+==== label
+
+[source,python]
+----
+label() -> str
+----
+
+
+
+[caption=""]
+.Returns
+`str`
+
+[#_Label_variable_]
+==== variable
+
+[source,python]
+----
+variable() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

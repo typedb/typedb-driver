@@ -1,0 +1,54 @@
+[#_Isa]
+=== Isa
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents an ‘isa’ constraint: &lt;instance&gt; isa(!) &lt;type&gt;
+
+// tag::methods[]
+[#_Isa_exactness_]
+==== exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Isa_instance_]
+==== instance
+
+[source,python]
+----
+instance() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Isa_type_]
+==== type
+
+[source,python]
+----
+type() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

@@ -1,0 +1,20 @@
+[#_KindVariant]
+=== KindVariant
+
+An enumeration.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `Attribute` a| `1`
+a| `Entity` a| `0`
+a| `Relation` a| `2`
+a| `Role` a| `3`
+a| `native_driver_wrapper` a| `<module 'typedb.native_driver_wrapper' from '/private/var/tmp/_bazel_krishnangovindraj/fef9a4b18d1cd69595e1e5fd888c199d/sandbox/darwin-sandbox/208/execroot/typedb_driver/bazel-out/darwin_arm64-fastbuild/bin/python/package/typedb/native_driver_wrapper.py'>`
+|===
+// end::enum_constants[]
+

@@ -1,0 +1,26 @@
+[#_MatchStage]
+=== MatchStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘match’ stage: match &lt;block&gt;
+
+// tag::methods[]
+[#_MatchStage_block_]
+==== block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+The index into Pipeline.conjunctions.
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

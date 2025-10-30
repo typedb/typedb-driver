@@ -1,0 +1,40 @@
+[#_FetchObject]
+=== FetchObject
+
+*Supertypes:*
+
+* `Fetch`
+
+A mapping of string keys to Fetch documents.
+
+// tag::methods[]
+[#_FetchObject_get_]
+==== get
+
+[source,python]
+----
+get(key: str) -> Fetch
+----
+
+The Fetch object for the given key.
+
+[caption=""]
+.Returns
+`Fetch`
+
+[#_FetchObject_keys_]
+==== keys
+
+[source,python]
+----
+keys() -> Iterator[str]
+----
+
+The available keys of this Fetch document.
+
+[caption=""]
+.Returns
+`Iterator[str]`
+
+// end::methods[]
+

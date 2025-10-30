@@ -68,7 +68,7 @@ dir_mapping = {
     "PipelineStage.ReduceStage.ReduceAssignment.adoc": "analyze",
     "ReduceAssignment.adoc": "analyze",
     "Reducer.adoc": "analyze",
-    "ReturnOperation.adoc": "analyze",
+#    "ReturnOperation.adoc": "analyze",
     "SortOrder.adoc": "analyze",
     "SortVariable.adoc": "analyze",
     "TypeAnnotations.adoc": "analyze",

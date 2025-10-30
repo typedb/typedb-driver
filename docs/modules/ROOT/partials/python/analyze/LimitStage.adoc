@@ -1,0 +1,26 @@
+[#_LimitStage]
+=== LimitStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘limit’ stage: limit &lt;limit&gt;
+
+// tag::methods[]
+[#_LimitStage_limit_]
+==== limit
+
+[source,python]
+----
+limit() -> int
+----
+
+
+
+[caption=""]
+.Returns
+`int`
+
+// end::methods[]
+

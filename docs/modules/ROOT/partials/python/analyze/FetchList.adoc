@@ -1,0 +1,26 @@
+[#_FetchList]
+=== FetchList
+
+*Supertypes:*
+
+* `Fetch`
+
+A list of Fetch documents.
+
+// tag::methods[]
+[#_FetchList_element_]
+==== element
+
+[source,python]
+----
+element() -> Fetch
+----
+
+The element type of the list.
+
+[caption=""]
+.Returns
+`Fetch`
+
+// end::methods[]
+

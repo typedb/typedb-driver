@@ -1,0 +1,54 @@
+[#_Has]
+=== Has
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘has’ constraint: &lt;owner&gt; has &lt;attribute&gt;
+
+// tag::methods[]
+[#_Has_attribute_]
+==== attribute
+
+[source,python]
+----
+attribute() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Has_exactness_]
+==== exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Has_owner_]
+==== owner
+
+[source,python]
+----
+owner() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

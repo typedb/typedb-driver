@@ -1,0 +1,26 @@
+[#_SortStage]
+=== SortStage
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘sort’ stage: sort &lt;variables-and-order&gt;
+
+// tag::methods[]
+[#_SortStage_variables_]
+==== variables
+
+[source,python]
+----
+variables() -> Iterator['PipelineStage.SortStage.SortVariable']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['PipelineStage.SortStage.SortVariable']`
+
+// end::methods[]
+

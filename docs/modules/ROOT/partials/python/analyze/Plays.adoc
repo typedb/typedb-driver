@@ -1,0 +1,54 @@
+[#_Plays]
+=== Plays
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘plays’ constraint: &lt;player&gt; plays &lt;role&gt;
+
+// tag::methods[]
+[#_Plays_exactness_]
+==== exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Plays_player_]
+==== player
+
+[source,python]
+----
+player() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Plays_role_]
+==== role
+
+[source,python]
+----
+role() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

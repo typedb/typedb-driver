@@ -1,0 +1,26 @@
+[#_Not]
+=== Not
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘not’ constraint: not { &lt;conjunction&gt; }
+
+// tag::methods[]
+[#_Not_conjunction_]
+==== conjunction
+
+[source,python]
+----
+conjunction() -> ConjunctionID
+----
+
+Index into Pipeline.conjunctions
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

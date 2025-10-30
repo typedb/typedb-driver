@@ -1,0 +1,40 @@
+[#_KindOf]
+=== KindOf
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
+
+// tag::methods[]
+[#_KindOf_kind_]
+==== kind
+
+[source,python]
+----
+kind() -> KindOf
+----
+
+
+
+[caption=""]
+.Returns
+`KindOf`
+
+[#_KindOf_type_]
+==== type
+
+[source,python]
+----
+type() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+
