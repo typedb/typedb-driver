@@ -28,8 +28,6 @@ from typedb.driver import (
 
 from typing import Iterable, Tuple
 
-from python.typedb.native_driver_wrapper import (ConjunctionID, Variable)
-
 class FunctorEncoderContext:
     def __init__(self, pipeline: Pipeline):
         self.pipeline = pipeline
@@ -41,7 +39,6 @@ SUBPATTERN_VARIANTS = [ConstraintVariant.Or, ConstraintVariant.Try, ConstraintVa
 
 def normalize_functor_for_compare(functor: str) -> str:
     return re.sub(WHITE_SPACE_REGEX, '', functor.lower())
-
 
 def _make_functor(name: str, *args) -> str:
     args = ", ".join(arg if isinstance(arg, str) else arg.encode_as_functor() for arg in args)
@@ -65,7 +62,7 @@ def _encode_enum_as_name(self: Enum):
     return self.name
 
 
-def _encode_conjunction_id(conj_id: ConjunctionID, context: FunctorEncoderContext) -> str:
+def _encode_conjunction_id(conj_id: "ConjunctionID", context: FunctorEncoderContext) -> str:
     conjunction = context.pipeline.conjunction(conj_id)
     return _encode_as_list(conjunction.constraints(), context)
 
@@ -213,8 +210,7 @@ def _encode_variable(self, context: FunctorEncoderContext) -> str:
 
 def _encode_sort_variable(self, context: FunctorEncoderContext) -> str:
     order = "Asc" if self.order() == SortStage.SortOrderVariant.Ascending else "Desc"
-    var = self.variable()
-    return _make_functor(order, var.encode_as_functor(context))
+    return _make_functor(order, self.variable().encode_as_functor(context))
 
 
 def _encode_reduce_assignment(self, context: FunctorEncoderContext) -> str:
@@ -233,50 +229,27 @@ def _encode_reducer(self, context: FunctorEncoderContext) -> str:
 def _encode_pipeline_stage(self: PipelineStage, context: FunctorEncoderContext) -> str:
     variant = self.variant()
     name = variant.name
-    if variant == PipelineStageVariant.Match:
-        return _make_functor(name, self.as_match().block().encode_as_functor(context))
-    elif variant == PipelineStageVariant.Insert:
-        return _make_functor(name, self.as_insert().block().encode_as_functor(context))
-    elif variant == PipelineStageVariant.Put:
-        return _make_functor(name, self.as_put().block().encode_as_functor(context))
-    elif variant == PipelineStageVariant.Update:
-        return _make_functor(name, self.as_update().block().encode_as_functor(context))
-
-    # Delete -> deleted variables + block
+    if variant in [PipelineStageVariant.Match, PipelineStageVariant.Insert, PipelineStageVariant.Put, PipelineStageVariant.Update]:
+        return _make_functor(name, _encode_conjunction_id(self.block(), context))
     elif variant == PipelineStageVariant.Delete:
         deleted_vars = _encode_as_list(self.as_delete().deleted_variables(), context)
         block = self.as_delete().block().encode_as_functor(context)
         return _make_functor(name, deleted_vars, block)
-
-    # Select -> list of variables
     elif variant == PipelineStageVariant.Select:
         vars_ = _encode_as_list(self.as_select().variables(), context)
         return _make_functor(name, vars_)
-
-    # Sort -> list of sort variables (Order functor around variable)
     elif variant == PipelineStageVariant.Sort:
         return _make_functor(name, _encode_as_list(self.as_sort().variables(), context))
-
-    # Require -> list of variables
     elif variant == PipelineStageVariant.Require:
         vars_ = _encode_as_list(self.as_require().variables(), context)
         return _make_functor(name, vars_)
-
-    # Offset -> numeric offset
     elif variant == PipelineStageVariant.Offset:
         return _make_functor(name, str(self.as_offset().offset()))
-
-    # Limit -> numeric limit
     elif variant == PipelineStageVariant.Limit:
         return _make_functor(name, str(self.as_limit().limit()))
-
-    # Distinct -> no args
     elif variant == PipelineStageVariant.Distinct:
         return _make_functor(name)
-
-    # Reduce -> reducer assignments and group by
     elif variant == PipelineStageVariant.Reduce:
-        # reducer assignments
         reduce_assignments = _encode_as_list(self.as_reduce().reduce_assignments(), context)
         group_by = _encode_as_list(self.as_reduce().group_by(), context)
         return _make_functor(name, reduce_assignments, group_by)
@@ -341,7 +314,7 @@ def _encode_subpattern_annotations(self: Constraint, context: FunctorEncoderCont
 
 
 
-def _encode_conjunction_annotations(self: ConjunctionID, context: FunctorEncoderContext) -> str:
+def _encode_conjunction_annotations(self: "ConjunctionID", context: FunctorEncoderContext) -> str:
     conj = context.pipeline.conjunction(self)
 
     trunk_annotations = ((var, conj.variable_annotations(var)) for var in conj.annotated_variables())
@@ -393,6 +366,7 @@ def _encode_fetch_annotations(self: Fetch, context: FunctorEncoderContext) -> st
 
 # When this file is imported, we inject the encode_as_functor implementations
 def monkey_patch_all():
+    import typedb
     Enum.encode_as_functor = _encode_enum_as_name
 
     Constraint.encode_as_functor = _encode_constraint
@@ -402,12 +376,12 @@ def monkey_patch_all():
     Pipeline.encode_as_functor = _encode_pipeline
     PipelineStage.encode_as_functor = _encode_pipeline_stage
     ReturnOperation.encode_as_functor = _encode_return_operation
-    ConjunctionID.encode_as_functor = _encode_conjunction_id
+    typedb.native_driver_wrapper.ConjunctionID.encode_as_functor = _encode_conjunction_id
     ReduceStage.ReduceAssignment.encode_as_functor = _encode_reduce_assignment
     Reducer.encode_as_functor = _encode_reducer
     SortStage.SortVariable.encode_as_functor = _encode_sort_variable
     Type.encode_as_functor = _encode_type
-    Variable.encode_as_functor = _encode_variable
+    typedb.native_driver_wrapper.Variable.encode_as_functor = _encode_variable
     VariableAnnotations.encode_as_functor = _encode_variable_annotations
 
 monkey_patch_all()
