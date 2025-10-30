@@ -114,12 +114,12 @@ Constraint.Isa asIsa()
 .Returns
 `Constraint.Isa`
 
-[#_Constraint_Comparison_asKindOf_]
-==== asKindOf
+[#_Constraint_Comparison_asKind_]
+==== asKind
 
 [source,java]
 ----
-Constraint.Kind asKindOf()
+Constraint.Kind asKind()
 ----
 
 
@@ -394,12 +394,12 @@ boolean isIsa()
 .Returns
 `boolean`
 
-[#_Constraint_Comparison_isKindOf_]
-==== isKindOf
+[#_Constraint_Comparison_isKind_]
+==== isKind
 
 [source,java]
 ----
-boolean isKindOf()
+boolean isKind()
 ----
 
 
