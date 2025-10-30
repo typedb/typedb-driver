@@ -34,7 +34,7 @@ dir_mapping = {
     "Is.adoc": "analyze",
     "Iid.adoc": "analyze",
     "Comparison.adoc": "analyze",
-    "KindOf.adoc": "analyze",
+    "Kind.adoc": "analyze",
     "Label.adoc": "analyze",
 #    "Value.adoc": "analyze", # Oh no.
     "Or.adoc": "analyze",

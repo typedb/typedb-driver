@@ -9,14 +9,14 @@ The answer to a TypeDB query is a set of concepts which satisfy the constraints 
 
 [source,python]
 ----
-as_label() -> Type
+as_label() -> typedb.api.concept.type.type.Type
 ----
 
 Down-casts this vertex to a type label.
 
 [caption=""]
 .Returns
-`Type`
+`typedb.api.concept.type.type.Type`
 
 [#_ConstraintVertex_as_named_role_get_name_]
 ==== as_named_role_get_name
@@ -51,14 +51,14 @@ Down-casts the variable as a NamedRoleVertex and gets the associated variable.
 
 [source,python]
 ----
-as_value() -> Value
+as_value() -> typedb.api.concept.value.value.Value
 ----
 
 Down-casts this vertex to a value.
 
 [caption=""]
 .Returns
-`Value`
+`typedb.api.concept.value.value.Value`
 
 [#_ConstraintVertex_as_variable_]
 ==== as_variable

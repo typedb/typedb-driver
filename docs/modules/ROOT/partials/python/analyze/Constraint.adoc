@@ -107,14 +107,14 @@ as_isa() -> Isa
 
 [source,python]
 ----
-as_kind() -> KindOf
+as_kind() -> Kind
 ----
 
 
 
 [caption=""]
 .Returns
-`KindOf`
+`Kind`
 
 [#_Constraint_as_label_]
 ==== as_label

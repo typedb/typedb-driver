@@ -1,5 +1,5 @@
-[#_KindOf]
-=== KindOf
+[#_Kind]
+=== Kind
 
 *Supertypes:*
 
@@ -8,7 +8,7 @@
 Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
 
 // tag::methods[]
-[#_KindOf_kind_]
+[#_Kind_kind_]
 ==== kind
 
 [source,python]
@@ -22,7 +22,7 @@ kind() -> KindVariant
 .Returns
 `KindVariant`
 
-[#_KindOf_type_]
+[#_Kind_type_]
 ==== type
 
 [source,python]
