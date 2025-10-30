@@ -37,8 +37,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.concept.type.type import Type
-    from typedb.api.concept.value.value import Value
+    import typedb
     from typedb.native_driver_wrapper import Variable
 
 
@@ -65,10 +64,10 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
     def as_variable(self) -> Variable:
         return constraint_vertex_as_variable(self.native_object)
 
-    def as_label(self) -> Type:
+    def as_label(self) -> "typedb.api.concept.type.type.Type":
         return concept_factory.wrap_concept(constraint_vertex_as_label(self.native_object))
 
-    def as_value(self) -> Value:
+    def as_value(self) -> "typedb.api.concept.value.value.Value":
         return concept_factory.wrap_concept(constraint_vertex_as_value(self.native_object)).as_value()
 
     def as_named_role_get_variable(self) -> "Variable":

@@ -27,7 +27,7 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALI
 from typedb.api.analyze.constraint import (
     Constraint, ConstraintVariant, ConstraintExactness, Comparator, Span, KindVariant,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
-    FunctionCall, Expression, Is, Iid, Comparison, KindOf, Label, Value,
+    FunctionCall, Expression, Is, Iid, Comparison, Kind, Label, Value,
     Or, Not, Try,
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
@@ -130,7 +130,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
         if variant == ConstraintVariant.Comparison:
             return _Comparison(native)
         if variant == ConstraintVariant.KindOf:
-            return _KindOf(native)
+            return _Kind(native)
         if variant == ConstraintVariant.Label:
             return _Label(native)
         if variant == ConstraintVariant.Value:
@@ -242,7 +242,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Comparison"))
 
     def as_kind(self):
-        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "KindOf"))
+        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Kind"))
 
     def as_label(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Label"))
@@ -535,7 +535,7 @@ class _Comparison(_Constraint, Comparison):
         return Comparator(constraint_comparison_get_comparator(self.native_object))
 
 
-class _KindOf(_Constraint, KindOf):
+class _Kind(_Constraint, Kind):
     def __init__(self, native):
         super().__init__(native)
 

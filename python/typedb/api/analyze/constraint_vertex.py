@@ -21,8 +21,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typedb.api.concept.type.type import Type
-    from typedb.api.concept.value.value import Value
+    import typedb
     from typedb.native_driver_wrapper import Variable
 
 
@@ -58,7 +57,7 @@ class ConstraintVertex(ABC):
         pass
 
     @abstractmethod
-    def as_label(self) -> Type:
+    def as_label(self) -> "typedb.api.concept.type.type.Type":
         """
         Down-casts this vertex to a type label.
 
@@ -68,7 +67,7 @@ class ConstraintVertex(ABC):
         pass
 
     @abstractmethod
-    def as_value(self) -> Value:
+    def as_value(self) -> "typedb.api.concept.value.value.Value":
         """Down-casts this vertex to a value."""
         pass
 

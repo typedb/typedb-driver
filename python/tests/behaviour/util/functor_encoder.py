@@ -18,15 +18,16 @@
 import re
 from enum import Enum
 
-from typedb.driver import (
+from typedb.analyze import (
     Constraint, ConstraintVertex, ConstraintVariant, ConstraintExactness,
     Pipeline, PipelineStage, PipelineStageVariant, Fetch, FetchVariant,
     Function, ReturnOperation, ReturnOperationVariant,
     ReduceStage, Reducer, SortStage, VariableAnnotations,
-    Type
 )
+from typedb.driver import Type
 
 from typing import Iterable, Dict
+
 
 class FunctorEncoder:
     def __init__(self, pipeline: Pipeline):

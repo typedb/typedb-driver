@@ -253,7 +253,7 @@ class Constraint(ABC):
         pass
 
     @abstractmethod
-    def as_kind(self) -> "KindOf":
+    def as_kind(self) -> "Kind":
         pass
 
     @abstractmethod
@@ -467,7 +467,7 @@ class Comparison(Constraint, ABC):
         pass
 
 
-class KindOf(Constraint, ABC):
+class Kind(Constraint, ABC):
     """Represents a kind constraint: <kind> <type>"""
 
     @abstractmethod
