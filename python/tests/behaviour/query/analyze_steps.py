@@ -23,11 +23,10 @@ from tests.behaviour.context import Context
 
 from tests.behaviour.config.parameters import MayError
 from tests.behaviour.util.functor_encoder import (
-    FunctorEncoderContext, normalize_functor_for_compare,
+    FunctorEncoder, normalize_functor_for_compare,
     _encode_pipeline, _encode_function,
     _encode_pipeline_annotations, _encode_function_annotations, _encode_fetch_annotations
 )
-from python.tests.behaviour.util.functor_encoder import _encode_function_annotations
 
 
 @step("get answers of typeql analyze")
@@ -43,7 +42,7 @@ def step_impl(context, may_error: MayError):
 @step("analyzed query pipeline structure is")
 def step_impl(context: Context):
     pipeline = context.analyzed.pipeline()
-    actual_functor = _encode_pipeline(pipeline, FunctorEncoderContext(pipeline))
+    actual_functor = _encode_pipeline(pipeline, FunctorEncoder(pipeline))
     assert_that(
         normalize_functor_for_compare(actual_functor),
         is_(equal_to(normalize_functor_for_compare(context.text)))
@@ -53,7 +52,7 @@ def step_impl(context: Context):
 def step_impl(context):
     expected_functor = normalize_functor_for_compare(context.text)
     preamble_functors_unnormalized = [
-        _encode_function(func, FunctorEncoderContext(func.body()))
+        _encode_function(func, FunctorEncoder(func.body()))
         for func in context.analyzed.preamble()
     ]
     preamble_functors = [normalize_functor_for_compare(f) for f in preamble_functors_unnormalized]
@@ -62,7 +61,7 @@ def step_impl(context):
 @step("analyzed query pipeline annotations are")
 def step_impl(context):
     pipeline = context.analyzed.pipeline()
-    actual_functor = _encode_pipeline_annotations(pipeline, FunctorEncoderContext(pipeline))
+    actual_functor = _encode_pipeline_annotations(pipeline, FunctorEncoder(pipeline))
     assert_that(
         normalize_functor_for_compare(actual_functor),
         is_(normalize_functor_for_compare(context.text))
@@ -73,7 +72,7 @@ def step_impl(context):
 def step_impl(context):
     expected_functor = normalize_functor_for_compare(context.text)
     preamble_functors_unnormalized = [
-        _encode_function_annotations(func, FunctorEncoderContext(func.body()))
+        _encode_function_annotations(func, FunctorEncoder(func.body()))
         for func in context.analyzed.preamble()
     ]
     preamble_functors = [normalize_functor_for_compare(f) for f in preamble_functors_unnormalized]
@@ -85,7 +84,7 @@ def step_impl(context):
     expected_functor = normalize_functor_for_compare(context.text)
     pipeline = context.analyzed.pipeline()
     fetch = context.analyzed.fetch()
-    actual_functor = _encode_fetch_annotations(fetch, FunctorEncoderContext(pipeline))
+    actual_functor = _encode_fetch_annotations(fetch, FunctorEncoder(pipeline))
     assert_that(
         normalize_functor_for_compare(actual_functor),
         is_(normalize_functor_for_compare(expected_functor))
