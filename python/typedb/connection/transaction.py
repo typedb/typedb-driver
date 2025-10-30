@@ -28,7 +28,6 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
-from typedb.analyze.analyzed_query import _AnalyzedQuery
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
     transaction_analyze, transaction_query, \
     transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
@@ -67,6 +66,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         return self._options
 
     def analyze(self, query: str) -> Promise[AnalyzedQuery]:
+        from typedb.analyze.analyzed_query import _AnalyzedQuery
         require_non_null(query, "query")
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
