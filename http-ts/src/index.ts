@@ -19,6 +19,7 @@
 
 import { DriverParams, remoteOrigin } from "./params";
 import {
+    AnalyzeResponse,
     ApiErrorResponse,
     ApiResponse,
     DatabasesListResponse,
@@ -105,6 +106,10 @@ export class TypeDBHttpDriver {
 
     rollbackTransaction(transactionId: string): Promise<ApiResponse> {
         return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/rollback`, {});
+    }
+
+    analyze(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<AnalyzeResponse>> {
+        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, queryOptions });
     }
 
     query(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<QueryResponse>> {
