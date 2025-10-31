@@ -31,10 +31,15 @@ export interface QueryVertexLabel {
     type: Type;
 }
 
-export interface QueryVertexValue {
+// TODO: This is ideal but it's not what it currently is.
+// export interface QueryVertexValue {
+//     tag: "value";
+//     value: Value;
+// }
+export interface QueryVertexValue extends Value  {
     tag: "value";
-    value: Value;
 }
+
 
 export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue;
 

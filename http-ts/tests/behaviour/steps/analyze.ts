@@ -3,7 +3,15 @@ import assert from "assert";
 import {analyzed, doAnalyze, setAnalyzed} from "./context";
 import {assertNotError} from "./params";
 
-import {QueryConstraintAny, QueryVertex, FunctionReturnStructure, FunctionStructure, PipelineStage, PipelineStructure, ConjunctionIndex} from "../../../dist/index.cjs";
+import {
+    QueryConstraintAny,
+    QueryVertex,
+    FunctionReturnStructure,
+    FunctionStructure,
+    PipelineStage,
+    PipelineStructure,
+    ConjunctionIndex
+} from "../../../dist/index.cjs";
 // import {QueryConstraintAny, QueryVertex} from "../../../src";
 // import {FunctionReturnStructure, FunctionStructure, PipelineStage, PipelineStructure} from "../../../src/analyze";
 
@@ -94,45 +102,83 @@ class FunctorEncoder {
 function encodeConstraint(constraint: QueryConstraintAny, encoder: FunctorEncoder): string {
     switch (constraint.tag) {
         case "isa":
-            return encoder.makeFunctor("Isa", constraint.instance, constraint.type);
+            return encoder.makeFunctor("Isa",
+                encodeConstraintVertex(constraint.instance, encoder),
+                encodeConstraintVertex(constraint.type, encoder));
         case "isa!":
-            return encoder.makeFunctor("IsaExact", constraint.instance, constraint.type);
+            return encoder.makeFunctor("IsaExact",
+                encodeConstraintVertex(constraint.instance, encoder),
+                encodeConstraintVertex(constraint.type, encoder));
         case "has":
-            return encoder.makeFunctor("Has", constraint.owner, constraint.attribute);
+            return encoder.makeFunctor("Has",
+                encodeConstraintVertex(constraint.owner, encoder),
+                encodeConstraintVertex(constraint.attribute, encoder));
         case "links":
-            return encoder.makeFunctor("Links", constraint.relation, constraint.player, constraint.role);
+            return encoder.makeFunctor("Links",
+                encodeConstraintVertex(constraint.relation, encoder),
+                encodeConstraintVertex(constraint.player, encoder),
+                encodeConstraintVertex(constraint.role, encoder));
         case "sub":
-            return encoder.makeFunctor("Sub", constraint.subtype, constraint.supertype);
+            return encoder.makeFunctor("Sub",
+                encodeConstraintVertex(constraint.subtype, encoder),
+                encodeConstraintVertex(constraint.supertype, encoder));
         case "sub!":
-            return encoder.makeFunctor("SubExact", constraint.subtype, constraint.supertype);
+            return encoder.makeFunctor("SubExact",
+                encodeConstraintVertex(constraint.subtype, encoder),
+                encodeConstraintVertex(constraint.supertype, encoder));
         case "owns":
-            return encoder.makeFunctor("Owns", constraint.owner, constraint.attribute);
+            return encoder.makeFunctor("Owns",
+                encodeConstraintVertex(constraint.owner, encoder),
+                encodeConstraintVertex(constraint.attribute, encoder));
         case "relates":
-            return encoder.makeFunctor("Relates", constraint.relation, constraint.role);
+            return encoder.makeFunctor("Relates",
+                encodeConstraintVertex(constraint.relation, encoder),
+                encodeConstraintVertex(constraint.role, encoder));
         case "plays":
-            return encoder.makeFunctor("Plays", constraint.player, constraint.role);
+            return encoder.makeFunctor("Plays",
+                encodeConstraintVertex(constraint.player, encoder),
+                encodeConstraintVertex(constraint.role, encoder));
         case "expression":
-            return encoder.makeFunctor("Expression", constraint.text, constraint.assigned, constraint.arguments);
+            return encoder.makeFunctor("Expression",
+                constraint.text,
+                encodeConstraintVertex(constraint.assigned[0], encoder), // TODO: When we break HTTP
+                constraint.arguments.map(v => encodeConstraintVertex(v, encoder)));
         case "functionCall":
-            return encoder.makeFunctor("FunctionCall", constraint.name, constraint.assigned, constraint.arguments);
+            return encoder.makeFunctor("FunctionCall",
+                constraint.name,
+                constraint.assigned.map(v => encodeConstraintVertex(v, encoder)),
+                constraint.arguments.map(v => encodeConstraintVertex(v, encoder)));
         case "comparison":
-            return encoder.makeFunctor("Comparison", constraint.lhs, constraint.rhs, constraint.comparator);
+            return encoder.makeFunctor("Comparison",
+                encodeConstraintVertex(constraint.lhs, encoder),
+                encodeConstraintVertex(constraint.rhs, encoder),
+                constraint.comparator);
         case "is":
-            return encoder.makeFunctor("Is", constraint.lhs, constraint.rhs);
+            return encoder.makeFunctor("Is",
+                encodeConstraintVertex(constraint.lhs, encoder),
+                encodeConstraintVertex(constraint.rhs, encoder));
         case "iid":
-            return encoder.makeFunctor("Iid", constraint.concept, constraint.iid);
+            return encoder.makeFunctor("Iid",
+                encodeConstraintVertex(constraint.concept, encoder),
+                constraint.iid);
         case "kind":
-            return encoder.makeFunctor("Kind", constraint.type, "kind");
+            return encoder.makeFunctor("Kind",
+                encodeConstraintVertex(constraint.type, encoder),
+                "kind");
         case "value":
-            return encoder.makeFunctor("Value", constraint.attributeType, constraint.valueType);
+            return encoder.makeFunctor("Value",
+                encodeConstraintVertex(constraint.attributeType, encoder),
+                constraint.valueType);
         case "label":
-            return encoder.makeFunctor("Label", constraint.type, constraint.label);
+            return encoder.makeFunctor("Label",
+                encodeConstraintVertex(constraint.type, encoder),
+                constraint.label);
     }
 }
 
 function encodeVariable(id: string, encoder: FunctorEncoder) {
     const v = encoder.pipeline.variables[id];
-    if (v != undefined) {
+    if (v != null && v.name != null) {
         return "$" + v.name;
     } else {
         return "$_";
@@ -145,8 +191,13 @@ function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): s
             return encodeVariable(vertex.id, encoder);
         case "label":
             return vertex.type.label;
-        case "value":
-            return vertex.value.value;
+        case "value": {
+            if (vertex.valueType == "string") {
+                return `"${vertex.value}"`;
+            } else {
+                return vertex.value;
+            }
+        }
         // TODO: NamedRole when it comes
     }
     throw new Error("Unknown constraint vertex type");
@@ -181,9 +232,8 @@ function encodePipelineStage(stage: PipelineStage, encoder: FunctorEncoder): str
             return encoder.makeFunctor(variant);
         case "reduce":
             return encoder.makeFunctor(variant, stage.reducers.map(v => encodeVariable(v, encoder)), stage.groupby.map(v => encodeVariable(v, encoder)));
-        default:
-            throw new Error(`Unknown pipeline stage variant: ${variant}`);
     }
+    throw new Error(`Unknown pipeline stage variant: ${variant}`);
 }
 
 function encodeReturnOperation(returnOp: FunctionReturnStructure, encoder: FunctorEncoder): string {
@@ -199,8 +249,8 @@ function encodeReturnOperation(returnOp: FunctionReturnStructure, encoder: Funct
     }
 }
 
-function encodePipeline(pipeline: PipelineStructure, context: FunctorEncoder): string {
-    return context.encodeAsList(pipeline.pipeline.map(stage => encodePipelineStage(stage, context)));
+function encodePipeline(pipeline: PipelineStructure, encoder: FunctorEncoder): string {
+    return encoder.makeFunctor("Pipeline", encoder.encodeAsList(pipeline.pipeline.map(stage => encodePipelineStage(stage, encoder))));
 }
 
 function normalizeFunctorForCompare(functor: string): string {
