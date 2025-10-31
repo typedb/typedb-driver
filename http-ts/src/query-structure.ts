@@ -58,7 +58,8 @@ export type QueryVariableInfo = { name: string | null };
 export type QueryConstraintAny = QueryConstraintIsa | QueryConstraintIsaExact | QueryConstraintHas | QueryConstraintLinks |
     QueryConstraintSub | QueryConstraintSubExact | QueryConstraintOwns | QueryConstraintRelates | QueryConstraintPlays |
     QueryConstraintExpression | QueryConstraintFunction | QueryConstraintComparison |
-    QueryConstraintIs | QueryConstraintIid | QueryConstraintKind | QueryConstraintValue | QueryConstraintLabel;
+    QueryConstraintIs | QueryConstraintIid | QueryConstraintKind | QueryConstraintValue | QueryConstraintLabel |
+    QueryConstraintOr | QueryConstraintNot | QueryConstraintTry;
 
 export type QueryConstraintSpan = { begin: number, end: number };
 
@@ -204,4 +205,20 @@ export interface QueryConstraintKind {
 
     type: QueryVertexVariable,
     kind: string,
+}
+
+type ConjunctionIndex = number;
+export interface QueryConstraintOr {
+    tag: "or",
+    branches: ConjunctionIndex[],
+}
+
+export interface QueryConstraintNot {
+    tag: "not",
+    conjunction: ConjunctionIndex,
+}
+
+export interface QueryConstraintTry {
+    tag: "try",
+    conjunction: ConjunctionIndex,
 }

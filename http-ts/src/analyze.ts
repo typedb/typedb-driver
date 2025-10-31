@@ -22,6 +22,12 @@ import {Type, ValueType} from "./concept";
 
 
 type VariableId = string;
+export interface PipelineStructureForStudio {
+    blocks: QueryConstraintAny[][],
+    variables: {[name: VariableId]: QueryVariableInfo },
+    outputs: string[],
+}
+
 export interface PipelineStructure {
     conjunctions: QueryConstraintAny[][],
     variables: {[name: VariableId]: QueryVariableInfo },
@@ -37,7 +43,7 @@ export type PipelineStage =
     { tag: "put",  block: ConjunctionIndex } |
     { tag: "update",  block: ConjunctionIndex } |
     { tag: "select",  variables: VariableId[] } |
-    { tag: "sort",  variables: VariableId[] } |
+    { tag: "sort",  variables: { variable: VariableId[], ascending: boolean } } |
     { tag: "require",  variables: VariableId } |
     { tag: "offset",  offset: number } |
     { tag: "limit",  limit: number } |
@@ -50,7 +56,7 @@ export interface FunctionStructure {
     returns: FunctionReturnStructure,
 }
 
-export type Reducer = { reducer: string, variable: VariableId[] };
+export type Reducer = { reducer: string, arguments: VariableId[] };
 export type FunctionSingleReturnSelector = "first" | "last" ;
 export type FunctionReturnStructure =
     { tag: "single", variables: VariableId[], selector: FunctionSingleReturnSelector } |
