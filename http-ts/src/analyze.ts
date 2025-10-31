@@ -42,7 +42,7 @@ export type PipelineStage =
     { tag: "offset",  offset: number } |
     { tag: "limit",  limit: number } |
     { tag: "distinct" } |
-    { tag: "reduce",  reducers: { assigned: VariableId, reducer: Reducer }[] };
+    { tag: "reduce",  reducers: { assigned: VariableId, reducer: Reducer }[], groupby: VariableId[] };
 
 export interface FunctionStructure {
     arguments: VariableId[],
