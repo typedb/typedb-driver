@@ -32,9 +32,9 @@ from typedb.api.analyze.pipeline_stage import (
     SelectStage, SortStage, RequireStage, OffsetStage, LimitStage, DistinctStage, ReduceStage
 )
 from typedb.common.enums import SortOrder
+from typedb.analyze.reducer import _Reducer
 from typedb.analyze.variants import PipelineStageVariant
 
-# native functions/types
 from typedb.native_driver_wrapper import (
     PipelineStage as NativePipelineStage,
     pipeline_stage_variant,
@@ -108,7 +108,6 @@ class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
 
-    # default type checks (all False)
     def variant(self) -> PipelineStageVariant:
         return PipelineStageVariant(pipeline_stage_variant(self.native_object))
 
@@ -148,7 +147,6 @@ class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
     def is_reduce(self) -> bool:
         return False
 
-    # default downcasts raise INVALID_STAGE_CASTING
     def as_match(self):
         raise TypeDBDriverException(INVALID_STAGE_CASTING, (self.__class__.__name__, "MatchStage"))
 
@@ -396,7 +394,5 @@ class _ReduceStage(ReduceStage, _PipelineStage):
             return reduce_assignment_get_assigned(self.native_object)
 
         def reducer(self) -> "Reducer":
-            # lazy import to avoid circular dependency
-            from typedb.analyze.reducer import _Reducer  # type: ignore
             native_red = reduce_assignment_get_reducer(self.native_object)
             return _Reducer(native_red)

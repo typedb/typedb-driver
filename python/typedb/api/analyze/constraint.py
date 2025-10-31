@@ -108,7 +108,6 @@ class Constraint(ABC):
     def is_try(self) -> bool:
         pass
 
-    # Down-cast accessors for each concrete constraint variant
     @abstractmethod
     def as_isa(self) -> "Isa":
         pass
@@ -180,8 +179,6 @@ class Constraint(ABC):
     @abstractmethod
     def as_try(self) -> "Try":
         pass
-
-    # Nested constraint subtype interfaces
 
 
 class Isa(Constraint, ABC):

@@ -107,7 +107,6 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     @staticmethod
     def of(native: NativeConstraint) -> "_Constraint":
         variant = ConstraintVariant(constraint_variant(native))
-        # Map native variant to concrete wrapper
         if variant == ConstraintVariant.Isa:
             return _Isa(native)
         if variant == ConstraintVariant.Has:
@@ -152,7 +151,6 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     def span(self) -> "Span":
         return _Constraint.SpanImpl(constraint_span_begin(self.native_object), constraint_span_end(self.native_object))
 
-    # default type checks
     def is_isa(self) -> bool:
         return False
 
@@ -207,7 +205,6 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     def is_try(self) -> bool:
         return False
 
-    # default downcasts raise
     def as_isa(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Isa"))
 

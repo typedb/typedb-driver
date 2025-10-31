@@ -116,7 +116,6 @@ class _ReturnOperation(ReturnOperation, NativeWrapper[NativeReturnOperation], AB
     def variant(self) -> "ReturnOperationVariant":
         return ReturnOperationVariant(return_operation_variant(self.native_object))
 
-    # default type checks (all False)
     def is_stream(self) -> bool:
         return False
 
@@ -129,7 +128,6 @@ class _ReturnOperation(ReturnOperation, NativeWrapper[NativeReturnOperation], AB
     def is_reduce(self) -> bool:
         return False
 
-    # default downcasts raise
     def as_stream(self) -> "ReturnOperationStream":
         raise TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING,
                                     (self.__class__.__name__, "ReturnOperationStream"))

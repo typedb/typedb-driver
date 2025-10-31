@@ -70,7 +70,6 @@ class _Fetch(Fetch, NativeWrapper[NativeFetch]):
         return False
 
     def as_leaf(self) -> "FetchLeaf":
-        # default implementation: invalid cast for this variant
         raise TypeDBDriverException(INVALID_FETCH_CASTING, (self.__class__.__name__, "Fetch.FetchLeaf"))
 
     def as_list(self) -> "FetchList":

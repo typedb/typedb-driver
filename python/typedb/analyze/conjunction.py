@@ -26,7 +26,6 @@ from typedb.api.analyze.conjunction import Conjunction
 from typedb.analyze.variable_annotations import _VariableAnnotations
 from typedb.analyze.constraint import _Constraint
 
-# native functions (C wrapper)
 from typedb.native_driver_wrapper import (
     Conjunction as NativeConjunction,
     conjunction_get_constraints,

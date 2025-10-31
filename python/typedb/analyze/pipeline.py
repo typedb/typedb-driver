@@ -27,9 +27,7 @@ from typedb.api.analyze.pipeline import Pipeline
 
 from typedb.analyze.conjunction import _Conjunction
 from typedb.analyze.pipeline_stage import _PipelineStage
-from typedb.analyze.reducer import _Reducer
 
-# native functions (C wrapper)
 from typedb.native_driver_wrapper import (
     Pipeline as NativePipeline,
     pipeline_stages,
