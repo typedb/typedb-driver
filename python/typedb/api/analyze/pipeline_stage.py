@@ -18,45 +18,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import IntEnum
 from typing import TYPE_CHECKING, Iterator
-
-from typedb.native_driver_wrapper import (
-    Match as NativeMatch,
-    Insert as NativeInsert,
-    Put as NativePut,
-    Update as NativeUpdate,
-    Delete as NativeDelete,
-    Select as NativeSelect,
-    Sort as NativeSort,
-    Require as NativeRequire,
-    Offset as NativeOffset,
-    Limit as NativeLimit,
-    Distinct as NativeDistinct,
-    Reduce as NativeReduce,
-
-    Ascending as NativeAscending,
-    Descending as NativeDescending,
-)
 
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import ConjunctionID,Variable
     from typedb.api.analyze.reducer import Reducer
-
-
-class PipelineStageVariant(IntEnum):
-    Match = NativeMatch
-    Insert = NativeInsert
-    Put = NativePut
-    Update = NativeUpdate
-    Delete = NativeDelete
-    Select = NativeSelect
-    Sort = NativeSort
-    Require = NativeRequire
-    Offset = NativeOffset
-    Limit = NativeLimit
-    Distinct = NativeDistinct
-    Reduce = NativeReduce
 
 
 class PipelineStage(ABC):
@@ -228,10 +194,6 @@ class SortStage(PipelineStage, ABC):
     @abstractmethod
     def variables(self) -> Iterator["SortStage.SortVariable"]:
         pass
-
-    class SortOrderVariant(IntEnum):
-        Ascending = NativeAscending
-        Descending = NativeDescending
 
     class SortVariable(ABC):
         """A variable and its sort order."""

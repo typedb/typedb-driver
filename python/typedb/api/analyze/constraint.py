@@ -19,101 +19,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
-from enum import IntEnum
-
-from typedb.native_driver_wrapper import (
-    comparator_get_name,
-
-    Isa as NativeIsa,
-    Has as NativeHas,
-    Links as NativeLinks,
-    Sub as NativeSub,
-    Owns as NativeOwns,
-    Relates as NativeRelates,
-    Plays as NativePlays,
-    FunctionCall as NativeFunctionCall,
-    Expression as NativeExpression,
-    Is as NativeIs,
-    Iid as NativeIid,
-    Comparison as NativeComparison,
-    KindOf as NativeKindOf,
-    Label as NativeLabel,
-    Value as NativeValue,
-    Or as NativeOr,
-    Not as NativeNot,
-    Try as NativeTry,
-
-    Exact as NativeExact,
-    Subtypes as NativeSubtypes,
-
-    Equal as NativeEqual,
-    NotEqual as NativeNotEqual,
-    LessThan as NativeLessThan,
-    LessOrEqual as NativeLessOrEqual,
-    Greater as NativeGreater,
-    GreaterOrEqual as NativeGreaterOrEqual,
-    Like as NativeLike,
-    Contains as NativeContains,
-
-    Entity as NativeEntity,
-    Relation as NativeRelation,
-    Attribute as NativeAttribute,
-    Role as NativeRole,
-)
 
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
     from typedb.native_driver_wrapper import ConjunctionID
-
-
-class ConstraintExactness(IntEnum):
-    Exact = NativeExact
-    Subtypes = NativeSubtypes
-
-
-class Comparator(IntEnum):
-    Equal = NativeEqual
-    NotEqual = NativeNotEqual
-    LessThan = NativeLessThan
-    LessOrEqual = NativeLessOrEqual
-    Greater = NativeGreater
-    GreaterOrEqual = NativeGreaterOrEqual
-    Like = NativeLike
-    Contains = NativeContains
-
-    def symbol(self):
-        return comparator_get_name(self)
-
-    def __str__(self):
-        return self.symbol()
-
-
-class ConstraintVariant(IntEnum):
-    Isa = NativeIsa
-    Has = NativeHas
-    Links = NativeLinks
-    Sub = NativeSub
-    Owns = NativeOwns
-    Relates = NativeRelates
-    Plays = NativePlays
-    FunctionCall = NativeFunctionCall
-    Expression = NativeExpression
-    Is = NativeIs
-    Iid = NativeIid
-    Comparison = NativeComparison
-    KindOf = NativeKindOf
-    Label = NativeLabel
-    Value = NativeValue
-    Or = NativeOr
-    Not = NativeNot
-    Try = NativeTry
-
-
-class KindVariant(IntEnum):
-    Entity = NativeEntity
-    Relation = NativeRelation
-    Attribute = NativeAttribute
-    Role = NativeRole
 
 
 class Constraint(ABC):

@@ -18,23 +18,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import IntEnum
 from typing import TYPE_CHECKING, Iterator
-
-from typedb.native_driver_wrapper import (
-    InstanceAnnotations as NativeInstanceAnnotations,
-    TypeAnnotations as NativeTypeAnnotations,
-    ValueAnnotations as NativeValueAnnotations,
-)
 
 if TYPE_CHECKING:
     from typedb.api.concept.type.type import Type
-
-
-class VariableAnnotationsVariant(IntEnum):
-    InstanceAnnotations = NativeInstanceAnnotations
-    TypeAnnotations = NativeTypeAnnotations
-    ValueAnnotations = NativeValueAnnotations
 
 
 class VariableAnnotations(ABC):

@@ -18,28 +18,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import IntEnum
 from typing import TYPE_CHECKING, Iterator
-
-from typedb.native_driver_wrapper import (
-    StreamReturn as NativeStreamReturn,
-    SingleReturn as NativeSingleReturn,
-    CheckReturn as NativeCheckReturn,
-    ReduceReturn as NativeReduceReturn,
-)
 
 if TYPE_CHECKING:
     from typedb.analyze.pipeline import Pipeline
     from typedb.analyze.variable_annotations import VariableAnnotations
     from typedb.analyze.reducer import Reducer
     from typedb.native_driver_wrapper import Variable
-
-
-class ReturnOperationVariant(IntEnum):
-    StreamReturn = NativeStreamReturn
-    SingleReturn = NativeSingleReturn
-    CheckReturn = NativeCheckReturn
-    ReduceReturn = NativeReduceReturn
 
 
 class Function(ABC):

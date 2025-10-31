@@ -18,22 +18,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import IntEnum
 from typing import TYPE_CHECKING, Iterator
-from typedb.native_driver_wrapper import (
-    LeafDocument as NativeLeafDocument,
-    ListDocument as NativeListDocument,
-    ObjectDocument as NativeObjectDocument,
-)
 
 if TYPE_CHECKING:
     pass
-
-
-class FetchVariant(IntEnum):
-    LeafDocument = NativeLeafDocument
-    ListDocument = NativeListDocument
-    ObjectDocument = NativeObjectDocument,
 
 
 class Fetch(ABC):
