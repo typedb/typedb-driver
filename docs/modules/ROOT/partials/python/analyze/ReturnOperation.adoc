@@ -114,19 +114,5 @@ is_stream() -> bool
 .Returns
 `bool`
 
-[#_ReturnOperation_variant_]
-==== variant
-
-[source,python]
-----
-variant() -> ReturnOperationVariant
-----
-
-
-
-[caption=""]
-.Returns
-`ReturnOperationVariant`
-
 // end::methods[]
 

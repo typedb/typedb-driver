@@ -88,19 +88,5 @@ Returns True if this variable is a Value variable.
 .Returns
 `bool`
 
-[#_VariableAnnotations_variant_]
-==== variant
-
-[source,python]
-----
-variant() -> VariableAnnotationsVariant
-----
-
-The variant indicates whether this is an instance variable, type variable, or value variable.
-
-[caption=""]
-.Returns
-`VariableAnnotationsVariant`
-
 // end::methods[]
 

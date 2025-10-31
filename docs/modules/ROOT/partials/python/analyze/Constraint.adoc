@@ -522,19 +522,5 @@ Gets the span of this constraint in the source query.
 .Returns
 `Span`
 
-[#_Constraint_variant_]
-==== variant
-
-[source,python]
-----
-variant() -> ConstraintVariant
-----
-
-Gets the variant of this constraint.
-
-[caption=""]
-.Returns
-`ConstraintVariant`
-
 // end::methods[]
 

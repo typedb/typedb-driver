@@ -9,14 +9,14 @@ A variable and its sort order.
 
 [source,python]
 ----
-order() -> SortOrderVariant
+order() -> SortOrder
 ----
 
 
 
 [caption=""]
 .Returns
-`SortOrderVariant`
+`SortOrder`
 
 [#_SortVariable_variable_]
 ==== variable

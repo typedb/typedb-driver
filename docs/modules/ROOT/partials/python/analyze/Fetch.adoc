@@ -88,19 +88,5 @@ is_object() -> bool
 .Returns
 `bool`
 
-[#_Fetch_variant_]
-==== variant
-
-[source,python]
-----
-variant() -> FetchVariant
-----
-
-The variant. One of List, Leaf, Object
-
-[caption=""]
-.Returns
-`FetchVariant`
-
 // end::methods[]
 

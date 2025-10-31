@@ -340,19 +340,5 @@ is_update() -> bool
 .Returns
 `bool`
 
-[#_PipelineStage_variant_]
-==== variant
-
-[source,python]
-----
-variant() -> PipelineStageVariant
-----
-
-Return the pipeline stage variant.
-
-[caption=""]
-.Returns
-`PipelineStageVariant`
-
 // end::methods[]
 

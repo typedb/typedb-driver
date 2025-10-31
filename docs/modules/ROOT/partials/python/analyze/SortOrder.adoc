@@ -1,5 +1,5 @@
-[#_KindVariant]
-=== KindVariant
+[#_SortOrder]
+=== SortOrder
 
 An enumeration.
 
@@ -10,10 +10,8 @@ An enumeration.
 [options="header"]
 |===
 |Name |Value
-a| `Attribute` a| `1`
-a| `Entity` a| `0`
-a| `Relation` a| `2`
-a| `Role` a| `3`
+a| `Ascending` a| `0`
+a| `Descending` a| `1`
 |===
 // end::enum_constants[]
 
