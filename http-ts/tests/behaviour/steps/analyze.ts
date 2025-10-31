@@ -1,7 +1,7 @@
 import {When, Then} from "@cucumber/cucumber";
 import assert from "assert";
 import {analyzed, doAnalyze, setAnalyzed} from "./context";
-import {assertNotError} from "./params";
+import {assertNotError, EXPECT_ERROR_CONTAINING, MayError} from "./params";
 
 import {
     QueryConstraintAny,
@@ -21,7 +21,7 @@ When('get answers of typeql analyze', async function (query: string) {
     setAnalyzed(results.ok);
 });
 
-When('typeql analyze{may_error}:', async function (mayError: string, query: string) {
+const analyzeMayError = async function (mayError: MayError, query: string) {
     const results = await doAnalyze(query);
     if (mayError) assert.notEqual(results.err, undefined);
     else assert.notEqual(results.ok, undefined);
@@ -32,7 +32,9 @@ When('typeql analyze{may_error}:', async function (mayError: string, query: stri
             throw e;
         }
     }
-});
+}
+When('typeql analyze{may_error}', analyzeMayError);
+When(`typeql analyze${EXPECT_ERROR_CONTAINING}`, analyzeMayError);
 
 Then('analyzed query pipeline structure is:', function (expectedFunctor: string) {
     const context = new FunctorEncoder(analyzed.structure.query);
@@ -54,15 +56,15 @@ Then('analyzed query preamble contains:', function (expectedFunctor: string) {
 });
 
 Then('analyzed query pipeline annotations are:', function (expectedFunctor: string) {
-    // TODO: Implement pipeline annotations checking
+    assert.ok(false, "Implement me")
 });
 
 Then('analyzed preamble annotations contains:', function (expectedFunctor: string) {
-    // TODO: Implement preamble annotations checking
+    assert.ok(false, "Implement me")
 });
 
 Then('analyzed fetch annotations are:', function (expectedFunctor: string) {
-    // TODO: Implement fetch annotations checking
+    assert.ok(false, "Implement me")
 });
 
 function normalizeFunctorForCompare(functor: string): string {
