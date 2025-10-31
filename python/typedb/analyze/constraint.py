@@ -32,6 +32,7 @@ from typedb.api.analyze.constraint import (
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
 from typedb.analyze.variants import ConstraintVariant
+from typedb.common.enums import Comparator, ConstraintExactness
 
 from typedb.native_driver_wrapper import (
     ConstraintWithSpan as NativeConstraint,
@@ -95,7 +96,6 @@ if TYPE_CHECKING:
     from typedb.api.analyze.constraint import Constraint, Span
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
     from typedb.native_driver_wrapper import ConjunctionID
-    from typedb.common.enums import Comparator, ConstraintExactness
     import typedb
 
 

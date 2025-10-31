@@ -19,11 +19,13 @@ import re
 from enum import Enum
 
 from typedb.analyze import (
-    Constraint, ConstraintVertex, ConstraintVariant, ConstraintExactness,
-    Pipeline, PipelineStage, PipelineStageVariant, Fetch, FetchVariant,
-    Function, ReturnOperation, ReturnOperationVariant,
+    Constraint, ConstraintVertex,
+    Pipeline, PipelineStage,  Fetch,
+    Function, ReturnOperation,
     ReduceStage, Reducer, SortStage, VariableAnnotations,
 )
+from typedb.analyze.variants import ConstraintVariant, PipelineStageVariant, FetchVariant, ReturnOperationVariant
+from typedb.common.enums import ConstraintExactness, SortOrder
 from typedb.driver import Type
 
 from typing import Iterable, Dict
@@ -182,7 +184,7 @@ def _encode_variable(self, encoder: FunctorEncoder) -> str:
 
 
 def _encode_sort_variable(self, encoder: FunctorEncoder) -> str:
-    order = "Asc" if self.order() == SortStage.SortOrder.Ascending else "Desc"
+    order = "Asc" if self.order() == SortOrder.Ascending else "Desc"
     return encoder.make_functor(order, self.variable().encode_as_functor(encoder))
 
 
