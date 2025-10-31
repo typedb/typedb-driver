@@ -27,10 +27,12 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALI
     UNEXPECTED_NATIVE_VALUE, NULL_NATIVE_OBJECT
 
 from typedb.api.analyze.pipeline_stage import (
-    PipelineStage, PipelineStageVariant,
+    PipelineStage,
     MatchStage, InsertStage, PutStage, UpdateStage, DeleteStage,
     SelectStage, SortStage, RequireStage, OffsetStage, LimitStage, DistinctStage, ReduceStage
 )
+from typedb.common.enums import SortOrder
+from typedb.analyze.variants import PipelineStageVariant
 
 # native functions/types
 from typedb.native_driver_wrapper import (
@@ -61,7 +63,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import ConjunctionID,Variable
+    from typedb.native_driver_wrapper import ConjunctionID, Variable
     from typedb.api.analyze.reducer import Reducer
 
 
@@ -301,8 +303,8 @@ class _SortStage(SortStage, _PipelineStage):
         def variable(self) -> "Variable":
             return sort_variable_get_variable(self.native_object)
 
-        def order(self) -> "SortStage.SortOrderVariant":
-            return SortStage.SortOrderVariant(sort_variable_get_order(self.native_object))
+        def order(self) -> "SortOrder":
+            return SortOrder(sort_variable_get_order(self.native_object))
 
 
 class _RequireStage(RequireStage, _PipelineStage):

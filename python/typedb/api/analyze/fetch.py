@@ -30,15 +30,6 @@ class Fetch(ABC):
     """
 
     @abstractmethod
-    def variant(self) -> FetchVariant:
-        """
-        The variant. One of `List, Leaf, Object`
-
-        :return: fetch variant
-        """
-        pass
-
-    @abstractmethod
     def is_leaf(self) -> bool:
         pass
 

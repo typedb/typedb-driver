@@ -41,18 +41,6 @@ from typedb.native_driver_wrapper import (
     Not as NativeNot,
     Try as NativeTry,
 
-    Exact as NativeExact,
-    Subtypes as NativeSubtypes,
-
-    Equal as NativeEqual,
-    NotEqual as NativeNotEqual,
-    LessThan as NativeLessThan,
-    LessOrEqual as NativeLessOrEqual,
-    Greater as NativeGreater,
-    GreaterOrEqual as NativeGreaterOrEqual,
-    Like as NativeLike,
-    Contains as NativeContains,
-
     Entity as NativeEntity,
     Relation as NativeRelation,
     Attribute as NativeAttribute,
@@ -80,43 +68,62 @@ from typedb.native_driver_wrapper import (
     Distinct as NativeDistinct,
     Reduce as NativeReduce,
 
-    Ascending as NativeAscending,
-    Descending as NativeDescending,
-
     InstanceAnnotations as NativeInstanceAnnotations,
     TypeAnnotations as NativeTypeAnnotations,
     ValueAnnotations as NativeValueAnnotations,
 )
 
-class ConstraintExactness(IntEnum):
-    Exact = NativeExact
-    Subtypes = NativeSubtypes
+
+class ConstraintVariant(IntEnum):
+    Isa = NativeIsa
+    Has = NativeHas
+    Links = NativeLinks
+    Sub = NativeSub
+    Owns = NativeOwns
+    Relates = NativeRelates
+    Plays = NativePlays
+    FunctionCall = NativeFunctionCall
+    Expression = NativeExpression
+    Is = NativeIs
+    Iid = NativeIid
+    Comparison = NativeComparison
+    KindOf = NativeKindOf
+    Label = NativeLabel
+    Value = NativeValue
+    Or = NativeOr
+    Not = NativeNot
+    Try = NativeTry
 
 
-class Comparator(IntEnum):
-    Equal = NativeEqual
-    NotEqual = NativeNotEqual
-    LessThan = NativeLessThan
-    LessOrEqual = NativeLessOrEqual
-    Greater = NativeGreater
-    GreaterOrEqual = NativeGreaterOrEqual
-    Like = NativeLike
-    Contains = NativeContains
-
-    def symbol(self):
-        return comparator_get_name(self)
-
-    def __str__(self):
-        return self.symbol()
+class FetchVariant(IntEnum):
+    LeafDocument = NativeLeafDocument
+    ListDocument = NativeListDocument
+    ObjectDocument = NativeObjectDocument,
 
 
-class Kind(IntEnum):
-    Entity = NativeEntity
-    Relation = NativeRelation
-    Attribute = NativeAttribute
-    Role = NativeRole
+class PipelineStageVariant(IntEnum):
+    Match = NativeMatch
+    Insert = NativeInsert
+    Put = NativePut
+    Update = NativeUpdate
+    Delete = NativeDelete
+    Select = NativeSelect
+    Sort = NativeSort
+    Require = NativeRequire
+    Offset = NativeOffset
+    Limit = NativeLimit
+    Distinct = NativeDistinct
+    Reduce = NativeReduce
 
 
-class SortOrder(IntEnum):
-    Ascending = NativeAscending
-    Descending = NativeDescending
+class ReturnOperationVariant(IntEnum):
+    StreamReturn = NativeStreamReturn
+    SingleReturn = NativeSingleReturn
+    CheckReturn = NativeCheckReturn
+    ReduceReturn = NativeReduceReturn
+
+
+class VariableAnnotationsVariant(IntEnum):
+    InstanceAnnotations = NativeInstanceAnnotations
+    TypeAnnotations = NativeTypeAnnotations
+    ValueAnnotations = NativeValueAnnotations

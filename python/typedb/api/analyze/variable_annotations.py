@@ -30,11 +30,6 @@ class VariableAnnotations(ABC):
     """
 
     @abstractmethod
-    def variant(self) -> "VariableAnnotationsVariant":
-        """The variant indicates whether this is an instance variable, type variable, or value variable."""
-        pass
-
-    @abstractmethod
     def is_instance(self) -> bool:
         """Returns True if this variable is an Instance variable."""
         pass

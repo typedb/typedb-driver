@@ -24,7 +24,8 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALID_VARIABLE_ANNOTATIONS_CASTING
 from typedb.concept.concept_factory import wrap_concept
 
-from typedb.api.analyze.variable_annotations import VariableAnnotations, VariableAnnotationsVariant
+from typedb.analyze.variants import VariableAnnotationsVariant
+from typedb.api.analyze.variable_annotations import VariableAnnotations
 
 from typedb.native_driver_wrapper import (
     VariableAnnotations as NativeVariableAnnotations,

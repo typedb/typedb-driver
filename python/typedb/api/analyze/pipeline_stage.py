@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Iterator
 if TYPE_CHECKING:
     from typedb.native_driver_wrapper import ConjunctionID,Variable
     from typedb.api.analyze.reducer import Reducer
+    from typedb.common.enums import SortOrder
 
 
 class PipelineStage(ABC):
@@ -30,12 +31,6 @@ class PipelineStage(ABC):
     Representation of a stage in a Pipeline.
     """
 
-    @abstractmethod
-    def variant(self) -> PipelineStageVariant:
-        """Return the pipeline stage variant."""
-        pass
-
-    # Type check methods
     @abstractmethod
     def is_match(self) -> bool:
         pass
@@ -84,7 +79,6 @@ class PipelineStage(ABC):
     def is_reduce(self) -> bool:
         pass
 
-    # Conversion / downcast methods
     @abstractmethod
     def as_match(self) -> "MatchStage":
         pass
@@ -203,7 +197,7 @@ class SortStage(PipelineStage, ABC):
             pass
 
         @abstractmethod
-        def order(self) -> "SortStage.SortOrderVariant":
+        def order(self) -> "SortOrder":
             pass
 
 

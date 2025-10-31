@@ -182,7 +182,7 @@ def _encode_variable(self, encoder: FunctorEncoder) -> str:
 
 
 def _encode_sort_variable(self, encoder: FunctorEncoder) -> str:
-    order = "Asc" if self.order() == SortStage.SortOrderVariant.Ascending else "Desc"
+    order = "Asc" if self.order() == SortStage.SortOrder.Ascending else "Desc"
     return encoder.make_functor(order, self.variable().encode_as_functor(encoder))
 
 

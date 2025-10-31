@@ -17,11 +17,13 @@
 
 from typing import TYPE_CHECKING, Iterator, Optional
 
-from typedb.api.analyze.fetch import Fetch, FetchLeaf, FetchList, FetchObject, FetchVariant
+from typedb.api.analyze.fetch import Fetch, FetchLeaf, FetchList, FetchObject
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, UNEXPECTED_NATIVE_VALUE, \
     INVALID_FETCH_CASTING, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.analyze.variants import FetchVariant
+
 from typedb.native_driver_wrapper import (
     Fetch as NativeFetch,
     LeafDocument, ListDocument, ObjectDocument,
@@ -30,7 +32,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.pipeline import Pipeline
+    pass
 
 
 class _Fetch(Fetch, NativeWrapper[NativeFetch]):

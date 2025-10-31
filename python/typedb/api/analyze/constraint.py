@@ -23,17 +23,13 @@ from typing import TYPE_CHECKING, Iterator
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
     from typedb.native_driver_wrapper import ConjunctionID
-
+    from typedb.common.enums import Comparator, ConstraintExactness
+    import typedb
 
 class Constraint(ABC):
     """
     A representation of a TypeQL constraint.
     """
-
-    @abstractmethod
-    def variant(self) -> ConstraintVariant:
-        """Gets the variant of this constraint."""
-        pass
 
     @abstractmethod
     def span(self) -> "Span":
@@ -380,7 +376,7 @@ class Kind(Constraint, ABC):
     """Represents a kind constraint: <kind> <type>"""
 
     @abstractmethod
-    def kind(self) -> "KindVariant":
+    def kind(self) -> "typedb.common.enums.Kind":
         pass
 
     @abstractmethod

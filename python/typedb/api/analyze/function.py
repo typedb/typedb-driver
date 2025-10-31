@@ -60,10 +60,6 @@ class Function(ABC):
 
 class ReturnOperation(ABC):
     @abstractmethod
-    def variant(self) -> "ReturnOperationVariant":
-        pass
-
-    @abstractmethod
     def is_stream(self) -> bool:
         pass
 

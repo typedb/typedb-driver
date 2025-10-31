@@ -43,13 +43,14 @@ from typedb.native_driver_wrapper import (
 )
 
 from typedb.api.analyze.function import (
-    Function, ReturnOperation, ReturnOperationVariant,
+    Function, ReturnOperation,
     ReturnOperationStream, ReturnOperationSingle, ReturnOperationCheck, ReturnOperationReduce,
 )
 
 from typedb.analyze.pipeline import _Pipeline
 from typedb.analyze.variable_annotations import _VariableAnnotations
 from typedb.analyze.reducer import _Reducer
+from typedb.analyze.variants import ReturnOperationVariant
 
 if TYPE_CHECKING:
     from typedb.api.analyze.pipeline import Pipeline

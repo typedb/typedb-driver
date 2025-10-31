@@ -25,12 +25,13 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALI
     UNEXPECTED_NATIVE_VALUE
 
 from typedb.api.analyze.constraint import (
-    Constraint, ConstraintVariant, ConstraintExactness, Comparator, Span, KindVariant,
+    Constraint, Span,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
     FunctionCall, Expression, Is, Iid, Comparison, Kind, Label, Value,
     Or, Not, Try,
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
+from typedb.analyze.variants import ConstraintVariant
 
 from typedb.native_driver_wrapper import (
     ConstraintWithSpan as NativeConstraint,
@@ -91,9 +92,11 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.constraint import Constraint, ConstraintExactness, ConstraintVariant, Span
+    from typedb.api.analyze.constraint import Constraint, Span
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
     from typedb.native_driver_wrapper import ConjunctionID
+    from typedb.common.enums import Comparator, ConstraintExactness
+    import typedb
 
 
 class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
@@ -545,8 +548,9 @@ class _Kind(_Constraint, Kind):
     def as_kind(self):
         return self
 
-    def kind(self) -> KindVariant:
-        return KindVariant(constraint_kind_get_kind(self.native_object))
+    def kind(self) -> "typedb.common.enums.Kind":
+        from typedb.common.enums import Kind as KindEnum
+        return KindEnum(constraint_kind_get_kind(self.native_object))
 
     def type(self) -> "ConstraintVertex":
         native = constraint_kind_get_type(self.native_object)
