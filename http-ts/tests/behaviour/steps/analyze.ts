@@ -13,17 +13,9 @@ import {
     Reducer,
     PipelineAnnotations,
     VariableAnnotations,
+    FetchAnnotations,
     FunctionAnnotations,
 } from "../../../dist/index.cjs";
-// import {QueryConstraintAny, QueryVertex} from "../../../src";
-// import {
-//     FunctionReturnStructure,
-//     FunctionStructure,
-//     PipelineAnnotations,
-//     PipelineStage,
-//     PipelineStructure,
-//     Reducer, VariableAnnotations
-// } from "../../../src/analyze";
 
 
 When('get answers of typeql analyze', async function (query: string) {
@@ -83,10 +75,11 @@ Then('analyzed preamble annotations contains:', function (expectedFunctor: strin
     const found = preambleFunctors.some(actual =>
         normalizeFunctorForCompare(actual) === normalizedExpected
     );
-    assert.ok(found, `Expected to find functor in preamble: ${normalizedExpected}\nFound: ${preambleFunctors.join('\n')}`);});
+    assert.ok(found, `Expected to find functor in preamble: ${normalizedExpected}\nFound: ${preambleFunctors.join('\n')}`);
+});
 
 Then('analyzed fetch annotations are:', function (expectedFunctor: string) {
-    assert.ok(false, "Implement me")
+    encodeFetchAnnotations(analyzed.annotations.fetch);
 });
 
 function normalizeFunctorForCompare(functor: string): string {
@@ -260,9 +253,9 @@ function encodePipelineStage(stage: PipelineStage, encoder: FunctorEncoder): str
                 variant,
                 encoder.encodeAsList(stage.variables.map(v => encodeVariable(v, encoder)))
             );
-        case "sort":{
+        case "sort": {
             const sortVariables = stage.variables.map(v => encoder.makeFunctor(
-                v.ascending? "Asc" : "Desc",
+                v.ascending ? "Asc" : "Desc",
                 encodeVariable(v.variable, encoder),
             ));
             return encoder.makeFunctor(variant, encoder.encodeAsList(sortVariables));
@@ -372,7 +365,7 @@ function encodeConjunctionAnnotations(conjunctionIndex: number, encoder: Functor
     const variableAnnotations = Object.keys(conjunctionAnnotations.variableAnnotations).map(v => {
         const annotations = conjunctionAnnotations.variableAnnotations[v];
         return [encodeVariable(v, encoder), encodeVariableAnnotations(annotations, encoder)]
-    }).sort().map(([k,v]) => `${k} : ${v}`);
+    }).sort().map(([k, v]) => `${k} : ${v}`);
     return encoder.makeFunctor(
         "And",
         "{" + variableAnnotations.join(",") + "}",
@@ -417,4 +410,20 @@ function encodeFunctionAnnotations(structure: FunctionStructure, annotations: Fu
         encoder.makeFunctor(annotations.returns.tag, encoder.encodeAsList(ret)),
         encodePipelineAnnotations(structure.body, encoder)
     );
+}
+
+function encodeFetchAnnotations(fetch: FetchAnnotations): string {
+    switch (fetch.tag) {
+        case "list": {
+            const inner = encodeFetchAnnotations(fetch.elements);
+            return `List(${inner})`;
+        }
+        case "object": {
+            const kv = fetch.possibleFields.map(inner => `${inner.key}: ${encodeFetchAnnotations(inner)}`);
+            return "{" + kv.join(",") + "}";
+        }
+        case "value":
+            return "[" + fetch.valueTypes.join(",") + "]";
+    }
+    throw new Error("Unknown fetch annotations variant");
 }
