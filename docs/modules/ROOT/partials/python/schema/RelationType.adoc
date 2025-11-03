@@ -1,6 +1,8 @@
 [#_RelationType]
 === RelationType
 
+*Package*: `typedb.api.concept.type.relation_type`
+
 *Supertypes:*
 
 * `Type`

@@ -1,6 +1,8 @@
 [#_OffsetStage]
 === OffsetStage
 
+*Package*: `typedb.api.analyze.pipeline_stage`
+
 *Supertypes:*
 
 * `PipelineStage`

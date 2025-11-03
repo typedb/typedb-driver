@@ -1,6 +1,8 @@
 [#_FunctionCall]
 === FunctionCall
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

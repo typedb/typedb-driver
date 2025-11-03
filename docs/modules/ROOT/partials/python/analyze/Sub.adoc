@@ -1,6 +1,8 @@
 [#_Sub]
 === Sub
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

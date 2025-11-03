@@ -1,6 +1,8 @@
 [#_Or]
 === Or
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

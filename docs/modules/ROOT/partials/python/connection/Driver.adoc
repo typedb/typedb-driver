@@ -1,6 +1,8 @@
 [#_Driver]
 === Driver
 
+*Package*: `typedb.api.connection.driver`
+
 [caption=""]
 .Properties
 // tag::properties[]

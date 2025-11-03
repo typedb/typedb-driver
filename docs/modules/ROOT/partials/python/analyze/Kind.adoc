@@ -1,6 +1,8 @@
 [#_Kind]
 === Kind
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

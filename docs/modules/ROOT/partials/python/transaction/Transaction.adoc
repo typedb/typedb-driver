@@ -1,6 +1,8 @@
 [#_Transaction]
 === Transaction
 
+*Package*: `typedb.api.connection.transaction`
+
 [caption=""]
 .Properties
 // tag::properties[]

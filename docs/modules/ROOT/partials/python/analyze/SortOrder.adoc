@@ -1,6 +1,8 @@
 [#_SortOrder]
 === SortOrder
 
+*Package*: `typedb.common.enums`
+
 An enumeration.
 
 [caption=""]

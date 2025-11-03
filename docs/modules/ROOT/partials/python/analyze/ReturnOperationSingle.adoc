@@ -1,6 +1,8 @@
 [#_ReturnOperationSingle]
 === ReturnOperationSingle
 
+*Package*: `typedb.api.analyze.function`
+
 *Supertypes:*
 
 * `ReturnOperation`

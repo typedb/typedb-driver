@@ -1,6 +1,8 @@
 [#_Constraint]
 === Constraint
 
+*Package*: `typedb.api.analyze.constraint`
+
 A representation of a TypeQL constraint.
 
 // tag::methods[]

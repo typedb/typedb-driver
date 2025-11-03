@@ -1,6 +1,8 @@
 [#_TypeDB]
 === TypeDB
 
+*Package*: `typedb.driver`
+
 // tag::methods[]
 [#_TypeDB_driver_address_str_credentials_Credentials_driver_options_DriverOptions]
 ==== driver

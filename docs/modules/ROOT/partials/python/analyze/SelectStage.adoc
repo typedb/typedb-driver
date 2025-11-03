@@ -1,6 +1,8 @@
 [#_SelectStage]
 === SelectStage
 
+*Package*: `typedb.api.analyze.pipeline_stage`
+
 *Supertypes:*
 
 * `PipelineStage`

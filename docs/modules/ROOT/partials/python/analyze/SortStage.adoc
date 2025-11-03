@@ -1,6 +1,8 @@
 [#_SortStage]
 === SortStage
 
+*Package*: `typedb.api.analyze.pipeline_stage`
+
 *Supertypes:*
 
 * `PipelineStage`

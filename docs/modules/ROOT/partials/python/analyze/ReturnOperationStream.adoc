@@ -1,6 +1,8 @@
 [#_ReturnOperationStream]
 === ReturnOperationStream
 
+*Package*: `typedb.api.analyze.function`
+
 *Supertypes:*
 
 * `ReturnOperation`

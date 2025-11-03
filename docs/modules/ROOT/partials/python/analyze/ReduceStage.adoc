@@ -1,6 +1,8 @@
 [#_ReduceStage]
 === ReduceStage
 
+*Package*: `typedb.api.analyze.pipeline_stage`
+
 *Supertypes:*
 
 * `PipelineStage`

@@ -1,6 +1,8 @@
 [#_Pipeline]
 === Pipeline
 
+*Package*: `typedb.api.analyze.pipeline`
+
 A representation of a query pipeline.
 
 // tag::methods[]

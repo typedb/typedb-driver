@@ -1,6 +1,8 @@
 [#_Not]
 === Not
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

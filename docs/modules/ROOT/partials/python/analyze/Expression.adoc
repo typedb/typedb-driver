@@ -1,6 +1,8 @@
 [#_Expression]
 === Expression
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

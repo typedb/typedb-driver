@@ -1,6 +1,8 @@
 [#_ReturnOperation]
 === ReturnOperation
 
+*Package*: `typedb.api.analyze.function`
+
 // tag::methods[]
 [#_ReturnOperation_as_check_]
 ==== as_check

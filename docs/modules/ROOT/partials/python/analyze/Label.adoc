@@ -1,6 +1,8 @@
 [#_Label]
 === Label
 
+*Package*: `typedb.api.analyze.constraint`
+
 *Supertypes:*
 
 * `Constraint`

@@ -1,6 +1,8 @@
 [#_FetchList]
 === FetchList
 
+*Package*: `typedb.api.analyze.fetch`
+
 *Supertypes:*
 
 * `Fetch`

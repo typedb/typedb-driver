@@ -1,6 +1,8 @@
 [#_DeleteStage]
 === DeleteStage
 
+*Package*: `typedb.api.analyze.pipeline_stage`
+
 *Supertypes:*
 
 * `PipelineStage`

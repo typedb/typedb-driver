@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# Keys are suffixes of the fully qualified class name. The longest match is picked.
+# The filename will be className.adoc
 dir_mapping = {
     "AnalyzedQuery.adoc": "analyze",
     "Comparator.adoc": "analyze",
@@ -36,7 +38,7 @@ dir_mapping = {
     "Comparison.adoc": "analyze",
     "Kind.adoc": "analyze",
     "Label.adoc": "analyze",
-#    "Value.adoc": "analyze", # Oh no.
+    "analyze.value.Value.adoc": "analyze", # Longer suffix match to avoid ambiguity with the Value concept
     "Or.adoc": "analyze",
     "Not.adoc": "analyze",
     "Try.adoc": "analyze",
