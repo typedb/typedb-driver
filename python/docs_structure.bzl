@@ -38,7 +38,7 @@ dir_mapping = {
     "Comparison.adoc": "analyze",
     "Kind.adoc": "analyze",
     "Label.adoc": "analyze",
-    "analyze.value.Value.adoc": "analyze", # Longer suffix match to avoid ambiguity with the Value concept
+    "analyze.constraint.Value.adoc": "analyze", # Longer suffix match to avoid ambiguity with the Value concept
     "Or.adoc": "analyze",
     "Not.adoc": "analyze",
     "Try.adoc": "analyze",

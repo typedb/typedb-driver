@@ -102,7 +102,7 @@ class PythonDocParser : Callable<Unit> {
     }
 
     private fun getClassFilter(filePathString: String, fileClassFilter: Map<Regex, Regex>, ): Optional<Regex> {
-        return fileClassFilter.entries.stream().filter { it.key.matches(filePathString) }.findFirst().map { it.value };
+        return fileClassFilter.entries.stream().filter { it.key.matches(filePathString) }.findFirst().map { it.value }
     }
 
     private fun parseClass(element: Element): Class {
@@ -242,12 +242,12 @@ class PythonDocParser : Callable<Unit> {
         return signature.replace("→", "->").replace("¶", "").replace("abstract ", "")
     }
 
-    private fun getDirMappingFor(qualifedClassName: String): String {
+    private fun getDirMappingFor(qualifiedClassName: String): String {
         try {
-            val longestMatchingKey = dirs.keys.filter { qualifedClassName.endsWith(it) }.maxWith(Comparator.comparing { o1 -> o1.length })
+            val longestMatchingKey = dirs.keys.filter { qualifiedClassName.endsWith(it) }.maxWith(Comparator.comparing { o1 -> o1.length })
             return dirs[longestMatchingKey]!!
         } catch (e: NoSuchElementException) {
-            throw IllegalArgumentException("Output directory for '$qualifedClassName' could not be determined", e)
+            throw IllegalArgumentException("Output directory for '$qualifiedClassName' could not be determined", e)
         }
     }
 }
