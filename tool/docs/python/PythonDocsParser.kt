@@ -89,8 +89,7 @@ class PythonDocParser : Callable<Unit> {
                 if (parsedClass.isNotEmpty() && classNameFilter.matches(parsedClass.name)) {
                     val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                     val fileName = "${parsedClass.name}.adoc"
-                    val fileDir = docsDir.resolve(dirs[fileName]
-                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                    val fileDir = docsDir.resolve(getDirMappingFor("${parsedClass.packagePath}.${parsedClass.name}.adoc"))
                     if (!fileDir.toFile().exists()) {
                         Files.createDirectory(fileDir)
                     }
@@ -103,14 +102,15 @@ class PythonDocParser : Callable<Unit> {
     }
 
     private fun getClassFilter(filePathString: String, fileClassFilter: Map<Regex, Regex>, ): Optional<Regex> {
-        return fileClassFilter.entries.stream().filter { it.key.matches(filePathString) }.findFirst().map { it.value };
+        return fileClassFilter.entries.stream().filter { it.key.matches(filePathString) }.findFirst().map { it.value }
     }
 
     private fun parseClass(element: Element): Class {
-        val classSignElement = element.selectFirst("dt.sig-object")
-        val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+        val classSignElement = element.selectFirst("dt.sig-object")!!
+        val className = classSignElement.selectFirst("dt.sig-object span.sig-name")!!.text()
         val classAnchor = className
 
+        val packagePath = classSignElement.id().substringBeforeLast(".")
         var classDetailsElement = classSignElement.nextElementSibling()
         val classDetailsParagraphs = classDetailsElement!!.children().map { it }.filter { it.tagName() == "p" }
         val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
@@ -139,6 +139,7 @@ class PythonDocParser : Callable<Unit> {
             fields = properties,
             methods = methods,
             superClasses = superClasses,
+            packagePath = packagePath,
         )
     }
 
@@ -147,6 +148,7 @@ class PythonDocParser : Callable<Unit> {
         val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
         val classAnchor = className
 
+        val packagePath = classSignElement.id().substringBeforeLast(".")
         val classDetails = classSignElement.nextElementSibling()
         val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
         val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
@@ -164,6 +166,7 @@ class PythonDocParser : Callable<Unit> {
             enumConstants = members,
             examples = classExamples,
             methods = methods,
+            packagePath = packagePath,
         )
     }
 
@@ -237,5 +240,14 @@ class PythonDocParser : Callable<Unit> {
 
     private fun enhanceSignature(signature: String): String {
         return signature.replace("→", "->").replace("¶", "").replace("abstract ", "")
+    }
+
+    private fun getDirMappingFor(qualifiedClassName: String): String {
+        try {
+            val longestMatchingKey = dirs.keys.filter { qualifiedClassName.endsWith(it) }.maxWith(Comparator.comparing { o1 -> o1.length })
+            return dirs[longestMatchingKey]!!
+        } catch (e: NoSuchElementException) {
+            throw IllegalArgumentException("Output directory for '$qualifiedClassName' could not be determined", e)
+        }
     }
 }

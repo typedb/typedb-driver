@@ -36,11 +36,11 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
 
     public static FetchImpl of(com.typedb.driver.jni.Fetch nativeObject) {
         switch (com.typedb.driver.jni.typedb_driver.fetch_variant(nativeObject)) {
-            case Leaf:
+            case LeafDocument:
                 return new FetchImpl.FetchLeafImpl(nativeObject);
-            case List:
+            case ListDocument:
                 return new FetchImpl.FetchListImpl(nativeObject);
-            case Object:
+            case ObjectDocument:
                 return new FetchImpl.FetchObjectImpl(nativeObject);
             default:
                 throw new TypeDBDriverException("Unrecognised Fetch variant", null);
@@ -49,6 +49,21 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
 
     public com.typedb.driver.jni.FetchVariant variant() {
         return com.typedb.driver.jni.typedb_driver.fetch_variant(nativeObject);
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return false;
+    }
+
+    @Override
+    public boolean isList() {
+        return false;
+    }
+
+    @Override
+    public boolean isObject() {
+        return false;
     }
 
     @Override
@@ -72,6 +87,11 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
         }
 
         @Override
+        public boolean isLeaf() {
+            return true;
+        }
+
+        @Override
         public FetchLeafImpl asLeaf() {
             return this;
         }
@@ -85,6 +105,11 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
     public static class FetchListImpl extends FetchImpl implements Fetch.FetchList {
         protected FetchListImpl(com.typedb.driver.jni.Fetch nativeObject) {
             super(nativeObject);
+        }
+
+        @Override
+        public boolean isList() {
+            return true;
         }
 
         @Override
@@ -102,6 +127,11 @@ public abstract class FetchImpl extends NativeObject<com.typedb.driver.jni.Fetch
 
         protected FetchObjectImpl(com.typedb.driver.jni.Fetch nativeObject) {
             super(nativeObject);
+        }
+
+        @Override
+        public boolean isObject() {
+            return true;
         }
 
         @Override

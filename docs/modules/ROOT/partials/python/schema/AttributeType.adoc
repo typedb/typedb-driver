@@ -1,6 +1,8 @@
 [#_AttributeType]
 === AttributeType
 
+*Package*: `typedb.api.concept.type.attribute_type`
+
 *Supertypes:*
 
 * `Type`

@@ -1,6 +1,8 @@
 [#_QueryType]
 === QueryType
 
+*Package*: `typedb.api.answer.query_type`
+
 Used to specify the type of the executed query.
 
 [caption=""]

@@ -17,8 +17,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Callable
 
+from typedb.api.analyze.analyzed_query import AnalyzedQuery
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.query_options import QueryOptions
 from typedb.api.connection.transaction import Transaction
@@ -28,10 +29,10 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
-from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_query, \
-    transaction_commit, \
-    transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
-    query_answer_promise_resolve, \
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
+    transaction_analyze, transaction_query, \
+    transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
+    query_answer_promise_resolve, analyzed_query_promise_resolve, \
     Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 if TYPE_CHECKING:
@@ -65,6 +66,12 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
     def options(self) -> TransactionOptions:
         return self._options
 
+    def analyze(self, query: str) -> Promise[AnalyzedQuery]:
+        from typedb.analyze.analyzed_query import _AnalyzedQuery
+        require_non_null(query, "query")
+        promise = transaction_analyze(self.native_object, query)
+        return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
+
     def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
@@ -77,13 +84,13 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             return False
         return transaction_is_open(self.native_object)
 
-    def on_close(self, function: callable):
+    def on_close(self, function: Callable):
         callback = _Transaction.TransactionOnClose(function)
         void_promise_resolve(transaction_on_close(self.native_object, callback.__disown__()))
 
     class TransactionOnClose(TransactionCallbackDirector):
 
-        def __init__(self, function: callable):
+        def __init__(self, function: Callable):
             super().__init__()
             self._function = function
 

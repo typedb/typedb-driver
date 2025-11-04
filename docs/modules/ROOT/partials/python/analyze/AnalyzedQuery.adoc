@@ -1,0 +1,52 @@
+[#_AnalyzedQuery]
+=== AnalyzedQuery
+
+*Package*: `typedb.api.analyze.analyzed_query`
+
+An AnalyzedQuery contains the server’s representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.
+
+// tag::methods[]
+[#_AnalyzedQuery_fetch_]
+==== fetch
+
+[source,python]
+----
+fetch() -> 'Fetch' | None
+----
+
+A representation of the Fetch stage of the query, if it has one.
+
+[caption=""]
+.Returns
+`'Fetch' | None`
+
+[#_AnalyzedQuery_pipeline_]
+==== pipeline
+
+[source,python]
+----
+pipeline() -> Pipeline
+----
+
+A representation of the query as a Pipeline.
+
+[caption=""]
+.Returns
+`Pipeline`
+
+[#_AnalyzedQuery_preamble_]
+==== preamble
+
+[source,python]
+----
+preamble() -> Iterator['Function']
+----
+
+A representation of the Functions in the preamble of the query.
+
+[caption=""]
+.Returns
+`Iterator['Function']`
+
+// end::methods[]
+

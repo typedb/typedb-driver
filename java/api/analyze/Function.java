@@ -72,6 +72,14 @@ public interface Function {
          */
         com.typedb.driver.jni.ReturnOperationVariant variant();
 
+        boolean isStream();
+
+        boolean isSingle();
+
+        boolean isCheck();
+
+        boolean isReduce();
+
         /**
          * Down-casts this ReturnOperation to a <code>Stream</code> return operation.
          *

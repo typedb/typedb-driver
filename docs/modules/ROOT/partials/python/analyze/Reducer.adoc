@@ -1,0 +1,38 @@
+[#_Reducer]
+=== Reducer
+
+*Package*: `typedb.api.analyze.reducer`
+
+Representation of a reducer used either in a PipelineStage::Reduce or in a function’s ReturnOperation.
+
+// tag::methods[]
+[#_Reducer_arguments_]
+==== arguments
+
+[source,python]
+----
+arguments() -> Iterator['Variable']
+----
+
+The arguments to the reducer.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+[#_Reducer_name_]
+==== name
+
+[source,python]
+----
+name() -> str
+----
+
+The reduce operation applied (e.g. ‘sum’, ‘count’).
+
+[caption=""]
+.Returns
+`str`
+
+// end::methods[]
+

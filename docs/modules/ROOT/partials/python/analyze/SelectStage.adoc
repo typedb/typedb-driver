@@ -1,0 +1,28 @@
+[#_SelectStage]
+=== SelectStage
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘select’ stage: select &lt;variables&gt;
+
+// tag::methods[]
+[#_SelectStage_variables_]
+==== variables
+
+[source,python]
+----
+variables() -> Iterator['Variable']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

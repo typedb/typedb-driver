@@ -1,6 +1,8 @@
 [#_Value]
 === Value
 
+*Package*: `typedb.api.concept.value.value`
+
 *Supertypes:*
 
 * `Concept`

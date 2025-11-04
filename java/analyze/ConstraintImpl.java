@@ -158,7 +158,7 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
-    public boolean isKindOf() {
+    public boolean isKind() {
         return false;
     }
 
@@ -230,7 +230,7 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(ComparisonImpl.class));
     }
 
-    public KindImpl asKindOf() {
+    public KindImpl asKind() {
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(KindImpl.class));
     }
 
@@ -596,12 +596,12 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         }
 
         @Override
-        public boolean isKindOf() {
+        public boolean isKind() {
             return true;
         }
 
         @Override
-        public KindImpl asKindOf() {
+        public KindImpl asKind() {
             return this;
         }
 

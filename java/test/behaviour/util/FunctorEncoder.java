@@ -205,7 +205,7 @@ public abstract class FunctorEncoder {
                     );
                 }
                 case KindOf: {
-                    Constraint.Kind kind = constraint.asKindOf();
+                    Constraint.Kind kind = constraint.asKind();
                     return makeFunctor("Kind", kind.kind().toString(), encode(kind.type()));
                 }
                 case Label: {
@@ -268,7 +268,7 @@ public abstract class FunctorEncoder {
                 case CheckReturn:
                     return makeFunctor("Check");
                 case ReduceReturn:
-                    return makeFunctor("Single", encodeList(returnOperation.asReduce().reducers().map(this::encode)));
+                    return makeFunctor("Reduce", encodeList(returnOperation.asReduce().reducers().map(this::encode)));
                 default:
                     throw new IllegalArgumentException("Unhandled return operation variant", null);
             }
@@ -367,11 +367,11 @@ public abstract class FunctorEncoder {
 
         public String encode(Fetch fetch) {
             switch (fetch.variant()) {
-                case Leaf:
+                case LeafDocument:
                     return FunctorEncoder.encodeList(fetch.asLeaf().annotations());
-                case List:
+                case ListDocument:
                     return FunctorEncoder.makeFunctor("List", encode(fetch.asList().element()));
-                case Object:
+                case ObjectDocument:
                     Stream<String> fields = fetch.asObject().keys().map(field -> field + ":" + encode(fetch.asObject().get(field)));
                     return "{" + fields.sorted().collect(Collectors.joining(",")) + "}";
                 default:

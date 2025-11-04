@@ -71,7 +71,7 @@ pub enum ReturnOperation {
     /// Indicates the function returns a single row of the specified <code>Variables</code>.
     /// e.g. <code>return first $x, $y;</code>
     Single {
-        /// Determines how the operation used to select the row.
+        /// The selector used to determine which row to select.
         selector: String,
         /// The <code>Variables</code> in the returned row.
         variables: Vec<Variable>,

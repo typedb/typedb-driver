@@ -1,0 +1,38 @@
+[#_ReduceAssignment]
+=== ReduceAssignment
+
+*Package*: `typedb.api.analyze.pipeline_stage.ReduceStage`
+
+An assignment of a reducer to a variable.
+
+// tag::methods[]
+[#_ReduceAssignment_assigned_]
+==== assigned
+
+[source,python]
+----
+assigned() -> Variable
+----
+
+
+
+[caption=""]
+.Returns
+`Variable`
+
+[#_ReduceAssignment_reducer_]
+==== reducer
+
+[source,python]
+----
+reducer() -> Reducer
+----
+
+
+
+[caption=""]
+.Returns
+`Reducer`
+
+// end::methods[]
+

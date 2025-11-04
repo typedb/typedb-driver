@@ -1,0 +1,120 @@
+[#_ReturnOperation]
+=== ReturnOperation
+
+*Package*: `typedb.api.analyze.function`
+
+// tag::methods[]
+[#_ReturnOperation_as_check_]
+==== as_check
+
+[source,python]
+----
+as_check() -> ReturnOperationCheck
+----
+
+
+
+[caption=""]
+.Returns
+`ReturnOperationCheck`
+
+[#_ReturnOperation_as_reduce_]
+==== as_reduce
+
+[source,python]
+----
+as_reduce() -> ReturnOperationReduce
+----
+
+
+
+[caption=""]
+.Returns
+`ReturnOperationReduce`
+
+[#_ReturnOperation_as_single_]
+==== as_single
+
+[source,python]
+----
+as_single() -> ReturnOperationSingle
+----
+
+
+
+[caption=""]
+.Returns
+`ReturnOperationSingle`
+
+[#_ReturnOperation_as_stream_]
+==== as_stream
+
+[source,python]
+----
+as_stream() -> ReturnOperationStream
+----
+
+
+
+[caption=""]
+.Returns
+`ReturnOperationStream`
+
+[#_ReturnOperation_is_check_]
+==== is_check
+
+[source,python]
+----
+is_check() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReturnOperation_is_reduce_]
+==== is_reduce
+
+[source,python]
+----
+is_reduce() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReturnOperation_is_single_]
+==== is_single
+
+[source,python]
+----
+is_single() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReturnOperation_is_stream_]
+==== is_stream
+
+[source,python]
+----
+is_stream() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

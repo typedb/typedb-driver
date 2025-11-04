@@ -80,6 +80,26 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
             return com.typedb.driver.jni.typedb_driver.return_operation_variant(nativeObject);
         }
 
+        @Override
+        public boolean isStream() {
+            return false;
+        }
+
+        @Override
+        public boolean isSingle() {
+            return false;
+        }
+
+        @Override
+        public boolean isCheck() {
+            return false;
+        }
+
+        @Override
+        public boolean isReduce() {
+            return false;
+        }
+
         public StreamImpl asStream() {
             throw new TypeDBDriverException(INVALID_RETURN_OPERATION_CASTING, className(this.getClass()), className(StreamImpl.class));
         }
@@ -117,6 +137,16 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
             }
 
             @Override
+            public boolean isStream() {
+                return true;
+            }
+
+            @Override
+            public boolean isSingle() {
+                return true;
+            }
+
+            @Override
             public SingleImpl asSingle() {
                 return this;
             }
@@ -136,6 +166,11 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
             }
 
             @Override
+            public boolean isCheck() {
+                return true;
+            }
+
+            @Override
             public CheckImpl asCheck() {
                 return this;
             }
@@ -144,6 +179,11 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
         public static class ReduceImpl extends ReturnOperationImpl implements Function.ReturnOperation.Reduce {
             private ReduceImpl(com.typedb.driver.jni.ReturnOperation nativeObject) {
                 super(nativeObject);
+            }
+
+            @Override
+            public boolean isReduce() {
+                return true;
             }
 
             @Override
