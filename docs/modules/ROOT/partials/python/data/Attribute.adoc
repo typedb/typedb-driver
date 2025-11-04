@@ -1,6 +1,8 @@
 [#_Attribute]
 === Attribute
 
+*Package*: `typedb.api.concept.instance.attribute`
+
 *Supertypes:*
 
 * `Instance`

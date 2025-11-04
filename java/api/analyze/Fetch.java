@@ -30,6 +30,12 @@ public interface Fetch {
      */
     com.typedb.driver.jni.FetchVariant variant();
 
+    boolean isLeaf();
+
+    boolean isList();
+
+    boolean isObject();
+
     /**
      * Down-casts this <code>Fetch</code> as a <code>FetchLeaf</code> variant
      */

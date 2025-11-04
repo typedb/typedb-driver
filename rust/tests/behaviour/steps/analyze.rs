@@ -404,7 +404,7 @@ pub mod functor_encoding {
         Stream { variables, } |
         Single { selector, variables, }  |
         Check { }  |
-        Reduce {} |
+        Reduce { reducers, } |
     ]);
 
     pub fn encode_query_structure_as_functor(analyzed: &AnalyzedQuery) -> (String, Vec<String>) {

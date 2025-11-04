@@ -124,6 +124,23 @@ ILLEGAL_STATE = InternalErrorMessage(2, "Illegal state has been reached!")
 NULL_NATIVE_OBJECT = InternalErrorMessage(3, "Unhandled null pointer to a native object encountered!")
 NULL_CONCEPT_PROPERTY = InternalErrorMessage(4, "Unexpected null for a concept (%s) property is found!");
 
+class AnalyzeExceptionMessage(ErrorMessage):
+    """
+    :meta private:
+    """
+
+    def __init__(self, code: int, message: str):
+        super(AnalyzeExceptionMessage, self).__init__(code_prefix="PAN", code_number=code,
+                                                      message_prefix="Analyze Error", message_body=message)
+    
+
+INVALID_CONSTRAINT_CASTING = AnalyzeExceptionMessage(1, "Invalid constraint conversion from '%s' to '%s'.")
+INVALID_CONSTRAINT_VERTEX_CASTING = AnalyzeExceptionMessage(2, "Invalid constraint vertex conversion from '%s' to '%s'.")
+INVALID_STAGE_CASTING = AnalyzeExceptionMessage(3, "Invalid stage conversion from '%s' to '%s'.")
+INVALID_RETURN_OPERATION_CASTING = AnalyzeExceptionMessage(4, "Invalid return operation conversion from '%s' to '%s'.")
+INVALID_FETCH_CASTING = AnalyzeExceptionMessage(5, "Invalid fetch conversion from '%s' to '%s'.")
+INVALID_VARIABLE_ANNOTATIONS_CASTING = AnalyzeExceptionMessage(6, "Invalid VariableAnnotations conversion from '%s' to '%s'.")
+
 
 class TypeDBException(Exception):
     """

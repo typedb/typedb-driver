@@ -1,6 +1,8 @@
 [#_User]
 === User
 
+*Package*: `typedb.api.user.user`
+
 TypeDB user information
 
 [caption=""]

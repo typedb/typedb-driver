@@ -48,6 +48,48 @@ Down-casts this ``Fetch`` as a ``FetchObject`` variant
 .Returns
 `Fetch.FetchObject`
 
+[#_Fetch_isLeaf_]
+==== isLeaf
+
+[source,java]
+----
+boolean isLeaf()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Fetch_isList_]
+==== isList
+
+[source,java]
+----
+boolean isList()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Fetch_isObject_]
+==== isObject
+
+[source,java]
+----
+boolean isObject()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
 [#_Fetch_variant_]
 ==== variant
 

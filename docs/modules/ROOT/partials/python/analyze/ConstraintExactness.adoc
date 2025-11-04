@@ -1,0 +1,19 @@
+[#_ConstraintExactness]
+=== ConstraintExactness
+
+*Package*: `typedb.common.enums`
+
+An enumeration.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `Exact` a| `0`
+a| `Subtypes` a| `1`
+|===
+// end::enum_constants[]
+

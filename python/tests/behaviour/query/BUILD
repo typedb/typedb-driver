@@ -25,6 +25,12 @@ py_library(
     deps = [],
 )
 
+py_library(
+    name = "analyze_steps",
+    srcs = ["analyze_steps.py"],
+    deps = ["//python/tests/behaviour/util:functor-encoder"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

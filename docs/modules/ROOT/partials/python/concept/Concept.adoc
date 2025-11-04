@@ -1,6 +1,8 @@
 [#_Concept]
 === Concept
 
+*Package*: `typedb.api.concept.concept`
+
 // tag::methods[]
 [#_Concept_as_attribute_]
 ==== as_attribute
