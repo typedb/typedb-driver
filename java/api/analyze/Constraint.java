@@ -248,9 +248,7 @@ public interface Constraint {
 
         com.typedb.driver.jni.Comparator comparator();
 
-        static String comparatorName(com.typedb.driver.jni.Comparator comparator) {
-            return typedb_driver.comparator_get_name(comparator);
-        }
+        String comparatorSymbol();
     }
 
     /**
