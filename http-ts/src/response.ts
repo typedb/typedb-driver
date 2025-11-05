@@ -17,15 +17,13 @@
  * under the License.
  */
 
-import { Database, User } from "./index";
-import { Concept } from "./concept";
-import { QueryStructure } from "./query-structure";
+import {Database, User} from "./index";
+import {Concept} from "./concept";
+import {QueryStructure} from "./query-structure";
 import {
-    FetchAnnotations,
-    FunctionAnnotations,
-    FunctionStructure,
-    PipelineAnnotations,
-    PipelineStructure
+    AnalyzedFetch,
+    AnalyzedFunction,
+    AnalyzedPipeline
 } from "./analyze";
 
 export interface SignInResponse {
@@ -92,15 +90,9 @@ export interface ConceptDocumentsQueryResponse extends QueryResponseBase {
 export type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse;
 
 export interface AnalyzeResponse {
-    structure: {
-        preamble: FunctionStructure[],
-        query: PipelineStructure,
-    }
-    annotations: {
-        preamble: FunctionAnnotations[],
-        query: PipelineAnnotations,
-        fetch: FetchAnnotations | null,
-    }
+    preamble: AnalyzedFunction[],
+    query: AnalyzedPipeline,
+    fetch: AnalyzedFetch | null,
 }
 
 export type ApiOkResponse<OK_RES = {}> = { ok: OK_RES };

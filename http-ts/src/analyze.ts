@@ -17,47 +17,60 @@
  * under the License.
  */
 
-import {QueryConstraintAny, QueryVariableInfo} from "./query-structure";
+import {
+    QueryConstraintAny, QueryConstraintComparison, QueryConstraintFunction,
+    QueryConstraintHas, QueryConstraintIid, QueryConstraintIs,
+    QueryConstraintIsa,
+    QueryConstraintIsaExact, QueryConstraintKind, QueryConstraintLabel,
+    QueryConstraintLinks,
+    QueryConstraintOwns, QueryConstraintPlays,
+    QueryConstraintRelates, QueryConstraintSpan,
+    QueryConstraintSub,
+    QueryConstraintSubExact, QueryConstraintValue,
+    QueryVariableInfo, QueryVertexVariable
+} from "./query-structure";
 import {Type, ValueType} from "./concept";
 
 
 type VariableId = string;
-export interface PipelineStructureForStudio {
-    blocks: QueryConstraintAny[][],
-    variables: {[name: VariableId]: QueryVariableInfo },
+
+export interface AnalyzedPipeline {
+    conjunctions: AnalyzedConjunction[],
+    variables: { [name: VariableId]: QueryVariableInfo },
+    stages: PipelineStage[],
     outputs: string[],
 }
 
-export interface PipelineStructure {
-    conjunctions: QueryConstraintAny[][],
-    variables: {[name: VariableId]: QueryVariableInfo },
-    pipeline: PipelineStage[],
-    outputs: string[],
+export interface AnalyzedConjunction {
+    constraints: QueryConstraintAny[],
+    annotations: ConjunctionAnnotations,
 }
 
 type ConjunctionIndex = number;
 export type PipelineStage =
-    { tag: "match",  block: ConjunctionIndex } |
-    { tag: "insert",  block: ConjunctionIndex } |
-    { tag: "delete",  block: ConjunctionIndex, deletedVariables: VariableId[] } |
-    { tag: "put",  block: ConjunctionIndex } |
-    { tag: "update",  block: ConjunctionIndex } |
-    { tag: "select",  variables: VariableId[] } |
-    { tag: "sort",  variables: { variable: VariableId[], ascending: boolean } } |
-    { tag: "require",  variables: VariableId } |
-    { tag: "offset",  offset: number } |
-    { tag: "limit",  limit: number } |
+    { tag: "match", block: ConjunctionIndex } |
+    { tag: "insert", block: ConjunctionIndex } |
+    { tag: "delete", block: ConjunctionIndex, deletedVariables: VariableId[] } |
+    { tag: "put", block: ConjunctionIndex } |
+    { tag: "update", block: ConjunctionIndex } |
+    { tag: "select", variables: VariableId[] } |
+    { tag: "sort", variables: { variable: VariableId[], ascending: boolean } } |
+    { tag: "require", variables: VariableId } |
+    { tag: "offset", offset: number } |
+    { tag: "limit", limit: number } |
     { tag: "distinct" } |
-    { tag: "reduce",  reducers: { assigned: VariableId, reducer: Reducer }[], groupby: VariableId[] };
+    { tag: "reduce", reducers: { assigned: VariableId, reducer: Reducer }[], groupby: VariableId[] };
 
-export interface FunctionStructure {
+export interface AnalyzedFunction {
     arguments: VariableId[],
-    body: PipelineStructure,
     returns: FunctionReturnStructure,
+    body: AnalyzedPipeline,
+    argumentAnnotations: VariableAnnotations[],
+    returnAnnotations: { tag: "single" | "stream", annotations: VariableAnnotations[] },
 }
 
 export type Reducer = { reducer: string, arguments: VariableId[] };
-export type FunctionSingleReturnSelector = "first" | "last" ;
+export type FunctionSingleReturnSelector = "first" | "last";
 export type FunctionReturnStructure =
     { tag: "single", variables: VariableId[], selector: FunctionSingleReturnSelector } |
     { tag: "stream", variables: VariableId[] } |
@@ -69,21 +82,51 @@ export type VariableAnnotations =
     { tag: "type", annotations: Type[] } |
     { tag: "value", valueTypes: ValueType[] };
 
-export interface PipelineAnnotations {
-    annotationsByConjunction: {
-        variableAnnotations: {[name: VariableId]: VariableAnnotations }
-    }[]
+export interface ConjunctionAnnotations {
+    variableAnnotations: { [name: VariableId]: VariableAnnotations }
 }
 
-export interface FunctionAnnotations {
-    arguments: VariableAnnotations[],
-    returns: { tag: "single" | "stream", annotations: VariableAnnotations[] },
-    body: PipelineAnnotations,
+export type AnalyzedFetch =
+    { tag: "list", elements: AnalyzedFetch } |
+    { tag: "object", possibleFields: FetchAnnotationFieldEntry[] } |
+    { tag: "value", valueTypes: ValueType[] };
+
+export type FetchAnnotationFieldEntry = AnalyzedFetch & { key: string };
+
+// Backwards compatibility of studio
+export interface PipelineStructureForStudio {
+    blocks: QueryConstraintAnyForStudio[][],
+    variables: { [name: VariableId]: QueryVariableInfo },
+    outputs: string[],
 }
 
-export type FetchAnnotations =
-    { tag:  "list", elements: FetchAnnotations } |
-    { tag : "object", possibleFields: FetchAnnotationFieldEntry[] } |
-    { tag : "value", valueTypes: ValueType[] };
+export type QueryConstraintAnyForStudio =
+    QueryConstraintIsa
+    | QueryConstraintIsaExact
+    | QueryConstraintHas
+    | QueryConstraintLinks
+    |
+    QueryConstraintSub
+    | QueryConstraintSubExact
+    | QueryConstraintOwns
+    | QueryConstraintRelates
+    | QueryConstraintPlays
+    |
+    QueryConstraintExpressionForStudio
+    | QueryConstraintFunction
+    | QueryConstraintComparison
+    |
+    QueryConstraintIs
+    | QueryConstraintIid
+    | QueryConstraintKind
+    | QueryConstraintValue
+    | QueryConstraintLabel;
 
-export type FetchAnnotationFieldEntry = FetchAnnotations & { key: string };
+export interface QueryConstraintExpressionForStudio {
+    tag: "expression",
+    textSpan: QueryConstraintSpan,
+
+    text: string,
+    arguments: QueryVertexVariable[],
+    assigned: QueryVertexVariable,
+}

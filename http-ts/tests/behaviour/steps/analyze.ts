@@ -4,12 +4,14 @@ import {analyzed, doAnalyze, setAnalyzed} from "./context";
 import {assertNotError, EXPECT_ERROR_CONTAINING, MayError} from "./params";
 
 import {
+    AnalyzedFetch,
+    AnalyzedFunction,
+    AnalyzedPipeline,
     QueryConstraintAny,
     QueryVertex,
     FunctionReturnStructure,
     FunctionStructure,
     PipelineStage,
-    PipelineStructure,
     Reducer,
     PipelineAnnotations,
     VariableAnnotations,
@@ -27,27 +29,19 @@ const analyzeMayError = async function (mayError: MayError, query: string) {
     const results = await doAnalyze(query);
     if (mayError) assert.notEqual(results.err, undefined);
     else assert.notEqual(results.ok, undefined);
-    // try {
-    //     await this.tx().analyze(this.text).resolve();
-    // } catch (e) {
-    //     if (!mayError) {
-    //         throw e;
-    //     }
-    // }
 }
 When('typeql analyze{may_error}', analyzeMayError);
 When(`typeql analyze${EXPECT_ERROR_CONTAINING}`, analyzeMayError);
 
 Then('analyzed query pipeline structure is:', function (expectedFunctor: string) {
-    const context = new FunctorEncoder(analyzed.structure.query, analyzed.annotations.query);
-    const actualFunctor = encodePipeline(analyzed.structure.query, context);
+    const context = new FunctorEncoder(analyzed.query);
+    const actualFunctor = encodePipeline(analyzed.query, context);
     assert.equal(normalizeFunctorForCompare(actualFunctor), normalizeFunctorForCompare(expectedFunctor))
 });
 
 Then('analyzed query preamble contains:', function (expectedFunctor: string) {
-    const preambleFunctors = analyzed.structure.preamble.map((func, index) => {
-        let annotations = analyzed.annotations.preamble[index];
-        const encoder = new FunctorEncoder(func.body, annotations);
+    const preambleFunctors = analyzed.preamble.map(func => {
+        const encoder = new FunctorEncoder(func.body);
         return encodeFunction(func, encoder);
     });
 
@@ -59,16 +53,15 @@ Then('analyzed query preamble contains:', function (expectedFunctor: string) {
 });
 
 Then('analyzed query pipeline annotations are:', function (expectedFunctor: string) {
-    const context = new FunctorEncoder(analyzed.structure.query, analyzed.annotations.query);
-    const actualFunctor = encodePipelineAnnotations(analyzed.structure.query, context);
+    const context = new FunctorEncoder(analyzed.query);
+    const actualFunctor = encodePipelineAnnotations(analyzed.query, context);
     assert.equal(normalizeFunctorForCompare(actualFunctor), normalizeFunctorForCompare(expectedFunctor))
 });
 
 Then('analyzed preamble annotations contains:', function (expectedFunctor: string) {
-    const preambleFunctors = analyzed.structure.preamble.map((structure, index) => {
-        let annotations = analyzed.annotations.preamble[index];
-        const encoder = new FunctorEncoder(structure.body, annotations.body);
-        return encodeFunctionAnnotations(structure, annotations, encoder);
+    const preambleFunctors = analyzed.preamble.map(func => {
+        const encoder = new FunctorEncoder(func.body);
+        return encodeFunctionAnnotations(func, encoder);
     });
 
     const normalizedExpected = normalizeFunctorForCompare(expectedFunctor);
@@ -79,7 +72,7 @@ Then('analyzed preamble annotations contains:', function (expectedFunctor: strin
 });
 
 Then('analyzed fetch annotations are:', function (expectedFunctor: string) {
-    encodeFetchAnnotations(analyzed.annotations.fetch);
+    encodeFetchAnnotations(analyzed.fetch);
 });
 
 function normalizeFunctorForCompare(functor: string): string {
@@ -88,12 +81,10 @@ function normalizeFunctorForCompare(functor: string): string {
 
 // FunctorEncoder class
 class FunctorEncoder {
-    pipeline: PipelineStructure;
-    annotations: PipelineAnnotations;
+    pipeline: AnalyzedPipeline;
 
-    constructor(pipeline: PipelineStructure, annotations: PipelineAnnotations) {
+    constructor(pipeline: AnalyzedPipeline) {
         this.pipeline = pipeline;
-        this.annotations = annotations;
     }
 
     makeFunctor(name: string, ...args: any[]): string {
@@ -149,7 +140,7 @@ function encodeConstraint(constraint: QueryConstraintAny, encoder: FunctorEncode
         case "expression":
             return encoder.makeFunctor("Expression",
                 constraint.text,
-                encodeConstraintVertex(constraint.assigned[0], encoder), // TODO: When we break HTTP
+                encodeConstraintVertex(constraint.assigned, encoder),
                 encoder.encodeAsList(constraint.arguments.map(v => encodeConstraintVertex(v, encoder))));
         case "functionCall":
             return encoder.makeFunctor("FunctionCall",
@@ -209,6 +200,8 @@ function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): s
             return encodeVariable(vertex.id, encoder);
         case "label":
             return vertex.type.label;
+        case "namedRole":
+            return vertex.name;
         case "value": {
             if (vertex.valueType == "string") {
                 return `"${vertex.value}"`;
@@ -216,14 +209,13 @@ function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): s
                 return vertex.value;
             }
         }
-        // TODO: NamedRole when it comes
     }
     throw new Error("Unknown constraint vertex type");
 }
 
 function encodeConjunction(index: number, encoder: FunctorEncoder): string {
-    const constraints = encoder.pipeline.conjunctions[index];
-    return encoder.encodeAsList(constraints.map(c => encodeConstraint(c, encoder)));
+    const conjunction = encoder.pipeline.conjunctions[index];
+    return encoder.encodeAsList(conjunction.constraints.map(c => encodeConstraint(c, encoder)));
 }
 
 function encodeReducer(reducer: Reducer, encoder: FunctorEncoder): string {
@@ -310,11 +302,11 @@ function encodeReturnOperation(returnOp: FunctionReturnStructure, encoder: Funct
     }
 }
 
-function encodePipeline(pipeline: PipelineStructure, encoder: FunctorEncoder): string {
-    return encoder.makeFunctor("Pipeline", encoder.encodeAsList(pipeline.pipeline.map(stage => encodePipelineStage(stage, encoder))));
+function encodePipeline(pipeline: AnalyzedPipeline, encoder: FunctorEncoder): string {
+    return encoder.makeFunctor("Pipeline", encoder.encodeAsList(pipeline.stages.map(stage => encodePipelineStage(stage, encoder))));
 }
 
-function encodeFunction(func: FunctionStructure, encoder: FunctorEncoder): string {
+function encodeFunction(func: AnalyzedFunction, encoder: FunctorEncoder): string {
     const encodedArgs = func.arguments.map(arg =>
         encodeVariable(arg, encoder)
     );
@@ -344,7 +336,7 @@ function encodeVariableAnnotations(annotations: VariableAnnotations, encoder: Fu
 }
 
 function encodeConjunctionAnnotations(conjunctionIndex: number, encoder: FunctorEncoder): string {
-    const constraints = encoder.pipeline.conjunctions[conjunctionIndex];
+    const constraints = encoder.pipeline.conjunctions[conjunctionIndex].constraints;
     const subpatternAnnotations = constraints
         .map(c => {
             switch (c.tag) {
@@ -361,7 +353,7 @@ function encodeConjunctionAnnotations(conjunctionIndex: number, encoder: Functor
                     return null;
             }
         }).filter(x => x != null);
-    const conjunctionAnnotations = encoder.annotations.annotationsByConjunction[conjunctionIndex];
+    const conjunctionAnnotations = encoder.pipeline.conjunctions[conjunctionIndex].annotations;
     const variableAnnotations = Object.keys(conjunctionAnnotations.variableAnnotations).map(v => {
         const annotations = conjunctionAnnotations.variableAnnotations[v];
         return [encodeVariable(v, encoder), encodeVariableAnnotations(annotations, encoder)]
@@ -394,25 +386,25 @@ function encodeStageAnnotations(stage: PipelineStage, encoder: FunctorEncoder): 
     throw new Error(`Unknown pipeline stage variant: ${variant}`);
 }
 
-function encodePipelineAnnotations(pipeline: PipelineStructure, encoder: FunctorEncoder): string {
+function encodePipelineAnnotations(pipeline: AnalyzedPipeline, encoder: FunctorEncoder): string {
     return encoder.makeFunctor(
         "Pipeline",
-        encoder.encodeAsList(pipeline.pipeline.map(stageAnnotation => encodeStageAnnotations(stageAnnotation, encoder)))
+        encoder.encodeAsList(pipeline.stages.map(stageAnnotation => encodeStageAnnotations(stageAnnotation, encoder)))
     );
 }
 
-function encodeFunctionAnnotations(structure: FunctionStructure, annotations: FunctionAnnotations, encoder: FunctorEncoder): string {
-    const args = annotations.arguments.map(arg => encodeVariableAnnotations(arg, encoder));
-    const ret = annotations.returns.annotations.map(arg => encodeVariableAnnotations(arg, encoder));
+function encodeFunctionAnnotations(func: AnalyzedFunction, encoder: FunctorEncoder): string {
+    const args = func.argumentAnnotations.map(arg => encodeVariableAnnotations(arg, encoder));
+    const ret = func.returnAnnotations.annotations.map(arg => encodeVariableAnnotations(arg, encoder));
     return encoder.makeFunctor(
         "Function",
         encoder.encodeAsList(args),
-        encoder.makeFunctor(annotations.returns.tag, encoder.encodeAsList(ret)),
-        encodePipelineAnnotations(structure.body, encoder)
+        encoder.makeFunctor(func.returnAnnotations.tag, encoder.encodeAsList(ret)),
+        encodePipelineAnnotations(func.body, encoder)
     );
 }
 
-function encodeFetchAnnotations(fetch: FetchAnnotations): string {
+function encodeFetchAnnotations(fetch: AnalyzedFetch): string {
     switch (fetch.tag) {
         case "list": {
             const inner = encodeFetchAnnotations(fetch.elements);

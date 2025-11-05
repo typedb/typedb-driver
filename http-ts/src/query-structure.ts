@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Type, Value } from "./concept";
+import {Type, Value} from "./concept";
 
 export type QueryVertexKind = "variable" | "label" | "value";
 
@@ -31,35 +31,61 @@ export interface QueryVertexLabel {
     type: Type;
 }
 
+export interface QueryVertexNamedRole {
+    tag: "namedRole";
+    variable: string;
+    name: string;
+}
+
 // TODO: This is ideal but it's not what it currently is.
 // export interface QueryVertexValue {
 //     tag: "value";
 //     value: Value;
 // }
-export interface QueryVertexValue extends Value  {
+export interface QueryVertexValue extends Value {
     tag: "value";
 }
 
 
-export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue;
+export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue | QueryVertexNamedRole;
 
 export type QueryStructure = {
     blocks: { constraints: QueryConstraintAny[] }[],
-    variables: {[name: string]: QueryVariableInfo },
+    variables: { [name: string]: QueryVariableInfo },
     outputs: string[],
 };
 
-export function getVariableName(structure: QueryStructure, variable: QueryVertexVariable) : string | null {
+export function getVariableName(structure: QueryStructure, variable: QueryVertexVariable): string | null {
     return structure.variables[variable.id]?.name;
 }
 
 export type QueryVariableInfo = { name: string | null };
 
-export type QueryConstraintAny = QueryConstraintIsa | QueryConstraintIsaExact | QueryConstraintHas | QueryConstraintLinks |
-    QueryConstraintSub | QueryConstraintSubExact | QueryConstraintOwns | QueryConstraintRelates | QueryConstraintPlays |
-    QueryConstraintExpression | QueryConstraintFunction | QueryConstraintComparison |
-    QueryConstraintIs | QueryConstraintIid | QueryConstraintKind | QueryConstraintValue | QueryConstraintLabel |
-    QueryConstraintOr | QueryConstraintNot | QueryConstraintTry;
+export type QueryConstraintAny =
+    QueryConstraintIsa
+    | QueryConstraintIsaExact
+    | QueryConstraintHas
+    | QueryConstraintLinks
+    |
+    QueryConstraintSub
+    | QueryConstraintSubExact
+    | QueryConstraintOwns
+    | QueryConstraintRelates
+    | QueryConstraintPlays
+    |
+    QueryConstraintExpression
+    | QueryConstraintFunction
+    | QueryConstraintComparison
+    |
+    QueryConstraintIs
+    | QueryConstraintIid
+    | QueryConstraintKind
+    | QueryConstraintValue
+    | QueryConstraintLabel
+    |
+    QueryConstraintOr
+    | QueryConstraintNot
+    | QueryConstraintTry;
 
 export type QueryConstraintSpan = { begin: number, end: number };
 
@@ -95,7 +121,7 @@ export interface QueryConstraintLinks {
 
     relation: QueryVertexVariable,
     player: QueryVertexVariable,
-    role: QueryVertexVariable | QueryVertexLabel,
+    role: QueryVertexVariable | QueryVertexNamedRole,
 }
 
 // Type
@@ -208,6 +234,7 @@ export interface QueryConstraintKind {
 }
 
 type ConjunctionIndex = number;
+
 export interface QueryConstraintOr {
     tag: "or",
     branches: ConjunctionIndex[],
