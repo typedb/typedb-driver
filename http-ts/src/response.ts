@@ -19,12 +19,12 @@
 
 import {Database, User} from "./index";
 import {Concept} from "./concept";
-import {QueryStructure} from "./query-structure";
 import {
     AnalyzedFetch,
     AnalyzedFunction,
     AnalyzedPipeline
 } from "./analyze";
+import {QueryStructureForStudio} from "./studio-compatibility";
 
 export interface SignInResponse {
     token: string;
@@ -70,7 +70,7 @@ export interface QueryResponseBase {
     answerType: AnswerType;
     queryType: QueryType;
     comment: string | null;
-    query: QueryStructure | null;
+    query: QueryStructureForStudio | null;
 }
 
 export interface OkQueryResponse extends QueryResponseBase {

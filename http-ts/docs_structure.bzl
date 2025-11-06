@@ -103,7 +103,6 @@ dir_mapping = {
     "QueryType.adoc": "query-structure",
     "QueryVariableInfo.adoc": "query-structure",
     "QueryVertex.adoc": "query-structure",
-    "QueryVertexKind.adoc": "query-structure",
     "ThingKind.adoc": "concept",
     "TransactionType.adoc": "connection",
     "Type.adoc": "concept",

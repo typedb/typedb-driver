@@ -18,9 +18,14 @@
  */
 
 import {Type, Value} from "./concept";
+import {AnalyzedPipeline} from "./analyze";
+import {QueryStructureForStudio} from "./studio-compatibility";
 
-export type QueryVertexKind = "variable" | "label" | "value";
+export function getVariableName(structure: QueryStructureForStudio | AnalyzedPipeline, variable: QueryVertexVariable): string | null {
+    return structure.variables[variable.id]?.name;
+}
 
+export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue | QueryVertexNamedRole;
 export interface QueryVertexVariable {
     tag: "variable";
     id: string,
@@ -37,27 +42,11 @@ export interface QueryVertexNamedRole {
     name: string;
 }
 
-// TODO: This is ideal but it's not what it currently is.
-// export interface QueryVertexValue {
-//     tag: "value";
-//     value: Value;
-// }
 export interface QueryVertexValue extends Value {
     tag: "value";
 }
 
-
-export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue | QueryVertexNamedRole;
-
-export type QueryStructure = {
-    blocks: { constraints: QueryConstraintAny[] }[],
-    variables: { [name: string]: QueryVariableInfo },
-    outputs: string[],
-};
-
-export function getVariableName(structure: QueryStructure, variable: QueryVertexVariable): string | null {
-    return structure.variables[variable.id]?.name;
-}
+type ConjunctionIndex = number;
 
 export type QueryVariableInfo = { name: string | null };
 
@@ -232,8 +221,6 @@ export interface QueryConstraintKind {
     type: QueryVertexVariable,
     kind: string,
 }
-
-type ConjunctionIndex = number;
 
 export interface QueryConstraintOr {
     tag: "or",
