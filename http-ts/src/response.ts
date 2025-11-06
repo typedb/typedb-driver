@@ -58,7 +58,7 @@ export interface ConceptRow {
 }
 
 export interface ConceptRowAnswer {
-    involvedBlocks: number[];
+    involvedBlocks: number[] | null;
     data: ConceptRow;
 }
 

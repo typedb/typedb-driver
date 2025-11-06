@@ -111,3 +111,18 @@ class ConceptRow(ABC):
           concept_row.concepts()
         """
         pass
+
+    @abstractmethod
+    def involved_conjunctions(self) -> Optional[Iterator["ConjunctionID"]]:
+        """
+        Retrieve the ConjunctionIDs of Conjunctions that answered this row.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_row.involved_conjunctions()
+        """
+        pass

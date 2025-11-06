@@ -36,7 +36,7 @@ use crate::{
     common::StringIterator,
     concept::ConceptRowIterator,
     error::{try_release, try_release_optional},
-    memory::take_ownership,
+    memory::{release_optional, take_ownership},
 };
 
 /// Promise object representing the result of an asynchronous operation.
@@ -148,10 +148,11 @@ pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_i
 }
 
 /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
+/// May be null.
 #[no_mangle]
 pub extern "C" fn concept_row_involved_conjunctions(concept_row: *const ConceptRow) -> *mut ConjunctionIDIterator {
-    let iter = borrow(concept_row).clone().get_involved_conjunctions_cloned();
-    release(ConjunctionIDIterator(CIterator(box_stream(iter))))
+    let iter_opt = borrow(concept_row).clone().get_involved_conjunctions_cloned();
+    release_optional(iter_opt.map(|iter| ConjunctionIDIterator(CIterator(box_stream(iter)))))
 }
 
 /// Checks whether the provided <code>ConceptRow</code> objects are equal

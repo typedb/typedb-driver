@@ -186,7 +186,9 @@ impl IntoProto<transaction::Req> for TransactionRequest {
             }
             Self::Commit => transaction::req::Req::CommitReq(transaction::commit::Req {}),
             Self::Rollback => transaction::req::Req::RollbackReq(transaction::rollback::Req {}),
-            Self::Analyze { query } => transaction::req::Req::AnalyzeReq(typedb_protocol::analyze::Req { query }),
+            Self::Analyze { query } => {
+                transaction::req::Req::AnalyzeReq(typedb_protocol::analyze::Req { query, options: None })
+            }
             Self::Query(query_request) => transaction::req::Req::QueryReq(query_request.into_proto()),
             Self::Stream { request_id: req_id } => {
                 request_id = Some(req_id);

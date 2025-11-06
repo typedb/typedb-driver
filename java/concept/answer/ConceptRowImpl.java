@@ -92,8 +92,12 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     @Override
-    public Stream<ConjunctionID> involvedConjunctions() {
-        return new NativeIterator<>(concept_row_involved_conjunctions(nativeObject)).stream();
+    public Optional<Stream<ConjunctionID>> involvedConjunctions() {
+        if (concept_row_involved_conjunctions(nativeObject) != null) {
+            return Optional.of(new NativeIterator<>(concept_row_involved_conjunctions(nativeObject)).stream());
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

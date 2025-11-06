@@ -48,11 +48,15 @@ impl ConceptRowHeader {
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
-    involved_conjunctions: Vec<u8>,
+    involved_conjunctions: Option<Vec<u8>>,
 }
 
 impl ConceptRow {
-    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>, involved_conjunctions: Vec<u8>) -> Self {
+    pub fn new(
+        header: Arc<ConceptRowHeader>,
+        row: Vec<Option<Concept>>,
+        involved_conjunctions: Option<Vec<u8>>,
+    ) -> Self {
         Self { header, involved_conjunctions, row }
     }
 
@@ -85,27 +89,31 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.get_involved_conjunctions()
     /// ```
-    pub fn get_involved_conjunctions(&self) -> impl Iterator<Item = ConjunctionID> + '_ {
-        (0..self.involved_conjunctions.len())
-            .filter(|index| {
-                let index = index / 8;
-                let mask = 1 << (index % 8);
-                self.involved_conjunctions[index] & mask != 0
-            })
-            .map(ConjunctionID)
+    pub fn get_involved_conjunctions(&self) -> Option<impl Iterator<Item = ConjunctionID> + '_> {
+        self.involved_conjunctions.as_ref().map(|involved| {
+            (0..involved.len())
+                .filter(|index| {
+                    let index = index / 8;
+                    let mask = 1 << (index % 8);
+                    involved[index] & mask != 0
+                })
+                .map(ConjunctionID)
+        })
     }
 
     /// Like <code>ConceptRow::get_involved_conjunctions</code> but clones the underlying data.
     /// Meant for simpler lifetimes over FFI.
-    pub fn get_involved_conjunctions_cloned(&self) -> impl Iterator<Item = ConjunctionID> + 'static {
-        let involved_conjunctions = self.involved_conjunctions.clone();
-        (0..self.involved_conjunctions.len())
-            .filter(move |index| {
-                let index = index / 8;
-                let mask = 1 << (index % 8);
-                involved_conjunctions[index] & mask != 0
-            })
-            .map(ConjunctionID)
+    pub fn get_involved_conjunctions_cloned(&self) -> Option<impl Iterator<Item = ConjunctionID> + 'static> {
+        let cloned = self.involved_conjunctions.clone();
+        cloned.map(|involved| {
+            (0..involved.len())
+                .filter(move |index| {
+                    let index = index / 8;
+                    let mask = 1 << (index % 8);
+                    involved[index] & mask != 0
+                })
+                .map(ConjunctionID)
+        })
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if
