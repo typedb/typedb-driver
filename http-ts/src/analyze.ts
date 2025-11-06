@@ -43,7 +43,7 @@ export type PipelineStage =
     { tag: "put", block: ConjunctionIndex } |
     { tag: "update", block: ConjunctionIndex } |
     { tag: "select", variables: VariableId[] } |
-    { tag: "sort", variables: { variable: VariableId[], ascending: boolean } } |
+    { tag: "sort", variables: { tag: "Ascending" | "Descending", variable: VariableId }[] } |
     { tag: "require", variables: VariableId } |
     { tag: "offset", offset: number } |
     { tag: "limit", limit: number } |

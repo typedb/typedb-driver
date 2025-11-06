@@ -243,7 +243,7 @@ function encodePipelineStage(stage: PipelineStage, encoder: FunctorEncoder): str
             );
         case "sort": {
             const sortVariables = stage.variables.map(v => encoder.makeFunctor(
-                v.ascending ? "Asc" : "Desc",
+                v.tag == "ascending" ? "Asc" : "Desc",
                 encodeVariable(v.variable, encoder),
             ));
             return encoder.makeFunctor(variant, encoder.encodeAsList(sortVariables));
