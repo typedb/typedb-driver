@@ -1,4 +1,4 @@
-[#_query-structureStaticFunctions]
+[#_analyzeStaticFunctions]
 === Static Functions
 
 // tag::methods[]
