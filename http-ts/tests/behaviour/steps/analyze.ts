@@ -10,13 +10,9 @@ import {
     QueryConstraintAny,
     QueryVertex,
     FunctionReturnStructure,
-    FunctionStructure,
     PipelineStage,
     Reducer,
-    PipelineAnnotations,
     VariableAnnotations,
-    FetchAnnotations,
-    FunctionAnnotations,
 } from "../../../dist/index.cjs";
 
 

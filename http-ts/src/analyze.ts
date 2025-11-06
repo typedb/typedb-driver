@@ -17,18 +17,7 @@
  * under the License.
  */
 
-import {
-    QueryConstraintAny, QueryConstraintComparison, QueryConstraintFunction,
-    QueryConstraintHas, QueryConstraintIid, QueryConstraintIs,
-    QueryConstraintIsa,
-    QueryConstraintIsaExact, QueryConstraintKind, QueryConstraintLabel,
-    QueryConstraintLinks,
-    QueryConstraintOwns, QueryConstraintPlays,
-    QueryConstraintRelates, QueryConstraintSpan,
-    QueryConstraintSub,
-    QueryConstraintSubExact, QueryConstraintValue,
-    QueryVariableInfo, QueryVertexVariable
-} from "./query-structure";
+import { QueryConstraintAny, QueryVariableInfo } from "./query-structure";
 import {Type, ValueType} from "./concept";
 
 

@@ -282,19 +282,19 @@ com.typedb.driver.jni.Comparator comparator()
 .Returns
 `com.typedb.driver.jni.Comparator`
 
-[#_Constraint_Comparison_comparatorName_com_typedb_driver_jni_Comparator]
-==== comparatorName
+[#_Constraint_Comparison_comparatorSymbol_]
+==== comparatorSymbol
 
 [source,java]
 ----
-static java.lang.String comparatorName​(com.typedb.driver.jni.Comparator comparator)
+java.lang.String comparatorSymbol()
 ----
 
 
 
 [caption=""]
 .Returns
-`static java.lang.String`
+`java.lang.String`
 
 [#_Constraint_Comparison_isComparison_]
 ==== isComparison

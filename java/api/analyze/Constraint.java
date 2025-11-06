@@ -19,8 +19,6 @@
 
 package com.typedb.driver.api.analyze;
 
-import com.typedb.driver.jni.typedb_driver;
-
 import java.util.stream.Stream;
 
 /**
