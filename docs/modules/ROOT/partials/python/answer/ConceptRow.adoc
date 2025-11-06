@@ -121,5 +121,26 @@ a| `column_index` a| The column index a| `int` a|
 concept_row.get_index(column_index)
 ----
 
+[#_ConceptRow_involved_conjunctions_]
+==== involved_conjunctions
+
+[source,python]
+----
+involved_conjunctions() -> Iterator['ConjunctionID'] | None
+----
+
+Retrieve the ConjunctionIDs of Conjunctions that answered this row.
+
+[caption=""]
+.Returns
+`Iterator['ConjunctionID'] | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept_row.involved_conjunctions()
+----
+
 // end::methods[]
 

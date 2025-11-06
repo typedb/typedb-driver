@@ -144,7 +144,7 @@ concept_row.get_position(column_index)
 ----
 pub fn get_involved_conjunctions(
     &self,
-) -> impl Iterator<Item = ConjunctionID> + '_
+) -> Option<impl Iterator<Item = ConjunctionID> + '_>
 ----
 
 Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
@@ -153,7 +153,7 @@ Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
 .Returns
 [source,rust]
 ----
-impl Iterator<Item = ConjunctionID> + '_
+Option<impl Iterator<Item = ConjunctionID> + '_>
 ----
 
 [caption=""]
@@ -170,7 +170,7 @@ concept_row.get_involved_conjunctions()
 ----
 pub fn get_involved_conjunctions_cloned(
     &self,
-) -> impl Iterator<Item = ConjunctionID> + 'static
+) -> Option<impl Iterator<Item = ConjunctionID> + 'static>
 ----
 
 Like ``ConceptRow::get_involved_conjunctions`` but clones the underlying data. Meant for simpler lifetimes over FFI.
@@ -179,7 +179,7 @@ Like ``ConceptRow::get_involved_conjunctions`` but clones the underlying data. M
 .Returns
 [source,rust]
 ----
-impl Iterator<Item = ConjunctionID> + 'static
+Option<impl Iterator<Item = ConjunctionID> + 'static>
 ----
 
 [#_struct_ConceptRow_get_query_type_]
