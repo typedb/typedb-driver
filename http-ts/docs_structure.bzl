@@ -103,7 +103,7 @@ dir_mapping = {
     "QueryConstraintAny.adoc": "query-structure",
     "QueryConstraintSpan.adoc": "query-structure",
     "QueryResponse.adoc": "query-structure",
-    "QueryStructure.adoc": "query-structure",
+    "QueryStructureForStudio.adoc": "query-structure",
     "QueryType.adoc": "query-structure",
     "QueryVariableInfo.adoc": "query-structure",
     "QueryVertex.adoc": "query-structure",
