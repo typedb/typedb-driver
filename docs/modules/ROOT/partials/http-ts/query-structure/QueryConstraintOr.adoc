@@ -1,0 +1,15 @@
+[#_QueryConstraintOr]
+==== QueryConstraintOr
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `branches` a| `number` a| 
+a| `tag` a| `"or"` a| 
+|===
+// end::properties[]
+

@@ -25,6 +25,31 @@ a| `params` a|  a| `DriverParams`
 .Returns
 `TypeDBHttpDriver`
 
+[#_TypeDBHttpDriver_analyze_transactionId_string_query_string_queryOptions_QueryOptions]
+==== analyze
+
+[source,typescript]
+----
+analyze( transactionId: string, query: string, queryOptions?: QueryOptions, ): Promise<ApiResponse<AnalyzeResponse>>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionId` a|  a| `string`
+a| `query` a|  a| `string`
+a| `queryOptions` a|  a| `QueryOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<AnalyzeResponse>>`
+
 [#_TypeDBHttpDriver_closeTransaction_transactionId_string]
 ==== closeTransaction
 

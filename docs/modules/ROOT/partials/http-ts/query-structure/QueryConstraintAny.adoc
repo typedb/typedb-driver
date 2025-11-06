@@ -21,6 +21,9 @@ QueryConstraintAny:
  | QueryConstraintKind
  | QueryConstraintValue
  | QueryConstraintLabel
+ | QueryConstraintOr
+ | QueryConstraintNot
+ | QueryConstraintTry
 ----
 
 

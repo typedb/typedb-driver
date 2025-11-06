@@ -3,7 +3,11 @@
 
 [source,typescript]
 ----
-QueryVertex: QueryVertexVariable | QueryVertexLabel | QueryVertexValue
+QueryVertex:
+ | QueryVertexVariable
+ | QueryVertexLabel
+ | QueryVertexValue
+ | QueryVertexNamedRole
 ----
 
 

@@ -8,8 +8,10 @@
 [options="header"]
 |===
 |Name |Type |Description
+a| `kind` a| `"value"` a| 
 a| `tag` a| `"value"` a| 
-a| `value` a| `Value` a| 
+a| `value` a| `any` a| 
+a| `valueType` a| `ValueType` a| 
 |===
 // end::properties[]
 
