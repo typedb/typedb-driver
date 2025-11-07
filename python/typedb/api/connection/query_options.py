@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import (
     query_options_set_include_instance_types, query_options_has_include_query_structure,
     query_options_get_include_query_structure, query_options_set_include_query_structure,
     query_options_has_prefetch_size, query_options_get_prefetch_size, query_options_set_prefetch_size,
-  QueryOptions as NativeOptions
+    QueryOptions as NativeOptions
 )
 
 

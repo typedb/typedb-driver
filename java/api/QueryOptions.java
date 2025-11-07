@@ -125,6 +125,7 @@ public class QueryOptions extends NativeObject<com.typedb.driver.jni.QueryOption
         query_options_set_prefetch_size(nativeObject, prefetchSize);
         return this;
     }
+
     /**
      * Returns the value set for the "include query structure" flag in this <code>QueryOptions</code> object.
      * If set, requests the server to return the structure of the query in the ConceptRow header.
