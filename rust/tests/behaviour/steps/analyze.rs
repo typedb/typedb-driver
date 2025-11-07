@@ -111,7 +111,7 @@ async fn analyzed_fetch_annotations_are(context: &mut Context, step: &Step) {
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
-fn normalize_functor_for_compare(functor: &String) -> String {
+pub(crate) fn normalize_functor_for_compare(functor: &String) -> String {
     let mut normalized = functor.to_lowercase();
     normalized.retain(|c| !c.is_whitespace());
     normalized
@@ -124,8 +124,8 @@ pub mod functor_encoding {
 
     use itertools::Itertools;
 
-    struct FunctorContext<'a> {
-        structure: &'a Pipeline,
+    pub(crate) struct FunctorContext<'a> {
+        pub(crate) structure: &'a Pipeline,
     }
 
     pub trait FunctorEncoded {

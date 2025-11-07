@@ -86,6 +86,12 @@ def step_impl(context: Context, value: bool):
     context.query_options.include_instance_types = value
 
 
+@step("set query option include_query_structure to: {value:Bool}")
+def step_impl(context: Context, value: bool):
+    context.init_query_options_if_needed_fn()
+    context.query_options.include_query_structure = value
+
+
 @step("set query option prefetch_size to: {value:Int}")
 def step_impl(context: Context, value: int):
     context.init_query_options_if_needed_fn()
@@ -820,3 +826,17 @@ def step_impl(context: Context, contains_or_doesnt: bool):
     assert_that(list_contains_json(context.collected_answer, expected), is_(contains_or_doesnt),
                 "expected?({}) document: {}\nin answer: {}".format(contains_or_doesnt, expected,
                                                                    context.collected_answer))
+
+
+@step("answers have query structure")
+def step_impl(context: Context):
+    from python.tests.behaviour.util.functor_encoder import (
+        normalize_functor_for_compare, _encode_pipeline, FunctorEncoder
+    )
+    collect_answer_if_needed(context)
+    pipeline = context.collected_answer[0].query_structure()
+    actual_functor = _encode_pipeline(pipeline, FunctorEncoder(pipeline))
+    assert_that(
+        normalize_functor_for_compare(actual_functor),
+        is_(equal_to(normalize_functor_for_compare(context.text)))
+    )

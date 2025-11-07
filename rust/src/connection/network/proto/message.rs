@@ -25,11 +25,18 @@ use typedb_protocol::{
 use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
-use crate::{answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType}, common::{info::DatabaseInfo, RequestID, Result}, connection::message::{
-    AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
-    TransactionRequest, TransactionResponse,
-}, error::{ConnectionError, InternalError, ServerError}, info::UserInfo, Credentials, Error};
-use crate::analyze::pipeline::Pipeline;
+use crate::{
+    analyze::pipeline::Pipeline,
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
+    common::{info::DatabaseInfo, RequestID, Result},
+    connection::message::{
+        AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
+        TransactionRequest, TransactionResponse,
+    },
+    error::{ConnectionError, InternalError, ServerError},
+    info::UserInfo,
+    Credentials, Error,
+};
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
@@ -386,7 +393,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                         None => Err(ConnectionError::MissingResponseField {
                             field: "transaction.res.query.initial_res.res.Ok.ok",
                         }
-                            .into()),
+                        .into()),
                         Some(header) => Ok(TransactionResponse::Query(QueryResponse::try_from_proto(header)?)),
                     },
                 },

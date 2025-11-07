@@ -26,9 +26,12 @@ use std::{
 use itertools::Itertools;
 
 use crate::{
-    analyze::conjunction::ConjunctionID, answer::QueryType, common::Result, concept::Concept, error::ConceptError,
+    analyze::{conjunction::ConjunctionID, pipeline::Pipeline},
+    answer::QueryType,
+    common::Result,
+    concept::Concept,
+    error::ConceptError,
 };
-use crate::analyze::pipeline::Pipeline;
 
 #[derive(Debug)]
 pub struct ConceptRowHeader {
@@ -180,8 +183,7 @@ impl ConceptRow {
 
 impl PartialEq for ConceptRow {
     fn eq(&self, other: &Self) -> bool {
-        self.row.eq(&other.row) &&
-            self.involved_conjunctions.eq(&other.involved_conjunctions)
+        self.row.eq(&other.row) && self.involved_conjunctions.eq(&other.involved_conjunctions)
     }
 }
 

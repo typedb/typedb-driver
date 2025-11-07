@@ -20,12 +20,12 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
+    analyze::pipeline::Pipeline,
     answer::{ConceptRow, QueryAnswer, QueryType},
     box_stream,
     concept::Concept,
     BoxPromise, Promise, Result,
 };
-use typedb_driver::analyze::pipeline::Pipeline;
 
 use super::{
     concept::ConceptIterator,

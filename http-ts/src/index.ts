@@ -239,6 +239,7 @@ export interface TransactionOptions {
 
 export interface QueryOptions {
     includeInstanceTypes?: boolean;
+    includeQueryStructure?: boolean;
     answerCountLimit?: number;
 }
 

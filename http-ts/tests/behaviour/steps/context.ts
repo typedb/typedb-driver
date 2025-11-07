@@ -67,6 +67,10 @@ export function setQueryIncludeInstanceTypes(include: boolean) {
     queryOptions.includeInstanceTypes = include;
 }
 
+export function setQueryIncludeQueryStructure(include: boolean) {
+    queryOptions.includeQueryStructure = include;
+}
+
 export function setQueryAnswerCountLimit(limit: number) {
     queryOptions.answerCountLimit = limit;
 }

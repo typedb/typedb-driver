@@ -243,10 +243,10 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_row_get_column_names;
 %newobject concept_row_get_query_type;
 %newobject concept_row_involved_conjunctions;
-%newobject query_answer_get_query_structure;
 %newobject query_answer_get_query_type;
 %newobject concept_row_get_concepts;
 %newobject concept_row_get_index;
+%newobject concept_row_get_query_structure;
 %newobject concept_row_to_string;
 
 %newobject value_get_string;

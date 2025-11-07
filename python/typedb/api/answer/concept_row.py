@@ -63,7 +63,6 @@ class ConceptRow(ABC):
         """
         pass
 
-
     @abstractmethod
     def query_structure(self) -> Optional["Pipeline"]:
         """

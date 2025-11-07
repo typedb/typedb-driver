@@ -90,12 +90,12 @@ Then('analyzed fetch annotations are:', function (expectedFunctor: string) {
     encodeFetchAnnotations(analyzed.fetch);
 });
 
-function normalizeFunctorForCompare(functor: string): string {
+export function normalizeFunctorForCompare(functor: string): string {
     return functor.toLowerCase().replace(/\s/g, "");
 }
 
 // FunctorEncoder class
-class FunctorEncoder {
+export class FunctorEncoder {
     pipeline: AnalyzedPipeline;
 
     constructor(pipeline: AnalyzedPipeline) {
@@ -317,7 +317,7 @@ function encodeReturnOperation(returnOp: FunctionReturnStructure, encoder: Funct
     }
 }
 
-function encodePipeline(pipeline: AnalyzedPipeline, encoder: FunctorEncoder): string {
+export function encodePipeline(pipeline: AnalyzedPipeline, encoder: FunctorEncoder): string {
     return encoder.makeFunctor("Pipeline", encoder.encodeAsList(pipeline.stages.map(stage => encodePipelineStage(stage, encoder))));
 }
 

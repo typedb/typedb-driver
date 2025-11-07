@@ -22,6 +22,7 @@ package com.typedb.driver.test.behaviour.query;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
@@ -42,6 +43,7 @@ import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.Duration;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.test.behaviour.config.Parameters;
+import com.typedb.driver.test.behaviour.util.FunctorEncoder;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -68,8 +70,7 @@ import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.qu
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class QuerySteps {
     private static QueryAnswer queryAnswer;
@@ -882,6 +883,12 @@ public class QuerySteps {
         queryOptions.get().includeInstanceTypes(value);
     }
 
+    @When("set query option include_query_structure to: {bool}")
+    public void set_query_option_include_query_structure_to(boolean value) {
+        initQueryOptionsIfNeeded();
+        queryOptions.get().includeQueryStructure(value);
+    }
+
     @When("set query option prefetch_size to: {integer}")
     public void set_query_option_prefetch_size_to(int value) {
         initQueryOptionsIfNeeded();
@@ -1231,5 +1238,14 @@ public class QuerySteps {
         collectDocumentsAnswerIfNeeded();
         JSON expectedJSON = JSON.parse(expectedDocument);
         containsOrDoesnt.check(JSONListContains(collectedDocuments, expectedJSON));
+    }
+
+    @Then("answers have query structure:")
+    public void answer_has_structure(String expectedFunctor) {
+        collectRowsAnswerIfNeeded();
+        Pipeline pipeline = collectedRows.get(0).getQueryStructure().get();
+        FunctorEncoder.StructureEncoder encoder = new FunctorEncoder.StructureEncoder(pipeline);
+        String actualFunctor = encoder.encode(pipeline);
+        assertEquals(FunctorEncoder.normalizeForCompare(expectedFunctor), FunctorEncoder.normalizeForCompare(actualFunctor));
     }
 }
