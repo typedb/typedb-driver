@@ -30,7 +30,7 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-import com.typedb.driver.concept.answer.QueryAnswerImpl;
+import com.typedb.driver.answer.QueryAnswerImpl;
 
 import java.util.ArrayList;
 import java.util.List;

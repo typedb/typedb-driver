@@ -17,34 +17,12 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.answer;
+package com.typedb.driver.answer;
 
-import com.typedb.driver.api.answer.ConceptDocumentIterator;
-import com.typedb.driver.api.answer.JSON;
-import com.typedb.driver.common.NativeIterator;
+import com.typedb.driver.api.answer.OkQueryAnswer;
 
-import java.util.stream.Stream;
-
-public class ConceptDocumentIteratorImpl extends QueryAnswerImpl implements ConceptDocumentIterator {
-    NativeIterator<String> nativeIterator;
-
-    public ConceptDocumentIteratorImpl(com.typedb.driver.jni.QueryAnswer answer) {
+public class OkQueryAnswerImpl extends QueryAnswerImpl implements OkQueryAnswer {
+    protected OkQueryAnswerImpl(com.typedb.driver.jni.QueryAnswer answer) {
         super(answer);
-        nativeIterator = new NativeIterator<>(answer.intoDocuments());
-    }
-
-    @Override
-    public boolean hasNext() {
-        return nativeIterator.hasNext();
-    }
-
-    @Override
-    public JSON next() {
-        return JSON.parse(nativeIterator.next());
-    }
-
-    @Override
-    public Stream<JSON> stream() {
-        return nativeIterator.stream().map(JSON::parse);
     }
 }

@@ -25,17 +25,11 @@ use typedb_protocol::{
 use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
-use crate::{
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
-    common::{info::DatabaseInfo, RequestID, Result},
-    connection::message::{
-        AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
-        TransactionRequest, TransactionResponse,
-    },
-    error::{ConnectionError, InternalError, ServerError},
-    info::UserInfo,
-    Credentials,
-};
+use crate::{answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType}, common::{info::DatabaseInfo, RequestID, Result}, connection::message::{
+    AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
+    TransactionRequest, TransactionResponse,
+}, error::{ConnectionError, InternalError, ServerError}, info::UserInfo, Credentials, Error};
+use crate::analyze::pipeline::Pipeline;
 
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
@@ -392,7 +386,7 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                         None => Err(ConnectionError::MissingResponseField {
                             field: "transaction.res.query.initial_res.res.Ok.ok",
                         }
-                        .into()),
+                            .into()),
                         Some(header) => Ok(TransactionResponse::Query(QueryResponse::try_from_proto(header)?)),
                     },
                 },
@@ -420,9 +414,11 @@ impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse
                 }))
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(row_stream_header) => {
+                let query_structure = row_stream_header.query_structure.map(Pipeline::try_from_proto).transpose()?;
                 Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
                     column_names: row_stream_header.column_variable_names,
                     query_type: QueryType::try_from_proto(row_stream_header.query_type)?,
+                    query_structure,
                 }))
             }
         }

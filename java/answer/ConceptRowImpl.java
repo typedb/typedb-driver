@@ -17,9 +17,11 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.answer;
+package com.typedb.driver.answer;
 
+import com.typedb.driver.analyze.PipelineImpl;
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.NativeIterator;
@@ -37,6 +39,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_row_get;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_column_names;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_concepts;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_index;
+import static com.typedb.driver.jni.typedb_driver.concept_row_get_query_structure;
 import static com.typedb.driver.jni.typedb_driver.concept_row_get_query_type;
 import static com.typedb.driver.jni.typedb_driver.concept_row_to_string;
 import static com.typedb.driver.jni.typedb_driver.concept_row_involved_conjunctions;
@@ -56,6 +59,16 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     @Override
     public QueryType getQueryType() {
         return QueryType.of(concept_row_get_query_type(nativeObject));
+    }
+
+    @Override
+    public Optional<Pipeline> getQueryStructure() {
+        com.typedb.driver.jni.Pipeline nativePipeline = concept_row_get_query_structure(nativeObject);
+        if (nativePipeline == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(new PipelineImpl(nativePipeline));
+        }
     }
 
     @Override

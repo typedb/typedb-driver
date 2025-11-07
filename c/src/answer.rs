@@ -25,6 +25,7 @@ use typedb_driver::{
     concept::Concept,
     BoxPromise, Promise, Result,
 };
+use typedb_driver::analyze::pipeline::Pipeline;
 
 use super::{
     concept::ConceptIterator,
@@ -119,6 +120,12 @@ pub extern "C" fn concept_row_drop(concept_row: *mut ConceptRow) {
 #[no_mangle]
 pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -> *mut StringIterator {
     release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
+}
+
+/// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+#[no_mangle]
+pub extern "C" fn concept_row_get_query_structure(concept_row: *const ConceptRow) -> *mut Pipeline {
+    release_optional(borrow(concept_row).get_query_structure().cloned())
 }
 
 /// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.

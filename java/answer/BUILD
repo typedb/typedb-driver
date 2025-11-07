@@ -20,37 +20,25 @@ package(default_visibility = ["//visibility:public"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "connection",
-    srcs = glob(
-        [
-            "*.java",
-            "*/*.java",
-        ],
-        exclude = ["test/**"],
-    ),
-    runtime_deps = [
-        "@maven//:ch_qos_logback_logback_classic",
-        "@maven//:ch_qos_logback_logback_core",
-        "@maven//:io_netty_netty_tcnative_boringssl_static",
-    ],
+    name = "answer",
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
     deps = [
         # Internal dependencies
-        "//java/api",
-        "//java/analyze",
-        "//java/answer",
-        "//java/common",
-        "//java/concept",
-        "//java/user",
+        "//java/api:api",
+        "//java/analyze:analyze",
+        "//java/common:common",
+        "//java/concept:concept",
+
         "//java:typedb_driver_jni",
+
+        # External dependencies from Maven
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    size = "small",
-    include = glob([
-        "*",
-        "*/*",
-    ]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
+    size = "small",
 )

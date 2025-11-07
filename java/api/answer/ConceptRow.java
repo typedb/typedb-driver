@@ -20,6 +20,7 @@
 package com.typedb.driver.api.answer;
 
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
@@ -54,6 +55,17 @@ public interface ConceptRow {
      */
     @CheckReturnValue
     QueryType getQueryType();
+
+    /**
+     * Retrieves the executed query's structure of this <code>ConceptRow</code>.
+     * Shared between all the rows in a QueryAnswer.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptRow.getQueryStructure();
+     * </pre>
+     */
+    Optional<Pipeline> getQueryStructure();
 
     /**
      * Retrieves a concept for a given column name (variable).

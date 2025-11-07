@@ -28,11 +28,13 @@ use itertools::Itertools;
 use crate::{
     analyze::conjunction::ConjunctionID, answer::QueryType, common::Result, concept::Concept, error::ConceptError,
 };
+use crate::analyze::pipeline::Pipeline;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub struct ConceptRowHeader {
     pub column_names: Vec<String>,
     pub query_type: QueryType,
+    pub query_structure: Option<Pipeline>,
 }
 
 impl ConceptRowHeader {
@@ -44,7 +46,7 @@ impl ConceptRowHeader {
 /// A single row of concepts representing substitutions for variables in the query.
 /// Contains a Header (column names and query type), and the row of optional concepts.
 /// An empty concept in a column means the variable does not have a substitution in this answer.
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
@@ -80,6 +82,17 @@ impl ConceptRow {
     /// ```
     pub fn get_query_type(&self) -> QueryType {
         self.header.query_type
+    }
+
+    /// Retrieve the executed query's structure (shared by all elements in this stream).
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_query_structure()
+    /// ```
+    pub fn get_query_structure(&self) -> Option<&Pipeline> {
+        self.header.query_structure.as_ref()
     }
 
     /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
@@ -162,6 +175,13 @@ impl ConceptRow {
     /// ```
     pub fn get_concepts(&self) -> impl Iterator<Item = &Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
+    }
+}
+
+impl PartialEq for ConceptRow {
+    fn eq(&self, other: &Self) -> bool {
+        self.row.eq(&other.row) &&
+            self.involved_conjunctions.eq(&other.involved_conjunctions)
     }
 }
 

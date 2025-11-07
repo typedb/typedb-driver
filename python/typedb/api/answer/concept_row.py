@@ -63,6 +63,23 @@ class ConceptRow(ABC):
         """
         pass
 
+
+    @abstractmethod
+    def query_structure(self) -> Optional["Pipeline"]:
+        """
+        Retrieves the executed query's structure of this ``ConceptRow``.
+        Shared between all the rows in a QueryAnswer.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_row.query_structure()
+        """
+        pass
+
     @abstractmethod
     def get(self, column_name: str) -> Optional[Concept]:
         """
