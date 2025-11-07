@@ -99,6 +99,9 @@
 %nojavaexception query_options_get_prefetch_size;
 %nojavaexception query_options_set_prefetch_size;
 %nojavaexception query_options_has_prefetch_size;
+%nojavaexception query_options_set_include_query_structure;
+%nojavaexception query_options_get_include_query_structure;
+%nojavaexception query_options_has_include_query_structure;
 
 %nojavaexception error_code;
 %nojavaexception error_message;
