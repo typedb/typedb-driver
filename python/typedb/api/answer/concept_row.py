@@ -66,7 +66,8 @@ class ConceptRow(ABC):
     @abstractmethod
     def query_structure(self) -> Optional["Pipeline"]:
         """
-        Retrieves the executed query's structure of this ``ConceptRow``.
+        Retrieve the executed query's structure from the ``ConceptRow``'s header, if set.
+        It must be requested via "include query structure" in ``QueryOptions``
         Shared between all the rows in a QueryAnswer.
 
         :return:

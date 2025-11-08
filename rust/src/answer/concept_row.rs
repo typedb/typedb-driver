@@ -87,7 +87,8 @@ impl ConceptRow {
         self.header.query_type
     }
 
-    /// Retrieve the executed query's structure (shared by all elements in this stream).
+    /// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+    /// It must be requested via "include query structure" in <code>QueryOptions</code>
     ///
     /// # Examples
     ///

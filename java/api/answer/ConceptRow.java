@@ -57,7 +57,8 @@ public interface ConceptRow {
     QueryType getQueryType();
 
     /**
-     * Retrieves the executed query's structure of this <code>ConceptRow</code>.
+     * Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+     * It must be requested via "include query structure" in <code>QueryOptions</code>
      * Shared between all the rows in a QueryAnswer.
      *
      * <h3>Examples</h3>

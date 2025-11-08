@@ -108,8 +108,8 @@ export class TypeDBHttpDriver {
         return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/rollback`, {});
     }
 
-    analyze(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<AnalyzeResponse>> {
-        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, queryOptions });
+    analyze(transactionId: string, query: string, analyzeOptions?: AnalyzeOptions): Promise<ApiResponse<AnalyzeResponse>> {
+        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, analyzeOptions });
     }
 
     query(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<QueryResponse>> {
@@ -241,6 +241,10 @@ export interface QueryOptions {
     includeInstanceTypes?: boolean;
     includeQueryStructure?: boolean;
     answerCountLimit?: number;
+}
+
+export interface AnalyzeOptions {
+    include_plan?: boolean,
 }
 
 export interface User {

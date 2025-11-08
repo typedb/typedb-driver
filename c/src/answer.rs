@@ -123,6 +123,7 @@ pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -
 }
 
 /// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+/// It must be requested via "include query structure" in <code>QueryOptions</code>
 #[no_mangle]
 pub extern "C" fn concept_row_get_query_structure(concept_row: *const ConceptRow) -> *mut Pipeline {
     release_optional(borrow(concept_row).get_query_structure().cloned())
