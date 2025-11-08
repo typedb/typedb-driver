@@ -35,7 +35,7 @@ const HTTP_UNAUTHORIZED = 401;
 
 export * from "./concept";
 export * from "./params";
-export * from "./query-structure";
+export * from "./analyzed-conjunction";
 export * from "./response";
 
 export class TypeDBHttpDriver {

@@ -25,12 +25,12 @@ a| `params` a|  a| `DriverParams`
 .Returns
 `TypeDBHttpDriver`
 
-[#_TypeDBHttpDriver_analyze_transactionId_string_query_string_queryOptions_QueryOptions]
+[#_TypeDBHttpDriver_analyze_transactionId_string_query_string_analyzeOptions_AnalyzeOptions]
 ==== analyze
 
 [source,typescript]
 ----
-analyze( transactionId: string, query: string, queryOptions?: QueryOptions, ): Promise<ApiResponse<AnalyzeResponse>>
+analyze( transactionId: string, query: string, analyzeOptions?: AnalyzeOptions, ): Promise<ApiResponse<AnalyzeResponse>>
 ----
 
 
@@ -43,7 +43,7 @@ analyze( transactionId: string, query: string, queryOptions?: QueryOptions, ): P
 |Name |Description |Type
 a| `transactionId` a|  a| `string`
 a| `query` a|  a| `string`
-a| `queryOptions` a|  a| `QueryOptions`
+a| `analyzeOptions` a|  a| `AnalyzeOptions`
 |===
 
 [caption=""]

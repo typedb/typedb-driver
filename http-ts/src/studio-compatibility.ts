@@ -30,7 +30,7 @@ import {
     QueryConstraintSub,
     QueryConstraintSubExact, QueryConstraintValue,
     QueryVariableInfo, QueryVertexLabel, QueryVertexVariable
-} from "./query-structure";
+} from "./analyzed-conjunction";
 import {ConceptRowAnswer, QueryType} from "./response";
 
 export interface ConceptRowsQueryResponseForStudio {

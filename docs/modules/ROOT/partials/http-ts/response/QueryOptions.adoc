@@ -10,6 +10,7 @@
 |Name |Type |Description
 a| `answerCountLimit` a| `number` a| 
 a| `includeInstanceTypes` a| `boolean` a| 
+a| `includeQueryStructure` a| `boolean` a| 
 |===
 // end::properties[]
 

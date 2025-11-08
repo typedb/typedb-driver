@@ -11,6 +11,7 @@
 a| `fetch` a| `AnalyzedFetch` a| 
 a| `preamble` a| `AnalyzedFunction` a| 
 a| `query` a| `AnalyzedPipeline` a| 
+a| `source` a| `string` a| 
 |===
 // end::properties[]
 

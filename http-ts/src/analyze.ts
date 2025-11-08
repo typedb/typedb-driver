@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {QueryConstraintAny, QueryVariableInfo} from "./query-structure";
+import {QueryConstraintAny, QueryVariableInfo} from "./analyzed-conjunction";
 import {Type, ValueType} from "./concept";
 
 

@@ -344,7 +344,7 @@ function encodeVariableAnnotations(annotations: VariableAnnotations, encoder: Fu
             return encoder.makeFunctor("Value", encoder.encodeAsList(annotations.valueTypes));
         case "type":
             return encoder.makeFunctor("Type", encoder.encodeAsList(annotations.annotations.map(t => t.label)));
-        case "thing":
+        case "instance":
             return encoder.makeFunctor("Instance", encoder.encodeAsList(annotations.annotations.map(t => t.label)));
     }
     throw new Error(`Unknown VariableAnnotations variant: ${variant}`);

@@ -16,7 +16,7 @@
 # under the License.
 
 static_function_mapping = {
-    "getVariableName": "query-structure",
+    "getVariableName": "analyze",
 
     "isApiError": "response",
     "isApiErrorResponse": "response",
@@ -116,6 +116,7 @@ dir_mapping = {
     "ValueType.adoc": "concept",
 
     "analyzeStaticFunctions.adoc": "analyze",
+    "analyzed-conjunctionStaticFunctions.adoc": "analyze",
     "responseStaticFunctions.adoc": "response",
     "connectionStaticFunctions.adoc": "connection",
 }

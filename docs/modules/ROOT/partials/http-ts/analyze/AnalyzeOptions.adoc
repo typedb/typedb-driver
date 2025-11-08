@@ -1,0 +1,14 @@
+[#_AnalyzeOptions]
+=== AnalyzeOptions
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `include_plan` a| `boolean` a| 
+|===
+// end::properties[]
+
