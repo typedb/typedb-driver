@@ -24,14 +24,22 @@ import {
     QueryConstraintHas, QueryConstraintIid, QueryConstraintIs,
     QueryConstraintIsa,
     QueryConstraintIsaExact, QueryConstraintKind, QueryConstraintLabel,
-    QueryConstraintLinks,
     QueryConstraintOwns,
     QueryConstraintPlays,
     QueryConstraintRelates, QueryConstraintSpan,
     QueryConstraintSub,
     QueryConstraintSubExact, QueryConstraintValue,
-    QueryVariableInfo, QueryVertexVariable
+    QueryVariableInfo, QueryVertexLabel, QueryVertexVariable
 } from "./query-structure";
+import {ConceptRowAnswer, QueryType} from "./response";
+
+export interface ConceptRowsQueryResponseForStudio {
+    answerType: "conceptRows";
+    queryType: QueryType;
+    comment: string | null;
+    query: QueryStructureForStudio | null;
+    answers: ConceptRowAnswer[];
+}
 
 export interface QueryStructureForStudio {
     blocks: { constraints: QueryConstraintAnyForStudio[] }[],
@@ -43,7 +51,7 @@ export type QueryConstraintAnyForStudio =
     QueryConstraintIsa
     | QueryConstraintIsaExact
     | QueryConstraintHas
-    | QueryConstraintLinks
+    | QueryConstraintLinksForStudio
     | QueryConstraintSub
     | QueryConstraintSubExact
     | QueryConstraintOwns
@@ -58,11 +66,20 @@ export type QueryConstraintAnyForStudio =
     | QueryConstraintValue
     | QueryConstraintLabel;
 
+export interface QueryConstraintLinksForStudio {
+    tag: "links",
+    textSpan: QueryConstraintSpan,
+
+    relation: QueryVertexVariable,
+    player: QueryVertexVariable,
+    role: QueryVertexVariable | QueryVertexLabel,
+}
+
 export interface QueryConstraintExpressionForStudio {
     tag: "expression",
     textSpan: QueryConstraintSpan,
 
     text: string,
     arguments: QueryVertexVariable[],
-    assigned: QueryVertexVariable,
+    assigned: QueryVertexVariable[],
 }

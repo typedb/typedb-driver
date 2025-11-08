@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { QueryConstraintAny, QueryVariableInfo } from "./query-structure";
+import {QueryConstraintAny, QueryVariableInfo} from "./query-structure";
 import {Type, ValueType} from "./concept";
 
 
@@ -70,7 +70,7 @@ export type VariableAnnotations = { isOptional: boolean } & (
     { tag: "instance", annotations: Type[] } |
     { tag: "type", annotations: Type[] } |
     { tag: "value", valueTypes: ValueType[] }
-);
+    );
 
 export interface ConjunctionAnnotations {
     variableAnnotations: { [name: VariableId]: VariableAnnotations }

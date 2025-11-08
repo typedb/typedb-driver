@@ -24,7 +24,7 @@ import {
     AnalyzedFunction,
     AnalyzedPipeline
 } from "./analyze";
-import {QueryStructureForStudio} from "./studio-compatibility";
+import {ConceptRowsQueryResponseForStudio} from "./studio-compatibility";
 
 export interface SignInResponse {
     token: string;
@@ -70,7 +70,7 @@ export interface QueryResponseBase {
     answerType: AnswerType;
     queryType: QueryType;
     comment: string | null;
-    query: QueryStructureForStudio | null;
+    query: AnalyzedPipeline | null;
 }
 
 export interface OkQueryResponse extends QueryResponseBase {
@@ -87,7 +87,11 @@ export interface ConceptDocumentsQueryResponse extends QueryResponseBase {
     answers: ConceptDocument[];
 }
 
-export type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse;
+export type QueryResponse =
+    OkQueryResponse
+    | ConceptRowsQueryResponse
+    | ConceptDocumentsQueryResponse
+    | ConceptRowsQueryResponseForStudio;
 
 export interface AnalyzeResponse {
     source: string,

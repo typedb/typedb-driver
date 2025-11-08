@@ -26,6 +26,7 @@ export function getVariableName(structure: QueryStructureForStudio | AnalyzedPip
 }
 
 export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue | QueryVertexNamedRole;
+
 export interface QueryVertexVariable {
     tag: "variable";
     id: string,
