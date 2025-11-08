@@ -997,7 +997,6 @@ pub async fn answer_has_structure(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let answers = context.get_collected_rows().await;
     let pipeline = answers[0].get_query_structure().unwrap();
-    eprintln!("{pipeline:?}");
     let context = functor_encoding::FunctorContext { structure: pipeline };
     let actual_functor = pipeline.encode_as_functor(&context);
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));

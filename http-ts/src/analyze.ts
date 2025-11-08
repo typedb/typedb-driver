@@ -67,7 +67,7 @@ export type FunctionReturnStructure =
     { tag: "reduce", reducers: Reducer[] }
 
 export type VariableAnnotations =
-    { tag: "thing", annotations: Type[] } |
+    { tag: "instance", annotations: Type[] } |
     { tag: "type", annotations: Type[] } |
     { tag: "value", valueTypes: ValueType[] };
 
