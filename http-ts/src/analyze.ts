@@ -66,10 +66,11 @@ export type FunctionReturnStructure =
     { tag: "check" } |
     { tag: "reduce", reducers: Reducer[] }
 
-export type VariableAnnotations =
+export type VariableAnnotations = { isOptional: boolean } & (
     { tag: "instance", annotations: Type[] } |
     { tag: "type", annotations: Type[] } |
-    { tag: "value", valueTypes: ValueType[] };
+    { tag: "value", valueTypes: ValueType[] }
+);
 
 export interface ConjunctionAnnotations {
     variableAnnotations: { [name: VariableId]: VariableAnnotations }

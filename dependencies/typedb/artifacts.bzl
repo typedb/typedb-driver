@@ -25,7 +25,7 @@ def typedb_artifact():
         artifact_name = "typedb-all-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],
         commit_source = deployment["artifact"]["snapshot"]["download"],
-        commit = "7ceabca3256fc87536f77cad6f4ed6b2daca4414"
+        commit = "82260e4baaf79e5751b4d1eaf5de4da605c7b67e"
     )
 
 #def typedb_cloud_artifact():

@@ -161,7 +161,7 @@ export interface QueryConstraintExpression {
 
     text: string,
     arguments: QueryVertexVariable[],
-    assigned: QueryVertexVariable[],
+    assigned: QueryVertexVariable,
 }
 
 export interface QueryConstraintFunction {

@@ -90,6 +90,7 @@ export interface ConceptDocumentsQueryResponse extends QueryResponseBase {
 export type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse;
 
 export interface AnalyzeResponse {
+    source: string,
     preamble: AnalyzedFunction[],
     query: AnalyzedPipeline,
     fetch: AnalyzedFetch | null,
