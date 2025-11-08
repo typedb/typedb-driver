@@ -37,7 +37,7 @@ class_nesting_prefixes = [
 dir_mapping = {
     "TypeDBHttpDriver.adoc": "connection",
 
-    "AnalyzeOptions": "analyze",
+    "AnalyzeOptions.adoc": "analyze",
     "AnalyzeResponse.adoc": "response",
     "ApiErrorResponse.adoc": "response",
     "Attribute.adoc": "concept",
