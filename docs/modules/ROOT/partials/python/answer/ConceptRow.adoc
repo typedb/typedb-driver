@@ -142,5 +142,26 @@ Retrieve the ConjunctionIDs of Conjunctions that answered this row.
 concept_row.involved_conjunctions()
 ----
 
+[#_ConceptRow_query_structure_]
+==== query_structure
+
+[source,python]
+----
+query_structure() -> 'Pipeline' | None
+----
+
+Retrieve the executed query’s structure from the ``ConceptRow``’s header, if set. It must be requested via “include query structure” in ``QueryOptions`` Shared between all the rows in a QueryAnswer.
+
+[caption=""]
+.Returns
+`'Pipeline' | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept_row.query_structure()
+----
+
 // end::methods[]
 

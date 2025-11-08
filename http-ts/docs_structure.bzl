@@ -16,7 +16,7 @@
 # under the License.
 
 static_function_mapping = {
-    "getVariableName": "analyze",
+    "getVariableName": "query-structure",
 
     "isApiError": "response",
     "isApiErrorResponse": "response",
@@ -33,9 +33,11 @@ class_nesting_prefixes = [
     "QueryVertex",
 ]
 
+
 dir_mapping = {
     "TypeDBHttpDriver.adoc": "connection",
 
+    "AnalyzeOptions": "analyze",
     "AnalyzeResponse.adoc": "response",
     "ApiErrorResponse.adoc": "response",
     "Attribute.adoc": "concept",
@@ -70,8 +72,8 @@ dir_mapping = {
     "QueryConstraintSubExact.adoc": "analyze",
     "QueryConstraintTry.adoc": "analyze",
     "QueryConstraintValue.adoc": "analyze",
-    "QueryOptions.adoc": "analyze",
-    "QueryResponseBase.adoc": "analyze",
+    "QueryOptions.adoc": "response",
+    "QueryResponseBase.adoc": "response",
     "QueryVertexLabel.adoc": "analyze",
     "QueryVertexNamedRole.adoc": "analyze",
     "QueryVertexValue.adoc": "analyze",
@@ -102,8 +104,8 @@ dir_mapping = {
     "InstantiableType.adoc": "concept",
     "QueryConstraintAny.adoc": "analyze",
     "QueryConstraintSpan.adoc": "analyze",
-    "QueryResponse.adoc": "analyze",
-    "QueryType.adoc": "analyze",
+    "QueryResponse.adoc": "response",
+    "QueryType.adoc": "response",
     "QueryVariableInfo.adoc": "analyze",
     "QueryVertex.adoc": "analyze",
     "ThingKind.adoc": "concept",

@@ -118,6 +118,28 @@ a| `columnIndex` a| the column index a| `long`
 conceptRow.getIndex(columnIndex);
 ----
 
+[#_ConceptRow_getQueryStructure_]
+==== getQueryStructure
+
+[source,java]
+----
+java.util.Optional<Pipeline> getQueryStructure()
+----
+
+Retrieve the executed query's structure from the ``ConceptRow``'s header, if set. It must be requested via "include query structure" in ``QueryOptions`` Shared between all the rows in a QueryAnswer. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<Pipeline>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptRow.getQueryStructure();
+----
+
 [#_ConceptRow_getQueryType_]
 ==== getQueryType
 

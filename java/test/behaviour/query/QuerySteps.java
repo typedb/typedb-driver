@@ -70,7 +70,8 @@ import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.qu
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class QuerySteps {
     private static QueryAnswer queryAnswer;
