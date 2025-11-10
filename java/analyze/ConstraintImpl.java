@@ -585,8 +585,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
             return typedb_driver.constraint_comparison_get_comparator(nativeObject);
         }
 
-        public static String comparatorName(com.typedb.driver.jni.Comparator comparator) {
-            return typedb_driver.comparator_get_name(comparator);
+        public String comparatorSymbol() {
+            return typedb_driver.comparator_get_name(comparator());
         }
     }
 

@@ -17,16 +17,14 @@
  * under the License.
  */
 
-import { Database, User } from "./index";
-import { Concept } from "./concept";
-import { QueryStructure } from "./query-structure";
+import {Database, User} from "./index";
+import {Concept} from "./concept";
 import {
-    FetchAnnotations,
-    FunctionAnnotations,
-    FunctionStructure,
-    PipelineAnnotations,
-    PipelineStructure
+    AnalyzedFetch,
+    AnalyzedFunction,
+    AnalyzedPipeline
 } from "./analyze";
+import {ConceptRowsQueryResponseForStudio} from "./studio-compatibility";
 
 export interface SignInResponse {
     token: string;
@@ -60,7 +58,7 @@ export interface ConceptRow {
 }
 
 export interface ConceptRowAnswer {
-    involvedBlocks: number[];
+    involvedBlocks: number[] | null;
     data: ConceptRow;
 }
 
@@ -72,7 +70,7 @@ export interface QueryResponseBase {
     answerType: AnswerType;
     queryType: QueryType;
     comment: string | null;
-    query: QueryStructure | null;
+    query: AnalyzedPipeline | null;
 }
 
 export interface OkQueryResponse extends QueryResponseBase {
@@ -89,18 +87,17 @@ export interface ConceptDocumentsQueryResponse extends QueryResponseBase {
     answers: ConceptDocument[];
 }
 
-export type QueryResponse = OkQueryResponse | ConceptRowsQueryResponse | ConceptDocumentsQueryResponse;
+export type QueryResponse =
+    OkQueryResponse
+    | ConceptRowsQueryResponse
+    | ConceptDocumentsQueryResponse
+    | ConceptRowsQueryResponseForStudio;
 
 export interface AnalyzeResponse {
-    structure: {
-        preamble: FunctionStructure[],
-        query: PipelineStructure,
-    }
-    annotations: {
-        preamble: FunctionAnnotations[],
-        query: PipelineAnnotations,
-        fetch: FetchAnnotations | null,
-    }
+    source: string,
+    preamble: AnalyzedFunction[],
+    query: AnalyzedPipeline,
+    fetch: AnalyzedFetch | null,
 }
 
 export type ApiOkResponse<OK_RES = {}> = { ok: OK_RES };

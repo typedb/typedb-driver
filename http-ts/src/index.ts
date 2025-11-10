@@ -19,6 +19,7 @@
 
 import { DriverParams, remoteOrigin } from "./params";
 import {
+    AnalyzeResponse,
     ApiErrorResponse,
     ApiResponse,
     DatabasesListResponse,
@@ -34,7 +35,7 @@ const HTTP_UNAUTHORIZED = 401;
 
 export * from "./concept";
 export * from "./params";
-export * from "./query-structure";
+export * from "./analyzed-conjunction";
 export * from "./response";
 
 export class TypeDBHttpDriver {
@@ -105,6 +106,10 @@ export class TypeDBHttpDriver {
 
     rollbackTransaction(transactionId: string): Promise<ApiResponse> {
         return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/rollback`, {});
+    }
+
+    analyze(transactionId: string, query: string, analyzeOptions?: AnalyzeOptions): Promise<ApiResponse<AnalyzeResponse>> {
+        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, analyzeOptions });
     }
 
     query(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<QueryResponse>> {
@@ -234,7 +239,12 @@ export interface TransactionOptions {
 
 export interface QueryOptions {
     includeInstanceTypes?: boolean;
+    includeQueryStructure?: boolean;
     answerCountLimit?: number;
+}
+
+export interface AnalyzeOptions {
+    include_plan?: boolean,
 }
 
 export interface User {

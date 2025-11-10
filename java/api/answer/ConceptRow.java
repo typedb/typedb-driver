@@ -20,6 +20,7 @@
 package com.typedb.driver.api.answer;
 
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
@@ -56,6 +57,18 @@ public interface ConceptRow {
     QueryType getQueryType();
 
     /**
+     * Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+     * It must be requested via "include query structure" in <code>QueryOptions</code>
+     * Shared between all the rows in a QueryAnswer.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptRow.getQueryStructure();
+     * </pre>
+     */
+    Optional<Pipeline> getQueryStructure();
+
+    /**
      * Retrieves a concept for a given column name (variable).
      * Returns an empty <code>Optional</code> if the variable has an empty answer.
      * Throws an exception if the variable is not present.
@@ -88,7 +101,7 @@ public interface ConceptRow {
     /**
      * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
      */
-    Stream<com.typedb.driver.jni.ConjunctionID> involvedConjunctions();
+    Optional<Stream<com.typedb.driver.jni.ConjunctionID>> involvedConjunctions();
 
     /**
      * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.

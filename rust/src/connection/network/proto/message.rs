@@ -26,6 +26,7 @@ use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
+    analyze::pipeline::Pipeline,
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
     common::{info::DatabaseInfo, RequestID, Result},
     connection::message::{
@@ -34,7 +35,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    Credentials,
+    Credentials, Error,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -186,7 +187,9 @@ impl IntoProto<transaction::Req> for TransactionRequest {
             }
             Self::Commit => transaction::req::Req::CommitReq(transaction::commit::Req {}),
             Self::Rollback => transaction::req::Req::RollbackReq(transaction::rollback::Req {}),
-            Self::Analyze { query } => transaction::req::Req::AnalyzeReq(typedb_protocol::analyze::Req { query }),
+            Self::Analyze { query } => {
+                transaction::req::Req::AnalyzeReq(typedb_protocol::analyze::Req { query, options: None })
+            }
             Self::Query(query_request) => transaction::req::Req::QueryReq(query_request.into_proto()),
             Self::Stream { request_id: req_id } => {
                 request_id = Some(req_id);
@@ -418,9 +421,11 @@ impl TryFromProto<typedb_protocol::query::initial_res::ok::Ok> for QueryResponse
                 }))
             }
             typedb_protocol::query::initial_res::ok::Ok::ConceptRowStream(row_stream_header) => {
+                let query_structure = row_stream_header.query_structure.map(Pipeline::try_from_proto).transpose()?;
                 Ok(QueryResponse::ConceptRowsHeader(ConceptRowHeader {
                     column_names: row_stream_header.column_variable_names,
                     query_type: QueryType::try_from_proto(row_stream_header.query_type)?,
+                    query_structure,
                 }))
             }
         }

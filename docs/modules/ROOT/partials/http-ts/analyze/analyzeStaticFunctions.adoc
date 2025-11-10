@@ -1,13 +1,13 @@
-[#_query-structureStaticFunctions]
+[#_analyzeStaticFunctions]
 === Static Functions
 
 // tag::methods[]
-[#_getVariableName_getVariableName_structure_QueryStructure_variable_QueryVertexVariable]
+[#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_QueryVertexVariable]
 ==== getVariableName
 
 [source,typescript]
 ----
-getVariableName( structure: QueryStructure, variable: QueryVertexVariable, ): string
+getVariableName( structure: AnalyzedPipeline | QueryStructureForStudio, variable: QueryVertexVariable, ): string
 ----
 
 
@@ -18,7 +18,7 @@ getVariableName( structure: QueryStructure, variable: QueryVertexVariable, ): st
 [options="header"]
 |===
 |Name |Description |Type
-a| `structure` a|  a| `QueryStructure`
+a| `structure` a|  a| `AnalyzedPipeline`
 a| `variable` a|  a| `QueryVertexVariable`
 |===
 

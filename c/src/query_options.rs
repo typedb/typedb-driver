@@ -80,3 +80,22 @@ pub extern "C" fn query_options_get_prefetch_size(options: *const QueryOptions) 
 pub extern "C" fn query_options_has_prefetch_size(options: *const QueryOptions) -> bool {
     borrow(options).prefetch_size.is_some()
 }
+
+/// Explicitly set the prefetch size.
+/// If set, it requests the server to include the query structure in the answer header.
+#[no_mangle]
+pub extern "C" fn query_options_set_include_query_structure(options: *mut QueryOptions, include_query_structure: bool) {
+    borrow_mut(options).include_query_structure = Some(include_query_structure);
+}
+
+/// Returns the value set for 'include query structure' in this <code>QueryOptions</code> object.
+#[no_mangle]
+pub extern "C" fn query_options_get_include_query_structure(options: *const QueryOptions) -> bool {
+    borrow(options).include_query_structure.unwrap()
+}
+
+/// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
+#[no_mangle]
+pub extern "C" fn query_options_has_include_query_structure(options: *const QueryOptions) -> bool {
+    borrow(options).include_query_structure.is_some()
+}

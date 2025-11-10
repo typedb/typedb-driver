@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.typedb.driver.concept.answer;
+package com.typedb.driver.answer;
 
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;

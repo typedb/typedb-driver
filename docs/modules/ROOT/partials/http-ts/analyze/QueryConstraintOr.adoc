@@ -1,5 +1,5 @@
-[#_QueryVertexValue]
-==== QueryVertexValue
+[#_QueryConstraintOr]
+==== QueryConstraintOr
 
 [caption=""]
 .Fields
@@ -8,8 +8,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `tag` a| `"value"` a| 
-a| `value` a| `Value` a| 
+a| `branches` a| `number` a| 
+a| `tag` a| `"or"` a| 
 |===
 // end::properties[]
 

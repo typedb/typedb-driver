@@ -17,67 +17,68 @@
  * under the License.
  */
 
-import {QueryConstraintAny, QueryVariableInfo} from "./query-structure";
+import {QueryConstraintAny, QueryVariableInfo} from "./analyzed-conjunction";
 import {Type, ValueType} from "./concept";
 
 
 type VariableId = string;
-export interface PipelineStructure {
-    conjunctions: QueryConstraintAny[][],
-    variables: {[name: VariableId]: QueryVariableInfo },
-    pipeline: PipelineStage[],
+
+export interface AnalyzedPipeline {
+    conjunctions: AnalyzedConjunction[],
+    variables: { [name: VariableId]: QueryVariableInfo },
+    stages: PipelineStage[],
     outputs: string[],
+}
+
+export interface AnalyzedConjunction {
+    constraints: QueryConstraintAny[],
+    annotations: ConjunctionAnnotations,
 }
 
 type ConjunctionIndex = number;
 export type PipelineStage =
-    { tag: "match",  block: ConjunctionIndex } |
-    { tag: "insert",  block: ConjunctionIndex } |
-    { tag: "delete",  block: ConjunctionIndex, deletedVariables: VariableId[] } |
-    { tag: "put",  block: ConjunctionIndex } |
-    { tag: "update",  block: ConjunctionIndex } |
-    { tag: "select",  variables: VariableId[] } |
-    { tag: "sort",  variables: VariableId[] } |
-    { tag: "require",  variables: VariableId } |
-    { tag: "offset",  offset: number } |
-    { tag: "limit",  limit: number } |
+    { tag: "match", block: ConjunctionIndex } |
+    { tag: "insert", block: ConjunctionIndex } |
+    { tag: "delete", block: ConjunctionIndex, deletedVariables: VariableId[] } |
+    { tag: "put", block: ConjunctionIndex } |
+    { tag: "update", block: ConjunctionIndex } |
+    { tag: "select", variables: VariableId[] } |
+    { tag: "sort", variables: { tag: "Ascending" | "Descending", variable: VariableId }[] } |
+    { tag: "require", variables: VariableId } |
+    { tag: "offset", offset: number } |
+    { tag: "limit", limit: number } |
     { tag: "distinct" } |
-    { tag: "reduce",  reducers: { assigned: VariableId, reducer: Reducer }[] };
+    { tag: "reduce", reducers: { assigned: VariableId, reducer: Reducer }[], groupby: VariableId[] };
 
-export interface FunctionStructure {
+export interface AnalyzedFunction {
     arguments: VariableId[],
-    body: PipelineStructure,
     returns: FunctionReturnStructure,
+    body: AnalyzedPipeline,
+    argumentAnnotations: VariableAnnotations[],
+    returnAnnotations: { tag: "single" | "stream", annotations: VariableAnnotations[] },
 }
 
-export type Reducer = { reducer: string, variable: VariableId[] };
-export type FunctionSingleReturnSelector = "first" | "last" ;
+export type Reducer = { reducer: string, arguments: VariableId[] };
+export type FunctionSingleReturnSelector = "first" | "last";
 export type FunctionReturnStructure =
     { tag: "single", variables: VariableId[], selector: FunctionSingleReturnSelector } |
     { tag: "stream", variables: VariableId[] } |
     { tag: "check" } |
     { tag: "reduce", reducers: Reducer[] }
 
-export type VariableAnnotations =
-    { tag: "thing", annotations: Type[] } |
+export type VariableAnnotations = { isOptional: boolean } & (
+    { tag: "instance", annotations: Type[] } |
     { tag: "type", annotations: Type[] } |
+    { tag: "value", valueTypes: ValueType[] }
+    );
+
+export interface ConjunctionAnnotations {
+    variableAnnotations: { [name: VariableId]: VariableAnnotations }
+}
+
+export type AnalyzedFetch =
+    { tag: "list", elements: AnalyzedFetch } |
+    { tag: "object", possibleFields: FetchAnnotationFieldEntry[] } |
     { tag: "value", valueTypes: ValueType[] };
 
-export interface PipelineAnnotations {
-    annotationsByConjunction: {
-        variableAnnotations: {[name: VariableId]: VariableAnnotations }
-    }[]
-}
-
-export interface FunctionAnnotations {
-    arguments: VariableAnnotations[],
-    returns: { tag: "single" | "stream", annotations: VariableAnnotations[] },
-    body: PipelineAnnotations,
-}
-
-export type FetchAnnotations =
-    { tag:  "list", elements: FetchAnnotations } |
-    { tag : "object", possibleFields: FetchAnnotationFieldEntry[] } |
-    { tag : "value", valueTypes: ValueType[] };
-
-export type FetchAnnotationFieldEntry = FetchAnnotations & { key: string };
+export type FetchAnnotationFieldEntry = AnalyzedFetch & { key: string };

@@ -1,5 +1,5 @@
-[#_QueryOptions]
-=== QueryOptions
+[#_QueryConstraintTry]
+==== QueryConstraintTry
 
 [caption=""]
 .Fields
@@ -8,8 +8,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `answerCountLimit` a| `number` a| 
-a| `includeInstanceTypes` a| `boolean` a| 
+a| `conjunction` a| `number` a| 
+a| `tag` a| `"try"` a| 
 |===
 // end::properties[]
 

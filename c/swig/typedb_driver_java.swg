@@ -99,6 +99,9 @@
 %nojavaexception query_options_get_prefetch_size;
 %nojavaexception query_options_set_prefetch_size;
 %nojavaexception query_options_has_prefetch_size;
+%nojavaexception query_options_set_include_query_structure;
+%nojavaexception query_options_get_include_query_structure;
+%nojavaexception query_options_has_include_query_structure;
 
 %nojavaexception error_code;
 %nojavaexception error_message;
@@ -176,6 +179,7 @@
 %nojavaexception concept_row_equals;
 %nojavaexception concept_row_get_column_names;
 %nojavaexception concept_row_get_concepts;
+%nojavaexception concept_row_get_query_structure;
 %nojavaexception concept_row_get_query_type;
 %nojavaexception concept_row_involved_conjunctions;
 %nojavaexception concept_row_to_string;

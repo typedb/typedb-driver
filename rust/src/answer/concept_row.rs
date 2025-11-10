@@ -26,13 +26,18 @@ use std::{
 use itertools::Itertools;
 
 use crate::{
-    analyze::conjunction::ConjunctionID, answer::QueryType, common::Result, concept::Concept, error::ConceptError,
+    analyze::{conjunction::ConjunctionID, pipeline::Pipeline},
+    answer::QueryType,
+    common::Result,
+    concept::Concept,
+    error::ConceptError,
 };
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub struct ConceptRowHeader {
     pub column_names: Vec<String>,
     pub query_type: QueryType,
+    pub query_structure: Option<Pipeline>,
 }
 
 impl ConceptRowHeader {
@@ -44,15 +49,19 @@ impl ConceptRowHeader {
 /// A single row of concepts representing substitutions for variables in the query.
 /// Contains a Header (column names and query type), and the row of optional concepts.
 /// An empty concept in a column means the variable does not have a substitution in this answer.
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub struct ConceptRow {
     header: Arc<ConceptRowHeader>,
     pub row: Vec<Option<Concept>>,
-    involved_conjunctions: Vec<u8>,
+    involved_conjunctions: Option<Vec<u8>>,
 }
 
 impl ConceptRow {
-    pub fn new(header: Arc<ConceptRowHeader>, row: Vec<Option<Concept>>, involved_conjunctions: Vec<u8>) -> Self {
+    pub fn new(
+        header: Arc<ConceptRowHeader>,
+        row: Vec<Option<Concept>>,
+        involved_conjunctions: Option<Vec<u8>>,
+    ) -> Self {
         Self { header, involved_conjunctions, row }
     }
 
@@ -78,6 +87,18 @@ impl ConceptRow {
         self.header.query_type
     }
 
+    /// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+    /// It must be requested via "include query structure" in <code>QueryOptions</code>
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// concept_row.get_query_structure()
+    /// ```
+    pub fn get_query_structure(&self) -> Option<&Pipeline> {
+        self.header.query_structure.as_ref()
+    }
+
     /// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
     ///
     /// # Examples
@@ -85,27 +106,31 @@ impl ConceptRow {
     /// ```rust
     /// concept_row.get_involved_conjunctions()
     /// ```
-    pub fn get_involved_conjunctions(&self) -> impl Iterator<Item = ConjunctionID> + '_ {
-        (0..self.involved_conjunctions.len())
-            .filter(|index| {
-                let index = index / 8;
-                let mask = 1 << (index % 8);
-                self.involved_conjunctions[index] & mask != 0
-            })
-            .map(ConjunctionID)
+    pub fn get_involved_conjunctions(&self) -> Option<impl Iterator<Item = ConjunctionID> + '_> {
+        self.involved_conjunctions.as_ref().map(|involved| {
+            (0..involved.len())
+                .filter(|index| {
+                    let index = index / 8;
+                    let mask = 1 << (index % 8);
+                    involved[index] & mask != 0
+                })
+                .map(ConjunctionID)
+        })
     }
 
     /// Like <code>ConceptRow::get_involved_conjunctions</code> but clones the underlying data.
     /// Meant for simpler lifetimes over FFI.
-    pub fn get_involved_conjunctions_cloned(&self) -> impl Iterator<Item = ConjunctionID> + 'static {
-        let involved_conjunctions = self.involved_conjunctions.clone();
-        (0..self.involved_conjunctions.len())
-            .filter(move |index| {
-                let index = index / 8;
-                let mask = 1 << (index % 8);
-                involved_conjunctions[index] & mask != 0
-            })
-            .map(ConjunctionID)
+    pub fn get_involved_conjunctions_cloned(&self) -> Option<impl Iterator<Item = ConjunctionID> + 'static> {
+        let cloned = self.involved_conjunctions.clone();
+        cloned.map(|involved| {
+            (0..involved.len())
+                .filter(move |index| {
+                    let index = index / 8;
+                    let mask = 1 << (index % 8);
+                    involved[index] & mask != 0
+                })
+                .map(ConjunctionID)
+        })
     }
 
     /// Retrieves a concept for a given variable. Returns an empty optional if
@@ -154,6 +179,12 @@ impl ConceptRow {
     /// ```
     pub fn get_concepts(&self) -> impl Iterator<Item = &Concept> {
         self.row.iter().filter_map(|concept| concept.as_ref())
+    }
+}
+
+impl PartialEq for ConceptRow {
+    fn eq(&self, other: &Self) -> bool {
+        self.row.eq(&other.row) && self.involved_conjunctions.eq(&other.involved_conjunctions)
     }
 }
 

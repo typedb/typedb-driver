@@ -19,12 +19,13 @@
 
 import { DataTable, Then, When } from "@cucumber/cucumber";
 import {
+    analyzed,
     answers,
     concurrentAnswers,
     makeQuery,
     setAnswers,
     setConcurrentAnswers, setQueryAnswerCountLimit,
-    setQueryIncludeInstanceTypes,
+    setQueryIncludeInstanceTypes, setQueryIncludeQueryStructure,
 } from "./context";
 import {
     assertNotError,
@@ -35,6 +36,7 @@ import {
 } from "./params";
 import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.cjs";
 import assert from "assert";
+import {encodePipeline, FunctorEncoder, normalizeFunctorForCompare} from "./analyze";
 
 const runQuery = async (mayError: MayError, query: string) =>  {
     await makeQuery(query).then(checkMayError(mayError));
@@ -83,6 +85,7 @@ When('concurrently get answers of typeql {query_type} query {int} times', async 
 });
 
 When('set query option include_instance_types to: {boolean}', setQueryIncludeInstanceTypes);
+When('set query option include_query_structure to: {boolean}', setQueryIncludeQueryStructure);
 When('set query option answer_count_limit to: {int}', setQueryAnswerCountLimit);
 
 Then('answer type {is_or_not}: {query_answer_type}', (is: boolean, type: QueryType) => {
@@ -360,3 +363,10 @@ function documentPresentInAnswers(document: any, answers: ConceptDocument[]) {
         }
     });
 }
+
+Then('answers have query structure:', (expectedFunctor: string) => {
+    const pipeline = answers.query;
+    const context = new FunctorEncoder(pipeline);
+    const actualFunctor = encodePipeline(pipeline, context);
+    assert.equal(normalizeFunctorForCompare(actualFunctor), normalizeFunctorForCompare(expectedFunctor))
+});

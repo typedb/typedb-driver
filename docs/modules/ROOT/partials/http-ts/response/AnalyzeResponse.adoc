@@ -8,8 +8,10 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `annotations` a| `FetchAnnotations` a| 
-a| `structure` a| `FunctionStructure` a| 
+a| `fetch` a| `AnalyzedFetch` a| 
+a| `preamble` a| `AnalyzedFunction` a| 
+a| `query` a| `AnalyzedPipeline` a| 
+a| `source` a| `string` a| 
 |===
 // end::properties[]
 

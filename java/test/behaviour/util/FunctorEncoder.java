@@ -201,7 +201,7 @@ public abstract class FunctorEncoder {
                             "Comparison",
                             encode(comparison.lhs()),
                             encode(comparison.rhs()),
-                            Constraint.Comparison.comparatorName(comparison.comparator())
+                            comparison.comparatorSymbol()
                     );
                 }
                 case KindOf: {

@@ -31,6 +31,7 @@ use typedb_driver::{
 };
 
 use crate::{
+    analyze::functor_encoding::encode_query_structure_as_functor,
     assert_err, generic_step, params,
     params::check_boolean,
     util,
@@ -217,6 +218,13 @@ pub async fn concurrently_get_answers_of_typeql_query_times(context: &mut Contex
 pub async fn set_query_option_include_instance_types(context: &mut Context, value: params::Boolean) {
     context.init_query_options_if_needed();
     context.query_options.as_mut().unwrap().include_instance_types = Some(value.to_bool());
+}
+
+#[apply(generic_step)]
+#[step(expr = "set query option include_query_structure to: {boolean}")]
+pub async fn set_query_option_include_query_structure(context: &mut Context, value: params::Boolean) {
+    context.init_query_options_if_needed();
+    context.query_options.as_mut().unwrap().include_query_structure = Some(value.to_bool());
 }
 
 #[apply(generic_step)]
@@ -980,4 +988,16 @@ pub async fn answer_contains_document(
         list_contains_json(&concept_documents, &expected_document),
         &format!("Concept documents: {:?}", concept_documents),
     );
+}
+
+#[apply(generic_step)]
+#[step(expr = r"answers have query structure:")]
+pub async fn answer_has_structure(context: &mut Context, step: &Step) {
+    use crate::analyze::{functor_encoding, functor_encoding::FunctorEncoded, normalize_functor_for_compare};
+    let expected_functor = step.docstring().unwrap();
+    let answers = context.get_collected_rows().await;
+    let pipeline = answers[0].get_query_structure().unwrap();
+    let context = functor_encoding::FunctorContext { structure: pipeline };
+    let actual_functor = pipeline.encode_as_functor(&context);
+    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }

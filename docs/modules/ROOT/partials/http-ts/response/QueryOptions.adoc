@@ -1,0 +1,16 @@
+[#_QueryOptions]
+=== QueryOptions
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `answerCountLimit` a| `number` a| 
+a| `includeInstanceTypes` a| `boolean` a| 
+a| `includeQueryStructure` a| `boolean` a| 
+|===
+// end::properties[]
+

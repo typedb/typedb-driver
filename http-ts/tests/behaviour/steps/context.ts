@@ -18,7 +18,7 @@
  */
 
 import { After, Before } from "@cucumber/cucumber";
-import { isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
+import { AnalyzeResponse, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
 import { assertNotError } from "./params";
 
 export let driver: TypeDBHttpDriver;
@@ -26,6 +26,7 @@ let transactionID: string;
 let backgroundTransactionID: string;
 let transactionOptions: TransactionOptions = {};
 let queryOptions: QueryOptions = {};
+export let analyzed: AnalyzeResponse;
 export let answers: QueryResponse;
 export let concurrentAnswers: QueryResponse[];
 
@@ -50,6 +51,10 @@ export async function makeQuery(query: string) {
     return await driver.query(tx(), query, queryOptions);
 }
 
+export async function doAnalyze(query: string) {
+    return await driver.analyze(tx(), query);
+}
+
 export function setTransactionTimeoutMillis(timeout: number) {
     transactionOptions.transactionTimeoutMillis = timeout;
 }
@@ -62,12 +67,20 @@ export function setQueryIncludeInstanceTypes(include: boolean) {
     queryOptions.includeInstanceTypes = include;
 }
 
+export function setQueryIncludeQueryStructure(include: boolean) {
+    queryOptions.includeQueryStructure = include;
+}
+
 export function setQueryAnswerCountLimit(limit: number) {
     queryOptions.answerCountLimit = limit;
 }
 
 export function setAnswers(response: QueryResponse) {
     answers = response;
+}
+
+export function setAnalyzed(response: AnalyzeResponse) {
+    analyzed = response;
 }
 
 export function setConcurrentAnswers(answers: QueryResponse[]) {

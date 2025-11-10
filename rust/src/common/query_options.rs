@@ -36,6 +36,9 @@ pub struct QueryOptions {
     /// reduce the number of network round-trips at the cost of more resources on the server side.
     /// Minimal value: 1.
     pub prefetch_size: Option<u64>,
+
+    /// If set, requests the server to return the structure of the query in the ConceptRow header.
+    pub include_query_structure: Option<bool>,
 }
 
 impl QueryOptions {
@@ -54,5 +57,10 @@ impl QueryOptions {
     /// reduce the number of network round-trips at the cost of more resources on the server side.
     pub fn prefetch_size(self, prefetch_size: u64) -> Self {
         Self { prefetch_size: Some(prefetch_size), ..self }
+    }
+
+    /// If set, requests the server to return the structure of the query in the ConceptRow header.
+    pub fn include_query_structure(self, include_query_structure: bool) -> Self {
+        Self { include_query_structure: Some(include_query_structure), ..self }
     }
 }

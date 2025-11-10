@@ -19,8 +19,6 @@
 
 package com.typedb.driver.api.analyze;
 
-import com.typedb.driver.jni.typedb_driver;
-
 import java.util.stream.Stream;
 
 /**
@@ -248,9 +246,7 @@ public interface Constraint {
 
         com.typedb.driver.jni.Comparator comparator();
 
-        static String comparatorName(com.typedb.driver.jni.Comparator comparator) {
-            return typedb_driver.comparator_get_name(comparator);
-        }
+        String comparatorSymbol();
     }
 
     /**
