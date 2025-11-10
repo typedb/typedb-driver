@@ -26,12 +26,16 @@ import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 import static com.typedb.driver.jni.typedb_driver.query_options_get_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_get_include_query_structure;
 import static com.typedb.driver.jni.typedb_driver.query_options_get_prefetch_size;
 import static com.typedb.driver.jni.typedb_driver.query_options_has_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_has_include_query_structure;
 import static com.typedb.driver.jni.typedb_driver.query_options_has_prefetch_size;
 import static com.typedb.driver.jni.typedb_driver.query_options_new;
 import static com.typedb.driver.jni.typedb_driver.query_options_set_include_instance_types;
+import static com.typedb.driver.jni.typedb_driver.query_options_set_include_query_structure;
 import static com.typedb.driver.jni.typedb_driver.query_options_set_prefetch_size;
+
 
 /**
  * TypeDB transaction options. <code>QueryOptions</code> object can be used to override
@@ -119,6 +123,39 @@ public class QueryOptions extends NativeObject<com.typedb.driver.jni.QueryOption
     public QueryOptions prefetchSize(int prefetchSize) {
         Validator.requireNonNegative(prefetchSize, "prefetchSize");
         query_options_set_prefetch_size(nativeObject, prefetchSize);
+        return this;
+    }
+
+    /**
+     * Returns the value set for the "include query structure" flag in this <code>QueryOptions</code> object.
+     * If set, requests the server to return the structure of the query in the ConceptRow header.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.includeQueryStructure();
+     * </pre>
+     *
+     * @param includeQueryStructure Whether to include query structure in ConceptRow header.
+     */
+    public Optional<Boolean> includeQueryStructure() {
+        if (query_options_has_include_query_structure(nativeObject))
+            return Optional.of(query_options_get_include_query_structure(nativeObject));
+        return Optional.empty();
+    }
+
+    /**
+     * Explicitly set the "include query structure" flag.
+     * If set, requests the server to return the structure of the query in the ConceptRow header.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.includeQueryStructure(true);
+     * </pre>
+     *
+     * @param includeQueryStructure Whether to include query structure in ConceptRow header.
+     */
+    public QueryOptions includeQueryStructure(boolean includeQueryStructure) {
+        query_options_set_include_query_structure(nativeObject, includeQueryStructure);
         return this;
     }
 }

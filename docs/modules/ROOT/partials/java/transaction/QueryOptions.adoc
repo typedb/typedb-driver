@@ -82,6 +82,68 @@ a| `includeInstanceTypes` a| Whether to include instance types in ConceptRow ans
 options.includeInstanceTypes(includeInstanceTypes);
 ----
 
+[#_QueryOptions_includeQueryStructure_]
+==== includeQueryStructure
+
+[source,java]
+----
+public java.util.Optional<java.lang.Boolean> includeQueryStructure()
+----
+
+Returns the value set for the "include query structure" flag in this ``QueryOptions`` object. If set, requests the server to return the structure of the query in the ConceptRow header. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `includeQueryStructure` a| Whether to include query structure in ConceptRow header. a| 
+|===
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.includeQueryStructure();
+----
+
+[#_QueryOptions_includeQueryStructure_boolean]
+==== includeQueryStructure
+
+[source,java]
+----
+public QueryOptions includeQueryStructure​(boolean includeQueryStructure)
+----
+
+Explicitly set the "include query structure" flag. If set, requests the server to return the structure of the query in the ConceptRow header. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `includeQueryStructure` a| Whether to include query structure in ConceptRow header. a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public QueryOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.includeQueryStructure(true);
+----
+
 [#_QueryOptions_prefetchSize_]
 ==== prefetchSize
 

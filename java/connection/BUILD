@@ -36,6 +36,8 @@ java_library(
     deps = [
         # Internal dependencies
         "//java/api",
+        "//java/analyze",
+        "//java/answer",
         "//java/common",
         "//java/concept",
         "//java/user",

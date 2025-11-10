@@ -23,6 +23,7 @@ java_library(
     name = "steps",
     srcs = [
         "QuerySteps.java",
+        "AnalyzeSteps.java",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
@@ -31,11 +32,14 @@ java_library(
     ],
     deps = [
         # Package dependencies
+
+        "//java/analyze",
         "//java/api",
         "//java/common",
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util",
+        "//java/test/behaviour/util:functor-encoder",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

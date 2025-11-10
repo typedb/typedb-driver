@@ -1,0 +1,528 @@
+[#_Constraint]
+=== Constraint
+
+*Package*: `typedb.api.analyze.constraint`
+
+A representation of a TypeQL constraint.
+
+// tag::methods[]
+[#_Constraint_as_comparison_]
+==== as_comparison
+
+[source,python]
+----
+as_comparison() -> Comparison
+----
+
+
+
+[caption=""]
+.Returns
+`Comparison`
+
+[#_Constraint_as_expression_]
+==== as_expression
+
+[source,python]
+----
+as_expression() -> Expression
+----
+
+
+
+[caption=""]
+.Returns
+`Expression`
+
+[#_Constraint_as_function_call_]
+==== as_function_call
+
+[source,python]
+----
+as_function_call() -> FunctionCall
+----
+
+
+
+[caption=""]
+.Returns
+`FunctionCall`
+
+[#_Constraint_as_has_]
+==== as_has
+
+[source,python]
+----
+as_has() -> Has
+----
+
+
+
+[caption=""]
+.Returns
+`Has`
+
+[#_Constraint_as_iid_]
+==== as_iid
+
+[source,python]
+----
+as_iid() -> Iid
+----
+
+
+
+[caption=""]
+.Returns
+`Iid`
+
+[#_Constraint_as_is_]
+==== as_is
+
+[source,python]
+----
+as_is() -> Is
+----
+
+
+
+[caption=""]
+.Returns
+`Is`
+
+[#_Constraint_as_isa_]
+==== as_isa
+
+[source,python]
+----
+as_isa() -> Isa
+----
+
+
+
+[caption=""]
+.Returns
+`Isa`
+
+[#_Constraint_as_kind_]
+==== as_kind
+
+[source,python]
+----
+as_kind() -> Kind
+----
+
+
+
+[caption=""]
+.Returns
+`Kind`
+
+[#_Constraint_as_label_]
+==== as_label
+
+[source,python]
+----
+as_label() -> Label
+----
+
+
+
+[caption=""]
+.Returns
+`Label`
+
+[#_Constraint_as_links_]
+==== as_links
+
+[source,python]
+----
+as_links() -> Links
+----
+
+
+
+[caption=""]
+.Returns
+`Links`
+
+[#_Constraint_as_not_]
+==== as_not
+
+[source,python]
+----
+as_not() -> Not
+----
+
+
+
+[caption=""]
+.Returns
+`Not`
+
+[#_Constraint_as_or_]
+==== as_or
+
+[source,python]
+----
+as_or() -> Or
+----
+
+
+
+[caption=""]
+.Returns
+`Or`
+
+[#_Constraint_as_owns_]
+==== as_owns
+
+[source,python]
+----
+as_owns() -> Owns
+----
+
+
+
+[caption=""]
+.Returns
+`Owns`
+
+[#_Constraint_as_plays_]
+==== as_plays
+
+[source,python]
+----
+as_plays() -> Plays
+----
+
+
+
+[caption=""]
+.Returns
+`Plays`
+
+[#_Constraint_as_relates_]
+==== as_relates
+
+[source,python]
+----
+as_relates() -> Relates
+----
+
+
+
+[caption=""]
+.Returns
+`Relates`
+
+[#_Constraint_as_sub_]
+==== as_sub
+
+[source,python]
+----
+as_sub() -> Sub
+----
+
+
+
+[caption=""]
+.Returns
+`Sub`
+
+[#_Constraint_as_try_]
+==== as_try
+
+[source,python]
+----
+as_try() -> Try
+----
+
+
+
+[caption=""]
+.Returns
+`Try`
+
+[#_Constraint_as_value_]
+==== as_value
+
+[source,python]
+----
+as_value() -> Value
+----
+
+
+
+[caption=""]
+.Returns
+`Value`
+
+[#_Constraint_is_comparison_]
+==== is_comparison
+
+[source,python]
+----
+is_comparison() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_expression_]
+==== is_expression
+
+[source,python]
+----
+is_expression() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_function_call_]
+==== is_function_call
+
+[source,python]
+----
+is_function_call() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_has_]
+==== is_has
+
+[source,python]
+----
+is_has() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_iid_]
+==== is_iid
+
+[source,python]
+----
+is_iid() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_is_]
+==== is_is
+
+[source,python]
+----
+is_is() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_isa_]
+==== is_isa
+
+[source,python]
+----
+is_isa() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_kind_of_]
+==== is_kind_of
+
+[source,python]
+----
+is_kind_of() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_label_]
+==== is_label
+
+[source,python]
+----
+is_label() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_links_]
+==== is_links
+
+[source,python]
+----
+is_links() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_not_]
+==== is_not
+
+[source,python]
+----
+is_not() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_or_]
+==== is_or
+
+[source,python]
+----
+is_or() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_owns_]
+==== is_owns
+
+[source,python]
+----
+is_owns() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_plays_]
+==== is_plays
+
+[source,python]
+----
+is_plays() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_relates_]
+==== is_relates
+
+[source,python]
+----
+is_relates() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_sub_]
+==== is_sub
+
+[source,python]
+----
+is_sub() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_try_]
+==== is_try
+
+[source,python]
+----
+is_try() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_value_]
+==== is_value
+
+[source,python]
+----
+is_value() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_span_]
+==== span
+
+[source,python]
+----
+span() -> Span
+----
+
+Gets the span of this constraint in the source query.
+
+[caption=""]
+.Returns
+`Span`
+
+// end::methods[]
+

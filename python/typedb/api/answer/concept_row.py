@@ -64,6 +64,23 @@ class ConceptRow(ABC):
         pass
 
     @abstractmethod
+    def query_structure(self) -> Optional["Pipeline"]:
+        """
+        Retrieve the executed query's structure from the ``ConceptRow``'s header, if set.
+        It must be requested via "include query structure" in ``QueryOptions``
+        Shared between all the rows in a QueryAnswer.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_row.query_structure()
+        """
+        pass
+
+    @abstractmethod
     def get(self, column_name: str) -> Optional[Concept]:
         """
         Retrieves a concept for a given column name (variable). Returns ``None`` if the variable has an empty answer.
@@ -109,5 +126,20 @@ class ConceptRow(ABC):
         ::
 
           concept_row.concepts()
+        """
+        pass
+
+    @abstractmethod
+    def involved_conjunctions(self) -> Optional[Iterator["ConjunctionID"]]:
+        """
+        Retrieve the ConjunctionIDs of Conjunctions that answered this row.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_row.involved_conjunctions()
         """
         pass

@@ -410,6 +410,7 @@ impl Debug for Concept {
 
 /// Kind represents the base of a defined type to describe its capabilities.
 /// For example, "define entity person;" defines a type "person" of a kind "entity".
+#[repr(C)]
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 pub enum Kind {
     Entity,

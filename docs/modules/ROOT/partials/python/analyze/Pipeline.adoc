@@ -1,0 +1,70 @@
+[#_Pipeline]
+=== Pipeline
+
+*Package*: `typedb.api.analyze.pipeline`
+
+A representation of a query pipeline.
+
+// tag::methods[]
+[#_Pipeline_conjunction_conjunction_id_ConjunctionID]
+==== conjunction
+
+[source,python]
+----
+conjunction(conjunction_id: ConjunctionID) -> 'Conjunction' | None
+----
+
+Gets the Conjunction corresponding to the ConjunctionID.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `conjunction_id` a| the ConjunctionID of the conjunction to retrieve a| `ConjunctionID` a| 
+|===
+
+[caption=""]
+.Returns
+`'Conjunction' | None`
+
+[#_Pipeline_get_variable_name_variable_Variable]
+==== get_variable_name
+
+[source,python]
+----
+get_variable_name(variable: Variable) -> str | None
+----
+
+Gets the name of the specified variable, if it has one.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `variable` a| the variable from this pipeline a| `Variable` a| 
+|===
+
+[caption=""]
+.Returns
+`str | None`
+
+[#_Pipeline_stages_]
+==== stages
+
+[source,python]
+----
+stages() -> Iterator['PipelineStage']
+----
+
+A stream/iterator of the stages making up the pipeline.
+
+[caption=""]
+.Returns
+`Iterator['PipelineStage']`
+
+// end::methods[]
+

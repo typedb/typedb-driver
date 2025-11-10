@@ -99,6 +99,9 @@
 %nojavaexception query_options_get_prefetch_size;
 %nojavaexception query_options_set_prefetch_size;
 %nojavaexception query_options_has_prefetch_size;
+%nojavaexception query_options_set_include_query_structure;
+%nojavaexception query_options_get_include_query_structure;
+%nojavaexception query_options_has_include_query_structure;
 
 %nojavaexception error_code;
 %nojavaexception error_message;
@@ -176,7 +179,9 @@
 %nojavaexception concept_row_equals;
 %nojavaexception concept_row_get_column_names;
 %nojavaexception concept_row_get_concepts;
+%nojavaexception concept_row_get_query_structure;
 %nojavaexception concept_row_get_query_type;
+%nojavaexception concept_row_involved_conjunctions;
 %nojavaexception concept_row_to_string;
 
 %nojavaexception query_answer_get_query_type;
@@ -210,6 +215,116 @@
 /* director constructors do not throw */
 %nojavaexception TransactionCallbackDirector;
 
+/* field accessors for analyze do not throw */
+%nojavaexception analyzed_query_pipeline;
+%nojavaexception analyzed_preamble;
+%nojavaexception analyzed_fetch;
+%nojavaexception comparator_get_name;
+
+%nojavaexception conjunction_get_constraints;
+%nojavaexception conjunction_get_annotated_variables;
+%nojavaexception conjunction_get_variable_annotations;
+
+%nojavaexception constraint_span_begin;
+%nojavaexception constraint_span_end;
+%nojavaexception constraint_variant;
+%nojavaexception constraint_isa_get_instance;
+%nojavaexception constraint_isa_get_type;
+%nojavaexception constraint_has_get_attribute;
+%nojavaexception constraint_has_get_owner;
+%nojavaexception constraint_links_get_relation;
+%nojavaexception constraint_links_get_player;
+%nojavaexception constraint_links_get_role;
+%nojavaexception constraint_sub_get_subtype;
+%nojavaexception constraint_sub_get_supertype;
+%nojavaexception constraint_owns_get_owner;
+%nojavaexception constraint_owns_get_attribute;
+%nojavaexception constraint_relates_get_relation;
+%nojavaexception constraint_relates_get_role;
+%nojavaexception constraint_plays_get_player;
+%nojavaexception constraint_plays_get_role;
+%nojavaexception constraint_isa_get_exactness;
+%nojavaexception constraint_has_get_exactness;
+%nojavaexception constraint_links_get_exactness;
+%nojavaexception constraint_sub_get_exactness;
+%nojavaexception constraint_owns_get_exactness;
+%nojavaexception constraint_relates_get_exactness;
+%nojavaexception constraint_plays_get_exactness;
+%nojavaexception constraint_function_call_get_name;
+%nojavaexception constraint_function_call_get_arguments;
+%nojavaexception constraint_function_call_get_assigned;
+%nojavaexception constraint_expression_get_text;
+%nojavaexception constraint_expression_get_arguments;
+%nojavaexception constraint_expression_get_assigned;
+%nojavaexception constraint_is_get_lhs;
+%nojavaexception constraint_is_get_rhs;
+%nojavaexception constraint_iid_get_variable;
+%nojavaexception constraint_iid_get_iid;
+%nojavaexception constraint_comparison_get_lhs;
+%nojavaexception constraint_comparison_get_rhs;
+%nojavaexception constraint_comparison_get_comparator;
+%nojavaexception constraint_kind_get_kind;
+%nojavaexception constraint_kind_get_type;
+%nojavaexception constraint_label_get_variable;
+%nojavaexception constraint_label_get_label;
+%nojavaexception constraint_value_get_attribute_type;
+%nojavaexception constraint_value_get_value_type;
+%nojavaexception constraint_or_get_branches;
+%nojavaexception constraint_not_get_conjunction;
+%nojavaexception constraint_try_get_conjunction;
+
+%nojavaexception constraint_vertex_variant;
+%nojavaexception constraint_vertex_as_variable;
+%nojavaexception constraint_vertex_as_label;
+%nojavaexception constraint_vertex_as_value;
+%nojavaexception constraint_vertex_as_named_role_get_name;
+%nojavaexception constraint_vertex_as_named_role_get_variable;
+
+%nojavaexception fetch_variant;
+%nojavaexception fetch_leaf_annotations;
+%nojavaexception fetch_list_element;
+%nojavaexception fetch_object_fields;
+%nojavaexception fetch_object_get_field;
+
+%nojavaexception function_body;
+%nojavaexception function_argument_variables;
+%nojavaexception function_return_operation;
+%nojavaexception function_argument_annotations;
+%nojavaexception function_return_annotations;
+
+%nojavaexception pipeline_get_conjunction;
+%nojavaexception pipeline_stages;
+%nojavaexception pipeline_stage_variant;
+%nojavaexception pipeline_stage_get_block;
+%nojavaexception pipeline_stage_delete_get_deleted_variables;
+%nojavaexception pipeline_stage_select_get_variables;
+%nojavaexception pipeline_stage_require_get_variables;
+%nojavaexception pipeline_stage_offset_get_offset;
+%nojavaexception pipeline_stage_limit_get_limit;
+%nojavaexception pipeline_stage_sort_get_sort_variables;
+%nojavaexception pipeline_stage_reduce_get_groupby;
+%nojavaexception pipeline_stage_reduce_get_reducer_assignments;
+%nojavaexception reduce_assignment_get_assigned;
+%nojavaexception reduce_assignment_get_reducer;
+%nojavaexception reducer_get_name;
+%nojavaexception reducer_get_arguments;
+%nojavaexception sort_variable_get_variable;
+%nojavaexception sort_variable_get_order;
+
+%nojavaexception return_operation_variant;
+%nojavaexception return_operation_stream_variables;
+%nojavaexception return_operation_single_selector;
+%nojavaexception return_operation_single_variables;
+%nojavaexception return_operation_reducers;
+
+%nojavaexception variable_annotations_variant;
+%nojavaexception variable_annotations_instance;
+%nojavaexception variable_annotations_type;
+%nojavaexception variable_annotations_value;
+
+%nojavaexception variable_get_name;
+
+
 /* destructors do not throw */
 %nojavaexception ~Concept;
 %nojavaexception ~ConceptIterator;
@@ -238,6 +353,33 @@
 %nojavaexception ~User;
 %nojavaexception ~UserIterator;
 %nojavaexception ~Value;
+
+%nojavaexception ~AnalyzedQuery;
+%nojavaexception ~Conjunction;
+%nojavaexception ~ConjunctionID;
+%nojavaexception ~ConstraintWithSpan;
+%nojavaexception ~ConstraintVertex;
+%nojavaexception ~Fetch;
+%nojavaexception ~Function;
+%nojavaexception ~PipelineStage;
+%nojavaexception ~Pipeline;
+%nojavaexception ~Reducer;
+%nojavaexception ~ReduceAssignment;
+%nojavaexception ~ReturnOperation;
+%nojavaexception ~ConstraintWithSpanIterator;
+%nojavaexception ~ConjunctionIDIterator;
+%nojavaexception ~ConstraintVertexIterator;
+%nojavaexception ~FunctionIterator;
+%nojavaexception ~PipelineStageIterator;
+%nojavaexception ~ReducerIterator;
+%nojavaexception ~ReduceAssignmentIterator;
+%nojavaexception ~SortVariable;
+%nojavaexception ~SortVariableIterator;
+%nojavaexception ~VariableAnnotations;
+%nojavaexception ~VariableAnnotationsIterator;
+%nojavaexception ~Variable;
+%nojavaexception ~VariableIterator;
+
 
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
@@ -286,6 +428,7 @@
 }%}
 %enddef
 
+%promise(AnalyzedQuery, analyzed_query)
 %promise(QueryAnswer, query_answer)
 %promise(Concept, concept)
 %promise(Rule, rule)
@@ -385,6 +528,18 @@
 %iterator(User, user)
 %iterator(Database, database)
 //%iterator(ReplicaInfo, replica_info)
+
+%iterator(ConjunctionID, conjunction_id)
+%iterator(ConstraintWithSpan, constraint_with_span)
+%iterator(ConstraintVertex, constraint_vertex)
+%iterator(Function, function)
+%iterator(PipelineStage, pipeline_stage)
+%iterator(ReduceAssignment, reduce_assignment)
+%iterator(Reducer, reducer)
+%iterator(SortVariable, sort_variable)
+%iterator(VariableAnnotations, variable_annotations)
+%iterator(Variable, variable)
+
 
 %typemap(javabody) QueryAnswer %{
     private transient long swigCPtr;

@@ -32,13 +32,15 @@ use typedb_protocol::{
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptDocument as ConceptDocumentProto, ConceptRow as ConceptRowProto, Entity as EntityProto,
     EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto, Value as ValueProto, ValueType as ValueTypeStructProto,
+    RoleType as RoleTypeProto, Type as TypeProto, Value as ValueProto, ValueType as ValueTypeStructProto,
 };
 
 use super::{FromProto, TryFromProto};
 use crate::{
     answer::concept_document::{Leaf, Node},
     concept::{
+        type_,
+        type_::Type,
         value::{Decimal, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,
@@ -53,7 +55,7 @@ use crate::{
     Error, Result,
 };
 
-impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
+impl TryFromProto<ConceptRowProto> for (Vec<Option<Concept>>, Option<Vec<u8>>) {
     fn try_from_proto(proto: ConceptRowProto) -> Result<Self> {
         let mut row = Vec::new();
         for entry in proto.row {
@@ -66,7 +68,8 @@ impl TryFromProto<ConceptRowProto> for Vec<Option<Concept>> {
                 }
             }
         }
-        Ok(row)
+        let involved_blocks = proto.involved_blocks;
+        Ok((row, involved_blocks))
     }
 }
 
@@ -97,6 +100,28 @@ impl TryFromProto<ConceptProto> for Concept {
             }
 
             None => Err(MissingResponseField { field: "concept" }.into()),
+        }
+    }
+}
+
+impl TryFromProto<TypeProto> for Type {
+    fn try_from_proto(proto: TypeProto) -> Result<Self> {
+        let TypeProto { r#type: type_proto } = proto;
+        match type_proto {
+            Some(typedb_protocol::r#type::Type::EntityType(entity_type_proto)) => {
+                Ok(Self::EntityType(EntityType::from_proto(entity_type_proto)))
+            }
+            Some(typedb_protocol::r#type::Type::RelationType(relation_type_proto)) => {
+                Ok(Self::RelationType(RelationType::from_proto(relation_type_proto)))
+            }
+            Some(typedb_protocol::r#type::Type::AttributeType(attribute_type_proto)) => {
+                Ok(Self::AttributeType(AttributeType::from_proto(attribute_type_proto)))
+            }
+            Some(typedb_protocol::r#type::Type::RoleType(role_type_proto)) => {
+                Ok(Self::RoleType(RoleType::from_proto(role_type_proto)))
+            }
+
+            None => Err(MissingResponseField { field: "type" }.into()),
         }
     }
 }

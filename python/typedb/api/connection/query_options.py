@@ -22,10 +22,14 @@ from typing import Optional
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_negative
-from typedb.native_driver_wrapper import query_options_new, \
-    query_options_has_include_instance_types, query_options_get_include_instance_types, \
-    query_options_set_include_instance_types, query_options_has_prefetch_size, \
-    query_options_get_prefetch_size, query_options_set_prefetch_size, QueryOptions as NativeOptions
+from typedb.native_driver_wrapper import (
+    query_options_new,
+    query_options_has_include_instance_types, query_options_get_include_instance_types,
+    query_options_set_include_instance_types, query_options_has_include_query_structure,
+    query_options_get_include_query_structure, query_options_set_include_query_structure,
+    query_options_has_prefetch_size, query_options_get_prefetch_size, query_options_set_prefetch_size,
+    QueryOptions as NativeOptions
+)
 
 
 class QueryOptions(NativeWrapper[NativeOptions]):
@@ -87,3 +91,15 @@ class QueryOptions(NativeWrapper[NativeOptions]):
     def prefetch_size(self, prefetch_size: int):
         require_non_negative(prefetch_size, "prefetch_size")
         query_options_set_prefetch_size(self.native_object, prefetch_size)
+
+    @property
+    def include_query_structure(self) -> Optional[bool]:
+        """
+        If set, specifies if types should be included in instance structs returned in ConceptRow answers.
+        """
+        return query_options_get_include_query_structure(self.native_object) \
+            if query_options_has_include_query_structure(self.native_object) else None
+
+    @include_query_structure.setter
+    def include_query_structure(self, include_query_structure: bool):
+        query_options_set_include_query_structure(self.native_object, include_query_structure)

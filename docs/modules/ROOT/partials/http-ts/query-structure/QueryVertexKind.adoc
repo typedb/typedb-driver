@@ -1,9 +1,0 @@
-[#_QueryVertexKind]
-==== QueryVertexKind
-
-[source,typescript]
-----
-QueryVertexKind: "variable" | "label" | "value"
-----
-
-

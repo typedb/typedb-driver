@@ -1,0 +1,38 @@
+[#_PipelineStage_SortStage_SortVariable]
+=== PipelineStage.SortStage.SortVariable
+
+*Package*: `com.typedb.driver.api.analyze`
+
+A variable and its sort order
+
+// tag::methods[]
+[#_PipelineStage_SortStage_SortVariable_order_]
+==== order
+
+[source,java]
+----
+com.typedb.driver.jni.SortOrder order()
+----
+
+The sort order (ascending or descending)
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.SortOrder`
+
+[#_PipelineStage_SortStage_SortVariable_variable_]
+==== variable
+
+[source,java]
+----
+com.typedb.driver.jni.Variable variable()
+----
+
+The variable to sort by
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.Variable`
+
+// end::methods[]
+

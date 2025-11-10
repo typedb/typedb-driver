@@ -46,6 +46,7 @@ class Database(ABC):
         """
         pass
 
+    @abstractmethod
     def type_schema(self) -> str:
         """
         Returns the types in the schema as a valid TypeQL define query string.

@@ -20,6 +20,7 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
+    analyze::pipeline::Pipeline,
     answer::{ConceptRow, QueryAnswer, QueryType},
     box_stream,
     concept::Concept,
@@ -32,10 +33,11 @@ use super::{
     memory::{borrow, free, release, release_string, string_view},
 };
 use crate::{
+    analyze::ConjunctionIDIterator,
     common::StringIterator,
     concept::ConceptRowIterator,
     error::{try_release, try_release_optional},
-    memory::take_ownership,
+    memory::{release_optional, take_ownership},
 };
 
 /// Promise object representing the result of an asynchronous operation.
@@ -120,6 +122,13 @@ pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -
     release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
 }
 
+/// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+/// It must be requested via "include query structure" in <code>QueryOptions</code>
+#[no_mangle]
+pub extern "C" fn concept_row_get_query_structure(concept_row: *const ConceptRow) -> *mut Pipeline {
+    release_optional(borrow(concept_row).get_query_structure().cloned())
+}
+
 /// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.
 #[no_mangle]
 pub extern "C" fn concept_row_get_query_type(concept_row: *const ConceptRow) -> QueryType {
@@ -144,6 +153,14 @@ pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *
 #[no_mangle]
 pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
     try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())
+}
+
+/// Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
+/// May be null.
+#[no_mangle]
+pub extern "C" fn concept_row_involved_conjunctions(concept_row: *const ConceptRow) -> *mut ConjunctionIDIterator {
+    let iter_opt = borrow(concept_row).clone().get_involved_conjunctions_cloned();
+    release_optional(iter_opt.map(|iter| ConjunctionIDIterator(CIterator(box_stream(iter)))))
 }
 
 /// Checks whether the provided <code>ConceptRow</code> objects are equal

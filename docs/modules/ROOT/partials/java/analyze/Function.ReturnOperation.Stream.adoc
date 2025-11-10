@@ -1,0 +1,154 @@
+[#_Function_ReturnOperation_Stream]
+=== Function.ReturnOperation.Stream
+
+*Package*: `com.typedb.driver.api.analyze`
+
+*Superinterfaces:*
+
+* `Function.ReturnOperation`
+
+Indicates the function returns a stream of concepts. e.g. ``return { $x, $y };``
+
+// tag::methods[]
+[#_Function_ReturnOperation_Stream_asCheck_]
+==== asCheck
+
+[source,java]
+----
+Function.ReturnOperation.Check asCheck()
+----
+
+Down-casts this ReturnOperation to a ``Check`` return operation.
+
+[caption=""]
+.Returns
+`Function.ReturnOperation.Check`
+
+[#_Function_ReturnOperation_Stream_asReduce_]
+==== asReduce
+
+[source,java]
+----
+Function.ReturnOperation.Reduce asReduce()
+----
+
+Down-casts this ReturnOperation to a Reduce return operation.
+
+[caption=""]
+.Returns
+`Function.ReturnOperation.Reduce`
+
+[#_Function_ReturnOperation_Stream_asSingle_]
+==== asSingle
+
+[source,java]
+----
+Function.ReturnOperation.Single asSingle()
+----
+
+Down-casts this ReturnOperation to a ``Single`` return operation.
+
+[caption=""]
+.Returns
+`Function.ReturnOperation.Single`
+
+[#_Function_ReturnOperation_Stream_asStream_]
+==== asStream
+
+[source,java]
+----
+Function.ReturnOperation.Stream asStream()
+----
+
+Down-casts this ReturnOperation to a ``Stream`` return operation.
+
+[caption=""]
+.Returns
+`Function.ReturnOperation.Stream`
+
+[#_Function_ReturnOperation_Stream_isCheck_]
+==== isCheck
+
+[source,java]
+----
+boolean isCheck()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Stream_isReduce_]
+==== isReduce
+
+[source,java]
+----
+boolean isReduce()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Stream_isSingle_]
+==== isSingle
+
+[source,java]
+----
+boolean isSingle()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Stream_isStream_]
+==== isStream
+
+[source,java]
+----
+boolean isStream()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Function_ReturnOperation_Stream_variables_]
+==== variables
+
+[source,java]
+----
+java.util.stream.Stream<com.typedb.driver.jni.Variable> variables()
+----
+
+Gets the variables in the returned row.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+
+[#_Function_ReturnOperation_Stream_variant_]
+==== variant
+
+[source,java]
+----
+com.typedb.driver.jni.ReturnOperationVariant variant()
+----
+
+Gets the variant of this return operation. One of: ``StreamReturn, SingleReturn, CheckReturn, ReduceReturn``
+
+[caption=""]
+.Returns
+`com.typedb.driver.jni.ReturnOperationVariant`
+
+// end::methods[]
+

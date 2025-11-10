@@ -1,6 +1,8 @@
 [#_DatabaseManager]
 === DatabaseManager
 
+*Package*: `typedb.api.connection.database`
+
 Provides access to all database management methods.
 
 // tag::methods[]

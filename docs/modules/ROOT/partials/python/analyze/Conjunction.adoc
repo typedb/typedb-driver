@@ -1,0 +1,61 @@
+[#_Conjunction]
+=== Conjunction
+
+*Package*: `typedb.api.analyze.conjunction`
+
+A representation of the constraints involved in the query, and types inferred for each variable.
+
+// tag::methods[]
+[#_Conjunction_annotated_variables_]
+==== annotated_variables
+
+[source,python]
+----
+annotated_variables() -> Iterator['Variable']
+----
+
+The variables that have annotations in this conjunction.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+[#_Conjunction_constraints_]
+==== constraints
+
+[source,python]
+----
+constraints() -> Iterator['Constraint']
+----
+
+The Constraint(s) in the conjunction.
+
+[caption=""]
+.Returns
+`Iterator['Constraint']`
+
+[#_Conjunction_variable_annotations_variable_Variable]
+==== variable_annotations
+
+[source,python]
+----
+variable_annotations(variable: Variable) -> 'VariableAnnotations' | None
+----
+
+Gets the annotations for a specific variable in this conjunction.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `variable` a| the variable to get annotations for a| `Variable` a| 
+|===
+
+[caption=""]
+.Returns
+`'VariableAnnotations' | None`
+
+// end::methods[]
+

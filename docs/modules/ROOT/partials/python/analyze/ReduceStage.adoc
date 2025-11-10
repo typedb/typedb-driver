@@ -1,0 +1,42 @@
+[#_ReduceStage]
+=== ReduceStage
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘reduce’ stage: reduce &lt;reducers&gt; groupby &lt;groupby&gt;
+
+// tag::methods[]
+[#_ReduceStage_group_by_]
+==== group_by
+
+[source,python]
+----
+group_by() -> Iterator['Variable']
+----
+
+The variables to group by.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+[#_ReduceStage_reduce_assignments_]
+==== reduce_assignments
+
+[source,python]
+----
+reduce_assignments() -> Iterator[ReduceAssignment]
+----
+
+The reducer assignments.
+
+[caption=""]
+.Returns
+`Iterator[ReduceAssignment]`
+
+// end::methods[]
+

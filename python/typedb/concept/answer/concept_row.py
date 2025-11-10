@@ -25,14 +25,19 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_N
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null, require_non_negative
+from typedb.analyze.pipeline import _Pipeline
 from typedb.concept import concept_factory
-from typedb.native_driver_wrapper import (string_iterator_next, concept_iterator_next, concept_row_get,
-                                          concept_row_get_index, concept_row_to_string, concept_row_equals,
-                                          concept_row_get_column_names, concept_row_get_query_type,
-                                          concept_row_get_concepts, ConceptRow as NativeConceptRow,
-                                          TypeDBDriverExceptionNative)
+from typedb.native_driver_wrapper import (
+    string_iterator_next, concept_iterator_next, conjunction_id_iterator_next,
+    concept_row_get, concept_row_get_index, concept_row_to_string,
+    concept_row_equals, concept_row_get_column_names, concept_row_get_query_type, concept_row_get_query_structure,
+    concept_row_get_concepts, concept_row_involved_conjunctions,
+    ConceptRow as NativeConceptRow,
+    TypeDBDriverExceptionNative
+)
 
 if TYPE_CHECKING:
+    from typedb.api.analyze.pipeline import Pipeline
     from typedb.api.concept.concept import Concept
 
 
@@ -54,9 +59,17 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
     def query_type(self) -> QueryType:
         return QueryType(concept_row_get_query_type(self.native_object))
 
+    def query_structure(self) -> Optional["Pipeline"]:
+        native_pipeline = concept_row_get_query_structure(self.native_object)
+        return _Pipeline(native_pipeline) if native_pipeline else None
+
     def concepts(self) -> Iterator[Concept]:
         return map(concept_factory.wrap_concept, IteratorWrapper(concept_row_get_concepts(self.native_object),
                                                                  concept_iterator_next))
+
+    def involved_conjunctions(self) -> Optional[Iterator["ConjunctionID"]]:
+        iter = concept_row_involved_conjunctions(self.native_object)
+        return IteratorWrapper(iter, conjunction_id_iterator_next) if iter else None
 
     def get(self, column_name: str) -> Optional[Concept]:
         require_non_null(column_name, "column_name")

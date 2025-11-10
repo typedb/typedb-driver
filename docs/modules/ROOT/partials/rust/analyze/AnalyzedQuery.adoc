@@ -1,0 +1,24 @@
+[#_struct_AnalyzedQuery]
+=== AnalyzedQuery
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+An ``AnalyzedQuery`` contains the server’s representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `fetch` a| `Option<Fetch>` a| A representation of the ``Fetch`` stage of the query, if it has one
+a| `preamble` a| `Vec<Function>` a| A representation of the ``Function``s in the preamble of the query
+a| `query` a| `Pipeline` a| A representation of the query as a ``Pipeline``
+a| `source` a| `String` a| The original TypeQL query string
+|===
+// end::properties[]
+

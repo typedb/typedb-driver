@@ -33,7 +33,7 @@ from typedb.user.user_manager import _UserManager
 if TYPE_CHECKING:
     from typedb.connection.driver_options import DriverOptions
     from typedb.api.connection.credentials import Credentials
-    from typedb.api.connection.transaction import TransactionType
+    from typedb.api.connection.transaction import Transaction, TransactionType
     from typedb.api.user.user import UserManager
 
 

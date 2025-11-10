@@ -1,0 +1,28 @@
+[#_InsertStage]
+=== InsertStage
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents an ‘insert’ stage: insert &lt;block&gt;
+
+// tag::methods[]
+[#_InsertStage_block_]
+==== block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

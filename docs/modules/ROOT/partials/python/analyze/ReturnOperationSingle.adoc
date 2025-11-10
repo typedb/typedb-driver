@@ -1,0 +1,40 @@
+[#_ReturnOperationSingle]
+=== ReturnOperationSingle
+
+*Package*: `typedb.api.analyze.function`
+
+*Supertypes:*
+
+* `ReturnOperation`
+
+// tag::methods[]
+[#_ReturnOperationSingle_selector_]
+==== selector
+
+[source,python]
+----
+selector() -> str
+----
+
+Gets the selector that determines how the operation selects the row.
+
+[caption=""]
+.Returns
+`str`
+
+[#_ReturnOperationSingle_variables_]
+==== variables
+
+[source,python]
+----
+variables() -> Iterator['Variable']
+----
+
+Gets the variables in the returned row.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

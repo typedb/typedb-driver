@@ -1,0 +1,24 @@
+[#_Fetch_FetchLeaf]
+=== Fetch.FetchLeaf
+
+*Package*: `com.typedb.driver.api.analyze`
+
+The leaf of a Fetch object. Holds information on the value it can hold.
+
+// tag::methods[]
+[#_Fetch_FetchLeaf_annotations_]
+==== annotations
+
+[source,java]
+----
+java.util.stream.Stream<java.lang.String> annotations()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<java.lang.String>`
+
+// end::methods[]
+

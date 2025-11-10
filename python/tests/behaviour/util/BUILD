@@ -27,6 +27,12 @@ py_library(
 )
 
 py_library(
+    name = "functor-encoder",
+    srcs = ["functor_encoder.py"],
+    deps = ["//python:driver_python",],
+)
+
+py_library(
     name = "steps",
     srcs = ["util_steps.py"],
     deps = [],

@@ -1,0 +1,13 @@
+[#_QueryVertex]
+==== QueryVertex
+
+[source,typescript]
+----
+QueryVertex:
+ | QueryVertexVariable
+ | QueryVertexLabel
+ | QueryVertexValue
+ | QueryVertexNamedRole
+----
+
+

@@ -32,6 +32,7 @@ pub use self::{
     user::{User, UserManager},
 };
 
+pub mod analyze;
 pub mod answer;
 mod common;
 pub mod concept;

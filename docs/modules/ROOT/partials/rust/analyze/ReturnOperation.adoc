@@ -1,0 +1,19 @@
+[#_enum_ReturnOperation]
+=== ReturnOperation
+
+A representation of the return operation of the function
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Check`
+a| `Reduce`
+a| `Single`
+a| `Stream`
+|===
+// end::enum_constants[]
+

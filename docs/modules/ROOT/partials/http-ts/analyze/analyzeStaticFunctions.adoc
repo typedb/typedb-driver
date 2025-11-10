@@ -1,0 +1,30 @@
+[#_analyzeStaticFunctions]
+=== Static Functions
+
+// tag::methods[]
+[#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_QueryVertexVariable]
+==== getVariableName
+
+[source,typescript]
+----
+getVariableName( structure: AnalyzedPipeline | QueryStructureForStudio, variable: QueryVertexVariable, ): string
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `structure` a|  a| `AnalyzedPipeline`
+a| `variable` a|  a| `QueryVertexVariable`
+|===
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

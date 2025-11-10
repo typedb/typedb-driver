@@ -1,0 +1,21 @@
+[#_struct_FetchLeaf]
+=== FetchLeaf
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+Holds typing information about a leaf value in a ``Fetch`` document.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `annotations` a| `Vec<ValueType>` a| The ``ValueType`` this value can be.
+|===
+// end::properties[]
+

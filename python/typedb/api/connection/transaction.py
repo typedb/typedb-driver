@@ -19,11 +19,13 @@ from __future__ import annotations
 
 import enum
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Callable
 
 if TYPE_CHECKING:
+    from typedb.api.answer.query_answer import QueryAnswer
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.query_options import QueryOptions
+    from typedb.common import Promise
 
 
 class TransactionType(enum.Enum):
@@ -133,7 +135,7 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
-    def on_close(self, function: callable) -> None:
+    def on_close(self, function: Callable) -> None:
         """
         Registers a callback function which will be executed when this transaction is closed.
 

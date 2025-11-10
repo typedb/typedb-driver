@@ -19,6 +19,7 @@
 
 use crate::Result;
 
+mod analyze;
 mod common;
 mod concept;
 mod database;

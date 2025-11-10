@@ -7,7 +7,6 @@
 * `Debug`
 * `Display`
 * `PartialEq`
-* `StructuralPartialEq`
 
 A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
 
@@ -135,6 +134,75 @@ Result<Option<&Concept>>
 [source,rust]
 ----
 concept_row.get_position(column_index)
+----
+
+[#_struct_ConceptRow_get_involved_conjunctions_]
+==== get_involved_conjunctions
+
+[source,rust]
+----
+pub fn get_involved_conjunctions(
+    &self,
+) -> Option<impl Iterator<Item = ConjunctionID> + '_>
+----
+
+Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<impl Iterator<Item = ConjunctionID> + '_>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_involved_conjunctions()
+----
+
+[#_struct_ConceptRow_get_involved_conjunctions_cloned_]
+==== get_involved_conjunctions_cloned
+
+[source,rust]
+----
+pub fn get_involved_conjunctions_cloned(
+    &self,
+) -> Option<impl Iterator<Item = ConjunctionID> + 'static>
+----
+
+Like ``ConceptRow::get_involved_conjunctions`` but clones the underlying data. Meant for simpler lifetimes over FFI.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<impl Iterator<Item = ConjunctionID> + 'static>
+----
+
+[#_struct_ConceptRow_get_query_structure_]
+==== get_query_structure
+
+[source,rust]
+----
+pub fn get_query_structure(&self) -> Option<&Pipeline>
+----
+
+Retrieve the executed query’s structure from the ``ConceptRow``’s header, if set. It must be requested via “include query structure” in ``QueryOptions``
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Pipeline>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_query_structure()
 ----
 
 [#_struct_ConceptRow_get_query_type_]

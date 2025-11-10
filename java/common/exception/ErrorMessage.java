@@ -112,6 +112,33 @@ public abstract class ErrorMessage {
         }
     }
 
+    public static class Analyze extends ErrorMessage {
+        public static final Analyze INVALID_CONSTRAINT_CASTING =
+                new Analyze(1, "Invalid constraint conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_CONSTRAINT_VERTEX_CASTING =
+                new Analyze(2, "Invalid constraint vertex conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_STAGE_CASTING =
+                new Analyze(3, "Invalid stage conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_RETURN_OPERATION_CASTING =
+                new Analyze(4, "Invalid return operation conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_FETCH_CASTING =
+                new Analyze(5, "Invalid fetch conversion from '%s' to '%s'.");
+
+        public static final Analyze INVALID_VARIABLE_ANNOTATIONS_CASTING =
+                new Analyze(6, "Invalid VariableAnnotations conversion from '%s' to '%s'.");
+
+        private static final String codePrefix = "JAN";
+        private static final String messagePrefix = "Analyze Error";
+
+        Analyze(int number, String message) {
+            super(codePrefix, number, messagePrefix, message);
+        }
+    }
+
     public static class Internal extends ErrorMessage {
         public static final Internal UNEXPECTED_NATIVE_VALUE =
                 new Internal(1, "Unexpected native value encountered!");

@@ -1,0 +1,61 @@
+[#_Conjunction]
+=== Conjunction
+
+*Package*: `com.typedb.driver.api.analyze`
+
+A representation of the constraints involved in the query, and types inferred for each variable.
+
+// tag::methods[]
+[#_Conjunction_annotated_variables_]
+==== annotated_variables
+
+[source,java]
+----
+java.util.stream.Stream<com.typedb.driver.jni.Variable> annotated_variables()
+----
+
+The variables that have annotations in this conjunction.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+
+[#_Conjunction_constraints_]
+==== constraints
+
+[source,java]
+----
+java.util.stream.Stream<? extends Constraint> constraints()
+----
+
+The ``Constraint``s in the conjunction.
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Constraint>`
+
+[#_Conjunction_variable_annotations_com_typedb_driver_jni_Variable]
+==== variable_annotations
+
+[source,java]
+----
+VariableAnnotations variable_annotations​(com.typedb.driver.jni.Variable variable)
+----
+
+Gets the annotations for a specific variable in this conjunction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| the variable to get annotations for a| `com.typedb.driver.jni.Variable`
+|===
+
+[caption=""]
+.Returns
+`VariableAnnotations`
+
+// end::methods[]
+

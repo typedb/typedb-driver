@@ -4,8 +4,6 @@
 *Implements traits:*
 
 * `Debug`
-* `PartialEq`
-* `StructuralPartialEq`
 
 [caption=""]
 .Fields
@@ -15,6 +13,7 @@
 |===
 |Name |Type |Description
 a| `column_names` a| `Vec<String>` a| 
+a| `query_structure` a| `Option<Pipeline>` a| 
 a| `query_type` a| `QueryType` a| 
 |===
 // end::properties[]

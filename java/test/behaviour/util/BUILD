@@ -34,6 +34,23 @@ java_library(
 )
 
 java_library(
+    name = "functor-encoder",
+    srcs = ["FunctorEncoder.java"],
+    visibility = ["//visibility:public"],
+    deps = [
+        # Package dependencies
+        "//java/analyze",
+        "//java/api",
+        "//java/common",
+        "//java:typedb_driver_jni",
+
+        # External Maven Dependencies
+        "@maven//:junit_junit",
+    ],
+)
+
+
+java_library(
     name = "steps",
     srcs = ["UtilSteps.java"],
     deps = [
