@@ -34,6 +34,9 @@
     "docs": "typedoc"
   },
   "packageManager" : "pnpm@8.15.9",
+  "packageConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@cucumber/cucumber": "9.0.0",
     "@types/node": "24.0.12",
