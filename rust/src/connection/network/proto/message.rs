@@ -20,7 +20,7 @@
 use itertools::Itertools;
 use typedb_protocol::{
     authentication, connection, database, database_manager, migration, query::initial_res::Res, server_manager,
-    transaction, user, user_manager, Version::Version, ExtensionVersion::Extension
+    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
 };
 use uuid::Uuid;
 
