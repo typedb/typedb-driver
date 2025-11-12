@@ -20,7 +20,7 @@
 use itertools::Itertools;
 use typedb_protocol::{
     authentication, connection, database, database_manager, migration, query::initial_res::Res, server_manager,
-    transaction, user, user_manager, Version::Version,
+    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
 };
 use uuid::Uuid;
 
@@ -43,6 +43,7 @@ impl TryIntoProto<connection::open::Req> for Request {
         match self {
             Self::ConnectionOpen { driver_lang, driver_version, credentials } => Ok(connection::open::Req {
                 version: Version.into(),
+                extension_version: Extension.into(),
                 driver_lang,
                 driver_version,
                 authentication: Some(credentials.try_into_proto()?),
