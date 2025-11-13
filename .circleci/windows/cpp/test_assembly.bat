@@ -22,9 +22,9 @@ choco install cmake.install --version 3.27.0 --installargs '"ADD_CMAKE_TO_PATH=U
 CALL refreshenv
 
 bazel --output_user_root=C:\b build @typedb_artifact_windows-x86_64//file
-powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
-7z x typedb-server-windows.zip
-powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
+powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-all-windows* -Destination typedb-all-windows.zip"
+7z x typedb-all-windows.zip
+powershell -Command "Move-Item -Path typedb-all-windows-* -Destination typedb-all-windows"
 
 bazel --output_user_root=C:\b build //cpp:assemble-windows-x86_64-zip
 mkdir test_assembly_cpp
@@ -35,7 +35,7 @@ cmake --build . --config release
 popd
 set PATH=%cd%\test_assembly_cpp\typedb-driver-cpp-windows-x86_64\lib;%PATH%;
 
-START /B "" typedb-server-windows\typedb server --development-mode.enable=true
+START /B "" typedb-all-windows\typedb server --development-mode.enabled=true
 powershell -Command "Start-Sleep -Seconds 10"
 
 test_assembly_cpp\Release\test_assembly.exe
