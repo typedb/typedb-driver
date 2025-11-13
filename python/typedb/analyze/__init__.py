@@ -25,4 +25,4 @@ from typedb.api.analyze.pipeline import *  # noqa # pylint: disable=unused-impor
 from typedb.api.analyze.pipeline_stage import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.reducer import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.variable_annotations import *  # noqa # pylint: disable=unused-import
-from typedb.native_driver_wrapper import ConjunctionID, Variable
+from typedb.native_driver_wrapper import ConjunctionID, Variable # noqa # pylint: disable=unused-import
