@@ -91,6 +91,13 @@ assemble_npm(
     target = ":npm-package",
 )
 
+# NOTE: a scoped package published to npm is private by default unless `--access=public` is
+#   supplied to the `npm publish` invocation OR the package already exists and is public.
+#   Attempting to deploy a scoped package without that flag requires a paid accout and fails with
+#   402 Payment Required otherwise.
+#   We've pushed a version of driver-http manually to make deployment work in CI.
+# See: https://docs.npmjs.com/cli/v10/using-npm/scope#publishing-scoped-packages
+# (This comment should also be added to the `deploy_npm` rule definition in bazel-distribution)
 deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
