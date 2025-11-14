@@ -115,7 +115,7 @@ class _Value(Value, _Concept):
     def __eq__(self, other):
         if other is self:
             return True
-        if not other or type(self) is not type(other) or self.get_value_type() != other.get_value_type():
+        if not other or type(self) is not type(other) or self.try_get_value_type() != other.try_get_value_type():
             return False
         return self.get() == other.get()
 
