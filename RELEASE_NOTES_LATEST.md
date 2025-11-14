@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.7.0-rc2
+cargo add typedb-driver@3.7.0-rc3
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.7.0-rc2/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.7.0-rc3/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.7.0-rc2</version>
+        <version>3.7.0-rc3</version>
     </dependency>
 </dependencies>
 ```
@@ -43,7 +43,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.7.0rc2
+pip install typedb-driver==3.7.0rc3
 ```
 
 ### HTTP Typescript driver
@@ -54,12 +54,12 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/drivers/
 
 ```
-npm install @typedb/driver-http@3.7.0-rc2
+npm install @typedb/driver-http@3.7.0-rc3
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.7.0-rc2
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.7.0-rc3
 
 
 ## New Features
@@ -71,6 +71,10 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## Bugs Fixed
+- **Fix how we return involved conjunctions**
+  Fix a bug where we used the wrong index when decoding involved_conjunctions.
+
+
 - **Use naiive date in Python**
 
   Python `Date` objects were timezone-aware, which means that it was possible to insert, for example `2010-10-10` (recorded on the server-side in UTC :00-00-00), and read it back as `2010-10-09` when in a negative timezone relative to UTC!
