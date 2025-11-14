@@ -108,10 +108,10 @@ impl ConceptRow {
     /// ```
     pub fn get_involved_conjunctions(&self) -> Option<impl Iterator<Item = ConjunctionID> + '_> {
         self.involved_conjunctions.as_ref().map(|involved| {
-            (0..involved.len())
-                .filter(|index| {
-                    let index = index / 8;
-                    let mask = 1 << (index % 8);
+            (0..(involved.len() * 8))
+                .filter(|conjunction| {
+                    let index = conjunction / 8;
+                    let mask = 1 << (conjunction % 8);
                     involved[index] & mask != 0
                 })
                 .map(ConjunctionID)
@@ -123,10 +123,10 @@ impl ConceptRow {
     pub fn get_involved_conjunctions_cloned(&self) -> Option<impl Iterator<Item = ConjunctionID> + 'static> {
         let cloned = self.involved_conjunctions.clone();
         cloned.map(|involved| {
-            (0..involved.len())
-                .filter(move |index| {
-                    let index = index / 8;
-                    let mask = 1 << (index % 8);
+            (0..(involved.len() * 8))
+                .filter(move |conjunction| {
+                    let index = conjunction / 8;
+                    let mask = 1 << (conjunction % 8);
                     involved[index] & mask != 0
                 })
                 .map(ConjunctionID)
