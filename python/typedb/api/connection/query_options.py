@@ -52,12 +52,15 @@ class QueryOptions(NativeWrapper[NativeOptions]):
     def __init__(self, *,
                  include_instance_types: Optional[bool] = None,
                  prefetch_size: Optional[int] = None,
+                 include_query_structure: Optional[bool] = None,
                  ):
         super().__init__(query_options_new())
         if include_instance_types is not None:
             self.include_instance_types = include_instance_types
         if prefetch_size is not None:
             self.prefetch_size = prefetch_size
+        if include_query_structure is not None:
+            self.include_query_structure = include_query_structure
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
