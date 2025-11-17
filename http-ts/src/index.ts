@@ -39,6 +39,8 @@ export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
 
+export * from "./studio-compatibility";
+
 export class TypeDBHttpDriver {
 
     private token?: string;
