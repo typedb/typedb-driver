@@ -1,0 +1,15 @@
+[#_Reducer]
+=== Reducer
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `arguments` a| `VariableId` a| 
+a| `reducer` a| `string` a| 
+|===
+// end::properties[]
+

@@ -1,0 +1,16 @@
+[#_QueryStructureForStudio]
+=== QueryStructureForStudio
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `blocks` a| `QueryConstraintAnyForStudio` a| 
+a| `outputs` a| `string` a| 
+a| `variables` a| `string` a| 
+|===
+// end::properties[]
+

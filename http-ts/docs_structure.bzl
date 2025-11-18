@@ -38,6 +38,25 @@ dir_mapping = {
     "TypeDBHttpDriver.adoc": "connection",
 
     "AnalyzeOptions.adoc": "analyze",
+    "AnalyzedFetch.adoc": "analyze",
+    "AnalyzedFunction.adoc": "analyze",
+    "AnalyzedPipeline.adoc": "analyze",
+    "AnalyzedConjunction.adoc": "analyze",
+    "FunctionSingleReturnSelector.adoc": "analyze",
+    "FunctionReturnStructure.adoc": "analyze",
+    "FetchAnnotationFieldEntry.adoc": "analyze",
+    "PipelineStage.adoc": "analyze",
+    "Reducer.adoc": "analyze",
+    "ConjunctionAnnotations.adoc": "analyze",
+    "VariableAnnotations.adoc": "analyze",
+
+    "QueryStructureForStudio.adoc": "analyze",
+    "QueryConstraintAnyForStudio.adoc": "analyze",
+    "QueryConstraintExpressionForStudio.adoc": "analyze",
+    "QueryConstraintLinksForStudio.adoc": "analyze",
+    "ConceptRowsQueryResponseForStudio.adoc": "analyze",
+
+
     "AnalyzeResponse.adoc": "response",
     "ApiErrorResponse.adoc": "response",
     "Attribute.adoc": "concept",

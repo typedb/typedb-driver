@@ -1,0 +1,13 @@
+[#_VariableAnnotations]
+=== VariableAnnotations
+
+[source,typescript]
+----
+VariableAnnotations: { isOptional: boolean } & (
+ | { annotations: Type[]; tag: "instance" }
+ | { annotations: Type[]; tag: "type" }
+ | { tag: "value"; valueTypes: ValueType[] }
+ )
+----
+
+

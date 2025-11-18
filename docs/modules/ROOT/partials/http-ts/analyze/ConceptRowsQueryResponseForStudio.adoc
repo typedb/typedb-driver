@@ -1,0 +1,18 @@
+[#_ConceptRowsQueryResponseForStudio]
+=== ConceptRowsQueryResponseForStudio
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `answerType` a| `"conceptRows"` a| 
+a| `answers` a| `ConceptRowAnswer` a| 
+a| `comment` a| `string` a| 
+a| `query` a| `QueryStructureForStudio` a| 
+a| `queryType` a| `QueryType` a| 
+|===
+// end::properties[]
+

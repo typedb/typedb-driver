@@ -1,0 +1,26 @@
+[#_QueryConstraintAnyForStudio]
+==== QueryConstraintAnyForStudio
+
+[source,typescript]
+----
+QueryConstraintAnyForStudio:
+ | QueryConstraintIsa
+ | QueryConstraintIsaExact
+ | QueryConstraintHas
+ | QueryConstraintLinksForStudio
+ | QueryConstraintSub
+ | QueryConstraintSubExact
+ | QueryConstraintOwns
+ | QueryConstraintRelates
+ | QueryConstraintPlays
+ | QueryConstraintExpressionForStudio
+ | QueryConstraintFunction
+ | QueryConstraintComparison
+ | QueryConstraintIs
+ | QueryConstraintIid
+ | QueryConstraintKind
+ | QueryConstraintValue
+ | QueryConstraintLabel
+----
+
+

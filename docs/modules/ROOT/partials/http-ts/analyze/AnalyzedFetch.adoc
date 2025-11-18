@@ -1,0 +1,12 @@
+[#_AnalyzedFetch]
+=== AnalyzedFetch
+
+[source,typescript]
+----
+AnalyzedFetch:
+ | { elements: AnalyzedFetch; tag: "list" }
+ | { possibleFields: FetchAnnotationFieldEntry[]; tag: "object" }
+ | { tag: "value"; valueTypes: ValueType[] }
+----
+
+

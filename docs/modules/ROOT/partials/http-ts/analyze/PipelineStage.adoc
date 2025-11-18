@@ -1,0 +1,32 @@
+[#_PipelineStage]
+=== PipelineStage
+
+[source,typescript]
+----
+PipelineStage:
+ | { block: ConjunctionIndex; tag: "match" }
+ | { block: ConjunctionIndex; tag: "insert" }
+ | {
+ block: ConjunctionIndex;
+ deletedVariables: VariableId[];
+ tag: "delete";
+ }
+ | { block: ConjunctionIndex; tag: "put" }
+ | { block: ConjunctionIndex; tag: "update" }
+ | { tag: "select"; variables: VariableId[] }
+ | {
+ tag: "sort";
+ variables: { tag: "Ascending" | "Descending"; variable: VariableId }[];
+ }
+ | { tag: "require"; variables: VariableId }
+ | { offset: number; tag: "offset" }
+ | { limit: number; tag: "limit" }
+ | { tag: "distinct" }
+ | {
+ groupby: VariableId[];
+ reducers: { assigned: VariableId; reducer: Reducer }[];
+ tag: "reduce";
+ }
+----
+
+
