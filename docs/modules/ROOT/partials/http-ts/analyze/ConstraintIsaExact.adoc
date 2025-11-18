@@ -1,0 +1,17 @@
+[#_ConstraintIsaExact]
+==== ConstraintIsaExact
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `instance` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"isa!"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+a| `type` a| `ConstraintVertexVariable` a| 
+|===
+// end::properties[]
+

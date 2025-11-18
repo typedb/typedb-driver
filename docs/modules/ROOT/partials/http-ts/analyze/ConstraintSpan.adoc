@@ -1,0 +1,15 @@
+[#_ConstraintSpan]
+==== ConstraintSpan
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `begin` a| `number` a| 
+a| `end` a| `number` a| 
+|===
+// end::properties[]
+

@@ -1,0 +1,17 @@
+[#_ConstraintPlays]
+==== ConstraintPlays
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `player` a| `ConstraintVertexVariable` a| 
+a| `role` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"plays"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

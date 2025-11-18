@@ -1,0 +1,17 @@
+[#_ConstraintIid]
+==== ConstraintIid
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `concept` a| `ConstraintVertexVariable` a| 
+a| `iid` a| `string` a| 
+a| `tag` a| `"iid"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

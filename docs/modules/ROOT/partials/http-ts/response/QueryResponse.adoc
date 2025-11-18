@@ -7,7 +7,7 @@ QueryResponse:
  | OkQueryResponse
  | ConceptRowsQueryResponse
  | ConceptDocumentsQueryResponse
- | ConceptRowsQueryResponseForStudio
+ | ConceptRowsQueryResponseLegacy
 ----
 
 

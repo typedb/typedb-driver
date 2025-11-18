@@ -1,0 +1,17 @@
+[#_ConstraintHas]
+==== ConstraintHas
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `attribute` a| `ConstraintVertexVariable` a| 
+a| `owner` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"has"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

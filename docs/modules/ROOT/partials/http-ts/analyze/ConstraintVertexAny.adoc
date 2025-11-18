@@ -1,0 +1,13 @@
+[#_ConstraintVertexAny]
+==== ConstraintVertexAny
+
+[source,typescript]
+----
+ConstraintVertexAny:
+ | ConstraintVertexVariable
+ | ConstraintVertexLabel
+ | ConstraintVertexValue
+ | ConstraintVertexNamedRole
+----
+
+

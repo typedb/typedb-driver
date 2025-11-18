@@ -1,0 +1,14 @@
+[#_QueryConjunctionLegacy]
+=== QueryConjunctionLegacy
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `constraints` a| `QueryConstraintAny` a| 
+|===
+// end::properties[]
+

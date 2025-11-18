@@ -1,0 +1,18 @@
+[#_ConstraintFunction]
+==== ConstraintFunction
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `arguments` a| `ConstraintVertexVariable` a| 
+a| `assigned` a| `ConstraintVertexVariable` a| 
+a| `name` a| `string` a| 
+a| `tag` a| `"functionCall"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

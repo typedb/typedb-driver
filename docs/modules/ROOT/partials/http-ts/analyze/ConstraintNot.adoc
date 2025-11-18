@@ -1,0 +1,15 @@
+[#_ConstraintNot]
+==== ConstraintNot
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conjunction` a| `number` a| 
+a| `tag` a| `"not"` a| 
+|===
+// end::properties[]
+

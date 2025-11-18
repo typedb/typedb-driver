@@ -1,0 +1,18 @@
+[#_ConstraintExpression]
+==== ConstraintExpression
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `arguments` a| `ConstraintVertexVariable` a| 
+a| `assigned` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"expression"` a| 
+a| `text` a| `string` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+
