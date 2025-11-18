@@ -1,0 +1,14 @@
+[#_ConjunctionAnnotations]
+=== ConjunctionAnnotations
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `variableAnnotations` a| `string` a| 
+|===
+// end::properties[]
+

@@ -33,10 +33,13 @@ import {
 
 const HTTP_UNAUTHORIZED = 401;
 
+export * from "./analyze";
 export * from "./concept";
 export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
+
+export * from "./legacy";
 
 export class TypeDBHttpDriver {
 

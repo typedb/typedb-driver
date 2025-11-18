@@ -1,0 +1,18 @@
+[#_ConstraintComparison]
+==== ConstraintComparison
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `comparator` a| `string` a| 
+a| `lhs` a| `ConstraintVertexVariable` a| 
+a| `rhs` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"comparison"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

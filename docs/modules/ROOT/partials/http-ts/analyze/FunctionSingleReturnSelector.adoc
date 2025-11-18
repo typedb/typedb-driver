@@ -1,0 +1,9 @@
+[#_FunctionSingleReturnSelector]
+=== FunctionSingleReturnSelector
+
+[source,typescript]
+----
+FunctionSingleReturnSelector: "first" | "last"
+----
+
+

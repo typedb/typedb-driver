@@ -1,0 +1,9 @@
+[#_VariableId]
+=== VariableId
+
+[source,typescript]
+----
+VariableId: string
+----
+
+

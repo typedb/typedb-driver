@@ -2,12 +2,12 @@
 === Static Functions
 
 // tag::methods[]
-[#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_QueryVertexVariable]
+[#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable]
 ==== getVariableName
 
 [source,typescript]
 ----
-getVariableName( structure: AnalyzedPipeline | QueryStructureForStudio, variable: QueryVertexVariable, ): string
+getVariableName( structure: AnalyzedPipeline | QueryStructureLegacy, variable: ConstraintVertexVariable, ): string
 ----
 
 
@@ -19,7 +19,7 @@ getVariableName( structure: AnalyzedPipeline | QueryStructureForStudio, variable
 |===
 |Name |Description |Type
 a| `structure` a|  a| `AnalyzedPipeline`
-a| `variable` a|  a| `QueryVertexVariable`
+a| `variable` a|  a| `ConstraintVertexVariable`
 |===
 
 [caption=""]

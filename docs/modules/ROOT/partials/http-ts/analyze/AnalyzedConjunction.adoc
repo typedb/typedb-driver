@@ -1,0 +1,15 @@
+[#_AnalyzedConjunction]
+=== AnalyzedConjunction
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `annotations` a| `ConjunctionAnnotations` a| 
+a| `constraints` a| `ConstraintAny` a| 
+|===
+// end::properties[]
+

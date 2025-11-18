@@ -1,0 +1,18 @@
+[#_AnalyzedFunction]
+=== AnalyzedFunction
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `argumentAnnotations` a| `VariableAnnotations` a| 
+a| `arguments` a| `string` a| 
+a| `body` a| `AnalyzedPipeline` a| 
+a| `returnAnnotations` a| `VariableAnnotations` a| 
+a| `returns` a| `FunctionReturnStructure` a| 
+|===
+// end::properties[]
+

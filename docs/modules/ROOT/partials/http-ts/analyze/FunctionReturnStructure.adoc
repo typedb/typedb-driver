@@ -1,0 +1,17 @@
+[#_FunctionReturnStructure]
+=== FunctionReturnStructure
+
+[source,typescript]
+----
+FunctionReturnStructure:
+ | {
+ selector: FunctionSingleReturnSelector;
+ tag: "single";
+ variables: VariableId[];
+ }
+ | { tag: "stream"; variables: VariableId[] }
+ | { tag: "check" }
+ | { reducers: Reducer[]; tag: "reduce" }
+----
+
+

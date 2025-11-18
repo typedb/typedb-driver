@@ -1,0 +1,9 @@
+[#_FetchAnnotationFieldEntry]
+=== FetchAnnotationFieldEntry
+
+[source,typescript]
+----
+FetchAnnotationFieldEntry: AnalyzedFetch & { key: string }
+----
+
+

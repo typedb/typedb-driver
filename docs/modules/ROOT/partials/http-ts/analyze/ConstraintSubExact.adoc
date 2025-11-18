@@ -1,0 +1,17 @@
+[#_ConstraintSubExact]
+==== ConstraintSubExact
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `subtype` a| `ConstraintVertexVariable` a| 
+a| `supertype` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"sub!"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+|===
+// end::properties[]
+

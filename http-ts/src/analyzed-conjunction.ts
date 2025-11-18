@@ -19,221 +19,224 @@
 
 import {Type, Value} from "./concept";
 import {AnalyzedPipeline} from "./analyze";
-import {QueryStructureForStudio} from "./studio-compatibility";
+import {QueryStructureLegacy} from "./legacy";
 
-export function getVariableName(structure: QueryStructureForStudio | AnalyzedPipeline, variable: QueryVertexVariable): string | null {
+export function getVariableName(structure: AnalyzedPipeline | QueryStructureLegacy, variable: ConstraintVertexVariable): string | null {
     return structure.variables[variable.id]?.name;
 }
 
-export type QueryVertex = QueryVertexVariable | QueryVertexLabel | QueryVertexValue | QueryVertexNamedRole;
+export type ConstraintVertexAny =
+    ConstraintVertexVariable
+    | ConstraintVertexLabel
+    | ConstraintVertexValue
+    | ConstraintVertexNamedRole;
 
-export interface QueryVertexVariable {
+export interface ConstraintVertexVariable {
     tag: "variable";
     id: string,
 }
 
-export interface QueryVertexLabel {
+export interface ConstraintVertexLabel {
     tag: "label";
     type: Type;
 }
 
-export interface QueryVertexNamedRole {
+export interface ConstraintVertexNamedRole {
     tag: "namedRole";
     variable: string;
     name: string;
 }
 
-export interface QueryVertexValue extends Value {
+export interface ConstraintVertexValue extends Value {
     tag: "value";
 }
 
 type ConjunctionIndex = number;
 
-export type QueryVariableInfo = { name: string | null };
+export type VariableInfo = { name: string | null };
 
-export type QueryConstraintAny =
-    QueryConstraintIsa
-    | QueryConstraintIsaExact
-    | QueryConstraintHas
-    | QueryConstraintLinks
+export type ConstraintAny =
+    ConstraintIsa
+    | ConstraintIsaExact
+    | ConstraintHas
+    | ConstraintLinks
     |
-    QueryConstraintSub
-    | QueryConstraintSubExact
-    | QueryConstraintOwns
-    | QueryConstraintRelates
-    | QueryConstraintPlays
+    ConstraintSub
+    | ConstraintSubExact
+    | ConstraintOwns
+    | ConstraintRelates
+    | ConstraintPlays
     |
-    QueryConstraintExpression
-    | QueryConstraintFunction
-    | QueryConstraintComparison
+    ConstraintExpression
+    | ConstraintFunction
+    | ConstraintComparison
     |
-    QueryConstraintIs
-    | QueryConstraintIid
-    | QueryConstraintKind
-    | QueryConstraintValue
-    | QueryConstraintLabel
+    ConstraintIs
+    | ConstraintIid
+    | ConstraintKind
+    | ConstraintValue
+    | ConstraintLabel
     |
-    QueryConstraintOr
-    | QueryConstraintNot
-    | QueryConstraintTry;
+    ConstraintOr
+    | ConstraintNot
+    | ConstraintTry;
 
-export type QueryConstraintSpan = { begin: number, end: number };
+export type ConstraintSpan = { begin: number, end: number };
 
 // Instance
-export interface QueryConstraintIsa {
+export interface ConstraintIsa {
     tag: "isa",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    instance: QueryVertexVariable,
-    type: QueryVertexVariable | QueryVertexLabel,
+    instance: ConstraintVertexVariable,
+    type: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintIsaExact {
+export interface ConstraintIsaExact {
     tag: "isa!",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    instance: QueryVertexVariable,
-    type: QueryVertexVariable | QueryVertexLabel,
+    instance: ConstraintVertexVariable,
+    type: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintHas {
+export interface ConstraintHas {
     tag: "has",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    owner: QueryVertexVariable
-    attribute: QueryVertexVariable,
+    owner: ConstraintVertexVariable
+    attribute: ConstraintVertexVariable,
 }
 
-
-export interface QueryConstraintLinks {
+export interface ConstraintLinks {
     tag: "links",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    relation: QueryVertexVariable,
-    player: QueryVertexVariable,
-    role: QueryVertexVariable | QueryVertexNamedRole,
+    relation: ConstraintVertexVariable,
+    player: ConstraintVertexVariable,
+    role: ConstraintVertexVariable | ConstraintVertexNamedRole,
 }
 
 // Type
-export interface QueryConstraintSub {
+export interface ConstraintSub {
     tag: "sub",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    subtype: QueryVertexVariable | QueryVertexLabel,
-    supertype: QueryVertexVariable | QueryVertexLabel,
+    subtype: ConstraintVertexVariable | ConstraintVertexLabel,
+    supertype: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintSubExact {
+export interface ConstraintSubExact {
     tag: "sub!",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    subtype: QueryVertexVariable | QueryVertexLabel,
-    supertype: QueryVertexVariable | QueryVertexLabel,
+    subtype: ConstraintVertexVariable | ConstraintVertexLabel,
+    supertype: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintOwns {
+export interface ConstraintOwns {
     tag: "owns",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    owner: QueryVertexVariable | QueryVertexLabel,
-    attribute: QueryVertexVariable | QueryVertexLabel,
+    owner: ConstraintVertexVariable | ConstraintVertexLabel,
+    attribute: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintRelates {
+export interface ConstraintRelates {
     tag: "relates",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    relation: QueryVertexVariable | QueryVertexLabel,
-    role: QueryVertexVariable | QueryVertexLabel,
+    relation: ConstraintVertexVariable | ConstraintVertexLabel,
+    role: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
-export interface QueryConstraintPlays {
+export interface ConstraintPlays {
     tag: "plays",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    player: QueryVertexVariable | QueryVertexLabel,
-    role: QueryVertexVariable | QueryVertexLabel,
+    player: ConstraintVertexVariable | ConstraintVertexLabel,
+    role: ConstraintVertexVariable | ConstraintVertexLabel,
 }
 
 // Function
-export interface QueryConstraintExpression {
+export interface ConstraintExpression {
     tag: "expression",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
     text: string,
-    arguments: QueryVertexVariable[],
-    assigned: QueryVertexVariable,
+    arguments: ConstraintVertexVariable[],
+    assigned: ConstraintVertexVariable,
 }
 
-export interface QueryConstraintFunction {
+export interface ConstraintFunction {
     tag: "functionCall",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
     name: string,
-    arguments: QueryVertexVariable[],
-    assigned: QueryVertexVariable[],
+    arguments: ConstraintVertexVariable[],
+    assigned: ConstraintVertexVariable[],
 }
 
-export interface QueryConstraintComparison {
+export interface ConstraintComparison {
     tag: "comparison",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    lhs: QueryVertexVariable | QueryVertexValue,
-    rhs: QueryVertexVariable | QueryVertexValue,
+    lhs: ConstraintVertexVariable | ConstraintVertexValue,
+    rhs: ConstraintVertexVariable | ConstraintVertexValue,
     comparator: string,
 }
 
-export interface QueryConstraintIs {
+export interface ConstraintIs {
     tag: "is",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    lhs: QueryVertexVariable,
-    rhs: QueryVertexVariable,
+    lhs: ConstraintVertexVariable,
+    rhs: ConstraintVertexVariable,
 }
 
-export interface QueryConstraintIid {
+export interface ConstraintIid {
     tag: "iid",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    concept: QueryVertexVariable,
+    concept: ConstraintVertexVariable,
     iid: string,
 }
 
-export interface QueryConstraintLabel {
+export interface ConstraintLabel {
     tag: "label",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    type: QueryVertexVariable,
+    type: ConstraintVertexVariable,
     label: string,
 }
 
-export interface QueryConstraintValue {
+export interface ConstraintValue {
     tag: "value",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    attributeType: QueryVertexVariable,
+    attributeType: ConstraintVertexVariable,
     valueType: string,
 }
 
-export interface QueryConstraintKind {
+export interface ConstraintKind {
     tag: "kind",
-    textSpan: QueryConstraintSpan,
+    textSpan: ConstraintSpan,
 
-    type: QueryVertexVariable,
+    type: ConstraintVertexVariable,
     kind: string,
 }
 
-export interface QueryConstraintOr {
+export interface ConstraintOr {
     tag: "or",
     branches: ConjunctionIndex[],
 }
 
-export interface QueryConstraintNot {
+export interface ConstraintNot {
     tag: "not",
     conjunction: ConjunctionIndex,
 }
 
-export interface QueryConstraintTry {
+export interface ConstraintTry {
     tag: "try",
     conjunction: ConjunctionIndex,
 }
