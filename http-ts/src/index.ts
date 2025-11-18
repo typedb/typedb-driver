@@ -39,7 +39,7 @@ export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
 
-export * from "./studio-compatibility";
+export * from "./legacy";
 
 export class TypeDBHttpDriver {
 

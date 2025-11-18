@@ -17,21 +17,21 @@
  * under the License.
  */
 
-import {QueryConstraintAny, QueryVariableInfo} from "./analyzed-conjunction";
+import {ConstraintAny, VariableInfo} from "./analyzed-conjunction";
 import {Type, ValueType} from "./concept";
 
 
-type VariableId = string;
+export type VariableId = string;
 
 export interface AnalyzedPipeline {
     conjunctions: AnalyzedConjunction[],
-    variables: { [name: VariableId]: QueryVariableInfo },
+    variables: { [name: VariableId]: VariableInfo },
     stages: PipelineStage[],
     outputs: string[],
 }
 
 export interface AnalyzedConjunction {
-    constraints: QueryConstraintAny[],
+    constraints: ConstraintAny[],
     annotations: ConjunctionAnnotations,
 }
 

@@ -24,7 +24,7 @@ import {
     AnalyzedFunction,
     AnalyzedPipeline
 } from "./analyze";
-import {ConceptRowsQueryResponseForStudio} from "./studio-compatibility";
+import {ConceptRowsQueryResponseLegacy} from "./legacy";
 
 export interface SignInResponse {
     token: string;
@@ -91,7 +91,7 @@ export type QueryResponse =
     OkQueryResponse
     | ConceptRowsQueryResponse
     | ConceptDocumentsQueryResponse
-    | ConceptRowsQueryResponseForStudio;
+    | ConceptRowsQueryResponseLegacy;
 
 export interface AnalyzeResponse {
     source: string,
