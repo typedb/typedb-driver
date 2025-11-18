@@ -8,7 +8,7 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `constraints` a| `QueryConstraintAny` a| 
+a| `constraints` a| `ConstraintExpressionLegacy` a| 
 |===
 // end::properties[]
 
