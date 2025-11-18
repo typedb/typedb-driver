@@ -37,7 +37,7 @@ export interface ConceptRowsQueryResponseLegacy {
 }
 
 export interface QueryConjunctionLegacy {
-    constraints: ConstraintAny[] | ConstraintExpressionLegacy | ConstraintLinksLegacy
+    constraints: (ConstraintAny | ConstraintExpressionLegacy | ConstraintLinksLegacy)[]
 }
 
 export interface QueryStructureLegacy {
