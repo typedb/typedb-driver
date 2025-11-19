@@ -17,8 +17,10 @@
  * under the License.
  */
 
-use std::collections::HashMap;
-use std::fmt::{Debug, Display, Formatter};
+use std::{
+    collections::HashMap,
+    fmt::{Debug, Display, Formatter},
+};
 
 use crate::{analyze::VariableAnnotations, concept, IID};
 
@@ -165,7 +167,7 @@ impl Debug for ConstraintVertex {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             ConstraintVertex::Variable(variable) => Debug::fmt(variable, f),
-            ConstraintVertex::Label(label)  => Debug::fmt(label, f),
+            ConstraintVertex::Label(label) => Debug::fmt(label, f),
             ConstraintVertex::Value(value) => write!(f, "Value({:?})", value),
             ConstraintVertex::NamedRole(named_role) => write!(f, "NamedRole({})", named_role.name),
         }
