@@ -17,26 +17,9 @@
  * under the License.
  */
 
-use super::address::Address;
-
 #[derive(Debug)]
 pub(crate) struct DatabaseInfo {
     pub(crate) name: String,
-    pub(crate) replicas: Vec<ReplicaInfo>,
-}
-
-/// The metadata and state of an individual raft replica of a database.
-#[derive(Debug)]
-pub struct ReplicaInfo {
-    /// The server hosting this replica
-    pub server: Address,
-    /// Whether this is the primary replica of the raft cluster.
-    pub is_primary: bool,
-    /// Whether this is the preferred replica of the raft cluster.
-    /// If true, Operations which can be run on any replica will prefer to use this replica.
-    pub is_preferred: bool,
-    /// The raft protocol ‘term’ of this replica.
-    pub term: i64,
 }
 
 #[derive(Debug)]

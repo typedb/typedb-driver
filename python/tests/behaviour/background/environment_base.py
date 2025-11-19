@@ -24,14 +24,24 @@ from tests.behaviour.context import Context
 from tests.behaviour.util.util import delete_dir
 from typedb.driver import *
 
+IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 def before_all(context: Context):
     context.THREAD_POOL_SIZE = 32
+    context.DEFAULT_USERNAME = "admin"
+    context.DEFAULT_PASSWORD = "password"
     context.init_transaction_options_if_needed_fn = lambda: _init_transaction_options_if_needed(context)
     context.init_query_options_if_needed_fn = lambda: _init_query_options_if_needed(context)
+    context.full_path = lambda file_name: _full_path(context, file_name)
+    context.tx = lambda: next(iter(context.transactions), None)
+    context.clear_answers = lambda: _clear_answers(context)
+    context.clear_concurrent_answers = lambda: _clear_concurrent_answers(context)
 
 
-def before_scenario(context: Context):
+def before_scenario(context: Context, scenario):
+    if ignored(scenario):
+        return
+
     # setup context state
     context.temp_dir = None
     context.background_driver = None
@@ -43,13 +53,17 @@ def before_scenario(context: Context):
     context.collected_answer = None  # [ConceptRow] / [dict]
     context.concurrent_answers = None
     context.unwrapped_concurrent_answers = None
-    # setup context functions
-    context.full_path = lambda file_name: _full_path(context, file_name)
-    context.tx = lambda: next(iter(context.transactions), None)
-    context.clear_answers = lambda: _clear_answers(context)
-    context.clear_concurrent_answers = lambda: _clear_concurrent_answers(context)
     context.transaction_options = None
     context.query_options = None
+    context.driver_options = DriverOptions(tls_enabled=False)
+
+
+def ignored(scenario):
+    for tag in IGNORE_TAGS:
+        if tag in scenario.effective_tags:
+            scenario.skip("tagged with @" + tag)
+            return True
+    return False
 
 
 def after_scenario(context: Context, scenario):
@@ -61,6 +75,14 @@ def after_scenario(context: Context, scenario):
         context.driver.close()
     if context.background_driver and context.background_driver.is_open():
         context.background_driver.close()
+
+    context.setup_context_driver_fn()
+    for database in context.driver.databases.all():
+        database.delete()
+    for user in context.driver.users.all():
+        if user.name != "admin":
+            context.driver.users.get(user.name).delete()
+    context.driver.close()
 
 
 def after_all(_: Context):

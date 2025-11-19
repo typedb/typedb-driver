@@ -51,7 +51,7 @@ Open a TypeDB Driver to a TypeDB server available at the provided address.
 |Name |Description |Type
 a| `address` a| The address of the TypeDB server a| `java.lang.String`
 a| `credentials` a| The credentials to connect with a| `Credentials`
-a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
+a| `driverOptions` a| The driver connection options to connect with a| `DriverOptions`
 |===
 
 [caption=""]
@@ -63,6 +63,78 @@ a| `driverOptions` a| The connection settings to connect with a| `DriverOptions`
 [source,java]
 ----
 TypeDB.driver(address);
+----
+
+[#_TypeDB_driver_java_util_Set_java_lang_String_Credentials_DriverOptions]
+==== driver
+
+[source,java]
+----
+public static Driver driver​(java.util.Set<java.lang.String> addresses,
+                            Credentials credentials,
+                            DriverOptions driverOptions)
+                     throws TypeDBDriverException
+----
+
+Open a TypeDB Driver to a TypeDB cluster available at the provided addresses. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The addresses of TypeDB cluster replicas for connection a| `java.util.Set<java.lang.String>`
+a| `credentials` a| The credentials to connect with a| `Credentials`
+a| `driverOptions` a| The driver connection options to connect with a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`public static Driver`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.driver(address);
+----
+
+[#_TypeDB_driver_java_util_Map_java_lang_String_​java_lang_String_Credentials_DriverOptions]
+==== driver
+
+[source,java]
+----
+public static Driver driver​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation,
+                            Credentials credentials,
+                            DriverOptions driverOptions)
+                     throws TypeDBDriverException
+----
+
+Open a TypeDB Driver to a TypeDB cluster, using the provided address translation. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addressTranslation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
+a| `credentials` a| The credentials to connect with a| `Credentials`
+a| `driverOptions` a| The driver connection options to connect with a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`public static Driver`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.driver(addresses);
 ----
 
 // end::methods[]

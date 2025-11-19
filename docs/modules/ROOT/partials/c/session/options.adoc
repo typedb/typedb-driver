@@ -525,7 +525,7 @@ void options_set_transaction_timeout_millis(struct Options* options, int64_t tim
 
 
 
-Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+Explicitly sets a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
 [caption=""]
 .Returns

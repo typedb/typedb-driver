@@ -1,0 +1,66 @@
+[#_ConsistencyLevel_Eventual]
+=== ConsistencyLevel.Eventual
+
+*Package*: `com.typedb.driver.api`
+
+Allow stale reads from any replica. May not reflect latest writes. The execution may be eventually faster compared to other consistency levels.
+
+// tag::methods[]
+[#_ConsistencyLevel_Eventual_nativeValue_]
+==== nativeValue
+
+[source,java]
+----
+public com.typedb.driver.jni.ConsistencyLevel nativeValue()
+----
+
+
+
+[caption=""]
+.Returns
+`public com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_Eventual_nativeValue_ConsistencyLevel]
+==== nativeValue
+
+[source,java]
+----
+public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyLevel consistencyLevel)
+----
+
+
+
+[caption=""]
+.Returns
+`public static com.typedb.driver.jni.ConsistencyLevel`
+
+[#_ConsistencyLevel_Eventual_of_com_typedb_driver_jni_ConsistencyLevel]
+==== of
+
+[source,java]
+----
+public static ConsistencyLevel of​(com.typedb.driver.jni.ConsistencyLevel nativeValue)
+----
+
+
+
+[caption=""]
+.Returns
+`public static ConsistencyLevel`
+
+[#_ConsistencyLevel_Eventual_toString_]
+==== toString
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+// end::methods[]
+

@@ -38,7 +38,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Code examples
 [source,java]
 ----
-driver.close()
+driver.close();
 ----
 
 [#_Driver_databases_]
@@ -50,11 +50,50 @@ driver.close()
 DatabaseManager databases()
 ----
 
-The ``DatabaseManager`` for this connection, providing access to database management methods.
+The ``DatabaseManager`` for this connection, providing access to database management methods. 
+
 
 [caption=""]
 .Returns
 `DatabaseManager`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases();
+----
+
+[#_Driver_deregisterReplica_long]
+==== deregisterReplica
+
+[source,java]
+----
+void deregisterReplica​(long replicaID)
+----
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replicaID` a| The numeric identifier of the deregistered replica a| `long`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.deregisterReplica(2);
+----
 
 [#_Driver_isOpen_]
 ==== isOpen
@@ -77,6 +116,140 @@ Checks whether this connection is presently open.
 [source,java]
 ----
 driver.isOpen();
+----
+
+[#_Driver_primaryReplica_]
+==== primaryReplica
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends ServerReplica> primaryReplica()
+----
+
+Returns the primary replica for this driver connection. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.primaryReplica();
+----
+
+[#_Driver_registerReplica_long_java_lang_String]
+==== registerReplica
+
+[source,java]
+----
+void registerReplica​(long replicaID,
+                     java.lang.String address)
+----
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replicaID` a| The numeric identifier of the new replica a| `long`
+a| `address` a| The address(es) of the TypeDB replica as a string a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.registerReplica(2, "127.0.0.1:11729");
+----
+
+[#_Driver_replicas_]
+==== replicas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends ServerReplica> replicas()
+----
+
+Set of ``Replica`` instances for this driver connection. 
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.replicas();
+----
+
+[#_Driver_serverVersion_]
+==== serverVersion
+
+[source,java]
+----
+@CheckReturnValue
+default ServerVersion serverVersion()
+----
+
+Retrieves the server's version, using default strong consistency. See <<#_serverVersion_com_typedb_driver_api_ConsistencyLevel,``serverVersion(ConsistencyLevel)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+[#_Driver_serverVersion_ConsistencyLevel]
+==== serverVersion
+
+[source,java]
+----
+@CheckReturnValue
+ServerVersion serverVersion​(ConsistencyLevel consistencyLevel)
+----
+
+Retrieves the server's version. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type]
@@ -150,6 +323,37 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `T
 driver.transaction(database, sessionType);
 ----
 
+[#_Driver_updateAddressTranslation_java_util_Map_java_lang_String_​java_lang_String_]
+==== updateAddressTranslation
+
+[source,java]
+----
+void updateAddressTranslation​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation)
+----
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addressTranslation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.updateAddressTranslation(2);
+----
+
 [#_Driver_users_]
 ==== users
 
@@ -159,7 +363,7 @@ driver.transaction(database, sessionType);
 UserManager users()
 ----
 
-The ``UserManager`` instance for this connection, providing access to user management methods. 
+The ``UserManager`` for this connection, providing access to user management methods. 
 
 
 [caption=""]

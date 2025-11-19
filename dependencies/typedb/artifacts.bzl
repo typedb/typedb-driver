@@ -37,8 +37,3 @@ def typedb_artifact():
 #        commit_source = deployment_private["artifact"]["snapshot"]["download"],
 #        tag = "e4e4fee9d488e2a6e89e29716b98e3213d228809",
 #    )
-
-#maven_artifacts = {
-#    'com.typedb:typedb-runner': '2.28.3',
-#    'com.typedb:typedb-cloud-runner': '2.28.3',
-#}

@@ -18,45 +18,52 @@
 
 set -e
 
-export BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
 NODE_COUNT=${1:-1}
+ENCRYPTION_ENABLED=${2:-true}
 
-peers=
-for i in $(seq 1 $NODE_COUNT); do
-  peers="${peers} --server.peers.peer-${i}.address=localhost:${i}1729"
-  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=localhost:${i}1730"
-  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=localhost:${i}1731"
-done
+# TODO: Update configs
+#peers=
+#for i in $(seq 1 $NODE_COUNT); do
+#  peers="${peers} --server.peers.peer-${i}.address=127.0.0.1:${i}1729"
+#  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=127.0.0.1:${i}1730"
+#  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=127.0.0.1:${i}1731"
+#done
 
 function server_start() {
-  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb server \
-    --storage.data=server/data \
-    --server.address=localhost:${1}1729 \
-    --server.internal-address.zeromq=localhost:${1}1730 \
-    --server.internal-address.grpc=localhost:${1}1731 \
-    $(echo $peers) \
-    --server.encryption.enable=true \
-    --server.encryption.file.enable=true \
-    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
-    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
-    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
-    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
-    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
-    --diagnostics.monitoring.port=${1}1732 \
-    --development-mode.enable=true
+  ./${1}/typedb server \
+    --server.address=127.0.0.1:${1}1729 \
+    --server.encryption.enabled=$ENCRYPTION_ENABLED \
+    --server.encryption.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
+    --server.encryption.certificate-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
+    --server.encryption.ca-certificate=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+    --diagnostics.monitoring.port ${1}1732 \
+    --development-mode.enabled true
+#    --storage.data=server/data \
+#    --server.internal-address.zeromq=127.0.0.1:${1}1730 \
+#    --server.internal-address.grpc=127.0.0.1:${1}1731 \
+#    $(echo $peers) \
+#    --server.encryption.enable=true \
+#    --server.encryption.file.enable=true \
+#    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
+#    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
+#    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+#    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
+#    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
+#    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
+#    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
+#    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
 }
 
-rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
+rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
-bazel run //tool/test:typedb-cloud-extractor -- typedb-cloud-all
-echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
+#bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
+bazel run //tool/test:typedb-extractor -- typedb-cluster-all
+
+echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-cloud-all $i || exit 1
+  cp -r typedb-cluster-all $i || exit 1
 done
-echo Starting a cloud consisting of $NODE_COUNT servers...
+echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
@@ -70,7 +77,7 @@ RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Cloud servers to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB Cluster servers to start \($(($RETRY_NUM / 2))s\)...
   fi
   ALL_STARTED=1
   for i in $(seq 1 $NODE_COUNT); do
@@ -82,7 +89,7 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   sleep $POLL_INTERVAL_SECS
 done
 if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Cloud servers
+  echo Failed to start one or more TypeDB Cluster servers
   exit 1
 fi
-echo $NODE_COUNT TypeDB Cloud database servers started
+echo $NODE_COUNT TypeDB Cluster database servers started

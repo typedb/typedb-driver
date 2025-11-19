@@ -27,17 +27,15 @@ use typedb_driver::{
     BoxPromise, Promise, Result,
 };
 
-use super::{
-    concept::ConceptIterator,
-    iterator::CIterator,
-    memory::{borrow, free, release, release_string, string_view},
-};
 use crate::{
     analyze::ConjunctionIDIterator,
-    common::StringIterator,
-    concept::ConceptRowIterator,
-    error::{try_release, try_release_optional},
-    memory::{release_optional, take_ownership},
+    common::{
+        error::{try_release, try_release_optional},
+        iterator::CIterator,
+        memory::{borrow, free, release, release_optional, release_string, string_view, take_ownership},
+        StringIterator,
+    },
+    concept::{ConceptIterator, ConceptRowIterator},
 };
 
 /// Promise object representing the result of an asynchronous operation.
@@ -64,7 +62,7 @@ pub extern "C" fn query_answer_promise_drop(promise: *mut QueryAnswerPromise) {
     drop(take_ownership(promise))
 }
 
-/// Retrieve the executed query's type of the <code>QueryAnswer</code>.
+/// Retrieves the executed query's type of the <code>QueryAnswer</code>.
 #[no_mangle]
 pub extern "C" fn query_answer_get_query_type(query_answer: *const QueryAnswer) -> QueryType {
     borrow(query_answer).get_query_type()
@@ -122,14 +120,14 @@ pub extern "C" fn concept_row_get_column_names(concept_row: *const ConceptRow) -
     release(StringIterator(CIterator(box_stream(borrow(concept_row).get_column_names().into_iter().cloned().map(Ok)))))
 }
 
-/// Retrieve the executed query's structure from the <code>ConceptRow</code>'s header, if set.
+/// Retrieves the executed query's structure from the <code>ConceptRow</code>'s header, if set.
 /// It must be requested via "include query structure" in <code>QueryOptions</code>
 #[no_mangle]
 pub extern "C" fn concept_row_get_query_structure(concept_row: *const ConceptRow) -> *mut Pipeline {
     release_optional(borrow(concept_row).get_query_structure().cloned())
 }
 
-/// Retrieve the executed query's type of the <code>ConceptRow</code>'s header.
+/// Retrieves the executed query's type of the <code>ConceptRow</code>'s header.
 #[no_mangle]
 pub extern "C" fn concept_row_get_query_type(concept_row: *const ConceptRow) -> QueryType {
     borrow(concept_row).get_query_type()
@@ -142,14 +140,12 @@ pub extern "C" fn concept_row_get_concepts(concept_row: *const ConceptRow) -> *m
 }
 
 /// Retrieves a concept for a given column name.
-///
 #[no_mangle]
 pub extern "C" fn concept_row_get(concept_row: *const ConceptRow, column_name: *const c_char) -> *mut Concept {
     try_release_optional(borrow(concept_row).get(string_view(column_name)).map(|concept| concept.cloned()).transpose())
 }
 
 /// Retrieves a concept for a given column index.
-///
 #[no_mangle]
 pub extern "C" fn concept_row_get_index(concept_row: *const ConceptRow, column_index: usize) -> *mut Concept {
     try_release_optional(borrow(concept_row).get_index(column_index).map(|concept| concept.cloned()).transpose())

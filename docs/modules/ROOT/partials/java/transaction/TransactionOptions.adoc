@@ -28,6 +28,59 @@ Produces a new ``TransactionOptions`` object.
 TransactionOptions options = TransactionOptions();
 ----
 
+[#_TransactionOptions_readConsistencyLevel_]
+==== readConsistencyLevel
+
+[source,java]
+----
+public java.util.Optional<ConsistencyLevel> readConsistencyLevel()
+----
+
+Returns the value set for the read consistency level in this ``TransactionOptions`` object. If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<ConsistencyLevel>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.readConsistencyLevel();
+----
+
+[#_TransactionOptions_readConsistencyLevel_ConsistencyLevel]
+==== readConsistencyLevel
+
+[source,java]
+----
+public TransactionOptions readConsistencyLevel​(ConsistencyLevel readConsistencyLevel)
+----
+
+Explicitly sets read consistency level. If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `readConsistencyLevel` a| The requested consistency level a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`public TransactionOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
+----
+
 [#_TransactionOptions_schemaLockAcquireTimeoutMillis_]
 ==== schemaLockAcquireTimeoutMillis
 
@@ -112,7 +165,7 @@ options.transactionTimeoutMillis();
 public TransactionOptions transactionTimeoutMillis​(int transactionTimeoutMillis)
 ----
 
-Explicitly set a transaction timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
+Explicitly sets a transaction timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock. 
 
 
 [caption=""]

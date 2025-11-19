@@ -18,6 +18,7 @@
  */
 
 pub use self::{
+    address::{Address, Addresses},
     error::Error,
     promise::{box_promise, BoxPromise, Promise},
     query_options::QueryOptions,
@@ -26,6 +27,7 @@ pub use self::{
 };
 
 pub(crate) mod address;
+pub mod consistency_level;
 pub mod error;
 mod id;
 pub mod info;

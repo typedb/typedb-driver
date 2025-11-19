@@ -1,0 +1,62 @@
+[#_ServerVersion]
+=== ServerVersion
+
+*Package*: `com.typedb.driver.api.server`
+
+A full TypeDB server's version specification. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+// tag::methods[]
+[#_ServerVersion_getDistribution_]
+==== getDistribution
+
+[source,java]
+----
+public java.lang.String getDistribution()
+----
+
+Returns the server's distribution. 
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+serverVersion.getDistribution();
+----
+
+[#_ServerVersion_getVersion_]
+==== getVersion
+
+[source,java]
+----
+public java.lang.String getVersion()
+----
+
+Returns the server's version. 
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+serverVersion.getVersion();
+----
+
+// end::methods[]
+

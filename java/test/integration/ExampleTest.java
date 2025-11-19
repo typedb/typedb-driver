@@ -64,7 +64,7 @@ public class ExampleTest {
     // EXAMPLE END MARKER
     @BeforeClass
     public static void setUpClass() {
-        Driver typedbDriver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+        Driver typedbDriver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions().tlsEnabled(false));
         if (typedbDriver.databases().contains("typedb")) {
             typedbDriver.databases().get("typedb").delete();
         }
@@ -75,7 +75,7 @@ public class ExampleTest {
     // EXAMPLE START MARKER
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null))) {
+        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions().tlsEnabled(false))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");

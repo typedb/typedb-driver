@@ -16,30 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::{collections::HashSet, fmt, sync::Arc};
 
-use std::{
-    collections::{HashMap, HashSet},
-    fmt,
-    sync::Arc,
-};
-
-use itertools::Itertools;
 use tracing::{debug, error, info, trace};
 use tracing_subscriber::{fmt as tracing_fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use crate::{
-    common::{
-        address::Address,
-        error::{ConnectionError, Error},
-        Result,
+    common::{consistency_level::ConsistencyLevel, Addresses, Result},
+    connection::{
+        runtime::BackgroundRuntime,
+        server::{
+            server_connection::ServerConnection, server_manager::ServerManager, server_replica::ServerReplica,
+            server_version::ServerVersion,
+        },
+        server_replica::AvailableServerReplica,
     },
-    connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
     Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
 pub struct TypeDBDriver {
-    server_connections: HashMap<Address, ServerConnection>,
+    server_manager: Arc<ServerManager>,
     database_manager: DatabaseManager,
     user_manager: UserManager,
     background_runtime: Arc<BackgroundRuntime>,
@@ -52,7 +49,7 @@ impl TypeDBDriver {
         Some(version) => version,
     };
 
-    pub const DEFAULT_ADDRESS: &'static str = "localhost:1729";
+    pub const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
 
     /// Initialize logging configuration for the TypeDB driver.
     ///
@@ -97,7 +94,7 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `addresses` — The address(es) of the TypeDB Server(s), provided in a unified format
     /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     ///
@@ -106,21 +103,17 @@ impl TypeDBDriver {
     /// ```rust
     #[cfg_attr(
         feature = "sync",
-        doc = "TypeDBDriver::new(\"127.0.0.1:1729\", Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None))"
+        doc = "TypeDBDriver::new(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None))"
     )]
     #[cfg_attr(
         not(feature = "sync"),
-        doc = "TypeDBDriver::new(\"127.0.0.1:1729\", Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None)).await"
+        doc = "TypeDBDriver::new(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None)).await"
     )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn new(
-        address: impl AsRef<str>,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-    ) -> Result<Self> {
-        debug!("Creating new TypeDB driver connection to {}", address.as_ref());
-        Self::new_with_description(address, credentials, driver_options, Self::DRIVER_LANG).await
+    pub async fn new(addresses: Addresses, credentials: Credentials, driver_options: DriverOptions) -> Result<Self> {
+        debug!("Creating new TypeDB driver connection to {:?}", addresses);
+        Self::new_with_description(addresses, credentials, driver_options, Self::DRIVER_LANG).await
     }
 
     /// Creates a new TypeDB Server connection with a description.
@@ -129,7 +122,7 @@ impl TypeDBDriver {
     ///
     /// # Arguments
     ///
-    /// * `address` — The address (host:port) on which the TypeDB Server is running
+    /// * `addresses` — The address(es) of the TypeDB Server(s), provided in a unified format
     /// * `credentials` — The Credentials to connect with
     /// * `driver_options` — The DriverOptions to connect with
     /// * `driver_lang` — The language of the driver connecting to the server
@@ -139,16 +132,16 @@ impl TypeDBDriver {
     /// ```rust
     #[cfg_attr(
         feature = "sync",
-        doc = "TypeDBDriver::new_with_description(\"127.0.0.1:1729\", Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None), \"rust\")"
+        doc = "TypeDBDriver::new_with_description(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None), \"rust\")"
     )]
     #[cfg_attr(
         not(feature = "sync"),
-        doc = "TypeDBDriver::new_with_description(\"127.0.0.1:1729\", Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None), \"rust\").await"
+        doc = "TypeDBDriver::new_with_description(Addresses::try_from_address_str(\"127.0.0.1:1729\").unwrap(), Credentials::new(\"username\", \"password\"), DriverOptions::new(true, None), \"rust\").await"
     )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_with_description(
-        address: impl AsRef<str>,
+        addresses: Addresses,
         credentials: Credentials,
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
@@ -156,77 +149,32 @@ impl TypeDBDriver {
         Self::init_logging();
 
         debug!("Initializing TypeDB driver with description: {}", driver_lang.as_ref());
-        let id = address.as_ref().to_string();
-        let address: Address = id.parse()?;
-
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
-        debug!("Establishing server connection to {}", address);
-        let (server_connection, database_info) = ServerConnection::new(
-            background_runtime.clone(),
-            address.clone(),
-            credentials,
-            driver_options,
-            driver_lang.as_ref(),
-            Self::VERSION,
-        )
-        .await?;
-        debug!("Successfully connected to server at {}", address);
+        debug!("Establishing server connection to {:?}", addresses);
+        let server_manager = Arc::new(
+            ServerManager::new(
+                background_runtime.clone(),
+                addresses,
+                credentials,
+                driver_options,
+                driver_lang.as_ref(),
+                Self::VERSION,
+            )
+            .await?,
+        );
+        debug!("Successfully connected to servers");
 
-        // // validate
-        // let advertised_address = server_connection
-        //     .servers_all()?
-        //     .into_iter()
-        //     .exactly_one()
-        //     .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?;
-
-        // TODO: this solidifies the assumption that servers don't change
-        let server_connections: HashMap<Address, ServerConnection> = [(address, server_connection)].into();
-        let database_manager = DatabaseManager::new(server_connections.clone(), database_info)?;
-        let user_manager = UserManager::new(server_connections.clone());
+        let database_manager = DatabaseManager::new(server_manager.clone())?;
+        let user_manager = UserManager::new(server_manager.clone());
         debug!("Created database manager and user manager");
 
         debug!("TypeDB driver initialization completed successfully");
-        Ok(Self { server_connections, database_manager, user_manager, background_runtime })
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn fetch_server_list(
-        background_runtime: Arc<BackgroundRuntime>,
-        addresses: impl IntoIterator<Item = impl AsRef<str>> + Clone,
-        credentials: Credentials,
-        driver_options: DriverOptions,
-    ) -> Result<HashSet<Address>> {
-        let addresses: Vec<Address> = addresses.into_iter().map(|addr| addr.as_ref().parse()).try_collect()?;
-        for address in &addresses {
-            let server_connection = ServerConnection::new(
-                background_runtime.clone(),
-                address.clone(),
-                credentials.clone(),
-                driver_options.clone(),
-                Self::DRIVER_LANG,
-                Self::VERSION,
-            )
-            .await;
-            match server_connection {
-                Ok((server_connection, _)) => match server_connection.servers_all() {
-                    Ok(servers) => return Ok(servers.into_iter().collect()),
-                    Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                    )) => (),
-                    Err(err) => Err(err)?,
-                },
-                Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
-                )) => (),
-                Err(err) => Err(err)?,
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailed { addresses }.into())
+        Ok(Self { server_manager, database_manager, user_manager, background_runtime })
     }
 
     /// Checks it this connection is opened.
-    //
+    ///
     /// # Examples
     ///
     /// ```rust
@@ -236,16 +184,166 @@ impl TypeDBDriver {
         self.background_runtime.is_open()
     }
 
+    /// The ``DatabaseManager`` for this connection, providing access to database management methods.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.databases()
+    /// ```
     pub fn databases(&self) -> &DatabaseManager {
         &self.database_manager
     }
 
+    /// The ``UserManager`` for this connection, providing access to user management methods.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.databases()
+    /// ```
     pub fn users(&self) -> &UserManager {
         &self.user_manager
     }
 
+    /// Retrieves the server's version, using default strong consistency.
+    ///
+    /// See [`Self::server_version_with_consistency`] for more details and options.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.server_version()")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version().await")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn server_version(&self) -> Result<ServerVersion> {
+        self.server_version_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves the server's version, using default strong consistency.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn server_version_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<ServerVersion> {
+        self.server_manager
+            .execute(consistency_level, |server_connection| async move { server_connection.version().await })
+            .await
+    }
+
+    /// Retrieves the server's replicas.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.replicas();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas().await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn replicas(&self) -> Result<HashSet<ServerReplica>> {
+        self.server_manager.fetch_replicas().await
+    }
+
+    // TODO: Add servers_get call for a specific server. How to design it?
+
+    /// Retrieves the server's primary replica, if exists.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.primary_replica();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica().await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>> {
+        self.server_manager.fetch_primary_replica().await
+    }
+
+    /// Registers a new replica in the cluster the driver is currently connected to. The registered
+    /// replica will become available eventually, depending on the behavior of the whole cluster.
+    /// To register a replica, its clustering address should be passed, not the connection address.
+    ///
+    /// # Arguments
+    ///
+    /// * `replica_id` — The numeric identifier of the new replica
+    /// * `address` — The clustering address of the TypeDB replica as a string
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.register_replica(2, \"127.0.0.1:2729\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.register_replica(2, \"127.0.0.1:2729\").await")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn register_replica(&self, replica_id: u64, address: String) -> Result {
+        self.server_manager.register_replica(replica_id, address).await
+    }
+
+    // TODO: Rename to replica_register and replica_deregister?
+
+    /// Deregisters a replica from the cluster the driver is currently connected to. This replica
+    /// will no longer play a raft role in this cluster.
+    ///
+    /// # Arguments
+    ///
+    /// * `replica_id` — The numeric identifier of the deregistered replica
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.deregister_replica(2)")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_replica(2).await")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn deregister_replica(&self, replica_id: u64) -> Result {
+        self.server_manager.deregister_replica(replica_id).await
+    }
+
+    /// Updates address translation of the driver. This lets you actualize new translation
+    /// information without recreating the driver from scratch. Useful after registering new
+    /// replicas requiring address translation.
+    /// This operation will update existing connections using the provided addresses.
+    ///
+    /// # Arguments
+    ///
+    /// * `addresses` — Addresses containing the new address translation information
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(
+        feature = "sync",
+        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap());"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.update_address_translation(Addresses::try_from_translation_str([(\"typedb-cloud.ext:11729\", \"127.0.0.1:1729\")].into()).unwrap()).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn update_address_translation(&self, addresses: Addresses) -> Result {
+        self.server_manager.update_address_translation(addresses).await
+    }
+
     /// Opens a transaction with default options.
-    /// See [`TypeDBDriver::transaction_with_options`]
+    ///
+    /// See [`TypeDBDriver::transaction_with_options`] for more details.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction(
         &self,
@@ -255,7 +353,10 @@ impl TypeDBDriver {
         self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
-    /// Performs a TypeQL query in this transaction.
+    /// Opens a new transaction with the following consistency level:
+    /// * read transaction - strong consistency, can be overridden through `options`;
+    /// * write transaction - strong consistency, cannot be overridden;
+    /// * schema transaction - strong consistency, cannot be overridden.
     ///
     /// # Arguments
     ///
@@ -266,7 +367,14 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.transaction_with_options(database_name, transaction_type, options)
+    #[cfg_attr(
+        feature = "sync",
+        doc = "transaction.transaction_with_options(database_name, transaction_type, options)"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "transaction.transaction_with_options(database_name, transaction_type, options).await"
+    )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction_with_options(
@@ -276,15 +384,23 @@ impl TypeDBDriver {
         options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
-        debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
+        let consistency_level = options.read_consistency_level.clone();
+        let open_fn = |server_connection: ServerConnection| {
+            let options = options.clone();
+            async move { server_connection.open_transaction(database_name, transaction_type, options).await }
+        };
 
-        let database = self.database_manager.get_cached_or_fetch(database_name).await?;
-        let transaction_stream = database
-            .run_failsafe(|database| async move {
-                let res = database.connection().open_transaction(database.name(), transaction_type, options).await;
-                res
-            })
-            .await?;
+        debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
+        let transaction_stream = match transaction_type {
+            TransactionType::Read => {
+                self.server_manager
+                    .execute(consistency_level.unwrap_or_else(|| ConsistencyLevel::Strong), open_fn)
+                    .await?
+            }
+            TransactionType::Write | TransactionType::Schema => {
+                self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
+            }
+        };
 
         debug!("Successfully opened transaction for database: {}", database_name);
         Ok(Transaction::new(transaction_stream))
@@ -303,43 +419,17 @@ impl TypeDBDriver {
         }
 
         debug!("Closing TypeDB driver connection");
-        let result =
-            self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
-        let close_result = self.background_runtime.force_close().and(result);
-
+        let close_result = self.server_manager.force_close().and(self.background_runtime.force_close());
         match &close_result {
             Ok(_) => debug!("Successfully closed TypeDB driver connection"),
             Err(e) => error!("Failed to close TypeDB driver connection: {}", e),
         }
-
         close_result
-    }
-
-    pub(crate) fn server_count(&self) -> usize {
-        self.server_connections.len()
-    }
-
-    pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
-        self.server_connections.keys()
-    }
-
-    pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
-        self.server_connections.get(id)
-    }
-
-    pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
-        self.server_connections.iter()
-    }
-
-    pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailed {
-            addresses: self.servers().map(Address::clone).collect_vec(),
-        })
     }
 }
 
 impl fmt::Debug for TypeDBDriver {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Connection").field("server_connections", &self.server_connections).finish()
+        f.debug_struct("TypeDBDriver").field("server_manager", &self.server_manager).finish()
     }
 }

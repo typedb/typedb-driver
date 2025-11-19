@@ -33,6 +33,7 @@ rustfmt_test(
         "//rust/tests/behaviour/driver:test_user",
 
         "//rust/tests/integration:test_example",
+        "//rust/tests/integration/cluster:test_clustering",
     ],
     size = "small",
 )

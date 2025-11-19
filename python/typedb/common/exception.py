@@ -92,6 +92,7 @@ POSITIVE_VALUE_REQUIRED = DriverErrorMessage(4, "Value of '%s' should be positiv
 NON_NEGATIVE_VALUE_REQUIRED = DriverErrorMessage(5, "Value of '%s' should be non-negative, was: '%d'.")
 NON_NULL_VALUE_REQUIRED = DriverErrorMessage(6, "Value of '%s' should not be null.")
 UNIMPLEMENTED = DriverErrorMessage(7, "This operation is not implemented yet.")
+INVALID_ADDRESS_FORMAT = DriverErrorMessage(8, "Driver addresses should be either a string, a list, or a dict.")
 
 
 class ConceptErrorMessage(ErrorMessage):

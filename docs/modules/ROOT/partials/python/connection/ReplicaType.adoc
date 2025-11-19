@@ -1,0 +1,55 @@
+[#_ReplicaType]
+=== ReplicaType
+
+This class is used to specify the type of replica.
+
+[caption=""]
+.Examples
+[source,python]
+----
+server_replica.replica_type
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `PRIMARY` a| `0`
+a| `SECONDARY` a| `1`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_ReplicaType_is_primary_]
+==== is_primary
+
+[source,python]
+----
+is_primary() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReplicaType_is_secondary_]
+==== is_secondary
+
+[source,python]
+----
+is_secondary() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

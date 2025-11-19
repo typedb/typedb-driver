@@ -112,7 +112,7 @@ struct ReplicaInfoIterator* database_get_replicas_info(const struct Database* da
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Set of ``ServerReplica`` instances for this database. Only works in TypeDB Cloud
 
 [caption=""]
 .Returns

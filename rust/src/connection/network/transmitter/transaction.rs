@@ -38,7 +38,7 @@ use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     select,
     sync::{
-        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
         oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
     },
     task,
@@ -299,7 +299,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
-        let mut collector = ResponseCollector {
+        let collector = ResponseCollector {
             callbacks: Default::default(),
             is_open,
             error,

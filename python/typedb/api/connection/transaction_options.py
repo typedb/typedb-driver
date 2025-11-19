@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from typedb.api.connection.consistency_level import ConsistencyLevel
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_positive
@@ -26,7 +27,9 @@ from typedb.native_driver_wrapper import transaction_options_new, \
     transaction_options_has_transaction_timeout_millis, transaction_options_get_transaction_timeout_millis, \
     transaction_options_set_transaction_timeout_millis, transaction_options_get_schema_lock_acquire_timeout_millis, \
     transaction_options_has_schema_lock_acquire_timeout_millis, \
-    transaction_options_set_schema_lock_acquire_timeout_millis, TransactionOptions as NativeOptions
+    transaction_options_set_schema_lock_acquire_timeout_millis, transaction_options_get_read_consistency_level, \
+    transaction_options_has_read_consistency_level, transaction_options_set_read_consistency_level, \
+    TransactionOptions as NativeOptions
 
 
 class TransactionOptions(NativeWrapper[NativeOptions]):
@@ -49,12 +52,15 @@ class TransactionOptions(NativeWrapper[NativeOptions]):
     def __init__(self, *,
                  transaction_timeout_millis: Optional[int] = None,
                  schema_lock_acquire_timeout_millis: Optional[int] = None,
+                 read_consistency_level: Optional[ConsistencyLevel] = None,
                  ):
         super().__init__(transaction_options_new())
         if transaction_timeout_millis is not None:
             self.transaction_timeout_millis = transaction_timeout_millis
         if schema_lock_acquire_timeout_millis is not None:
             self.schema_lock_acquire_timeout_millis = schema_lock_acquire_timeout_millis
+        if read_consistency_level is not None:
+            self.read_consistency_level = read_consistency_level
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -88,3 +94,16 @@ class TransactionOptions(NativeWrapper[NativeOptions]):
         require_positive(schema_lock_acquire_timeout_millis, "schema_lock_acquire_timeout_millis")
         transaction_options_set_schema_lock_acquire_timeout_millis(self.native_object,
                                                                    schema_lock_acquire_timeout_millis)
+
+    @property
+    def read_consistency_level(self) -> Optional[ConsistencyLevel]:
+        """
+        If set, specifies the requested consistency level of the transaction opening operation.
+        Affects only read transactions, as write and schema transactions require primary replicas.
+        """
+        return ConsistencyLevel.of(transaction_options_get_read_consistency_level(self.native_object)) \
+            if transaction_options_has_read_consistency_level(self.native_object) else None
+
+    @read_consistency_level.setter
+    def read_consistency_level(self, read_consistency_level: ConsistencyLevel):
+        transaction_options_set_read_consistency_level(self.native_object, read_consistency_level.native_object())

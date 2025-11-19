@@ -1,0 +1,34 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+server:
+    address: 127.0.0.1:11729
+    http-enabled: false
+    http-address: 127.0.0.1:8000
+
+    authentication:
+        token-expiration-seconds: 5000
+
+    encryption:
+        enabled: false
+        certificate:
+        certificate_key:
+        ca-certificate:
+
+storage:
+    data-directory: "data"
+
+logging:
+    directory: "logs"
+
+diagnostics:
+    monitoring:
+        enabled: false
+        port: 4104
+    reporting:
+        metrics: false
+        errors: false
+
+development-mode:
+    enabled: true

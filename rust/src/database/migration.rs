@@ -82,10 +82,10 @@ impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
                             return if self.buffer.is_empty() {
                                 Ok(None)
                             } else {
-                                Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength))
+                                Err(MigrationError::CannotDecodeImportedConceptLength.into())
                             };
                         }
-                        Err(_) => return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength)),
+                        Err(_) => return Err(MigrationError::CannotDecodeImportedConceptLength.into()),
                         Ok(_) => continue,
                     }
                 }
@@ -108,14 +108,14 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
         while self.buffer.len() < required {
             let to_read = required - self.buffer.len();
             match self.read_more(max(to_read, Self::BUF_CAPACITY)) {
-                Ok(0) | Err(_) => return Some(Err(Error::Migration(MigrationError::CannotDecodeImportedConcept))),
+                Ok(0) | Err(_) => return Some(Err(MigrationError::CannotDecodeImportedConcept.into())),
                 Ok(_) => {}
             }
         }
 
         self.buffer.advance(consumed);
         let message_bytes = self.buffer.split_to(message_len).freeze();
-        Some(M::decode(message_bytes).map_err(|_| Error::Migration(MigrationError::CannotDecodeImportedConcept)))
+        Some(M::decode(message_bytes).map_err(|_| MigrationError::CannotDecodeImportedConcept.into()))
     }
 }
 

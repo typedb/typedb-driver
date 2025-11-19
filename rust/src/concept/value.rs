@@ -267,8 +267,11 @@ impl fmt::Debug for Value {
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct Decimal {
-    integer: i64,
-    fractional: u64,
+    /// The integer part of the decimal as normal signed 64 bit number
+    pub integer: i64,
+    /// The fractional part of the decimal, in multiples of 10^-19 (Decimal::FRACTIONAL_PART_DENOMINATOR).
+    /// This means that the smallest decimal representable is 10^-19, and up to 19 decimal places are supported.
+    pub fractional: u64,
 }
 
 impl Decimal {
@@ -280,17 +283,6 @@ impl Decimal {
     pub const fn new(integer: i64, fractional: u64) -> Self {
         assert!(fractional < Decimal::FRACTIONAL_PART_DENOMINATOR);
         Self { integer, fractional }
-    }
-
-    /// Get the integer part of the decimal as normal signed 64 bit number
-    pub fn integer_part(&self) -> i64 {
-        self.integer
-    }
-
-    /// Get the fractional part of the decimal, in multiples of 10^-19 (Decimal::FRACTIONAL_PART_DENOMINATOR)
-    /// This means, the smallest decimal representable is 10^-19, and up to 19 decimal places are supported.
-    pub fn fractional_part(&self) -> u64 {
-        self.fractional
     }
 }
 
@@ -345,7 +337,7 @@ impl fmt::Display for Decimal {
 impl fmt::Debug for Decimal {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.fractional == 0 {
-            write!(f, "{}.0", self.integer_part())?;
+            write!(f, "{}.0", self.integer)?;
         } else {
             // count number of tailing 0's that don't have to be represented
             let mut tail_0s = 0;
@@ -356,7 +348,7 @@ impl fmt::Debug for Decimal {
             }
 
             let fractional_width = Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - tail_0s;
-            write!(f, "{}.{:0width$}dec", self.integer_part(), fractional, width = fractional_width as usize)?;
+            write!(f, "{}.{:0width$}dec", self.integer, fractional, width = fractional_width as usize)?;
         }
         Ok(())
     }
@@ -459,18 +451,6 @@ impl Duration {
 
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }
-    }
-
-    pub fn months(&self) -> u32 {
-        self.months
-    }
-
-    pub fn days(&self) -> u32 {
-        self.days
-    }
-
-    pub fn nanos(&self) -> u64 {
-        self.nanos
     }
 
     fn is_empty(&self) -> bool {

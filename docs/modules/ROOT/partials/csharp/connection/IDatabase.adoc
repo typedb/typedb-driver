@@ -38,7 +38,7 @@ ISet< IReplica > GetReplicas()
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Set of ``ServerReplica`` instances for this database. Only works in TypeDB Cloud
 
 
 [caption=""]
