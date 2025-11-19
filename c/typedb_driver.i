@@ -339,6 +339,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_or_get_branches;
 %newobject constraint_not_get_conjunction;
 %newobject constraint_try_get_conjunction;
+%newobject constraint_to_string;
 %newobject constraint_vertex_variant;
 %newobject constraint_vertex_as_variable;
 %newobject constraint_vertex_as_label;

@@ -18,6 +18,7 @@
  */
 
 use std::collections::HashMap;
+use std::fmt::{Debug, Display, Formatter};
 
 use crate::{analyze::VariableAnnotations, concept, IID};
 
@@ -126,6 +127,12 @@ pub enum Constraint {
     },
 }
 
+impl std::fmt::Display for Constraint {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Debug::fmt(self, f)
+    }
+}
+
 /// Uniquely identifies a variable in a <code>Pipeline</code>pipeline.
 /// Its name (if any) can be retrieved from the <code>variable_names</code> field in <code>Pipeline</code>
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
@@ -140,12 +147,29 @@ pub struct Variable(pub u32);
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub enum ConstraintVertex {
     Variable(Variable),
     Label(concept::type_::Type),
     Value(concept::Value),
     NamedRole(NamedRole),
+}
+
+impl Display for ConstraintVertex {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl Debug for ConstraintVertex {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ConstraintVertex::Variable(variable) => Debug::fmt(variable, f),
+            ConstraintVertex::Label(label)  => Debug::fmt(label, f),
+            ConstraintVertex::Value(value) => write!(f, "Value({:?})", value),
+            ConstraintVertex::NamedRole(named_role) => write!(f, "NamedRole({})", named_role.name),
+        }
+    }
 }
 
 /// A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.

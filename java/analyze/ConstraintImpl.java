@@ -182,6 +182,10 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
+    public String toString() {
+        return typedb_driver.constraint_to_string(nativeObject);
+    }
+
     public IsaImpl asIsa() {
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(IsaImpl.class));
     }

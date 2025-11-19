@@ -272,6 +272,7 @@
 %nojavaexception constraint_or_get_branches;
 %nojavaexception constraint_not_get_conjunction;
 %nojavaexception constraint_try_get_conjunction;
+%nojavaexception constraint_to_string;
 
 %nojavaexception constraint_vertex_variant;
 %nojavaexception constraint_vertex_as_variable;

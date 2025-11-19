@@ -1101,6 +1101,12 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
     };
     release(conjunction.clone())
 }
+/// The variant of the specified constraint
+///
+#[no_mangle]
+pub extern "C" fn constraint_to_string(constraint: *const ConstraintWithSpan) -> *mut c_char {
+    release_string(format!("{}", &borrow(constraint).constraint))
+}
 
 // ConstraintVertex accessors
 ///
