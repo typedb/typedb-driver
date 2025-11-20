@@ -34,6 +34,7 @@ from typedb.native_driver_wrapper import (
     constraint_vertex_as_value,
     constraint_vertex_as_named_role_get_variable,
     constraint_vertex_as_named_role_get_name,
+    constraint_vertex_to_string,
 )
 
 if TYPE_CHECKING:
@@ -75,3 +76,6 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
 
     def as_named_role_get_name(self) -> str:
         return constraint_vertex_as_named_role_get_name(self.native_object)
+
+    def __repr__(self):
+        return constraint_vertex_to_string(self.native_object)

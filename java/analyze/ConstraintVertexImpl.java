@@ -27,7 +27,6 @@ import com.typedb.driver.jni.ConstraintVertexVariant;
 import com.typedb.driver.jni.typedb_driver;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Analyze.INVALID_CONSTRAINT_VERTEX_CASTING;
-import static com.typedb.driver.common.util.Objects.className;
 
 public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
     public ConstraintVertexImpl(com.typedb.driver.jni.ConstraintVertex nativeObject) {
@@ -87,5 +86,10 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
         return typedb_driver.constraint_vertex_as_named_role_get_name(nativeObject);
+    }
+
+    @Override
+    public String toString() {
+        return typedb_driver.constraint_vertex_to_string(nativeObject);
     }
 }

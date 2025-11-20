@@ -182,6 +182,7 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
+    @Override
     public String toString() {
         return typedb_driver.constraint_to_string(nativeObject);
     }

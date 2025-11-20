@@ -280,6 +280,7 @@
 %nojavaexception constraint_vertex_as_value;
 %nojavaexception constraint_vertex_as_named_role_get_name;
 %nojavaexception constraint_vertex_as_named_role_get_variable;
+%nojavaexception constraint_vertex_to_string;
 
 %nojavaexception fetch_variant;
 %nojavaexception fetch_leaf_annotations;
@@ -305,6 +306,7 @@
 %nojavaexception pipeline_stage_sort_get_sort_variables;
 %nojavaexception pipeline_stage_reduce_get_groupby;
 %nojavaexception pipeline_stage_reduce_get_reducer_assignments;
+%nojavaexception pipeline_stage_to_string;
 %nojavaexception reduce_assignment_get_assigned;
 %nojavaexception reduce_assignment_get_reducer;
 %nojavaexception reducer_get_name;

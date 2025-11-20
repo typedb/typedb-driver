@@ -346,6 +346,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_vertex_as_value;
 %newobject constraint_vertex_as_named_role_get_variable;
 %newobject constraint_vertex_as_named_role_get_name;
+%newobject constraint_vertex_to_string;
 %newobject constraint_with_span_iterator_next;
 %newobject constraint_with_span_iterator_drop;
 %newobject constraint_vertex_iterator_next;
@@ -369,6 +370,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject pipeline_stage_reduce_get_reducer_assignments;
 %newobject pipeline_stage_sort_get_sort_variables;
 %newobject pipeline_stage_reduce_get_groupby;
+%newobject pipeline_stage_to_string;
 %newobject sort_variable_get_variable;
 %newobject reduce_assignment_get_assigned;
 %newobject reduce_assignment_get_reducer;

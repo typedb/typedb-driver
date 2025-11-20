@@ -351,6 +351,12 @@ pub extern "C" fn pipeline_stage_variant(stage: *const PipelineStage) -> Pipelin
     }
 }
 
+/// Returns a string representation of the pipeline stage
+#[no_mangle]
+pub extern "C" fn pipeline_stage_to_string(stage: *const PipelineStage) -> *mut c_char {
+    release_string(format!("{}", &borrow(stage)))
+}
+
 /// Returns the block of the pipeline stage - this is the <code>ConjunctionID</code> of the root conjunction.
 /// Will panic if the stage does not have a block.
 #[no_mangle]
@@ -1101,15 +1107,15 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
     };
     release(conjunction.clone())
 }
-/// The variant of the specified constraint
-///
+
+/// Returns a string representation of the constraint
 #[no_mangle]
 pub extern "C" fn constraint_to_string(constraint: *const ConstraintWithSpan) -> *mut c_char {
     release_string(format!("{}", &borrow(constraint).constraint))
 }
 
 // ConstraintVertex accessors
-///
+/// Returns the variant of the constraint
 #[no_mangle]
 pub extern "C" fn constraint_vertex_variant(vertex: *const ConstraintVertex) -> ConstraintVertexVariant {
     match borrow(vertex) {
@@ -1172,6 +1178,12 @@ pub extern "C" fn constraint_vertex_as_named_role_get_name(vertex: *const Constr
         ConstraintVertex::NamedRole(value) => release_string(value.name.clone()),
         _ => unreachable!(),
     }
+}
+
+/// Returns a string representation of the constraint
+#[no_mangle]
+pub extern "C" fn constraint_vertex_to_string(vertex: *const ConstraintVertex) -> *mut c_char {
+    release_string(format!("{}", &borrow(vertex)))
 }
 
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]

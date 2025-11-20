@@ -52,7 +52,7 @@ from typedb.native_driver_wrapper import (
     pipeline_stage_offset_get_offset,
     pipeline_stage_limit_get_limit,
     pipeline_stage_reduce_get_groupby,
-    variable_iterator_next,
+    pipeline_stage_to_string,
     pipeline_stage_reduce_get_reducer_assignments,
     pipeline_stage_iterator_next,
     ReduceAssignment as NativeReduceAssignment,
@@ -60,6 +60,7 @@ from typedb.native_driver_wrapper import (
     reduce_assignment_get_reducer,
     reduce_assignment_iterator_next,
     SortVariable as NativeSortVariable,
+    variable_iterator_next,
 )
 
 if TYPE_CHECKING:
@@ -183,6 +184,8 @@ class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
     def as_reduce(self):
         raise TypeDBDriverException(INVALID_STAGE_CASTING, (self.__class__.__name__, "ReduceStage"))
 
+    def __repr__(self):
+        return pipeline_stage_to_string(self.native_object)
 
 class _MatchStage(MatchStage, _PipelineStage):
     def __init__(self, native):
