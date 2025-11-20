@@ -88,9 +88,9 @@
 %nojavaexception transaction_options_get_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_set_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_has_schema_lock_acquire_timeout_millis;
-%nojavaexception transaction_options_get_parallel;
-%nojavaexception transaction_options_set_parallel;
-%nojavaexception transaction_options_has_parallel;
+%nojavaexception transaction_options_get_read_consistency_level;
+%nojavaexception transaction_options_set_read_consistency_level;
+%nojavaexception transaction_options_has_read_consistency_level;
 
 %nojavaexception query_options_new;
 %nojavaexception query_options_get_include_instance_types;
@@ -107,21 +107,39 @@
 %nojavaexception error_message;
 
 %nojavaexception driver_is_open;
+// TODO: Remove from this list if we start making network calls to retrieve this
+%nojavaexception driver_primary_replica;
+
+%nojavaexception driver_options_new;
+%nojavaexception driver_options_set_tls_enabled;
+%nojavaexception driver_options_get_tls_enabled;
+%nojavaexception driver_options_set_tls_root_ca_path;
+%nojavaexception driver_options_get_tls_root_ca_path;
+%nojavaexception driver_options_has_tls_root_ca_path;
+%nojavaexception driver_options_set_use_replication;
+%nojavaexception driver_options_get_use_replication;
+%nojavaexception driver_options_set_primary_failover_retries;
+%nojavaexception driver_options_get_primary_failover_retries;
+%nojavaexception driver_options_set_replica_discovery_attempts;
+%nojavaexception driver_options_get_replica_discovery_attempts;
+%nojavaexception driver_options_has_replica_discovery_attempts;
 
 %nojavaexception transaction_is_open;
 
 %nojavaexception user_get_name;
 %nojavaexception user_get_password_expiry_seconds;
 
-//%nojavaexception replica_info_get_server;
-//%nojavaexception replica_info_is_primary;
-//%nojavaexception replica_info_is_preferred;
-//%nojavaexception replica_info_get_term;
+%nojavaexception server_replica_get_address;
+%nojavaexception server_replica_is_primary;
+%nojavaexception server_replica_get_id;
+%nojavaexception server_replica_get_type;
+%nojavaexception server_replica_get_term;
 
 %nojavaexception database_get_name;
-//%nojavaexception database_get_replicas_info;
-//%nojavaexception database_get_primary_replica_info;
-//%nojavaexception database_get_preferred_replica_info;
+
+%nojavaexception consistency_level_strong;
+%nojavaexception consistency_level_eventual;
+%nojavaexception consistency_level_replica_dependent;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;
@@ -191,6 +209,9 @@
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
 
+%nojavaexception ServerVersion::distribution;
+%nojavaexception ServerVersion::version;
+
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
@@ -211,6 +232,9 @@
 %nojavaexception Duration::months;
 %nojavaexception Duration::days;
 %nojavaexception Duration::nanos;
+
+%nojavaexception ConsistencyLevel::tag;
+%nojavaexception ConsistencyLevel::address;
 
 /* director constructors do not throw */
 %nojavaexception TransactionCallbackDirector;
@@ -330,6 +354,7 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
+%nojavaexception ~ConsistencyLevel;
 %nojavaexception ~DriverOptions;
 %nojavaexception ~Credentials;
 %nojavaexception ~Database;
@@ -339,7 +364,9 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-//%nojavaexception ~ReplicaInfo;
+%nojavaexception ~ServerReplica;
+%nojavaexception ~ServerReplicaIterator;
+%nojavaexception ~ServerVersion;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
 %nojavaexception ~StringAndOptValueIterator;
@@ -527,7 +554,7 @@
 %iterator(StringAndOptValue, string_and_opt_value)
 %iterator(User, user)
 %iterator(Database, database)
-//%iterator(ReplicaInfo, replica_info)
+%iterator(ServerReplica, server_replica)
 
 %iterator(ConjunctionID, conjunction_id)
 %iterator(ConstraintWithSpan, constraint_with_span)

@@ -21,7 +21,9 @@ set -e
 rm -rf typedb-all
 
 bazel run //tool/test:typedb-extractor -- typedb-all
-./typedb-all/typedb server --development-mode.enabled true --server.authentication.token-expiration-seconds 15 &
+./typedb-all/typedb server \
+  --development-mode.enabled true \
+  --server.authentication.token_ttl_seconds 15 &
 
 set +e
 POLL_INTERVAL_SECS=0.5
@@ -32,5 +34,5 @@ while [[ $RETRY_NUM -gt 0 ]]; do
   ((RETRY_NUM-=1))
   sleep $POLL_INTERVAL_SECS
 done
-echo "TypeDB server failed to start within $((POLL_INTERVAL_SECS * RETRY_NUM)) seconds, aborting..."
+echo "TypeDB CE server failed to start within $((POLL_INTERVAL_SECS * RETRY_NUM)) seconds, aborting..."
 exit 1

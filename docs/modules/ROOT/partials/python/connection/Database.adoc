@@ -36,12 +36,12 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_export_to_file_schema_file_path_str_data_file_path_str]
+[#_Database_export_to_file_schema_file_path_str_data_file_path_str_consistency_level_ConsistencyLevel_None]
 ==== export_to_file
 
 [source,python]
 ----
-export_to_file(schema_file_path: str, data_file_path: str) -> None
+export_to_file(schema_file_path: str, data_file_path: str, consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
 Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
@@ -54,6 +54,7 @@ Export a database into a schema definition and a data files saved to the disk. T
 |Name |Description |Type |Default Value
 a| `schema_file_path` a| The path to the schema definition file to be created a| `str` a| 
 a| `data_file_path` a| The path to the data file to be created a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -65,17 +66,27 @@ a| `data_file_path` a| The path to the data file to be created a| `str` a|
 [source,python]
 ----
 database.export_to_file("schema.typeql", "data.typedb")
+database.export_to_file("schema.typeql", "data.typedb", ConsistencyLevel.Strong())
 ----
 
-[#_Database_schema_]
+[#_Database_schema_consistency_level_ConsistencyLevel_None]
 ==== schema
 
 [source,python]
 ----
-schema() -> str
+schema(consistency_level: ConsistencyLevel | None = None) -> str
 ----
 
 Returns a full schema text as a valid TypeQL define query string.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -86,17 +97,27 @@ Returns a full schema text as a valid TypeQL define query string.
 [source,python]
 ----
 database.schema()
+database.schema(ConsistencyLevel.Strong())
 ----
 
-[#_Database_type_schema_]
+[#_Database_type_schema_consistency_level_ConsistencyLevel_None]
 ==== type_schema
 
 [source,python]
 ----
-type_schema() -> str
+type_schema(consistency_level: ConsistencyLevel | None = None) -> str
 ----
 
 Returns the types in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -107,6 +128,7 @@ Returns the types in the schema as a valid TypeQL define query string.
 [source,python]
 ----
 database.type_schema()
+database.type_schema(ConsistencyLevel.Strong())
 ----
 
 // end::methods[]

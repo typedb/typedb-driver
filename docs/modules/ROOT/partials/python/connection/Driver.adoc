@@ -11,7 +11,7 @@
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
-a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+a| `users` a| `UserManager` a| The ``UserManager`` for this connection, providing access to user management methods.
 |===
 // end::properties[]
 
@@ -37,6 +37,36 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
+[#_Driver_deregister_replica_replica_id_int]
+==== deregister_replica
+
+[source,python]
+----
+deregister_replica(replica_id: int) -> None
+----
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `replica_id` a| The numeric identifier of the deregistered replica a| `int` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.deregister_replica(2)
+----
+
 [#_Driver_is_open_]
 ==== is_open
 
@@ -56,6 +86,110 @@ Checks whether this connection is presently open.
 [source,python]
 ----
 driver.is_open()
+----
+
+[#_Driver_primary_replica_]
+==== primary_replica
+
+[source,python]
+----
+primary_replica() -> ServerReplica | None
+----
+
+Returns the primary replica for this driver connection.
+
+[caption=""]
+.Returns
+`ServerReplica | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.primary_replica()
+----
+
+[#_Driver_register_replica_replica_id_int_address_str]
+==== register_replica
+
+[source,python]
+----
+register_replica(replica_id: int, address: str) -> None
+----
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `replica_id` a| The numeric identifier of the new replica a| `int` a| 
+a| `address` a| The address(es) of the TypeDB replica as a string a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.register_replica(2, "127.0.0.1:11729")
+----
+
+[#_Driver_replicas_]
+==== replicas
+
+[source,python]
+----
+replicas() -> Set[ServerReplica]
+----
+
+Set of ``Replica`` instances for this driver connection.
+
+[caption=""]
+.Returns
+`Set[ServerReplica]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.replicas()
+----
+
+[#_Driver_server_version_consistency_level_ConsistencyLevel_None]
+==== server_version
+
+[source,python]
+----
+server_version(consistency_level: ConsistencyLevel | None = None) -> ServerVersion
+----
+
+Retrieves the server’s version.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.server_version()
+driver.server_version(ConsistencyLevel.Strong())
 ----
 
 [#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]
@@ -88,6 +222,36 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `T
 [source,python]
 ----
 driver.transaction(database, transaction_type, options)
+----
+
+[#_Driver_update_address_translation_address_translation_Mapping_str_str_]
+==== update_address_translation
+
+[source,python]
+----
+update_address_translation(address_translation: Mapping[str, str]) -> None
+----
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `address_translation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `Mapping[str, str]` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.update_address_translation({"typedb-cloud.ext:11729": "127.0.0.1:11729"})
 ----
 
 // end::methods[]

@@ -22,6 +22,7 @@ transaction_options.schema_lock_acquire_timeout_millis = 50_000
 [options="header"]
 |===
 |Name |Type |Description
+a| `read_consistency_level` a| `ConsistencyLevel \| None` a| If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas.
 a| `schema_lock_acquire_timeout_millis` a| `int \| None` a| If set, specifies how long the driver should wait if opening a transaction is blocked by a schema write lock.
 a| `transaction_timeout_millis` a| `int \| None` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 |===

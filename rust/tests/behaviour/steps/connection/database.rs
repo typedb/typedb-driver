@@ -17,16 +17,14 @@
  * under the License.
  */
 
-use std::io::Read;
-
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{
     future::{join_all, try_join_all},
-    stream, StreamExt, TryFutureExt,
+    TryFutureExt,
 };
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TransactionType, TypeDBDriver};
+use typedb_driver::{Database, Result as TypeDBResult, TransactionType, TypeDBDriver};
 use uuid::Uuid;
 
 use crate::{

@@ -9,16 +9,16 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 fn typedb_example() {
     async_std::task::block_on(async {
         // Open a driver connection. Specify your parameters if needed
         let driver = TypeDBDriver::new(
-            TypeDBDriver::DEFAULT_ADDRESS,
+            Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
-            DriverOptions::new(false, None).unwrap(),
+            DriverOptions::new().is_tls_enabled(false),
         )
         .await
         .unwrap();
@@ -161,7 +161,7 @@ fn typedb_example() {
         // just call `commit`, which will wait for all ongoing operations to finish before executing.
         let queries = ["insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";"];
         for query in queries {
-            transaction.query(query);
+            let _unawaited_future = transaction.query(query);
         }
         transaction.commit().await.unwrap();
 

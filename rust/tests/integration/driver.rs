@@ -23,13 +23,13 @@ use std::sync::{
 };
 
 use serial_test::serial;
-use typedb_driver::{Credentials, DriverOptions, TransactionType, TypeDBDriver};
+use typedb_driver::{Addresses, Credentials, DriverOptions, TransactionType, TypeDBDriver};
 
 async fn cleanup() {
     let driver = TypeDBDriver::new(
-        TypeDBDriver::DEFAULT_ADDRESS,
+        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
         Credentials::new("admin", "password"),
-        DriverOptions::new(false, None).unwrap(),
+        DriverOptions::new().is_tls_enabled(false),
     )
     .await
     .unwrap();
@@ -44,9 +44,9 @@ fn transaction_callback() {
     async_std::task::block_on(async {
         cleanup().await;
         let driver = TypeDBDriver::new(
-            TypeDBDriver::DEFAULT_ADDRESS,
+            Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
-            DriverOptions::new(false, None).unwrap(),
+            DriverOptions::new().is_tls_enabled(false),
         )
         .await
         .unwrap();

@@ -17,14 +17,12 @@
  * under the License.
  */
 
-use std::{collections::VecDeque, ops::Index};
-
 use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::join_all, StreamExt, TryStreamExt};
+use futures::{future::join_all, StreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, JSON},
+    answer::{ConceptRow, QueryAnswer},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
     QueryOptions, Result as TypeDBResult, Transaction,
@@ -32,9 +30,8 @@ use typedb_driver::{
 
 use crate::{
     analyze::functor_encoding::encode_query_structure_as_functor,
-    assert_err, generic_step, params,
+    generic_step, params,
     params::check_boolean,
-    util,
     util::{iter_table, list_contains_json, parse_json},
     BehaviourTestOptionalError, Context,
 };
