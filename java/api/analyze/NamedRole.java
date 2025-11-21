@@ -1,18 +1,24 @@
 package com.typedb.driver.api.analyze;
 
+/**
+ * 'links' & 'relates' constraints accept unscoped role names.
+ * Since an unscoped role-name does not uniquely identify a role-type,
+ *  (Different role-types belonging to different relation types may share the same name)
+ *  an internal variable is introduced to handle the ambiguity
+ */
 public interface NamedRole {
 
     /**
-     * This is an internal variable injected to handle ambiguity in role-names.
+     * The internal variable injected to handle ambiguity in unscoped role names.
      *
      * @return the variable associated with this named role
      */
     Variable variable();
 
     /**
-     * This is the role label specified by the user in the <code>Links</code> constraint.
+     * The unscoped role name specified in the query.
      *
-     * @return the name of this named role
+     * @return the unscoped name of the role
      */
     String name();
 }

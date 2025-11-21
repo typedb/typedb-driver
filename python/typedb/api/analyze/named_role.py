@@ -25,16 +25,22 @@ if TYPE_CHECKING:
 
 
 class NamedRole(ABC):
+    """
+    'links' & 'relates' constraints accept unscoped role names.
+    Since an unscoped role-name does not uniquely identify a role-type,
+    (Different role-types belonging to different relation types may share the same name)
+    an internal variable is introduced to handle the ambiguity
+    """
     @abstractmethod
     def variable(self) -> "Variable":
         """
-        Gets the variable associated with the NamedRole.
+        The internal variable injected to handle ambiguity in unscoped role names.
         """
         pass
 
     @abstractmethod
     def name(self) -> str:
         """
-        Gets the name associated with the NamedRole.
+        The unscoped role name specified in the query.
         """
         pass

@@ -3,6 +3,8 @@
 
 *Package*: `com.typedb.driver.api.analyze`
 
+'links' &amp; 'relates' constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity
+
 // tag::methods[]
 [#_NamedRole_name_]
 ==== name
@@ -12,7 +14,7 @@
 java.lang.String name()
 ----
 
-This is the role label specified by the user in the ``Links`` constraint.
+The unscoped role name specified in the query.
 
 [caption=""]
 .Returns
@@ -26,7 +28,7 @@ This is the role label specified by the user in the ``Links`` constraint.
 Variable variable()
 ----
 
-This is an internal variable injected to handle ambiguity in role-names.
+The internal variable injected to handle ambiguity in unscoped role names.
 
 [caption=""]
 .Returns

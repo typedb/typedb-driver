@@ -1182,9 +1182,10 @@ pub extern "C" fn constraint_vertex_as_value(vertex: *const ConstraintVertex) ->
 }
 
 /// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole.
-/// For `$_ links (name: $_);`, a variable is introduced in place of name.
-/// This is needed since a role-name does not uniquely identify a role-type
+/// 'links' & 'relates' constraints accept unscoped role names.
+/// Since an unscoped role-name does not uniquely identify a role-type,
 ///  (Different role-types belonging to different relation types may share the same name)
+///  an internal variable is introduced to handle the ambiguity
 /// Will panic if the instance is not a NamedRole variant.
 #[no_mangle]
 pub extern "C" fn constraint_vertex_as_named_role(vertex: *const ConstraintVertex) -> *mut NamedRole {
