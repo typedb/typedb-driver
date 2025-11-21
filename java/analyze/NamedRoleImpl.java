@@ -9,12 +9,25 @@ public class NamedRoleImpl extends NativeObject<com.typedb.driver.jni.NamedRole>
         super(nativeObject);
     }
 
-    public com.typedb.driver.jni.Variable variable() {
-        return typedb_driver.named_role_get_variable(nativeObject);
+    public VariableImpl variable() {
+        return new VariableImpl(typedb_driver.named_role_get_variable(nativeObject));
     }
 
     public String name() {
         return typedb_driver.named_role_get_name(nativeObject);
+    }
+
+    @Override
+    public int hashCode() {
+        return variable().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NamedRoleImpl that = (NamedRoleImpl) obj;
+        return this.variable().equals(that.variable());
     }
 
     @Override

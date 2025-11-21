@@ -293,6 +293,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject analyzed_fetch;
 %newobject conjunction_get_variable_annotations;
 %newobject conjunction_get_constraints;
+%newobject conjunction_id_to_string;
 %newobject constraint_span_begin;
 %newobject constraint_span_end;
 %newobject constraint_variant;
@@ -379,6 +380,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject reducer_get_name;
 %newobject reducer_get_arguments;
 %newobject variable_get_name;
+%newobject variable_to_string;
 
 %newobject function_iterator_next;
 %newobject conjunction_id_iterator_next;

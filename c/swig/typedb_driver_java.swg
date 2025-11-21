@@ -222,6 +222,7 @@
 %nojavaexception comparator_get_name;
 
 %nojavaexception conjunction_id_as_u32;
+%nojavaexception conjunction_id_to_string;
 %nojavaexception conjunction_get_constraints;
 %nojavaexception conjunction_get_annotated_variables;
 %nojavaexception conjunction_get_variable_annotations;
@@ -329,7 +330,7 @@
 
 %nojavaexception variable_get_name;
 %nojavaexception variable_id_as_u32;
-
+%nojavaexception variable_to_string;
 
 /* destructors do not throw */
 %nojavaexception ~Concept;

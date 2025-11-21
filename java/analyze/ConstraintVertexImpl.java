@@ -54,11 +54,11 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         return variant() == ConstraintVertexVariant.NamedRoleVertex;
     }
 
-    public com.typedb.driver.jni.Variable asVariable() {
+    public VariableImpl asVariable() {
         if (!isVariable()) {
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.VariableVertex);
         }
-        return typedb_driver.constraint_vertex_as_variable(nativeObject);
+        return new VariableImpl(typedb_driver.constraint_vertex_as_variable(nativeObject));
     }
 
     public com.typedb.driver.api.concept.type.Type asLabel() {

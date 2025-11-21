@@ -20,6 +20,7 @@
 package com.typedb.driver.api.answer;
 
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.analyze.ConjunctionID;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.common.exception.TypeDBDriverException;
@@ -101,7 +102,7 @@ public interface ConceptRow {
     /**
      * Retrieve the <code>ConjunctionID</code>s of <code>Conjunction</code>s that answered this row.
      */
-    Optional<Stream<com.typedb.driver.jni.ConjunctionID>> involvedConjunctions();
+    Optional<Stream<? extends ConjunctionID>> involvedConjunctions();
 
     /**
      * Produces a stream over all concepts in this `ConceptRow`, skipping empty results.

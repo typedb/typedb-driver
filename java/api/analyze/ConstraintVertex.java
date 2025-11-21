@@ -64,7 +64,7 @@ public interface ConstraintVertex {
      *
      * @return the variable
      */
-    com.typedb.driver.jni.Variable asVariable();
+    Variable asVariable();
 
     /**
      * Down-casts this vertex to a type label.

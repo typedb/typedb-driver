@@ -492,6 +492,20 @@ pub extern "C" fn variable_get_name(pipeline_structure: *const Pipeline, variabl
     release_optional_string(borrow(pipeline_structure).variable_name(borrow(variable)).map(str::to_owned))
 }
 
+/// Returns the Variable id as u32 to use in hash, equality etc.
+#[no_mangle]
+pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
+    borrow(variable).0
+}
+
+
+/// Returns a string representation of the variable. Does not resolve the name.
+#[no_mangle]
+pub extern "C" fn variable_to_string(variable: *const Variable) -> *mut c_char {
+    release_string(format!("{}", borrow(variable)))
+}
+
+
 /// Returns the <code>Conjunction</code> corresponding to the ConjunctionID.
 /// The <code>Pipeline</code> must be the one that contains the Conjunction & ConjunctionID.
 #[no_mangle]
@@ -506,6 +520,12 @@ pub extern "C" fn pipeline_get_conjunction(
 #[no_mangle]
 pub extern "C" fn conjunction_id_as_u32(conjunction_id: *const ConjunctionID) -> u32 {
      borrow(conjunction_id).0 as u32
+}
+
+/// Returns a string representation of the ConjunctionID.
+#[no_mangle]
+pub extern "C" fn conjunction_id_to_string(conjunction_id: *const ConjunctionID) -> *mut c_char {
+    release_string(format!("{}", borrow(conjunction_id).0))
 }
 
 /// Returns the <code>Constraint</code>s in the given conjunction.
@@ -1193,12 +1213,6 @@ pub extern "C" fn named_role_get_name(named_role: *const NamedRole) -> *mut c_ch
 #[no_mangle]
 pub extern "C" fn named_role_to_string(named_role: *const NamedRole) -> *mut c_char {
     release_string(format!("{}", borrow(named_role)))
-}
-
-/// Returns the Variable id as u32 to use in hash, equality etc.
-#[no_mangle]
-pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
-    borrow(variable).0
 }
 
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]

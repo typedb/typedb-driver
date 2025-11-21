@@ -7,7 +7,7 @@ public interface NamedRole {
      *
      * @return the variable associated with this named role
      */
-    com.typedb.driver.jni.Variable variable();
+    Variable variable();
 
     /**
      * This is the role label specified by the user in the <code>Links</code> constraint.

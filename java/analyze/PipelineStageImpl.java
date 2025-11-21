@@ -212,8 +212,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public com.typedb.driver.jni.ConjunctionID block() {
-            return com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject);
+        public ConjunctionIDImpl block() {
+            return new ConjunctionIDImpl(com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject));
         }
     }
 
@@ -233,8 +233,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public com.typedb.driver.jni.ConjunctionID block() {
-            return com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject);
+        public ConjunctionIDImpl block() {
+            return new ConjunctionIDImpl(com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject));
         }
     }
 
@@ -254,8 +254,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public com.typedb.driver.jni.ConjunctionID block() {
-            return com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject);
+        public ConjunctionIDImpl block() {
+            return new ConjunctionIDImpl(com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject));
         }
     }
 
@@ -275,8 +275,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public com.typedb.driver.jni.ConjunctionID block() {
-            return com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject);
+        public ConjunctionIDImpl block() {
+            return new ConjunctionIDImpl(com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject));
         }
     }
 
@@ -296,13 +296,13 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public com.typedb.driver.jni.ConjunctionID block() {
-            return com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject);
+        public ConjunctionIDImpl block() {
+            return new ConjunctionIDImpl(com.typedb.driver.jni.typedb_driver.pipeline_stage_get_block(nativeObject));
         }
 
         @Override
-        public Stream<com.typedb.driver.jni.Variable> deletedVariables() {
-            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_delete_get_deleted_variables(nativeObject)).stream();
+        public Stream<VariableImpl> deletedVariables() {
+            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_delete_get_deleted_variables(nativeObject)).stream().map(VariableImpl::new);
         }
     }
 
@@ -322,8 +322,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public Stream<com.typedb.driver.jni.Variable> variables() {
-            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_select_get_variables(nativeObject)).stream();
+        public Stream<VariableImpl> variables() {
+            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_select_get_variables(nativeObject)).stream().map(VariableImpl::new);
         }
     }
 
@@ -354,8 +354,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
             }
 
             @Override
-            public com.typedb.driver.jni.Variable variable() {
-                return com.typedb.driver.jni.typedb_driver.sort_variable_get_variable(nativeObject);
+            public VariableImpl variable() {
+                return new VariableImpl(com.typedb.driver.jni.typedb_driver.sort_variable_get_variable(nativeObject));
             }
 
             @Override
@@ -381,8 +381,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public Stream<com.typedb.driver.jni.Variable> variables() {
-            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_require_get_variables(nativeObject)).stream();
+        public Stream<VariableImpl> variables() {
+            return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.pipeline_stage_require_get_variables(nativeObject)).stream().map(VariableImpl::new);
         }
     }
 
@@ -460,10 +460,10 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
         }
 
         @Override
-        public Stream<com.typedb.driver.jni.Variable> groupBy() {
+        public Stream<VariableImpl> groupBy() {
             return new NativeIterator<>(
                     com.typedb.driver.jni.typedb_driver.pipeline_stage_reduce_get_groupby(nativeObject)
-            ).stream();
+            ).stream().map(VariableImpl::new);
         }
 
         @Override
@@ -479,8 +479,8 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
             }
 
             @Override
-            public com.typedb.driver.jni.Variable assigned() {
-                return com.typedb.driver.jni.typedb_driver.reduce_assignment_get_assigned(nativeObject);
+            public VariableImpl assigned() {
+                return new VariableImpl(com.typedb.driver.jni.typedb_driver.reduce_assignment_get_assigned(nativeObject));
             }
 
             @Override
