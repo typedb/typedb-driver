@@ -27,6 +27,7 @@ import com.typedb.driver.jni.ConstraintVertexVariant;
 import com.typedb.driver.jni.typedb_driver;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Analyze.INVALID_CONSTRAINT_VERTEX_CASTING;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
     public ConstraintVertexImpl(com.typedb.driver.jni.ConstraintVertex nativeObject) {
@@ -79,5 +80,37 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
         return new NamedRoleImpl(typedb_driver.constraint_vertex_as_named_role(nativeObject));
+    }
+
+    private Object unwrap() {
+        if (isVariable()) {
+            return asVariable();
+        } else if (isLabel()) {
+            return asLabel();
+        } else if (isValue()) {
+            return asValue();
+        } else if (isNamedRole()) {
+            return asNamedRole();
+        } else {
+            throw new TypeDBDriverException(ILLEGAL_STATE);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return unwrap().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ConstraintVertexImpl that = (ConstraintVertexImpl) obj;
+        return unwrap().equals(that.unwrap());
+    }
+
+    @Override
+    public String toString() {
+        return unwrap().toString();
     }
 }

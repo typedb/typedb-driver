@@ -73,4 +73,27 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
     def as_named_role(self) -> "typedb.api.analyze.named_role.NamedRole":
         return _NamedRole(constraint_vertex_as_named_role(self.native_object))
 
-    # TODO: __repr__, __eq__, __hash__
+    def _unwrap(self):
+        if self.is_variable():
+            return self.as_variable()
+        elif self.is_label():
+            return self.as_label()
+        elif self.is_value():
+            return self.as_value()
+        elif self.is_named_role():
+            return self.as_named_role()
+        else:
+            raise TypeDBDriverException(ILLEGAL_STATE)
+
+    def __repr__(self):
+        return self._unwrap().__repr__()
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self._unwrap() == other._unwrap()
+
+    def __hash__(self, other):
+        hash(self._unwrap())
