@@ -132,7 +132,7 @@ public abstract class FunctorEncoder {
                     return vertex.asValue().toString();
                 }
             } else if (vertex.isNamedRole()) {
-                return vertex.asNamedRoleGetName();
+                return vertex.asNamedRole().name();
             } else {
                 throw new IllegalArgumentException("Unexpected ConstraintVertex variant");
             }

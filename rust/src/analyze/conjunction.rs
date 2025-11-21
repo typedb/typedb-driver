@@ -26,7 +26,7 @@ use crate::{analyze::VariableAnnotations, concept, IID};
 
 /// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
 /// Used as indirection in the representation of a pipeline.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ConjunctionID(pub usize);
 
 /// A representation of the constraints involved in the query, and types inferred for each variable.
@@ -149,7 +149,7 @@ pub struct Variable(pub u32);
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ConstraintVertex {
     Variable(Variable),
     Label(concept::type_::Type),
@@ -157,28 +157,23 @@ pub enum ConstraintVertex {
     NamedRole(NamedRole),
 }
 
-impl Display for ConstraintVertex {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
-    }
-}
-
-impl Debug for ConstraintVertex {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ConstraintVertex::Variable(variable) => Debug::fmt(variable, f),
-            ConstraintVertex::Label(label) => Debug::fmt(label, f),
-            ConstraintVertex::Value(value) => write!(f, "Value({:?})", value),
-            ConstraintVertex::NamedRole(named_role) => write!(f, "NamedRole({})", named_role.name),
-        }
-    }
-}
-
 /// A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
 #[derive(Debug, Clone)]
 pub struct NamedRole {
     pub variable: Variable,
     pub name: String,
+}
+
+impl PartialEq for NamedRole {
+    fn eq(&self, other: &Self) -> bool {
+        self.variable == other.variable // Names will be equal unless they belong to different pipelines
+    }
+}
+
+impl Display for NamedRole {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "NamedRole({})", self.name)
+    }
 }
 
 /// A representation of the comparator used in a comparison constraint.

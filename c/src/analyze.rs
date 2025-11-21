@@ -35,6 +35,7 @@ use typedb_driver::{
     concept::{type_::Type, AttributeType, Concept, Kind, ValueType},
     BoxPromise, Promise,
 };
+use typedb_driver::analyze::conjunction::NamedRole;
 
 use crate::{
     common::StringIterator,
@@ -499,6 +500,12 @@ pub extern "C" fn pipeline_get_conjunction(
     conjunction_id: *const ConjunctionID,
 ) -> *mut Conjunction {
     release_optional(borrow(pipeline).conjunctions.get(borrow(conjunction_id).0).cloned())
+}
+
+/// Returns the ConjunctionID as u32 to use in hash, equality etc.
+#[no_mangle]
+pub extern "C" fn conjunction_id_as_u32(conjunction_id: *const ConjunctionID) -> u32 {
+     borrow(conjunction_id).0 as u32
 }
 
 /// Returns the <code>Constraint</code>s in the given conjunction.
@@ -1157,33 +1164,41 @@ pub extern "C" fn constraint_vertex_as_value(vertex: *const ConstraintVertex) ->
     }
 }
 
-/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role-type variable.
-/// e.g. for `$_ links (name: $_);`, a variable is introduced in place of name.
+/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole.
+/// For `$_ links (name: $_);`, a variable is introduced in place of name.
 /// This is needed since a role-name does not uniquely identify a role-type
 ///  (Different role-types belonging to different relation types may share the same name)
 /// Will panic if the instance is not a NamedRole variant.
 #[no_mangle]
-pub extern "C" fn constraint_vertex_as_named_role_get_variable(vertex: *const ConstraintVertex) -> *mut Variable {
+pub extern "C" fn constraint_vertex_as_named_role(vertex: *const ConstraintVertex) -> *mut NamedRole {
     match borrow(vertex) {
-        ConstraintVertex::NamedRole(value) => release(value.variable.clone()),
+        ConstraintVertex::NamedRole(named_role) => release(named_role.clone()),
         _ => unreachable!(),
     }
 }
 
-/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role name.
-/// Will panic if the instance is not a NamedRole variant.
+/// Returns the role-type variable associated with the NamedRole.
 #[no_mangle]
-pub extern "C" fn constraint_vertex_as_named_role_get_name(vertex: *const ConstraintVertex) -> *mut c_char {
-    match borrow(vertex) {
-        ConstraintVertex::NamedRole(value) => release_string(value.name.clone()),
-        _ => unreachable!(),
-    }
+pub extern "C" fn named_role_get_variable(named_role: *const NamedRole) -> *mut Variable {
+    release(borrow(named_role).variable.clone())
 }
 
-/// Returns a string representation of the constraint
+/// Returns the role name associated with the NamedRole.
 #[no_mangle]
-pub extern "C" fn constraint_vertex_to_string(vertex: *const ConstraintVertex) -> *mut c_char {
-    release_string(format!("{}", &borrow(vertex)))
+pub extern "C" fn named_role_get_name(named_role: *const NamedRole) -> *mut c_char {
+    release_string(borrow(named_role).name.clone())
+}
+
+/// Returns a string representation of the NamedRole
+#[no_mangle]
+pub extern "C" fn named_role_to_string(named_role: *const NamedRole) -> *mut c_char {
+    release_string(format!("{}", borrow(named_role)))
+}
+
+/// Returns the Variable id as u32 to use in hash, equality etc.
+#[no_mangle]
+pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
+    borrow(variable).0
 }
 
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]
@@ -1345,6 +1360,12 @@ pub extern "C" fn fetch_drop(obj: *mut Fetch) {
 #[doc = "Frees the native rust <code>Function</code> object."]
 #[no_mangle]
 pub extern "C" fn function_drop(obj: *mut Function) {
+    free(obj);
+}
+
+#[doc = "Frees the native rust <code>NamedRole</code> object."]
+#[no_mangle]
+pub extern "C" fn named_role_drop(obj: *mut NamedRole) {
     free(obj);
 }
 

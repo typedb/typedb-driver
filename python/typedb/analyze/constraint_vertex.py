@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING
 
 from typedb.api.analyze.constraint_vertex import ConstraintVertex
 
+from typedb.analyze.named_role import _NamedRole
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.concept import concept_factory
@@ -32,9 +33,7 @@ from typedb.native_driver_wrapper import (
     constraint_vertex_as_variable,
     constraint_vertex_as_label,
     constraint_vertex_as_value,
-    constraint_vertex_as_named_role_get_variable,
-    constraint_vertex_as_named_role_get_name,
-    constraint_vertex_to_string,
+    constraint_vertex_as_named_role,
 )
 
 if TYPE_CHECKING:
@@ -71,11 +70,7 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
     def as_value(self) -> "typedb.api.concept.value.value.Value":
         return concept_factory.wrap_concept(constraint_vertex_as_value(self.native_object)).as_value()
 
-    def as_named_role_get_variable(self) -> "Variable":
-        return constraint_vertex_as_named_role_get_variable(self.native_object)
+    def as_named_role(self) -> "typedb.api.analyze.named_role.NamedRole":
+        return _NamedRole(constraint_vertex_as_named_role(self.native_object))
 
-    def as_named_role_get_name(self) -> str:
-        return constraint_vertex_as_named_role_get_name(self.native_object)
-
-    def __repr__(self):
-        return constraint_vertex_to_string(self.native_object)
+    # TODO: __repr__, __eq__, __hash__

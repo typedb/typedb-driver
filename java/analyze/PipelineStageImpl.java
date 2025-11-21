@@ -193,7 +193,7 @@ public abstract class PipelineStageImpl extends NativeObject<com.typedb.driver.j
 
     @Override
     public String toString() {
-        return typedb_driver.pipeline_stage_to_string(nativeObject);
+        return com.typedb.driver.jni.typedb_driver.pipeline_stage_to_string(nativeObject);
     }
 
     public static class MatchStageImpl extends PipelineStageImpl implements PipelineStage.MatchStage {

@@ -74,22 +74,10 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         return new com.typedb.driver.concept.value.ValueImpl(typedb_driver.constraint_vertex_as_value(nativeObject));
     }
 
-    public com.typedb.driver.jni.Variable asNamedRoleGetVariable() {
+    public NamedRoleImpl asNamedRole() {
         if (!isNamedRole()) {
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
-        return typedb_driver.constraint_vertex_as_named_role_get_variable(nativeObject);
-    }
-
-    public String asNamedRoleGetName() {
-        if (!isNamedRole()) {
-            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
-        }
-        return typedb_driver.constraint_vertex_as_named_role_get_name(nativeObject);
-    }
-
-    @Override
-    public String toString() {
-        return typedb_driver.constraint_vertex_to_string(nativeObject);
+        return new NamedRoleImpl(typedb_driver.constraint_vertex_as_named_role(nativeObject));
     }
 }

@@ -175,7 +175,7 @@ def _encode_constraint_vertex(constraint_vertex: ConstraintVertex, encoder: Func
         value = constraint_vertex.as_value()
         return f"\"{value}\"" if value.is_string() else str(value)
     elif constraint_vertex.is_named_role():
-        return constraint_vertex.as_named_role_get_name()
+        return constraint_vertex.as_named_role().name()
 
 
 def _encode_variable(self, encoder: FunctorEncoder) -> str:

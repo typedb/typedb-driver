@@ -81,19 +81,12 @@ public interface ConstraintVertex {
      */
     Value asValue();
 
-    /**
-     * Down-casts the variable as a NamedRoleVertex and gets the associated variable.
-     * This is an internal variable injected to handle ambiguity in role-names.
-     *
-     * @return the variable associated with this named role
-     */
-    com.typedb.driver.jni.Variable asNamedRoleGetVariable();
 
     /**
-     * Down-casts the variable as a NamedRoleVertex and gets the associated name
-     * This is the role label specified by the user in a <code>Links</code> constraint.
+     * Down-casts this vertex to a NamedRole.
+     * This is an internal variable injected to handle ambiguity in unscoped role-names.
      *
-     * @return the name of this named role
+     * @return This vertex down-casted to NamedRole.
      */
-    String asNamedRoleGetName();
+    NamedRole asNamedRole();
 }
