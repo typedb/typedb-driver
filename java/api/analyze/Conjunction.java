@@ -37,7 +37,7 @@ public interface Conjunction {
      *
      * @return stream of annotated variables
      */
-    Stream<com.typedb.driver.jni.Variable> annotated_variables();
+    Stream<? extends Variable> annotated_variables();
 
     /**
      * Gets the annotations for a specific variable in this conjunction.
@@ -45,5 +45,5 @@ public interface Conjunction {
      * @param variable the variable to get annotations for
      * @return the annotations
      */
-    VariableAnnotations variable_annotations(com.typedb.driver.jni.Variable variable);
+    VariableAnnotations variable_annotations(Variable variable);
 }

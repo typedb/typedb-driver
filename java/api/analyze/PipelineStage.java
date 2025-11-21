@@ -88,7 +88,7 @@ public interface PipelineStage {
         /**
          * The index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID block();
+        ConjunctionID block();
     }
 
     /**
@@ -99,7 +99,7 @@ public interface PipelineStage {
         /**
          * The index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID block();
+        ConjunctionID block();
     }
 
     /**
@@ -110,7 +110,7 @@ public interface PipelineStage {
         /**
          * The index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID block();
+        ConjunctionID block();
     }
 
     /**
@@ -121,7 +121,7 @@ public interface PipelineStage {
         /**
          * The index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID block();
+        ConjunctionID block();
     }
 
     /**
@@ -142,12 +142,12 @@ public interface PipelineStage {
         /**
          * The index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID block();
+        ConjunctionID block();
 
         /**
          * The variables for which the unified concepts are to be deleted.
          */
-        Stream<com.typedb.driver.jni.Variable> deletedVariables();
+        Stream<? extends Variable> deletedVariables();
     }
 
     /**
@@ -158,7 +158,7 @@ public interface PipelineStage {
         /**
          * The variables being selected
          */
-        Stream<com.typedb.driver.jni.Variable> variables();
+        Stream<? extends Variable> variables();
     }
 
     /**
@@ -178,7 +178,7 @@ public interface PipelineStage {
             /**
              * The variable to sort by
              */
-            com.typedb.driver.jni.Variable variable();
+            Variable variable();
 
             /**
              * The sort order (ascending or descending)
@@ -195,7 +195,7 @@ public interface PipelineStage {
         /**
          * The variables that must be present in the result
          */
-        Stream<com.typedb.driver.jni.Variable> variables();
+        Stream<? extends Variable> variables();
     }
 
     /**
@@ -240,7 +240,7 @@ public interface PipelineStage {
         /**
          * The variables to group by
          */
-        Stream<com.typedb.driver.jni.Variable> groupBy();
+        Stream<? extends Variable> groupBy();
 
         /**
          * The reducer assignments
@@ -254,7 +254,7 @@ public interface PipelineStage {
             /**
              * The variable being assigned to
              */
-            com.typedb.driver.jni.Variable assigned();
+            Variable assigned();
 
             /**
              * The reducer being applied

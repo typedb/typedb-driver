@@ -272,14 +272,14 @@ Constraint.Value asValue()
 
 [source,java]
 ----
-java.util.stream.Stream<? extends com.typedb.driver.jni.ConjunctionID> branches()
+java.util.stream.Stream<? extends ConjunctionID> branches()
 ----
 
 Index into ``Pipeline.conjunctions``
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<? extends com.typedb.driver.jni.ConjunctionID>`
+`java.util.stream.Stream<? extends ConjunctionID>`
 
 [#_Constraint_Or_isComparison_]
 ==== isComparison

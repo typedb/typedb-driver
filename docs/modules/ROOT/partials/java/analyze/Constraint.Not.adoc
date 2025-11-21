@@ -269,14 +269,14 @@ Constraint.Value asValue()
 
 [source,java]
 ----
-com.typedb.driver.jni.ConjunctionID conjunction()
+ConjunctionID conjunction()
 ----
 
 Index into ``Pipeline.conjunctions``
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.ConjunctionID`
+`ConjunctionID`
 
 [#_Constraint_Not_isComparison_]
 ==== isComparison

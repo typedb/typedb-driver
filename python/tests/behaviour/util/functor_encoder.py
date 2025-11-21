@@ -19,8 +19,8 @@ import re
 from enum import Enum
 
 from typedb.analyze import (
-    Constraint, ConstraintVertex,
-    Pipeline, PipelineStage,  Fetch,
+    Constraint, ConstraintVertex, Variable,
+    ConjunctionID, Pipeline, PipelineStage,  Fetch,
     Function, ReturnOperation,
     ReduceStage, Reducer, SortStage, VariableAnnotations,
 )
@@ -175,7 +175,7 @@ def _encode_constraint_vertex(constraint_vertex: ConstraintVertex, encoder: Func
         value = constraint_vertex.as_value()
         return f"\"{value}\"" if value.is_string() else str(value)
     elif constraint_vertex.is_named_role():
-        return constraint_vertex.as_named_role_get_name()
+        return constraint_vertex.as_named_role().name()
 
 
 def _encode_variable(self, encoder: FunctorEncoder) -> str:
@@ -345,9 +345,9 @@ def monkey_patch_all():
     Type.encode_as_functor = _encode_type
     VariableAnnotations.encode_as_functor = _encode_variable_annotations
 
-    typedb.native_driver_wrapper.ConjunctionID.encode_as_functor = _encode_conjunction_id
+    ConjunctionID.encode_as_functor = _encode_conjunction_id
     typedb.common.iterator_wrapper.IteratorWrapper.encode_as_functor = _encode_iterator_wrapper
-    typedb.native_driver_wrapper.Variable.encode_as_functor = _encode_variable
+    Variable.encode_as_functor = _encode_variable
 
 
 monkey_patch_all()

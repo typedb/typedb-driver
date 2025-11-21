@@ -19,26 +19,35 @@
 
 package com.typedb.driver.analyze;
 
-import com.typedb.driver.api.analyze.Reducer;
-import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.jni.typedb_driver;
 
-import java.util.stream.Stream;
+import com.typedb.driver.api.analyze.ConjunctionID;
 
-public class ReducerImpl extends NativeObject<com.typedb.driver.jni.Reducer> implements Reducer {
-
-    protected ReducerImpl(com.typedb.driver.jni.Reducer nativeObject) {
+public class ConjunctionIDImpl extends NativeObject<com.typedb.driver.jni.ConjunctionID> implements ConjunctionID {
+    public ConjunctionIDImpl(com.typedb.driver.jni.ConjunctionID nativeObject) {
         super(nativeObject);
     }
 
-    public String name() {
-        return typedb_driver.reducer_get_name(nativeObject);
+    private long id() {
+        return com.typedb.driver.jni.typedb_driver.conjunction_id_as_u32(nativeObject);
     }
 
-    public Stream<VariableImpl> arguments() {
-        return new NativeIterator<>(
-                typedb_driver.reducer_get_arguments(nativeObject)
-        ).stream().map(VariableImpl::new);
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ConjunctionIDImpl that = (ConjunctionIDImpl) obj;
+        return this.id() == that.id();
+    }
+
+    @Override
+    public String toString() {
+        return typedb_driver.conjunction_id_to_string(nativeObject);
     }
 }

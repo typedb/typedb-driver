@@ -50,13 +50,14 @@ from typedb.api.analyze.function import (
 from typedb.analyze.pipeline import _Pipeline
 from typedb.analyze.variable_annotations import _VariableAnnotations
 from typedb.analyze.reducer import _Reducer
+from typedb.analyze.variable import _Variable
 from typedb.analyze.variants import ReturnOperationVariant
 
 if TYPE_CHECKING:
     from typedb.api.analyze.pipeline import Pipeline
-    from typedb.analyze.variable_annotations import VariableAnnotations
-    from typedb.analyze.reducer import Reducer
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable_annotations import VariableAnnotations
+    from typedb.api.analyze.reducer import Reducer
+    from typedb.api.analyze.variable import Variable
 
 
 class _Function(Function, NativeWrapper[NativeFunction]):
@@ -88,7 +89,7 @@ class _Function(Function, NativeWrapper[NativeFunction]):
 
     def argument_variables(self) -> Iterator["Variable"]:
         native_iter = function_argument_variables(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
     def return_operation(self) -> "ReturnOperation":
         return _Function._return_operation_of(function_return_operation(self.native_object))
@@ -155,7 +156,7 @@ class _ReturnOperationStream(_ReturnOperation, ReturnOperationStream):
         return self
 
     def variables(self) -> Iterator["Variable"]:
-        return IteratorWrapper(return_operation_stream_variables(self.native_object), variable_iterator_next)
+        return map(_Variable, IteratorWrapper(return_operation_stream_variables(self.native_object), variable_iterator_next))
 
 
 class _ReturnOperationSingle(_ReturnOperation, ReturnOperationSingle):
@@ -169,7 +170,7 @@ class _ReturnOperationSingle(_ReturnOperation, ReturnOperationSingle):
         return self
 
     def variables(self) -> Iterator["Variable"]:
-        return IteratorWrapper(return_operation_single_variables(self.native_object), variable_iterator_next)
+        return map(_Variable, IteratorWrapper(return_operation_single_variables(self.native_object), variable_iterator_next))
 
     def selector(self) -> str:
         return return_operation_single_selector(self.native_object)

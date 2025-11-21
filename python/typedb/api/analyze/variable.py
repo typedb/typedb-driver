@@ -21,20 +21,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.variable import Variable
+    pass
 
 
-class Reducer(ABC):
-    """
-    Representation of a reducer used either in a PipelineStage::Reduce or in a function's ReturnOperation.
-    """
-
-    @abstractmethod
-    def name(self) -> str:
-        """The reduce operation applied (e.g. 'sum', 'count')."""
-        pass
-
-    @abstractmethod
-    def arguments(self) -> Iterator["Variable"]:
-        """The arguments to the reducer."""
-        pass
+class Variable(ABC):
+    pass

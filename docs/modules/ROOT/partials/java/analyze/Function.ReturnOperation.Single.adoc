@@ -141,14 +141,14 @@ Gets the selector that determines how the operation selects the row.
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> variables()
+java.util.stream.Stream<? extends Variable> variables()
 ----
 
 Gets the variables in the returned row.
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_Function_ReturnOperation_Single_variant_]
 ==== variant

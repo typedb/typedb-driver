@@ -41,11 +41,6 @@ from typedb.native_driver_wrapper import (
     Not as NativeNot,
     Try as NativeTry,
 
-    Entity as NativeEntity,
-    Relation as NativeRelation,
-    Attribute as NativeAttribute,
-    Role as NativeRole,
-
     LeafDocument as NativeLeafDocument,
     ListDocument as NativeListDocument,
     ObjectDocument as NativeObjectDocument,

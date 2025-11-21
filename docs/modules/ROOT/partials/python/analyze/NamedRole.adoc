@@ -1,0 +1,38 @@
+[#_NamedRole]
+=== NamedRole
+
+*Package*: `typedb.api.analyze.named_role`
+
+‘links’ &amp; ‘relates’ constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity
+
+// tag::methods[]
+[#_NamedRole_name_]
+==== name
+
+[source,python]
+----
+name() -> str
+----
+
+The unscoped role name specified in the query.
+
+[caption=""]
+.Returns
+`str`
+
+[#_NamedRole_variable_]
+==== variable
+
+[source,python]
+----
+variable() -> Variable
+----
+
+The internal variable injected to handle ambiguity in unscoped role names.
+
+[caption=""]
+.Returns
+`Variable`
+
+// end::methods[]
+

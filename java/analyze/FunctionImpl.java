@@ -39,8 +39,8 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
         return new PipelineImpl(com.typedb.driver.jni.typedb_driver.function_body(nativeObject));
     }
 
-    public Stream<com.typedb.driver.jni.Variable> argument_variables() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.function_argument_variables(nativeObject)).stream();
+    public Stream<VariableImpl> argument_variables() {
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.function_argument_variables(nativeObject)).stream().map(VariableImpl::new);
     }
 
     public ReturnOperationImpl return_operation() {
@@ -126,8 +126,8 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
                 return this;
             }
 
-            public java.util.stream.Stream<com.typedb.driver.jni.Variable> variables() {
-                return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.return_operation_stream_variables(nativeObject)).stream();
+            public java.util.stream.Stream<VariableImpl> variables() {
+                return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.return_operation_stream_variables(nativeObject)).stream().map(VariableImpl::new);
             }
         }
 
@@ -151,8 +151,8 @@ public class FunctionImpl extends NativeObject<com.typedb.driver.jni.Function> i
                 return this;
             }
 
-            public java.util.stream.Stream<com.typedb.driver.jni.Variable> variables() {
-                return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.return_operation_single_variables(nativeObject)).stream();
+            public java.util.stream.Stream<VariableImpl> variables() {
+                return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.return_operation_single_variables(nativeObject)).stream().map(VariableImpl::new);
             }
 
             public String selector() {

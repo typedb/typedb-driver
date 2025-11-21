@@ -221,14 +221,14 @@ com.typedb.driver.jni.PipelineStageVariant getVariant()
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> groupBy()
+java.util.stream.Stream<? extends Variable> groupBy()
 ----
 
 The variables to group by
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_PipelineStage_ReduceStage_isDelete_]
 ==== isDelete

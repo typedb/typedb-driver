@@ -34,5 +34,5 @@ public interface Reducer {
     /**
      * @return The arguments to the reducer.
      */
-    Stream<com.typedb.driver.jni.Variable> arguments();
+    Stream<? extends Variable> arguments();
 }

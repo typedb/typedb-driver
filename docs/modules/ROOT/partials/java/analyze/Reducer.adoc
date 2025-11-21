@@ -11,14 +11,14 @@ Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a f
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> arguments()
+java.util.stream.Stream<? extends Variable> arguments()
 ----
 
 
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_Reducer_name_]
 ==== name

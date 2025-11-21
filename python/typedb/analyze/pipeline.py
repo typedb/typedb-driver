@@ -37,9 +37,10 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.analyze.pipeline_stage import PipelineStage
-    from typedb.analyze.conjunction import Conjunction
-    from typedb.native_driver_wrapper import ConjunctionID, Variable
+    from typedb.api.analyze.conjunction import Conjunction
+    from typedb.api.analyze.conjunction_id import ConjunctionID
+    from typedb.api.analyze.pipeline_stage import PipelineStage
+    from typedb.api.analyze.variable import Variable
 
 class _Pipeline(Pipeline, NativeWrapper[NativePipeline]):
 
@@ -57,10 +58,10 @@ class _Pipeline(Pipeline, NativeWrapper[NativePipeline]):
         return map(_PipelineStage.of, IteratorWrapper(native_iter, pipeline_stage_iterator_next))
 
     def get_variable_name(self, variable: "Variable") -> Optional[str]:
-        name = variable_get_name(self.native_object, variable)
+        name = variable_get_name(self.native_object, variable.native_object)
         return None if name is None else name
 
     def conjunction(self, conjunction_id: "ConjunctionID") -> Optional["Conjunction"]:
-        native_conj = pipeline_get_conjunction(self.native_object, conjunction_id)
+        native_conj = pipeline_get_conjunction(self.native_object, conjunction_id.native_object)
         return None if native_conj is None else _Conjunction(native_conj)
 

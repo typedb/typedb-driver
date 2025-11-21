@@ -11,14 +11,14 @@ A representation of the constraints involved in the query, and types inferred fo
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> annotated_variables()
+java.util.stream.Stream<? extends Variable> annotated_variables()
 ----
 
 The variables that have annotations in this conjunction.
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_Conjunction_constraints_]
 ==== constraints
@@ -34,12 +34,12 @@ The ``Constraint``s in the conjunction.
 .Returns
 `java.util.stream.Stream<? extends Constraint>`
 
-[#_Conjunction_variable_annotations_com_typedb_driver_jni_Variable]
+[#_Conjunction_variable_annotations_Variable]
 ==== variable_annotations
 
 [source,java]
 ----
-VariableAnnotations variable_annotations​(com.typedb.driver.jni.Variable variable)
+VariableAnnotations variable_annotations​(Variable variable)
 ----
 
 Gets the annotations for a specific variable in this conjunction.
@@ -50,7 +50,7 @@ Gets the annotations for a specific variable in this conjunction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| the variable to get annotations for a| `com.typedb.driver.jni.Variable`
+a| `variable` a| the variable to get annotations for a| `Variable`
 |===
 
 [caption=""]

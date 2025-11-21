@@ -20,33 +20,19 @@ Down-casts this vertex to a type label.
 .Returns
 `typedb.api.concept.type.type.Type`
 
-[#_ConstraintVertex_as_named_role_get_name_]
-==== as_named_role_get_name
+[#_ConstraintVertex_as_named_role_]
+==== as_named_role
 
 [source,python]
 ----
-as_named_role_get_name() -> str
+as_named_role() -> typedb.api.analyze.named_role.NamedRole
 ----
 
-Down-casts the variable as a NamedRoleVertex and gets the associated name.
+Down-casts this vertex to a NamedRole. This is an internal variable injected to handle ambiguity in unscoped role-names.
 
 [caption=""]
 .Returns
-`str`
-
-[#_ConstraintVertex_as_named_role_get_variable_]
-==== as_named_role_get_variable
-
-[source,python]
-----
-as_named_role_get_variable() -> Variable
-----
-
-Down-casts the variable as a NamedRoleVertex and gets the associated variable.
-
-[caption=""]
-.Returns
-`Variable`
+`typedb.api.analyze.named_role.NamedRole`
 
 [#_ConstraintVertex_as_value_]
 ==== as_value

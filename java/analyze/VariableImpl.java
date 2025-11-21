@@ -19,27 +19,34 @@
 
 package com.typedb.driver.analyze;
 
-import com.typedb.driver.api.analyze.Conjunction;
 import com.typedb.driver.api.analyze.Variable;
-import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.jni.typedb_driver;
 
-import java.util.stream.Stream;
-
-public class ConjunctionImpl extends NativeObject<com.typedb.driver.jni.Conjunction> implements Conjunction {
-    protected ConjunctionImpl(com.typedb.driver.jni.Conjunction nativeObject) {
+public class VariableImpl extends NativeObject<com.typedb.driver.jni.Variable> implements Variable {
+    VariableImpl(com.typedb.driver.jni.Variable nativeObject) {
         super(nativeObject);
     }
 
-    public Stream<ConstraintImpl> constraints() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_constraints(nativeObject)).stream().map(ConstraintImpl::of);
+    private long id() {
+        return com.typedb.driver.jni.typedb_driver.variable_id_as_u32(nativeObject);
     }
 
-    public Stream<VariableImpl> annotated_variables() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_annotated_variables(nativeObject)).stream().map(VariableImpl::new);
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id());
     }
 
-    public VariableAnnotationsImpl variable_annotations(Variable variable) {
-        return new VariableAnnotationsImpl(com.typedb.driver.jni.typedb_driver.conjunction_get_variable_annotations(nativeObject, ((VariableImpl) variable).nativeObject));
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        VariableImpl that = (VariableImpl) obj;
+        return this.id() == that.id();
+    }
+
+    @Override
+    public String toString() {
+        return typedb_driver.variable_to_string(nativeObject);
     }
 }

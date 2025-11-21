@@ -18,43 +18,29 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typedb.analyze.constraint import Constraint
-    from typedb.analyze.variable_annotations import VariableAnnotations
-    from typedb.analyze.variable import Variable
+    from typedb.api.analyze.variable import Variable
 
 
-class Conjunction(ABC):
+class NamedRole(ABC):
     """
-    A representation of the constraints involved in the query, and types inferred for each variable.
+    'links' & 'relates' constraints accept unscoped role names.
+    Since an unscoped role-name does not uniquely identify a role-type,
+    (Different role-types belonging to different relation types may share the same name)
+    an internal variable is introduced to handle the ambiguity
     """
-
     @abstractmethod
-    def constraints(self) -> Iterator["Constraint"]:
+    def variable(self) -> "Variable":
         """
-        The Constraint(s) in the conjunction.
-
-        :return: an iterator over constraints
+        The internal variable injected to handle ambiguity in unscoped role names.
         """
         pass
 
     @abstractmethod
-    def annotated_variables(self) -> Iterator["Variable"]:
+    def name(self) -> str:
         """
-        The variables that have annotations in this conjunction.
-
-        :return: an iterator over annotated variables
-        """
-        pass
-
-    @abstractmethod
-    def variable_annotations(self, variable: "Variable") -> Optional["VariableAnnotations"]:
-        """
-        Gets the annotations for a specific variable in this conjunction.
-
-        :param variable: the variable to get annotations for
-        :return: the variable's annotations
+        The unscoped role name specified in the query.
         """
         pass

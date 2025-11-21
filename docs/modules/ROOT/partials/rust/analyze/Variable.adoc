@@ -5,6 +5,7 @@
 
 * `Clone`
 * `Debug`
+* `Display`
 * `Eq`
 * `Hash`
 * `PartialEq`

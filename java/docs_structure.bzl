@@ -50,6 +50,7 @@ dir_mapping = {
     "Function.ReturnOperation.Check.adoc": "analyze",
     "Function.ReturnOperation.Reduce.adoc": "analyze",
     "Function.ReturnOperation.Reduce.ReduceAssignment.adoc": "analyze",
+    "NamedRole.adoc": "analyze",
     "Pipeline.adoc": "analyze",
     "PipelineStage.adoc": "analyze",
     "PipelineStage.MatchStage.adoc": "analyze",

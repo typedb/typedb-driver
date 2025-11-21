@@ -44,6 +44,7 @@ dir_mapping = {
     "Try.adoc": "analyze",
     "Span.adoc": "analyze",
     "ConstraintVertex.adoc": "analyze",
+    "NamedRole.adoc": "analyze",
     "Fetch.adoc": "analyze",
     "FetchVariant.adoc": "analyze",
     "FetchObject.adoc": "analyze",

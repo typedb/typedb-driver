@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import typedb
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable import Variable
 
 
 class ConstraintVertex(ABC):
@@ -72,15 +72,9 @@ class ConstraintVertex(ABC):
         pass
 
     @abstractmethod
-    def as_named_role_get_variable(self) -> "Variable":
+    def as_named_role(self) -> "typedb.api.analyze.named_role.NamedRole":
         """
-        Down-casts the variable as a NamedRoleVertex and gets the associated variable.
-        """
-        pass
-
-    @abstractmethod
-    def as_named_role_get_name(self) -> str:
-        """
-        Down-casts the variable as a NamedRoleVertex and gets the associated name.
+        Down-casts this vertex to a NamedRole.
+        This is an internal variable injected to handle ambiguity in unscoped role-names.
         """
         pass

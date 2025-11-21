@@ -17,34 +17,44 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING
 
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.native_wrapper import NativeWrapper
-from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
-
-from typedb.api.analyze.reducer import Reducer
+from typedb.api.analyze.named_role import NamedRole
 from typedb.analyze.variable import _Variable
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
+from typedb.common.native_wrapper import NativeWrapper
 
 from typedb.native_driver_wrapper import (
-    Reducer as NativeReducer,
-    reducer_get_name,
-    reducer_get_arguments,
-    variable_iterator_next,
+    NamedRole as NativeNamedRole,
+    named_role_get_variable,
+    named_role_get_name,
+    named_role_to_string,
 )
 
 if TYPE_CHECKING:
     from typedb.api.analyze.variable import Variable
 
 
-class _Reducer(Reducer, NativeWrapper[NativeReducer]):
+class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
 
-    def name(self) -> str:
-        return reducer_get_name(self.native_object)
+    def variable(self) -> "Variable":
+        return _Variable(named_role_get_variable(self.native_object))
 
-    def arguments(self) -> Iterator["Variable"]:
-        native_iter = reducer_get_arguments(self.native_object)
-        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
+    def name(self) -> str:
+        return named_role_get_name(self.native_object)
+
+    def __repr__(self) -> str:
+        return named_role_to_string(self.native_object)
+
+    def __hash__(self) -> int:
+        return hash(self.variable())
+
+    def __eq__(self, other: object) -> bool:
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self.variable() == other.variable()

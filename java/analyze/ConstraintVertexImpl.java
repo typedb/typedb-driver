@@ -27,7 +27,7 @@ import com.typedb.driver.jni.ConstraintVertexVariant;
 import com.typedb.driver.jni.typedb_driver;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Analyze.INVALID_CONSTRAINT_VERTEX_CASTING;
-import static com.typedb.driver.common.util.Objects.className;
+import static com.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.ConstraintVertex> implements ConstraintVertex {
     public ConstraintVertexImpl(com.typedb.driver.jni.ConstraintVertex nativeObject) {
@@ -54,11 +54,11 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         return variant() == ConstraintVertexVariant.NamedRoleVertex;
     }
 
-    public com.typedb.driver.jni.Variable asVariable() {
+    public VariableImpl asVariable() {
         if (!isVariable()) {
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.VariableVertex);
         }
-        return typedb_driver.constraint_vertex_as_variable(nativeObject);
+        return new VariableImpl(typedb_driver.constraint_vertex_as_variable(nativeObject));
     }
 
     public com.typedb.driver.api.concept.type.Type asLabel() {
@@ -75,17 +75,42 @@ public class ConstraintVertexImpl extends NativeObject<com.typedb.driver.jni.Con
         return new com.typedb.driver.concept.value.ValueImpl(typedb_driver.constraint_vertex_as_value(nativeObject));
     }
 
-    public com.typedb.driver.jni.Variable asNamedRoleGetVariable() {
+    public NamedRoleImpl asNamedRole() {
         if (!isNamedRole()) {
             throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
         }
-        return typedb_driver.constraint_vertex_as_named_role_get_variable(nativeObject);
+        return new NamedRoleImpl(typedb_driver.constraint_vertex_as_named_role(nativeObject));
     }
 
-    public String asNamedRoleGetName() {
-        if (!isNamedRole()) {
-            throw new TypeDBDriverException(INVALID_CONSTRAINT_VERTEX_CASTING, this.variant(), ConstraintVertexVariant.NamedRoleVertex);
+    private Object unwrap() {
+        if (isVariable()) {
+            return asVariable();
+        } else if (isLabel()) {
+            return asLabel();
+        } else if (isValue()) {
+            return asValue();
+        } else if (isNamedRole()) {
+            return asNamedRole();
+        } else {
+            throw new TypeDBDriverException(ILLEGAL_STATE);
         }
-        return typedb_driver.constraint_vertex_as_named_role_get_name(nativeObject);
+    }
+
+    @Override
+    public int hashCode() {
+        return unwrap().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ConstraintVertexImpl that = (ConstraintVertexImpl) obj;
+        return unwrap().equals(that.unwrap());
+    }
+
+    @Override
+    public String toString() {
+        return unwrap().toString();
     }
 }

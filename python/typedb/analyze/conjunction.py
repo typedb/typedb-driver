@@ -25,6 +25,7 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.api.analyze.conjunction import Conjunction
 from typedb.analyze.variable_annotations import _VariableAnnotations
 from typedb.analyze.constraint import _Constraint
+from typedb.analyze.variable import _Variable
 
 from typedb.native_driver_wrapper import (
     Conjunction as NativeConjunction,
@@ -38,7 +39,7 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint import Constraint
     from typedb.api.analyze.variable_annotations import VariableAnnotations
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable import Variable
 
 
 class _Conjunction(Conjunction, NativeWrapper[NativeConjunction]):
@@ -53,8 +54,8 @@ class _Conjunction(Conjunction, NativeWrapper[NativeConjunction]):
 
     def annotated_variables(self) -> Iterator["Variable"]:
         native_iter = conjunction_get_annotated_variables(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
     def variable_annotations(self, variable: "Variable") -> Optional["VariableAnnotations"]:
-        native_annotations = conjunction_get_variable_annotations(self.native_object, variable)
+        native_annotations = conjunction_get_variable_annotations(self.native_object, variable.native_object)
         return None if native_annotations is None else _VariableAnnotations(native_annotations)

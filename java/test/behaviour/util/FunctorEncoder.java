@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.util;
 
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.analyze.Conjunction;
 import com.typedb.driver.api.analyze.Constraint;
 import com.typedb.driver.api.analyze.ConstraintVertex;
@@ -27,8 +28,8 @@ import com.typedb.driver.api.analyze.Function;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.analyze.PipelineStage;
 import com.typedb.driver.api.analyze.Reducer;
+import com.typedb.driver.api.analyze.Variable;
 import com.typedb.driver.api.analyze.VariableAnnotations;
-import com.typedb.driver.api.concept.Concept;
 
 import com.typedb.driver.jni.ConstraintExactness;
 import com.typedb.driver.jni.ReturnOperationVariant;
@@ -59,7 +60,7 @@ public abstract class FunctorEncoder {
     }
 
     // The few common ones
-    public String encode(com.typedb.driver.jni.Variable variable) {
+    public String encode(Variable variable) {
         return "$" + pipeline.getVariableName(variable).orElse("_");
     }
 
@@ -132,7 +133,7 @@ public abstract class FunctorEncoder {
                     return vertex.asValue().toString();
                 }
             } else if (vertex.isNamedRole()) {
-                return vertex.asNamedRoleGetName();
+                return vertex.asNamedRole().name();
             } else {
                 throw new IllegalArgumentException("Unexpected ConstraintVertex variant");
             }

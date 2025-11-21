@@ -183,14 +183,14 @@ PipelineStage.UpdateStage asUpdate()
 
 [source,java]
 ----
-com.typedb.driver.jni.ConjunctionID block()
+ConjunctionID block()
 ----
 
 The index into ``Pipeline.conjunctions``
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.ConjunctionID`
+`ConjunctionID`
 
 [#_PipelineStage_InsertStage_getVariant_]
 ==== getVariant

@@ -11,14 +11,14 @@ An assignment of a reducer to a variable
 
 [source,java]
 ----
-com.typedb.driver.jni.Variable assigned()
+Variable assigned()
 ----
 
 The variable being assigned to
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.Variable`
+`Variable`
 
 [#_PipelineStage_ReduceStage_ReduceAssignment_reducer_]
 ==== reducer

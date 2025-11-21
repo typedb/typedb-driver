@@ -19,28 +19,25 @@
 
 package com.typedb.driver.api.analyze;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
- * A representation of a query pipeline.
+ * 'links' & 'relates' constraints accept unscoped role names.
+ * Since an unscoped role-name does not uniquely identify a role-type,
+ *  (Different role-types belonging to different relation types may share the same name)
+ *  an internal variable is introduced to handle the ambiguity
  */
-public interface Pipeline {
-    /**
-     * @return A stream of the stages making up the pipeline
-     */
-    Stream<? extends PipelineStage> stages();
+public interface NamedRole {
 
     /**
-     * Gets the name of the specified variable, if it has one.
+     * The internal variable injected to handle ambiguity in unscoped role names.
      *
-     * @return the name, if any
+     * @return the variable associated with this named role
      */
-    Optional<String> getVariableName(Variable variable);
+    Variable variable();
 
     /**
-     * @param conjunctionID The ConjunctionID of the conjunction to retrieve
-     * @return The corresponding <code>Conjunction</code> instance
+     * The unscoped role name specified in the query.
+     *
+     * @return the unscoped name of the role
      */
-    Optional<? extends Conjunction> conjunction(ConjunctionID conjunctionID);
+    String name();
 }

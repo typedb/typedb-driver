@@ -221,6 +221,8 @@
 %nojavaexception analyzed_fetch;
 %nojavaexception comparator_get_name;
 
+%nojavaexception conjunction_id_as_u32;
+%nojavaexception conjunction_id_to_string;
 %nojavaexception conjunction_get_constraints;
 %nojavaexception conjunction_get_annotated_variables;
 %nojavaexception conjunction_get_variable_annotations;
@@ -272,13 +274,16 @@
 %nojavaexception constraint_or_get_branches;
 %nojavaexception constraint_not_get_conjunction;
 %nojavaexception constraint_try_get_conjunction;
+%nojavaexception constraint_to_string;
 
 %nojavaexception constraint_vertex_variant;
 %nojavaexception constraint_vertex_as_variable;
 %nojavaexception constraint_vertex_as_label;
 %nojavaexception constraint_vertex_as_value;
-%nojavaexception constraint_vertex_as_named_role_get_name;
-%nojavaexception constraint_vertex_as_named_role_get_variable;
+%nojavaexception constraint_vertex_as_named_role;
+%nojavaexception named_role_get_name;
+%nojavaexception named_role_get_variable;
+%nojavaexception named_role_to_string;
 
 %nojavaexception fetch_variant;
 %nojavaexception fetch_leaf_annotations;
@@ -304,6 +309,7 @@
 %nojavaexception pipeline_stage_sort_get_sort_variables;
 %nojavaexception pipeline_stage_reduce_get_groupby;
 %nojavaexception pipeline_stage_reduce_get_reducer_assignments;
+%nojavaexception pipeline_stage_to_string;
 %nojavaexception reduce_assignment_get_assigned;
 %nojavaexception reduce_assignment_get_reducer;
 %nojavaexception reducer_get_name;
@@ -323,7 +329,8 @@
 %nojavaexception variable_annotations_value;
 
 %nojavaexception variable_get_name;
-
+%nojavaexception variable_id_as_u32;
+%nojavaexception variable_to_string;
 
 /* destructors do not throw */
 %nojavaexception ~Concept;
@@ -361,6 +368,7 @@
 %nojavaexception ~ConstraintVertex;
 %nojavaexception ~Fetch;
 %nojavaexception ~Function;
+%nojavaexception ~NamedRole;
 %nojavaexception ~PipelineStage;
 %nojavaexception ~Pipeline;
 %nojavaexception ~Reducer;

@@ -17,34 +17,40 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING
 
-from typedb.common.iterator_wrapper import IteratorWrapper
-from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
+from typedb.common.native_wrapper import NativeWrapper
 
-from typedb.api.analyze.reducer import Reducer
-from typedb.analyze.variable import _Variable
+from typedb.api.analyze.variable import Variable
 
 from typedb.native_driver_wrapper import (
-    Reducer as NativeReducer,
-    reducer_get_name,
-    reducer_get_arguments,
-    variable_iterator_next,
+    Variable as NativeVariable,
+    variable_id_as_u32,
+    variable_to_string,
 )
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.variable import Variable
+    pass
 
 
-class _Reducer(Reducer, NativeWrapper[NativeReducer]):
+class _Variable(Variable, NativeWrapper[NativeVariable]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
 
-    def name(self) -> str:
-        return reducer_get_name(self.native_object)
+    def _id(self) -> int:
+        return variable_id_as_u32(self.native_object)
 
-    def arguments(self) -> Iterator["Variable"]:
-        native_iter = reducer_get_arguments(self.native_object)
-        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
+    def __hash__(self) -> int:
+        return hash(self._id())
+
+    def __eq__(self, other: object) -> bool:
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self._id() == other._id()
+
+    def __repr__(self) -> str:
+        return variable_to_string(self.native_object)

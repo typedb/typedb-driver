@@ -20,33 +20,19 @@ Down-casts this vertex to a type label.
 .Returns
 `Type`
 
-[#_ConstraintVertex_asNamedRoleGetName_]
-==== asNamedRoleGetName
+[#_ConstraintVertex_asNamedRole_]
+==== asNamedRole
 
 [source,java]
 ----
-java.lang.String asNamedRoleGetName()
+NamedRole asNamedRole()
 ----
 
-Down-casts the variable as a NamedRoleVertex and gets the associated name This is the role label specified by the user in a ``Links`` constraint.
+Down-casts this vertex to a NamedRole. This is an internal variable injected to handle ambiguity in unscoped role-names.
 
 [caption=""]
 .Returns
-`java.lang.String`
-
-[#_ConstraintVertex_asNamedRoleGetVariable_]
-==== asNamedRoleGetVariable
-
-[source,java]
-----
-com.typedb.driver.jni.Variable asNamedRoleGetVariable()
-----
-
-Down-casts the variable as a NamedRoleVertex and gets the associated variable. This is an internal variable injected to handle ambiguity in role-names.
-
-[caption=""]
-.Returns
-`com.typedb.driver.jni.Variable`
+`NamedRole`
 
 [#_ConstraintVertex_asValue_]
 ==== asValue
@@ -67,14 +53,14 @@ Down-casts this vertex to a value.
 
 [source,java]
 ----
-com.typedb.driver.jni.Variable asVariable()
+Variable asVariable()
 ----
 
 Down-casts this variable to a vertex.
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.Variable`
+`Variable`
 
 [#_ConstraintVertex_isLabel_]
 ==== isLabel

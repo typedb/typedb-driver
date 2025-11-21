@@ -6,12 +6,12 @@
 A representation of a query pipeline.
 
 // tag::methods[]
-[#_Pipeline_conjunction_com_typedb_driver_jni_ConjunctionID]
+[#_Pipeline_conjunction_ConjunctionID]
 ==== conjunction
 
 [source,java]
 ----
-java.util.Optional<? extends Conjunction> conjunction​(com.typedb.driver.jni.ConjunctionID conjunctionID)
+java.util.Optional<? extends Conjunction> conjunction​(ConjunctionID conjunctionID)
 ----
 
 
@@ -22,19 +22,19 @@ java.util.Optional<? extends Conjunction> conjunction​(com.typedb.driver.jni.C
 [options="header"]
 |===
 |Name |Description |Type
-a| `conjunctionID` a| The ConjunctionID of the conjunction to retrieve a| `com.typedb.driver.jni.ConjunctionID`
+a| `conjunctionID` a| The ConjunctionID of the conjunction to retrieve a| `ConjunctionID`
 |===
 
 [caption=""]
 .Returns
 `java.util.Optional<? extends Conjunction>`
 
-[#_Pipeline_getVariableName_com_typedb_driver_jni_Variable]
+[#_Pipeline_getVariableName_Variable]
 ==== getVariableName
 
 [source,java]
 ----
-java.util.Optional<java.lang.String> getVariableName​(com.typedb.driver.jni.Variable variable)
+java.util.Optional<java.lang.String> getVariableName​(Variable variable)
 ----
 
 Gets the name of the specified variable, if it has one.

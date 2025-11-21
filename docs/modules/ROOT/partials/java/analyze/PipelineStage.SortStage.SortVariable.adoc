@@ -25,14 +25,14 @@ The sort order (ascending or descending)
 
 [source,java]
 ----
-com.typedb.driver.jni.Variable variable()
+Variable variable()
 ----
 
 The variable to sort by
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.Variable`
+`Variable`
 
 // end::methods[]
 

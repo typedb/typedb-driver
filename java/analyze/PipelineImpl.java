@@ -19,7 +19,9 @@
 
 package com.typedb.driver.analyze;
 
+import com.typedb.driver.api.analyze.ConjunctionID;
 import com.typedb.driver.api.analyze.Pipeline;
+import com.typedb.driver.api.analyze.Variable;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
 
@@ -37,13 +39,13 @@ public class PipelineImpl extends NativeObject<com.typedb.driver.jni.Pipeline> i
     }
 
     @Override
-    public Optional<String> getVariableName(com.typedb.driver.jni.Variable variable) {
-        return Optional.ofNullable(com.typedb.driver.jni.typedb_driver.variable_get_name(nativeObject, variable));
+    public Optional<String> getVariableName(Variable variable) {
+        return Optional.ofNullable(com.typedb.driver.jni.typedb_driver.variable_get_name(nativeObject, ((VariableImpl) variable).nativeObject));
     }
 
     @Override
-    public Optional<ConjunctionImpl> conjunction(com.typedb.driver.jni.ConjunctionID conjunctionID) {
-        com.typedb.driver.jni.Conjunction nativeConjunction = com.typedb.driver.jni.typedb_driver.pipeline_get_conjunction(nativeObject, conjunctionID);
+    public Optional<ConjunctionImpl> conjunction(ConjunctionID conjunctionID) {
+        com.typedb.driver.jni.Conjunction nativeConjunction = com.typedb.driver.jni.typedb_driver.pipeline_get_conjunction(nativeObject, ((ConjunctionIDImpl) conjunctionID).nativeObject);
         if (nativeConjunction == null) {
             return Optional.empty();
         } else {

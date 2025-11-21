@@ -17,14 +17,23 @@
  * under the License.
  */
 
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fmt::{Debug, Display, Formatter},
+};
 
 use crate::{analyze::VariableAnnotations, concept, IID};
 
 /// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
 /// Used as indirection in the representation of a pipeline.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ConjunctionID(pub usize);
+
+impl Display for ConjunctionID {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
 
 /// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
@@ -126,10 +135,22 @@ pub enum Constraint {
     },
 }
 
+impl Display for Constraint {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
 /// Uniquely identifies a variable in a <code>Pipeline</code>pipeline.
 /// Its name (if any) can be retrieved from the <code>variable_names</code> field in <code>Pipeline</code>
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
+
+impl Display for Variable {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
 
 /// The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query.
 /// A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
@@ -140,7 +161,7 @@ pub struct Variable(pub u32);
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ConstraintVertex {
     Variable(Variable),
     Label(concept::type_::Type),
@@ -153,6 +174,18 @@ pub enum ConstraintVertex {
 pub struct NamedRole {
     pub variable: Variable,
     pub name: String,
+}
+
+impl PartialEq for NamedRole {
+    fn eq(&self, other: &Self) -> bool {
+        self.variable == other.variable // Names will be equal unless they belong to different pipelines
+    }
+}
+
+impl Display for NamedRole {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "NamedRole({})", self.name)
+    }
 }
 
 /// A representation of the comparator used in a comparison constraint.
