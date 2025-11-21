@@ -46,5 +46,15 @@ class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
     def name(self) -> str:
         return named_role_get_name(self.native_object)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return named_role_to_string(self.native_object)
+
+    def __hash__(self) -> int:
+        return hash(self.variable())
+
+    def __eq__(self, other: object) -> bool:
+        if other is self:
+            return True
+        if other is None or not isinstance(other, self.__class__):
+            return False
+        return self.variable() == other.variable()
