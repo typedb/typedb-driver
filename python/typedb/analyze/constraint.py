@@ -31,6 +31,7 @@ from typedb.api.analyze.constraint import (
     Or, Not, Try,
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
+from typedb.analyze.conjunction_id import _ConjunctionID
 from typedb.analyze.variants import ConstraintVariant
 from typedb.common.enums import Comparator, ConstraintExactness
 
@@ -96,7 +97,7 @@ from typedb.native_driver_wrapper import (
 if TYPE_CHECKING:
     from typedb.api.analyze.constraint import Constraint, Span
     from typedb.api.analyze.constraint_vertex import ConstraintVertex
-    from typedb.native_driver_wrapper import ConjunctionID
+    from typedb.api.analyze.conjunction_id import ConjunctionID
     import typedb
 
 
@@ -606,7 +607,7 @@ class _Or(_Constraint, Or):
 
     def branches(self) -> Iterator["ConjunctionID"]:
         native_iter = constraint_or_get_branches(self.native_object)
-        return IteratorWrapper(native_iter, conjunction_id_iterator_next)
+        return map(_ConjunctionID, IteratorWrapper(native_iter, conjunction_id_iterator_next))
 
 
 class _Not(_Constraint, Not):
@@ -620,7 +621,7 @@ class _Not(_Constraint, Not):
         return self
 
     def conjunction(self) -> "ConjunctionID":
-        return constraint_not_get_conjunction(self.native_object)
+        return _ConjunctionID(constraint_not_get_conjunction(self.native_object))
 
 
 class _Try(_Constraint, Try):
@@ -634,4 +635,4 @@ class _Try(_Constraint, Try):
         return self
 
     def conjunction(self) -> "ConjunctionID":
-        return constraint_try_get_conjunction(self.native_object)
+        return _ConjunctionID(constraint_try_get_conjunction(self.native_object))

@@ -21,6 +21,8 @@ from typing import TYPE_CHECKING
 
 from typedb.api.analyze.constraint_vertex import ConstraintVertex
 
+from typedb.analyze.variable import _Variable
+
 from typedb.analyze.named_role import _NamedRole
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
@@ -38,7 +40,7 @@ from typedb.native_driver_wrapper import (
 
 if TYPE_CHECKING:
     import typedb
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze import Variable
 
 
 class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex]):
@@ -62,7 +64,7 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
         return self.variant() == NamedRoleVertex
 
     def as_variable(self) -> Variable:
-        return constraint_vertex_as_variable(self.native_object)
+        return _Variable(constraint_vertex_as_variable(self.native_object))
 
     def as_label(self) -> "typedb.api.concept.type.type.Type":
         return concept_factory.wrap_concept(constraint_vertex_as_label(self.native_object))
@@ -95,5 +97,5 @@ class _ConstraintVertex(ConstraintVertex, NativeWrapper[NativeConstraintVertex])
             return False
         return self._unwrap() == other._unwrap()
 
-    def __hash__(self, other):
-        hash(self._unwrap())
+    def __hash__(self):
+        return hash(self._unwrap())

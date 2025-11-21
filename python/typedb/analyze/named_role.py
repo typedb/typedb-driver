@@ -20,6 +20,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.api.analyze.named_role import NamedRole
+from typedb.analyze.variable import _Variable
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
@@ -31,7 +32,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable import Variable
 
 
 class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
@@ -40,7 +41,7 @@ class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
         return TypeDBDriverException(ILLEGAL_STATE)
 
     def variable(self) -> "Variable":
-        return named_role_get_variable(self.native_object)
+        return _Variable(named_role_get_variable(self.native_object))
 
     def name(self) -> str:
         return named_role_get_name(self.native_object)

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 from typedb.api.analyze.variable import Variable
@@ -34,6 +35,9 @@ if TYPE_CHECKING:
 
 
 class _Variable(Variable, NativeWrapper[NativeVariable]):
+    @property
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def _id(self) -> int:
         return variable_id_as_u32(self.native_object)

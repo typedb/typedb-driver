@@ -32,7 +32,9 @@ from typedb.api.analyze.pipeline_stage import (
     SelectStage, SortStage, RequireStage, OffsetStage, LimitStage, DistinctStage, ReduceStage
 )
 from typedb.common.enums import SortOrder
+from typedb.analyze.conjunction_id import _ConjunctionID
 from typedb.analyze.reducer import _Reducer
+from typedb.analyze.variable import _Variable
 from typedb.analyze.variants import PipelineStageVariant
 
 from typedb.native_driver_wrapper import (
@@ -64,8 +66,9 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import ConjunctionID, Variable
+    from typedb.api.analyze.conjunction_id import ConjunctionID
     from typedb.api.analyze.reducer import Reducer
+    from typedb.api.analyze.variable import Variable
 
 
 class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
@@ -198,7 +201,7 @@ class _MatchStage(MatchStage, _PipelineStage):
         return self
 
     def block(self) -> "ConjunctionID":
-        return pipeline_stage_get_block(self.native_object)
+        return _ConjunctionID(pipeline_stage_get_block(self.native_object))
 
 
 class _InsertStage(InsertStage, _PipelineStage):
@@ -212,7 +215,7 @@ class _InsertStage(InsertStage, _PipelineStage):
         return self
 
     def block(self) -> "ConjunctionID":
-        return pipeline_stage_get_block(self.native_object)
+        return _ConjunctionID(pipeline_stage_get_block(self.native_object))
 
 
 class _PutStage(PutStage, _PipelineStage):
@@ -226,7 +229,7 @@ class _PutStage(PutStage, _PipelineStage):
         return self
 
     def block(self) -> "ConjunctionID":
-        return pipeline_stage_get_block(self.native_object)
+        return _ConjunctionID(pipeline_stage_get_block(self.native_object))
 
 
 class _UpdateStage(UpdateStage, _PipelineStage):
@@ -240,7 +243,7 @@ class _UpdateStage(UpdateStage, _PipelineStage):
         return self
 
     def block(self) -> "ConjunctionID":
-        return pipeline_stage_get_block(self.native_object)
+        return _ConjunctionID(pipeline_stage_get_block(self.native_object))
 
 
 class _DeleteStage(DeleteStage, _PipelineStage):
@@ -254,11 +257,11 @@ class _DeleteStage(DeleteStage, _PipelineStage):
         return self
 
     def block(self) -> "ConjunctionID":
-        return pipeline_stage_get_block(self.native_object)
+        return _ConjunctionID(pipeline_stage_get_block(self.native_object))
 
     def deleted_variables(self) -> Iterator["Variable"]:
         native_iter = pipeline_stage_delete_get_deleted_variables(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
 
 class _SelectStage(SelectStage, _PipelineStage):
@@ -273,7 +276,7 @@ class _SelectStage(SelectStage, _PipelineStage):
 
     def variables(self) -> Iterator["Variable"]:
         native_iter = pipeline_stage_select_get_variables(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
 
 class _SortStage(SortStage, _PipelineStage):
@@ -302,7 +305,7 @@ class _SortStage(SortStage, _PipelineStage):
             return TypeDBDriverException(ILLEGAL_STATE)
 
         def variable(self) -> "Variable":
-            return sort_variable_get_variable(self.native_object)
+            return _Variable(sort_variable_get_variable(self.native_object))
 
         def order(self) -> "SortOrder":
             return SortOrder(sort_variable_get_order(self.native_object))
@@ -320,7 +323,7 @@ class _RequireStage(RequireStage, _PipelineStage):
 
     def variables(self) -> Iterator["Variable"]:
         native_iter = pipeline_stage_require_get_variables(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
 
 class _OffsetStage(OffsetStage, _PipelineStage):
@@ -374,7 +377,7 @@ class _ReduceStage(ReduceStage, _PipelineStage):
 
     def group_by(self) -> Iterator["Variable"]:
         native_iter = pipeline_stage_reduce_get_groupby(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))
 
     def reduce_assignments(self) -> Iterator["ReduceStage.ReduceAssignment"]:
         native_iter = pipeline_stage_reduce_get_reducer_assignments(self.native_object)
@@ -394,7 +397,7 @@ class _ReduceStage(ReduceStage, _PipelineStage):
             return TypeDBDriverException(ILLEGAL_STATE)
 
         def assigned(self) -> "Variable":
-            return reduce_assignment_get_assigned(self.native_object)
+            return _Variable(reduce_assignment_get_assigned(self.native_object))
 
         def reducer(self) -> "Reducer":
             native_red = reduce_assignment_get_reducer(self.native_object)

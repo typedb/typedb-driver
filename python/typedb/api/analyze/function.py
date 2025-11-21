@@ -21,10 +21,10 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
 
 if TYPE_CHECKING:
-    from typedb.analyze.pipeline import Pipeline
-    from typedb.analyze.variable_annotations import VariableAnnotations
-    from typedb.analyze.reducer import Reducer
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.pipeline import Pipeline
+    from typedb.api.analyze.variable_annotations import VariableAnnotations
+    from typedb.api.analyze.reducer import Reducer
+    from typedb.api.analyze.Variable import Variable
 
 
 class Function(ABC):

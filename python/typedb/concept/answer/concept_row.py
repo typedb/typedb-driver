@@ -37,7 +37,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.pipeline import Pipeline
+    from typedb.api.analyze.pipeline import Pipeline, ConjunctionID
     from typedb.api.concept.concept import Concept
 
 

@@ -22,7 +22,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import typedb
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable import Variable
 
 
 class ConstraintVertex(ABC):

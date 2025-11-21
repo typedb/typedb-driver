@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING, Iterator, Optional
 if TYPE_CHECKING:
     from typedb.analyze.constraint import Constraint
     from typedb.analyze.variable_annotations import VariableAnnotations
-    from typedb.native_driver_wrapper import Variable
+    from typedb.analyze.variable import Variable
 
 
 class Conjunction(ABC):
