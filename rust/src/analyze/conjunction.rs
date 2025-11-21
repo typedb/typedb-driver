@@ -135,9 +135,9 @@ pub enum Constraint {
     },
 }
 
-impl std::fmt::Display for Constraint {
+impl Display for Constraint {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        std::fmt::Debug::fmt(self, f)
+        Debug::fmt(self, f)
     }
 }
 

@@ -19,7 +19,7 @@
 
 use std::fmt::{Debug, Display, Formatter};
 
-use super::{Concept, ConceptCategory, ValueType};
+use super::{ConceptCategory, ValueType};
 
 #[derive(Clone, PartialEq)]
 pub enum Type {

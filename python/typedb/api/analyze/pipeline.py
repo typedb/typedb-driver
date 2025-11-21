@@ -21,9 +21,9 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator, Optional
 
 if TYPE_CHECKING:
-    from typedb.analyze.pipeline_stage import PipelineStage
     from typedb.analyze.conjunction import Conjunction
     from typedb.api.analyze.conjunction_id import ConjunctionID
+    from typedb.analyze.pipeline_stage import PipelineStage
     from typedb.api.analyze.conjunction_id import Variable
 
 

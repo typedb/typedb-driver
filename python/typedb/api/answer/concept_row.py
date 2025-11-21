@@ -21,9 +21,10 @@ from abc import ABC, abstractmethod
 from typing import Iterator, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typedb.api.analyze.conjunction_id import ConjunctionID, Pipeline
-    from typedb.api.answer.query_type import QueryType
     from typedb.api.concept.concept import Concept
+    from typedb.api.analyze.conjunction_id import ConjunctionID
+    from typedb.api.analyze.pipeline import Pipeline
+    from typedb.api.answer.query_type import QueryType
 
 
 class ConceptRow(ABC):
