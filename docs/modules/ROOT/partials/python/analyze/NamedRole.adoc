@@ -1,0 +1,36 @@
+[#_NamedRole]
+=== NamedRole
+
+*Package*: `typedb.api.analyze.named_role`
+
+// tag::methods[]
+[#_NamedRole_name_]
+==== name
+
+[source,python]
+----
+name() -> str
+----
+
+Gets the name associated with the NamedRole.
+
+[caption=""]
+.Returns
+`str`
+
+[#_NamedRole_variable_]
+==== variable
+
+[source,python]
+----
+variable() -> Variable
+----
+
+Gets the variable associated with the NamedRole.
+
+[caption=""]
+.Returns
+`Variable`
+
+// end::methods[]
+

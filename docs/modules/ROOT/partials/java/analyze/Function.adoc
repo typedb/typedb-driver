@@ -25,14 +25,14 @@ Gets the type annotations for each argument of the function.
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> argument_variables()
+java.util.stream.Stream<? extends Variable> argument_variables()
 ----
 
 Gets the variables which are the arguments of the function.
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_Function_body_]
 ==== body

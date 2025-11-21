@@ -215,28 +215,28 @@ PipelineStage.UpdateStage asUpdate()
 
 [source,java]
 ----
-com.typedb.driver.jni.ConjunctionID block()
+ConjunctionID block()
 ----
 
 The index into ``Pipeline.conjunctions``
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.ConjunctionID`
+`ConjunctionID`
 
 [#_PipelineStage_DeleteStage_deletedVariables_]
 ==== deletedVariables
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> deletedVariables()
+java.util.stream.Stream<? extends Variable> deletedVariables()
 ----
 
 The variables for which the unified concepts are to be deleted.
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 [#_PipelineStage_DeleteStage_getVariant_]
 ==== getVariant

@@ -26,7 +26,7 @@ use typedb_driver::{
     analyze::{
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
-            ConstraintWithSpan, Variable,
+            ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
@@ -35,7 +35,6 @@ use typedb_driver::{
     concept::{type_::Type, AttributeType, Concept, Kind, ValueType},
     BoxPromise, Promise,
 };
-use typedb_driver::analyze::conjunction::NamedRole;
 
 use crate::{
     common::StringIterator,
@@ -498,13 +497,11 @@ pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
     borrow(variable).0
 }
 
-
 /// Returns a string representation of the variable. Does not resolve the name.
 #[no_mangle]
 pub extern "C" fn variable_to_string(variable: *const Variable) -> *mut c_char {
     release_string(format!("{}", borrow(variable)))
 }
-
 
 /// Returns the <code>Conjunction</code> corresponding to the ConjunctionID.
 /// The <code>Pipeline</code> must be the one that contains the Conjunction & ConjunctionID.
@@ -519,7 +516,7 @@ pub extern "C" fn pipeline_get_conjunction(
 /// Returns the ConjunctionID as u32 to use in hash, equality etc.
 #[no_mangle]
 pub extern "C" fn conjunction_id_as_u32(conjunction_id: *const ConjunctionID) -> u32 {
-     borrow(conjunction_id).0 as u32
+    borrow(conjunction_id).0 as u32
 }
 
 /// Returns a string representation of the ConjunctionID.

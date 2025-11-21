@@ -168,14 +168,14 @@ conceptRow.getQueryType();
 
 [source,java]
 ----
-java.util.Optional<java.util.stream.Stream<com.typedb.driver.jni.ConjunctionID>> involvedConjunctions()
+java.util.Optional<java.util.stream.Stream<? extends ConjunctionID>> involvedConjunctions()
 ----
 
 Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
 
 [caption=""]
 .Returns
-`java.util.Optional<java.util.stream.Stream<com.typedb.driver.jni.ConjunctionID>>`
+`java.util.Optional<java.util.stream.Stream<? extends ConjunctionID>>`
 
 // end::methods[]
 

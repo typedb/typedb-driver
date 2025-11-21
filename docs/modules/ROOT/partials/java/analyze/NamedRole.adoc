@@ -1,0 +1,36 @@
+[#_NamedRole]
+=== NamedRole
+
+*Package*: `com.typedb.driver.api.analyze`
+
+// tag::methods[]
+[#_NamedRole_name_]
+==== name
+
+[source,java]
+----
+java.lang.String name()
+----
+
+This is the role label specified by the user in the ``Links`` constraint.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_NamedRole_variable_]
+==== variable
+
+[source,java]
+----
+Variable variable()
+----
+
+This is an internal variable injected to handle ambiguity in role-names.
+
+[caption=""]
+.Returns
+`Variable`
+
+// end::methods[]
+
