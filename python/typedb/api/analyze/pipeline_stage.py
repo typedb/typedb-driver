@@ -21,7 +21,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Iterator
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import ConjunctionID,Variable
+    from typedb.api.analyze.conjunction_id import ConjunctionID
+    from typedb.api.analyze.variable import Variable
     from typedb.api.analyze.reducer import Reducer
     from typedb.common.enums import SortOrder
 

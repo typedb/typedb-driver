@@ -39,6 +39,8 @@ from typedb.analyze.variants import PipelineStageVariant
 
 from typedb.native_driver_wrapper import (
     PipelineStage as NativePipelineStage,
+    ReduceAssignment as NativeReduceAssignment,
+    SortVariable as NativeSortVariable,
     pipeline_stage_variant,
     pipeline_stage_get_block,
     pipeline_stage_delete_get_deleted_variables,
@@ -57,11 +59,9 @@ from typedb.native_driver_wrapper import (
     pipeline_stage_to_string,
     pipeline_stage_reduce_get_reducer_assignments,
     pipeline_stage_iterator_next,
-    ReduceAssignment as NativeReduceAssignment,
     reduce_assignment_get_assigned,
     reduce_assignment_get_reducer,
     reduce_assignment_iterator_next,
-    SortVariable as NativeSortVariable,
     variable_iterator_next,
 )
 
