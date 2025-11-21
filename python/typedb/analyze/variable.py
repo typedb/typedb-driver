@@ -52,5 +52,5 @@ class _Variable(Variable, NativeWrapper[NativeVariable]):
             return False
         return self._id() == other._id()
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return variable_to_string(self.native_object)

@@ -52,5 +52,5 @@ class _ConjunctionID(ConjunctionID, NativeWrapper[NativeConjunctionID]):
             return False
         return self._id() == other._id()
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return conjunction_id_to_string(self.native_object)
