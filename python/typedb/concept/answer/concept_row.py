@@ -26,6 +26,7 @@ from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null, require_non_negative
 from typedb.analyze.pipeline import _Pipeline
+from typedb.analyze.conjunction_id import _ConjunctionID
 from typedb.concept import concept_factory
 from typedb.native_driver_wrapper import (
     string_iterator_next, concept_iterator_next, conjunction_id_iterator_next,
@@ -70,7 +71,7 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
 
     def involved_conjunctions(self) -> Optional[Iterator["ConjunctionID"]]:
         iter = concept_row_involved_conjunctions(self.native_object)
-        return IteratorWrapper(iter, conjunction_id_iterator_next) if iter else None
+        return map(_ConjunctionID, IteratorWrapper(iter, conjunction_id_iterator_next)) if iter else None
 
     def get(self, column_name: str) -> Optional[Concept]:
         require_non_null(column_name, "column_name")
