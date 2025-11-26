@@ -21,6 +21,7 @@ static_function_mapping = {
     "isApiError": "response",
     "isApiErrorResponse": "response",
     "isOkResponse": "response",
+    "isQueryResponseLegacy": "legacy",
 
     "isBasicParams": "connection",
     "isTranslatedParams": "connection",
@@ -93,11 +94,12 @@ dir_mapping = {
     "ConstraintSubExact.adoc": "analyze",
     "ConstraintTry.adoc": "analyze",
     "ConstraintValue.adoc": "analyze",
-    "ConstraintExpressionLegacy.adoc": "analyze",
-    "ConstraintLinksLegacy.adoc": "analyze",
-    "ConceptRowsQueryResponseLegacy.adoc": "analyze",
-    "QueryConjunctionLegacy.adoc": "analyze",
-    "QueryStructureLegacy.adoc": "analyze",
+
+    "ConstraintExpressionLegacy.adoc": "legacy",
+    "ConstraintLinksLegacy.adoc": "legacy",
+    "ConceptRowsQueryResponseLegacy.adoc": "legacy",
+    "QueryConjunctionLegacy.adoc": "legacy",
+    "QueryStructureLegacy.adoc": "legacy",
 
     "QueryOptions.adoc": "response",
     "QueryResponseBase.adoc": "response",
@@ -146,4 +148,5 @@ dir_mapping = {
     "analyzed-conjunctionStaticFunctions.adoc": "analyze",
     "responseStaticFunctions.adoc": "response",
     "connectionStaticFunctions.adoc": "connection",
+    "legacyStaticFunctions.adoc": "legacy",
 }

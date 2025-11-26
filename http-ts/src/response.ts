@@ -122,3 +122,7 @@ export function isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResp
 export function isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse {
     return typeof res === "object" && "err" in res;
 }
+
+export function isQueryResponseLegacy(res: ConceptRowsQueryResponse | ConceptRowsQueryResponseLegacy) : boolean {
+    return res.query != null && "blocks" in res.query;
+}

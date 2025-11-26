@@ -1,0 +1,29 @@
+[#_legacyStaticFunctions]
+=== Static Functions
+
+// tag::methods[]
+[#_isQueryResponseLegacy_isQueryResponseLegacy_res_ConceptRowsQueryResponse]
+==== isQueryResponseLegacy
+
+[source,typescript]
+----
+isQueryResponseLegacy( res: ConceptRowsQueryResponse | ConceptRowsQueryResponseLegacy, ): boolean
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `res` a|  a| `ConceptRowsQueryResponse`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+// end::methods[]
+
