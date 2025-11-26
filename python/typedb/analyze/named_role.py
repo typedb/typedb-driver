@@ -29,6 +29,7 @@ from typedb.native_driver_wrapper import (
     named_role_get_variable,
     named_role_get_name,
     named_role_to_string,
+    named_role_as_u32,
 )
 
 if TYPE_CHECKING:
@@ -39,6 +40,9 @@ class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
+
+    def _id(self) -> int:
+        return named_role_as_u32(self.native_object)
 
     def variable(self) -> "Variable":
         return _Variable(named_role_get_variable(self.native_object))
@@ -57,4 +61,4 @@ class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
             return True
         if other is None or not isinstance(other, self.__class__):
             return False
-        return self.variable() == other.variable()
+        return self._id() == other._id()

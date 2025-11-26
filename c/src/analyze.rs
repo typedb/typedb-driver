@@ -1207,6 +1207,13 @@ pub extern "C" fn named_role_get_name(named_role: *const NamedRole) -> *mut c_ch
     release_string(borrow(named_role).name.clone())
 }
 
+/// Returns a u32 identifying the named role instance.
+/// Meant to be used to implement hash, equality etc.
+#[no_mangle]
+pub extern "C" fn named_role_as_u32(named_role: *const NamedRole) -> u32 {
+    borrow(named_role).variable.0
+}
+
 /// Returns a string representation of the NamedRole
 #[no_mangle]
 pub extern "C" fn named_role_to_string(named_role: *const NamedRole) -> *mut c_char {

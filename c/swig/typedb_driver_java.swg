@@ -283,6 +283,7 @@
 %nojavaexception constraint_vertex_as_named_role;
 %nojavaexception named_role_get_name;
 %nojavaexception named_role_get_variable;
+%nojavaexception named_role_as_u32;
 %nojavaexception named_role_to_string;
 
 %nojavaexception fetch_variant;
