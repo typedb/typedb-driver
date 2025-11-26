@@ -17,10 +17,7 @@
  * under the License.
  */
 
-use std::{
-    collections::HashMap,
-    fmt::{Debug, Display, Formatter},
-};
+use std::{collections::HashMap, fmt};
 
 use crate::{analyze::VariableAnnotations, concept, IID};
 
@@ -29,9 +26,9 @@ use crate::{analyze::VariableAnnotations, concept, IID};
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ConjunctionID(pub usize);
 
-impl Display for ConjunctionID {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for ConjunctionID {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
@@ -135,9 +132,9 @@ pub enum Constraint {
     },
 }
 
-impl Display for Constraint {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Constraint {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
@@ -146,9 +143,9 @@ impl Display for Constraint {
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
 
-impl Display for Variable {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Variable {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
@@ -182,8 +179,8 @@ impl PartialEq for NamedRole {
     }
 }
 
-impl Display for NamedRole {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for NamedRole {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "NamedRole({})", self.name)
     }
 }
