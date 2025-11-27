@@ -39,7 +39,7 @@ impl Type {
         }
     }
 
-    pub fn get_category(&self) -> ConceptCategory {
+    pub fn category(&self) -> ConceptCategory {
         match self {
             Self::EntityType(_) => ConceptCategory::EntityType,
             Self::RelationType(_) => ConceptCategory::RelationType,
@@ -57,7 +57,7 @@ impl fmt::Display for Type {
 
 impl fmt::Debug for Type {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}({})", self.get_category(), self.label())
+        write!(f, "{}({})", self.category(), self.label())
     }
 }
 
