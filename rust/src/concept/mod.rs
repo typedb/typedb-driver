@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt;
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 
@@ -77,14 +77,14 @@ impl ConceptCategory {
     }
 }
 
-impl Display for ConceptCategory {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for ConceptCategory {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for ConceptCategory {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for ConceptCategory {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.name())
     }
 }
@@ -381,14 +381,14 @@ impl Concept {
     }
 }
 
-impl Display for Concept {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(self, f)
+impl fmt::Display for Concept {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self, f)
     }
 }
 
-impl Debug for Concept {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Concept {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.is_type() {
             write!(f, "{}({})", self.get_category(), self.get_label())
         } else {
@@ -430,14 +430,14 @@ impl Kind {
     }
 }
 
-impl Debug for Kind {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Debug for Kind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Kind[{}]", self.name())
     }
 }
 
-impl Display for Kind {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for Kind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.name())
     }
 }

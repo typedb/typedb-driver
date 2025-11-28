@@ -24,6 +24,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 
 from typedb.api.analyze.reducer import Reducer
+from typedb.analyze.variable import _Variable
 
 from typedb.native_driver_wrapper import (
     Reducer as NativeReducer,
@@ -33,7 +34,7 @@ from typedb.native_driver_wrapper import (
 )
 
 if TYPE_CHECKING:
-    from typedb.native_driver_wrapper import Variable
+    from typedb.api.analyze.variable import Variable
 
 
 class _Reducer(Reducer, NativeWrapper[NativeReducer]):
@@ -46,4 +47,4 @@ class _Reducer(Reducer, NativeWrapper[NativeReducer]):
 
     def arguments(self) -> Iterator["Variable"]:
         native_iter = reducer_get_arguments(self.native_object)
-        return IteratorWrapper(native_iter, variable_iterator_next)
+        return map(_Variable, IteratorWrapper(native_iter, variable_iterator_next))

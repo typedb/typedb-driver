@@ -98,6 +98,7 @@ struct Type {};
 %dropproxy(ConstraintVertex, constraint_vertex)
 %dropproxy(Fetch, fetch)
 %dropproxy(Function, function)
+%dropproxy(NamedRole, named_role)
 %dropproxy(Pipeline, pipeline)
 %dropproxy(PipelineStage, pipeline_stage)
 %dropproxy(ReduceAssignment, reduce_assignment)
@@ -292,6 +293,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject analyzed_fetch;
 %newobject conjunction_get_variable_annotations;
 %newobject conjunction_get_constraints;
+%newobject conjunction_id_string_repr;
 %newobject constraint_span_begin;
 %newobject constraint_span_end;
 %newobject constraint_variant;
@@ -339,18 +341,21 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_or_get_branches;
 %newobject constraint_not_get_conjunction;
 %newobject constraint_try_get_conjunction;
+%newobject constraint_string_repr;
 %newobject constraint_vertex_variant;
 %newobject constraint_vertex_as_variable;
 %newobject constraint_vertex_as_label;
 %newobject constraint_vertex_as_value;
-%newobject constraint_vertex_as_named_role_get_variable;
-%newobject constraint_vertex_as_named_role_get_name;
+%newobject constraint_vertex_as_named_role;
 %newobject constraint_with_span_iterator_next;
 %newobject constraint_with_span_iterator_drop;
 %newobject constraint_vertex_iterator_next;
 %newobject constraint_vertex_iterator_drop;
 %newobject constraint_with_span_drop;
 %newobject constraint_vertex_drop;
+%newobject named_role_get_name;
+%newobject named_role_get_variable;
+%newobject named_role_string_repr;
 %newobject function_argument_variables;
 %newobject function_argument_annotations;
 %newobject function_body;
@@ -368,12 +373,14 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject pipeline_stage_reduce_get_reducer_assignments;
 %newobject pipeline_stage_sort_get_sort_variables;
 %newobject pipeline_stage_reduce_get_groupby;
+%newobject pipeline_stage_string_repr;
 %newobject sort_variable_get_variable;
 %newobject reduce_assignment_get_assigned;
 %newobject reduce_assignment_get_reducer;
 %newobject reducer_get_name;
 %newobject reducer_get_arguments;
 %newobject variable_get_name;
+%newobject variable_string_repr;
 
 %newobject function_iterator_next;
 %newobject conjunction_id_iterator_next;

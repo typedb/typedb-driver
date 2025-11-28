@@ -182,6 +182,11 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
+    @Override
+    public String toString() {
+        return typedb_driver.constraint_string_repr(nativeObject);
+    }
+
     public IsaImpl asIsa() {
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(IsaImpl.class));
     }
@@ -677,8 +682,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
             return this;
         }
 
-        public Stream<com.typedb.driver.jni.ConjunctionID> branches() {
-            return new NativeIterator<>(typedb_driver.constraint_or_get_branches(nativeObject)).stream();
+        public Stream<ConjunctionIDImpl> branches() {
+            return new NativeIterator<>(typedb_driver.constraint_or_get_branches(nativeObject)).stream().map(ConjunctionIDImpl::new);
         }
     }
 
@@ -697,8 +702,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
             return this;
         }
 
-        public com.typedb.driver.jni.ConjunctionID conjunction() {
-            return typedb_driver.constraint_not_get_conjunction(nativeObject);
+        public ConjunctionIDImpl conjunction() {
+            return new ConjunctionIDImpl(typedb_driver.constraint_not_get_conjunction(nativeObject));
         }
     }
 
@@ -717,8 +722,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
             return this;
         }
 
-        public com.typedb.driver.jni.ConjunctionID conjunction() {
-            return typedb_driver.constraint_try_get_conjunction(nativeObject);
+        public ConjunctionIDImpl conjunction() {
+            return new ConjunctionIDImpl(typedb_driver.constraint_try_get_conjunction(nativeObject));
         }
     }
 }

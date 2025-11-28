@@ -26,7 +26,7 @@ use typedb_driver::{
     analyze::{
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
-            ConstraintWithSpan, Variable,
+            ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
@@ -351,6 +351,12 @@ pub extern "C" fn pipeline_stage_variant(stage: *const PipelineStage) -> Pipelin
     }
 }
 
+/// Returns a string representation of the pipeline stage
+#[no_mangle]
+pub extern "C" fn pipeline_stage_string_repr(stage: *const PipelineStage) -> *mut c_char {
+    release_string(format!("{:?}", &borrow(stage)))
+}
+
 /// Returns the block of the pipeline stage - this is the <code>ConjunctionID</code> of the root conjunction.
 /// Will panic if the stage does not have a block.
 #[no_mangle]
@@ -485,6 +491,18 @@ pub extern "C" fn variable_get_name(pipeline_structure: *const Pipeline, variabl
     release_optional_string(borrow(pipeline_structure).variable_name(borrow(variable)).map(str::to_owned))
 }
 
+/// Returns the Variable id as u32 to use in hash, equality etc.
+#[no_mangle]
+pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
+    borrow(variable).0
+}
+
+/// Returns a string representation of the variable. Does not resolve the name.
+#[no_mangle]
+pub extern "C" fn variable_string_repr(variable: *const Variable) -> *mut c_char {
+    release_string(format!("{:?}", borrow(variable)))
+}
+
 /// Returns the <code>Conjunction</code> corresponding to the ConjunctionID.
 /// The <code>Pipeline</code> must be the one that contains the Conjunction & ConjunctionID.
 #[no_mangle]
@@ -493,6 +511,18 @@ pub extern "C" fn pipeline_get_conjunction(
     conjunction_id: *const ConjunctionID,
 ) -> *mut Conjunction {
     release_optional(borrow(pipeline).conjunctions.get(borrow(conjunction_id).0).cloned())
+}
+
+/// Returns the ConjunctionID as u32 to use in hash, equality etc.
+#[no_mangle]
+pub extern "C" fn conjunction_id_as_u32(conjunction_id: *const ConjunctionID) -> u32 {
+    borrow(conjunction_id).0 as u32
+}
+
+/// Returns a string representation of the ConjunctionID.
+#[no_mangle]
+pub extern "C" fn conjunction_id_string_repr(conjunction_id: *const ConjunctionID) -> *mut c_char {
+    release_string(format!("{:?}", borrow(conjunction_id).0))
 }
 
 /// Returns the <code>Constraint</code>s in the given conjunction.
@@ -1102,8 +1132,14 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
     release(conjunction.clone())
 }
 
+/// Returns a string representation of the constraint
+#[no_mangle]
+pub extern "C" fn constraint_string_repr(constraint: *const ConstraintWithSpan) -> *mut c_char {
+    release_string(format!("{:?}", &borrow(constraint).constraint))
+}
+
 // ConstraintVertex accessors
-///
+/// Returns the variant of the constraint
 #[no_mangle]
 pub extern "C" fn constraint_vertex_variant(vertex: *const ConstraintVertex) -> ConstraintVertexVariant {
     match borrow(vertex) {
@@ -1145,27 +1181,43 @@ pub extern "C" fn constraint_vertex_as_value(vertex: *const ConstraintVertex) ->
     }
 }
 
-/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role-type variable.
-/// e.g. for `$_ links (name: $_);`, a variable is introduced in place of name.
-/// This is needed since a role-name does not uniquely identify a role-type
+/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole.
+/// 'links' & 'relates' constraints accept unscoped role names.
+/// Since an unscoped role-name does not uniquely identify a role-type,
 ///  (Different role-types belonging to different relation types may share the same name)
+///  an internal variable is introduced to handle the ambiguity
 /// Will panic if the instance is not a NamedRole variant.
 #[no_mangle]
-pub extern "C" fn constraint_vertex_as_named_role_get_variable(vertex: *const ConstraintVertex) -> *mut Variable {
+pub extern "C" fn constraint_vertex_as_named_role(vertex: *const ConstraintVertex) -> *mut NamedRole {
     match borrow(vertex) {
-        ConstraintVertex::NamedRole(value) => release(value.variable.clone()),
+        ConstraintVertex::NamedRole(named_role) => release(named_role.clone()),
         _ => unreachable!(),
     }
 }
 
-/// Unwraps the <code>ConstraintVertex</code> instance as a NamedRole, and returns the role name.
-/// Will panic if the instance is not a NamedRole variant.
+/// Returns the role-type variable associated with the NamedRole.
 #[no_mangle]
-pub extern "C" fn constraint_vertex_as_named_role_get_name(vertex: *const ConstraintVertex) -> *mut c_char {
-    match borrow(vertex) {
-        ConstraintVertex::NamedRole(value) => release_string(value.name.clone()),
-        _ => unreachable!(),
-    }
+pub extern "C" fn named_role_get_variable(named_role: *const NamedRole) -> *mut Variable {
+    release(borrow(named_role).variable.clone())
+}
+
+/// Returns the role name associated with the NamedRole.
+#[no_mangle]
+pub extern "C" fn named_role_get_name(named_role: *const NamedRole) -> *mut c_char {
+    release_string(borrow(named_role).name.clone())
+}
+
+/// Returns a u32 identifying the named role instance.
+/// Meant to be used to implement hash, equality etc.
+#[no_mangle]
+pub extern "C" fn named_role_as_u32(named_role: *const NamedRole) -> u32 {
+    borrow(named_role).variable.0
+}
+
+/// Returns a string representation of the NamedRole
+#[no_mangle]
+pub extern "C" fn named_role_string_repr(named_role: *const NamedRole) -> *mut c_char {
+    release_string(format!("{:?}", borrow(named_role)))
 }
 
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]
@@ -1327,6 +1379,12 @@ pub extern "C" fn fetch_drop(obj: *mut Fetch) {
 #[doc = "Frees the native rust <code>Function</code> object."]
 #[no_mangle]
 pub extern "C" fn function_drop(obj: *mut Function) {
+    free(obj);
+}
+
+#[doc = "Frees the native rust <code>NamedRole</code> object."]
+#[no_mangle]
+pub extern "C" fn named_role_drop(obj: *mut NamedRole) {
     free(obj);
 }
 

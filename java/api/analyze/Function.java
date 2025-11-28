@@ -37,7 +37,7 @@ public interface Function {
      *
      * @return stream of argument variables
      */
-    Stream<com.typedb.driver.jni.Variable> argument_variables();
+    Stream<? extends Variable> argument_variables();
 
     /**
      * Gets the return operation of the function.
@@ -121,7 +121,7 @@ public interface Function {
              *
              * @return stream of variables
              */
-            java.util.stream.Stream<com.typedb.driver.jni.Variable> variables();
+            java.util.stream.Stream<? extends Variable> variables();
         }
 
         /**
@@ -134,7 +134,7 @@ public interface Function {
              *
              * @return stream of variables
              */
-            java.util.stream.Stream<com.typedb.driver.jni.Variable> variables();
+            java.util.stream.Stream<? extends Variable> variables();
 
             /**
              * Gets the selector that determines how the operation selects the row.

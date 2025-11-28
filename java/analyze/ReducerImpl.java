@@ -36,9 +36,9 @@ public class ReducerImpl extends NativeObject<com.typedb.driver.jni.Reducer> imp
         return typedb_driver.reducer_get_name(nativeObject);
     }
 
-    public Stream<com.typedb.driver.jni.Variable> arguments() {
+    public Stream<VariableImpl> arguments() {
         return new NativeIterator<>(
                 typedb_driver.reducer_get_arguments(nativeObject)
-        ).stream();
+        ).stream().map(VariableImpl::new);
     }
 }

@@ -20,6 +20,7 @@
 package com.typedb.driver.analyze;
 
 import com.typedb.driver.api.analyze.Conjunction;
+import com.typedb.driver.api.analyze.Variable;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
 
@@ -34,11 +35,11 @@ public class ConjunctionImpl extends NativeObject<com.typedb.driver.jni.Conjunct
         return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_constraints(nativeObject)).stream().map(ConstraintImpl::of);
     }
 
-    public Stream<com.typedb.driver.jni.Variable> annotated_variables() {
-        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_annotated_variables(nativeObject)).stream();
+    public Stream<VariableImpl> annotated_variables() {
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.conjunction_get_annotated_variables(nativeObject)).stream().map(VariableImpl::new);
     }
 
-    public VariableAnnotationsImpl variable_annotations(com.typedb.driver.jni.Variable variable) {
-        return new VariableAnnotationsImpl(com.typedb.driver.jni.typedb_driver.conjunction_get_variable_annotations(nativeObject, variable));
+    public VariableAnnotationsImpl variable_annotations(Variable variable) {
+        return new VariableAnnotationsImpl(com.typedb.driver.jni.typedb_driver.conjunction_get_variable_annotations(nativeObject, ((VariableImpl) variable).nativeObject));
     }
 }

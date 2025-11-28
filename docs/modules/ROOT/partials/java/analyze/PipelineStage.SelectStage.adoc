@@ -365,14 +365,14 @@ boolean isUpdate()
 
 [source,java]
 ----
-java.util.stream.Stream<com.typedb.driver.jni.Variable> variables()
+java.util.stream.Stream<? extends Variable> variables()
 ----
 
 The variables being selected
 
 [caption=""]
 .Returns
-`java.util.stream.Stream<com.typedb.driver.jni.Variable>`
+`java.util.stream.Stream<? extends Variable>`
 
 // end::methods[]
 

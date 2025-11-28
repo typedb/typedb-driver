@@ -17,12 +17,14 @@
 
 from typedb.api.analyze.analyzed_query import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.conjunction import *  # noqa # pylint: disable=unused-import
+from typedb.api.analyze.conjunction_id import * # noqa # pylint: disable=unused-import
 from typedb.api.analyze.constraint import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.constraint_vertex import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.fetch import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.function import *  # noqa # pylint: disable=unused-import
+from typedb.api.analyze.named_role import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.pipeline import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.pipeline_stage import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.reducer import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.variable_annotations import *  # noqa # pylint: disable=unused-import
-from typedb.native_driver_wrapper import ConjunctionID, Variable # noqa # pylint: disable=unused-import
+from typedb.api.analyze.variable import * # noqa # pylint: disable=unused-import

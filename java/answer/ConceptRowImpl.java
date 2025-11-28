@@ -19,8 +19,10 @@
 
 package com.typedb.driver.answer;
 
+import com.typedb.driver.analyze.ConjunctionIDImpl;
 import com.typedb.driver.analyze.PipelineImpl;
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.analyze.ConjunctionID;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.concept.Concept;
@@ -29,7 +31,7 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
-import com.typedb.driver.jni.ConjunctionID;
+import com.typedb.driver.jni.ConjunctionIDIterator;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -105,9 +107,10 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     @Override
-    public Optional<Stream<ConjunctionID>> involvedConjunctions() {
-        if (concept_row_involved_conjunctions(nativeObject) != null) {
-            return Optional.of(new NativeIterator<>(concept_row_involved_conjunctions(nativeObject)).stream());
+    public Optional<Stream<? extends ConjunctionID>> involvedConjunctions() {
+        ConjunctionIDIterator nativeInvolvedConjunctions = concept_row_involved_conjunctions(nativeObject);
+        if (nativeInvolvedConjunctions != null) {
+            return Optional.of(new NativeIterator<>(nativeInvolvedConjunctions).stream().map(ConjunctionIDImpl::new));
         } else {
             return Optional.empty();
         }

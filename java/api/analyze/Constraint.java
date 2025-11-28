@@ -286,7 +286,7 @@ public interface Constraint {
         /**
          * Index into <code>Pipeline.conjunctions</code>
          */
-        Stream<? extends com.typedb.driver.jni.ConjunctionID> branches();
+        Stream<? extends ConjunctionID> branches();
     }
 
     /**
@@ -296,7 +296,7 @@ public interface Constraint {
         /**
          * Index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID conjunction();
+        ConjunctionID conjunction();
     }
 
     /**
@@ -306,7 +306,7 @@ public interface Constraint {
         /**
          * Index into <code>Pipeline.conjunctions</code>
          */
-        com.typedb.driver.jni.ConjunctionID conjunction();
+        ConjunctionID conjunction();
     }
 
     /**
