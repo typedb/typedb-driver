@@ -19,9 +19,9 @@
 
 use std::fmt;
 
-use super::{ConceptCategory, ValueType};
+use super::ValueType;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Type {
     EntityType(EntityType),
     RelationType(RelationType),
@@ -37,27 +37,6 @@ impl Type {
             Type::AttributeType(attribute_type) => attribute_type.label(),
             Type::RoleType(role_type) => role_type.label(),
         }
-    }
-
-    pub fn category(&self) -> ConceptCategory {
-        match self {
-            Self::EntityType(_) => ConceptCategory::EntityType,
-            Self::RelationType(_) => ConceptCategory::RelationType,
-            Self::RoleType(_) => ConceptCategory::RoleType,
-            Self::AttributeType(_) => ConceptCategory::AttributeType,
-        }
-    }
-}
-
-impl fmt::Display for Type {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
-    }
-}
-
-impl fmt::Debug for Type {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}({})", self.category(), self.label())
     }
 }
 

@@ -47,6 +47,6 @@ public class VariableImpl extends NativeObject<com.typedb.driver.jni.Variable> i
 
     @Override
     public String toString() {
-        return typedb_driver.variable_to_string(nativeObject);
+        return typedb_driver.variable_string_repr(nativeObject);
     }
 }

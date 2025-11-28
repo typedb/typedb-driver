@@ -293,7 +293,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject analyzed_fetch;
 %newobject conjunction_get_variable_annotations;
 %newobject conjunction_get_constraints;
-%newobject conjunction_id_to_string;
+%newobject conjunction_id_string_repr;
 %newobject constraint_span_begin;
 %newobject constraint_span_end;
 %newobject constraint_variant;
@@ -341,7 +341,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_or_get_branches;
 %newobject constraint_not_get_conjunction;
 %newobject constraint_try_get_conjunction;
-%newobject constraint_to_string;
+%newobject constraint_string_repr;
 %newobject constraint_vertex_variant;
 %newobject constraint_vertex_as_variable;
 %newobject constraint_vertex_as_label;
@@ -355,7 +355,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_vertex_drop;
 %newobject named_role_get_name;
 %newobject named_role_get_variable;
-%newobject named_role_to_string;
+%newobject named_role_string_repr;
 %newobject function_argument_variables;
 %newobject function_argument_annotations;
 %newobject function_body;
@@ -373,14 +373,14 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject pipeline_stage_reduce_get_reducer_assignments;
 %newobject pipeline_stage_sort_get_sort_variables;
 %newobject pipeline_stage_reduce_get_groupby;
-%newobject pipeline_stage_to_string;
+%newobject pipeline_stage_string_repr;
 %newobject sort_variable_get_variable;
 %newobject reduce_assignment_get_assigned;
 %newobject reduce_assignment_get_reducer;
 %newobject reducer_get_name;
 %newobject reducer_get_arguments;
 %newobject variable_get_name;
-%newobject variable_to_string;
+%newobject variable_string_repr;
 
 %newobject function_iterator_next;
 %newobject conjunction_id_iterator_next;

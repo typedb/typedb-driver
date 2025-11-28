@@ -27,7 +27,7 @@ from typedb.api.analyze.variable import Variable
 from typedb.native_driver_wrapper import (
     Variable as NativeVariable,
     variable_id_as_u32,
-    variable_to_string,
+    variable_string_repr,
 )
 
 if TYPE_CHECKING:
@@ -53,4 +53,4 @@ class _Variable(Variable, NativeWrapper[NativeVariable]):
         return self._id() == other._id()
 
     def __repr__(self) -> str:
-        return variable_to_string(self.native_object)
+        return variable_string_repr(self.native_object)

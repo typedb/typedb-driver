@@ -353,8 +353,8 @@ pub extern "C" fn pipeline_stage_variant(stage: *const PipelineStage) -> Pipelin
 
 /// Returns a string representation of the pipeline stage
 #[no_mangle]
-pub extern "C" fn pipeline_stage_to_string(stage: *const PipelineStage) -> *mut c_char {
-    release_string(format!("{}", &borrow(stage)))
+pub extern "C" fn pipeline_stage_string_repr(stage: *const PipelineStage) -> *mut c_char {
+    release_string(format!("{:?}", &borrow(stage)))
 }
 
 /// Returns the block of the pipeline stage - this is the <code>ConjunctionID</code> of the root conjunction.
@@ -499,8 +499,8 @@ pub extern "C" fn variable_id_as_u32(variable: *const Variable) -> u32 {
 
 /// Returns a string representation of the variable. Does not resolve the name.
 #[no_mangle]
-pub extern "C" fn variable_to_string(variable: *const Variable) -> *mut c_char {
-    release_string(format!("{}", borrow(variable)))
+pub extern "C" fn variable_string_repr(variable: *const Variable) -> *mut c_char {
+    release_string(format!("{:?}", borrow(variable)))
 }
 
 /// Returns the <code>Conjunction</code> corresponding to the ConjunctionID.
@@ -521,8 +521,8 @@ pub extern "C" fn conjunction_id_as_u32(conjunction_id: *const ConjunctionID) ->
 
 /// Returns a string representation of the ConjunctionID.
 #[no_mangle]
-pub extern "C" fn conjunction_id_to_string(conjunction_id: *const ConjunctionID) -> *mut c_char {
-    release_string(format!("{}", borrow(conjunction_id).0))
+pub extern "C" fn conjunction_id_string_repr(conjunction_id: *const ConjunctionID) -> *mut c_char {
+    release_string(format!("{:?}", borrow(conjunction_id).0))
 }
 
 /// Returns the <code>Constraint</code>s in the given conjunction.
@@ -1134,8 +1134,8 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
 
 /// Returns a string representation of the constraint
 #[no_mangle]
-pub extern "C" fn constraint_to_string(constraint: *const ConstraintWithSpan) -> *mut c_char {
-    release_string(format!("{}", &borrow(constraint).constraint))
+pub extern "C" fn constraint_string_repr(constraint: *const ConstraintWithSpan) -> *mut c_char {
+    release_string(format!("{:?}", &borrow(constraint).constraint))
 }
 
 // ConstraintVertex accessors
@@ -1216,8 +1216,8 @@ pub extern "C" fn named_role_as_u32(named_role: *const NamedRole) -> u32 {
 
 /// Returns a string representation of the NamedRole
 #[no_mangle]
-pub extern "C" fn named_role_to_string(named_role: *const NamedRole) -> *mut c_char {
-    release_string(format!("{}", borrow(named_role)))
+pub extern "C" fn named_role_string_repr(named_role: *const NamedRole) -> *mut c_char {
+    release_string(format!("{:?}", borrow(named_role)))
 }
 
 #[doc = "Forwards the <code>FunctionIterator</code> and returns the next <code>Function</code> if it exists, or null if there are no more elements."]

@@ -149,9 +149,3 @@ pub enum SortOrder {
     Ascending,
     Descending,
 }
-
-impl fmt::Display for PipelineStage {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
-    }
-}

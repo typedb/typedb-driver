@@ -91,7 +91,7 @@ from typedb.native_driver_wrapper import (
     constraint_or_get_branches,
     constraint_not_get_conjunction,
     constraint_try_get_conjunction,
-    constraint_to_string,
+    constraint_string_repr,
 )
 
 if TYPE_CHECKING:
@@ -262,7 +262,7 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Try"))
 
     def __repr__(self):
-        return constraint_to_string(self.native_object)
+        return constraint_string_repr(self.native_object)
 
     class SpanImpl(Span):
         def __init__(self, begin: int, end: int):

@@ -27,7 +27,7 @@ from typedb.api.analyze.conjunction_id import ConjunctionID
 from typedb.native_driver_wrapper import (
     ConjunctionID as NativeConjunctionID,
     conjunction_id_as_u32,
-    conjunction_id_to_string,
+    conjunction_id_string_repr,
 )
 
 if TYPE_CHECKING:
@@ -53,4 +53,4 @@ class _ConjunctionID(ConjunctionID, NativeWrapper[NativeConjunctionID]):
         return self._id() == other._id()
 
     def __repr__(self) -> str:
-        return conjunction_id_to_string(self.native_object)
+        return conjunction_id_string_repr(self.native_object)

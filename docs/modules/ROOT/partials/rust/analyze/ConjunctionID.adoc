@@ -6,7 +6,6 @@
 * `Clone`
 * `Copy`
 * `Debug`
-* `Display`
 * `PartialEq`
 * `StructuralPartialEq`
 

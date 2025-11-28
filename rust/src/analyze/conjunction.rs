@@ -26,12 +26,6 @@ use crate::{analyze::VariableAnnotations, concept, IID};
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ConjunctionID(pub usize);
 
-impl fmt::Display for ConjunctionID {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
-    }
-}
-
 /// A representation of the constraints involved in the query, and types inferred for each variable.
 #[derive(Debug, Clone)]
 pub struct Conjunction {
@@ -132,22 +126,10 @@ pub enum Constraint {
     },
 }
 
-impl fmt::Display for Constraint {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
-    }
-}
-
 /// Uniquely identifies a variable in a <code>Pipeline</code>pipeline.
 /// Its name (if any) can be retrieved from the <code>variable_names</code> field in <code>Pipeline</code>
 #[derive(Debug, Hash, Clone, Eq, PartialEq)]
 pub struct Variable(pub u32);
-
-impl fmt::Display for Variable {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
-    }
-}
 
 /// The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query.
 /// A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
@@ -176,12 +158,6 @@ pub struct NamedRole {
 impl PartialEq for NamedRole {
     fn eq(&self, other: &Self) -> bool {
         self.variable == other.variable // Names will be equal unless they belong to different pipelines
-    }
-}
-
-impl fmt::Display for NamedRole {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "NamedRole({})", self.name)
     }
 }
 

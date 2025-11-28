@@ -222,7 +222,7 @@
 %nojavaexception comparator_get_name;
 
 %nojavaexception conjunction_id_as_u32;
-%nojavaexception conjunction_id_to_string;
+%nojavaexception conjunction_id_string_repr;
 %nojavaexception conjunction_get_constraints;
 %nojavaexception conjunction_get_annotated_variables;
 %nojavaexception conjunction_get_variable_annotations;
@@ -274,7 +274,7 @@
 %nojavaexception constraint_or_get_branches;
 %nojavaexception constraint_not_get_conjunction;
 %nojavaexception constraint_try_get_conjunction;
-%nojavaexception constraint_to_string;
+%nojavaexception constraint_string_repr;
 
 %nojavaexception constraint_vertex_variant;
 %nojavaexception constraint_vertex_as_variable;
@@ -284,7 +284,7 @@
 %nojavaexception named_role_get_name;
 %nojavaexception named_role_get_variable;
 %nojavaexception named_role_as_u32;
-%nojavaexception named_role_to_string;
+%nojavaexception named_role_string_repr;
 
 %nojavaexception fetch_variant;
 %nojavaexception fetch_leaf_annotations;
@@ -310,7 +310,7 @@
 %nojavaexception pipeline_stage_sort_get_sort_variables;
 %nojavaexception pipeline_stage_reduce_get_groupby;
 %nojavaexception pipeline_stage_reduce_get_reducer_assignments;
-%nojavaexception pipeline_stage_to_string;
+%nojavaexception pipeline_stage_string_repr;
 %nojavaexception reduce_assignment_get_assigned;
 %nojavaexception reduce_assignment_get_reducer;
 %nojavaexception reducer_get_name;
@@ -331,7 +331,7 @@
 
 %nojavaexception variable_get_name;
 %nojavaexception variable_id_as_u32;
-%nojavaexception variable_to_string;
+%nojavaexception variable_string_repr;
 
 /* destructors do not throw */
 %nojavaexception ~Concept;

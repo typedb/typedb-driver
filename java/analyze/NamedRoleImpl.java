@@ -55,6 +55,6 @@ public class NamedRoleImpl extends NativeObject<com.typedb.driver.jni.NamedRole>
 
     @Override
     public String toString() {
-        return typedb_driver.named_role_to_string(nativeObject);
+        return typedb_driver.named_role_string_repr(nativeObject);
     }
 }

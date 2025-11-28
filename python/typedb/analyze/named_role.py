@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import (
     NamedRole as NativeNamedRole,
     named_role_get_variable,
     named_role_get_name,
-    named_role_to_string,
+    named_role_string_repr,
     named_role_as_u32,
 )
 
@@ -51,7 +51,7 @@ class _NamedRole(NamedRole, NativeWrapper[NativeNamedRole]):
         return named_role_get_name(self.native_object)
 
     def __repr__(self) -> str:
-        return named_role_to_string(self.native_object)
+        return named_role_string_repr(self.native_object)
 
     def __hash__(self) -> int:
         return hash(self.variable())

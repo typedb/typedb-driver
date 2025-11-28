@@ -184,7 +184,7 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
 
     @Override
     public String toString() {
-        return typedb_driver.constraint_to_string(nativeObject);
+        return typedb_driver.constraint_string_repr(nativeObject);
     }
 
     public IsaImpl asIsa() {

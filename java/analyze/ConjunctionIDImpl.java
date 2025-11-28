@@ -48,6 +48,6 @@ public class ConjunctionIDImpl extends NativeObject<com.typedb.driver.jni.Conjun
 
     @Override
     public String toString() {
-        return typedb_driver.conjunction_id_to_string(nativeObject);
+        return typedb_driver.conjunction_id_string_repr(nativeObject);
     }
 }
