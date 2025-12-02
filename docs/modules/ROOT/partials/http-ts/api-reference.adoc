@@ -100,73 +100,56 @@ include::{page-version}@external-typedb-driver::partial$http-ts/concept/ValueKin
 
 include::{page-version}@external-typedb-driver::partial$http-ts/concept/ValueType.adoc[]
 
-[#_query_structure_header]
-== Query Structure
+[#_analyze_header]
+== Analyze
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/analyzeStaticFunctions.adoc[]
 
-[#_QueryConstraint_header]
-=== Query Constraints
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/AnalyzeOptions.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/AnalyzedConjunction.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/AnalyzedFetch.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/AnalyzedFunction.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/AnalyzedPipeline.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintAny.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConjunctionAnnotations.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintIsa.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintAny.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintComparison.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintExpression.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintFunction.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintHas.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintIid.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintIs.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintIsa.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintIsaExact.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintKind.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintLabel.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintLinks.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintNot.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintOr.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintOwns.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintPlays.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintRelates.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintSub.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintSubExact.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintTry.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintValue.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintIsaExact.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintSpan.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintHas.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintVertexAny.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintVertexLabel.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintVertexNamedRole.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintVertexValue.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/ConstraintVertexVariable.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintLinks.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/FetchAnnotationFieldEntry.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintSub.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/FunctionReturnStructure.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/FunctionSingleReturnSelector.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintSubExact.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/PipelineStage.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintOwns.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintExpression.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintFunction.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintComparison.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintIs.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintIid.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintKind.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintValue.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintLabel.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintPlays.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintRelates.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryConstraintSpan.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryOptions.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryResponse.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryResponseBase.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryStructure.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryType.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVariableInfo.adoc[]
-
-[#_QueryVertex_header]
-=== Query Vertices
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVertex.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVertexKind.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVertexLabel.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVertexValue.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/QueryVertexVariable.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$http-ts/query-structure/query-structureStaticFunctions.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/Reducer.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/VariableAnnotations.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/VariableId.adoc[]
+include::{page-version}@external-typedb-driver::partial$http-ts/analyze/VariableInfo.adoc[]

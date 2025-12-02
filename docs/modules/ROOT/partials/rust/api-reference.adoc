@@ -99,6 +99,44 @@ include::{page-version}@external-typedb-driver::partial$rust/value/TimeZone.adoc
 // TODO: Enable when Structs are introduced
 // include::{page-version}@external-typedb-driver::partial$rust/value/Struct.adoc[]
 
+[#_analyze_header]
+== Analyze
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/AnalyzedQuery.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Comparator.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ConjunctionID.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Conjunction.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Constraint.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ConstraintVertex.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ConstraintSpan.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ConstraintExactness.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Fetch.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/FetchLeaf.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Function.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ReturnOperation.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/NamedRole.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Pipeline.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/PipelineStage.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/ReduceAssignment.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Reducer.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/SortVariable.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/SortOrder.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/TypeAnnotations.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/analyze/Variable.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/VariableAnnotations.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/analyze/VariableInfo.adoc[]
+
+
 [#_errors_header]
 == Errors
 
