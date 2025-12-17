@@ -23,7 +23,7 @@ use typedb_driver::{
     analyze::{
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex,
-            ConstraintWithSpan, Variable, NamedRole
+            ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
