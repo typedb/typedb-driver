@@ -101,8 +101,6 @@ impl ServerManager {
         )
         .await?;
         let address_translation = addresses.address_translation();
-        println!("INIT REPLICA CONNECTIONS: {:?}", source_connections);
-        println!("INIT REPLICAS: {:?}", replicas);
         let server_manager = Self {
             configured_addresses: addresses,
             replicas: RwLock::new(filter_available_replicas!(replicas).collect()),
@@ -159,7 +157,6 @@ impl ServerManager {
         for replica in &replicas {
             let private_address = replica.private_address().clone();
             if !connection_addresses.contains(&private_address) {
-                println!("UPDATE REPLICA CONNECTION FOR {private_address:?}");
                 match self.new_replica_connection(replica.address().clone()).await {
                     Ok(replica_connection) => {
                         new_replica_connections.insert(private_address, replica_connection);
@@ -174,10 +171,8 @@ impl ServerManager {
         let replica_addresses: HashSet<Address> =
             replicas.into_iter().map(|replica| replica.private_address().clone()).collect();
         let mut replica_connections = self.write_replica_connections();
-        println!("REFRESH REPLICA CONNECTIONS. BEFORE: {:?}", replica_connections);
         replica_connections.retain(|address, _| replica_addresses.contains(address));
         replica_connections.extend(new_replica_connections);
-        println!("REFRESH REPLICA CONNECTIONS. AFTER: {:?}", replica_connections);
 
         if replica_connections.is_empty() {
             Err(self.server_connection_failed_err(connection_errors))
@@ -208,9 +203,7 @@ impl ServerManager {
     ) -> Result<ServerConnection> {
         let replica_connection = self.new_replica_connection(public_address).await?;
         let mut replica_connections = self.write_replica_connections();
-        println!("RECORD NEW REPLICA CONNECTION. BEFORE: {:?}", replica_connections);
         replica_connections.insert(private_address, replica_connection.clone());
-        println!("RECORD NEW REPLICA CONNECTION. AFTER: {:?}", replica_connections);
         Ok(replica_connection)
     }
 
@@ -270,7 +263,6 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        println!("STRONG");
         let mut primary_replica = match self.read_primary_replica() {
             Some(replica) => replica,
             None => {
@@ -287,24 +279,20 @@ impl ServerManager {
         let retries = self.driver_options.primary_failover_retries;
         let mut connection_errors = HashMap::new();
         for x in 0..=retries {
-            println!("Retry {x} on {primary_replica:?}");
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, &task).await {
                 Err(Error::Connection(connection_error)) => {
                     let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
                     let replicas_without_old_primary = replicas.into_iter().filter(|replica| {
-                        println!("REPLICAS: Filter out? {private_address:?} vs mine {:?}", replica.private_address());
                         replica.private_address() != &private_address
                     });
                     primary_replica = match &connection_error {
                         ConnectionError::ClusterReplicaNotPrimary => {
-                            println!("Not primary");
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
                             let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
                             self.seek_primary_replica_in(replicas).await?
                         }
                         err => {
-                            println!("ERROR STRONG");
                             debug!("Could not connect to the primary replica: {err:?}. Retrying...");
                             self.seek_primary_replica_in(replicas_without_old_primary).await?
                         }
@@ -317,11 +305,9 @@ impl ServerManager {
                     }
                 }
                 Err(err) => {
-                    println!("ERROR RETURN res: {err:?}");
                     return Err(err);
                 }
                 res => {
-                    println!("res ok");
                     return res;
                 }
             }
@@ -339,13 +325,10 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        println!("ANY");
         let limit = self.driver_options.replica_discovery_attempts.unwrap_or(usize::MAX);
         let mut connection_errors = HashMap::new();
         for (attempt, replica) in enumerate(replicas.into_iter()) {
-            println!("ATTEMPT {attempt} with {limit}");
             if attempt == limit {
-                println!("BREAK");
                 break;
             }
             // TODO: If we only use eventual consistency, we won't ever reconnect to disconnected /
@@ -355,7 +338,6 @@ impl ServerManager {
                     return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
                 }
                 Err(Error::Connection(error)) => {
-                    println!("CONNECTION ERROR ANY: {error:?}");
                     debug!("Unable to connect to {}: {error:?}. May attempt the next server.", replica.address());
                     connection_errors.insert(replica.address().clone(), error.into());
                 }
@@ -384,7 +366,6 @@ impl ServerManager {
         &self,
         source_replicas: impl IntoIterator<Item = AvailableServerReplica>,
     ) -> Result<AvailableServerReplica> {
-        println!("SEEK");
         let result = self
             .execute_on_any(source_replicas, |replica_connection| async {
                 let result = self.seek_primary_replica(replica_connection).await;
@@ -411,9 +392,7 @@ impl ServerManager {
     async fn seek_primary_replica(&self, replica_connection: ServerConnection) -> Result<AvailableServerReplica> {
         let address_translation = self.read_address_translation().clone();
         if self.driver_options.use_replication {
-            println!("SEEK PRIMARY REPLICA");
             let replicas = Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await?;
-            println!("WRITE NEW PRIMARY");
             *self.replicas.write().expect("Expected replicas write lock") =
                 filter_available_replicas!(replicas).collect();
         }
@@ -427,7 +406,6 @@ impl ServerManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn wait_for_primary_replica_selection() {
-        println!("Wait for primary");
         // FIXME: blocking sleep! Can't do agnostic async sleep.
         sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
     }
@@ -444,9 +422,7 @@ impl ServerManager {
     ) -> Result<(HashMap<Address, ServerConnection>, HashSet<ServerReplica>)> {
         let address_translation = addresses.address_translation();
         let mut errors = Vec::with_capacity(addresses.len());
-        println!("Fetch replicas from addresses: {addresses:?}");
         for address in addresses.addresses() {
-            println!("Fetch replicas. Address: {address:?}");
             let replica_connection = ServerConnection::new(
                 background_runtime.clone(),
                 address.clone(),
@@ -474,17 +450,14 @@ impl ServerManager {
                     }
                 }
                 Err(Error::Connection(err)) => {
-                    println!("Fetch replicas from addresses: push error {err:?}");
                     debug!("Unable to fetch replicas from {}: {err:?}. Attempting next server.", address);
                     errors.push(err);
                 }
                 Err(err) => {
-                    println!("UNEXPECTED ERR: {err:?}");
                     return Err(err);
                 }
             }
         }
-        println!("Fetch replicas from addresses: SERVER CONNECTION FAILED! {errors:?}");
         Err(ConnectionError::ServerConnectionFailed {
             configured_addresses: addresses.clone(),
             accessed_addresses: addresses.clone(),
