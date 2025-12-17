@@ -40,6 +40,6 @@ filegroup(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
+    exclude = glob(["encryption/*", "config.yml"]),
     license_type = "apache-header",
 )

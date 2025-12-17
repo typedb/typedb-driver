@@ -1,0 +1,35 @@
+[#_ReplicaDependent]
+=== ReplicaDependent
+
+*Package*: `typedb.api.connection.consistency_level.ConsistencyLevel`
+
+Replica dependent consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `str` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_ReplicaDependent_native_object_]
+==== native_object
+
+[source,python]
+----
+native_object()
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+// end::methods[]
+
