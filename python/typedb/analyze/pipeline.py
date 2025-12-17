@@ -42,6 +42,7 @@ if TYPE_CHECKING:
     from typedb.api.analyze.pipeline_stage import PipelineStage
     from typedb.api.analyze.variable import Variable
 
+
 class _Pipeline(Pipeline, NativeWrapper[NativePipeline]):
 
     def __init__(self, pipeline: NativePipeline):
@@ -64,4 +65,3 @@ class _Pipeline(Pipeline, NativeWrapper[NativePipeline]):
     def conjunction(self, conjunction_id: "ConjunctionID") -> Optional["Conjunction"]:
         native_conj = pipeline_get_conjunction(self.native_object, conjunction_id.native_object)
         return None if native_conj is None else _Conjunction(native_conj)
-

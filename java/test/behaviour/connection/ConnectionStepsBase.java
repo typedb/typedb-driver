@@ -19,20 +19,22 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.api.server.ReplicaRole;
+import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -41,13 +43,13 @@ import java.util.stream.Stream;
 
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "password";
     public static final Credentials DEFAULT_CREDENTIALS = new Credentials(ADMIN_USERNAME, ADMIN_PASSWORD);
-    public static final DriverOptions DEFAULT_CONNECTION_SETTINGS = new DriverOptions(false, null);
-    public static final Map<String, String> serverOptions = Collections.emptyMap();
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     public static Driver driver;
@@ -57,8 +59,10 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
+    public static DriverOptions driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
+    public static Optional<ConsistencyLevel> databaseOperationConsistency = Optional.empty();
     static boolean isBeforeAllRan = false;
     static final int BEFORE_TIMEOUT_MILLIS = 10;
 
@@ -117,13 +121,18 @@ public abstract class ConnectionStepsBase {
         cleanupBackgroundTransactions();
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
+        databaseOperationConsistency = Optional.empty();
 
+        if (driver.isOpen()) {
+            driver.close();
+        }
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
         driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
         backgroundDriver.close();
+        driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     }
 
     void cleanupTransactions() {
@@ -144,11 +153,9 @@ public abstract class ConnectionStepsBase {
         backgroundTransactions.clear();
     }
 
-    abstract Driver createTypeDBDriver(String address, Credentials credentials, DriverOptions driverOptions);
-
     abstract Driver createDefaultTypeDBDriver();
 
-    public static void initTransactionOptionsIfNeeded() { // TODO: Implement steps
+    public static void initTransactionOptionsIfNeeded() {
         if (transactionOptions.isEmpty()) {
             transactionOptions = Optional.of(new TransactionOptions());
         }
@@ -173,11 +180,94 @@ public abstract class ConnectionStepsBase {
         assertEquals(isOpen, driver != null && driver.isOpen());
     }
 
+    void connection_contains_distribution(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getDistribution().isEmpty());
+        });
+    }
+
+    void connection_contains_version(Parameters.MayError mayError) {
+        mayError.check(() -> {
+            ServerVersion serverVersion = driver.serverVersion();
+            assertFalse(serverVersion.getVersion().isEmpty());
+        });
+    }
+
+    void connection_has_count_replicas(int count) {
+        assertEquals(driver.replicas().size(), count);
+    }
+
+    void connection_primary_replica_exists() {
+        assertTrue(driver.primaryReplica().isPresent());
+    }
+
+    void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+        boolean exists = driver.replicas().stream().anyMatch(r -> r.getAddress().equals(address));
+        existsOrDoesnt.check(exists);
+    }
+
+    void connection_get_replica_has_term(String address) {
+        var replica = driver.replicas().stream().filter(r -> r.getAddress().equals(address)).findFirst();
+        Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
+        // term should exist (can be any value >= 0)
+    }
+
+    void connection_replicas_have_roles(List<String> roles) {
+        int expectedPrimaryCount = 0;
+        int expectedSecondaryCount = 0;
+        int expectedCandidateCount = 0;
+
+        for (String role : roles) {
+            switch (role.toLowerCase()) {
+                case "primary":
+                    expectedPrimaryCount++;
+                    break;
+                case "secondary":
+                    expectedSecondaryCount++;
+                    break;
+                case "candidate":
+                    expectedCandidateCount++;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown replica role: " + role);
+            }
+        }
+
+        var replicas = driver.replicas();
+        int actualPrimaryCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isPrimary).orElse(false)).count();
+        int actualSecondaryCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isSecondary).orElse(false)).count();
+        int actualCandidateCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isCandidate).orElse(false)).count();
+
+        assertEquals("Primary replica count mismatch", expectedPrimaryCount, actualPrimaryCount);
+        assertEquals("Secondary replica count mismatch", expectedSecondaryCount, actualSecondaryCount);
+        assertEquals("Candidate replica count mismatch", expectedCandidateCount, actualCandidateCount);
+    }
+
     void connection_has_count_databases(int count) {
         assertEquals(count, driver.databases().all().size());
     }
 
     void connection_has_count_users(int count) {
         assertEquals(count, driver.users().all().size());
+    }
+
+    void set_driver_option_use_replication_to(boolean value) {
+        driverOptions = driverOptions.useReplication(value);
+    }
+
+    void set_driver_option_primary_failover_retries_to(int value) {
+        driverOptions = driverOptions.primaryFailoverRetries(value);
+    }
+
+    void set_driver_option_replica_discovery_attempts_to(int value) {
+        driverOptions = driverOptions.replicaDiscoveryAttempts(value);
+    }
+
+    void set_database_operation_consistency_to(Parameters.Consistency consistency) {
+        databaseOperationConsistency = Optional.of(consistency.level());
     }
 }

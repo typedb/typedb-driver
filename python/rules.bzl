@@ -77,7 +77,7 @@ def native_driver_versioned(python_versions):
             ],
             url = "https://github.com/typedb/typedb-driver",
             author = "TypeDB Community",
-            author_email = "community@typedb.com",
+            author_email = "core@typedb.com",
             license = "Apache-2.0",
             requirements_file = "//python:requirements.txt",
             keywords = ["typedb", "database", "graph", "knowledgebase", "knowledge-engineering"],

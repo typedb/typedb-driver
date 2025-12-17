@@ -31,8 +31,6 @@ class ConceptDocumentIterator(QueryAnswer, ABC):
         """
         Checks if the query answer is a ``ConceptDocumentIterator``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -44,8 +42,6 @@ class ConceptDocumentIterator(QueryAnswer, ABC):
     def as_concept_documents(self) -> ConceptDocumentIterator:
         """
         Casts the query answer to ``ConceptDocumentIterator``.
-
-        :return:
 
         Examples
         --------

@@ -22,10 +22,11 @@ pip3 install typedb-driver
 3. Make sure a [TypeDB Server](https://typedb.com/docs/home/install/) is
    running.
 4. In your python program, import from `typedb.driver` (see [Example usage](#example-usage) or `tests/integration` for examples):
+
 ```py
 from typedb.driver import *
 
-driver = TypeDB.driver(address=TypeDB.DEFAULT_ADDRESS, ...)
+driver = TypeDB.driver(addresses=TypeDB.DEFAULT_ADDRESS, ...)
 ```
 
 ## Example usage
@@ -41,7 +42,8 @@ class TypeDBExample:
     def typedb_example(self):
         # Open a driver connection. Specify your parameters if needed
         # The connection will be automatically closed on the "with" block exit
-        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                           DriverOptions(DriverTlsConfig.disabled())) as driver:
             # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")

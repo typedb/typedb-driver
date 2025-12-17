@@ -45,6 +45,16 @@ export interface UsersListResponse {
     users: User[];
 }
 
+export interface Server {
+    address: string;
+    isPrimary: boolean;
+    term: number;
+}
+
+export interface ServersListResponse {
+    servers: Server[];
+}
+
 export interface TransactionOpenResponse {
     transactionId: string;
 }

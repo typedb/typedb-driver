@@ -42,25 +42,26 @@ bool check_error_may_print(const char* filename, int lineno) {
 
 void delete_database_if_exists(TypeDBDriver* driver, const char* name) {
     if (driver == NULL) return;
-    bool contains = databases_contains(driver, name);
+    bool contains = databases_contains(driver, name, NULL);
     if (check_error_may_print(__FILE__, __LINE__)) return;
     if (contains) {
-        const Database* db = databases_get(driver, name);
+        const Database* db = databases_get(driver, name, NULL);
         if (check_error_may_print(__FILE__, __LINE__)) return;
-        database_delete(db);
+        database_delete(db, NULL);
     }
 }
 
-TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password) {
+TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    options = driver_options_new(false, NULL);;
+    options = driver_options_new(tls_config);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    TypeDBDriver* driver = driver_open_with_description(address, creds, options, DRIVER_LANG);
+    TypeDBDriver* driver = driver_new_with_description(address, creds, options, DRIVER_LANG);
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);
-
+    driver_tls_config_drop(tls_config);
     return driver;
 }

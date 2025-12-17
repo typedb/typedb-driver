@@ -49,7 +49,7 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
-        # bazel build //...
+        # bazel build --config=ci //...
         bazel build --config=ci //c/...
         bazel build --config=ci //rust/...
         bazel build --config=ci //java/...
@@ -74,21 +74,21 @@ build:
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        
+
         # TODO: Temporarily update only 3.0 drivers
-        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python" "docs/modules/ROOT/partials/http-ts" "docs/modules/ROOT/partials/c")
+        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python" "docs/modules/ROOT/partials/http-ts")
         find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
         tool/docs/update.sh
         git add "${DOCS_DIRS[@]}"
-        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || { 
+        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || {
           echo "Failed to verify docs files: please update it manually and verify the changes"
           exit 1
         }
-        
+
         tool/docs/update_readme.sh
         git add .
-        git diff --exit-code || { 
-          echo "Failed to verify README files: plese update it manually and verify the changes"
+        git diff --exit-code || {
+          echo "Failed to verify README files: please update it manually and verify the changes"
           exit 1
         }
 
@@ -102,20 +102,20 @@ build:
         
         bazel test --config=ci //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         
-        tool/test/start-community-server.sh &&
+        tool/test/start-core-server.sh &&
           bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
         
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
-    test-rust-behaviour-community:
+    test-rust-behaviour-core:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
@@ -123,28 +123,31 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         
-        tool/test/start-community-server.sh &&
+        tool/test/start-core-server.sh &&
           bazel test --config=ci //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
+        tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-rust-behaviour-cluster:
-    #   image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-    #   dependencies:
-    #     - build
-    #   command: |
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       bazel test --config=ci //rust/tests/behaviour/...  --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-rust-behaviour-cluster:
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+ 
+        # TODO: run `bazel test --config=ci //rust/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //rust/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/driver:test_concept --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/driver:test_connection --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/driver:test_query --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/driver:test_user --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/driver:test_cluster --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
     test-c-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -153,10 +156,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        tool/test/start-community-server.sh &&
+        tool/test/start-core-server.sh &&
           bazel test --config=ci //c/tests/integration:test-driver --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
+        tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-java-integration:
@@ -166,50 +169,53 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        
-        tool/test/start-community-server.sh &&
+
+        tool/test/start-core-server.sh &&
           bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "CLUSTER_FAILED" ]]; then exit 1; fi
 
-    test-java-behaviour-community:
+    test-java-behaviour-core:
       image: typedb-ubuntu-22.04
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        
-        tool/test/start-community-server.sh &&
-          .factory/test-community.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
+
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
+        tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-java-behaviour-cluster:
-    #   image: typedb-ubuntu-22.04
-    #   dependencies:
-    #     - build
-    #   command: |
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-java-behaviour-cluster:
+      image: typedb-ubuntu-22.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+
+        # TODO: run `.factory/test-cluster.sh //java/test/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+        source tool/test/start-cluster-servers.sh 3 &&
+          .factory/test-cluster.sh //java/test/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //java/test/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //java/test/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //java/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //java/test/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //java/test/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
     test-python-integration:
       image: typedb-ubuntu-22.04
@@ -221,20 +227,20 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
-        tool/test/start-community-server.sh &&
+        tool/test/start-core-server.sh &&
           bazel test --config=ci //python/tests/integration:all --test_output=streamed --jobs=1 &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test --config=ci //python/tests/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
-    test-python-behaviour-community:
+    test-python-behaviour-core:
       image: typedb-ubuntu-22.04
       type: foreground
       command: |
@@ -244,33 +250,35 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
-        tool/test/start-community-server.sh &&
-          .factory/test-community.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
+        tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-python-behaviour-cluster:
-    #   image: typedb-ubuntu-22.04
-    #   dependencies:
-    #     - build
-    #   type: foreground
-    #   command: |
-    #     export PATH="$HOME/.local/bin:$PATH"
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cluster.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-python-behaviour-cluster:
+      image: typedb-ubuntu-22.04
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
+        # TODO: run `.factory/test-cluster.sh //python/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+        source tool/test/start-cluster-servers.sh 3 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
-    test-http-ts-behaviour-community:
+    test-http-ts-behaviour-core:
       image: typedb-ubuntu-22.04
       type: foreground
       command: |
@@ -282,10 +290,34 @@ build:
         
         tool/http-ts/install-deps.sh
 
-        tool/test/start-community-server.sh &&
-          .factory/test-community.sh //http-ts/tests/behaviour/... --test_output=streamed --jobs=1 &&
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //http-ts/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-http-ts-behaviour-cluster:
+      image: typedb-ubuntu-22.04
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+
+        tool/http-ts/install-deps.sh
+
+        # TODO: we cannot run them now because we cannot register replicas through HTTP. fix it later
+        # .factory/test-cluster.sh //http-ts/tests/behaviour/feature:cluster-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+        
+        source tool/test/start-cluster-servers.sh 3 &&
+          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:concept-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:query-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:user-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:connection-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
 #    test-nodejs-integration:
@@ -299,13 +331,13 @@ build:
 #        bazel build --config=ci //nodejs/...
 #        cp -rL bazel-bin/nodejs/node_modules nodejs/.
 #        cp -rL bazel-bin/nodejs/dist nodejs/.
-#        tool/test/start-community-server.sh &&
+#        tool/test/start-core-server.sh &&
 #          node nodejs/test/integration/test-concept.js &&
 #          node nodejs/test/integration/test-query.js &&
 #          node nodejs/test/integration/test-connection-core.js &&
-#          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-#        tool/test/stop-community-server.sh
-#        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+#          export CORE_FAILED= || export CORE_FAILED=1
+#        tool/test/stop-core-server.sh
+#        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          node nodejs/test/integration/test-connection-cloud.js &&
@@ -314,7 +346,7 @@ build:
 #        tool/test/stop-cluster-servers.sh
 #        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
-#    test-nodejs-behaviour-community:
+#    test-nodejs-behaviour-core:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -322,15 +354,15 @@ build:
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
-#          .factory/test-community.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
+#        tool/test/start-core-server.sh &&
+#          .factory/test-core.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //nodejs/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-community-server.sh
+#        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
 #    test-nodejs-behaviour-cluster:
@@ -365,11 +397,11 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
+#        tool/test/start-core-server.sh &&
 #          bazel test --config=ci //cpp/test/integration:test-cpp-driver-core --test_output=streamed --jobs=1 &&
-#          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-#        tool/test/stop-community-server.sh
-#        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+#          export CORE_FAILED= || export CORE_FAILED=1
+#        tool/test/stop-core-server.sh
+#        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          bazel test --config=ci //cpp/test/integration:test-cpp-driver-cloud --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -377,7 +409,7 @@ build:
 #        tool/test/stop-cluster-servers.sh
 #        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
-#    test-cpp-behaviour-community:
+#    test-cpp-behaviour-core:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -389,15 +421,15 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
-#          .factory/test-community.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
-#          .factory/test-community.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
-#          .factory/test-community.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-#          .factory/test-community.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
-#          .factory/test-community.sh //cpp/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
+#        tool/test/start-core-server.sh &&
+#          .factory/test-core.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
+#          .factory/test-core.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
+#          .factory/test-core.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
+#          .factory/test-core.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
+#          .factory/test-core.sh //cpp/test/behaviour/query/language/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-community-server.sh
+#        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
 #    test-cpp-behaviour-cluster:
@@ -433,13 +465,13 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
+#        tool/test/start-core-server.sh &&
 #          bazel test --config=ci //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
 #          bazel test --config=ci //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
-#          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-#        tool/test/stop-community-server.sh
-#        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+#          .factory/test-core.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
+#          export CORE_FAILED= || export CORE_FAILED=1
+#        tool/test/stop-core-server.sh
+#        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          bazel test --config=ci //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -448,7 +480,7 @@ build:
 #        tool/test/stop-cluster-servers.sh
 #        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 #
-#    test-csharp-behaviour-community:
+#    test-csharp-behaviour-core:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
 #        - build
@@ -459,16 +491,16 @@ build:
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
 #        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-#        tool/test/start-community-server.sh &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Query/Language/... --test_output=errors --jobs=1 &&
-#          .factory/test-community.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
+#        tool/test/start-core-server.sh &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Concept/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Driver/Query/... --test_output=errors &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Query/Language/... --test_output=errors --jobs=1 &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/Query/Reasoner/... --test_output=errors --jobs=1 &&
 #          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-#        tool/test/stop-community-server.sh
+#        tool/test/stop-core-server.sh
 #        exit $TEST_SUCCESS
 #
 #    test-csharp-behaviour-cluster:
@@ -504,23 +536,23 @@ build:
 #        - build-dependency
 #        - build-docs
 #        - test-rust-unit-integration
-#        - test-rust-behaviour-community
+#        - test-rust-behaviour-core
 #        - test-rust-behaviour-cluster
 #        - test-c-integration
 #        - test-java-integration
-#        - test-java-behaviour-community
+#        - test-java-behaviour-core
 #        - test-java-behaviour-cluster
-#        - test-python-behaviour-community
+#        - test-python-behaviour-core
 #        - test-python-behaviour-cluster
 #        - test-python-integration
 #        - test-nodejs-integration
-#        - test-nodejs-behaviour-community
+#        - test-nodejs-behaviour-core
 #        - test-nodejs-behaviour-cluster
 #        - test-cpp-integration
-#        - test-cpp-behaviour-community
+#        - test-cpp-behaviour-core
 #        - test-cpp-behaviour-cluster
 #        - test-csharp-integration
-#        - test-csharp-behaviour-community
+#        - test-csharp-behaviour-core
 #        - test-csharp-behaviour-cluster
 #      command: |
 #        sudo add-apt-repository -y ppa:deadsnakes/ppa
@@ -534,7 +566,7 @@ build:
 release:
   filter:
     owner: typedb
-    branch: [master]
+    branch: [master, cluster-support-feature-branch]
   validation:
     validate-dependencies:
       image: typedb-ubuntu-22.04

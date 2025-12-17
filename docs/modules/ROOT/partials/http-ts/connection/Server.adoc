@@ -1,0 +1,16 @@
+[#_Server]
+=== Server
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `string` a| 
+a| `isPrimary` a| `boolean` a| 
+a| `term` a| `number` a| 
+|===
+// end::properties[]
+

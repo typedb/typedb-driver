@@ -262,7 +262,7 @@ impl Concept {
         }
     }
 
-    /// Check if this Concept represents a Type from the schema of the database.
+    /// Checks if this Concept represents a Type from the schema of the database.
     /// These are exactly: Entity Types, Relation Types, Role Types, and Attribute Types
     ///
     /// Equivalent to:
@@ -276,27 +276,27 @@ impl Concept {
         }
     }
 
-    /// Check if this Concept represents an Entity Type from the schema of the database
+    /// Checks if this Concept represents an Entity Type from the schema of the database
     pub fn is_entity_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::EntityType)
     }
 
-    /// Check if this Concept represents a Relation Type from the schema of the database
+    /// Checks if this Concept represents a Relation Type from the schema of the database
     pub fn is_relation_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::RelationType)
     }
 
-    /// Check if this Concept represents a Role Type from the schema of the database
+    /// Checks if this Concept represents a Role Type from the schema of the database
     pub fn is_role_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::RoleType)
     }
 
-    /// Check if this Concept represents an Attribute Type from the schema of the database
+    /// Checks if this Concept represents an Attribute Type from the schema of the database
     pub fn is_attribute_type(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::AttributeType)
     }
 
-    /// Check if this Concept represents a stored database instance from the database.
+    /// Checks if this Concept represents a stored database instance from the database.
     /// These are exactly: Entity, Relation, and Attribute
     ///
     /// Equivalent to:
@@ -310,72 +310,72 @@ impl Concept {
         }
     }
 
-    /// Check if this Concept represents an Entity instance from the database
+    /// Checks if this Concept represents an Entity instance from the database
     pub fn is_entity(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Entity)
     }
 
-    /// Check if this Concept represents an Relation instance from the database
+    /// Checks if this Concept represents an Relation instance from the database
     pub fn is_relation(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Relation)
     }
 
-    /// Check if this Concept represents an Attribute instance from the database
+    /// Checks if this Concept represents an Attribute instance from the database
     pub fn is_attribute(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Attribute)
     }
 
-    /// Check if this Concept represents a Value returned by the database
+    /// Checks if this Concept represents a Value returned by the database
     pub fn is_value(&self) -> bool {
         matches!(self.get_category(), ConceptCategory::Value)
     }
 
-    /// Check if this Concept holds a boolean as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a boolean as an AttributeType, an Attribute, or a Value
     pub fn is_boolean(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Boolean))
     }
 
-    /// Check if this Concept holds an integer as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds an integer as an AttributeType, an Attribute, or a Value
     pub fn is_integer(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Integer))
     }
 
-    /// Check if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a fixed-decimal as an AttributeType, an Attribute, or a Value
     pub fn is_decimal(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Decimal))
     }
 
-    /// Check if this Concept holds a double as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a double as an AttributeType, an Attribute, or a Value
     pub fn is_double(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Double))
     }
 
-    /// Check if this Concept holds a string as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a string as an AttributeType, an Attribute, or a Value
     pub fn is_string(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::String))
     }
 
-    /// Check if this Concept holds a date as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a date as an AttributeType, an Attribute, or a Value
     pub fn is_date(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Date))
     }
 
-    /// Check if this Concept holds a datetime as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Datetime))
     }
 
-    /// Check if this Concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a timezoned-datetime as an AttributeType, an Attribute, or a Value
     pub fn is_datetime_tz(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::DatetimeTZ))
     }
 
-    /// Check if this Concept holds a duration as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a duration as an AttributeType, an Attribute, or a Value
     pub fn is_duration(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Duration))
     }
 
-    /// Check if this Concept holds a struct as an AttributeType, an Attribute, or a Value
+    /// Checks if this Concept holds a struct as an AttributeType, an Attribute, or a Value
     pub fn is_struct(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Struct(_)))
     }

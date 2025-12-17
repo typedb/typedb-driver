@@ -59,8 +59,6 @@ class Transaction(ABC):
         """
         Checks whether this transaction is open.
 
-        :return:
-
         Examples:
         ---------
         ::
@@ -92,7 +90,6 @@ class Transaction(ABC):
 
         :param query: The query to execute.
         :param options: The ``QueryOptions`` to execute the query with..
-        :return:
 
         Examples:
         ---------
@@ -109,8 +106,6 @@ class Transaction(ABC):
         **Whether or not the transaction is commited successfully, it gets closed after the commit call.**
 
 
-        :return:
-
         Examples:
         ---------
         ::
@@ -123,8 +118,6 @@ class Transaction(ABC):
     def rollback(self) -> None:
         """
         Rolls back the uncommitted changes made via this transaction.
-
-        :return:
 
         Examples:
         ---------
@@ -140,7 +133,6 @@ class Transaction(ABC):
         Registers a callback function which will be executed when this transaction is closed.
 
         :param function: The callback function.
-        :return:
 
         Examples:
         ---------
@@ -154,8 +146,6 @@ class Transaction(ABC):
     def close(self) -> None:
         """
         Closes the transaction.
-
-        :return:
 
         Examples:
         ---------

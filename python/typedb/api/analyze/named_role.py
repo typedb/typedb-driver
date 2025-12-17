@@ -31,6 +31,7 @@ class NamedRole(ABC):
     (Different role-types belonging to different relation types may share the same name)
     an internal variable is introduced to handle the ambiguity
     """
+
     @abstractmethod
     def variable(self) -> "Variable":
         """

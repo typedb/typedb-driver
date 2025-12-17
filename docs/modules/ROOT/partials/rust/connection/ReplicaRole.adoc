@@ -1,0 +1,18 @@
+[#_enum_ReplicaRole]
+=== ReplicaRole
+
+This enum is used to specify the type of replica.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Candidate = 1`
+a| `Primary = 0`
+a| `Secondary = 2`
+|===
+// end::enum_constants[]
+

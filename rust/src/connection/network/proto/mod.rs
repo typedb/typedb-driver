@@ -24,6 +24,7 @@ mod common;
 mod concept;
 mod database;
 mod message;
+mod server;
 mod user;
 
 pub(super) trait IntoProto<Proto> {

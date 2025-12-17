@@ -413,7 +413,7 @@ pub mod functor_encoding {
         let preamble = analyzed
             .preamble
             .iter()
-            .map(|(func)| {
+            .map(|func| {
                 let context = FunctorContext { structure: &func.body };
                 func.encode_as_functor(&context)
             })
@@ -431,7 +431,7 @@ pub mod functor_encoding {
         let preamble = analyzed
             .preamble
             .iter()
-            .map(|(func)| {
+            .map(|func| {
                 let context = FunctorContext { structure: &func.body };
                 FunctionAnnotations(func).encode_as_functor(&context)
             })

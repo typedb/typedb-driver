@@ -36,7 +36,7 @@ namespace TypeDB.Driver.Api
          * driver.Users.Contains(username);
          * </pre>
          *
-         * @param username The user name to be checked
+         * @param username The username to be checked
          */
         bool Contains(string username);
 

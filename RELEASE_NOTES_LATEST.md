@@ -1,3 +1,6 @@
+**This is an alpha release for CLUSTERED TypeDB 3.x. Do not use this as a stable version of TypeDB.**
+**Instead, reference a non-alpha release of the same major and minor versions.**
+
 Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 
 ## Distribution
@@ -9,14 +12,17 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.8.0
+cargo add typedb-driver@3.7.0-alpha-3
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.7.0-alpha-3/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
+
+**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and can drastically change between versions.
+Use this driver only for the same `XYZ-alpha-A` version of the server.
 
 ```xml
 <repositories>
@@ -29,7 +35,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.8.0</version>
+        <version>3.7.0-alpha-3</version>
     </dependency>
 </dependencies>
 ```
@@ -39,112 +45,71 @@ Documentation: https://typedb.com/docs/drivers/java/overview
 PyPI package: https://pypi.org/project/typedb-driver
 Documentation: https://typedb.com/docs/drivers/python/overview
 
+**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and can drastically change between versions.
+Use this driver only for the same `XYZ-alpha-A` version of the server.
+
 Available through https://pypi.org
 
-[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.8.0
-```
-
-### HTTP Typescript driver
-
-[//]: # (TODO: Update docs link)
-
-NPM package: https://www.npmjs.com/package/@typedb/driver-http
-Documentation: https://typedb.com/docs/drivers/
-
-```
-npm install @typedb/driver-http@3.8.0
+pip install typedb-driver==3.7.0a2
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.7.0-alpha-3
 
 
 ## New Features
 
+### Refactor DriverOptions' TLS configuration
 
-## Bugs Fixed
-- **Fix memory leaks in C integration test example**
-  
-  We fix an issue in the c driver tests and examples which used the wrong transaction close method, causing memory leaks.
-  
-  
-  
+Introduce `DriverTlsConfig` with three possible constructors to eliminate ambiguity of TLS settings:
 
-## Code Refactors
+- disabled
+- enabled using default native root CA
+- enabled using custom root CA
 
+Now, `DriverOptions` contain a separate `tls_config` field instead of `is_tls_enabled` and `tls_root_ca`, and every
+`DriverOptions` object requires an instance of `DriverTlsConfig` on construction to provide explicit TLS connection
+preferences.
 
-## Other Improvements
-- **Update typedb artifact**
+#### Examples
 
-- **Create Bazel CI config**
-  
-  We create a separate Bazel CI config, which disables the disk cache. Disk cache is most useful on machines where we do many different builds on different branches and the standard bazel cache might be clobbered unnecessarily. In CI, where we do mostly one build per machine and also have a remote cache, this is not useful and on top of that hits the disk size limits.
-  
-  
-- **Add bazel disk cache to speed up local builds when switching branches**
+Rust:
+```rust
+// Default: TLS enabled with native system trust roots
+let options = DriverOptions::new(DriverTlsConfig::enabled_with_native_root_ca()).use_replication(true);
 
-- **Improve readability of reference docs**
-  
-  Add `function` before the method name (or `method` in Java/Python/Rust), to help readability of the generated docs page.
-  
-  
-- **Regenerate docs with new css classes**
+// Custom CA (PEM) for private PKI / self-signed deployments
+let options_custom_ca = DriverOptions::new(
+    DriverTlsConfig::enabled_with_root_ca(Path::new("path/to/ca-certificate.pem")).unwrap(),
+);
 
-- **Add doc-api-reference-driver class to classes in driver API reference pages**
+// Disable TLS (NOT recommended)
+let options_insecure = DriverOptions::new(DriverTlsConfig::disabled());
+```
 
-- **Improve driver docs reference formatting**
-  
-  We improve the driver reference formatting by including a `class` or `enum` or `struct` description to help delineate these constructs from methods in very long documentation pages.
-  
-  
-- **Update READMEs**
+Java:
+```java
+// Default: TLS enabled with native system trust roots
+DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA()).useReplication(true);
 
-- **Update C driver documentation to TypeDB 3.x API**
-    - Update C driver documentation to TypeDB 3.x API structure matching Rust/Java/Python
-    - Add C driver example with full integration test coverage
-    - Add example compile verification targets for Java, Rust, and C drivers
-    - Fix Java Value API Javadoc to correctly describe return types
-    - Add TransactionOptions and QueryOptions includes to Java/Python/Rust api-reference
-  
-  
-  
-- **Fix formatting**
+// Custom CA (PEM) for private PKI / self-signed deployments
+DriverOptions optionsCustomCA = new DriverOptions(DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem"));
 
-- **Set up configurable FFI/Rust driver logging**
-  
-  Rather than having Python/Java/other wrappers invoke logging initialization explicitly, we now just do it on open of the Rust driver automatically.
-  
-  This should fix warnings in Python:
-  ```
-  Failed to initialize logging: attempted to set a logger after the logging system was already initialized
-  ```
-  
-  We also remove uses of the `log` create in the `//c` layer, and use `tracing` instead.
-  
-  We can now configure logging in the Rust-driver component with the following variables: `TYPEDB_DRIVER_LOG=info|debug|warn|trace` or using the usual `RUST_LOG` variable. By default, ffi-based drivers calling `init_logging` will use INFO logging.
-  
-  Rust applications should continue set up their own logging subscriber, as usual.
-  
-  
-- **Add banner to readme, fix link**
+// Disable TLS (NOT recommended)
+DriverOptions optionsInsecure = new DriverOptions(DriverTlsConfig.disabled());
+```
 
-- **Add contributing guidelines to CONTRIBUTING.md**
+Python:
+```py
+# Default/recommended: TLS enabled with native system trust roots
+options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), use_replication=True)
 
-- **Handle output directories properly for python BDD and docs rules (#831)**
-  This enables the bazel `remote_download_toplevel` flag, which broke build due to badly declared outputs.
-  
-  
-- **Update README.md by removing outdated links**
+# Custom CA (PEM) for private PKI / self-signed deployments
+options_custom_ca = DriverOptions(DriverTlsConfig.enabled_with_root_ca("path/to/ca-certificate.pem"))
+options_custom_ca.use_replication = True # Post-construction setter
 
-- **Handle output directories properly for python BDD and docs rules**
-  This enables the bazel `remote_download_toplevel` flag, which broke build due to badly declared outputs.
-  
-  
-- **Remove --remote_download_toplevel since not all bazel targets have predeclared outputs (docs)**
-
-- **Improve bazel cache performance in CI with --remote_download_toplevel**
-
-    
+# Disable TLS (NOT recommended)
+options_insecure = DriverOptions(DriverTlsConfig.disabled())
+```

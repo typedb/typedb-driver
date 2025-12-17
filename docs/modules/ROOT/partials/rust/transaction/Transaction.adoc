@@ -139,7 +139,7 @@ transaction.commit()
 pub fn is_open(&self) -> bool
 ----
 
-Closes the transaction.
+Checks if the transaction is open.
 
 [caption=""]
 .Returns
@@ -152,7 +152,7 @@ bool
 .Code examples
 [source,rust]
 ----
-transaction.close()
+transaction.is_open()
 ----
 
 [#_struct_Transaction_on_close_function]
@@ -209,6 +209,13 @@ Performs a TypeQL query with default options. See <<#_struct_Transaction_method_
 [source,rust]
 ----
 impl Promise<'static, Result<QueryAnswer>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.query(query)
 ----
 
 [#_struct_Transaction_query_with_options_query_impl_AsRef_str_options_QueryOptions]
