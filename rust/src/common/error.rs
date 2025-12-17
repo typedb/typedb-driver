@@ -17,13 +17,13 @@
  * under the License.
  */
 
-use std::{collections::HashSet, error::Error as StdError, fmt};
+use std::{error::Error as StdError, fmt};
 
-use itertools::Itertools;
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
 
-use super::{address::Address, RequestID};
+use super::RequestID;
+use crate::common::address::{Address, Addresses};
 
 macro_rules! error_messages {
     {
@@ -128,50 +128,48 @@ error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable { message: String } =
         1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
-    ServerConnectionFailed { addresses: Vec<Address> } =
-        2: "Unable to connect to TypeDB server(s) at: \n{addresses:?}",
+    ServerConnectionFailed { configured_addresses: Addresses, accessed_addresses: Addresses, details: String } =
+        2: "Unable to connect to TypeDB server(s).\nInitially configured addresses: {configured_addresses}.\nTried accessing addresses: {accessed_addresses}. Details: {details}",
     ServerConnectionFailedWithError { error: String } =
         3: "Unable to connect to TypeDB server(s), received errors: \n{error}",
-    ServerConnectionFailedStatusError { error: String } =
+    ServerConnectionFailedNetworking { error: String } =
         4: "Unable to connect to TypeDB server(s), received network or protocol error: \n{error}",
     ServerConnectionIsClosed =
         5: "The connection has been closed and no further operation is allowed.",
+    ServerConnectionIsClosedUnexpectedly =
+        6: "The connection has been closed unexpectedly and no further operation is allowed.",
     TransactionIsClosed =
-        6: "The transaction is closed and no further operation is allowed.",
+        7: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors { errors: String } =
-        7: "The transaction is closed because of the error(s):\n{errors}",
-    DatabaseNotFound { name: String } =
-        8: "Database '{name}' not found.",
+        8: "The transaction is closed because of the error(s):\n{errors}",
     MissingResponseField { field: &'static str } =
         9: "Missing field in message received from server: '{field}'. This is either a version compatibility issue or a bug.",
     UnknownRequestId { request_id: RequestID } =
         10: "Received a response with unknown request id '{request_id}'",
     UnexpectedResponse { response: String } =
         11: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
-    InvalidResponseField { name: &'static str } =
-        12: "Invalid field in message received from server: '{name}'. This is either a version compatibility issue or a bug.",
     QueryStreamNoResponse =
         13: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     ClusterReplicaNotPrimary =
         15: "The replica is not the primary replica.",
-    ClusterAllNodesFailed { errors: String } =
-        16: "Attempted connecting to all TypeDB Cluster servers, but the following errors occurred: \n{errors}.",
+    UnknownDirectReplica { address: Address, configured_addresses: Addresses } =
+        16: "Could not execute operation against '{address}' since it's not a known replica of configured addresses ({configured_addresses}).",
     TokenCredentialInvalid =
         17: "Invalid token credentials.",
     EncryptionSettingsMismatch =
         18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
-    SSLCertificateNotValidated =
+    SslCertificateNotValidated =
         19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
         20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
-    ConnectionFailed =
-        21: "Connection failed. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
+    ConnectionRefusedNetworking =
+        21: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         22: "Invalid URL '{address}': missing port.",
-    AddressTranslationMismatch { unknown: HashSet<Address>, unmapped: HashSet<Address> } =
-        23: "Address translation map does not match the server's advertised address list. User-provided servers not in the advertised list: {unknown:?}. Advertised servers not mapped by user: {unmapped:?}.",
+    UnexpectedReplicaRole { replica_role: i32 } =
+        23: "Unexpected replica type in message received from server: {replica_role}. This is either a version compatibility issue or a bug.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
         24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
@@ -194,12 +192,20 @@ error_messages! { ConnectionError
         33: "Didn't receive any server responses for the database export command.",
     AbsentTlsConfigForTlsConnection =
         34: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
-    TlsConnectionWithoutHttps =
-        35: "TLS connections can only be enabled when connecting to HTTPS endpoints, for example using 'https://<ip>:port'. Please modify the address, or disable TLS (WARNING: this will send passwords over plaintext).",
-    NonTlsConnectionWithHttps =
-        36: "Connecting to an https endpoint requires enabling TLS in driver options.",
+    ServerIsNotInitialised =
+        35: "Server is not yet initialized.",
     AnalyzeNoResponse =
-        37: "Didn't receive any server responses for the analyze request.",
+        36: "Didn't receive any server responses for the analyze request.",
+    NotPrimaryOnReadOnly { address: Address } =
+        37: "Could not execute a readonly operation on a non-primary replica '{address}'.",
+    NoAvailableReplicas { configured_addresses: Addresses } =
+        38: "Could not connect: no available replicas read from addresses {configured_addresses}.",
+    InvalidAddressWithScheme { addresses: Addresses } =
+        39: "Invalid address format: a scheme was found in one or more addresses. Please provide addresses as 'host:port'. Use driver options to configure TLS. Addresses: {addresses}.",
+    AddressTranslationWithoutTranslation { addresses: Addresses } =
+        40: "Specified addresses do not contain address translation: {addresses}.",
+    NoPrimaryReplica =
+        41: "Could not find a primary replica.",
 }
 
 error_messages! { ConceptError
@@ -236,10 +242,8 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {request_type}. This is either a version compatibility issue or a bug.",
     UnexpectedResponseType { response_type: String } =
         4: "Unexpected response type for remote procedure call: {response_type}. This is either a version compatibility issue or a bug.",
-    UnknownServer { server: Address } =
-        5: "Received replica at unrecognized server: {server}.",
-    EnumOutOfBounds { value: i32, enum_name: &'static str } =
-        6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
+    Unimplemented { details: String } =
+        5: "Unimplemented feature: {details}.",
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -321,19 +325,23 @@ impl Error {
         }
     }
 
-    fn try_extracting_connection_error(status: &Status, code: &str) -> Option<ConnectionError> {
-        // TODO: We should probably catch more connection errors instead of wrapping them into
-        // ServerErrors. However, the most valuable information even for connection is inside
-        // stacktraces now.
+    fn try_extracting_connection_error_code(code: &str) -> Option<ConnectionError> {
         match code {
             "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
+            "CSV8" => Some(ConnectionError::ClusterReplicaNotPrimary {}),
             _ => None,
         }
     }
 
-    fn from_message(message: String) -> Self {
-        // TODO: Consider converting some of the messages to connection errors
-        Self::Other(message)
+    fn try_extracting_connection_error_message(message: &str) -> Option<ConnectionError> {
+        if is_rst_stream(message) || is_tcp_connect_error(message) {
+            Some(ConnectionError::ServerConnectionFailedNetworking { error: message.to_string() })
+        } else if is_reading_body_from_connection_error(message) {
+            Some(ConnectionError::ServerConnectionIsClosedUnexpectedly)
+        } else {
+            None
+        }
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
@@ -342,11 +350,11 @@ impl Error {
         } else if status_message.contains("received corrupt message") {
             Error::Connection(ConnectionError::EncryptionSettingsMismatch)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::SSLCertificateNotValidated)
+            Error::Connection(ConnectionError::SslCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionFailed)
+            Error::Connection(ConnectionError::ConnectionRefusedNetworking)
         } else {
-            Error::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status_message.to_owned() })
+            Error::Connection(ConnectionError::ServerConnectionFailedNetworking { error: status_message.to_owned() })
         }
     }
 }
@@ -397,6 +405,12 @@ impl From<ConceptError> for Error {
     }
 }
 
+impl From<MigrationError> for Error {
+    fn from(error: MigrationError) -> Self {
+        Self::Migration(error)
+    }
+}
+
 impl From<InternalError> for Error {
     fn from(error: InternalError) -> Self {
         Self::Internal(error)
@@ -413,45 +427,64 @@ impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if let Ok(details) = status.check_error_details() {
             if let Some(bad_request) = details.bad_request() {
-                Self::Connection(ConnectionError::ServerConnectionFailedWithError {
+                return Self::Connection(ConnectionError::ServerConnectionFailedWithError {
                     error: format!("{:?}", bad_request),
-                })
-            } else if let Some(error_info) = details.error_info() {
-                let code = error_info.reason.clone();
-                if let Some(connection_error) = Self::try_extracting_connection_error(&status, &code) {
-                    return Self::Connection(connection_error);
-                }
-                let domain = error_info.domain.clone();
-                let stack_trace =
-                    if let Some(debug_info) = details.debug_info() { debug_info.stack_entries.clone() } else { vec![] };
+                });
+            }
 
-                Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
+            let message = concat_source_messages(&status);
+            if let Some(connection_error) = Self::try_extracting_connection_error_message(&message) {
+                return Self::Connection(connection_error);
+            }
+
+            if let Some(error_info) = details.error_info() {
+                let code = error_info.reason.clone();
+                if let Some(connection_error) = Self::try_extracting_connection_error_code(&code) {
+                    Self::Connection(connection_error)
+                } else {
+                    let domain = error_info.domain.clone();
+                    let stack_trace =
+                        details.debug_info().map(|debug_info| debug_info.stack_entries.clone()).unwrap_or_default();
+                    Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
+                }
             } else {
-                Self::from_message(concat_source_messages(&status))
+                Self::Other(message)
             }
         } else {
-            if status.code() == Code::Unavailable {
-                Self::parse_unavailable(status.message())
-            } else if status.code() == Code::Unknown
-                || is_rst_stream(&status)
-                || status.code() == Code::FailedPrecondition
-                || status.code() == Code::AlreadyExists
-            {
-                Self::Connection(ConnectionError::ServerConnectionFailedStatusError {
-                    error: status.message().to_owned(),
-                })
-            } else if status.code() == Code::Unimplemented {
-                Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
-            } else {
-                Self::from_message(concat_source_messages(&status))
+            match status.code() {
+                Code::Unavailable => Self::parse_unavailable(status.message()),
+                Code::Unknown | Code::FailedPrecondition | Code::AlreadyExists => {
+                    Self::Connection(ConnectionError::ServerConnectionFailedNetworking {
+                        error: status.message().to_owned(),
+                    })
+                }
+                Code::Unimplemented => {
+                    Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
+                }
+                _ => {
+                    let message = concat_source_messages(&status);
+                    Self::try_extracting_connection_error_message(&message)
+                        .map(|error| Self::Connection(error))
+                        .unwrap_or_else(|| Self::Other(message))
+                }
             }
         }
     }
 }
 
-fn is_rst_stream(status: &Status) -> bool {
+fn is_rst_stream(message: &str) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
-    status.message().contains("Received Rst Stream")
+    message.contains("Received Rst Stream")
+}
+
+fn is_reading_body_from_connection_error(message: &str) -> bool {
+    // This error can be returned when the server crashes
+    message.contains("error reading a body from connection")
+}
+
+fn is_tcp_connect_error(message: &str) -> bool {
+    // No TCP connection
+    message.contains("tcp connect error")
 }
 
 fn concat_source_messages(status: &Status) -> String {

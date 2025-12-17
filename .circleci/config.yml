@@ -925,14 +925,13 @@ workflows:
             - deploy-snapshot-any
 #            - deploy-snapshot-dotnet-any
 
-# TODO: Windows typedb artifact is not ready
-#      - test-snapshot-windows-x86_64:
-#          filters:
-#            branches:
-#              only: [master]
-#          requires:
-#            - deploy-snapshot-windows-x86_64
-#            - deploy-snapshot-any
+      - test-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master]
+          requires:
+            - deploy-snapshot-windows-x86_64
+            - deploy-snapshot-any
 #            - deploy-snapshot-dotnet-any
 
 # TODO: npm is not ready

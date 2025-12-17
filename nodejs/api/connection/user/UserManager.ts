@@ -30,7 +30,7 @@ export interface UserManager {
      * driver.users.contains(username)
      * ```
      *
-     * @param username - The user name to be checked
+     * @param username - The username to be checked
      */
     contains(name: string): Promise<boolean>;
 

@@ -17,10 +17,44 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-# TODO: This package can contain cluster-specific integration tests. Tests available for running for both community
-# edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
+rust_test(
+    name = "test_clustering",
+    srcs = ["clustering.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:itertools",
+        "@crates//:regex",
+        "@crates//:serde_json",
+        "@crates//:serial_test",
+        "@crates//:smol",
+        "@crates//:tokio",
+        "@crates//:uuid",
+    ],
+)
+
+rust_test(
+    name = "test_playground",
+    srcs = ["playground.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:itertools",
+        "@crates//:regex",
+        "@crates//:serde_json",
+        "@crates//:serial_test",
+        "@crates//:smol",
+        "@crates//:tokio",
+        "@crates//:uuid",
+    ],
+)
 
 checkstyle_test(
     name = "checkstyle",

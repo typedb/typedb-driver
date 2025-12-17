@@ -79,7 +79,7 @@ public interface ConceptRow {
      * conceptRow.get(columnName);
      * </pre>
      *
-     * @param columnName the variable (column name from ``column_names``)
+     * @param columnName the variable (column name from <code>column_names</code>)
      */
     @CheckReturnValue
     Optional<Concept> get(String columnName) throws TypeDBDriverException;

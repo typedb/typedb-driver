@@ -72,7 +72,7 @@ public class QueryOptions extends NativeObject<com.typedb.driver.jni.QueryOption
     }
 
     /**
-     * Explicitly set the "include instance types" flag.
+     * Explicitly setsthe "include instance types" flag.
      * If set, specifies if types should be included in instance structs returned in ConceptRow answers.
      * This option allows reducing the amount of unnecessary data transmitted.
      *
@@ -107,7 +107,7 @@ public class QueryOptions extends NativeObject<com.typedb.driver.jni.QueryOption
     }
 
     /**
-     * Explicitly set the prefetch size.
+     * Explicitly setsthe prefetch size.
      * If set, specifies the number of extra query responses sent before the client side has to re-request more responses.
      * Increasing this may increase performance for queries with a huge number of answers, as it can
      * reduce the number of network round-trips at the cost of more resources on the server side.

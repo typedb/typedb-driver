@@ -20,13 +20,11 @@
 use std::{collections::VecDeque, time::Duration};
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::join_all, FutureExt};
+use futures::future::join_all;
 use macro_rules_attribute::apply;
 use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
-use crate::{
-    generic_step, in_background, in_oneshot_background, params, params::check_boolean, util::iter_table, Context,
-};
+use crate::{generic_step, in_background, params, params::check_boolean, util::iter_table, Context};
 
 pub(crate) async fn open_transaction_for_database(
     driver: &TypeDBDriver,
@@ -55,7 +53,7 @@ pub async fn connection_open_transaction_for_database(
                 context.driver.as_ref().unwrap(),
                 &database_name,
                 type_.transaction_type,
-                context.transaction_options,
+                context.transaction_options(),
             )
             .await,
         ),
@@ -73,7 +71,7 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
                     context.driver.as_ref().unwrap(),
                     &database_name,
                     transaction_type,
-                    context.transaction_options,
+                    context.transaction_options(),
                 )
                 .await,
             )
@@ -90,7 +88,7 @@ pub async fn connection_open_transactions_in_parallel(context: &mut Context, dat
             context.driver.as_ref().unwrap(),
             &database_name,
             transaction_type,
-            context.transaction_options,
+            context.transaction_options(),
         )
     }))
     .await
@@ -115,7 +113,7 @@ pub async fn in_background_connection_open_transaction_for_database(
                     &background,
                     &database_name,
                     type_.transaction_type,
-                    context.transaction_options,
+                    context.transaction_options(),
                 )
                 .await,
             ),
@@ -169,12 +167,12 @@ pub async fn transaction_rollbacks(context: &mut Context, may_error: params::May
 #[step(expr = "set transaction option transaction_timeout_millis to: {int}")]
 pub async fn set_transaction_option_transaction_timeout_millis(context: &mut Context, value: u64) {
     context.init_transaction_options_if_needed();
-    context.transaction_options.as_mut().unwrap().transaction_timeout = Some(Duration::from_millis(value));
+    context.transaction_options_mut().unwrap().transaction_timeout = Some(Duration::from_millis(value));
 }
 
 #[apply(generic_step)]
 #[step(expr = "set transaction option schema_lock_acquire_timeout_millis to: {int}")]
 pub async fn set_transaction_option_schema_lock_acquire_timeout_millis(context: &mut Context, value: u64) {
     context.init_transaction_options_if_needed();
-    context.transaction_options.as_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
+    context.transaction_options_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
 }

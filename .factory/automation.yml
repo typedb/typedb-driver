@@ -50,10 +50,10 @@ build:
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
-        bazel build //c/...
+        # bazel build //c/...
         bazel build //rust/...
-        bazel build //java/...
-        bazel build //python/...
+        # bazel build //java/...
+        # bazel build //python/...
         bazel build //http-ts/...
         
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
@@ -87,8 +87,8 @@ build:
         
         tool/docs/update_readme.sh
         git add .
-        git diff --exit-code || { 
-          echo "Failed to verify README files: plese update it manually and verify the changes"
+        git diff --exit-code || {
+          echo "Failed to verify README files: please update it manually and verify the changes"
           exit 1
         }
 
@@ -109,7 +109,7 @@ build:
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
         
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
@@ -129,22 +129,21 @@ build:
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-rust-behaviour-cluster:
-    #   image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-    #   dependencies:
-    #     - build
-    #   command: |
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       bazel test //rust/tests/behaviour/...  --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-rust-behaviour-cluster:
+      image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+ 
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test //rust/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
     test-c-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -176,7 +175,7 @@ build:
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test //java/test/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
@@ -196,22 +195,21 @@ build:
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-java-behaviour-cluster:
-    #   image: typedb-ubuntu-22.04
-    #   dependencies:
-    #     - build
-    #   command: |
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-java-behaviour-cluster:
+      image: typedb-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        
+        source tool/test/start-cluster-servers.sh 3 &&
+          .factory/test-cluster.sh //java/test/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
     test-python-integration:
       image: typedb-ubuntu-22.04
@@ -230,7 +228,7 @@ build:
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
         # TODO: Use cluster server artifact with 3 nodes when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # source tool/test/start-cluster-servers.sh 3 &&
         #   bazel test //python/tests/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
@@ -252,24 +250,23 @@ build:
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
 
-    # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
-    # test-python-behaviour-cluster:
-    #   image: typedb-ubuntu-22.04
-    #   dependencies:
-    #     - build
-    #   type: foreground
-    #   command: |
-    #     export PATH="$HOME/.local/bin:$PATH"
-    #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-    #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
-    #
-    #     tool/test/start-cluster-servers.sh 3 &&
-    #       .factory/test-cluster.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
-    #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-    #     tool/test/stop-cluster-servers.sh
-    #     exit $TEST_SUCCESS
+    test-python-behaviour-cluster:
+      image: typedb-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        
+        source tool/test/start-cluster-servers.sh 3 &&
+          .factory/test-cluster.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
 
 
     test-http-ts-behaviour-community:

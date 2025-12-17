@@ -43,7 +43,7 @@ public:
      * driver.users.contains(username);
      * </pre>
      *
-     * @param username The user name to be checked
+     * @param username The username to be checked
      */
     bool contains(const std::string& username) const;
 

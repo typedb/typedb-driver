@@ -12,11 +12,11 @@ Provides access to all database management methods.
 [source,java]
 ----
 @CheckReturnValue
-java.util.List<Database> all()
-                      throws TypeDBDriverException
+default java.util.List<Database> all()
+                              throws TypeDBDriverException
 ----
 
-Retrieves all databases present on the TypeDB server. 
+Retrieves all databases present on the TypeDB server, using default strong consistency. See <<#_all_com_typedb_driver_api_ConsistencyLevel,``all(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -30,17 +30,50 @@ Retrieves all databases present on the TypeDB server.
 driver.databases().all()
 ----
 
+[#_DatabaseManager_all_ConsistencyLevel]
+==== all
+
+[source,java]
+----
+@CheckReturnValue
+java.util.List<Database> all​(ConsistencyLevel consistencyLevel)
+                      throws TypeDBDriverException
+----
+
+Retrieves all databases present on the TypeDB server. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`java.util.List<Database>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().all(ConsistencyLevel.Strong)
+----
+
 [#_DatabaseManager_contains_java_lang_String]
 ==== contains
 
 [source,java]
 ----
 @CheckReturnValue
-boolean contains​(java.lang.String name)
-          throws TypeDBDriverException
+default boolean contains​(java.lang.String name)
+                  throws TypeDBDriverException
 ----
 
-Checks if a database with the given name exists. 
+Checks if a database with the given name exists, using default strong consistency. See <<#_contains_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``contains(String, ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -63,6 +96,41 @@ a| `name` a| The database name to be checked a| `java.lang.String`
 driver.databases().contains(name)
 ----
 
+[#_DatabaseManager_contains_java_lang_String_ConsistencyLevel]
+==== contains
+
+[source,java]
+----
+@CheckReturnValue
+boolean contains​(java.lang.String name,
+                 ConsistencyLevel consistencyLevel)
+          throws TypeDBDriverException
+----
+
+Checks if a database with the given name exists. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The database name to be checked a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().contains(name, ConsistencyLevel.Strong)
+----
+
 [#_DatabaseManager_create_java_lang_String]
 ==== create
 
@@ -72,7 +140,7 @@ void create​(java.lang.String name)
      throws TypeDBDriverException
 ----
 
-Create a database with the given name. 
+Creates a database with the given name. 
 
 
 [caption=""]
@@ -101,11 +169,11 @@ driver.databases().create(name)
 [source,java]
 ----
 @CheckReturnValue
-Database get​(java.lang.String name)
-      throws TypeDBDriverException
+default Database get​(java.lang.String name)
+              throws TypeDBDriverException
 ----
 
-Retrieve the database with the given name. 
+Retrieves the database with the given name, using default strong consistency. See <<#_get_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``get(String, ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -128,6 +196,41 @@ a| `name` a| The name of the database to retrieve a| `java.lang.String`
 driver.databases().get(name)
 ----
 
+[#_DatabaseManager_get_java_lang_String_ConsistencyLevel]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+Database get​(java.lang.String name,
+             ConsistencyLevel consistencyLevel)
+      throws TypeDBDriverException
+----
+
+Retrieves the database with the given name. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`Database`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().get(name, ConsistencyLevel.Strong)
+----
+
 [#_DatabaseManager_importFromFile_java_lang_String_java_lang_String_java_lang_String]
 ==== importFromFile
 
@@ -139,7 +242,7 @@ void importFromFile​(java.lang.String name,
              throws TypeDBDriverException
 ----
 
-Create a database with the given name based on previously exported another database's data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size. 
+Creates a database with the given name based on previously exported another database's data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size. 
 
 
 [caption=""]

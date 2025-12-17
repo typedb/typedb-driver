@@ -1,0 +1,51 @@
+[#_ServerReplica]
+=== ServerReplica
+
+The metadata and state of an individual raft replica of a driver connection.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `str` a| Returns the address this replica is hosted at.
+
+
+a| `id` a| `int` a| Returns the id of this replica.
+
+
+a| `replica_type` a| `ReplicaType` a| Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+
+
+a| `term` a| `int` a| Returns the raft protocol ‘term’ of this replica.
+
+
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_ServerReplica_is_primary_]
+==== is_primary
+
+[source,python]
+----
+is_primary() -> bool
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+server_replica.is_primary()
+----
+
+// end::methods[]
+

@@ -16,7 +16,6 @@
 # under the License.
 
 from abc import ABC, abstractmethod
-from typing import Optional, List
 
 
 class User(ABC):
@@ -31,16 +30,6 @@ class User(ABC):
         :return:
         """
         pass
-
-    # TODO: Not implemented
-    # @abstractmethod
-    # def password_expiry_seconds(self) -> Optional[int]:
-    #     """
-    #     Returns the number of seconds remaining till this user's current password expires.
-    #
-    #     :return:
-    #     """
-    #     pass
 
     @abstractmethod
     def update_password(self, password: str) -> None:
@@ -66,91 +55,5 @@ class User(ABC):
         ::
 
            driver.users.delete(username)
-        """
-        pass
-
-
-class UserManager(ABC):
-    """
-    Provides access to all user management methods.
-    """
-
-    @abstractmethod
-    def contains(self, username: str) -> bool:
-        """
-        Checks if a user with the given name exists.
-
-        :param username: The user name to be checked
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.contains(username)
-        """
-        pass
-
-    @abstractmethod
-    def create(self, username: str, password: str) -> None:
-        """
-        Create a user with the given name and password.
-
-        :param username: The name of the user to be created
-        :param password: The password of the user to be created
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.create(username, password)
-        """
-        pass
-
-    @abstractmethod
-    def get(self, username: str) -> Optional[User]:
-        """
-        Retrieve a user with the given name.
-
-        :param username: The name of the user to retrieve
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.get(username)
-        """
-        pass
-
-    @abstractmethod
-    def get_current_user(self) -> Optional[User]:
-        """
-        Retrieve the name of the user who opened the current connection.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.get_current_user()
-        """
-        pass
-
-    @abstractmethod
-    def all(self) -> List[User]:
-        """
-        Retrieves all users which exist on the TypeDB server.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.all()
-
         """
         pass

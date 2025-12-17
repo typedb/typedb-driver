@@ -12,23 +12,23 @@ An extension class for ``datetime.datetime`` class to store additional informati
 [options="header"]
 |===
 |Name |Type |Description
-a| `date` a| `date` a| Return the date part.
-a| `datetime_without_nanos` a| `datetime` a| Return the standard library’s datetime, containing data up to microseconds.
-a| `day` a| `int` a| Return the datetime’s day (1-31).
-a| `hour` a| `int` a| Return the datetime’s hour (0-23).
-a| `microsecond` a| `int` a| Return the rounded number of microseconds.
-a| `minute` a| `int` a| Return the datetime’s minute (0-59).
-a| `month` a| `int` a| Return the datetime’s month (1-12).
-a| `nanos` a| `int` a| Return the nanoseconds part.
-a| `offset_seconds` a| `str \| None` a| Return the timezone offset (local minus UTC) in seconds. None if an IANA name is used for the initialisation instead.
-a| `second` a| `int` a| Return the datetime’s second (0-59).
-a| `total_seconds` a| `float` a| Return the total number of seconds including the nanoseconds part as a float.
+a| `date` a| `date` a| Returns the date part.
+a| `datetime_without_nanos` a| `datetime` a| Returns the standard library’s datetime, containing data up to microseconds.
+a| `day` a| `int` a| Returns the datetime’s day (1-31).
+a| `hour` a| `int` a| Returns the datetime’s hour (0-23).
+a| `microsecond` a| `int` a| Returns the rounded number of microseconds.
+a| `minute` a| `int` a| Returns the datetime’s minute (0-59).
+a| `month` a| `int` a| Returns the datetime’s month (1-12).
+a| `nanos` a| `int` a| Returns the nanoseconds part.
+a| `offset_seconds` a| `str \| None` a| Returns the timezone offset (local minus UTC) in seconds. None if an IANA name is used for the initialisation instead.
+a| `second` a| `int` a| Returns the datetime’s second (0-59).
+a| `total_seconds` a| `float` a| Returns the total number of seconds including the nanoseconds part as a float.
 
 ValueError – If timestamp is before the start of the epoch.
-a| `tz_name` a| `str \| None` a| Return the timezone IANA name. None if fixed offset is used for the initialisation instead.
-a| `tzinfo` a| `tzinfo` a| Return timezone info.
-a| `weekday` a| `int` a| Return the day of the week as an integer, where Monday == 0 … Sunday == 6.
-a| `year` a| `int` a| Return the datetime’s year (1-9999).
+a| `tz_name` a| `str \| None` a| Returns the timezone IANA name. None if fixed offset is used for the initialisation instead.
+a| `tzinfo` a| `tzinfo` a| Returns timezone info.
+a| `weekday` a| `int` a| Returns the day of the week as an integer, where Monday == 0 … Sunday == 6.
+a| `year` a| `int` a| Returns the datetime’s year (1-9999).
 |===
 // end::properties[]
 
@@ -103,7 +103,7 @@ a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000
 isoformat() -> str
 ----
 
-Return the time formatted according to ISO.
+Returns the time formatted according to ISO.
 
 [caption=""]
 .Returns

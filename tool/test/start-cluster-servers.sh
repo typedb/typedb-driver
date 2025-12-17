@@ -18,59 +18,70 @@
 
 set -e
 
-export BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
-NODE_COUNT=${1:-1}
+NODE_COUNT="${1:-1}"
+# TODO: Enable tls when the certificates are update
+ENCRYPTION_ENABLED="${2:-false}"
 
-peers=
-for i in $(seq 1 $NODE_COUNT); do
-  peers="${peers} --server.peers.peer-${i}.address=localhost:${i}1729"
-  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=localhost:${i}1730"
-  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=localhost:${i}1731"
-done
+DEPLOYMENT_ID="test"
 
-function server_start() {
-  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb server \
-    --storage.data=server/data \
-    --server.address=localhost:${1}1729 \
-    --server.internal-address.zeromq=localhost:${1}1730 \
-    --server.internal-address.grpc=localhost:${1}1731 \
-    $(echo $peers) \
-    --server.encryption.enable=true \
-    --server.encryption.file.enable=true \
-    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
-    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
-    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
-    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
-    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
-    --diagnostics.monitoring.port=${1}1732 \
-    --development-mode.enable=true
+ROOT_CA_PATH="$(realpath tool/test/resources/encryption/ext-grpc-root-ca.pem)"
+CERT_PATH="$(realpath tool/test/resources/encryption/ext-grpc-certificate.pem)"
+KEY_PATH="$(realpath tool/test/resources/encryption/ext-grpc-private-key.pem)"
+CONFIG_PATH="$(realpath tool/test/resources/config.yml)"
+
+server_start() {
+  local node_id="$1"
+  local server_port="${node_id}1729"
+  local clustering_port="${node_id}1730"
+  local monitoring_port="${node_id}1731"
+
+  local node_dir="./${node_id}"
+  local data_dir="${node_dir}/data"
+  local clustering_dir="${node_dir}/clustering"
+
+  "${node_dir}/typedb" server \
+    --config="${CONFIG_PATH}" \
+    --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
+    --server.address="0.0.0.0:${server_port}" \
+    --server.connection-address="127.0.0.1:${server_port}" \
+    --server.http.enabled=false \
+    --server.clustering.id="${node_id}" \
+    --server.clustering.address="0.0.0.0:${clustering_port}" \
+    --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
+    --server.encryption.certificate="${CERT_PATH}" \
+    --server.encryption.certificate-key="${KEY_PATH}" \
+    --server.encryption.ca-certificate="${ROOT_CA_PATH}" \
+    --storage.data-directory="${data_dir}" \
+    --storage.clustering-directory="${clustering_dir}" \
+    --diagnostics.monitoring.port="${monitoring_port}" \
+    --development-mode.enabled=true
 }
 
-rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
+rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
-bazel run //tool/test:typedb-cloud-extractor -- typedb-cloud-all
-echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
+bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
+
+echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-cloud-all $i || exit 1
+  rm -rf $i
+  cp -r typedb-cluster-all $i || exit 1
 done
-echo Starting a cloud consisting of $NODE_COUNT servers...
+echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
 
-ROOT_CA=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem`
+ROOT_CA=ROOT_CA_PATH
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5
+LEADER_SELF_ELECT_TIMEOUT=5
 MAX_RETRIES=60
 RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Cloud servers to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB Cluster servers to start \($(($RETRY_NUM / 2))s\)...
   fi
   ALL_STARTED=1
   for i in $(seq 1 $NODE_COUNT); do
@@ -82,7 +93,9 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   sleep $POLL_INTERVAL_SECS
 done
 if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Cloud servers
+  echo Failed to start one or more TypeDB Cluster servers
   exit 1
 fi
-echo $NODE_COUNT TypeDB Cloud database servers started
+
+sleep $LEADER_SELF_ELECT_TIMEOUT
+echo $NODE_COUNT TypeDB Cluster database servers started

@@ -17,7 +17,10 @@
 
 from __future__ import annotations
 
-from typedb.api.connection.database import Database
+from typing import Optional
+
+from typedb.api.connection.consistency_level import ConsistencyLevel
+from typedb.api.database.database import Database
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null
@@ -44,23 +47,25 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
             raise self._native_object_not_owned_exception
         return self._name
 
-    def schema(self) -> str:
+    def schema(self, consistency_level: Optional[ConsistencyLevel] = None) -> str:
         try:
-            return database_schema(self.native_object)
+            return database_schema(self.native_object, ConsistencyLevel.native_value(consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def type_schema(self) -> str:
+    def type_schema(self, consistency_level: Optional[ConsistencyLevel] = None) -> str:
         try:
-            return database_type_schema(self.native_object)
+            return database_type_schema(self.native_object, ConsistencyLevel.native_value(consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
+    def export_to_file(self, schema_file_path: str, data_file_path: str,
+                       consistency_level: Optional[ConsistencyLevel] = None) -> None:
         require_non_null(schema_file_path, "schema_file_path")
         require_non_null(data_file_path, "data_file_path")
         try:
-            return database_export_to_file(self.native_object, schema_file_path, data_file_path)
+            consistency_level = ConsistencyLevel.native_value(consistency_level)
+            return database_export_to_file(self.native_object, schema_file_path, data_file_path, consistency_level)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
@@ -71,45 +76,8 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    # def replicas(self) -> set[Replica]:
-    #     try:
-    #         repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
-    #         return set(_Database.Replica(replica_info) for replica_info in repl_iter)
-    #     except TypeDBDriverExceptionNative as e:
-    #         raise TypeDBDriverException.of(e) from None
-    #
-    # def primary_replica(self) -> Optional[Replica]:
-    #     if res := database_get_primary_replica_info(self.native_object):
-    #         return _Database.Replica(res)
-    #     return None
-    #
-    # def preferred_replica(self) -> Optional[Replica]:
-    #     if res := database_get_preferred_replica_info(self.native_object):
-    #         return _Database.Replica(res)
-    #     return None
-
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return f"Database('{str(self)}')"
-
-    # class Replica(Replica):
-    #
-    #     def __init__(self, replica_info: ReplicaInfo):
-    #         self._info = replica_info
-    #
-    #     def database(self) -> Database:
-    #         pass
-    #
-    #     def server(self) -> str:
-    #         return replica_info_get_server(self._info)
-    #
-    #     def is_primary(self) -> bool:
-    #         return replica_info_is_primary(self._info)
-    #
-    #     def is_preferred(self) -> bool:
-    #         return replica_info_is_preferred(self._info)
-    #
-    #     def term(self) -> int:
-    #         return replica_info_get_term(self._info)

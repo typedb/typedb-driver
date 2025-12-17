@@ -19,6 +19,7 @@
 
 package com.typedb.driver.user;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.user.User;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.NativeIterator;
@@ -32,7 +33,7 @@ import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
 import static com.typedb.driver.jni.typedb_driver.users_get;
-import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
+import static com.typedb.driver.jni.typedb_driver.users_get_current;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
@@ -42,20 +43,29 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public boolean contains(String username) throws TypeDBDriverException {
-        Validator.requireNonNull(username, "username");
+    public Set<User> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         try {
-            return users_contains(nativeDriver, username);
+            return new NativeIterator<>(users_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public User get(String username) throws TypeDBDriverException {
+    public boolean contains(String username, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         Validator.requireNonNull(username, "username");
         try {
-            com.typedb.driver.jni.User user = users_get(nativeDriver, username);
+            return users_contains(nativeDriver, username, ConsistencyLevel.nativeValue(consistencyLevel));
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public User get(String username, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+        Validator.requireNonNull(username, "username");
+        try {
+            com.typedb.driver.jni.User user = users_get(nativeDriver, username, ConsistencyLevel.nativeValue(consistencyLevel));
             if (user != null) return new UserImpl(user, this);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {
@@ -64,20 +74,11 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public User getCurrentUser() throws TypeDBDriverException {
-        try { // TODO: Make noexcept if we leave it returning just a String
-            com.typedb.driver.jni.User user = users_get_current_user(nativeDriver);
+    public User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+        try {
+            com.typedb.driver.jni.User user = users_get_current(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel));
             if (user != null) return new UserImpl(user, this);
             else return null;
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public Set<User> all() throws TypeDBDriverException {
-        try {
-            return new NativeIterator<>(users_all(nativeDriver)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

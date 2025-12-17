@@ -16,15 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::time::Duration;
 
 use cucumber::{given, then, when};
+use itertools::Itertools;
 use macro_rules_attribute::apply;
+use typedb_driver::{ServerVersion, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
 
 mod database;
 mod transaction;
 mod user;
+
+async fn get_server_version(driver: &TypeDBDriver, may_error: params::MayError) -> Option<ServerVersion> {
+    may_error.check(driver.server_version().await)
+}
 
 #[apply(generic_step)]
 #[step("typedb starts")]
@@ -109,6 +116,34 @@ async fn connection_has_been_opened(context: &mut Context, is_open: params::Bool
 }
 
 #[apply(generic_step)]
+#[step(expr = r"connection contains distribution{may_error}")]
+async fn connection_has_distribution(context: &mut Context, may_error: params::MayError) {
+    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+        assert!(!server_version.distribution().is_empty());
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection contains version{may_error}")]
+async fn connection_has_version(context: &mut Context, may_error: params::MayError) {
+    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+        assert!(!server_version.version().is_empty());
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection has {int} replica(s)")]
+async fn connection_has_count_replicas(context: &mut Context, count: usize) {
+    assert_eq!(context.driver.as_ref().unwrap().replicas().await.unwrap().len(), count);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection contains primary replica")]
+async fn connection_contains_primary_replica(context: &mut Context, count: usize) {
+    assert!(context.driver.as_ref().unwrap().primary_replica().await.unwrap().is_some());
+}
+
+#[apply(generic_step)]
 #[step(expr = r"connection has {int} database(s)")]
 async fn connection_has_count_databases(context: &mut Context, count: usize) {
     assert_eq!(context.driver.as_ref().unwrap().databases().all().await.unwrap().len(), count);
@@ -125,4 +160,25 @@ async fn connection_has_count_users(context: &mut Context, count: usize) {
 async fn driver_closes(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.driver.as_ref().unwrap().force_close());
     context.cleanup_transactions().await;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option use_replication to: {boolean}")]
+pub async fn set_transaction_option_use_replication(context: &mut Context, value: params::Boolean) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().use_replication = value.to_bool();
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option primary_failover_retries to: {int}")]
+pub async fn set_transaction_option_primary_failover_retries(context: &mut Context, value: usize) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().primary_failover_retries = value;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option replica_discovery_attempts to: {int}")]
+pub async fn set_transaction_option_replica_discovery_attempts(context: &mut Context, value: usize) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().replica_discovery_attempts = Some(value);
 }

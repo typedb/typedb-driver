@@ -35,7 +35,8 @@ use tonic::{
 
 use crate::{
     common::{address::Address, Result, StdResult},
-    Credentials, DriverOptions,
+    error::ConnectionError,
+    Credentials, DriverOptions, Error,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
@@ -54,10 +55,16 @@ pub(super) fn open_callcred_channel(
     credentials: Credentials,
     driver_options: DriverOptions,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {
-    let mut builder = Channel::builder(address.into_uri());
-    if driver_options.is_tls_enabled() {
-        let tls_config =
-            driver_options.tls_config().clone().expect("TLS config object must be set when TLS is enabled");
+    let connection_scheme = match driver_options.is_tls_enabled {
+        true => http::uri::Scheme::HTTPS,
+        false => http::uri::Scheme::HTTP,
+    };
+    let mut builder = Channel::builder(address.with_scheme(connection_scheme).into_uri());
+    if driver_options.is_tls_enabled {
+        let tls_config = driver_options
+            .get_tls_config()
+            .cloned()
+            .ok_or_else(|| Error::Connection(ConnectionError::AbsentTlsConfigForTlsConnection))?;
         builder = builder.tls_config(tls_config)?;
     }
     builder = builder.keep_alive_while_idle(true).http2_keep_alive_interval(Duration::from_secs(3));

@@ -21,7 +21,6 @@ use std::{collections::HashMap, str::FromStr};
 
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone};
 use chrono_tz::Tz;
-use futures::TryFutureExt;
 use itertools::Itertools;
 use typedb_protocol::{
     concept,

@@ -42,7 +42,9 @@ extern "C" {
 
 %nodefaultctor;
 
-%ignore driver_open; // use `driver_open_with_description`
+%ignore driver_new; // use `driver_new_with_description`
+%ignore driver_new_with_addresses; // use `driver_new_with_addresses_with_description`
+%ignore driver_new_with_address_translation; // use `driver_new_with_address_translation_with_description`
 
 %define %dropproxy(Type, function_prefix)
 struct Type {};
@@ -61,6 +63,7 @@ struct Type {};
 %dropproxy(DriverOptions, driver_options)
 %dropproxy(TransactionOptions, transaction_options)
 %dropproxy(QueryOptions, query_options)
+%dropproxydefined(ServerVersion, server_version)
 
 #define typedb_driver_drop driver_close
 #define transaction_drop transaction_submit_close
@@ -71,8 +74,8 @@ struct Type {};
 
 %dropproxy(Database, database)
 %dropproxy(DatabaseIterator, database_iterator)
-//%dropproxy(ReplicaInfo, replica_info)
-//%dropproxy(ReplicaInfoIterator, replica_info_iterator)
+%dropproxy(ServerReplica, server_replica)
+%dropproxy(ServerReplicaIterator, server_replica_iterator)
 
 %dropproxy(User, user)
 %dropproxy(UserIterator, user_iterator)
@@ -82,11 +85,11 @@ struct Type {};
 
 %dropproxy(ConceptRow, concept_row)
 %dropproxy(ConceptRowIterator, concept_row_iterator)
+%dropproxydefined(ConsistencyLevel, consistency_level)
 
 %dropproxydefined(DatetimeAndTimeZone, datetime_and_time_zone)
 %dropproxydefined(StringAndOptValue, string_and_opt_value)
 %dropproxy(StringAndOptValueIterator, string_and_opt_value_iterator)
-
 %dropproxy(StringIterator, string_iterator)
 
 %dropproxy(QueryAnswer, query_answer)
@@ -233,8 +236,8 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 }
 %}
 
-%delobject database_delete;
-
+%newobject transaction_new;
+%newobject transaction_query;
 %delobject transaction_commit;
 
 %typemap(newfree) char* "string_free($1);";
@@ -249,9 +252,6 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_row_get_index;
 %newobject concept_row_get_query_structure;
 %newobject concept_row_to_string;
-
-%newobject value_get_string;
-%newobject value_get_datetime_tz;
 
 %newobject query_answer_into_rows;
 %newobject query_answer_into_documents;
@@ -271,19 +271,23 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_try_get_value;
 %newobject credentials_new;
 
-%newobject driver_open_with_description;
+%newobject driver_new_with_description;
+%newobject driver_new_with_addresses_with_description;
+%newobject driver_new_with_address_translation_with_description;
+%newobject driver_server_version;
+%newobject driver_primary_replica;
+%newobject driver_replicas;
+
 %newobject driver_options_new;
+%newobject driver_options_get_tls_root_ca_path;
+%newobject transaction_options_get_read_consistency_level;
 
 %newobject database_get_name;
 %newobject database_schema;
 %newobject database_type_schema;
+%delobject database_delete;
 
-//%newobject database_get_preferred_replica_info;
-//%newobject database_get_primary_replica_info;
-//%newobject database_get_replicas_info;
-//
-//%newobject replica_info_get_server;
-//%newobject replica_info_iterator_next;
+%newobject server_replica_get_address;
 
 %newobject databases_all;
 %newobject databases_get;
@@ -404,19 +408,15 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_iterator_next;
 %newobject concept_row_iterator_next;
 %newobject database_iterator_next;
+%newobject server_replica_iterator_next;
 %newobject string_iterator_next;
 %newobject string_and_opt_value_iterator_next;
 %newobject user_iterator_next;
 %newobject variable_iterator_next;
 
-%newobject transaction_new;
-%newobject transaction_query;
-%newobject transaction_analyze;
-
 %newobject users_all;
-%newobject users_get_current_user;
+%newobject users_get_current;
 %newobject users_get;
-
 %newobject user_get_name;
 %delobject user_delete;
 
