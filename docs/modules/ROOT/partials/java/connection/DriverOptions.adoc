@@ -1,31 +1,65 @@
 [#_DriverOptions]
-[.doc-api-reference-driver]
 === DriverOptions
-
-`class`
 
 *Package*: `com.typedb.driver.api`
 
-User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 
+TypeDB driver options. ``DriverOptions`` are used to specify the driver's connection behavior.
+
+// tag::methods[]
+[#_DriverOptions_DriverOptions_DriverTlsConfig]
+==== DriverOptions
+
+[source,java]
+----
+public DriverOptions​(DriverTlsConfig tlsConfig)
+----
+
+Produces a new ``DriverOptions`` object for connecting to TypeDB Server using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
 
 
 [caption=""]
-.Examples
+.Returns
+`public`
+
+[caption=""]
+.Code examples
 [source,java]
 ----
-DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
+DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA());
 ----
 
-// tag::methods[]
-[#_DriverOptions_DriverOptions_boolean_java_lang_String]
-==== method ``DriverOptions``
+[#_DriverOptions_primaryFailoverRetries_]
+==== primaryFailoverRetries
 
 [source,java]
 ----
-public DriverOptions​(boolean isTlsEnabled,
-                     java.lang.String tlsRootCAPath)
+@CheckReturnValue
+public java.lang.Integer primaryFailoverRetries()
 ----
 
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. 
+
+
+[caption=""]
+.Returns
+`public java.lang.Integer`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.primaryFailoverRetries();
+----
+
+[#_DriverOptions_primaryFailoverRetries_int]
+==== primaryFailoverRetries
+
+[source,java]
+----
+public DriverOptions primaryFailoverRetries​(int primaryFailoverRetries)
+----
+
+Explicitly sets the limit on the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1. 
 
 
 [caption=""]
@@ -34,13 +68,226 @@ public DriverOptions​(boolean isTlsEnabled,
 [options="header"]
 |===
 |Name |Description |Type
-a| `isTlsEnabled` a| Specify whether the connection to TypeDB Server must be done over TLS. a| `boolean`
-a| `tlsRootCAPath` a| Path to the CA certificate to use for authenticating server certificates. a| `java.lang.String`
+a| `primaryFailoverRetries` a| The limit of primary failover retries. a| `int`
 |===
 
 [caption=""]
 .Returns
-`public`
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.primaryFailoverRetries(1);
+----
+
+[#_DriverOptions_replicaDiscoveryAttempts_]
+==== replicaDiscoveryAttempts
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Integer> replicaDiscoveryAttempts()
+----
+
+Returns the value set for the replica discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Integer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.replicaDiscoveryAttempts();
+----
+
+[#_DriverOptions_replicaDiscoveryAttempts_int]
+==== replicaDiscoveryAttempts
+
+[source,java]
+----
+public DriverOptions replicaDiscoveryAttempts​(int replicaDiscoveryAttempts)
+----
+
+Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. If not set, the maximum (practically unlimited) value is used. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replicaDiscoveryAttempts` a| The limit of replica discovery attempts. a| `int`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.primaryFailoverRetries(1);
+----
+
+[#_DriverOptions_requestTimeoutMillis_]
+==== requestTimeoutMillis
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Long requestTimeoutMillis()
+----
+
+Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). 
+
+
+[caption=""]
+.Returns
+`public java.lang.Long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.requestTimeoutMillis();
+----
+
+[#_DriverOptions_requestTimeoutMillis_long]
+==== requestTimeoutMillis
+
+[source,java]
+----
+public DriverOptions requestTimeoutMillis​(long requestTimeoutMillis)
+----
+
+Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours (7200000 milliseconds). 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `requestTimeoutMillis` a| The request timeout in milliseconds. Must be non-negative. a| `long`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.requestTimeoutMillis(30000); // 30 seconds
+----
+
+[#_DriverOptions_tlsConfig_]
+==== tlsConfig
+
+[source,java]
+----
+@CheckReturnValue
+public DriverTlsConfig tlsConfig()
+----
+
+Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB. 
+
+
+[caption=""]
+.Returns
+`public DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsConfig();
+----
+
+[#_DriverOptions_tlsConfig_DriverTlsConfig]
+==== tlsConfig
+
+[source,java]
+----
+public DriverOptions tlsConfig​(DriverTlsConfig tlsConfig)
+----
+
+Overrides the TLS configuration associated with this ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
+
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
+----
+
+[#_DriverOptions_useReplication_]
+==== useReplication
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Boolean useReplication()
+----
+
+Returns the value set for the replication usage flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. 
+
+
+[caption=""]
+.Returns
+`public java.lang.Boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.useReplication();
+----
+
+[#_DriverOptions_useReplication_boolean]
+==== useReplication
+
+[source,java]
+----
+public DriverOptions useReplication​(boolean useReplication)
+----
+
+Explicitly sets whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to true. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `useReplication` a| Whether the connection to TypeDB can use replication. a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.useReplication(true);
+----
 
 // end::methods[]
 

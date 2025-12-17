@@ -17,19 +17,20 @@
  * under the License.
  */
 
-use std::{borrow::Borrow, convert::Infallible, fmt, str::FromStr};
+use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use typedb_driver::{
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    TransactionType as TypeDBTransactionType,
+    consistency_level::ConsistencyLevel as TypeDBConsistencyLevel,
+    Address, TransactionType as TypeDBTransactionType,
 };
 
 #[derive(Debug, Default, Parameter, Clone)]
 #[param(name = "value", regex = ".*?")]
-pub(crate) struct Value {
+pub struct Value {
     raw_value: String,
 }
 
@@ -238,7 +239,7 @@ impl FromStr for Var {
 
 #[derive(Debug, Parameter)]
 #[param(name = "boolean", regex = "(true|false)")]
-pub(crate) enum Boolean {
+pub enum Boolean {
     False,
     True,
 }
@@ -279,7 +280,7 @@ impl FromStr for Boolean {
 
 #[derive(Debug, Clone, Parameter)]
 #[param(name = "may_error", regex = "(|; fails|; parsing fails|; fails with a message containing: \".*\")")]
-pub(crate) enum MayError {
+pub enum MayError {
     False,
     True(Option<String>),
 }
@@ -335,7 +336,7 @@ impl FromStr for MayError {
 
 #[derive(Debug, Parameter)]
 #[param(name = "is_or_not", regex = "(is|is not)")]
-pub(crate) enum IsOrNot {
+pub enum IsOrNot {
     Is,
     IsNot,
 }
@@ -388,7 +389,7 @@ impl FromStr for IsOrNot {
 
 #[derive(Debug, Parameter)]
 #[param(name = "contains_or_doesnt", regex = "(contains|does not contain)")]
-pub(crate) enum ContainsOrDoesnt {
+pub enum ContainsOrDoesnt {
     Contains,
     DoesNotContain,
 }
@@ -431,7 +432,7 @@ impl FromStr for ContainsOrDoesnt {
 
 #[derive(Debug, Parameter)]
 #[param(name = "exists_or_doesnt", regex = "(exists|does not exist)")]
-pub(crate) enum ExistsOrDoesnt {
+pub enum ExistsOrDoesnt {
     Exists,
     DoesNotExist,
 }
@@ -474,7 +475,7 @@ impl FromStr for ExistsOrDoesnt {
 
 #[derive(Debug, Parameter)]
 #[param(name = "is_by_var_index", regex = "(| by index of variable)")]
-pub(crate) enum IsByVarIndex {
+pub enum IsByVarIndex {
     Is,
     IsNot,
 }
@@ -492,7 +493,7 @@ impl FromStr for IsByVarIndex {
 
 #[derive(Debug, Clone, Copy, Parameter)]
 #[param(name = "query_answer_type", regex = "(ok|concept rows|concept documents)")]
-pub(crate) enum QueryAnswerType {
+pub enum QueryAnswerType {
     Ok,
     ConceptRows,
     ConceptDocuments,
@@ -520,12 +521,55 @@ impl fmt::Display for QueryAnswerType {
     }
 }
 
+#[derive(Debug, Clone, Parameter)]
+#[param(name = "consistency_level", regex = "(strong|eventual|replica(.*))")]
+pub enum ConsistencyLevel {
+    Strong,
+    Eventual,
+    ReplicaDependent { address: Address },
+}
+
+impl ConsistencyLevel {
+    pub fn into_typedb(self) -> TypeDBConsistencyLevel {
+        match self {
+            ConsistencyLevel::Strong => TypeDBConsistencyLevel::Strong,
+            ConsistencyLevel::Eventual => TypeDBConsistencyLevel::Eventual,
+            ConsistencyLevel::ReplicaDependent { address } => TypeDBConsistencyLevel::ReplicaDependent { address },
+        }
+    }
+}
+
+impl FromStr for ConsistencyLevel {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "strong" {
+            Ok(Self::Strong)
+        } else if s == "eventual" {
+            Ok(Self::Eventual)
+        } else if let Some(message) = s.strip_prefix("replica(").and_then(|suffix| suffix.strip_suffix(")")) {
+            Ok(Self::ReplicaDependent { address: message.parse().expect("Expected a valid address") })
+        } else {
+            Err(format!("Invalid `ConsistencyLevel`: {}", s))
+        }
+    }
+}
+
+impl fmt::Display for ConsistencyLevel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Strong => write!(f, "Strong"),
+            Self::Eventual => write!(f, "Eventual"),
+            Self::ReplicaDependent { address } => write!(f, "ReplicaDependent({address:?})"),
+        }
+    }
+}
+
 #[derive(Debug, Parameter)]
 #[param(
     name = "concept_kind",
     regex = "(concept|variable|type|instance|entity type|relation type|attribute type|role type|entity|relation|attribute|value)"
 )]
-pub(crate) enum ConceptKind {
+pub enum ConceptKind {
     Concept,
     Type,
     Instance,
@@ -540,7 +584,7 @@ pub(crate) enum ConceptKind {
 }
 
 impl ConceptKind {
-    pub(crate) fn matches_concept(&self, concept: &Concept) -> bool {
+    pub fn matches_concept(&self, concept: &Concept) -> bool {
         match self {
             ConceptKind::Concept => true,
             ConceptKind::Type => match concept {

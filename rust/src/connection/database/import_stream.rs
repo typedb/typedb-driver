@@ -24,7 +24,7 @@ use futures::{stream, StreamExt};
 use typedb_protocol::migration;
 
 use crate::{
-    common::{stream::Stream, Promise, Result},
+    common::{Promise, Result},
     connection::{message::DatabaseImportRequest, network::transmitter::DatabaseImportTransmitter},
     promisify, resolve,
 };

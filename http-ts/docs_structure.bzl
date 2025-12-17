@@ -116,6 +116,8 @@ dir_mapping = {
     "RoleType.adoc": "concept",
     "SignInResponse.adoc": "response",
     "TransactionOpenResponse.adoc": "response",
+    "ServersListResponse.adoc": "response",
+    "Server.adoc": "connection",
     "TransactionOptions.adoc": "connection",
     "TranslatedAddress.adoc": "connection",
     "User.adoc": "connection",

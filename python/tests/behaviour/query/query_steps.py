@@ -295,7 +295,15 @@ def get_row_get_concept_of_kind(context: Context, row_index: int, var: str, is_b
     elif kind == ConceptKind.VALUE:
         return get_row_get_value(context, row_index, var, is_by_var_index)
     else:
-        raise ValueError(f"Not all ConceptKind variants are covered! Found {kind}")
+        # Debug info: print type details to diagnose enum comparison issues
+        raise ValueError(
+            f"Not all ConceptKind variants are covered! Found {kind}\n"
+            f"  kind type: {type(kind)}, module: {type(kind).__module__}\n"
+            f"  ConceptKind.CONCEPT type: {type(ConceptKind.CONCEPT)}, module: {type(ConceptKind.CONCEPT).__module__}\n"
+            f"  kind == ConceptKind.CONCEPT: {kind == ConceptKind.CONCEPT}\n"
+            f"  kind.name: {kind.name}, ConceptKind.CONCEPT.name: {ConceptKind.CONCEPT.name}\n"
+            f"  id(type(kind)): {id(type(kind))}, id(ConceptKind): {id(ConceptKind)}"
+        )
 
 
 @step("answer get row({row_index:Int}) query type {is_or_not:IsOrNot}: {query_type:QueryType}")

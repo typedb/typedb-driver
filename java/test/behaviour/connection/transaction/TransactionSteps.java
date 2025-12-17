@@ -181,4 +181,10 @@ public class TransactionSteps {
         initTransactionOptionsIfNeeded();
         transactionOptions.get().schemaLockAcquireTimeoutMillis(value);
     }
+
+    @When("set transaction option read_consistency_level to: {consistency_level}")
+    public void set_transaction_option_read_consistency_level_to(Parameters.Consistency consistency) {
+        initTransactionOptionsIfNeeded();
+        transactionOptions.get().readConsistencyLevel(consistency.level());
+    }
 }

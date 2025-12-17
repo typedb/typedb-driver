@@ -26,6 +26,7 @@ powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifac
 RD /S /Q typedb-all-windows
 powershell -Command "Move-Item -Path typedb-all-windows-* -Destination typedb-all-windows"
 START /B "" typedb-all-windows\typedb server --development-mode.enable=true
+START /B "" typedb-all-windows\typedb server --development-mode.enabled=true --server.http.enabled=false
 
 powershell -Command "(gc csharp\Test\Deployment\NugetApplicationTest.csproj) -replace 'DRIVER_CSHARP_VERSION_MARKER', '0.0.0-%CIRCLE_SHA1%' | Out-File -encoding ASCII csharp\Test\Deployment\NugetApplicationTest.csproj"
 type csharp\Test\Deployment\NugetApplicationTest.csproj

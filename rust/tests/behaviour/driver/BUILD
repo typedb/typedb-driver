@@ -21,6 +21,12 @@ load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_behaviour_test(
+    name = "test_cluster",
+    srcs = ["cluster.rs"],
+    data = ["@typedb_behaviour//driver:cluster.feature"],
+)
+
+rust_behaviour_test(
     name = "test_concept",
     srcs = ["concept.rs"],
     data = ["@typedb_behaviour//driver:concept.feature"],

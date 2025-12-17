@@ -17,46 +17,120 @@
  * under the License.
  */
 
-use std::{fs, path::Path};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    sync::Arc,
+    time::Duration,
+};
 
-use tonic::transport::{Certificate, ClientTlsConfig};
+use crate::connection::driver_tls_config::DriverTlsConfig;
 
-/// User connection settings for connecting to TypeDB.
+// When changing these numbers, also update docs in DriverOptions
+const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
+const DEFAULT_USE_REPLICATION: bool = true;
+const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
+const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
+
+/// TypeDB driver connection options.
+/// `DriverOptions` object can be used to override the default driver behavior while connecting to
+/// TypeDB.
+///
+/// # Examples
+///
+/// ```rust
+/// let options = DriverOptions::new(DriverTlsConfig::default()).use_replication(false);
+/// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {
-    is_tls_enabled: bool,
-    tls_config: Option<ClientTlsConfig>,
+    /// Specifies the TLS configuration of the connection to TypeDB.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    /// Defaults to an enabled TLS configuration based on the system's native trust roots.
+    pub tls_config: DriverTlsConfig,
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    // TODO: What if the server does not respond on queries/commits?
+    // Shall we apply the same or a different timeout?
+    pub request_timeout: Duration,
+    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
+    /// or it should be limited to a single configured address.
+    /// Defaults to true.
+    pub use_replication: bool,
+    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// primary replica in case of a failure due to the change of replica roles.
+    /// Defaults to 1.
+    pub primary_failover_retries: usize,
+    /// Limits the number of driver attempts to discover a single working replica to perform an
+    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// that at most:
+    /// - {limit} operations are performed if the limit <= the number of replicas.
+    /// - {number of replicas} operations are performed if the limit > the number of replicas.
+    /// - {number of replicas} operations are performed if the limit is None.
+    /// Affects every eventually consistent operation, including redirect failover, when the new
+    /// primary replica is unknown.
+    /// Defaults to None.
+    pub replica_discovery_attempts: Option<usize>,
 }
 
 impl DriverOptions {
-    /// Creates a credentials with username and password. Specifies the connection must use TLS
-    ///
-    /// # Arguments
-    ///
-    /// * `is_tls_enabled` — Specify whether the connection to TypeDB Server must be done over TLS.
-    /// * `tls_root_ca` — Path to the CA certificate to use for authenticating server certificates.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// DriverOptions::new(true, Some(&path_to_ca));
-    ///```
-    pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
-        let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
-            ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
-        } else {
-            ClientTlsConfig::new().with_native_roots()
-        });
-
-        Ok(Self { is_tls_enabled, tls_config })
+    /// Creates new `DriverOptions` to configure connections to TypeDB using custom TLS settings.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    pub fn new(tls_config: DriverTlsConfig) -> Self {
+        Self { tls_config, ..Default::default() }
     }
 
-    /// Retrieves whether TLS is enabled for the connection.
-    pub fn is_tls_enabled(&self) -> bool {
-        self.is_tls_enabled
+    /// Override the existing TLS configuration.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    pub fn tls_config(mut self, tls_config: DriverTlsConfig) -> Self {
+        Self { tls_config, ..self }
     }
 
-    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
-        &self.tls_config
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    pub fn request_timeout(self, request_timeout: Duration) -> Self {
+        Self { request_timeout, ..self }
+    }
+
+    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
+    /// or it should be limited to the provided address.
+    /// If set to false, restricts the driver to only a single address.
+    pub fn use_replication(self, use_replication: bool) -> Self {
+        Self { use_replication, ..self }
+    }
+
+    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// primary replica in case of a failure due to the change of replica roles.
+    /// Defaults to 1.
+    pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
+        Self { primary_failover_retries, ..self }
+    }
+
+    /// Limits the number of driver attempts to discover a single working replica to perform an
+    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// that at most:
+    /// - {limit} operations are performed if the limit <= the number of replicas.
+    /// - {number of replicas} operations are performed if the limit > the number of replicas.
+    /// - {number of replicas} operations are performed if the limit is None.
+    /// Affects every eventually consistent operation, including redirect failover, when the new
+    /// primary replica is unknown.
+    /// Defaults to None.
+    pub fn replica_discovery_attempts(self, replica_discovery_attempts: Option<usize>) -> Self {
+        Self { replica_discovery_attempts, ..self }
+    }
+}
+
+impl Default for DriverOptions {
+    fn default() -> Self {
+        Self {
+            tls_config: DriverTlsConfig::default(),
+            request_timeout: DEFAULT_REQUEST_TIMEOUT,
+            use_replication: DEFAULT_USE_REPLICATION,
+            primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
+            replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+        }
     }
 }
