@@ -268,7 +268,6 @@ build:
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
-
     test-http-ts-behaviour-community:
       image: typedb-ubuntu-22.04
       type: foreground
@@ -286,6 +285,8 @@ build:
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
+
+# TODO: Run HTTP TS tests against clustered servers
 
 #    test-nodejs-integration:
 #      image: typedb-ubuntu-22.04
@@ -533,7 +534,7 @@ build:
 release:
   filter:
     owner: typedb
-    branch: [master]
+    branch: [master, cluster-support-feature-branch]
   validation:
     validate-dependencies:
       image: typedb-ubuntu-22.04

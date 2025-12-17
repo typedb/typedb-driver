@@ -20,6 +20,7 @@
 package com.typedb.driver.api.server;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 
 /**
  * The metadata and state of an individual raft replica of a driver connection.
@@ -43,7 +44,7 @@ public interface ServerReplica {
      * Returns whether this is the primary replica of the raft cluster or any of the supporting types.
      */
     @CheckReturnValue
-    ReplicaType getType();
+    Optional<ReplicaType> getRole();
 
     /**
      * Checks whether this is the primary replica of the raft cluster.
@@ -55,5 +56,5 @@ public interface ServerReplica {
      * Returns the raft protocol ‘term’ of this replica.
      */
     @CheckReturnValue
-    long getTerm();
+    Optional<Long> getTerm();
 }

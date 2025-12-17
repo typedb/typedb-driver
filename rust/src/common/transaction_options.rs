@@ -38,7 +38,7 @@ pub struct TransactionOptions {
     pub schema_lock_acquire_timeout: Option<Duration>,
     /// If set, specifies the requested consistency level of the transaction opening operation.
     /// Affects only read transactions, as write and schema transactions require primary replicas.
-    pub consistency_level: Option<ConsistencyLevel>,
+    pub read_consistency_level: Option<ConsistencyLevel>,
 }
 
 impl TransactionOptions {
@@ -59,6 +59,6 @@ impl TransactionOptions {
     /// If set, specifies the requested consistency level of the transaction opening operation.
     /// Affects only read transactions, as write and schema transactions require primary replicas.
     pub fn consistency_level(self, consistency_level: ConsistencyLevel) -> Self {
-        Self { consistency_level: Some(consistency_level), ..self }
+        Self { read_consistency_level: Some(consistency_level), ..self }
     }
 }

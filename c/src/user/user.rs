@@ -21,12 +21,9 @@ use std::ffi::c_char;
 
 use typedb_driver::User;
 
-use crate::{
-    common::{
-        error::unwrap_void,
-        memory::{borrow, free, release_string, string_view, take_ownership},
-    },
-    memory::take_ownership,
+use crate::common::{
+    error::unwrap_void,
+    memory::{borrow, free, release_string, string_view, take_ownership},
 };
 
 /// Frees the native rust <code>User</code> object.

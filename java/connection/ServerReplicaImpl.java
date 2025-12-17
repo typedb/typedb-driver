@@ -23,11 +23,15 @@ import com.typedb.driver.api.server.ReplicaType;
 import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.common.NativeObject;
 
+import java.util.Optional;
+
 import static com.typedb.driver.jni.typedb_driver.server_replica_get_address;
 import static com.typedb.driver.jni.typedb_driver.server_replica_get_id;
 import static com.typedb.driver.jni.typedb_driver.server_replica_is_primary;
+import static com.typedb.driver.jni.typedb_driver.server_replica_has_term;
+import static com.typedb.driver.jni.typedb_driver.server_replica_has_role;
 import static com.typedb.driver.jni.typedb_driver.server_replica_get_term;
-import static com.typedb.driver.jni.typedb_driver.server_replica_get_type;
+import static com.typedb.driver.jni.typedb_driver.server_replica_get_role;
 
 public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.ServerReplica> implements ServerReplica {
     public ServerReplicaImpl(com.typedb.driver.jni.ServerReplica serverReplica) {
@@ -45,8 +49,11 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     }
 
     @Override
-    public ReplicaType getType() {
-        return ReplicaType.of(server_replica_get_type(nativeObject));
+    public Optional<ReplicaType> getRole() {
+        if (server_replica_has_role(nativeObject)) {
+            return Optional.of(server_replica_get_role(nativeObject));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -55,8 +62,11 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     }
 
     @Override
-    public long getTerm() {
-        return server_replica_get_term(nativeObject);
+    public Optional<Long> getTerm() {
+        if (server_replica_has_term(nativeObject)) {
+            return Optional.of(server_replica_get_term(nativeObject));
+        }
+        return Optional.empty();
     }
 
     @Override

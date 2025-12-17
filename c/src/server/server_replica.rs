@@ -19,11 +19,11 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{ReplicaRole, ServerReplica};
+use typedb_driver::{Replica, ReplicaRole, ServerReplica};
 
 use crate::common::{
     iterator::{iterator_next, CIterator},
-    memory::{borrow, free, release_string},
+    memory::{borrow, free, release_optional_string},
 };
 
 /// Iterator over the <code>ServerReplica</code> corresponding to each replica of a TypeDB cluster.
@@ -57,13 +57,19 @@ pub extern "C" fn server_replica_get_id(replica_info: *const ServerReplica) -> i
 /// Returns the address this replica is hosted at.
 #[no_mangle]
 pub extern "C" fn server_replica_get_address(replica_info: *const ServerReplica) -> *mut c_char {
-    release_string(borrow(replica_info).address().to_string())
+    release_optional_string(borrow(replica_info).address().map(|address| address.to_string()))
 }
 
-/// Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+/// Returns whether the role of this replica is set.
 #[no_mangle]
-pub extern "C" fn server_replica_get_type(replica_info: *const ServerReplica) -> ReplicaRole {
-    borrow(replica_info).role().unwrap() // TODO: Return optional!
+pub extern "C" fn server_replica_has_type(replica_info: *const ServerReplica) -> bool {
+    borrow(replica_info).role().is_some()
+}
+
+/// Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
+#[no_mangle]
+pub extern "C" fn server_replica_get_role(replica_info: *const ServerReplica) -> ReplicaRole {
+    borrow(replica_info).role().unwrap()
 }
 
 /// Checks whether this is the primary replica of the raft cluster.
@@ -72,8 +78,14 @@ pub extern "C" fn server_replica_is_primary(replica_info: *const ServerReplica) 
     borrow(replica_info).is_primary()
 }
 
+/// Returns whether the raft protocol ‘term’ of this replica exists.
+#[no_mangle]
+pub extern "C" fn server_replica_has_term(replica_info: *const ServerReplica) -> bool {
+    borrow(replica_info).term().is_some()
+}
+
 /// Returns the raft protocol ‘term’ of this replica.
 #[no_mangle]
 pub extern "C" fn server_replica_get_term(replica_info: *const ServerReplica) -> i64 {
-    borrow(replica_info).term().unwrap() as i64 // TODO: Return optional!
+    borrow(replica_info).term().unwrap() as i64
 }

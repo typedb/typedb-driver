@@ -436,7 +436,7 @@ impl TypeDBDriver {
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
         let transaction_stream = self
             .server_manager
-            .execute(options.consistency_level.clone().unwrap_or(ConsistencyLevel::Strong), open_fn)
+            .execute(options.read_consistency_level.clone().unwrap_or(ConsistencyLevel::Strong), open_fn)
             .await?;
         // TODO: Understand
         // let transaction_stream = match transaction_type {

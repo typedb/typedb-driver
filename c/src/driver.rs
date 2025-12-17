@@ -23,10 +23,10 @@ use typedb_driver::{box_stream, Addresses, Credentials, DriverOptions, ServerRep
 
 use crate::{
     common::{
-        error::{try_release, unwrap_or_default, unwrap_void},
+        error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
         iterator::CIterator,
         iterators_to_map,
-        memory::{borrow, free, release, release_optional, string_array_view, string_view},
+        memory::{borrow, free, release, string_array_view, string_view},
     },
     server::{
         consistency_level::{native_consistency_level, ConsistencyLevel},
@@ -215,7 +215,10 @@ pub extern "C" fn driver_replicas(driver: *const TypeDBDriver) -> *mut ServerRep
 /// Retrieves the server's primary replica, if exists.
 #[no_mangle]
 pub extern "C" fn driver_primary_replica(driver: *const TypeDBDriver) -> *mut ServerReplica {
-    release_optional(borrow(driver).primary_replica())
+    // TODO: Return somehow else!!
+    try_release_optional(
+        borrow(driver).primary_replica().map(|res| res.map(|rep| ServerReplica::Available(rep))).transpose(),
+    )
 }
 
 /// Registers a new replica in the cluster the driver is currently connected to. The registered

@@ -283,9 +283,8 @@ impl ServerManager {
             match self.execute_on(primary_replica.address(), &private_address, &task).await {
                 Err(Error::Connection(connection_error)) => {
                     let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-                    let replicas_without_old_primary = replicas.into_iter().filter(|replica| {
-                        replica.private_address() != &private_address
-                    });
+                    let replicas_without_old_primary =
+                        replicas.into_iter().filter(|replica| replica.private_address() != &private_address);
                     primary_replica = match &connection_error {
                         ConnectionError::ClusterReplicaNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");

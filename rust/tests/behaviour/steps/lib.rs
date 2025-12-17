@@ -35,7 +35,10 @@ use futures::{
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::{time::{sleep, Duration}, sync::OnceCell};
+use tokio::{
+    sync::OnceCell,
+    time::{sleep, Duration},
+};
 use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
@@ -505,11 +508,8 @@ impl Context {
         let credentials = Credentials::new(username, password);
         // TODO: Renew test certificates...
         // assert!(self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(), "Root CA is expected for cluster tests!");
-        let driver_options = self
-            .driver_options()
-            .unwrap_or_default()
-            .is_tls_enabled(false);
-            // .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
+        let driver_options = self.driver_options().unwrap_or_default().is_tls_enabled(false);
+        // .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
@@ -532,7 +532,10 @@ impl Context {
                 let id = (i + 1) as u64;
                 // 1 is default registered replica
                 if id != 1 {
-                    driver.register_replica(id, address.to_string()).await.expect("Expected to register replica in setup");
+                    driver
+                        .register_replica(id, address.to_string())
+                        .await
+                        .expect("Expected to register replica in setup");
                 }
             }
         }

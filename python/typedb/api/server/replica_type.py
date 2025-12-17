@@ -28,7 +28,7 @@ class ReplicaType(enum.Enum):
     --------
     ::
 
-       server_replica.replica_type
+       server_replica.role
     """
     PRIMARY = 0
     CANDIDATE = 1

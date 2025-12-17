@@ -17,33 +17,33 @@
  * under the License.
  */
 
-use std::{
-    ffi::c_char,
-    ptr::{addr_of_mut, null_mut},
-};
+use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
     analyze::{
         conjunction::{
-            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
-            ConstraintWithSpan, NamedRole, Variable,
+            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex,
+            ConstraintWithSpan, Variable, NamedRole
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     box_stream,
-    concept::{type_::Type, AttributeType, Concept, Kind, ValueType},
+    concept::{type_::Type, Concept, Kind},
     BoxPromise, Promise,
 };
 
 use crate::{
-    common::StringIterator,
-    concept::ConceptIterator,
-    error::try_release,
-    iterator::{iterator_next, CIterator},
-    memory::{
-        borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership,
+    common::{
+        error::try_release,
+        iterator::{iterator_next, CIterator},
+        memory::{
+            borrow, free, release, release_optional, release_optional_string, release_string, string_view,
+            take_ownership,
+        },
+        StringIterator,
     },
+    concept::ConceptIterator,
 };
 
 // Iterators, promises & enums
@@ -406,7 +406,7 @@ pub extern "C" fn pipeline_stage_require_get_variables(stage: *const PipelineSta
 #[no_mangle]
 pub extern "C" fn pipeline_stage_offset_get_offset(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Offset { offset, .. } = borrow(stage) else { unreachable!("Expected Offset stage") };
-    (*offset as i64)
+    *offset as i64
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Limit stage, and returns the limit applied.
@@ -414,7 +414,7 @@ pub extern "C" fn pipeline_stage_offset_get_offset(stage: *const PipelineStage) 
 #[no_mangle]
 pub extern "C" fn pipeline_stage_limit_get_limit(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Limit { limit, .. } = borrow(stage) else { unreachable!("Expected Limit stage") };
-    (*limit as i64)
+    *limit as i64
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Sort stage, and returns the <code>SortVariable</code>.

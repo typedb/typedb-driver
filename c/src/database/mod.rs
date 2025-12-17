@@ -17,5 +17,5 @@
  * under the License.
  */
 
-pub(crate) mod database;
-pub(crate) mod database_manager;
+mod database;
+mod database_manager;

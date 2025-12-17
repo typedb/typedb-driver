@@ -132,8 +132,10 @@
 %nojavaexception server_replica_get_address;
 %nojavaexception server_replica_is_primary;
 %nojavaexception server_replica_get_id;
-%nojavaexception server_replica_get_type;
+%nojavaexception server_replica_get_role;
+%nojavaexception server_replica_has_role;
 %nojavaexception server_replica_get_term;
+%nojavaexception server_replica_has_term;
 
 %nojavaexception database_get_name;
 
