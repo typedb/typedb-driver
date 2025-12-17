@@ -52,9 +52,9 @@ fn playground_test() {
         .await
         .unwrap();
 
-        // for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-        //     driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
-        // }
+        for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
+            driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+        }
 
         println!("Test\n");
         //
@@ -79,7 +79,7 @@ fn playground_test() {
             )
             .await
             .unwrap();
-        let transaction1 = driver.transaction("a", TransactionType::Schema).await.unwrap();
+        // let transaction1 = driver.transaction("a", TransactionType::Schema).await.unwrap();
 
         // for i in 0..10000 {
         //     let consistency_level = ConsistencyLevel::ReplicaDependent {address: Address::from_str("0.0.0.0:31729").unwrap() };

@@ -30,7 +30,7 @@ load("@typedb_driver_pip//:requirements.bzl", "requirement")
 #    ],
 #    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
 #    size = "medium",
-#    native_typedb_cloud_artifact = "//tool/test:native-typedb-cloud-artifact",
+#    native_typedb_cluster_artifact = "//tool/test:native-typedb-cloud-artifact",
 #)
 
 checkstyle_test(

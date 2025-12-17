@@ -36,10 +36,8 @@ rust_test(
         "@crates//:tokio",
         "@crates//:uuid",
     ],
-    # TODO: Temporary. Use a binary extracted in a better way
-    data = ["//tool/test/temp-cluster-server:typedb",
-            "//tool/test/temp-cluster-server:config.yml"],
 )
+
 rust_test(
     name = "test_playground",
     srcs = ["playground.rs"],
@@ -56,9 +54,6 @@ rust_test(
         "@crates//:tokio",
         "@crates//:uuid",
     ],
-    # TODO: Temporary. Use a binary extracted in a better way
-    data = ["//tool/test/temp-cluster-server:typedb",
-            "//tool/test/temp-cluster-server:config.yml"],
 )
 
 checkstyle_test(

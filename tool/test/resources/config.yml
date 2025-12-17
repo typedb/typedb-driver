@@ -3,9 +3,10 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 server:
-    address: 127.0.0.1:11729
-    http-enabled: false
-    http-address: 127.0.0.1:8000
+    address: 0.0.0.0:1729
+    http:
+        enabled: true
+        address: 0.0.0.0:8000
 
     authentication:
         token-expiration-seconds: 5000
@@ -13,7 +14,7 @@ server:
     encryption:
         enabled: false
         certificate:
-        certificate_key:
+        certificate-key:
         ca-certificate:
 
 storage:
@@ -24,11 +25,8 @@ logging:
 
 diagnostics:
     monitoring:
-        enabled: false
+        enabled: true
         port: 4104
     reporting:
-        metrics: false
-        errors: false
-
-development-mode:
-    enabled: true
+        metrics: true
+        errors: true

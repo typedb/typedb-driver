@@ -18,46 +18,72 @@
 
 set -e
 
-NODE_COUNT=${1:-1}
-ENCRYPTION_ENABLED=${2:-true}
+NODE_COUNT="${1:-1}"
+ENCRYPTION_ENABLED="${2:-true}"
 
-# TODO: Update configs
-#peers=
-#for i in $(seq 1 $NODE_COUNT); do
-#  peers="${peers} --server.peers.peer-${i}.address=127.0.0.1:${i}1729"
-#  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=127.0.0.1:${i}1730"
-#  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=127.0.0.1:${i}1731"
-#done
+DEPLOYMENT_ID="test"
 
-function server_start() {
-  ./${1}/typedb server \
-    --server.address=127.0.0.1:${1}1729 \
-    --server.encryption.enabled=$ENCRYPTION_ENABLED \
-    --server.encryption.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.certificate-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.ca-certificate=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-    --diagnostics.monitoring.port ${1}1732 \
-    --development-mode.enabled true
-#    --storage.data=server/data \
-#    --server.internal-address.zeromq=127.0.0.1:${1}1730 \
-#    --server.internal-address.grpc=127.0.0.1:${1}1731 \
-#    $(echo $peers) \
-#    --server.encryption.enable=true \
-#    --server.encryption.file.enable=true \
-#    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-#    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-#    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-#    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
-#    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
-#    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
-#    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
-#    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
+ROOT_CA_PATH="$(realpath tool/test/resources/encryption/ext-grpc-root-ca.pem)"
+CERT_PATH="$(realpath tool/test/resources/encryption/ext-grpc-certificate.pem)"
+KEY_PATH="$(realpath tool/test/resources/encryption/ext-grpc-private-key.pem)"
+CONFIG_PATH="$(realpath tool/test/resources/config.yml)"
+
+server_start() {
+  local node_id="$1"
+  local server_port="${node_id}1729"
+  local clustering_port="${node_id}1730"
+  local monitoring_port="${node_id}1731"
+
+  local clustering_dir="../"
+  local node_dir="./${node_id}"
+  local data_dir="${node_dir}/data"
+
+  "${node_dir}/typedb" server \
+    --config="${CONFIG_PATH}" \
+    --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
+    --server.address="0.0.0.0:${server_port}" \
+    --server.connection-address="127.0.0.1:${server_port}" \
+    --server.http.enabled=false \
+    --server.clustering.id="${node_id}" \
+    --server.clustering.address="0.0.0.0:${clustering_port}" \
+    --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
+    --server.encryption.certificate="${CERT_PATH}" \
+    --server.encryption.certificate-key="${KEY_PATH}" \
+    --server.encryption.ca-certificate="${ROOT_CA_PATH}" \
+    --storage.data-directory="${data_dir}" \
+    --storage.clustering-directory="${clustering_dir}" \
+    --diagnostics.monitoring.port="${monitoring_port}" \
+    --development-mode.enabled=true
 }
+
+#function server_start() {
+#  SERVER_PORT="${1}1729"
+#  CLUSTER_PORT="${1}1730"
+#  DATA_DIR="target/debug/data${1}"
+#  CLUSTERING_DIR="target/debug/clustering${1}"
+#
+#  ./${1}/typedb server \
+#    --config="$CONFIG_PATH" \
+#    --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
+#    --server.address=0.0.0.0:${SERVER_PORT} \
+#    --server.connection-address=127.0.0.1:${SERVER_PORT} \
+#    --server.http.enabled false \
+#    --server.clustering.id "$NODE_ID" \
+#    --server.clustering.address "0.0.0.0:${CLUSTER_PORT}" \
+#    --server.encryption.enabled $ENCRYPTION_ENABLED \
+#    --server.encryption.certificate `realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
+#    --server.encryption.certificate-key `realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
+#    --server.encryption.ca-certificate `realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+#    --storage.data "$DATA_DIR" \
+#    --storage.clustering-directory "$CLUSTERING_DIR" \
+#    --diagnostics.monitoring.port ${1}1732 \
+#    --development-mode.enabled true
+#}
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
-#bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
-bazel run //tool/test:typedb-extractor -- typedb-cluster-all
+bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
+#bazel run //tool/test:typedb-extractor -- typedb-cluster-all
 
 echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
 for i in $(seq 1 $NODE_COUNT); do

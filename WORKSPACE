@@ -211,9 +211,9 @@ typedb_behaviour()
 typedb_protocol()
 
 # Load artifacts
-load("//dependencies/typedb:artifacts.bzl", "typedb_artifact")
+load("//dependencies/typedb:artifacts.bzl", "typedb_artifact", "typedb_cluster_artifact")
 typedb_artifact()
-#typedb_cloud_artifact()
+typedb_cluster_artifact()
 
 ####################
 # Load npm modules #
