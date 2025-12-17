@@ -70,7 +70,7 @@
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "b007ebc43e307ca4b6354fedbbfc3223361044dc"
+		rev = "a10b85923a54a579d6feee17aafbd0f0619c3c20"
 		git = "https://github.com/typedb/typedb-protocol"
 		default-features = false
 
@@ -148,6 +148,10 @@
 		features = ["alloc", "crossbeam-channel", "crossbeam-deque", "crossbeam-epoch", "crossbeam-queue", "default", "std"]
 		version = "0.8.4"
 		default-features = false
+
+[[test]]
+	path = "tests/integration/cluster/playground.rs"
+	name = "test_playground"
 
 [[test]]
 	path = "tests/integration/cluster/clustering.rs"

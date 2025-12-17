@@ -19,7 +19,7 @@
 
 use std::time::Duration;
 
-use crate::common::consistency_level::ConsistencyLevel;
+use crate::consistency_level::ConsistencyLevel;
 
 /// TypeDB transaction options.
 /// `TransactionOptions` object can be used to override the default behaviour for opened
@@ -38,7 +38,7 @@ pub struct TransactionOptions {
     pub schema_lock_acquire_timeout: Option<Duration>,
     /// If set, specifies the requested consistency level of the transaction opening operation.
     /// Affects only read transactions, as write and schema transactions require primary replicas.
-    pub read_consistency_level: Option<ConsistencyLevel>,
+    pub consistency_level: Option<ConsistencyLevel>,
 }
 
 impl TransactionOptions {
@@ -59,6 +59,6 @@ impl TransactionOptions {
     /// If set, specifies the requested consistency level of the transaction opening operation.
     /// Affects only read transactions, as write and schema transactions require primary replicas.
     pub fn consistency_level(self, consistency_level: ConsistencyLevel) -> Self {
-        Self { read_consistency_level: Some(consistency_level), ..self }
+        Self { consistency_level: Some(consistency_level), ..self }
     }
 }

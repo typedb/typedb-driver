@@ -196,7 +196,11 @@ impl DatabaseManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn create_with_consistency(&self, name: impl Into<String>, consistency_level: ConsistencyLevel) -> Result {
+    pub async fn create_with_consistency(
+        &self,
+        name: impl Into<String>,
+        consistency_level: ConsistencyLevel,
+    ) -> Result {
         let name = name.into();
         self.server_manager
             .execute(consistency_level, move |server_connection| {

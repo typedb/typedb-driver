@@ -171,6 +171,15 @@ impl Addresses {
             Addresses::Translated(translation) => AddressTranslation::Mapping(translation.clone()),
         }
     }
+
+    pub(crate) fn exclude_addresses(&mut self, excluded_addresses: &Addresses) {
+        match self {
+            Addresses::Direct(addresses) => {
+                addresses.retain(|address| excluded_addresses.contains(address));
+            }
+            Addresses::Translated(translation) => translation.retain(|address, _| excluded_addresses.contains(address)),
+        }
+    }
 }
 
 impl fmt::Display for Addresses {

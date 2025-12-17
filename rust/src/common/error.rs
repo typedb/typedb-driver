@@ -192,26 +192,20 @@ error_messages! { ConnectionError
         33: "Didn't receive any server responses for the database export command.",
     AbsentTlsConfigForTlsConnection =
         34: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
-    TlsConnectionWithoutHttps =
-        35: "TLS connections can only be enabled when connecting to HTTPS endpoints, for example using 'https://<ip>:port'. Please modify the address, or disable TLS (WARNING: this will send passwords over plaintext).",
-    NonTlsConnectionWithHttps =
-        36: "Connecting to an https endpoint requires enabling TLS in driver options.",
-    AnalyzeNoResponse =
-        37: "Didn't receive any server responses for the analyze request.",
-    MissingTlsConfigForTls =
-        38: "TODO It was 34 TLS config object must be set when TLS is enabled.",
-    MultipleAddressesForNoReplicationMode { addresses: Addresses } =
-        39: "Server replicas usage is turned off, but multiple connection addresses ({addresses}) are provided. This is error-prone, thus prohibited.",
-    NotPrimaryOnReadOnly { address: Address } =
-        40: "Could not execute a readonly operation on a non-primary replica '{address}'. It is either a version compatibility issue or a bug.",
-    NoAvailableReplicas { configured_addresses: Addresses } =
-        41: "Could not connect: no available replicas read from addresses {configured_addresses}.",
-    InvalidAddressWithScheme { addresses: Addresses } =
-        42: "Invalid address format: a scheme was found in one or more addresses. Please provide addresses as 'host:port'. Use driver options to configure TLS. Addresses: {addresses}.",
-    AddressTranslationWithoutTranslation { addresses: Addresses } =
-        43: "Specified addresses do not contain address translation: {addresses}.",
     ServerIsNotInitialised =
-        44: "Server is not yet initialized.",
+        35: "Server is not yet initialized.",
+    AnalyzeNoResponse =
+        36: "Didn't receive any server responses for the analyze request.",
+    NotPrimaryOnReadOnly { address: Address } =
+        37: "Could not execute a readonly operation on a non-primary replica '{address}'.",
+    NoAvailableReplicas { configured_addresses: Addresses } =
+        38: "Could not connect: no available replicas read from addresses {configured_addresses}.",
+    InvalidAddressWithScheme { addresses: Addresses } =
+        39: "Invalid address format: a scheme was found in one or more addresses. Please provide addresses as 'host:port'. Use driver options to configure TLS. Addresses: {addresses}.",
+    AddressTranslationWithoutTranslation { addresses: Addresses } =
+        40: "Specified addresses do not contain address translation: {addresses}.",
+    NoPrimaryReplica =
+        41: "Could not find a primary replica.",
 }
 
 error_messages! { ConceptError
@@ -331,23 +325,22 @@ impl Error {
         }
     }
 
-    fn try_extracting_connection_error(_status: &Status, code: &str) -> Option<ConnectionError> {
+    fn try_extracting_connection_error_code(code: &str) -> Option<ConnectionError> {
         match code {
             "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
-            "SRV16" => Some(ConnectionError::ServerIsNotInitialised {}),
-            // TODO: Add a branch for ClusterReplicaNotPrimary
+            "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
+            "CSV8" => Some(ConnectionError::ClusterReplicaNotPrimary {}),
             _ => None,
         }
     }
 
-    fn from_message(message: String) -> Self {
-        if is_rst_stream(message.as_str()) || is_tcp_connect_error(message.as_str()) {
-            Self::Connection(ConnectionError::ServerConnectionFailedNetworking { error: message })
-        } else if is_reading_body_from_connection_error(message.as_str()) {
-            Self::Connection(ConnectionError::ServerConnectionIsClosedUnexpectedly)
+    fn try_extracting_connection_error_message(message: &str) -> Option<ConnectionError> {
+        if is_rst_stream(message) || is_tcp_connect_error(message) {
+            Some(ConnectionError::ServerConnectionFailedNetworking { error: message.to_string() })
+        } else if is_reading_body_from_connection_error(message) {
+            Some(ConnectionError::ServerConnectionIsClosedUnexpectedly)
         } else {
-            println!("Error Other from message: {message}");
-            Self::Other(message)
+            None
         }
     }
 
@@ -432,15 +425,21 @@ impl From<ServerError> for Error {
 
 impl From<Status> for Error {
     fn from(status: Status) -> Self {
-        println!("ERROR FROM STATUS: {status:?}");
         if let Ok(details) = status.check_error_details() {
             if let Some(bad_request) = details.bad_request() {
-                Self::Connection(ConnectionError::ServerConnectionFailedWithError {
+                return Self::Connection(ConnectionError::ServerConnectionFailedWithError {
                     error: format!("{:?}", bad_request),
-                })
-            } else if let Some(error_info) = details.error_info() {
+                });
+            }
+
+            let message = concat_source_messages(&status);
+            if let Some(connection_error) = Self::try_extracting_connection_error_message(&message) {
+                return Self::Connection(connection_error);
+            }
+
+            if let Some(error_info) = details.error_info() {
                 let code = error_info.reason.clone();
-                if let Some(connection_error) = Self::try_extracting_connection_error(&status, &code) {
+                if let Some(connection_error) = Self::try_extracting_connection_error_code(&code) {
                     Self::Connection(connection_error)
                 } else {
                     let domain = error_info.domain.clone();
@@ -449,8 +448,7 @@ impl From<Status> for Error {
                     Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
                 }
             } else {
-                println!("From message!: {status:?}");
-                Self::from_message(concat_source_messages(&status))
+                Self::Other(message)
             }
         } else {
             match status.code() {
@@ -464,8 +462,10 @@ impl From<Status> for Error {
                     Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
                 }
                 _ => {
-                    println!("From message ELSE!: {status:?}");
-                    Self::from_message(concat_source_messages(&status))
+                    let message = concat_source_messages(&status);
+                    Self::try_extracting_connection_error_message(&message)
+                        .map(|error| Self::Connection(error))
+                        .unwrap_or_else(|| Self::Other(message))
                 }
             }
         }
@@ -485,10 +485,6 @@ fn is_reading_body_from_connection_error(message: &str) -> bool {
 fn is_tcp_connect_error(message: &str) -> bool {
     // No TCP connection
     message.contains("tcp connect error")
-}
-
-fn is_uninitialised(message: &str) -> bool {
-    message.contains("Not yet initialised")
 }
 
 fn concat_source_messages(status: &Status) -> String {

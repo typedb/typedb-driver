@@ -158,7 +158,7 @@ impl Replica for AvailableServerReplica {
 
 /// The metadata and state of an individual server as a raft replica.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
-pub(crate) struct ReplicaStatus {
+pub struct ReplicaStatus {
     /// The id of this replica.
     pub(crate) id: u64,
     /// The role of this replica in the raft cluster. May be unknown when the replica is unavailable.

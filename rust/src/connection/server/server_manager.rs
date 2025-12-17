@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 use std::{
     collections::{HashMap, HashSet},
     fmt,
     future::Future,
     iter,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
+    thread::sleep,
     time::Duration,
 };
 
@@ -43,6 +43,21 @@ use crate::{
     Credentials, DriverOptions, Error, Result,
 };
 
+macro_rules! filter_available_replicas {
+    ($iter:expr) => {{
+        $iter.into_iter().filter_map(|replica| match replica {
+            ServerReplica::Available(available) => Some(available),
+            ServerReplica::Unavailable { .. } => None,
+        })
+    }};
+}
+
+macro_rules! find_primary_replica {
+    ($iter:expr) => {{
+        $iter.filter(|replica| replica.is_primary()).max_by_key(|replica| replica.term().unwrap_or_default())
+    }};
+}
+
 pub(crate) struct ServerManager {
     configured_addresses: Addresses,
     replicas: RwLock<HashSet<AvailableServerReplica>>,
@@ -57,6 +72,8 @@ pub(crate) struct ServerManager {
 }
 
 impl ServerManager {
+    const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
+
     // TODO: Introduce a timer-based connections update to have a more actualized connections list
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -68,10 +85,6 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
-        if !driver_options.use_replication && addresses.len() > 1 {
-            return Err(ConnectionError::MultipleAddressesForNoReplicationMode { addresses: addresses.clone() }.into());
-        }
-
         let has_scheme = addresses.addresses().any(|address| address.has_scheme());
         if has_scheme {
             return Err(ConnectionError::InvalidAddressWithScheme { addresses: addresses.clone() }.into());
@@ -89,9 +102,10 @@ impl ServerManager {
         .await?;
         let address_translation = addresses.address_translation();
         println!("INIT REPLICA CONNECTIONS: {:?}", source_connections);
+        println!("INIT REPLICAS: {:?}", replicas);
         let server_manager = Self {
             configured_addresses: addresses,
-            replicas: RwLock::new(Self::filter_unavailable_replicas(replicas)),
+            replicas: RwLock::new(filter_available_replicas!(replicas).collect()),
             replica_connections: RwLock::new(source_connections),
             address_translation: RwLock::new(address_translation),
             background_runtime,
@@ -100,7 +114,7 @@ impl ServerManager {
             driver_lang: driver_lang.as_ref().to_string(),
             driver_version: driver_version.as_ref().to_string(),
         };
-        server_manager.update_replica_connections().await?;
+        server_manager.refresh_replica_connections().await?;
         Ok(server_manager)
     }
 
@@ -111,7 +125,7 @@ impl ServerManager {
             async move { replica_connection.servers_register(replica_id, address).await }
         })
         .await?;
-        self.update_replicas().await
+        self.refresh_replicas().await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -120,7 +134,7 @@ impl ServerManager {
             replica_connection.servers_deregister(replica_id).await
         })
         .await?;
-        self.update_replicas().await
+        self.refresh_replicas().await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -132,19 +146,20 @@ impl ServerManager {
         *self.address_translation.write().expect("Expected address translation write access") =
             addresses.address_translation();
 
-        self.update_replicas().await?;
-        self.update_replica_connections().await
+        self.refresh_replicas().await?;
+        self.refresh_replica_connections().await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn update_replica_connections(&self) -> Result {
-        let replicas = self.read_replicas().clone();
+    async fn refresh_replica_connections(&self) -> Result {
+        let mut replicas = self.read_replicas().clone();
         let mut connection_errors = HashMap::with_capacity(replicas.len());
         let mut new_replica_connections = HashMap::new();
         let connection_addresses: HashSet<Address> = self.read_replica_connections().keys().cloned().collect();
         for replica in &replicas {
             let private_address = replica.private_address().clone();
             if !connection_addresses.contains(&private_address) {
+                println!("UPDATE REPLICA CONNECTION FOR {private_address:?}");
                 match self.new_replica_connection(replica.address().clone()).await {
                     Ok(replica_connection) => {
                         new_replica_connections.insert(private_address, replica_connection);
@@ -159,10 +174,10 @@ impl ServerManager {
         let replica_addresses: HashSet<Address> =
             replicas.into_iter().map(|replica| replica.private_address().clone()).collect();
         let mut replica_connections = self.write_replica_connections();
-        println!("UPDATE REPLICA CONNECTIONS. BEFORE: {:?}", replica_connections);
+        println!("REFRESH REPLICA CONNECTIONS. BEFORE: {:?}", replica_connections);
         replica_connections.retain(|address, _| replica_addresses.contains(address));
         replica_connections.extend(new_replica_connections);
-        println!("UPDATE REPLICA CONNECTIONS. AFTER: {:?}", replica_connections);
+        println!("REFRESH REPLICA CONNECTIONS. AFTER: {:?}", replica_connections);
 
         if replica_connections.is_empty() {
             Err(self.server_connection_failed_err(connection_errors))
@@ -230,10 +245,9 @@ impl ServerManager {
     {
         match consistency_level {
             ConsistencyLevel::Strong => self.execute_strongly_consistent(task).await,
-            // TODO: Uncomment when reads from secondary replicas are implemented
-            // ConsistencyLevel::Eventual => self.execute_eventually_consistent(task).await,
             ConsistencyLevel::Eventual => {
-                Err(InternalError::Unimplemented { details: "eventual consistency".to_string() }.into())
+                let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
+                self.execute_on_any(replicas, task).await
             }
             ConsistencyLevel::ReplicaDependent { address } => {
                 if self.read_replicas().iter().find(|replica| replica.address() == &address).is_none() {
@@ -261,7 +275,12 @@ impl ServerManager {
             Some(replica) => replica,
             None => {
                 let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-                self.seek_primary_replica_in(replicas).await?
+                if replicas.len() == 1 && replicas.iter().next().unwrap().replica_status().is_none() {
+                    // Only replica without status => not Cluster
+                    replicas.into_iter().next().unwrap()
+                } else {
+                    self.seek_primary_replica_in(replicas).await?
+                }
             }
         };
 
@@ -308,16 +327,6 @@ impl ServerManager {
             }
         }
         Err(self.server_connection_failed_err(connection_errors))
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn execute_eventually_consistent<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection) -> P,
-        P: Future<Output = Result<R>>,
-    {
-        let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-        self.execute_on_any(replicas, task).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -375,27 +384,52 @@ impl ServerManager {
         &self,
         source_replicas: impl IntoIterator<Item = AvailableServerReplica>,
     ) -> Result<AvailableServerReplica> {
-        // TODO: Add retries with sleeps in between? Maybe replica_discovery_attempts should work / be used differently
         println!("SEEK");
-        self.execute_on_any(source_replicas, |replica_connection| async {
-            self.seek_primary_replica(replica_connection).await
-        })
-        .await
+        let result = self
+            .execute_on_any(source_replicas, |replica_connection| async {
+                let result = self.seek_primary_replica(replica_connection).await;
+                if &result == &Err(Error::Connection(ConnectionError::NoPrimaryReplica {})) {
+                    // TODO: Cannot actually happen
+                    Self::wait_for_primary_replica_selection().await;
+                }
+                result
+            })
+            .await;
+
+        match result {
+            // TODO: We may not check newly added configured addresses, and we need to somehow integrate it here...
+            // Err(Error::Connection(ConnectionError::ServerConnectionFailed { configured_addresses, accessed_addresses, details })) => {
+            //
+            //     // Last resort: try configured addresses if they are not in the list of accessed addresses
+            //     let addresses = configured_addresses.exclude_addresses(accessed_addresses);
+            // }
+            res => res,
+        }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self, replica_connection: ServerConnection) -> Result<AvailableServerReplica> {
         let address_translation = self.read_address_translation().clone();
-        println!("SEEK PRIMARY REPLICA");
-        let replicas = Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await?;
-        println!("WRITE NEW PRIMARY");
-        *self.replicas.write().expect("Expected replicas write lock") = Self::filter_unavailable_replicas(replicas);
+        if self.driver_options.use_replication {
+            println!("SEEK PRIMARY REPLICA");
+            let replicas = Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await?;
+            println!("WRITE NEW PRIMARY");
+            *self.replicas.write().expect("Expected replicas write lock") =
+                filter_available_replicas!(replicas).collect();
+        }
         if let Some(replica) = self.read_primary_replica() {
-            self.update_replica_connections().await?;
+            self.refresh_replica_connections().await?;
             Ok(replica)
         } else {
-            Err(self.server_connection_failed_err(HashMap::default()))
+            Err(ConnectionError::NoPrimaryReplica {}.into())
         }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn wait_for_primary_replica_selection() {
+        println!("Wait for primary");
+        // FIXME: blocking sleep! Can't do agnostic async sleep.
+        sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -460,20 +494,20 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn update_replicas(&self) -> Result {
-        self.fetch_replicas().await.map(|_| ())
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn fetch_replicas(&self) -> Result<HashSet<ServerReplica>> {
+    pub(crate) async fn fetch_replicas(&self, consistency_level: ConsistencyLevel) -> Result<HashSet<ServerReplica>> {
+        let is_strongly_consistent = consistency_level == ConsistencyLevel::Strong;
         let replicas = self
-            .execute(ConsistencyLevel::Strong, |replica_connection| {
+            .execute(consistency_level, |replica_connection| {
                 let address_translation = self.read_address_translation().clone();
                 async move { Self::fetch_replicas_from_connection(&replica_connection, &address_translation).await }
             })
             .await?;
-        *self.replicas.write().expect("Expected replicas write lock") =
-            Self::filter_unavailable_replicas(replicas.clone());
+
+        if is_strongly_consistent && self.driver_options.use_replication {
+            // Update cached replicas since it's the most recent info
+            *self.replicas.write().expect("Expected replicas write lock") =
+                filter_available_replicas!(replicas.clone()).collect();
+        }
         Ok(replicas)
     }
 
@@ -492,22 +526,18 @@ impl ServerManager {
         replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
     }
 
-    fn filter_unavailable_replicas(
-        replicas: impl IntoIterator<Item = ServerReplica>,
-    ) -> HashSet<AvailableServerReplica> {
-        replicas
-            .into_iter()
-            .filter_map(|replica| match replica {
-                ServerReplica::Available(available) => Some(available),
-                ServerReplica::Unavailable { .. } => None,
-            })
-            .collect()
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn fetch_primary_replica(
+        &self,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<Option<AvailableServerReplica>> {
+        let replicas = self.fetch_replicas(consistency_level).await?;
+        Ok(find_primary_replica!(filter_available_replicas!(replicas.iter())).cloned())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn fetch_primary_replica(&self) -> Result<Option<AvailableServerReplica>> {
-        self.fetch_replicas().await?;
-        Ok(Self::filter_primary_replica(self.read_replicas().iter()))
+    async fn refresh_replicas(&self) -> Result {
+        self.fetch_replicas(ConsistencyLevel::Strong).await.map(|_| ())
     }
 
     fn read_replicas(&self) -> RwLockReadGuard<'_, HashSet<AvailableServerReplica>> {
@@ -515,15 +545,7 @@ impl ServerManager {
     }
 
     fn read_primary_replica(&self) -> Option<AvailableServerReplica> {
-        Self::filter_primary_replica(self.read_replicas().iter())
-    }
-
-    fn filter_primary_replica<'a, R: Replica + 'a>(replicas: impl IntoIterator<Item = &'a R>) -> Option<R> {
-        replicas
-            .into_iter()
-            .filter(|replica| replica.is_primary())
-            .max_by_key(|replica| replica.term().unwrap_or_default())
-            .cloned()
+        find_primary_replica!(self.read_replicas().iter()).cloned()
     }
 
     fn server_connection_failed_err(&self, errors: HashMap<Address, Error>) -> Error {

@@ -35,7 +35,7 @@ use crate::{
 impl TryFromProto<ServerProto> for ServerReplica {
     fn try_from_proto(proto: ServerProto) -> Result<ServerReplica> {
         let replica_status = proto.replica_status.map(|status| ReplicaStatus::try_from_proto(status)).transpose()?;
-        match proto.address {
+        match proto.connection_address {
             Some(address) => Ok(ServerReplica::available_from_private(address.parse()?, replica_status)),
             None => Ok(ServerReplica::Unavailable { replica_status }),
         }

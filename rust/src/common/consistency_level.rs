@@ -44,7 +44,7 @@ impl fmt::Display for ConsistencyLevel {
         match self {
             ConsistencyLevel::Strong => write!(f, "Strong"),
             ConsistencyLevel::Eventual => write!(f, "Eventual"),
-            ConsistencyLevel::ReplicaDependent { address } => write!(f, "Target({address})"),
+            ConsistencyLevel::ReplicaDependent { address } => write!(f, "ReplicaDependent({address})"),
         }
     }
 }

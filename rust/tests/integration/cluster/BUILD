@@ -40,6 +40,26 @@ rust_test(
     data = ["//tool/test/temp-cluster-server:typedb",
             "//tool/test/temp-cluster-server:config.yml"],
 )
+rust_test(
+    name = "test_playground",
+    srcs = ["playground.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:itertools",
+        "@crates//:regex",
+        "@crates//:serde_json",
+        "@crates//:serial_test",
+        "@crates//:smol",
+        "@crates//:tokio",
+        "@crates//:uuid",
+    ],
+    # TODO: Temporary. Use a binary extracted in a better way
+    data = ["//tool/test/temp-cluster-server:typedb",
+            "//tool/test/temp-cluster-server:config.yml"],
+)
 
 checkstyle_test(
     name = "checkstyle",

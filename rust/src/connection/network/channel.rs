@@ -64,7 +64,7 @@ pub(super) fn open_callcred_channel(
         let tls_config = driver_options
             .get_tls_config()
             .cloned()
-            .ok_or_else(|| Error::Connection(ConnectionError::MissingTlsConfigForTls))?;
+            .ok_or_else(|| Error::Connection(ConnectionError::AbsentTlsConfigForTlsConnection))?;
         builder = builder.tls_config(tls_config)?;
     }
     builder = builder.keep_alive_while_idle(true).http2_keep_alive_interval(Duration::from_secs(3));

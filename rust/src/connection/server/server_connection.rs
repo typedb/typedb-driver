@@ -67,8 +67,6 @@ impl ServerConnection {
         driver_lang: &str,
         driver_version: &str,
     ) -> Result<(Self, Vec<ServerReplica>)> {
-        Self::validate_tls(&address, &driver_options)?; // TODO: Understand where to check this
-
         let username = credentials.username().to_string();
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
@@ -339,28 +337,6 @@ impl ServerConnection {
             Response::UsersDelete => Ok(()),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
-    }
-
-    // TODO: Do we want to check this?
-    fn validate_tls(address: &Address, driver_options: &DriverOptions) -> Result {
-        match driver_options.is_tls_enabled {
-            true => {
-                if driver_options.get_tls_config().is_none() {
-                    return Err(ConnectionError::AbsentTlsConfigForTlsConnection {}.into());
-                }
-                // TODO: ???
-                // if !address.is_https() {
-                //     return Err(ConnectionError::TlsConnectionWithoutHttps {}.into());
-                // }
-            }
-            false => {
-                // TODO: ???
-                // if address.is_https() {
-                //     return Err(ConnectionError::NonTlsConnectionWithHttps {}.into());
-                // }
-            }
-        }
-        Ok(())
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

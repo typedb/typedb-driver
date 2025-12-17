@@ -240,7 +240,9 @@ impl TypeDBDriver {
             .await
     }
 
-    /// Retrieves the server's replicas.
+    /// Retrieves the server's replicas, using default strong consistency.
+    ///
+    /// See [`Self::replicas_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -250,12 +252,34 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn replicas(&self) -> Result<HashSet<ServerReplica>> {
-        self.server_manager.fetch_replicas().await
+        self.replicas_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves the server's replicas, using default strong consistency.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.replicas_with_consistency();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn replicas_with_consistency(
+        &self,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<HashSet<ServerReplica>> {
+        self.server_manager.fetch_replicas(consistency_level).await
     }
 
     // TODO: Add servers_get call for a specific server. How to design it?
 
-    /// Retrieves the server's primary replica, if exists.
+    /// Retrieves the server's primary replica, if exists, using default strong consistency.
+    ///
+    /// See [`Self::primary_replica_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -265,7 +289,27 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>> {
-        self.server_manager.fetch_primary_replica().await
+        self.primary_replica_with_consistency(ConsistencyLevel::Strong).await
+    }
+
+    /// Retrieves the server's primary replica, if exists.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.primary_replica_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn primary_replica_with_consistency(
+        &self,
+        consistency_level: ConsistencyLevel,
+    ) -> Result<Option<AvailableServerReplica>> {
+        self.server_manager.fetch_primary_replica(consistency_level).await
     }
 
     /// Registers a new replica in the cluster the driver is currently connected to. The registered
@@ -384,23 +428,25 @@ impl TypeDBDriver {
         options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
-        let consistency_level = options.read_consistency_level.clone();
         let open_fn = |server_connection: ServerConnection| {
             let options = options.clone();
             async move { server_connection.open_transaction(database_name, transaction_type, options).await }
         };
 
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
-        let transaction_stream = match transaction_type {
-            TransactionType::Read => {
-                self.server_manager
-                    .execute(consistency_level.unwrap_or_else(|| ConsistencyLevel::Strong), open_fn)
-                    .await?
-            }
-            TransactionType::Write | TransactionType::Schema => {
-                self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
-            }
-        };
+        let transaction_stream = self
+            .server_manager
+            .execute(options.consistency_level.clone().unwrap_or(ConsistencyLevel::Strong), open_fn)
+            .await?;
+        // TODO: Understand
+        // let transaction_stream = match transaction_type {
+        //     TransactionType::Read => {
+        //         self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
+        //     }
+        //     TransactionType::Write | TransactionType::Schema => {
+        //         self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
+        //     }
+        // };
 
         debug!("Successfully opened transaction for database: {}", database_name);
         Ok(Transaction::new(transaction_stream))
