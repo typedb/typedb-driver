@@ -42,7 +42,7 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/util:util",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "small",
+    size = "medium",
 )
 
 checkstyle_test(

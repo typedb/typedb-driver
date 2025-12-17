@@ -36,8 +36,6 @@ class Relation(Instance, ABC):
         """
         Checks if the concept is a ``Relation``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -49,8 +47,6 @@ class Relation(Instance, ABC):
     def as_relation(self) -> Relation:
         """
         Casts the concept to ``Relation``.
-
-        :return:
 
         Examples
         --------
@@ -65,8 +61,6 @@ class Relation(Instance, ABC):
         """
         Retrieves the type which this ``Relation`` belongs to.
 
-        :return:
-
         Examples
         --------
         ::
@@ -79,8 +73,6 @@ class Relation(Instance, ABC):
     def get_iid(self) -> str:
         """
         Retrieves the unique id of the ``Relation``.
-
-        :return:
 
         Examples
         --------

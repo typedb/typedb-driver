@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.config;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import io.cucumber.java.DataTableType;
@@ -41,6 +42,14 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
+
+    private static boolean clusterMode = false;
+    private static final int RETRY_ATTEMPTS = 3;
+    private static final int RETRY_DELAY_MS = 500;
+
+    public static void setClusterMode(boolean isCluster) {
+        clusterMode = isCluster;
+    }
 
     @ParameterType("true|false")
     public Boolean bool(String bool) {
@@ -173,6 +182,11 @@ public class Parameters {
         return null;
     }
 
+    @ParameterType("strong|eventual|replica\\(.*\\)")
+    public Consistency consistency_level(String value) {
+        return Consistency.parse(value);
+    }
+
     public enum ConceptKind {
         CONCEPT("concept"),
         TYPE("type"),
@@ -280,6 +294,8 @@ public class Parameters {
         }
 
         public void check(Runnable function) {
+            int attempts = clusterMode ? RETRY_ATTEMPTS : 1;
+
             if (mayError) {
                 if (message.isEmpty()) {
                     assertThrows(function);
@@ -287,7 +303,24 @@ public class Parameters {
                     assertThrowsWithMessage(function, message);
                 }
             } else {
-                function.run();
+                Exception lastException = null;
+                for (int i = 0; i < attempts; i++) {
+                    try {
+                        function.run();
+                        return;
+                    } catch (Exception e) {
+                        lastException = e;
+                        if (i < attempts - 1) {
+                            try {
+                                Thread.sleep(RETRY_DELAY_MS);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                                throw new RuntimeException(ie);
+                            }
+                        }
+                    }
+                }
+                throw new RuntimeException(lastException);
             }
         }
     }
@@ -385,4 +418,34 @@ public class Parameters {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS VV"),
             DateTimeFormatter.ISO_ZONED_DATE_TIME
     );
+
+    public static class Consistency {
+        private final ConsistencyLevel level;
+
+        public Consistency(ConsistencyLevel level) {
+            this.level = level;
+        }
+
+        public ConsistencyLevel level() {
+            return level;
+        }
+
+        public static Consistency parse(String value) {
+            if (value.equalsIgnoreCase("strong")) {
+                return new Consistency(new ConsistencyLevel.Strong());
+            } else if (value.equalsIgnoreCase("eventual")) {
+                return new Consistency(new ConsistencyLevel.Eventual());
+            } else if (value.toLowerCase().startsWith("replica(") && value.endsWith(")")) {
+                String address = value.substring("replica(".length(), value.length() - 1);
+                return new Consistency(new ConsistencyLevel.ReplicaDependent(address));
+            } else {
+                throw new IllegalArgumentException("Unknown consistency level: " + value);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Consistency(" + level + ")";
+        }
+    }
 }

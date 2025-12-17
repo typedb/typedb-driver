@@ -1,0 +1,48 @@
+[#_struct_ServerVersion]
+=== ServerVersion
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+
+A full TypeDB server’s version specification
+
+// tag::methods[]
+[#_struct_ServerVersion_distribution_]
+==== distribution
+
+[source,rust]
+----
+pub fn distribution(&self) -> &str
+----
+
+Retrieves the server’s distribution.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_ServerVersion_version_]
+==== version
+
+[source,rust]
+----
+pub fn version(&self) -> &str
+----
+
+Retrieves the server’s version number.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+// end::methods[]
+

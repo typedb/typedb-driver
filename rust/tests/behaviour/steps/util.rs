@@ -29,11 +29,11 @@ use std::{
 
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use tokio::time::{Duration, sleep};
-use typedb_driver::{Result as TypeDBResult, answer::JSON};
+use tokio::time::{sleep, Duration};
+use typedb_driver::{answer::JSON, Result as TypeDBResult};
 use uuid::Uuid;
 
-use crate::{Context, generic_step, params};
+use crate::{generic_step, params, Context};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)

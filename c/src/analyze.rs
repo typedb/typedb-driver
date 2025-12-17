@@ -30,17 +30,21 @@ use typedb_driver::{
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
     },
     box_stream,
-    concept::{Concept, Kind, type_::Type},
+    concept::{type_::Type, Concept, Kind},
+    BoxPromise, Promise,
 };
 
 use crate::{
-    common::StringIterator,
-    concept::ConceptIterator,
-    error::try_release,
-    iterator::{CIterator, iterator_next},
-    memory::{
-        borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership,
+    common::{
+        error::try_release,
+        iterator::{iterator_next, CIterator},
+        memory::{
+            borrow, free, release, release_optional, release_optional_string, release_string, string_view,
+            take_ownership,
+        },
+        StringIterator,
     },
+    concept::ConceptIterator,
 };
 
 // Iterators, promises & enums

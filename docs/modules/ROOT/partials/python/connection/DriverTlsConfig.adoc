@@ -1,0 +1,98 @@
+[#_DriverTlsConfig]
+=== DriverTlsConfig
+
+*Package*: `typedb.api.connection.driver_tls_config`
+
+TLS configuration for the TypeDB driver.
+
+``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+
+The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `is_enabled` a| `bool` a| Returns whether TLS is enabled.
+a| `root_ca_path` a| `str \| None` a| Returns the configured custom root CA path, if present. If TLS is enabled with native roots (or disabled), this will be ``None``.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_DriverTlsConfig_disabled_]
+==== disabled
+
+[source,python]
+----
+static disabled() -> DriverTlsConfig
+----
+
+Creates a TLS configuration with TLS disabled. WARNING: Disabling TLS causes credentials and data to be transmitted in plaintext.
+
+[caption=""]
+.Returns
+`DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+tls_config = DriverTlsConfig.disabled()
+----
+
+[#_DriverTlsConfig_enabled_with_native_root_ca_]
+==== enabled_with_native_root_ca
+
+[source,python]
+----
+static enabled_with_native_root_ca() -> DriverTlsConfig
+----
+
+Creates a TLS configuration enabled with system native trust roots.
+
+[caption=""]
+.Returns
+`DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+tls_config = DriverTlsConfig.enabled_with_native_root_ca()
+----
+
+[#_DriverTlsConfig_enabled_with_root_ca_tls_root_ca_path_str]
+==== enabled_with_root_ca
+
+[source,python]
+----
+static enabled_with_root_ca(tls_root_ca_path: str) -> DriverTlsConfig
+----
+
+Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM).
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `tls_root_ca_path` a| the path to PEM-encoded root CA certificate bundle a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+tls_config = DriverTlsConfig.enabled_with_root_ca("path/to/ca-certificate.pem")
+----
+
+// end::methods[]
+

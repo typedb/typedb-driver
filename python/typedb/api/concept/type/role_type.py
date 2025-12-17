@@ -41,8 +41,6 @@ class RoleType(Type, ABC):
         """
         Checks if the concept is a ``RoleType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -54,8 +52,6 @@ class RoleType(Type, ABC):
     def as_role_type(self) -> RoleType:
         """
         Casts the concept to ``RoleType``.
-
-        :return:
 
         Examples
         --------

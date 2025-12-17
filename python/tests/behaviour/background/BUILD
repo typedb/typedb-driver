@@ -26,8 +26,8 @@ py_library(
 )
 
 py_library(
-    name = "community",
-    srcs = ["community/environment.py"],
+    name = "core",
+    srcs = ["core/environment.py"],
     deps = [],
 )
 

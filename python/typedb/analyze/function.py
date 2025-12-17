@@ -156,7 +156,8 @@ class _ReturnOperationStream(_ReturnOperation, ReturnOperationStream):
         return self
 
     def variables(self) -> Iterator["Variable"]:
-        return map(_Variable, IteratorWrapper(return_operation_stream_variables(self.native_object), variable_iterator_next))
+        return map(_Variable,
+                   IteratorWrapper(return_operation_stream_variables(self.native_object), variable_iterator_next))
 
 
 class _ReturnOperationSingle(_ReturnOperation, ReturnOperationSingle):
@@ -170,7 +171,8 @@ class _ReturnOperationSingle(_ReturnOperation, ReturnOperationSingle):
         return self
 
     def variables(self) -> Iterator["Variable"]:
-        return map(_Variable, IteratorWrapper(return_operation_single_variables(self.native_object), variable_iterator_next))
+        return map(_Variable,
+                   IteratorWrapper(return_operation_single_variables(self.native_object), variable_iterator_next))
 
     def selector(self) -> str:
         return return_operation_single_selector(self.native_object)

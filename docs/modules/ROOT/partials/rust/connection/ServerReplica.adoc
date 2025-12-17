@@ -1,0 +1,37 @@
+[#_enum_ServerReplica]
+=== ServerReplica
+
+The metadata and state of an individual raft replica of a driver connection.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Available(AvailableServerReplica)`
+a| `Unavailable`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_enum_ServerReplica_address_]
+==== address
+
+[source,rust]
+----
+pub fn address(&self) -> Option<&Address>
+----
+
+Returns the address this replica is hosted at. None if the information is unavailable.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Address>
+----
+
+// end::methods[]
+

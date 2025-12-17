@@ -21,8 +21,11 @@ use std::ptr::addr_of_mut;
 
 use typedb_driver::{BoxPromise, Promise, Result, answer::ConceptRow, concept::Concept};
 
-use super::{iterator::iterator_try_next, memory::free};
-use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
+use crate::common::{
+    error::try_release_optional,
+    iterator::{iterator_try_next, CIterator},
+    memory::{free, take_ownership},
+};
 
 mod concept;
 mod instance;

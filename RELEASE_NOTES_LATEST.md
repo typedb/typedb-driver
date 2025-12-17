@@ -1,3 +1,6 @@
+**This is an alpha release for CLUSTERED TypeDB 3.x. Do not use this as a stable version of TypeDB.**
+**Instead, reference a non-alpha release of the same major and minor versions.**
+
 Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 
 ## Distribution
@@ -9,14 +12,17 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.10.0
+cargo add typedb-driver@3.7.0-alpha-3
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.10.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.7.0-alpha-3/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
+
+**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and can drastically change between versions.
+Use this driver only for the same `XYZ-alpha-A` version of the server.
 
 ```xml
 <repositories>
@@ -29,7 +35,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.10.0</version>
+        <version>3.7.0-alpha-3</version>
     </dependency>
 </dependencies>
 ```
@@ -39,110 +45,71 @@ Documentation: https://typedb.com/docs/drivers/java/overview
 PyPI package: https://pypi.org/project/typedb-driver
 Documentation: https://typedb.com/docs/drivers/python/overview
 
+**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and can drastically change between versions.
+Use this driver only for the same `XYZ-alpha-A` version of the server.
+
 Available through https://pypi.org
 
-[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.10.0
-```
-
-### C# driver
-
-NuGet package: https://www.nuget.org/packages/TypeDB.Driver
-Documentation: https://typedb.com/docs/drivers/csharp/overview
-
-```xml
-<ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.10.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.10.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.10.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.10.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.10.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.10.0" />
-</ItemGroup>
-```
-
-### HTTP Typescript driver
-
-[//]: # (TODO: Update docs link)
-
-NPM package: https://www.npmjs.com/package/@typedb/driver-http
-Documentation: https://typedb.com/docs/home/install/drivers/
-
-```
-npm install @typedb/driver-http@3.10.0
+pip install typedb-driver==3.7.0a2
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.10.0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.7.0-alpha-3
 
 
 ## New Features
 
+### Refactor DriverOptions' TLS configuration
 
-## Bugs Fixed
+Introduce `DriverTlsConfig` with three possible constructors to eliminate ambiguity of TLS settings:
 
+- disabled
+- enabled using default native root CA
+- enabled using custom root CA
 
-## Code Refactors
+Now, `DriverOptions` contain a separate `tls_config` field instead of `is_tls_enabled` and `tls_root_ca`, and every
+`DriverOptions` object requires an instance of `DriverTlsConfig` on construction to provide explicit TLS connection
+preferences.
 
+#### Examples
 
-## Other Improvements
-- **Prepare release 3.8.4-rc0**
-  
-  Bump version and generate release notes
-  
-  
-- **Update Rust toolchain**
-  
-  We update the Rust toolchain version to 1.93 and edition to 2024. We also update the source to make it compile with this new toolchain, and resolve the warnings.
-  
-  
-- **Raise gRPC message size limits to 1 GB**
-  
-  The default tonic limit of 4 MB is too restrictive for database workloads. Large fetch documents, query result batches, and export streams can legitimately exceed 4 MB, causing decode failures on the client side with: "decoded message length too large: found N bytes, the limit is: 4194304 bytes"
-  
-  Set both encoding and decoding limits to 1 GB on the TypeDbClient stub, matching the corresponding server-side change in https://github.com/typedb/typedb/pull/7745
-  
-  
-  
-- **Add security framework for c integration test**
-  
-  Add `-framework Security` linkopt for macOS to the exposed C lib target, fixing linker errors with undefined Security framework symbols when building with Bazel 8.   
-  
-  
-- **Fetch TypeDB server using native_artifact_files module extension**
-  Fetches the TypeDB server artifact using `native_artifacts_files`, close to how we used to with bazel 6.
-  
-  
-  
-- **Fix Windows CircleCI test deployment**
+Rust:
+```rust
+// Default: TLS enabled with native system trust roots
+let options = DriverOptions::new(DriverTlsConfig::enabled_with_native_root_ca()).use_replication(true);
 
-- **Update bazel-distribution**
+// Custom CA (PEM) for private PKI / self-signed deployments
+let options_custom_ca = DriverOptions::new(
+    DriverTlsConfig::enabled_with_root_ca(Path::new("path/to/ca-certificate.pem")).unwrap(),
+);
 
-- **Update workspace_refs manually**
+// Disable TLS (NOT recommended)
+let options_insecure = DriverOptions::new(DriverTlsConfig::disabled());
+```
 
-- **Fix issue in workspace-status script**
+Java:
+```java
+// Default: TLS enabled with native system trust roots
+DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA()).useReplication(true);
 
-- **Update typedb-protocol**
+// Custom CA (PEM) for private PKI / self-signed deployments
+DriverOptions optionsCustomCA = new DriverOptions(DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem"));
 
-- **Depend on protocol by tag**
+// Disable TLS (NOT recommended)
+DriverOptions optionsInsecure = new DriverOptions(DriverTlsConfig.disabled());
+```
 
-- **Fix windows git patch line ending**
+Python:
+```py
+# Default/recommended: TLS enabled with native system trust roots
+options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), use_replication=True)
 
-- **Bump version to 3.8.2-rc0**
+# Custom CA (PEM) for private PKI / self-signed deployments
+options_custom_ca = DriverOptions(DriverTlsConfig.enabled_with_root_ca("path/to/ca-certificate.pem"))
+options_custom_ca.use_replication = True # Post-construction setter
 
-- **Fix Windows and Linux CI for Bazel 8**
-
-- **Fix deploy-snapshot jobs**
-
-- **Bazel 8 upgrade**
-  
-- **Fix csharp documentation outdated references**
-  
-  Add missing csharp driver documentation missing references, and fix existing broken ones.
-  
-  
-- **Add release cleanup job dependency**
-
-    
+# Disable TLS (NOT recommended)
+options_insecure = DriverOptions(DriverTlsConfig.disabled())
+```

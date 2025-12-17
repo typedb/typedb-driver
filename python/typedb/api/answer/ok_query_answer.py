@@ -31,8 +31,6 @@ class OkQueryAnswer(QueryAnswer, ABC):
         """
         Checks if the query answer is an ``Ok``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -44,8 +42,6 @@ class OkQueryAnswer(QueryAnswer, ABC):
     def as_ok(self) -> OkQueryAnswer:
         """
         Casts the query answer to ``OkQueryAnswer``.
-
-        :return:
 
         Examples
         --------

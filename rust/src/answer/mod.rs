@@ -36,7 +36,7 @@ pub enum QueryAnswer {
 }
 
 impl QueryAnswer {
-    /// Retrieve the executed query's type (shared by all elements in this stream).
+    /// Retrieves the executed query's type (shared by all elements in this stream).
     ///
     /// # Examples
     ///
@@ -51,7 +51,7 @@ impl QueryAnswer {
         }
     }
 
-    /// Check if the <code>QueryAnswer</code> is an <code>Ok</code> response.
+    /// Checks if the <code>QueryAnswer</code> is an <code>Ok</code> response.
     ///
     /// # Examples
     ///
@@ -62,7 +62,7 @@ impl QueryAnswer {
         matches!(self, Self::Ok(_))
     }
 
-    /// Check if the <code>QueryAnswer</code> is a <code>ConceptRowStream</code>.
+    /// Checks if the <code>QueryAnswer</code> is a <code>ConceptRowStream</code>.
     ///
     /// # Examples
     ///
@@ -73,7 +73,7 @@ impl QueryAnswer {
         matches!(self, Self::ConceptRowStream(_, _))
     }
 
-    /// Check if the <code>QueryAnswer</code> is a <code>ConceptDocumentStream</code>.
+    /// Checks if the <code>QueryAnswer</code> is a <code>ConceptDocumentStream</code>.
     ///
     /// # Examples
     ///

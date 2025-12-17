@@ -28,8 +28,6 @@ class Type(Concept, ABC):
         """
         Checks if the concept is a ``Type``.
 
-        :return:
-
         Examples
         --------
         ::

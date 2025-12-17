@@ -33,7 +33,7 @@ a| `root` a| `Option<Node>` a|
 pub fn get_query_type(&self) -> QueryType
 ----
 
-Retrieve the executed query’s type (shared by all elements in this stream).
+Retrieves the executed query’s type (shared by all elements in this stream).
 
 [caption=""]
 .Returns

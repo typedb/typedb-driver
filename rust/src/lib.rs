@@ -27,10 +27,14 @@
 
 pub use self::{
     common::{
-        BoxPromise, BoxStream, Error, IID, Promise, QueryOptions, Result, TransactionOptions, TransactionType,
-        box_stream, error, info,
+        box_stream, consistency_level, error, info, Address, Addresses, BoxPromise, BoxStream, Error, Promise,
+        QueryOptions, Result, TransactionOptions, TransactionType, IID,
     },
-    connection::{Credentials, DriverOptions},
+    connection::{
+        server_replica::{AvailableServerReplica, Replica, ReplicaRole, ServerReplica},
+        server_version::ServerVersion,
+        Credentials, DriverOptions, DriverTlsConfig,
+    },
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,
     transaction::Transaction,

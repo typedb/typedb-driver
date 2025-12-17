@@ -18,18 +18,17 @@
  */
 
 use cucumber::gherkin::Step;
-use futures::{StreamExt, future::join_all};
+use futures::{future::join_all, StreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    QueryOptions, Result as TypeDBResult, Transaction,
     answer::{ConceptRow, QueryAnswer},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
 };
 
 use crate::{
-    BehaviourTestOptionalError, Context, generic_step, params,
+    generic_step, params,
     params::check_boolean,
     util::{iter_table, list_contains_json, parse_json},
 };

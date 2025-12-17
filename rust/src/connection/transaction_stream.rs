@@ -84,8 +84,8 @@ impl TransactionStream {
         self.type_
     }
 
-    pub(crate) fn options(&self) -> TransactionOptions {
-        self.options
+    pub(crate) fn options(&self) -> &TransactionOptions {
+        &self.options
     }
 
     pub(crate) fn on_close(

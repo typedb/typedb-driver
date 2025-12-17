@@ -16,7 +16,9 @@
 # under the License.
 
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import Optional, TYPE_CHECKING
+
+from typedb.api.connection.consistency_level import ConsistencyLevel
 
 
 class User(ABC):
@@ -27,130 +29,38 @@ class User(ABC):
     def name(self) -> str:
         """
         Returns the name of this user.
-
-        :return:
         """
         pass
 
-    # TODO: Not implemented
-    # @abstractmethod
-    # def password_expiry_seconds(self) -> Optional[int]:
-    #     """
-    #     Returns the number of seconds remaining till this user's current password expires.
-    #
-    #     :return:
-    #     """
-    #     pass
-
     @abstractmethod
-    def update_password(self, password: str) -> None:
+    def update_password(self, password: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
         Updates the password for this user.
 
-        :param password_old: The current password of this user
-        :param password_new: The new password
-        :return:
-        """
-        pass
-
-    @abstractmethod
-    def delete(self) -> None:
-        """
-        Deletes a user with the given name.
-
-        :param username: The name of the user to be deleted
-        :return:
+        :param password: The new password
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
-           driver.users.delete(username)
+           user.update_password("new-password")
+           user.update_password("new-password", ConsistencyLevel.Strong())
         """
         pass
 
-
-class UserManager(ABC):
-    """
-    Provides access to all user management methods.
-    """
-
     @abstractmethod
-    def contains(self, username: str) -> bool:
+    def delete(self, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
-        Checks if a user with the given name exists.
+        Deletes this user.
 
-        :param username: The user name to be checked
-        :return:
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
-           driver.users.contains(username)
-        """
-        pass
-
-    @abstractmethod
-    def create(self, username: str, password: str) -> None:
-        """
-        Create a user with the given name and password.
-
-        :param username: The name of the user to be created
-        :param password: The password of the user to be created
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.create(username, password)
-        """
-        pass
-
-    @abstractmethod
-    def get(self, username: str) -> Optional[User]:
-        """
-        Retrieve a user with the given name.
-
-        :param username: The name of the user to retrieve
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.get(username)
-        """
-        pass
-
-    @abstractmethod
-    def get_current_user(self) -> Optional[User]:
-        """
-        Retrieve the name of the user who opened the current connection.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.get_current_user()
-        """
-        pass
-
-    @abstractmethod
-    def all(self) -> List[User]:
-        """
-        Retrieves all users which exist on the TypeDB server.
-
-        :return:
-
-        Examples:
-        ---------
-        ::
-
-           driver.users.all()
-
+           user.delete()
+           user.delete(ConsistencyLevel.Strong())
         """
         pass

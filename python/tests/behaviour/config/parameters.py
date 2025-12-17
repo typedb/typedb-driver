@@ -18,16 +18,34 @@
 from __future__ import annotations
 
 import re
+import time
 from enum import Enum
 from typing import Callable, Optional
 
 import parse
+
+# Cluster mode retry settings
+_cluster_mode = False
+RETRY_ATTEMPTS = 3
+RETRY_DELAY_S = 0.5
+
+
+def set_cluster_mode(is_cluster: bool):
+    global _cluster_mode
+    _cluster_mode = is_cluster
+
+
+def is_cluster_mode() -> bool:
+    return _cluster_mode
+
+
 from behave import register_type
 from behave.model import Table, Row
 from behave.runner import Context
 from hamcrest import *
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
+from typedb.api.connection.consistency_level import ConsistencyLevel as TypeDBConsistencyLevel
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
@@ -242,7 +260,17 @@ class MayError:
         if self.may_error:
             assert_that(func, raises(exception, self.message))
         else:
-            func()
+            attempts = RETRY_ATTEMPTS if is_cluster_mode() else 1
+            last_exception = None
+            for i in range(attempts):
+                try:
+                    func()
+                    return
+                except Exception as e:
+                    last_exception = e
+                    if i < attempts - 1:
+                        time.sleep(RETRY_DELAY_S)
+            raise last_exception
 
     def __repr__(self):
         return f"MayError({self.may_error})"
@@ -328,3 +356,29 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
 
 
 register_type(IsByVarIndex=parse_by_index_of_variable_or_not)
+
+
+class ConsistencyLevel:
+
+    def __init__(self, consistency_level: TypeDBConsistencyLevel):
+        self.consistency_level = consistency_level
+
+    def __repr__(self):
+        return f"ConsistencyLevel({self.consistency_level})"
+
+
+@parse.with_pattern("strong|eventual|replica\((?P<address>.*)\)")
+def parse_consistency_level(value: str) -> ConsistencyLevel:
+    if value == "strong":
+        return ConsistencyLevel(TypeDBConsistencyLevel.Strong())
+    elif value == "eventual":
+        return ConsistencyLevel(TypeDBConsistencyLevel.Eventual())
+    else:
+        match = re.match(r'replica\((?P<address>.*)\)', value)
+        if match:
+            return ConsistencyLevel(TypeDBConsistencyLevel.ReplicaDependent(match.group("address")))
+        else:
+            raise ValueError(f"Unrecognised ConsistencyLevel: {value}")
+
+
+register_type(ConsistencyLevel=parse_consistency_level)
