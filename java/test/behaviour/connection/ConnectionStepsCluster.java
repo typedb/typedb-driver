@@ -32,9 +32,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
-    // TODO: Add 2 more addresses
     public static Set<String> DEFAULT_CLUSTER_ADDRESSES = Set.of(
-            "127.0.0.1:11729"
+            "127.0.0.1:11729",
+            "127.0.0.1:21729",
+            "127.0.0.1:31729"
     );
 
     @Override

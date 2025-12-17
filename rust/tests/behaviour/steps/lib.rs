@@ -35,7 +35,7 @@ use futures::{
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::time::{sleep, Duration};
+use tokio::{time::{sleep, Duration}, sync::OnceCell};
 use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
@@ -96,6 +96,8 @@ impl<I: AsRef<Path>> cucumber::Parser<I> for SingletonParser {
     }
 }
 
+static CLUSTER_SETUP: OnceCell<()> = OnceCell::const_new();
+
 #[derive(World)]
 pub struct Context {
     pub is_cluster: bool,
@@ -147,8 +149,9 @@ impl fmt::Debug for Context {
 
 impl Context {
     const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
-    // TODO when multiple nodes are available: "127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"
-    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 1] = ["127.0.0.1:11729"];
+    const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
+    // Used to register cluster peers
+    const DEFAULT_CLUSTER_CLUSTERING_ADDRESSES: [&'static str; 3] = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"];
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
@@ -171,7 +174,15 @@ impl Context {
                 context.is_cluster = is_cluster;
                 // cucumber removes the default hook before each scenario and restores it after!
                 std::panic::set_hook(Box::new(move |info| println!("{}", info)));
-                Box::pin(async move {})
+                Box::pin(async move {
+                    if is_cluster {
+                        CLUSTER_SETUP
+                            .get_or_init(|| async {
+                                context.setup_cluster().await;
+                            })
+                            .await;
+                    }
+                })
             })
             .after(|_, _, _, _, context| {
                 Box::pin(async {
@@ -492,12 +503,13 @@ impl Context {
         let addresses = Addresses::try_from_addresses_str(addresses).expect("Expected addresses");
 
         let credentials = Credentials::new(username, password);
-        assert!(self.tls_root_ca.is_some(), "Root CA is expected for cluster tests!");
+        // TODO: Renew test certificates...
+        // assert!(self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(), "Root CA is expected for cluster tests!");
         let driver_options = self
             .driver_options()
             .unwrap_or_default()
-            .is_tls_enabled(true)
-            .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
+            .is_tls_enabled(false);
+            // .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
@@ -508,6 +520,21 @@ impl Context {
     pub fn reset_driver(driver: Option<TypeDBDriver>) {
         if let Some(driver) = driver {
             driver.force_close().unwrap()
+        }
+    }
+
+    async fn setup_cluster(&self) {
+        let driver = Self::create_default_driver(&self).await.expect("Expected a default driver in setup");
+
+        let clustering_addresses = Self::DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
+        if driver.replicas().await.unwrap().len() != clustering_addresses.len() {
+            for (i, address) in clustering_addresses.iter().enumerate() {
+                let id = (i + 1) as u64;
+                // 1 is default registered replica
+                if id != 1 {
+                    driver.register_replica(id, address.to_string()).await.expect("Expected to register replica in setup");
+                }
+            }
         }
     }
 }

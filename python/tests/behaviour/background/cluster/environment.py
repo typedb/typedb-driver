@@ -29,8 +29,7 @@ def before_all(context: Context):
         create_driver(context, address, user, password)
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
         setup_context_driver(context, address, username, password)
-    # TODO: Add 2 more addresses (or 1?)
-    context.default_address = ["127.0.0.1:11729"]
+    context.default_address = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
 
 
 def before_scenario(context: Context, scenario):
