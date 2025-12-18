@@ -379,6 +379,28 @@ impl TypeDBDriver {
         self.server_manager.update_address_translation(addresses).await
     }
 
+    /// The ``DriverOptions`` for this connection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.options()
+    /// ```
+    pub fn options(&self) -> &DriverOptions {
+        self.server_manager.driver_options()
+    }
+
+    /// The ``Addresses`` this connection is configured to.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.configured_addresses()
+    /// ```
+    pub fn configured_addresses(&self) -> &Addresses {
+        self.server_manager.configured_addresses()
+    }
+
     /// Opens a transaction with default options.
     ///
     /// See [`TypeDBDriver::transaction_with_options`] for more details.

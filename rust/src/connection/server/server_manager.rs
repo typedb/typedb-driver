@@ -116,6 +116,14 @@ impl ServerManager {
         Ok(server_manager)
     }
 
+    pub(crate) fn driver_options(&self) -> &DriverOptions {
+        &self.driver_options
+    }
+
+    pub(crate) fn configured_addresses(&self) -> &Addresses {
+        &self.configured_addresses
+    }
+
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn register_replica(&self, replica_id: u64, address: String) -> Result {
         self.execute(ConsistencyLevel::Strong, |replica_connection| {
