@@ -41,10 +41,18 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
     release_string(borrow(database).name().to_owned())
 }
 
-/// Deletes this <code>Database</code>.
+/// Deletes this database.
+///
+/// @param database The <code>Database</code> to delete.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn database_delete(database: *const Database) {
-    unwrap_void(take_arc(database).delete());
+pub extern "C" fn database_delete(database: *const Database, consistency_level: *const ConsistencyLevel) {
+    let database = take_arc(database);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => database.delete_with_consistency(consistency_level),
+        None => database.delete(),
+    };
+    unwrap_void(result);
 }
 
 /// A full schema text as a valid TypeQL define query string.

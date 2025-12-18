@@ -178,7 +178,9 @@ impl DatabaseManager {
             .await
     }
 
-    /// Creates a database with the given name. Always uses strong consistency.
+    /// Creates a database with the given name, using default strong consistency.
+    ///
+    /// See [`Self::create_with_consistency`] for more details and options.
     ///
     /// # Arguments
     ///
@@ -195,6 +197,22 @@ impl DatabaseManager {
         self.create_with_consistency(name, ConsistencyLevel::Strong).await
     }
 
+    /// Creates a database with the given name
+    ///
+    /// # Arguments
+    ///
+    /// * `name` — The name of the database to be created
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().create_with_consistency(name, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.databases().create_with_consistency(name, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create_with_consistency(
         &self,

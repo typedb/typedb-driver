@@ -56,7 +56,9 @@ impl Database {
         self.name.as_str()
     }
 
-    /// Deletes this database. Always uses strong consistency.
+    /// Deletes this database, using default strong consistency.
+    ///
+    /// See [`Self::delete_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -69,8 +71,20 @@ impl Database {
         self.delete_with_consistency(ConsistencyLevel::Strong).await
     }
 
+    /// Deletes this database.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.delete_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.delete_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn delete_with_consistency(self: Arc<Self>, consistency_level: ConsistencyLevel) -> Result {
+    pub async fn delete_with_consistency(self: Arc<Self>, consistency_level: ConsistencyLevel) -> Result {
         self.server_manager
             .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();

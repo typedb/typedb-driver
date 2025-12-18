@@ -28,7 +28,7 @@ import static com.typedb.driver.jni.typedb_driver.consistency_level_strong;
 
 /**
  * Consistency levels of operations against a distributed server. All driver methods have default
- * recommended values, however, readonly operations can be configured in order to potentially
+ * recommended values, however, most of the operations can be configured in order to potentially
  * speed up the execution (introducing risks of stale data) or test a specific replica.
  * This setting does not affect clusters with a single node.
  */
@@ -53,6 +53,7 @@ public abstract class ConsistencyLevel {
     }
 
     /**
+     * Strong consistency level.
      * Strongest consistency, always up-to-date due to the guarantee of the primary replica usage.
      * May require more time for operation execution.
      */
@@ -76,8 +77,10 @@ public abstract class ConsistencyLevel {
     }
 
     /**
-     * Allow stale reads from any replica. May not reflect latest writes. The execution may be
-     * eventually faster compared to other consistency levels.
+     * Eventual consistency level.
+     * Allow stale reads from any replica and execution orchestration through a non-primary replica.
+     * Does not guarantee latest writes, but is eventually faster compared to other consistency levels.
+     * Note that the target replica can redirect the request, if needed.
      */
     public static final class Eventual extends ConsistencyLevel {
         Eventual() {
@@ -99,8 +102,9 @@ public abstract class ConsistencyLevel {
     }
 
     /**
+     * Replica dependent consistency level.
      * The operation is executed against the provided replica address only. Its guarantees depend
-     * on the replica selected.
+     * on the replica selected. Note that the target replica can redirect the request, if needed.
      */
     public static final class ReplicaDependent extends ConsistencyLevel {
         private final String address;

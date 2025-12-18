@@ -121,9 +121,22 @@ pub extern "C" fn users_get_current(
 
 /// Creates a user with the given name &amp; password.
 ///
-/// @param username The username of the user to be created.
+/// @param username The username of the created user.
+/// @param password The password of the created user.
 /// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
-    unwrap_void(borrow(driver).users().create(string_view(username), string_view(password)));
+pub extern "C" fn users_create(
+    driver: *const TypeDBDriver,
+    username: *const c_char,
+    password: *const c_char,
+    consistency_level: *const ConsistencyLevel,
+) {
+    let users = borrow(driver).users();
+    let username = string_view(username);
+    let password = string_view(password);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => users.create_with_consistency(username, password, consistency_level),
+        None => users.create(username, password),
+    };
+    unwrap_void(result);
 }

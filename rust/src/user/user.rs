@@ -45,12 +45,15 @@ impl User {
         self.name.as_str()
     }
 
+    // TODO: We don't actually need to expose it?
     /// Retrieves the password as a string, if accessible.
     pub fn password(&self) -> Option<&str> {
         self.password.as_ref().map(|value| value.as_str())
     }
 
-    /// Updates the user's password. Always uses strong consistency.
+    /// Updates the user's password, using default strong consistency.
+    ///
+    /// See [`Self::update_password_with_consistency`] for more details and options.
     ///
     /// # Arguments
     ///
@@ -67,8 +70,24 @@ impl User {
         self.update_password_with_consistency(password, ConsistencyLevel::Strong).await
     }
 
+    /// Updates the user's password.
+    ///
+    /// # Arguments
+    ///
+    /// * `password` — The new password
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "user.update_password_with_consistency(password, ConsistencyLevel::Strong);")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "user.update_password_with_consistency(password, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn update_password_with_consistency(
+    pub async fn update_password_with_consistency(
         &self,
         password: impl Into<String>,
         consistency_level: ConsistencyLevel,
@@ -83,7 +102,9 @@ impl User {
             .await
     }
 
-    /// Deletes this user. Always uses strong consistency.
+    /// Deletes this user, using default strong consistency.
+    ///
+    /// See [`Self::delete_with_consistency`] for more details and options.
     ///
     /// # Examples
     ///
@@ -97,8 +118,20 @@ impl User {
         self.delete_with_consistency(ConsistencyLevel::Strong).await
     }
 
+    /// Deletes this user.
+    ///
+    /// # Arguments
+    ///
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "user.delete_with_consistency(ConsistencyLevel::Strong);")]
+    #[cfg_attr(not(feature = "sync"), doc = "user.delete_with_consistency(ConsistencyLevel::Strong).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn delete_with_consistency(self, consistency_level: ConsistencyLevel) -> Result {
+    pub async fn delete_with_consistency(self, consistency_level: ConsistencyLevel) -> Result {
         self.server_manager
             .execute(consistency_level, |server_connection| {
                 let name = self.name.clone();

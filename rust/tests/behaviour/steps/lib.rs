@@ -508,8 +508,13 @@ impl Context {
         let addresses = Addresses::try_from_addresses_str(addresses).expect("Expected addresses");
 
         let credentials = Credentials::new(username, password);
-        assert!(self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(), "Root CA is expected for cluster tests!");
-        let driver_options = self.driver_options().unwrap_or_default()
+        assert!(
+            self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(),
+            "Root CA is expected for cluster tests!"
+        );
+        let driver_options = self
+            .driver_options()
+            .unwrap_or_default()
             .is_tls_enabled(true)
             .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await

@@ -37,6 +37,8 @@ use crate::{
 
 const DRIVER_LANG: &'static str = "c";
 
+// TODO: These constructors get out of hand. Consider driver builders based on a config!
+
 /// Open a TypeDB C Driver to a TypeDB server available at the provided address.
 ///
 /// @param address The address on which the TypeDB Server is running
@@ -170,18 +172,24 @@ pub extern "C" fn driver_new_with_address_translation_with_description(
 
 /// Closes the <code>TypeDBDriver</code>. Before instantiating a new driver, the driver that’s currently open should first be closed.
 /// Closing a driver frees the underlying Rust object.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
 #[no_mangle]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);
 }
 
 /// Forcibly closes the <code>TypeDBDriver</code>. To be used in exceptional cases.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
 #[no_mangle]
 pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
 
 /// Checks whether this connection is presently open.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
 #[no_mangle]
 pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
     borrow(driver).is_open()
@@ -207,24 +215,45 @@ pub extern "C" fn driver_server_version(
 }
 
 /// Retrieves the server's replicas.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn driver_replicas(driver: *const TypeDBDriver) -> *mut ServerReplicaIterator {
-    release(ServerReplicaIterator(CIterator(box_stream(unwrap_or_default(borrow(driver).replicas()).into_iter()))))
+pub extern "C" fn driver_replicas(
+    driver: *const TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut ServerReplicaIterator {
+    let driver = borrow(driver);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => driver.replicas_with_consistency(consistency_level),
+        None => driver.replicas(),
+    };
+    release(ServerReplicaIterator(CIterator(box_stream(unwrap_or_default(result).into_iter()))))
 }
 
 /// Retrieves the server's primary replica, if exists.
+///
+/// @param driver The <code>TypeDBDriver</code> object.
+/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn driver_primary_replica(driver: *const TypeDBDriver) -> *mut ServerReplica {
-    // TODO: Return somehow else!!
-    try_release_optional(
-        borrow(driver).primary_replica().map(|res| res.map(|rep| ServerReplica::Available(rep))).transpose(),
-    )
+pub extern "C" fn driver_primary_replica(
+    driver: *const TypeDBDriver,
+    consistency_level: *const ConsistencyLevel,
+) -> *mut ServerReplica {
+    let driver = borrow(driver);
+    let result = match native_consistency_level(consistency_level) {
+        Some(consistency_level) => driver.primary_replica_with_consistency(consistency_level),
+        None => driver.primary_replica(),
+    };
+    // TODO: Return somehow else!! This will not work through SWIG
+    try_release_optional(result.map(|res| res.map(|rep| ServerReplica::Available(rep))).transpose())
 }
 
 /// Registers a new replica in the cluster the driver is currently connected to. The registered
 /// replica will become available eventually, depending on the behavior of the whole cluster.
 /// To register a replica, its clustering address should be passed, not the connection address.
 ///
+/// @param driver The <code>TypeDBDriver</code> object.
 /// @param replica_id The numeric identifier of the new replica
 /// @param address The address(es) of the TypeDB replica as a string
 #[no_mangle]
@@ -235,6 +264,7 @@ pub extern "C" fn driver_register_replica(driver: *const TypeDBDriver, replica_i
 /// Deregisters a replica from the cluster the driver is currently connected to. This replica
 /// will no longer play a raft role in this cluster.
 ///
+/// @param driver The <code>TypeDBDriver</code> object.
 /// @param replica_id The numeric identifier of the deregistered replica
 #[no_mangle]
 pub extern "C" fn driver_deregister_replica(driver: *const TypeDBDriver, replica_id: i64) {
@@ -246,6 +276,7 @@ pub extern "C" fn driver_deregister_replica(driver: *const TypeDBDriver, replica
 /// replicas requiring address translation.
 /// This operation will update existing connections using the provided addresses.
 ///
+/// @param driver The <code>TypeDBDriver</code> object.
 /// @param public_addresses A null-terminated array holding the replica addresses on for connection.
 /// @param private_addresses A null-terminated array holding the private replica addresses, configured on the server side.
 /// This array <i>must</i> have the same length as <code>public_addresses</code>.

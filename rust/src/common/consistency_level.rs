@@ -21,21 +21,25 @@ use std::fmt;
 use crate::common::address::Address;
 
 /// Consistency levels of operations against a distributed server. All driver methods have default
-/// recommended values, however, readonly operations can be configured in order to potentially
+/// recommended values, however, most of the operations can be configured in order to potentially
 /// speed up the execution (introducing risks of stale data) or test a specific replica.
 /// This setting does not affect clusters with a single node.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ConsistencyLevel {
+    /// Strong consistency level.
     /// Strongest consistency, always up-to-date due to the guarantee of the primary replica usage.
     /// May require more time for operation execution.
     Strong,
 
-    /// Allow stale reads from any replica. May not reflect latest writes. The execution may be
-    /// eventually faster compared to other consistency levels.
+    /// Eventual consistency level.
+    /// Allow stale reads from any replica and execution orchestration through a non-primary replica.
+    /// Does not guarantee latest writes, but is eventually faster compared to other consistency levels.
+    /// Note that the target replica can redirect the request, if needed.
     Eventual,
 
+    /// Replica dependent consistency level.
     /// The operation is executed against the provided replica address only. Its guarantees depend
-    /// on the replica selected.
+    /// on the replica selected. Note that the target replica can redirect the request, if needed.
     ReplicaDependent { address: Address },
 }
 

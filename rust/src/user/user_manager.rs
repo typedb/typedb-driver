@@ -209,7 +209,9 @@ impl UserManager {
             .await
     }
 
-    /// Creates a user with the given name &amp; password. Always uses strong consistency.
+    /// Creates a user with the given name &amp; password, using default strong consistency.
+    ///
+    /// See [`Self::contains_with_consistency`] for more details and options.
     ///
     /// # Arguments
     ///
@@ -227,8 +229,28 @@ impl UserManager {
         self.create_with_consistency(username, password, ConsistencyLevel::Strong).await
     }
 
+    /// Creates a user with the given name &amp; password.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` — The name of the user to be created
+    /// * `password` — The password of the user to be created
+    /// * `consistency_level` — The consistency level to use for the operation
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(
+        feature = "sync",
+        doc = "driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong);"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong).await;"
+    )]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn create_with_consistency(
+    pub async fn create_with_consistency(
         &self,
         username: impl Into<String>,
         password: impl Into<String>,

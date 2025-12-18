@@ -240,6 +240,7 @@ impl TypeDBDriver {
             .await
     }
 
+    // TODO: Maybe call it just "servers"?
     /// Retrieves the server's replicas, using default strong consistency.
     ///
     /// See [`Self::replicas_with_consistency`] for more details and options.
@@ -332,7 +333,7 @@ impl TypeDBDriver {
         self.server_manager.register_replica(replica_id, address).await
     }
 
-    // TODO: Rename to replica_register and replica_deregister?
+    // TODO: Rename to replica_register and replica_deregister? Does not actually matter since we're removing this
 
     /// Deregisters a replica from the cluster the driver is currently connected to. This replica
     /// will no longer play a raft role in this cluster.
@@ -434,19 +435,15 @@ impl TypeDBDriver {
         };
 
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
-        let transaction_stream = self
-            .server_manager
-            .execute(options.read_consistency_level.clone().unwrap_or(ConsistencyLevel::Strong), open_fn)
-            .await?;
-        // TODO: Understand
-        // let transaction_stream = match transaction_type {
-        //     TransactionType::Read => {
-        //         self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
-        //     }
-        //     TransactionType::Write | TransactionType::Schema => {
-        //         self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
-        //     }
-        // };
+        let transaction_stream = match transaction_type {
+            TransactionType::Read => {
+                let consistency_level = options.read_consistency_level.clone().unwrap_or(ConsistencyLevel::Strong);
+                self.server_manager.execute(consistency_level, open_fn).await?
+            }
+            TransactionType::Write | TransactionType::Schema => {
+                self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
+            }
+        };
 
         debug!("Successfully opened transaction for database: {}", database_name);
         Ok(Transaction::new(transaction_stream))

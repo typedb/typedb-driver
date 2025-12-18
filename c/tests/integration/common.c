@@ -42,12 +42,12 @@ bool check_error_may_print(const char* filename, int lineno) {
 
 void delete_database_if_exists(TypeDBDriver* driver, const char* name) {
     if (driver == NULL) return;
-    bool contains = databases_contains(driver, name, &STRONG_CONSISTENCY);
+    bool contains = databases_contains(driver, name, NULL);
     if (check_error_may_print(__FILE__, __LINE__)) return;
     if (contains) {
-        const Database* db = databases_get(driver, name, &STRONG_CONSISTENCY);
+        const Database* db = databases_get(driver, name, NULL);
         if (check_error_may_print(__FILE__, __LINE__)) return;
-        database_delete(db);
+        database_delete(db, NULL);
     }
 }
 

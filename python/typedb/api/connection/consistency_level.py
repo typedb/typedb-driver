@@ -27,7 +27,7 @@ from typedb.native_driver_wrapper import consistency_level_strong, consistency_l
 class ConsistencyLevel(ABC):
     """
     Consistency levels of operations against a distributed server. All driver methods have default
-    recommended values, however, readonly operations can be configured in order to potentially
+    recommended values, however, most of the operations can be configured in order to potentially
     speed up the execution (introducing risks of stale data) or test a specific replica.
     This setting does not affect clusters with a single node.
     """
@@ -65,7 +65,8 @@ class ConsistencyLevel(ABC):
 
     class Strong:
         """
-        The strongest consistency level. Always up-to-date due to the guarantee of the primary replica usage.
+        Strong consistency level.
+        Strongest consistency, always up-to-date due to the guarantee of the primary replica usage.
         May require more time for operation execution.
         """
 
@@ -77,8 +78,10 @@ class ConsistencyLevel(ABC):
 
     class Eventual:
         """
-        Eventual consistency level. Allow stale reads from any replica. May not reflect latest writes.
-        The execution may be eventually faster compared to other consistency levels.
+        Eventual consistency level.
+        Allow stale reads from any replica and execution orchestration through a non-primary replica.
+        Does not guarantee latest writes, but is eventually faster compared to other consistency levels.
+        Note that the target replica can redirect the request, if needed.
         """
 
         def native_object(self):
@@ -89,8 +92,9 @@ class ConsistencyLevel(ABC):
 
     class ReplicaDependent:
         """
-        Replica dependent consistency level. The operation is executed against the provided replica address only.
-        Its guarantees depend on the replica selected.
+        Replica dependent consistency level.
+        The operation is executed against the provided replica address only. Its guarantees depend
+        on the replica selected. Note that the target replica can redirect the request, if needed.
         """
 
         def __init__(self, address: str):
