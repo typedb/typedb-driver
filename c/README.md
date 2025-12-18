@@ -23,7 +23,7 @@ Code examples can be found in the [integration tests](https://github.com/typedb/
 
 Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
-struct TypeDBDriver *driver_open(const char *address,
+struct TypeDBDriver *driver_new(const char *address,
                                  const struct Credentials *credentials,
                                  const struct DriverOptions *driver_options);
 ``` 
@@ -31,9 +31,10 @@ struct TypeDBDriver *driver_open(const char *address,
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    DriverOptions* options = driver_options_new(false, NULL);;;
+    DriverOptions* options = driver_options_new();
+    driver_options_set_tls_enabled(options, false);
     Credentials* creds = credentials_new(username, password);
-    TypeDBDriver* driver = driver_open(address, creds, options);
+    TypeDBDriver* driver = driver_new(address, creds, options);
     databases_create(driver, dbName);
     Database* database = databases_get(driver, dbName);
     char* gotName = database_name(database);

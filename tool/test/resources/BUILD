@@ -26,8 +26,6 @@ filegroup(
         ":encryption/int-grpc-root-ca.pem",
         ":encryption/int-grpc-private-key.pem",
         ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
         ":encryption/keystore.pkcs12"
     ],
     visibility = [

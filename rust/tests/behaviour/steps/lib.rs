@@ -493,7 +493,9 @@ impl Context {
         assert!(!self.is_cluster, "Only non-cluster drivers are available in this mode");
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        TypeDBDriver::new(addresses, credentials, self.driver_options().unwrap_or_default()).await
+        // TLS is always off for a comminuty driver test
+        let options = self.driver_options().unwrap_or_default().is_tls_enabled(false);
+        TypeDBDriver::new(addresses, credentials, options).await
     }
 
     async fn create_driver_cluster(
@@ -506,10 +508,10 @@ impl Context {
         let addresses = Addresses::try_from_addresses_str(addresses).expect("Expected addresses");
 
         let credentials = Credentials::new(username, password);
-        // TODO: Renew test certificates...
-        // assert!(self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(), "Root CA is expected for cluster tests!");
-        let driver_options = self.driver_options().unwrap_or_default().is_tls_enabled(false);
-        // .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
+        assert!(self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(), "Root CA is expected for cluster tests!");
+        let driver_options = self.driver_options().unwrap_or_default()
+            .is_tls_enabled(true)
+            .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 

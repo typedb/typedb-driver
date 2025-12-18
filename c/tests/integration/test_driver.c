@@ -32,7 +32,7 @@ bool test_database_management() {
 
     bool success = false;
 
-    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
+    driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
     delete_database_if_exists(driver, databaseName);
@@ -41,13 +41,13 @@ bool test_database_management() {
     databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    if (!databases_contains(driver, databaseName)) {
+    if (!databases_contains(driver, databaseName, &STRONG_CONSISTENCY)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
 
     bool foundDB = false;
-    DatabaseIterator* it = databases_all(driver);
+    DatabaseIterator* it = databases_all(driver, &STRONG_CONSISTENCY);
     const Database* database = NULL;
     while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
@@ -82,7 +82,7 @@ bool test_query_schema() {
     bool success = false;
 
     // Set up connection & database
-    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
+    driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
     delete_database_if_exists(driver, databaseName);
@@ -171,7 +171,7 @@ bool test_query_data() {
     bool success = false;
 
     // Set up connection & database
-    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
+    driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
     delete_database_if_exists(driver, databaseName);

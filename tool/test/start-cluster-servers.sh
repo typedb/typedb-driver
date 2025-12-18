@@ -19,8 +19,7 @@
 set -e
 
 NODE_COUNT="${1:-1}"
-# TODO: Enable tls when the certificates are update
-ENCRYPTION_ENABLED="${2:-false}"
+ENCRYPTION_ENABLED="${2:-true}"
 
 DEPLOYMENT_ID="test"
 
@@ -71,7 +70,7 @@ for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
 
-ROOT_CA=ROOT_CA_PATH
+ROOT_CA=$ROOT_CA_PATH
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5

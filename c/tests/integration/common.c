@@ -42,22 +42,23 @@ bool check_error_may_print(const char* filename, int lineno) {
 
 void delete_database_if_exists(TypeDBDriver* driver, const char* name) {
     if (driver == NULL) return;
-    bool contains = databases_contains(driver, name);
+    bool contains = databases_contains(driver, name, &STRONG_CONSISTENCY);
     if (check_error_may_print(__FILE__, __LINE__)) return;
     if (contains) {
-        const Database* db = databases_get(driver, name);
+        const Database* db = databases_get(driver, name, &STRONG_CONSISTENCY);
         if (check_error_may_print(__FILE__, __LINE__)) return;
         database_delete(db);
     }
 }
 
-TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password) {
+TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    options = driver_options_new(false, NULL);;
+    options = driver_options_new();
+    driver_options_set_tls_enabled(options, false);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    TypeDBDriver* driver = driver_open_with_description(address, creds, options, DRIVER_LANG);
+    TypeDBDriver* driver = driver_new_with_description(address, creds, options, DRIVER_LANG);
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);
