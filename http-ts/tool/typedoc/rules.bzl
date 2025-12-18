@@ -24,6 +24,7 @@ def _copy_to_bin(ctx, src, dst):
 
 
 def _typedoc_doc_impl(ctx):
+    out_dir = ctx.actions.declare_directory(ctx.attr.out)
     dsts = []
     for src in ctx.files.srcs:
         dst = ctx.actions.declare_file(src.short_path)
@@ -32,13 +33,13 @@ def _typedoc_doc_impl(ctx):
 
     ctx.actions.run(
         inputs = [ctx.executable.script] + ctx.files.deps + dsts,
-        outputs = [ctx.outputs.out],
-        arguments = [ctx.outputs.out.basename],
+        outputs = [out_dir],
+        arguments = [out_dir.basename],
         executable = ctx.executable.script,
         env = {"BAZEL_BINDIR": ctx.bin_dir.path},
     )
 
-    return DefaultInfo(files = depset([ctx.outputs.out]))
+    return DefaultInfo(files = depset([out_dir]))
 
 
 typedoc_docs = rule(
@@ -59,7 +60,7 @@ typedoc_docs = rule(
             allow_files = True,
             doc = "Module source files",
         ),
-        "out": attr.output(
+        "out": attr.string(
             mandatory = True,
             doc = "Output directory",
         ),

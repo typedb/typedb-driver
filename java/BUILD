@@ -25,7 +25,7 @@ load("@typedb_dependencies//library/maven:artifacts.bzl", artifacts_org = "artif
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
-load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
+load("//tool/docs:java/rules.bzl", "javadoc_to_adoc", "unzip_javadoc_to_directory")
 load("//java:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_example")
 
@@ -120,11 +120,10 @@ javadoc_library(
     ],
 )
 
-genrule(
+unzip_javadoc_to_directory(
     name = "docs_html",
-    srcs = [":driver_docs_library"],
-    outs = ["driver_docs_javadoc"],
-    cmd = "mkdir $@ && unzip $< -d $@",
+    zip = ":driver_docs_library",
+    out = "driver_docs_javadoc",
 )
 
 javadoc_to_adoc(

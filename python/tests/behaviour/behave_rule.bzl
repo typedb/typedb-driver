@@ -19,20 +19,12 @@ load("@typedb_driver_pip//:requirements.bzl", "requirement")
 
 
 def py_behave_test(*, name, background, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
-    feats_dir = "features-" + name
-    steps_out_dir = feats_dir + "/steps"
-
-    native.genrule(
+    prepare_py_behave_directory(
         name = name + "_features",
-        cmd = "mkdir $(@D)/" + feats_dir
-                + " && cp $(location %s) $(@D)/%s" % (feats[0], feats_dir)
-                + " && cp $(location %s) $(@D)/%s" % (background, feats_dir)
-                + " && mkdir $(@D)/" + steps_out_dir + " && "
-                + " && ".join(["cp $(location %s) $(@D)/%s" % (step_file, steps_out_dir) for step_file in steps]),
-        srcs = steps + [background] + feats,
-        outs = [feats_dir],
-    ) # create directory structure as above
-
+        background = background,
+        feats = feats,
+        steps = steps,
+    )
     native.py_test( # run behave with the above as data
         name = name,
         data = data + [name + "_features"],
@@ -65,3 +57,35 @@ def typedb_behaviour_py_test_cluster(name, **kwargs):
 def typedb_behaviour_py_test(name, **kwargs):
     typedb_behaviour_py_test_community(name, **kwargs)
     typedb_behaviour_py_test_cluster(name, **kwargs)
+
+def _prepare_py_behave_directory_impl(ctx):
+    feats_dir = ctx.actions.declare_directory(ctx.attr.name)
+
+    all_inputs = [ctx.file.background] + ctx.files.feats + ctx.files.steps
+    all_output_paths_relative_to_feats = (
+        [ctx.file.background.basename] +
+        [f.basename for f in ctx.files.feats] +
+        ["steps/{}".format(f.basename) for f in ctx.files.steps]
+    )
+    commands = " && ".join(["mkdir -p {}/steps".format(feats_dir.path)] + [
+        "cp {} {}/{}".format(s.path, feats_dir.path, d) for (s,d) in zip(all_inputs, all_output_paths_relative_to_feats)
+    ])
+
+    ctx.actions.run_shell(
+        inputs = all_inputs,
+        outputs = [feats_dir],
+        command = commands,
+    )
+
+    return [
+        DefaultInfo(files = depset([feats_dir]))
+    ]
+
+prepare_py_behave_directory = rule(
+    implementation = _prepare_py_behave_directory_impl,
+    attrs = {
+        "background": attr.label(allow_single_file = True, mandatory = True),
+        "feats": attr.label_list(mandatory = True, allow_files=True),
+        "steps": attr.label_list(mandatory = True),
+    },
+)
