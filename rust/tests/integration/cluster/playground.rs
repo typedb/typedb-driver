@@ -75,7 +75,7 @@ fn playground_test() {
             .transaction_with_options(
                 "a",
                 TransactionType::Schema,
-                TransactionOptions::new().consistency_level(consistency_level3),
+                TransactionOptions::new().read_consistency_level(consistency_level3),
             )
             .await
             .unwrap();

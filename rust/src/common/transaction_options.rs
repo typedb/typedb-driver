@@ -58,7 +58,7 @@ impl TransactionOptions {
 
     /// If set, specifies the requested consistency level of the transaction opening operation.
     /// Affects only read transactions, as write and schema transactions require primary replicas.
-    pub fn consistency_level(self, consistency_level: ConsistencyLevel) -> Self {
+    pub fn read_consistency_level(self, consistency_level: ConsistencyLevel) -> Self {
         Self { read_consistency_level: Some(consistency_level), ..self }
     }
 }
