@@ -30,6 +30,16 @@ def before_all(context: Context):
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
         setup_context_driver(context, address, username, password)
     context.default_address = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
+    context.default_clustering_addresses = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
+
+    with create_driver(context) as driver:
+        if len(driver.replicas()) != len(context.default_clustering_addresses):
+            for i, address in enumerate(context.default_clustering_addresses):
+                replica_id = i + 1
+
+                # 1 is the default registered replica
+                if replica_id != 1:
+                    driver.register_replica(replica_id, address)
 
 
 def before_scenario(context: Context, scenario):

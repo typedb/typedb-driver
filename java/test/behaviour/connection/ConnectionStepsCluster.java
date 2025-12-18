@@ -28,6 +28,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,10 +38,30 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
             "127.0.0.1:21729",
             "127.0.0.1:31729"
     );
+    public static List<String> DEFAULT_CLUSTER_CLUSTERING_ADDRESSES = List.of(
+            "0.0.0.0:11730",
+            "0.0.0.0:21730",
+            "0.0.0.0:31730"
+    );
 
     @Override
     public void beforeAll() {
         super.beforeAll();
+
+        try (Driver driver = createDefaultTypeDBDriver()) {
+            List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
+            if (driver.replicas().size() != clusteringAddresses.size()) {
+                for (int i = 0; i < clusteringAddresses.size(); i++) {
+                    long id = i + 1L;
+                    String address = clusteringAddresses.get(i);
+
+                    // 1 is the default registered replica
+                    if (id != 1) {
+                        driver.registerReplica(id, address);
+                    }
+                }
+            }
+        }
     }
 
     @Before
