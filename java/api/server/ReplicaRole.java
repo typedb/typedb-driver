@@ -31,21 +31,21 @@ import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTE
  * replica.getType();
  * </pre>
  */
-public enum ReplicaType {
-    PRIMARY(0, com.typedb.driver.jni.ReplicaType.Primary),
-    SECONDARY(1, com.typedb.driver.jni.ReplicaType.Secondary);
+public enum ReplicaRole {
+    PRIMARY(0, com.typedb.driver.jni.ReplicaRole.Primary),
+    SECONDARY(1, com.typedb.driver.jni.ReplicaRole.Secondary);
 
-    public final com.typedb.driver.jni.ReplicaType nativeObject;
+    public final com.typedb.driver.jni.ReplicaRole nativeObject;
     private final int id;
 
-    ReplicaType(int id, com.typedb.driver.jni.ReplicaType nativeObject) {
+    ReplicaRole(int id, com.typedb.driver.jni.ReplicaRole nativeObject) {
         this.id = id;
         this.nativeObject = nativeObject;
     }
 
-    public static ReplicaType of(com.typedb.driver.jni.ReplicaType nativeType) {
-        if (nativeType == com.typedb.driver.jni.ReplicaType.Primary) return PRIMARY;
-        else if (nativeType == com.typedb.driver.jni.ReplicaType.Secondary) return SECONDARY;
+    public static ReplicaRole of(com.typedb.driver.jni.ReplicaRole nativeType) {
+        if (nativeType == com.typedb.driver.jni.ReplicaRole.Primary) return PRIMARY;
+        else if (nativeType == com.typedb.driver.jni.ReplicaRole.Secondary) return SECONDARY;
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
@@ -57,20 +57,20 @@ public enum ReplicaType {
      * Checks whether this is the primary replica of the raft cluster.
      */
     public boolean isPrimary() {
-        return nativeObject == com.typedb.driver.jni.ReplicaType.Primary;
+        return nativeObject == com.typedb.driver.jni.ReplicaRole.Primary;
     }
 
     /**
      * Checks whether this is a candidate replica of the raft cluster.
      */
     public boolean isCandidate() {
-        return nativeObject == com.typedb.driver.jni.ReplicaType.Candidate;
+        return nativeObject == com.typedb.driver.jni.ReplicaRole.Candidate;
     }
 
     /**
      * Checks whether this is a secondary replica of the raft cluster.
      */
     public boolean isSecondary() {
-        return nativeObject == com.typedb.driver.jni.ReplicaType.Secondary;
+        return nativeObject == com.typedb.driver.jni.ReplicaRole.Secondary;
     }
 }

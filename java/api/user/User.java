@@ -20,6 +20,8 @@
 package com.typedb.driver.api.user;
 
 
+import com.typedb.driver.api.ConsistencyLevel;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -32,27 +34,56 @@ public interface User {
     @CheckReturnValue
     String name();
 
-    // TODO: Not implemented
-//    /**
-//     * Returns the number of seconds remaining till this user’s current password expires.
-//     */
-//    Optional<Long> passwordExpirySeconds();
+    /**
+     * Updates the password for this user, using default strong consistency.
+     * See {@link #updatePassword(String, ConsistencyLevel)} for more details and options.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * user.updatePassword("new-password");
+     * </pre>
+     *
+     * @param password The new password
+     */
+    default void updatePassword(String password) {
+        updatePassword(password, null);
+    }
 
     /**
      * Updates the password for this user.
      *
-     * @param passwordOld The current password of this user
-     * @param passwordNew The new password
+     * <h3>Examples</h3>
+     * <pre>
+     * user.updatePassword("new-password", ConsistencyLevel.Strong);
+     * </pre>
+     *
+     * @param password The new password
+     * @param consistencyLevel The consistency level to use for the operation
      */
-    void updatePassword(String password);
+    void updatePassword(String password, ConsistencyLevel consistencyLevel);
+
+    /**
+     * Deletes a user with the given name, using default strong consistency.
+     * See {@link #delete(ConsistencyLevel)} for more details and options.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * user.delete();
+     * </pre>
+     */
+    default void delete() {
+        delete(null);
+    }
 
     /**
      * Deletes a user with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().delete(username);
+     * user.delete(ConsistencyLevel.Strong);
      * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
      */
-    void delete();
+    void delete(ConsistencyLevel consistencyLevel);
 }

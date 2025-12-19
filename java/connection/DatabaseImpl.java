@@ -75,11 +75,11 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public void delete() throws TypeDBDriverException {
+    public void delete(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            database_delete(nativeObject.released());
+            database_delete(nativeObject.released(), ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

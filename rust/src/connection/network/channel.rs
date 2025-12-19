@@ -59,6 +59,15 @@ pub(super) fn open_callcred_channel(
         true => http::uri::Scheme::HTTPS,
         false => http::uri::Scheme::HTTP,
     };
+    // TODO: Remove when we understand if we want to allow schemes
+    if let Some(address_scheme) = address.uri_scheme() {
+        if address_scheme != &connection_scheme {
+            return Err(Error::Connection(ConnectionError::SchemeTlsSettingsMismatch {
+                scheme: address_scheme.clone(),
+                tls_enabled: driver_options.is_tls_enabled,
+            }));
+        }
+    }
     let mut builder = Channel::builder(address.with_scheme(connection_scheme).into_uri());
     if driver_options.is_tls_enabled {
         let tls_config = driver_options

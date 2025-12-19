@@ -45,7 +45,7 @@ public class UserManagerImpl implements UserManager {
     @Override
     public Set<User> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         try {
-            return new NativeIterator<>(users_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+            return new NativeIterator<>(users_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(user -> new UserImpl(user)).collect(Collectors.toSet());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -66,7 +66,7 @@ public class UserManagerImpl implements UserManager {
         Validator.requireNonNull(username, "username");
         try {
             com.typedb.driver.jni.User user = users_get(nativeDriver, username, ConsistencyLevel.nativeValue(consistencyLevel));
-            if (user != null) return new UserImpl(user, this);
+            if (user != null) return new UserImpl(user);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
@@ -77,7 +77,7 @@ public class UserManagerImpl implements UserManager {
     public User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         try {
             com.typedb.driver.jni.User user = users_get_current(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel));
-            if (user != null) return new UserImpl(user, this);
+            if (user != null) return new UserImpl(user);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
@@ -85,11 +85,11 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void create(String username, String password) throws TypeDBDriverException {
+    public void create(String username, String password, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         Validator.requireNonNull(username, "username");
         Validator.requireNonNull(password, "password");
         try {
-            users_create(nativeDriver, username, password);
+            users_create(nativeDriver, username, password, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

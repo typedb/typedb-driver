@@ -85,10 +85,11 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
-        let has_scheme = addresses.addresses().any(|address| address.has_scheme());
-        if has_scheme {
-            return Err(ConnectionError::InvalidAddressWithScheme { addresses: addresses.clone() }.into());
-        }
+        // TODO: We currently don't have specific
+        // let has_scheme = addresses.addresses().any(|address| address.has_scheme());
+        // if has_scheme {
+        //     return Err(ConnectionError::InvalidAddressWithScheme { addresses: addresses.clone() }.into());
+        // }
 
         let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),

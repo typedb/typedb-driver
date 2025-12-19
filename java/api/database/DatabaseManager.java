@@ -117,7 +117,8 @@ public interface DatabaseManager {
     Database get(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
-     * Creates a database with the given name.
+     * Creates a database with the given name, using default strong consistency.
+     * See {@link #create(String, ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -126,7 +127,22 @@ public interface DatabaseManager {
      *
      * @param name The name of the database to be created
      */
-    void create(String name) throws TypeDBDriverException;
+    default void create(String name) throws TypeDBDriverException {
+        create(name, null);
+    }
+
+    /**
+     * Creates a database with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().create(name, ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param name The name of the database to be created
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    void create(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
      * Creates a database with the given name based on previously exported another database's data loaded from a file.

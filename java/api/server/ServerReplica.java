@@ -44,7 +44,7 @@ public interface ServerReplica {
      * Returns whether this is the primary replica of the raft cluster or any of the supporting types.
      */
     @CheckReturnValue
-    Optional<ReplicaType> getRole();
+    Optional<ReplicaRole> getRole();
 
     /**
      * Checks whether this is the primary replica of the raft cluster.
