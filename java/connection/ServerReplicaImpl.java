@@ -19,7 +19,7 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.server.ReplicaType;
+import com.typedb.driver.api.server.ReplicaRole;
 import com.typedb.driver.api.server.ServerReplica;
 import com.typedb.driver.common.NativeObject;
 
@@ -49,7 +49,7 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     }
 
     @Override
-    public Optional<ReplicaType> getRole() {
+    public Optional<ReplicaRole> getRole() {
         if (server_replica_has_role(nativeObject)) {
             return Optional.of(server_replica_get_role(nativeObject));
         }

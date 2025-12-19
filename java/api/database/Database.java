@@ -124,12 +124,27 @@ public interface Database {
     void exportToFile(String schemaFilePath, String dataFilePath, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
-     * Deletes this database.
+     * Deletes this database, using default strong consistency.
+     * See {@link #delete(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
      * database.delete()
      * </pre>
      */
-    void delete() throws TypeDBDriverException;
+    default void delete() throws TypeDBDriverException {
+        delete(null);
+    }
+
+    /**
+     * Deletes this database.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.delete(ConsistencyLevel.Strong)
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    void delete(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 }

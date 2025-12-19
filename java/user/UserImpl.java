@@ -19,6 +19,7 @@
 
 package com.typedb.driver.user;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.user.User;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
@@ -29,11 +30,8 @@ import static com.typedb.driver.jni.typedb_driver.user_get_name;
 import static com.typedb.driver.jni.typedb_driver.user_update_password;
 
 public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
-    private final UserManagerImpl users;
-
-    UserImpl(com.typedb.driver.jni.User user, UserManagerImpl users) {
+    UserImpl(com.typedb.driver.jni.User user) {
         super(user);
-        this.users = users;
     }
 
     @Override
@@ -41,31 +39,22 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
         return user_get_name(nativeObject);
     }
 
-// TODO: Not implemented
-//    @Override
-//    public Optional<Long> passwordExpirySeconds() {
-//        var res = user_get_password_expiry_seconds(nativeObject);
-//        if (res >= 0) return Optional.of(res);
-//        else return Optional.empty();
-//    }
-
     @Override
-    public void updatePassword(String password) {
+    public void updatePassword(String password, ConsistencyLevel consistencyLevel) {
         Validator.requireNonNull(password, "password");
         try {
-            user_update_password(nativeObject, password);
+            user_update_password(nativeObject, password, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void delete() {
+    public void delete(ConsistencyLevel consistencyLevel) {
         try {
-            user_delete(nativeObject.released());
+            user_delete(nativeObject.released(), ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
-
 }

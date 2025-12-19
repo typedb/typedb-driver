@@ -142,7 +142,8 @@ public interface UserManager {
     User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 
     /**
-     * Creates a user with the given name &amp; password.
+     * Creates a user with the given name &amp; password, using default strong consistency.
+     * See {@link #create(String, String, ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -152,5 +153,21 @@ public interface UserManager {
      * @param username The name of the user to be created
      * @param password The password of the user to be created
      */
-    void create(String username, String password) throws TypeDBDriverException;
+    default void create(String username, String password) throws TypeDBDriverException {
+        create(username, password, null);
+    }
+
+    /**
+     * Creates a user with the given name &amp; password.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users().create(username, password, ConsistencyLevel.Strong);
+     * </pre>
+     *
+     * @param username The name of the user to be created
+     * @param password The password of the user to be created
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    void create(String username, String password, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
 }
