@@ -17,8 +17,9 @@
 
 from abc import ABC, abstractmethod
 from typing import Optional, List
-from typedb.api.connection.consistency_level import ConsistencyLevel
 from typedb.api.user.user import User
+
+from typedb.api.connection.consistency_level import ConsistencyLevel
 
 
 class UserManager(ABC):
@@ -97,12 +98,13 @@ class UserManager(ABC):
         pass
 
     @abstractmethod
-    def create(self, username: str, password: str) -> None:
+    def create(self, username: str, password: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
         Creates a user with the given name and password.
 
         :param username: The name of the user to be created
         :param password: The password of the user to be created
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -110,5 +112,6 @@ class UserManager(ABC):
         ::
 
            driver.users.create(username, password)
+           driver.users.create(username, password, ConsistencyLevel.Strong())
         """
         pass

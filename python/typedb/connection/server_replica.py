@@ -23,8 +23,9 @@ from typedb.api.server.server_replica import ServerReplica
 from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import (server_replica_has_role, server_replica_has_term, server_replica_get_address, \
-    server_replica_get_id, server_replica_get_role, server_replica_is_primary, server_replica_get_term, \
-    ServerReplica as NativeServerReplica, TypeDBDriverExceptionNative)
+                                          server_replica_get_id, server_replica_get_role, server_replica_is_primary,
+                                          server_replica_get_term, \
+                                          ServerReplica as NativeServerReplica, TypeDBDriverExceptionNative)
 
 
 class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
@@ -50,7 +51,6 @@ class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
     def role(self) -> Optional[str]:
         return server_replica_has_role(self.native_object) \
             if server_replica_get_role(self.native_object) else None
-
 
     def is_primary(self) -> bool:
         return server_replica_is_primary(self.native_object)

@@ -64,7 +64,7 @@ public class DriverTest {
 
     @BeforeClass
     public static void setUpClass() {
-        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions().tlsEnabled(false));
         if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
         typedbDriver.databases().create(DB_NAME);
     }

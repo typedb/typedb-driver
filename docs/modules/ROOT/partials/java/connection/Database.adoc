@@ -9,11 +9,11 @@
 
 [source,java]
 ----
-void delete()
-     throws TypeDBDriverException
+default void delete()
+             throws TypeDBDriverException
 ----
 
-Deletes this database. 
+Deletes this database, using default strong consistency. See <<#_delete_com_typedb_driver_api_ConsistencyLevel,``delete(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -25,6 +25,38 @@ Deletes this database.
 [source,java]
 ----
 database.delete()
+----
+
+[#_Database_delete_ConsistencyLevel]
+==== delete
+
+[source,java]
+----
+void delete​(ConsistencyLevel consistencyLevel)
+     throws TypeDBDriverException
+----
+
+Deletes this database. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.delete(ConsistencyLevel.Strong)
 ----
 
 [#_Database_exportToFile_java_lang_String_java_lang_String]

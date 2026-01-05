@@ -190,6 +190,7 @@ class _PipelineStage(PipelineStage, NativeWrapper[NativePipelineStage], ABC):
     def __repr__(self):
         return pipeline_stage_string_repr(self.native_object)
 
+
 class _MatchStage(MatchStage, _PipelineStage):
     def __init__(self, native):
         super().__init__(native)

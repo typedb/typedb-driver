@@ -72,10 +72,10 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public void create(String name) throws TypeDBDriverException {
+    public void create(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
         Validator.requireNonNull(name, "name");
         try {
-            databases_create(nativeDriver, name);
+            databases_create(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -123,7 +123,8 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Set of <code>Replica</code> instances for this driver connection.
+     * Set of <code>Replica</code> instances for this driver connection, using default strong consistency.
+     * See {@link #replicas(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -131,10 +132,26 @@ public interface Driver extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    Set<? extends ServerReplica> replicas();
+    default Set<? extends ServerReplica> replicas() {
+        return replicas(null);
+    }
 
     /**
-     * Returns the primary replica for this driver connection.
+     * Set of <code>Replica</code> instances for this driver connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.replicas(ConsistencyLevel.Strong);
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    @CheckReturnValue
+    Set<? extends ServerReplica> replicas(ConsistencyLevel consistencyLevel);
+
+    /**
+     * Returns the primary replica for this driver connection, using default strong consistency.
+     * See {@link #primaryReplica(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -142,7 +159,22 @@ public interface Driver extends AutoCloseable {
      * </pre>
      */
     @CheckReturnValue
-    Optional<? extends ServerReplica> primaryReplica();
+    default Optional<? extends ServerReplica> primaryReplica() {
+        return primaryReplica(null);
+    }
+
+    /**
+     * Returns the primary replica for this driver connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.primaryReplica(ConsistencyLevel.Strong);
+     * </pre>
+     *
+     * @param consistencyLevel The consistency level to use for the operation
+     */
+    @CheckReturnValue
+    Optional<? extends ServerReplica> primaryReplica(ConsistencyLevel consistencyLevel);
 
     /**
      * Registers a new replica in the cluster the driver is currently connected to. The registered

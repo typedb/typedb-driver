@@ -3,7 +3,7 @@
 
 *Package*: `typedb.api.connection.consistency_level.ConsistencyLevel`
 
-Replica dependent consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
+Replica dependent consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected. Note that the target replica can redirect the request, if needed.
 
 [caption=""]
 .Properties

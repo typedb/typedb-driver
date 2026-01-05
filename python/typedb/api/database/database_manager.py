@@ -18,10 +18,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, List, Optional
+from typing import List, Optional
 
-if TYPE_CHECKING:
-    from typedb.api.connection.consistency_level import ConsistencyLevel
+from typedb.api.connection.consistency_level import ConsistencyLevel
 
 
 class DatabaseManager(ABC):
@@ -83,11 +82,12 @@ class DatabaseManager(ABC):
         pass
 
     @abstractmethod
-    def create(self, name: str) -> None:
+    def create(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
         Creates a database with the given name.
 
         :param name: The name of the database to be created
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -95,6 +95,7 @@ class DatabaseManager(ABC):
         ::
 
             driver.databases.create(name)
+            driver.databases.create(name, ConsistencyLevel.Strong())
         """
         pass
 

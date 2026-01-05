@@ -36,35 +36,35 @@ Returns the id of this replica.
 .Returns
 `long`
 
-[#_ServerReplica_getTerm_]
-==== getTerm
+[#_ServerReplica_getRole_]
+==== getRole
 
 [source,java]
 ----
 @CheckReturnValue
-long getTerm()
-----
-
-Returns the raft protocol ‘term’ of this replica.
-
-[caption=""]
-.Returns
-`long`
-
-[#_ServerReplica_getType_]
-==== getType
-
-[source,java]
-----
-@CheckReturnValue
-ReplicaType getType()
+java.util.Optional<ReplicaRole> getRole()
 ----
 
 Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 
 [caption=""]
 .Returns
-`ReplicaType`
+`java.util.Optional<ReplicaRole>`
+
+[#_ServerReplica_getTerm_]
+==== getTerm
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.Long> getTerm()
+----
+
+Returns the raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Long>`
 
 [#_ServerReplica_isPrimary_]
 ==== isPrimary

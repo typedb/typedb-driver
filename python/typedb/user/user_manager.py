@@ -69,10 +69,10 @@ class _UserManager(UserManager):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def create(self, username: str, password: str) -> None:
+    def create(self, username: str, password: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         require_non_null(username, "username")
         require_non_null(password, "password")
         try:
-            users_create(self.native_driver, username, password)
+            users_create(self.native_driver, username, password, ConsistencyLevel.native_value(consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

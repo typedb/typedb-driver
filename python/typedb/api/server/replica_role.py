@@ -20,7 +20,7 @@ from __future__ import annotations
 import enum
 
 
-class ReplicaType(enum.Enum):
+class ReplicaRole(enum.Enum):
     """
     This class is used to specify the type of replica.
 
@@ -35,10 +35,10 @@ class ReplicaType(enum.Enum):
     SECONDARY = 2
 
     def is_primary(self) -> bool:
-        return self is ReplicaType.PRIMARY
+        return self is ReplicaRole.PRIMARY
 
     def is_candidate(self) -> bool:
-        return self is ReplicaType.CANDIDATE
+        return self is ReplicaRole.CANDIDATE
 
     def is_secondary(self) -> bool:
-        return self is ReplicaType.SECONDARY
+        return self is ReplicaRole.SECONDARY

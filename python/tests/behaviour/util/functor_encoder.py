@@ -20,7 +20,7 @@ from enum import Enum
 
 from typedb.analyze import (
     Constraint, ConstraintVertex, Variable,
-    ConjunctionID, Pipeline, PipelineStage,  Fetch,
+    ConjunctionID, Pipeline, PipelineStage, Fetch,
     Function, ReturnOperation,
     ReduceStage, Reducer, SortStage, VariableAnnotations,
 )

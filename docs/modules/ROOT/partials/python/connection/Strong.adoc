@@ -1,7 +1,9 @@
 [#_Strong]
 === Strong
 
-The strongest consistency level. Always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
+*Package*: `typedb.api.connection.consistency_level.ConsistencyLevel`
+
+Strong consistency level. Strongest consistency, always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
 
 // tag::methods[]
 [#_Strong_native_object_]

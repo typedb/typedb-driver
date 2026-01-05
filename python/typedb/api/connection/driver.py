@@ -101,10 +101,11 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def replicas(self) -> Set[ServerReplica]:
+    def replicas(self, consistency_level: Optional[ConsistencyLevel] = None) -> Set[ServerReplica]:
         """
         Set of ``Replica`` instances for this driver connection.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -112,14 +113,16 @@ class Driver(ABC):
         ::
 
             driver.replicas()
+            driver.replicas(ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def primary_replica(self) -> Optional[ServerReplica]:
+    def primary_replica(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[ServerReplica]:
         """
         Returns the primary replica for this driver connection.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -127,6 +130,7 @@ class Driver(ABC):
         ::
 
             driver.primary_replica()
+            driver.primary_replica(ConsistencyLevel.Strong())
         """
         pass
 

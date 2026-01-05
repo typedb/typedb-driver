@@ -26,6 +26,7 @@ if TYPE_CHECKING:
     from typedb.common.enums import Comparator, ConstraintExactness
     import typedb
 
+
 class Constraint(ABC):
     """
     A representation of a TypeQL constraint.

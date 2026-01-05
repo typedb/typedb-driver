@@ -1,7 +1,7 @@
 [#_Database]
 === Database
 
-*Package*: `typedb.api.connection.database`
+*Package*: `typedb.api.database.database`
 
 [caption=""]
 .Properties
@@ -15,15 +15,24 @@ a| `name` a| `str` a| The database name as a string.
 // end::properties[]
 
 // tag::methods[]
-[#_Database_delete_]
+[#_Database_delete_consistency_level_ConsistencyLevel_None]
 ==== delete
 
 [source,python]
 ----
-delete() -> None
+delete(consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
 Deletes this database.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -34,6 +43,7 @@ Deletes this database.
 [source,python]
 ----
 database.delete()
+database.delete(ConsistencyLevel.Strong())
 ----
 
 [#_Database_export_to_file_schema_file_path_str_data_file_path_str_consistency_level_ConsistencyLevel_None]

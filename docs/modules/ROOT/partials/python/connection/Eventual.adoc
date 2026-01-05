@@ -1,7 +1,9 @@
 [#_Eventual]
 === Eventual
 
-Eventual consistency level. Allow stale reads from any replica. May not reflect latest writes. The execution may be eventually faster compared to other consistency levels.
+*Package*: `typedb.api.connection.consistency_level.ConsistencyLevel`
+
+Eventual consistency level. Allow stale reads from any replica and execution orchestration through a non-primary replica. Does not guarantee latest writes, but is eventually faster compared to other consistency levels. Note that the target replica can redirect the request, if needed.
 
 // tag::methods[]
 [#_Eventual_native_object_]

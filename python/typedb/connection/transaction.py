@@ -97,7 +97,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         def callback(self, error: NativeError) -> None:
             try:
                 if error:
-                     self._function(TypeDBException(error_code(error), error_message(error)))
+                    self._function(TypeDBException(error_code(error), error_message(error)))
                 else:
                     self._function(None)
             except Exception as e:

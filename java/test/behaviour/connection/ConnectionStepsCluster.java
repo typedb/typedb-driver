@@ -47,21 +47,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
-
-        try (Driver driver = createDefaultTypeDBDriver()) {
-            List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
-            if (driver.replicas().size() != clusteringAddresses.size()) {
-                for (int i = 0; i < clusteringAddresses.size(); i++) {
-                    long id = i + 1L;
-                    String address = clusteringAddresses.get(i);
-
-                    // 1 is the default registered replica
-                    if (id != 1) {
-                        driver.registerReplica(id, address);
-                    }
-                }
-            }
-        }
+        setupCluster();
     }
 
     @Before
@@ -81,6 +67,23 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     Driver createTypeDBDriver(Set<String> address, Credentials credentials, DriverOptions driverOptions) {
         return TypeDB.driver(address, credentials, driverOptions);
+    }
+
+    void setupCluster() {
+        try (Driver driver = createDefaultTypeDBDriver()) {
+            List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
+            if (driver.replicas().size() != clusteringAddresses.size()) {
+                for (int i = 0; i < clusteringAddresses.size(); i++) {
+                    long id = i + 1L;
+                    String address = clusteringAddresses.get(i);
+
+                    // 1 is the default registered replica
+                    if (id != 1) {
+                        driver.registerReplica(id, address);
+                    }
+                }
+            }
+        }
     }
 
     @Override

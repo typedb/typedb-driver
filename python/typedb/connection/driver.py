@@ -28,7 +28,7 @@ from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED, INVALI
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null, require_non_negative
-from typedb.connection.database_manager import _DatabaseManager
+from typedb.database.database_manager import _DatabaseManager
 from typedb.connection.server_replica import _ServerReplica
 from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
@@ -108,15 +108,18 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         require_non_null(transaction_type, "transaction_type")
         return _Transaction(self, database_name, transaction_type, options if options else TransactionOptions())
 
-    def replicas(self) -> set[ServerReplica]:
+    def replicas(self, consistency_level: Optional[ConsistencyLevel] = None) -> set[ServerReplica]:
         try:
-            replica_iter = IteratorWrapper(driver_replicas(self._native_driver), server_replica_iterator_next)
+            consistency_level = ConsistencyLevel.native_value(consistency_level)
+            replica_iter = IteratorWrapper(driver_replicas(self._native_driver, consistency_level),
+                                           server_replica_iterator_next)
             return set(_ServerReplica(server_replica) for server_replica in replica_iter)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def primary_replica(self) -> Optional[ServerReplica]:
-        if res := driver_primary_replica(self._native_driver):
+    def primary_replica(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[ServerReplica]:
+        consistency_level = ConsistencyLevel.native_value(consistency_level)
+        if res := driver_primary_replica(self._native_driver, consistency_level):
             return _ServerReplica(res)
         return None
 

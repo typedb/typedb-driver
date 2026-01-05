@@ -88,6 +88,7 @@ from typedb.native_driver_wrapper import (
     ValueAnnotations as NativeValueAnnotations,
 )
 
+
 class ConstraintExactness(IntEnum):
     Exact = NativeExact
     Subtypes = NativeSubtypes

@@ -134,12 +134,12 @@ driver.users().contains(username, ConsistencyLevel.Strong);
 
 [source,java]
 ----
-void create​(java.lang.String username,
-            java.lang.String password)
-     throws TypeDBDriverException
+default void create​(java.lang.String username,
+                    java.lang.String password)
+             throws TypeDBDriverException
 ----
 
-Creates a user with the given name &amp; password. 
+Creates a user with the given name &amp; password, using default strong consistency. See <<#_create_java_lang_String_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``create(String, String, ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -161,6 +161,42 @@ a| `password` a| The password of the user to be created a| `java.lang.String`
 [source,java]
 ----
 driver.users().create(username, password);
+----
+
+[#_UserManager_create_java_lang_String_java_lang_String_ConsistencyLevel]
+==== create
+
+[source,java]
+----
+void create​(java.lang.String username,
+            java.lang.String password,
+            ConsistencyLevel consistencyLevel)
+     throws TypeDBDriverException
+----
+
+Creates a user with the given name &amp; password. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| `java.lang.String`
+a| `password` a| The password of the user to be created a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().create(username, password, ConsistencyLevel.Strong);
 ----
 
 [#_UserManager_get_java_lang_String]
@@ -238,10 +274,10 @@ driver.users().get(username, ConsistencyLevel.Strong);
 ----
 @CheckReturnValue
 default User getCurrent()
-                     throws TypeDBDriverException
+                 throws TypeDBDriverException
 ----
 
-Retrieves the name of the user who opened the current connection, using default strong consistency. See <<#_getCurrent_com_typedb_driver_api_ConsistencyLevel,``getCurrent(ConsistencyLevel)``>> for more details and options.
+Retrieves the name of the user who opened the current connection, using default strong consistency. See <<#_getCurrent_com_typedb_driver_api_ConsistencyLevel,``getCurrent(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -262,7 +298,7 @@ driver.users().getCurrent();
 ----
 @CheckReturnValue
 User getCurrent​(ConsistencyLevel consistencyLevel)
-             throws TypeDBDriverException
+         throws TypeDBDriverException
 ----
 
 Retrieves the name of the user who opened the current connection. 

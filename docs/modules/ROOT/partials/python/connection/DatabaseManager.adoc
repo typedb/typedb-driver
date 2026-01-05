@@ -1,7 +1,7 @@
 [#_DatabaseManager]
 === DatabaseManager
 
-*Package*: `typedb.api.connection.database`
+*Package*: `typedb.api.database.database_manager`
 
 Provides access to all database management methods.
 
@@ -69,12 +69,12 @@ driver.databases.contains(name)
 driver.databases.contains(name, ConsistencyLevel.Strong())
 ----
 
-[#_DatabaseManager_create_name_str]
+[#_DatabaseManager_create_name_str_consistency_level_ConsistencyLevel_None]
 ==== create
 
 [source,python]
 ----
-create(name: str) -> None
+create(name: str, consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
 Creates a database with the given name.
@@ -86,6 +86,7 @@ Creates a database with the given name.
 |===
 |Name |Description |Type |Default Value
 a| `name` a| The name of the database to be created a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -97,6 +98,7 @@ a| `name` a| The name of the database to be created a| `str` a|
 [source,python]
 ----
 driver.databases.create(name)
+driver.databases.create(name, ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_get_name_str_consistency_level_ConsistencyLevel_None]

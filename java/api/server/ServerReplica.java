@@ -19,6 +19,8 @@
 
 package com.typedb.driver.api.server;
 
+import com.typedb.driver.api.server.ReplicaRole;
+
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 

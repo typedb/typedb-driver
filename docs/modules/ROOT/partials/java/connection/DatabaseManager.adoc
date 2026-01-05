@@ -136,11 +136,11 @@ driver.databases().contains(name, ConsistencyLevel.Strong)
 
 [source,java]
 ----
-void create​(java.lang.String name)
-     throws TypeDBDriverException
+default void create​(java.lang.String name)
+             throws TypeDBDriverException
 ----
 
-Creates a database with the given name. 
+Creates a database with the given name, using default strong consistency. See <<#_create_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``create(String, ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -161,6 +161,40 @@ a| `name` a| The name of the database to be created a| `java.lang.String`
 [source,java]
 ----
 driver.databases().create(name)
+----
+
+[#_DatabaseManager_create_java_lang_String_ConsistencyLevel]
+==== create
+
+[source,java]
+----
+void create​(java.lang.String name,
+            ConsistencyLevel consistencyLevel)
+     throws TypeDBDriverException
+----
+
+Creates a database with the given name. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| `java.lang.String`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().create(name, ConsistencyLevel.Strong)
 ----
 
 [#_DatabaseManager_get_java_lang_String]

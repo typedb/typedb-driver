@@ -18,8 +18,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typedb.api.connection.consistency_level import ConsistencyLevel
 from typing import Optional
+
+from typedb.api.connection.consistency_level import ConsistencyLevel
 
 
 class Database(ABC):
@@ -87,10 +88,11 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def delete(self) -> None:
+    def delete(self, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         """
         Deletes this database.
 
+        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
         :return:
 
         Examples:
@@ -98,5 +100,6 @@ class Database(ABC):
         ::
 
             database.delete()
+            database.delete(ConsistencyLevel.Strong())
         """
         pass

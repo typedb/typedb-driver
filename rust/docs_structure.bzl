@@ -63,7 +63,7 @@ dir_mapping = {
     "Database.adoc": "connection",
     "DatabaseManager.adoc": "connection",
     "DriverOptions.adoc": "connection",
-    "ReplicaType.adoc": "connection",
+    "ReplicaRole.adoc": "connection",
     "ServerReplica.adoc": "connection",
     "ServerVersion.adoc": "connection",
     "User.adoc": "connection",

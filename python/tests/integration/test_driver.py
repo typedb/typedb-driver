@@ -26,13 +26,14 @@ from typedb.driver import *
 class TestDriver(TestCase):
 
     def setUp(self):
-        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                           DriverOptions(is_tls_enabled=False)) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
 
-
     def test_on_close_callback(self):
-        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                           DriverOptions(is_tls_enabled=False)) as driver:
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")
             assert_that(database.name, is_("typedb"))
@@ -40,8 +41,10 @@ class TestDriver(TestCase):
             tx = driver.transaction(database.name, TransactionType.READ)
 
             transaction_closed = {"closed": False}
+
             def callback(_error):
                 transaction_closed.update({"closed": True})
+
             tx.on_close(callback)
 
             tx.close()

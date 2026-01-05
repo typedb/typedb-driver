@@ -1,5 +1,7 @@
-[#_ReplicaType]
-=== ReplicaType
+[#_ReplicaRole]
+=== ReplicaRole
+
+*Package*: `typedb.api.server.replica_role`
 
 This class is used to specify the type of replica.
 
@@ -7,7 +9,7 @@ This class is used to specify the type of replica.
 .Examples
 [source,python]
 ----
-server_replica.replica_type
+server_replica.role
 ----
 
 [caption=""]
@@ -17,13 +19,28 @@ server_replica.replica_type
 [options="header"]
 |===
 |Name |Value
+a| `CANDIDATE` a| `1`
 a| `PRIMARY` a| `0`
-a| `SECONDARY` a| `1`
+a| `SECONDARY` a| `2`
 |===
 // end::enum_constants[]
 
 // tag::methods[]
-[#_ReplicaType_is_primary_]
+[#_ReplicaRole_is_candidate_]
+==== is_candidate
+
+[source,python]
+----
+is_candidate() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReplicaRole_is_primary_]
 ==== is_primary
 
 [source,python]
@@ -37,7 +54,7 @@ is_primary() -> bool
 .Returns
 `bool`
 
-[#_ReplicaType_is_secondary_]
+[#_ReplicaRole_is_secondary_]
 ==== is_secondary
 
 [source,python]

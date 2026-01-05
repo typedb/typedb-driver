@@ -3,7 +3,7 @@
 
 *Package*: `com.typedb.driver.api`
 
-The operation is executed against the provided replica address only. Its guarantees depend on the replica selected.
+Replica dependent consistency level. The operation is executed against the provided replica address only. Its guarantees depend on the replica selected. Note that the target replica can redirect the request, if needed.
 
 // tag::methods[]
 [#_ConsistencyLevel_ReplicaDependent_ReplicaDependent_java_lang_String]

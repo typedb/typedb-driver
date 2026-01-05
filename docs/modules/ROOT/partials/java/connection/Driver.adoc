@@ -124,10 +124,10 @@ driver.isOpen();
 [source,java]
 ----
 @CheckReturnValue
-java.util.Optional<? extends ServerReplica> primaryReplica()
+default java.util.Optional<? extends ServerReplica> primaryReplica()
 ----
 
-Returns the primary replica for this driver connection. 
+Returns the primary replica for this driver connection, using default strong consistency. See <<#_primaryReplica_com_typedb_driver_api_ConsistencyLevel,``primaryReplica(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -139,6 +139,38 @@ Returns the primary replica for this driver connection.
 [source,java]
 ----
 driver.primaryReplica();
+----
+
+[#_Driver_primaryReplica_ConsistencyLevel]
+==== primaryReplica
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends ServerReplica> primaryReplica​(ConsistencyLevel consistencyLevel)
+----
+
+Returns the primary replica for this driver connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.primaryReplica(ConsistencyLevel.Strong);
 ----
 
 [#_Driver_registerReplica_long_java_lang_String]
@@ -180,10 +212,10 @@ driver.registerReplica(2, "127.0.0.1:11729");
 [source,java]
 ----
 @CheckReturnValue
-java.util.Set<? extends ServerReplica> replicas()
+default java.util.Set<? extends ServerReplica> replicas()
 ----
 
-Set of ``Replica`` instances for this driver connection. 
+Set of ``Replica`` instances for this driver connection, using default strong consistency. See <<#_replicas_com_typedb_driver_api_ConsistencyLevel,``replicas(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -195,6 +227,38 @@ Set of ``Replica`` instances for this driver connection.
 [source,java]
 ----
 driver.replicas();
+----
+
+[#_Driver_replicas_ConsistencyLevel]
+==== replicas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends ServerReplica> replicas​(ConsistencyLevel consistencyLevel)
+----
+
+Set of ``Replica`` instances for this driver connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`java.util.Set<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.replicas(ConsistencyLevel.Strong);
 ----
 
 [#_Driver_serverVersion_]
@@ -331,7 +395,7 @@ driver.transaction(database, sessionType);
 void updateAddressTranslation​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation)
 ----
 
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. 
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses. 
 
 
 [caption=""]

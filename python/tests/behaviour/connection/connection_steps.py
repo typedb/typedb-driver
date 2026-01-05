@@ -20,6 +20,7 @@ from hamcrest import *
 from tests.behaviour.config.parameters import MayError, check_is_none
 from tests.behaviour.context import Context
 
+
 def replace_host(address: str, new_host: str) -> str:
     return address.replace("127.0.0.1", new_host)
 

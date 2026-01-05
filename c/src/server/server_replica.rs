@@ -62,7 +62,7 @@ pub extern "C" fn server_replica_get_address(replica_info: *const ServerReplica)
 
 /// Returns whether the role of this replica is set.
 #[no_mangle]
-pub extern "C" fn server_replica_has_type(replica_info: *const ServerReplica) -> bool {
+pub extern "C" fn server_replica_has_role(replica_info: *const ServerReplica) -> bool {
     borrow(replica_info).role().is_some()
 }
 

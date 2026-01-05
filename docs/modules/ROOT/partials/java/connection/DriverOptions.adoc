@@ -28,60 +28,6 @@ Produces a new ``DriverOptions`` object.
 DriverOptions options = DriverOptions();
 ----
 
-[#_DriverOptions_tlsEnabled_]
-==== tlsEnabled
-
-[source,java]
-----
-@CheckReturnValue
-public java.lang.Boolean tlsEnabled()
-----
-
-Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB must be done over TLS. 
-
-
-[caption=""]
-.Returns
-`public java.lang.Boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.tlsEnabled();
-----
-
-[#_DriverOptions_tlsEnabled_boolean]
-==== tlsEnabled
-
-[source,java]
-----
-public DriverOptions tlsEnabled​(boolean tlsEnabled)
-----
-
-Explicitly sets whether the connection to TypeDB must be done over TLS. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `tlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
-|===
-
-[caption=""]
-.Returns
-`public DriverOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.tlsEnabled(true);
-----
-
 [#_DriverOptions_primaryFailoverRetries_]
 ==== primaryFailoverRetries
 
@@ -188,6 +134,60 @@ a| `replicaDiscoveryAttempts` a| The limit of replica discovery attempts. a| `in
 [source,java]
 ----
 options.primaryFailoverRetries(1);
+----
+
+[#_DriverOptions_tlsEnabled_]
+==== tlsEnabled
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Boolean tlsEnabled()
+----
+
+Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB must be done over TLS. 
+
+
+[caption=""]
+.Returns
+`public java.lang.Boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsEnabled();
+----
+
+[#_DriverOptions_tlsEnabled_boolean]
+==== tlsEnabled
+
+[source,java]
+----
+public DriverOptions tlsEnabled​(boolean tlsEnabled)
+----
+
+Explicitly sets whether the connection to TypeDB must be done over TLS. WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to true. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `tlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsEnabled(true);
 ----
 
 [#_DriverOptions_tlsRootCAPath_]

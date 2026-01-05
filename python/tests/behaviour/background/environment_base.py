@@ -26,6 +26,7 @@ from typedb.driver import *
 
 IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
+
 def before_all(context: Context):
     context.THREAD_POOL_SIZE = 32
     context.DEFAULT_USERNAME = "admin"
@@ -55,7 +56,7 @@ def before_scenario(context: Context, scenario):
     context.unwrapped_concurrent_answers = None
     context.transaction_options = None
     context.query_options = None
-    context.driver_options = DriverOptions(tls_enabled=False)
+    context.driver_options = DriverOptions(is_tls_enabled=False)
 
 
 def ignored(scenario):

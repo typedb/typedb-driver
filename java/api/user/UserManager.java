@@ -165,8 +165,8 @@ public interface UserManager {
      * driver.users().create(username, password, ConsistencyLevel.Strong);
      * </pre>
      *
-     * @param username The name of the user to be created
-     * @param password The password of the user to be created
+     * @param username         The name of the user to be created
+     * @param password         The password of the user to be created
      * @param consistencyLevel The consistency level to use for the operation
      */
     void create(String username, String password, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;

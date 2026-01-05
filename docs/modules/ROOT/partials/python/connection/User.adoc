@@ -19,15 +19,15 @@ a| `name` a| `str` a| Returns the name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_User_delete_username]
+[#_User_delete_consistency_level_ConsistencyLevel_None]
 ==== delete
 
 [source,python]
 ----
-delete() -> None
+delete(consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
-Deletes a user with the given name.
+Deletes this user.
 
 [caption=""]
 .Input parameters
@@ -35,7 +35,7 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `username` a| The name of the user to be deleted a|  a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -46,15 +46,16 @@ a| `username` a| The name of the user to be deleted a|  a|
 .Code examples
 [source,python]
 ----
-driver.users.delete(username)
+user.delete()
+user.delete(ConsistencyLevel.Strong())
 ----
 
-[#_User_update_password_password_old_password_new]
+[#_User_update_password_password_str_consistency_level_ConsistencyLevel_None]
 ==== update_password
 
 [source,python]
 ----
-update_password(password: str) -> None
+update_password(password: str, consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
 Updates the password for this user.
@@ -65,13 +66,21 @@ Updates the password for this user.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `password_old` a| The current password of this user a|  a| 
-a| `password_new` a| The new password a|  a| 
+a| `password` a| The new password a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
 .Returns
 `None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+user.update_password("new-password")
+user.update_password("new-password", ConsistencyLevel.Strong())
+----
 
 // end::methods[]
 

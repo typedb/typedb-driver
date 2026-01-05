@@ -35,7 +35,8 @@ class TestDeployedPythonDriver(TestCase):
     def setUpClass(cls):
         super(TestDeployedPythonDriver, cls).setUpClass()
         global driver
-        driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False))
+        driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                               DriverOptions(is_tls_enabled=False))
 
     @classmethod
     def tearDownClass(cls):

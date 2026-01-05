@@ -24,7 +24,7 @@ from typedb.api.database.database_manager import DatabaseManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.validation import require_non_null
-from typedb.connection.database import _Database
+from typedb.database.database import _Database
 from typedb.native_driver_wrapper import databases_all, databases_contains, databases_create, databases_get, \
     databases_import_from_file, database_iterator_next, TypeDBDriverExceptionNative
 
@@ -58,10 +58,10 @@ class _DatabaseManager(DatabaseManager):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def create(self, name: str) -> None:
+    def create(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         require_non_null(name, "name")
         try:
-            databases_create(self.native_driver, name)
+            databases_create(self.native_driver, name, ConsistencyLevel.native_value(consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

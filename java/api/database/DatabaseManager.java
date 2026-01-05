@@ -139,7 +139,7 @@ public interface DatabaseManager {
      * driver.databases().create(name, ConsistencyLevel.Strong)
      * </pre>
      *
-     * @param name The name of the database to be created
+     * @param name             The name of the database to be created
      * @param consistencyLevel The consistency level to use for the operation
      */
     void create(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;

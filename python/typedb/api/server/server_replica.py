@@ -22,7 +22,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typedb.api.server.role import ReplicaType
+    from typedb.api.server.role import ReplicaRole
 
 
 class ServerReplica(ABC):
@@ -64,7 +64,7 @@ class ServerReplica(ABC):
 
     @property
     @abstractmethod
-    def role(self) -> ReplicaType:
+    def role(self) -> ReplicaRole:
         """
         Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 

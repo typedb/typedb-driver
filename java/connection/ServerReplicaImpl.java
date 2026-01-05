@@ -51,7 +51,7 @@ public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.Server
     @Override
     public Optional<ReplicaRole> getRole() {
         if (server_replica_has_role(nativeObject)) {
-            return Optional.of(server_replica_get_role(nativeObject));
+            return Optional.of(ReplicaRole.of(server_replica_get_role(nativeObject)));
         }
         return Optional.empty();
     }

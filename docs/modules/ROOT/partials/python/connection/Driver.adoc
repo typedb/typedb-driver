@@ -88,15 +88,24 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
-[#_Driver_primary_replica_]
+[#_Driver_primary_replica_consistency_level_ConsistencyLevel_None]
 ==== primary_replica
 
 [source,python]
 ----
-primary_replica() -> ServerReplica | None
+primary_replica(consistency_level: ConsistencyLevel | None = None) -> ServerReplica | None
 ----
 
 Returns the primary replica for this driver connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -107,6 +116,7 @@ Returns the primary replica for this driver connection.
 [source,python]
 ----
 driver.primary_replica()
+driver.primary_replica(ConsistencyLevel.Strong())
 ----
 
 [#_Driver_register_replica_replica_id_int_address_str]
@@ -140,15 +150,24 @@ a| `address` a| The address(es) of the TypeDB replica as a string a| `str` a|
 driver.register_replica(2, "127.0.0.1:11729")
 ----
 
-[#_Driver_replicas_]
+[#_Driver_replicas_consistency_level_ConsistencyLevel_None]
 ==== replicas
 
 [source,python]
 ----
-replicas() -> Set[ServerReplica]
+replicas(consistency_level: ConsistencyLevel | None = None) -> Set[ServerReplica]
 ----
 
 Set of ``Replica`` instances for this driver connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -159,6 +178,7 @@ Set of ``Replica`` instances for this driver connection.
 [source,python]
 ----
 driver.replicas()
+driver.replicas(ConsistencyLevel.Strong())
 ----
 
 [#_Driver_server_version_consistency_level_ConsistencyLevel_None]
@@ -232,7 +252,7 @@ driver.transaction(database, transaction_type, options)
 update_address_translation(address_translation: Mapping[str, str]) -> None
 ----
 
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation.
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
 
 [caption=""]
 .Input parameters

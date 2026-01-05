@@ -57,13 +57,13 @@ public interface User {
      * user.updatePassword("new-password", ConsistencyLevel.Strong);
      * </pre>
      *
-     * @param password The new password
+     * @param password         The new password
      * @param consistencyLevel The consistency level to use for the operation
      */
     void updatePassword(String password, ConsistencyLevel consistencyLevel);
 
     /**
-     * Deletes a user with the given name, using default strong consistency.
+     * Deletes this user, using default strong consistency.
      * See {@link #delete(ConsistencyLevel)} for more details and options.
      *
      * <h3>Examples</h3>
@@ -76,7 +76,7 @@ public interface User {
     }
 
     /**
-     * Deletes a user with the given name.
+     * Deletes this user.
      *
      * <h3>Examples</h3>
      * <pre>

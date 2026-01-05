@@ -27,7 +27,8 @@ class TestExample(TestCase):
     # EXAMPLE END MARKER
 
     def setUp(self):
-        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                           DriverOptions(is_tls_enabled=False)) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
 
@@ -36,7 +37,8 @@ class TestExample(TestCase):
     def test_example(self):
         # Open a driver connection. Specify your parameters if needed
         # The connection will be automatically closed on the "with" block exit
-        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
+        with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                           DriverOptions(is_tls_enabled=False)) as driver:
             # Create a database
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")

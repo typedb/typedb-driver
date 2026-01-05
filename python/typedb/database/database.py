@@ -69,10 +69,10 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def delete(self) -> None:
+    def delete(self, consistency_level: Optional[ConsistencyLevel] = None) -> None:
         try:
             self._native_object.thisown = 0
-            database_delete(self._native_object)
+            database_delete(self._native_object, ConsistencyLevel.native_value(consistency_level))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

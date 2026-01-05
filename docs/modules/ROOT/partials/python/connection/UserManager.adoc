@@ -1,7 +1,7 @@
 [#_UserManager]
 === UserManager
 
-*Package*: `typedb.api.user.user`
+*Package*: `typedb.api.user.user_manager`
 
 Provides access to all user management methods.
 
@@ -69,12 +69,12 @@ driver.users.contains(username)
 driver.users.contains(username, ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_create_username_str_password_str]
+[#_UserManager_create_username_str_password_str_consistency_level_ConsistencyLevel_None]
 ==== create
 
 [source,python]
 ----
-create(username: str, password: str) -> None
+create(username: str, password: str, consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
 Creates a user with the given name and password.
@@ -87,6 +87,7 @@ Creates a user with the given name and password.
 |Name |Description |Type |Default Value
 a| `username` a| The name of the user to be created a| `str` a| 
 a| `password` a| The password of the user to be created a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -98,6 +99,7 @@ a| `password` a| The password of the user to be created a| `str` a|
 [source,python]
 ----
 driver.users.create(username, password)
+driver.users.create(username, password, ConsistencyLevel.Strong())
 ----
 
 [#_UserManager_get_username_str_consistency_level_ConsistencyLevel_None]

@@ -3,7 +3,7 @@
 
 *Package*: `com.typedb.driver.api`
 
-Consistency levels of operations against a distributed server. All driver methods have default recommended values, however, readonly operations can be configured in order to potentially speed up the execution (introducing risks of stale data) or test a specific replica. This setting does not affect clusters with a single node.
+Consistency levels of operations against a distributed server. All driver methods have default recommended values, however, most of the operations can be configured in order to potentially speed up the execution (introducing risks of stale data) or test a specific replica. This setting does not affect clusters with a single node.
 
 // tag::methods[]
 [#_ConsistencyLevel_ConsistencyLevel_]

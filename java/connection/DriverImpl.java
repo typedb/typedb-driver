@@ -144,17 +144,19 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public Set<? extends ServerReplica> replicas() {
+    public Set<? extends ServerReplica> replicas(ConsistencyLevel consistencyLevel) {
         try {
-            return new NativeIterator<>(driver_replicas(nativeObject)).stream().map(ServerReplicaImpl::new).collect(toSet());
+
+            return new NativeIterator<>(driver_replicas(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel)))
+                    .stream().map(ServerReplicaImpl::new).collect(toSet());
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
     }
 
     @Override
-    public Optional<? extends ServerReplica> primaryReplica() {
-        com.typedb.driver.jni.ServerReplica nativeReplica = driver_primary_replica(nativeObject);
+    public Optional<? extends ServerReplica> primaryReplica(ConsistencyLevel consistencyLevel) {
+        com.typedb.driver.jni.ServerReplica nativeReplica = driver_primary_replica(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
         if (nativeReplica != null) {
             return Optional.of(new ServerReplicaImpl(nativeReplica));
         }
