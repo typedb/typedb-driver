@@ -42,35 +42,37 @@ bool check_error_may_print(const char* filename, int lineno) {
 }
 
 #define FAILED() check_error_may_print(__FILE__, __LINE__)
+
 TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+
     options = driver_options_new();
     driver_options_set_tls_enabled(options, false);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
+
     TypeDBDriver* driver = driver_new_with_description(address, creds, options, DRIVER_LANG);
+
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);
-
     return driver;
 }
 
 int main() {
     const char databaseName[] = "test_assembly_clib";
 
-   TypeDBDriver* driver = NULL;
-
+    TypeDBDriver* driver = NULL;
     bool success = false;
 
     driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databases_create(driver, databaseName);
+    databases_create(driver, databaseName, NULL);
     if (FAILED()) goto cleanup;
 
-    if (!databases_contains(driver, databaseName)) {
+    if (!databases_contains(driver, databaseName, NULL)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
