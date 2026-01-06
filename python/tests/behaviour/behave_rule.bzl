@@ -18,7 +18,7 @@
 load("@typedb_driver_pip//:requirements.bzl", "requirement")
 
 
-def py_behave_test(*, name, background, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
+def py_behave_test(*, name, background, steps, feats, deps, data=[], typedb_port, **kwargs):
     feats_dir = "features-" + name
     steps_out_dir = feats_dir + "/steps"
 
@@ -40,15 +40,15 @@ def py_behave_test(*, name, background, native_typedb_artifact, steps, feats, de
         srcs = ["//python/tests/behaviour:entry_point_behave.py"],
         args = ["$(location :" + name + "_features)", "--no-capture", "-D", "port=" + typedb_port],
         main = "//python/tests/behaviour:entry_point_behave.py",
+        **kwargs,
     )
 
 def typedb_behaviour_py_test_community(name, **kwargs):
     py_behave_test(
         name = name + "-community",
         background = "@//python/tests/behaviour/background:community",
-        native_typedb_artifact = "@//tool/test:native-typedb-artifact",
         toolchains = ["@rules_python//python:current_py_toolchain"],
-        typedb_port = "1729",
+        typedb_port = "1729", # TODO: Not needed?
         **kwargs,
     )
 
@@ -56,9 +56,8 @@ def typedb_behaviour_py_test_cluster(name, **kwargs):
     py_behave_test(
         name = name + "-cluster",
         background = "@//python/tests/behaviour/background:cluster",
-        native_typedb_artifact = "@//tool/test:native-typedb-artifact", # TODO: Change to cloud artifact when available
         toolchains = ["@rules_python//python:current_py_toolchain"],
-        typedb_port = "1729", # TODO: Might want to change back to 11729 when cloud has multiple nodes
+        typedb_port = "11729", # TODO: Not needed?
         **kwargs,
     )
 
