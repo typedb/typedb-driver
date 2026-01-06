@@ -148,8 +148,6 @@ build:
 
     test-c-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-      dependencies:
-        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
