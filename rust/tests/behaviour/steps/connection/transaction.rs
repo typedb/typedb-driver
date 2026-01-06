@@ -19,7 +19,7 @@
 
 use std::{collections::VecDeque, time::Duration};
 
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::future::join_all;
 use macro_rules_attribute::apply;
 use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};

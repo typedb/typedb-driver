@@ -16,14 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::time::Duration;
-
-use cucumber::{given, then, when};
-use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{ServerVersion, TypeDBDriver};
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
+use crate::{generic_step, params, params::check_boolean, Context};
 
 mod database;
 mod transaction;
@@ -139,7 +135,7 @@ async fn connection_has_count_replicas(context: &mut Context, count: usize) {
 
 #[apply(generic_step)]
 #[step(expr = r"connection contains primary replica")]
-async fn connection_contains_primary_replica(context: &mut Context, count: usize) {
+async fn connection_contains_primary_replica(context: &mut Context) {
     assert!(context.driver.as_ref().unwrap().primary_replica().await.unwrap().is_some());
 }
 

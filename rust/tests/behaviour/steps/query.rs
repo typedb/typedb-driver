@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::{future::join_all, StreamExt};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
@@ -29,7 +29,6 @@ use typedb_driver::{
 };
 
 use crate::{
-    analyze::functor_encoding::encode_query_structure_as_functor,
     generic_step, params,
     params::check_boolean,
     util::{iter_table, list_contains_json, parse_json},
@@ -710,7 +709,7 @@ pub async fn answer_get_row_get_variable_try_get_specific_value_is_none(
     var_kind: params::ConceptKind,
     is_by_var_index: params::IsByVarIndex,
     var: params::Var,
-    value_type: params::ValueType,
+    _value_type: params::ValueType,
     is_or_not: params::IsOrNot,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
@@ -737,7 +736,7 @@ pub async fn answer_get_row_get_variable_get_specific_value(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    let actual_value = concept.try_get_value().expect("Value is expected");
+    let _actual_value = concept.try_get_value().expect("Value is expected");
     let expected_value = value.into_typedb(value_type.value_type.clone());
     match value_type.value_type {
         ValueType::Boolean => {

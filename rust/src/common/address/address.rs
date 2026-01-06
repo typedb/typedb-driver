@@ -42,10 +42,6 @@ impl Address {
         self.uri.scheme()
     }
 
-    pub(crate) fn has_scheme(&self) -> bool {
-        self.uri_scheme().is_some()
-    }
-
     pub(crate) fn with_scheme(&self, scheme: http::uri::Scheme) -> Self {
         let mut parts = self.uri.clone().into_parts();
         parts.scheme = Some(scheme);

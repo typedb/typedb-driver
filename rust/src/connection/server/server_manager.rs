@@ -72,7 +72,7 @@ pub(crate) struct ServerManager {
 }
 
 impl ServerManager {
-    const WAIT_FOR_PRIMARY_REPLICA_SELECTION: Duration = Duration::from_secs(2);
+    const PRIMARY_REPLICA_SELECTION_TIMEOUT: Duration = Duration::from_secs(2);
 
     // TODO: Introduce a timer-based connections update to have a more actualized connections list
 
@@ -85,12 +85,6 @@ impl ServerManager {
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
     ) -> Result<Self> {
-        // TODO: We currently don't have specific
-        // let has_scheme = addresses.addresses().any(|address| address.has_scheme());
-        // if has_scheme {
-        //     return Err(ConnectionError::InvalidAddressWithScheme { addresses: addresses.clone() }.into());
-        // }
-
         let (source_connections, replicas) = Self::fetch_replicas_from_addresses(
             background_runtime.clone(),
             &addresses,
@@ -415,7 +409,7 @@ impl ServerManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn wait_for_primary_replica_selection() {
         // FIXME: blocking sleep! Can't do agnostic async sleep.
-        sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
+        sleep(Self::PRIMARY_REPLICA_SELECTION_TIMEOUT);
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

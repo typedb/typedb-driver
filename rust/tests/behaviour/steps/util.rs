@@ -27,13 +27,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cucumber::{gherkin::Step, given, then, when, StatsWriter};
+use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{answer::JSON, Result as TypeDBResult};
 use uuid::Uuid;
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
+use crate::{generic_step, params, Context};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)

@@ -59,7 +59,6 @@ pub(super) fn open_callcred_channel(
         true => http::uri::Scheme::HTTPS,
         false => http::uri::Scheme::HTTP,
     };
-    // TODO: Remove when we understand if we want to allow schemes
     if let Some(address_scheme) = address.uri_scheme() {
         if address_scheme != &connection_scheme {
             return Err(Error::Connection(ConnectionError::SchemeTlsSettingsMismatch {

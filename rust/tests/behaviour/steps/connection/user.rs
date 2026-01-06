@@ -19,7 +19,7 @@
 
 use std::collections::HashSet;
 
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::TryFutureExt;
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
