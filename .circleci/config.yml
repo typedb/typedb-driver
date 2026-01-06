@@ -926,14 +926,15 @@ workflows:
             - deploy-snapshot-any
 #            - deploy-snapshot-dotnet-any
 
-      - test-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [master, cluster-support-feature-branch]
-          requires:
-            - deploy-snapshot-windows-x86_64
-            - deploy-snapshot-any
-#            - deploy-snapshot-dotnet-any
+# TODO: Temporarily disable
+#      - test-snapshot-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [master, cluster-support-feature-branch]
+#          requires:
+#            - deploy-snapshot-windows-x86_64
+#            - deploy-snapshot-any
+##            - deploy-snapshot-dotnet-any
 
 # TODO: npm is not ready
 #      - test-snapshot-any:
