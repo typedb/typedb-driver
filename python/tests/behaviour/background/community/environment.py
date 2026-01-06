@@ -27,10 +27,12 @@ def before_all(context: Context):
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
         setup_context_driver(context, address, username, password)
     context.default_address = TypeDB.DEFAULT_ADDRESS
+    context.driver_options.is_tls_enabled = False
 
 
 def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context, scenario)
+    context.driver_options.is_tls_enabled = False
 
 
 def setup_context_driver(context, address=None, username=None, password=None):

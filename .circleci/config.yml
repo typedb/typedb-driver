@@ -793,7 +793,8 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
-      - deploy-http-ts-npm-release-unix
+# TODO: http-ts is disabled in the clustering branch
+#      - deploy-http-ts-npm-release-unix
 #      - deploy-npm-release-unix
 
   deploy-release-dotnet-any:
