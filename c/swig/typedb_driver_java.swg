@@ -111,11 +111,8 @@
 %nojavaexception driver_primary_replica;
 
 %nojavaexception driver_options_new;
-%nojavaexception driver_options_set_tls_enabled;
-%nojavaexception driver_options_get_tls_enabled;
-%nojavaexception driver_options_set_tls_root_ca_path;
-%nojavaexception driver_options_get_tls_root_ca_path;
-%nojavaexception driver_options_has_tls_root_ca_path;
+%nojavaexception driver_options_set_tls_config;
+%nojavaexception driver_options_get_tls_config;
 %nojavaexception driver_options_set_use_replication;
 %nojavaexception driver_options_get_use_replication;
 %nojavaexception driver_options_set_primary_failover_retries;
@@ -123,6 +120,12 @@
 %nojavaexception driver_options_set_replica_discovery_attempts;
 %nojavaexception driver_options_get_replica_discovery_attempts;
 %nojavaexception driver_options_has_replica_discovery_attempts;
+
+%nojavaexception driver_tls_config_new_disabled;
+%nojavaexception driver_tls_config_new_enabled_with_native_root_ca;
+%nojavaexception driver_tls_config_is_enabled;
+%nojavaexception driver_tls_config_has_root_ca_path;
+%nojavaexception driver_tls_config_get_root_ca_path;
 
 %nojavaexception transaction_is_open;
 
@@ -366,6 +369,7 @@
 %nojavaexception ~ConceptRowIterator;
 %nojavaexception ~ConsistencyLevel;
 %nojavaexception ~DriverOptions;
+%nojavaexception ~DriverTlsConfig;
 %nojavaexception ~Credentials;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;

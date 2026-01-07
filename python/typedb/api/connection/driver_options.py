@@ -17,15 +17,15 @@
 
 from typing import Optional
 
+from typedb.api.connection.driver_tls_config import DriverTlsConfig
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.common.validation import require_non_negative
-from typedb.native_driver_wrapper import driver_options_get_tls_enabled, driver_options_get_tls_root_ca_path, \
-    driver_options_has_tls_root_ca_path, driver_options_new, driver_options_set_tls_enabled, \
-    driver_options_set_tls_root_ca_path, driver_options_get_use_replication, driver_options_set_use_replication, \
-    driver_options_get_primary_failover_retries, driver_options_set_primary_failover_retries, \
-    driver_options_get_replica_discovery_attempts, driver_options_set_replica_discovery_attempts, \
-    driver_options_has_replica_discovery_attempts, DriverOptions as NativeDriverOptions
+from typedb.common.validation import require_non_negative, require_non_null
+from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_options_new, driver_options_set_tls_config, \
+    driver_options_get_use_replication, driver_options_set_use_replication, driver_options_get_primary_failover_retries, \
+    driver_options_set_primary_failover_retries, driver_options_get_replica_discovery_attempts, \
+    driver_options_set_replica_discovery_attempts, driver_options_has_replica_discovery_attempts, \
+    DriverOptions as NativeDriverOptions
 
 
 class DriverOptions(NativeWrapper[NativeDriverOptions]):
@@ -39,22 +39,29 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     --------
     ::
 
-      driver_options = DriverOptions(is_tls_enabled=True)
-      driver_options.tls_root_ca_path = "path/to/ca-certificate.pem"
+      options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), use_replication=False)
+      options.use_replication = True
     """
 
-    def __init__(self, *,
-                 is_tls_enabled: Optional[bool] = None,
-                 tls_root_ca_path: Optional[str] = None,
+    def __init__(self,
+                 tls_config: DriverTlsConfig,
+                 *,
                  use_replication: Optional[bool] = None,
                  primary_failover_retries: Optional[int] = None,
                  replica_discovery_attempts: Optional[int] = None,
                  ):
-        super().__init__(driver_options_new())
-        if is_tls_enabled is not None:
-            self.is_tls_enabled = is_tls_enabled
-        if tls_root_ca_path is not None:
-            self.tls_root_ca_path = tls_root_ca_path
+        """
+        Produces a new ``DriverOptions`` object for connecting to TypeDB Server using custom TLS settings.
+        WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+        Examples
+        --------
+        ::
+
+          options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca())
+        """
+        require_non_null(tls_config, "tls_config")
+        super().__init__(driver_options_new(tls_config.native_object))
         if use_replication is not None:
             self.use_replication = use_replication
         if primary_failover_retries is not None:
@@ -67,31 +74,33 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
-    def is_tls_enabled(self) -> bool:
+    def tls_config(self) -> DriverTlsConfig:
         """
-        Returns the value set for the TLS flag in this ``DriverOptions`` object.
-        Specifies whether the connection to TypeDB must be done over TLS.
-        WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to True.
-        """
-        return driver_options_get_tls_enabled(self.native_object)
+        Returns the TLS configuration associated with this ``DriverOptions``.
+        Specifies the TLS configuration of the connection to TypeDB.
 
-    @is_tls_enabled.setter
-    def is_tls_enabled(self, is_tls_enabled: bool):
-        driver_options_set_tls_enabled(self.native_object, is_tls_enabled)
+        Examples
+        --------
+        ::
 
-    @property
-    def tls_root_ca_path(self) -> Optional[str]:
+          options.tls_config
         """
-        Returns the TLS root CA set in this ``DriverOptions`` object.
-        Specifies the root CA used in the TLS config for server certificates authentication.
-        Uses system roots if None is set.
-        """
-        return driver_options_get_tls_root_ca_path(self.native_object) \
-            if driver_options_has_tls_root_ca_path(self.native_object) else None
+        return DriverTlsConfig(driver_options_get_tls_config(self.native_object))
 
-    @tls_root_ca_path.setter
-    def tls_root_ca_path(self, tls_root_ca_path: Optional[str]):
-        driver_options_set_tls_root_ca_path(self.native_object, tls_root_ca_path)
+    @tls_config.setter
+    def tls_config(self, tls_config: DriverTlsConfig):
+        """
+        Overrides the TLS configuration associated with this ``DriverOptions``.
+        WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+        Examples
+        --------
+        ::
+
+          options.tls_config = DriverTlsConfig.enabled_with_native_root_ca()
+        """
+        require_non_null(tls_config, "tls_config")
+        driver_options_set_tls_config(self.native_object, tls_config.native_object)
 
     @property
     def use_replication(self) -> bool:

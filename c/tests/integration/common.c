@@ -53,10 +53,10 @@ void delete_database_if_exists(TypeDBDriver* driver, const char* name) {
 
 TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    options = driver_options_new();
-    driver_options_set_tls_enabled(options, false);
+    options = driver_options_new(tls_config);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
     TypeDBDriver* driver = driver_new_with_description(address, creds, options, DRIVER_LANG);
 cleanup:

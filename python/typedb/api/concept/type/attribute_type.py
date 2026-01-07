@@ -43,8 +43,6 @@ class AttributeType(Type, ABC):
         """
         Casts the concept to ``AttributeType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -56,8 +54,6 @@ class AttributeType(Type, ABC):
     def is_attribute_type(self) -> bool:
         """
         Checks if the concept is an ``AttributeType``.
-
-        :return:
 
         Examples
         --------

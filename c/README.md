@@ -31,7 +31,8 @@ struct TypeDBDriver *driver_new(const char *address,
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    DriverOptions* options = driver_options_new();
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
+    DriverOptions* options = driver_options_new(tls_config);
     driver_options_set_tls_enabled(options, false);
     Credentials* creds = credentials_new(username, password);
     TypeDBDriver* driver = driver_new(address, creds, options);

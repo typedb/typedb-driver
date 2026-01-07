@@ -45,10 +45,11 @@ bool check_error_may_print(const char* filename, int lineno) {
 
 TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
 
-    options = driver_options_new();
+    options = driver_options_new(tls_config);
     driver_options_set_tls_enabled(options, false);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
 

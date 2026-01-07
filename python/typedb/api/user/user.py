@@ -29,8 +29,6 @@ class User(ABC):
     def name(self) -> str:
         """
         Returns the name of this user.
-
-        :return:
         """
         pass
 
@@ -41,7 +39,6 @@ class User(ABC):
 
         :param password: The new password
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -58,7 +55,6 @@ class User(ABC):
         Deletes this user.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------

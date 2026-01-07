@@ -61,6 +61,7 @@ struct Type {};
 
 %dropproxy(Credentials, credentials)
 %dropproxy(DriverOptions, driver_options)
+%dropproxy(DriverTlsConfig, driver_tls_config)
 %dropproxy(TransactionOptions, transaction_options)
 %dropproxy(QueryOptions, query_options)
 %dropproxydefined(ServerVersion, server_version)
@@ -279,7 +280,11 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject driver_replicas;
 
 %newobject driver_options_new;
-%newobject driver_options_get_tls_root_ca_path;
+%newobject driver_options_get_tls_config;
+%newobject driver_tls_config_new_disabled;
+%newobject driver_tls_config_new_enabled_with_native_root_ca;
+%newobject driver_tls_config_new_enabled_with_root_ca_path;
+%newobject driver_tls_config_get_root_ca_path;
 %newobject transaction_options_get_read_consistency_level;
 
 %newobject database_get_name;

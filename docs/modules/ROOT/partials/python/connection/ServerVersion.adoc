@@ -20,11 +20,7 @@ driver.server_version()
 |===
 |Name |Type |Description
 a| `distribution` a| `str` a| Returns the server’s distribution.
-
-
 a| `version` a| `str` a| Returns the server’s version.
-
-
 |===
 // end::properties[]
 

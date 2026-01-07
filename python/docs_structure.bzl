@@ -106,6 +106,7 @@ dir_mapping = {
     "Eventual.adoc": "connection",
     "ReplicaDependent.adoc": "connection",
     "DriverOptions.adoc": "connection",
+    "DriverTlsConfig.adoc": "connection",
     "Driver.adoc": "connection",
     "ServerReplica.adoc": "connection",
     "ServerVersion.adoc": "connection",

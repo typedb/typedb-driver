@@ -62,6 +62,7 @@ import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
@@ -87,7 +88,7 @@ import java.util.stream.Collectors;
 public class TypeDBExample {
     public void example() {
         // Open a driver connection. Try-with-resources can be used for automatic driver connection management
-        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions().tlsEnabled(false))) {
+        try (Driver driver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.disabled()))) {
             // Create a database
             driver.databases().create("typedb");
             Database database = driver.databases().get("typedb");

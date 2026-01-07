@@ -19,17 +19,18 @@
 
 use std::{ffi::c_char, path::Path};
 
-use typedb_driver::DriverOptions;
+use typedb_driver::{DriverOptions, DriverTlsConfig};
 
 use crate::common::{
     error::unwrap_void,
     memory::{borrow, borrow_mut, borrow_optional, free, release, release_string, string_view},
 };
 
-/// Creates a new <code>DriverOptions</code> for connecting to TypeDB Server.
+/// Creates a new <code>DriverOptions</code> for connecting to TypeDB Server using custom TLS settings.
+/// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
 #[no_mangle]
-pub extern "C" fn driver_options_new() -> *mut DriverOptions {
-    release(DriverOptions::new())
+pub extern "C" fn driver_options_new(tls_config: *const DriverTlsConfig) -> *mut DriverOptions {
+    release(DriverOptions::new(borrow(tls_config).clone()))
 }
 
 /// Frees the native rust <code>DriverOptions</code> object.
@@ -38,41 +39,18 @@ pub extern "C" fn driver_options_drop(driver_options: *mut DriverOptions) {
     free(driver_options);
 }
 
-/// Explicitly sets whether the connection to TypeDB must be done over TLS.
-/// WARNING: Setting this to false will make the driver sending passwords as plaintext.
-/// Defaults to true.
+/// Overrides the TLS configuration on <code>DriverOptions</code>.
+/// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
 #[no_mangle]
-pub extern "C" fn driver_options_set_tls_enabled(options: *mut DriverOptions, tls_enabled: bool) {
-    borrow_mut(options).is_tls_enabled = tls_enabled;
+pub extern "C" fn driver_options_set_tls_config(options: *mut DriverOptions, tls_config: *const DriverTlsConfig) {
+    borrow_mut(options).tls_config = borrow(tls_config).clone();
 }
 
-/// Returns the value set for the TLS flag in this <code>DriverOptions</code> object.
-/// Specifies whether the connection to TypeDB must be done over TLS.
+/// Returns the TLS Config set for this <code>DriverOptions</code> object.
+/// Specifies the TLS configuration of the connection to TypeDB.
 #[no_mangle]
-pub extern "C" fn driver_options_get_tls_enabled(options: *const DriverOptions) -> bool {
-    borrow(options).is_tls_enabled
-}
-
-/// Specifies the root CA used in the TLS config for server certificates authentication.
-/// Uses system roots if None is set.
-#[no_mangle]
-pub extern "C" fn driver_options_set_tls_root_ca_path(options: *mut DriverOptions, tls_root_ca: *const c_char) {
-    let tls_root_ca_path = borrow_optional(tls_root_ca).map(|str| Path::new(string_view(str)));
-    unwrap_void(borrow_mut(options).set_tls_root_ca(tls_root_ca_path))
-}
-
-/// Returns the TLS root CA set in this <code>DriverOptions</code> object.
-/// Specifies the root CA used in the TLS config for server certificates authentication.
-/// Uses system roots if None is set.
-#[no_mangle]
-pub extern "C" fn driver_options_get_tls_root_ca_path(options: *const DriverOptions) -> *mut c_char {
-    release_string(borrow(options).get_tls_root_ca().unwrap().to_string_lossy().to_string())
-}
-
-/// Checks whether TLS root CA was explicitly set for this <code>DriverOptions</code> object.
-#[no_mangle]
-pub extern "C" fn driver_options_has_tls_root_ca_path(options: *const DriverOptions) -> bool {
-    borrow(options).get_tls_root_ca().is_some()
+pub extern "C" fn driver_options_get_tls_config(options: *const DriverOptions) -> *mut DriverTlsConfig {
+    release(borrow(options).tls_config.clone())
 }
 
 /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server

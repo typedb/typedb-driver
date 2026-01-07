@@ -28,7 +28,7 @@ pub use self::{
     connection::{
         server_replica::{AvailableServerReplica, Replica, ReplicaRole, ServerReplica},
         server_version::ServerVersion,
-        Credentials, DriverOptions,
+        Credentials, DriverOptions, DriverTlsConfig,
     },
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,

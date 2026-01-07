@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt};
+use std::collections::HashMap;
 
 use crate::analyze::conjunction::{Conjunction, ConjunctionID, Variable};
 

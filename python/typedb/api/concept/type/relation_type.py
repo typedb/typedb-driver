@@ -40,8 +40,6 @@ class RelationType(Type, ABC):
         """
         Checks if the concept is a ``RelationType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -53,8 +51,6 @@ class RelationType(Type, ABC):
     def as_relation_type(self) -> RelationType:
         """
         Casts the concept to ``RelationType``.
-
-        :return:
 
         Examples
         --------

@@ -31,8 +31,6 @@ class ConceptRowIterator(QueryAnswer, ABC):
         """
         Checks if the query answer is a ``ConceptRowIterator``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -44,8 +42,6 @@ class ConceptRowIterator(QueryAnswer, ABC):
     def as_concept_rows(self) -> ConceptRowIterator:
         """
         Casts the query answer to ``ConceptRowIterator``.
-
-        :return:
 
         Examples
         --------

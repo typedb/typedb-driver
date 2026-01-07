@@ -43,8 +43,6 @@ class ServerVersion(NativeWrapper[NativeServerVersion]):
         """
         Returns the server's distribution.
 
-        :return:
-
         Examples
         --------
         ::
@@ -57,8 +55,6 @@ class ServerVersion(NativeWrapper[NativeServerVersion]):
     def version(self) -> str:
         """
         Returns the server's version.
-
-        :return:
 
         Examples
         --------

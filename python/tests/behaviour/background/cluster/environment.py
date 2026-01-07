@@ -42,15 +42,13 @@ def before_all(context: Context):
         setup_context_driver(context, address, username, password)
     context.default_address = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
     context.default_clustering_addresses = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"]
-    context.driver_options.is_tls_enabled = True
-    context.driver_options.tls_root_ca_path = context.tls_root_ca_path
+    context.driver_options.tls_config = DriverTlsConfig.enabled_with_root_ca(context.tls_root_ca_path)
     setup_cluster(context)
 
 
 def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context, scenario)
-    context.driver_options.is_tls_enabled = True
-    context.driver_options.tls_root_ca_path = context.tls_root_ca_path
+    context.driver_options.tls_config = DriverTlsConfig.enabled_with_root_ca(context.tls_root_ca_path)
 
 
 def setup_context_driver(context, address=None, username=None, password=None):

@@ -23,6 +23,7 @@ import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
@@ -63,7 +64,7 @@ public class ValueTest {
 
     @BeforeClass
     public static void setUpClass() {
-        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions().tlsEnabled(false));
+        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.disabled()));
         if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
         typedbDriver.databases().create(DB_NAME);
     }

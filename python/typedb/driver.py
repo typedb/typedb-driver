@@ -37,6 +37,7 @@ from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.credentials import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.driver import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.driver_options import *  # noqa # pylint: disable=unused-import
+from typedb.api.connection.driver_tls_config import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.query_options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction_options import *  # noqa # pylint: disable=unused-import
@@ -66,7 +67,6 @@ class TypeDB:
         Can be a single string, multiple strings, or multiple pairs of strings.
         :param credentials: The credentials to connect with.
         :param driver_options: The driver connection options to connect with.
-        :return:
         """
         if isinstance(addresses, str):
             return _Driver(addresses, credentials, driver_options)

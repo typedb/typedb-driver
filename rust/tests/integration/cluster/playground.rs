@@ -30,7 +30,7 @@ use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
     answer::ConceptRow, consistency_level::ConsistencyLevel, Address, Addresses, AvailableServerReplica, Credentials,
-    DriverOptions, Error, Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
+    DriverOptions, DriverTlsConfig, Error, Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
 };
 // DO NOT commit changes to this test. Use it as playground for dev.
 
@@ -47,7 +47,7 @@ fn playground_test() {
         let driver: TypeDBDriver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new().is_tls_enabled(false),
+            DriverOptions::new(DriverTlsConfig::disabled()),
         )
         .await
         .unwrap();

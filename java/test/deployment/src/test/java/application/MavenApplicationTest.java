@@ -23,6 +23,7 @@ import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.Transaction;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class MavenApplicationTest {
         Driver driver = TypeDB.driver(
                 TypeDB.DEFAULT_ADDRESS,
                 new Credentials("admin", "password"),
-                new DriverOptions().tlsEnabled(false)
+                new DriverOptions(DriverTlsConfig.disabled())
         );
         if (driver.databases().contains(DB_NAME)) {
             driver.databases().get(DB_NAME).delete();

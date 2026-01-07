@@ -22,6 +22,7 @@ package com.typedb.driver.test.behaviour.connection;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
@@ -56,7 +57,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
-    public static DriverOptions driverOptions = new DriverOptions().tlsEnabled(false);
+    public static DriverOptions driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
     static boolean isBeforeAllRan = false;
@@ -124,7 +125,7 @@ public abstract class ConnectionStepsBase {
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
         backgroundDriver.close();
-        driverOptions = new DriverOptions().tlsEnabled(false);
+        driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     }
 
     void cleanupTransactions() {

@@ -6,15 +6,15 @@
 TypeDB driver options. ``DriverOptions`` are used to specify the driver's connection behavior.
 
 // tag::methods[]
-[#_DriverOptions_DriverOptions_]
+[#_DriverOptions_DriverOptions_DriverTlsConfig]
 ==== DriverOptions
 
 [source,java]
 ----
-public DriverOptions()
+public DriverOptions​(DriverTlsConfig tlsConfig)
 ----
 
-Produces a new ``DriverOptions`` object. 
+Produces a new ``DriverOptions`` object for connecting to TypeDB Server using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
 
 
 [caption=""]
@@ -25,7 +25,7 @@ Produces a new ``DriverOptions`` object.
 .Code examples
 [source,java]
 ----
-DriverOptions options = DriverOptions();
+DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA());
 ----
 
 [#_DriverOptions_primaryFailoverRetries_]
@@ -136,48 +136,39 @@ a| `replicaDiscoveryAttempts` a| The limit of replica discovery attempts. a| `in
 options.primaryFailoverRetries(1);
 ----
 
-[#_DriverOptions_tlsEnabled_]
-==== tlsEnabled
+[#_DriverOptions_tlsConfig_]
+==== tlsConfig
 
 [source,java]
 ----
 @CheckReturnValue
-public java.lang.Boolean tlsEnabled()
+public DriverTlsConfig tlsConfig()
 ----
 
-Returns the value set for the TLS flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB must be done over TLS. 
+Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB. 
 
 
 [caption=""]
 .Returns
-`public java.lang.Boolean`
+`public DriverTlsConfig`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-options.tlsEnabled();
+options.tlsConfig();
 ----
 
-[#_DriverOptions_tlsEnabled_boolean]
-==== tlsEnabled
+[#_DriverOptions_tlsConfig_DriverTlsConfig]
+==== tlsConfig
 
 [source,java]
 ----
-public DriverOptions tlsEnabled​(boolean tlsEnabled)
+public DriverOptions tlsConfig​(DriverTlsConfig tlsConfig)
 ----
 
-Explicitly sets whether the connection to TypeDB must be done over TLS. WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to true. 
+Overrides the TLS configuration associated with this ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
 
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `tlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `boolean`
-|===
 
 [caption=""]
 .Returns
@@ -187,61 +178,7 @@ a| `tlsEnabled` a| Whether the connection to TypeDB must be done over TLS. a| `b
 .Code examples
 [source,java]
 ----
-options.tlsEnabled(true);
-----
-
-[#_DriverOptions_tlsRootCAPath_]
-==== tlsRootCAPath
-
-[source,java]
-----
-@CheckReturnValue
-public java.util.Optional<java.lang.String> tlsRootCAPath()
-----
-
-Returns the TLS root CA set in this ``DriverOptions`` object. Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. 
-
-
-[caption=""]
-.Returns
-`public java.util.Optional<java.lang.String>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.tlsRootCAPath();
-----
-
-[#_DriverOptions_tlsRootCAPath_java_util_Optional_java_lang_String_]
-==== tlsRootCAPath
-
-[source,java]
-----
-public DriverOptions tlsRootCAPath​(java.util.Optional<java.lang.String> tlsRootCAPath)
-----
-
-Returns the TLS root CA set in this ``DriverOptions`` object. Specifies the root CA used in the TLS config for server certificates authentication. Uses system roots if None is set. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `tlsRootCAPath` a| The path to the TLS root CA. If None, system roots are used. a| `java.util.Optional<java.lang.String>`
-|===
-
-[caption=""]
-.Returns
-`public DriverOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.tlsRootCAPath(Optional.of("/path/to/ca-certificate.pem"));
+options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
 ----
 
 [#_DriverOptions_useReplication_]

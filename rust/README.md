@@ -72,7 +72,8 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
     },
     concept::{Concept, ValueType},
-    Addresses, Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
+    TypeDBDriver,
 };
 
 fn typedb_example() {
@@ -81,7 +82,7 @@ fn typedb_example() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
             Credentials::new("admin", "password"),
-            DriverOptions::new().is_tls_enabled(false),
+            DriverOptions::new(DriverTlsConfig::disabled()),
         )
         .await
         .unwrap();

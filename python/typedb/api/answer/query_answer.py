@@ -37,8 +37,6 @@ class QueryAnswer(ABC):
         """
         Retrieves the executed query's type of this ``QueryAnswer``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -50,8 +48,6 @@ class QueryAnswer(ABC):
     def is_ok(self) -> bool:
         """
         Checks if the query answer is an ``Ok``.
-
-        :return:
 
         Examples
         --------
@@ -65,8 +61,6 @@ class QueryAnswer(ABC):
         """
         Checks if the query answer is a ``ConceptRowIterator``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -78,8 +72,6 @@ class QueryAnswer(ABC):
     def is_concept_documents(self) -> bool:
         """
         Checks if the query answer is a ``ConceptDocumentIterator``.
-
-        :return:
 
         Examples
         --------
@@ -93,8 +85,6 @@ class QueryAnswer(ABC):
         """
         Casts the query answer to ``OkQueryAnswer``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -107,8 +97,6 @@ class QueryAnswer(ABC):
         """
         Casts the query answer to ``ConceptRowIterator``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -120,8 +108,6 @@ class QueryAnswer(ABC):
     def as_concept_documents(self) -> ConceptDocumentIterator:
         """
         Casts the query answer to ``ConceptDocumentIterator``.
-
-        :return:
 
         Examples
         --------

@@ -38,8 +38,6 @@ class Driver(ABC):
         """
         Checks whether this connection is presently open.
 
-        :return:
-
         Examples:
         ---------
         ::
@@ -70,7 +68,6 @@ class Driver(ABC):
         Retrieves the server's version.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -90,7 +87,6 @@ class Driver(ABC):
         :param database_name: The name of the database with which the transaction connects
         :param transaction_type: The type of transaction to be created (READ, WRITE, or SCHEMA)
         :param options: ``TransactionOptions`` to configure the opened transaction
-        :return:
 
         Examples:
         ---------
@@ -106,7 +102,6 @@ class Driver(ABC):
         Set of ``Replica`` instances for this driver connection.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -123,7 +118,6 @@ class Driver(ABC):
         Returns the primary replica for this driver connection.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -143,7 +137,6 @@ class Driver(ABC):
 
         :param replica_id: The numeric identifier of the new replica
         :param address: The address(es) of the TypeDB replica as a string
-        :return:
 
         Examples:
         ---------
@@ -160,7 +153,6 @@ class Driver(ABC):
         will no longer play a raft role in this cluster.
 
         :param replica_id: The numeric identifier of the deregistered replica
-        :return:
 
         Examples:
         ---------
@@ -179,7 +171,6 @@ class Driver(ABC):
         This operation will update existing connections using the provided addresses.
 
         :param address_translation: The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
-        :return:
 
         Examples:
         ---------
@@ -193,8 +184,6 @@ class Driver(ABC):
     def close(self) -> None:
         """
         Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
-
-        :return:
 
         Examples:
         ---------

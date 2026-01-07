@@ -19,24 +19,22 @@
 
 package com.typedb.driver.api;
 
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_replica_discovery_attempts;
-import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_root_ca_path;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_use_replication;
 import static com.typedb.driver.jni.typedb_driver.driver_options_has_replica_discovery_attempts;
-import static com.typedb.driver.jni.typedb_driver.driver_options_has_tls_root_ca_path;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_enabled;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_replica_discovery_attempts;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_root_ca_path;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_use_replication;
 
 /**
@@ -44,78 +42,44 @@ import static com.typedb.driver.jni.typedb_driver.driver_options_set_use_replica
  */
 public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOptions> {
     /**
-     * Produces a new <code>DriverOptions</code> object.
+     * Produces a new <code>DriverOptions</code> object for connecting to TypeDB Server using custom TLS settings.
+     * WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
      *
      * <h3>Examples</h3>
      * <pre>
-     * DriverOptions options = DriverOptions();
+     * DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA());
      * </pre>
      */
-    public DriverOptions() {
-        super(driver_options_new());
+    public DriverOptions(DriverTlsConfig tlsConfig) {
+        super(driver_options_new(tlsConfig.nativeObject));
     }
 
     /**
-     * Returns the value set for the TLS flag in this <code>DriverOptions</code> object.
-     * Specifies whether the connection to TypeDB must be done over TLS.
+     * Returns the TLS configuration associated with this <code>DriverOptions</code>.
+     * Specifies the TLS configuration of the connection to TypeDB.
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.tlsEnabled();
+     * options.tlsConfig();
      * </pre>
      */
     @CheckReturnValue
-    public Boolean tlsEnabled() {
-        return driver_options_get_tls_enabled(nativeObject);
+    public DriverTlsConfig tlsConfig() {
+        return new DriverTlsConfig(driver_options_get_tls_config(nativeObject));
     }
 
     /**
-     * Explicitly sets whether the connection to TypeDB must be done over TLS.
-     * WARNING: Setting this to false will make the driver sending passwords as plaintext. Defaults to true.
+     * Overrides the TLS configuration associated with this {@code DriverOptions}.
+     * WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.tlsEnabled(true);
-     * </pre>
-     *
-     * @param tlsEnabled Whether the connection to TypeDB must be done over TLS.
-     */
-    public DriverOptions tlsEnabled(boolean tlsEnabled) {
-        driver_options_set_tls_enabled(nativeObject, tlsEnabled);
-        return this;
-    }
-
-    /**
-     * Returns the TLS root CA set in this <code>DriverOptions</code> object.
-     * Specifies the root CA used in the TLS config for server certificates authentication.
-     * Uses system roots if None is set.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.tlsRootCAPath();
+     * options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
      * </pre>
      */
-    @CheckReturnValue
-    public Optional<String> tlsRootCAPath() {
-        if (driver_options_has_tls_root_ca_path(nativeObject))
-            return Optional.of(driver_options_get_tls_root_ca_path(nativeObject));
-        return Optional.empty();
-    }
-
-    /**
-     * Returns the TLS root CA set in this <code>DriverOptions</code> object.
-     * Specifies the root CA used in the TLS config for server certificates authentication.
-     * Uses system roots if None is set.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.tlsRootCAPath(Optional.of("/path/to/ca-certificate.pem"));
-     * </pre>
-     *
-     * @param tlsRootCAPath The path to the TLS root CA. If None, system roots are used.
-     */
-    public DriverOptions tlsRootCAPath(Optional<String> tlsRootCAPath) {
-        driver_options_set_tls_root_ca_path(nativeObject, tlsRootCAPath.orElse(null));
+    public DriverOptions tlsConfig(DriverTlsConfig tlsConfig) {
+        Validator.requireNonNull(tlsConfig, "tlsConfig");
+        driver_options_set_tls_config(nativeObject, tlsConfig.nativeObject);
         return this;
     }
 

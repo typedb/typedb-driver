@@ -35,7 +35,7 @@ class TestValues(TestCase):
 
     def setUp(self):
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
-                           DriverOptions(is_tls_enabled=False)) as driver:
+                           DriverOptions(DriverTlsConfig.disabled())) as driver:
             if driver.databases.contains(TYPEDB):
                 driver.databases.get(TYPEDB).delete()
             driver.databases.create(TYPEDB)
@@ -69,7 +69,7 @@ class TestValues(TestCase):
         }
 
         with (TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
-                            DriverOptions(is_tls_enabled=False)) as driver):
+                            DriverOptions(DriverTlsConfig.disabled())) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:
@@ -187,7 +187,7 @@ class TestValues(TestCase):
         Datetime.fromstring("21/09/24 18:34", tz_name="Africa/Cairo", datetime_fmt="%d/%m/%y %H:%M")
 
         with (TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
-                            DriverOptions(is_tls_enabled=False)) as driver):
+                            DriverOptions(DriverTlsConfig.disabled())) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:
@@ -378,7 +378,7 @@ class TestValues(TestCase):
         Duration.fromstring("P55W")
 
         with (TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
-                            DriverOptions(is_tls_enabled=False)) as driver):
+                            DriverOptions(DriverTlsConfig.disabled())) as driver):
             database = driver.databases.get(TYPEDB)
 
             with driver.transaction(database.name, SCHEMA) as tx:

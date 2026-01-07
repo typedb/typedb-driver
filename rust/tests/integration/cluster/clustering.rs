@@ -28,8 +28,8 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, Addresses, Credentials, DriverOptions, Error, ServerReplica, TransactionOptions,
-    TransactionType, TypeDBDriver,
+    answer::ConceptRow, Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, ServerReplica,
+    TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
@@ -55,7 +55,7 @@ fn primary_reelection_read_query() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new().is_tls_enabled(false),
+            DriverOptions::new(DriverTlsConfig::disabled()),
         )
         .await
         .unwrap();
@@ -71,7 +71,7 @@ fn primary_reelection_read_query() {
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new().is_tls_enabled(false),
+            DriverOptions::new(DriverTlsConfig::disabled()),
         )
         .await
         .unwrap();
@@ -129,7 +129,7 @@ fn primary_reelection_read_query() {
 //         let driver = TypeDBDriver::new(
 //             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
 //             Credentials::new(USERNAME, PASSWORD),
-//             DriverOptions::new().is_tls_enabled(false),
+//             DriverOptions::new(DriverTlsConfig::disabled()),
 //         )
 //             .await
 //             .unwrap();
@@ -187,7 +187,7 @@ async fn remove_test_database() {
     let driver = TypeDBDriver::new(
         Addresses::try_from_addresses_str(ADDRESSES.iter()).unwrap(),
         Credentials::new(USERNAME, PASSWORD),
-        DriverOptions::new().is_tls_enabled(false),
+        DriverOptions::new(DriverTlsConfig::disabled()),
     )
     .await
     .unwrap();

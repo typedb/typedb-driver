@@ -32,8 +32,6 @@ class Value(Concept, ABC):
         """
         Retrieves the ``str`` describing the value type of this ``Value`` concept.
 
-        :return:
-
         Examples
         --------
         ::
@@ -47,8 +45,6 @@ class Value(Concept, ABC):
         """
         Retrieves the value which this value concept holds.
 
-        :return:
-
         Examples
         --------
         ::
@@ -61,8 +57,6 @@ class Value(Concept, ABC):
         """
         Checks if the concept is a ``Value``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -74,8 +68,6 @@ class Value(Concept, ABC):
     def as_value(self) -> Value:
         """
         Casts the concept to ``Value``.
-
-        :return:
 
         Examples
         --------
@@ -91,8 +83,6 @@ class Value(Concept, ABC):
         Returns a ``boolean`` value of this value concept. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -106,8 +96,6 @@ class Value(Concept, ABC):
         """
         Returns a ``integer`` value of this value concept. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -123,8 +111,6 @@ class Value(Concept, ABC):
         Returns a ``double`` value of this value concept. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -138,8 +124,6 @@ class Value(Concept, ABC):
         """
         Returns a ``decimal`` value of this value concept. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -155,8 +139,6 @@ class Value(Concept, ABC):
         Returns a ``string`` value of this value concept. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -170,8 +152,6 @@ class Value(Concept, ABC):
         """
         Returns a timezone naive ``date`` value of this value concept. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -187,8 +167,6 @@ class Value(Concept, ABC):
         Returns a timezone naive ``datetime`` value of this value concept. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -202,8 +180,6 @@ class Value(Concept, ABC):
         """
         Returns a timezone naive ``datetime_tz`` value of this value concept. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -219,8 +195,6 @@ class Value(Concept, ABC):
         Returns a timezone naive ``duration`` value of this value concept. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -234,8 +208,6 @@ class Value(Concept, ABC):
         """
         Returns a ``struct`` value of this value concept represented as a map from field names to values.
         If the value has another type, raises an exception.
-
-        :return:
 
         Examples
         --------

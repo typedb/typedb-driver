@@ -42,8 +42,8 @@ use tokio::{
 use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    Addresses, BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction,
-    TransactionOptions, TypeDBDriver,
+    Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
+    Transaction, TransactionOptions, TypeDBDriver,
 };
 
 use crate::{
@@ -493,8 +493,8 @@ impl Context {
         assert!(!self.is_cluster, "Only non-cluster drivers are available in this mode");
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        // TLS is always off for a comminuty driver test
-        let options = self.driver_options().unwrap_or_default().is_tls_enabled(false);
+        // TLS is always off for a community driver test
+        let options = self.driver_options().unwrap_or_default().tls_config(DriverTlsConfig::disabled());
         TypeDBDriver::new(addresses, credentials, options).await
     }
 
@@ -512,11 +512,9 @@ impl Context {
             self.tls_root_ca.is_some() && self.tls_root_ca.as_ref().unwrap().exists(),
             "Root CA is expected for cluster tests!"
         );
-        let driver_options = self
-            .driver_options()
-            .unwrap_or_default()
-            .is_tls_enabled(true)
-            .tls_root_ca(self.tls_root_ca.as_ref().map(|path| path.as_path()))?;
+        let root_ca = self.tls_root_ca.as_ref().map(|path| path.as_path()).expect("Expected root CA for cluster tests");
+        let driver_options =
+            self.driver_options().unwrap_or_default().tls_config(DriverTlsConfig::enabled_with_root_ca(root_ca)?);
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 

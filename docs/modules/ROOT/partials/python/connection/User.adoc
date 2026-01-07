@@ -13,8 +13,6 @@ TypeDB user information
 |===
 |Name |Type |Description
 a| `name` a| `str` a| Returns the name of this user.
-
-
 |===
 // end::properties[]
 

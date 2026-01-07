@@ -39,7 +39,6 @@ class Database(ABC):
         Returns a full schema text as a valid TypeQL define query string.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -56,7 +55,6 @@ class Database(ABC):
         Returns the types in the schema as a valid TypeQL define query string.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -76,7 +74,6 @@ class Database(ABC):
         :param schema_file_path: The path to the schema definition file to be created
         :param data_file_path: The path to the data file to be created
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -93,7 +90,6 @@ class Database(ABC):
         Deletes this database.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------

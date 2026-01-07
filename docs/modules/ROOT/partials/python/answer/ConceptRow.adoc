@@ -13,8 +13,6 @@ Contains a row of concepts with a header.
 |===
 |Name |Type |Description
 a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this ``ConceptRow``. Shared between all the rows in a QueryAnswer.
-
-
 |===
 // end::properties[]
 

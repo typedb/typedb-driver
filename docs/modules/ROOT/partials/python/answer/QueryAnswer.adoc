@@ -13,8 +13,6 @@ General answer on a query returned by a server. Can be a simple Ok response or a
 |===
 |Name |Type |Description
 a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this ``QueryAnswer``.
-
-
 |===
 // end::properties[]
 

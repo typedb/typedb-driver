@@ -83,6 +83,7 @@ dir_mapping = {
     "Concept.adoc": "concept",
     "TypeDB.adoc": "connection",
     "DriverOptions.adoc": "connection",
+    "DriverTlsConfig.adoc": "connection",
     "Credentials.adoc": "connection",
     "ConsistencyLevel.adoc": "connection",
     "ConsistencyLevel.Strong.adoc": "connection",

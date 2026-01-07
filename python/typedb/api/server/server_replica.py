@@ -36,8 +36,6 @@ class ServerReplica(ABC):
         """
         Returns the id of this replica.
 
-        :return:
-
         Examples
         --------
         ::
@@ -51,8 +49,6 @@ class ServerReplica(ABC):
     def address(self) -> str:
         """
         Returns the address this replica is hosted at.
-
-        :return:
 
         Examples
         --------
@@ -68,8 +64,6 @@ class ServerReplica(ABC):
         """
         Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 
-        :return:
-
         Examples
         --------
         ::
@@ -82,8 +76,6 @@ class ServerReplica(ABC):
     def is_primary(self) -> bool:
         """
         Checks whether this is the primary replica of the raft cluster.
-
-        :return:
 
         Examples
         --------
@@ -98,8 +90,6 @@ class ServerReplica(ABC):
     def term(self) -> int:
         """
         Returns the raft protocol ‘term’ of this replica.
-
-        :return:
 
         Examples
         --------

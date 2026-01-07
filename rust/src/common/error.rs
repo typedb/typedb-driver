@@ -206,9 +206,8 @@ error_messages! { ConnectionError
         40: "Specified addresses do not contain address translation: {addresses}.",
     NoPrimaryReplica =
         41: "Could not find a primary replica.",
-    // TODO: Remove when not needed
-    SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, tls_enabled: bool } =
-        42: "Scheme {scheme} is not compatible with tls setting `enabled: {tls_enabled}`",
+    SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
+        42: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
 }
 
 error_messages! { ConceptError

@@ -13,17 +13,9 @@ The metadata and state of an individual raft replica of a driver connection.
 |===
 |Name |Type |Description
 a| `address` a| `str` a| Returns the address this replica is hosted at.
-
-
 a| `id` a| `int` a| Returns the id of this replica.
-
-
 a| `role` a| `ReplicaRole` a| Returns whether this is the primary replica of the raft cluster or any of the supporting types.
-
-
 a| `term` a| `int` a| Returns the raft protocol ‘term’ of this replica.
-
-
 |===
 // end::properties[]
 

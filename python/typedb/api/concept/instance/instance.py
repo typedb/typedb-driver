@@ -33,8 +33,6 @@ class Instance(Concept, ABC):
         """
         Retrieves the type which this ``Instance`` belongs to.
 
-        :return:
-
         Examples
         --------
         ::
@@ -47,8 +45,6 @@ class Instance(Concept, ABC):
         """
         Checks if the concept is a ``Instance``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -60,8 +56,6 @@ class Instance(Concept, ABC):
     def as_instance(self) -> Instance:
         """
         Casts the concept to ``Instance``.
-
-        :return:
 
         Examples
         --------

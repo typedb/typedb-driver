@@ -25,6 +25,7 @@ mod credentials;
 mod database;
 mod driver;
 mod driver_options;
+mod driver_tls_config;
 mod query_options;
 mod server;
 mod transaction;

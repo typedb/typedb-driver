@@ -30,7 +30,7 @@ class TestDebug(TestCase):
 
     def setUp(self):
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
-                           DriverOptions(is_tls_enabled=False)) as driver:
+                           DriverOptions(DriverTlsConfig.disabled())) as driver:
             if TYPEDB not in [db.name for db in driver.databases.all()]:
                 driver.databases.create(TYPEDB)
 

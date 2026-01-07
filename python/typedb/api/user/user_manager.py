@@ -33,7 +33,6 @@ class UserManager(ABC):
         Retrieves all users which exist on the TypeDB server.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -51,7 +50,6 @@ class UserManager(ABC):
 
         :param username: The username to be checked
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -69,7 +67,6 @@ class UserManager(ABC):
 
         :param username: The name of the user to retrieve
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -86,7 +83,6 @@ class UserManager(ABC):
         Retrieves the name of the user who opened the current connection.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -105,7 +101,6 @@ class UserManager(ABC):
         :param username: The name of the user to be created
         :param password: The password of the user to be created
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------

@@ -47,8 +47,6 @@ class Concept(ABC):
         """
         Checks if the concept is a ``Type``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -60,8 +58,6 @@ class Concept(ABC):
     def is_entity_type(self) -> bool:
         """
         Checks if the concept is an ``EntityType``.
-
-        :return:
 
         Examples
         --------
@@ -75,8 +71,6 @@ class Concept(ABC):
         """
         Checks if the concept is an ``AttributeType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -88,8 +82,6 @@ class Concept(ABC):
     def is_relation_type(self) -> bool:
         """
         Checks if the concept is a ``RelationType``.
-
-        :return:
 
         Examples
         --------
@@ -103,8 +95,6 @@ class Concept(ABC):
         """
         Checks if the concept is a ``RoleType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -116,8 +106,6 @@ class Concept(ABC):
     def is_instance(self) -> bool:
         """
         Checks if the concept is a ``Instance``.
-
-        :return:
 
         Examples
         --------
@@ -131,8 +119,6 @@ class Concept(ABC):
         """
         Checks if the concept is an ``Entity``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -144,8 +130,6 @@ class Concept(ABC):
     def is_attribute(self) -> bool:
         """
         Checks if the concept is an ``Attribute``.
-
-        :return:
 
         Examples
         --------
@@ -159,8 +143,6 @@ class Concept(ABC):
         """
         Checks if the concept is a ``Relation``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -172,8 +154,6 @@ class Concept(ABC):
     def is_value(self) -> bool:
         """
         Checks if the concept is a ``Value``.
-
-        :return:
 
         Examples
         --------
@@ -187,8 +167,6 @@ class Concept(ABC):
         """
         Casts the concept to ``Type``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -200,8 +178,6 @@ class Concept(ABC):
     def as_entity_type(self) -> EntityType:
         """
         Casts the concept to ``EntityType``.
-
-        :return:
 
         Examples
         --------
@@ -215,8 +191,6 @@ class Concept(ABC):
         """
         Casts the concept to ``AttributeType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -228,8 +202,6 @@ class Concept(ABC):
     def as_relation_type(self) -> RelationType:
         """
         Casts the concept to ``RelationType``.
-
-        :return:
 
         Examples
         --------
@@ -243,8 +215,6 @@ class Concept(ABC):
         """
         Casts the concept to ``RoleType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -256,8 +226,6 @@ class Concept(ABC):
     def as_instance(self) -> Instance:
         """
         Casts the concept to ``Instance``.
-
-        :return:
 
         Examples
         --------
@@ -271,8 +239,6 @@ class Concept(ABC):
         """
         Casts the concept to ``Entity``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -284,8 +250,6 @@ class Concept(ABC):
     def as_attribute(self) -> Attribute:
         """
         Casts the concept to ``Attribute``.
-
-        :return:
 
         Examples
         --------
@@ -299,8 +263,6 @@ class Concept(ABC):
         """
         Casts the concept to ``Relation``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -312,8 +274,6 @@ class Concept(ABC):
     def as_value(self) -> Value:
         """
         Casts the concept to ``Value``.
-
-        :return:
 
         Examples
         --------
@@ -330,8 +290,6 @@ class Concept(ABC):
         or if this ``Concept`` is an ``AttributeType`` of type ``boolean``.
         Otherwise, returns ``False``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -346,8 +304,6 @@ class Concept(ABC):
         Returns ``True`` if the value which this ``Concept`` holds is of type ``integer``
         or if this ``Concept`` is an ``AttributeType`` of type ``integer``.
         Otherwise, returns ``False``.
-
-        :return:
 
         Examples
         --------
@@ -364,8 +320,6 @@ class Concept(ABC):
         or if this ``Concept`` is an ``AttributeType`` of type ``double``.
         Otherwise, returns ``False``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -380,8 +334,6 @@ class Concept(ABC):
         Returns ``True`` if the value which this ``Concept`` holds is of type ``decimal``
         or if this ``Concept`` is an ``AttributeType`` of type ``decimal``.
         Otherwise, returns ``False``.
-
-        :return:
 
         Examples
         --------
@@ -398,8 +350,6 @@ class Concept(ABC):
         or if this ``Concept`` is an ``AttributeType`` of type ``string``.
         Otherwise, returns ``False``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -414,8 +364,6 @@ class Concept(ABC):
         Returns ``True`` if the value which this ``Concept`` holds is of type ``date``
         or if this ``Concept`` is an ``AttributeType`` of type ``date``.
         Otherwise, returns ``False``.
-
-        :return:
 
         Examples
         --------
@@ -432,8 +380,6 @@ class Concept(ABC):
         or if this ``Concept`` is an ``AttributeType`` of type ``datetime``.
         Otherwise, returns ``False``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -448,8 +394,6 @@ class Concept(ABC):
         Returns ``True`` if the value which this ``Concept`` holds is of type ``datetime-tz``
         or if this ``Concept`` is an ``AttributeType`` of type ``datetime-tz``.
         Otherwise, returns ``False``.
-
-        :return:
 
         Examples
         --------
@@ -466,8 +410,6 @@ class Concept(ABC):
         or if this ``Concept`` is an ``AttributeType`` of type ``duration``.
         Otherwise, returns ``False``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -482,8 +424,6 @@ class Concept(ABC):
         Returns ``True`` if the value which this ``Concept`` holds is of type ``struct``
         or if this ``Concept`` is an ``AttributeType`` of type ``struct``.
         Otherwise, returns ``False``.
-
-        :return:
 
         Examples
         --------
@@ -501,8 +441,6 @@ class Concept(ABC):
         Returns a ``boolean`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -516,8 +454,6 @@ class Concept(ABC):
         """
         Returns a ``integer`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -533,8 +469,6 @@ class Concept(ABC):
         Returns a ``double`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -548,8 +482,6 @@ class Concept(ABC):
         """
         Returns a ``decimal`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -565,8 +497,6 @@ class Concept(ABC):
         Returns a ``string`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -580,8 +510,6 @@ class Concept(ABC):
         """
         Returns a timezone naive ``date`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -597,8 +525,6 @@ class Concept(ABC):
         Returns a timezone naive ``datetime`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -612,8 +538,6 @@ class Concept(ABC):
         """
         Returns a timezone naive ``datetime_tz`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -629,8 +553,6 @@ class Concept(ABC):
         Returns a timezone naive ``duration`` value of this ``Concept``.
         If it's not a ``Value`` or it has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -644,8 +566,6 @@ class Concept(ABC):
         """
         Returns a ``struct`` value of this ``Concept`` represented as a map from field names to values.
         If it's not a ``Value`` or it has another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -662,8 +582,6 @@ class Concept(ABC):
         If this is an ``Instance``, return the label of the type of this instance ("unknown" if type fetching is disabled).
         If this is a ``Value``, return the label of the value type of the value.
         If this is a ``Type``, return the label of the type.
-
-        :return:
 
         Examples
         --------
@@ -682,8 +600,6 @@ class Concept(ABC):
         If this is a ``Value``, return the label of the value type of the value.
         If this is a ``Type``, return the label of the type.
 
-        :return:
-
         Examples
         --------
         ::
@@ -696,8 +612,6 @@ class Concept(ABC):
     def try_get_iid(self) -> Optional[str]:
         """
         Retrieves the unique id of the ``Concept``. Returns ``None`` if absent.
-
-        :return:
 
         Examples
         --------
@@ -712,8 +626,6 @@ class Concept(ABC):
         """
         Retrieves the ``str` describing the value type fo this ``Concept``. Returns ``None`` if absent.
 
-        :return:
-
         Examples
         --------
         ::
@@ -726,8 +638,6 @@ class Concept(ABC):
     def try_get_value(self) -> Optional[VALUE]:
         """
         Retrieves the value which this ``Concept`` holds. Returns ``None`` if this ``Concept`` does not hold any value.
-
-        :return:
 
         Examples
         --------

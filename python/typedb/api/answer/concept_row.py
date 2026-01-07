@@ -38,8 +38,6 @@ class ConceptRow(ABC):
         Produces an iterator over all column names (variables) in the header of this ``ConceptRow``.
         Shared between all the rows in a QueryAnswer.
 
-        :return:
-
         Examples
         --------
         ::
@@ -54,8 +52,6 @@ class ConceptRow(ABC):
         """
         Retrieves the executed query's type of this ``ConceptRow``.
         Shared between all the rows in a QueryAnswer.
-
-        :return:
 
         Examples
         --------
@@ -72,8 +68,6 @@ class ConceptRow(ABC):
         It must be requested via "include query structure" in ``QueryOptions``
         Shared between all the rows in a QueryAnswer.
 
-        :return:
-
         Examples
         --------
         ::
@@ -89,7 +83,6 @@ class ConceptRow(ABC):
         Throws an exception if the variable is not present.
 
         :param column_name: The string representation of a variable (column name from ``column_names``)
-        :return:
 
         Examples
         --------
@@ -106,7 +99,6 @@ class ConceptRow(ABC):
         an empty answer. Throws an exception if the index is not in the row's range.
 
         :param column_index: The column index
-        :return:
 
         Examples
         --------
@@ -121,8 +113,6 @@ class ConceptRow(ABC):
         """
         Produces an iterator over all concepts in this `ConceptRow`, skipping empty results.
 
-        :return:
-
         Examples
         --------
         ::
@@ -135,8 +125,6 @@ class ConceptRow(ABC):
     def involved_conjunctions(self) -> Optional[Iterator["ConjunctionID"]]:
         """
         Retrieve the ConjunctionIDs of Conjunctions that answered this row.
-
-        :return:
 
         Examples
         --------

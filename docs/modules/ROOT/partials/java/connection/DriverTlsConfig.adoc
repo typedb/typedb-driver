@@ -1,0 +1,149 @@
+[#_DriverTlsConfig]
+=== DriverTlsConfig
+
+*Package*: `com.typedb.driver.api`
+
+TLS configuration for the TypeDB driver. ``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+
+The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
+
+// tag::methods[]
+[#_DriverTlsConfig_DriverTlsConfig_com_typedb_driver_jni_DriverTlsConfig]
+==== DriverTlsConfig
+
+[source,java]
+----
+protected DriverTlsConfig​(com.typedb.driver.jni.DriverTlsConfig nativeObject)
+----
+
+
+
+[caption=""]
+.Returns
+`protected`
+
+[#_DriverTlsConfig_disabled_]
+==== disabled
+
+[source,java]
+----
+@CheckReturnValue
+public static DriverTlsConfig disabled()
+----
+
+Creates a TLS configuration with TLS disabled. WARNING: Disabling TLS causes credentials and data to be transmitted in plaintext. 
+
+
+[caption=""]
+.Returns
+`public static DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+DriverTlsConfig tlsConfig = DriverTlsConfig.disabled();
+----
+
+[#_DriverTlsConfig_enabledWithNativeRootCA_]
+==== enabledWithNativeRootCA
+
+[source,java]
+----
+@CheckReturnValue
+public static DriverTlsConfig enabledWithNativeRootCA()
+----
+
+Creates a TLS configuration enabled with system native trust roots. 
+
+
+[caption=""]
+.Returns
+`public static DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithNativeRootCA();
+----
+
+[#_DriverTlsConfig_enabledWithRootCA_java_lang_String]
+==== enabledWithRootCA
+
+[source,java]
+----
+@CheckReturnValue
+public static DriverTlsConfig enabledWithRootCA​(java.lang.String tlsRootCAPath)
+----
+
+Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM).
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `tlsRootCAPath` a| Path to PEM-encoded root CA certificate bundle. 
+Examples
+[source,java]
+----
+                                           DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
+                                           
+----
+ a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static DriverTlsConfig`
+
+[#_DriverTlsConfig_isEnabled_]
+==== isEnabled
+
+[source,java]
+----
+@CheckReturnValue
+public boolean isEnabled()
+----
+
+Returns whether TLS is enabled. 
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+tlsConfig.isEnabled();
+----
+
+[#_DriverTlsConfig_rootCAPath_]
+==== rootCAPath
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.String> rootCAPath()
+----
+
+Returns the configured custom root CA path, if present. If TLS is enabled with native roots (or disabled), this will be empty. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+tlsConfig.rootCAPath();
+----
+
+// end::methods[]
+

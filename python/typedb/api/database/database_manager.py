@@ -34,7 +34,6 @@ class DatabaseManager(ABC):
         Retrieves all databases present on the TypeDB server.
 
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -52,7 +51,6 @@ class DatabaseManager(ABC):
 
         :param name: The database name to be checked
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -70,7 +68,6 @@ class DatabaseManager(ABC):
 
         :param name: The name of the database to retrieve
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -88,7 +85,6 @@ class DatabaseManager(ABC):
 
         :param name: The name of the database to be created
         :param consistency_level: The consistency level to use for the operation. Strongest possible by default
-        :return:
 
         Examples:
         ---------
@@ -108,7 +104,6 @@ class DatabaseManager(ABC):
         :param name: The name of the database to be created
         :param schema: The schema definition query string for the database
         :param data_file_path: The exported database file path to import the data from
-        :return:
 
         Examples:
         ---------
