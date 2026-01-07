@@ -17,8 +17,10 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -58,11 +60,18 @@ namespace TypeDB.Driver.Connection
         {
             try
             {
-                return Pinvoke.typedb_driver.driver_open_with_description(
+                var result = Pinvoke.typedb_driver.driver_open_with_description(
                     address,
                     credentials.NativeObject,
                     driverOptions.NativeObject,
                     IDriver.Language);
+
+                // Prevent GC from collecting credentials/driverOptions during the native call
+                // The Rust code borrows these pointers and the objects must remain alive
+                GC.KeepAlive(credentials);
+                GC.KeepAlive(driverOptions);
+
+                return result;
             }
             catch (Pinvoke.Error e)
             {
@@ -73,6 +82,11 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public bool IsOpen()
         {
+            // Check if the SWIG object has been disposed (pointer is null)
+            if (!NativeObject.IsOwned())
+            {
+                return false;
+            }
             return Pinvoke.typedb_driver.driver_is_open(NativeObject);
         }
 
@@ -104,6 +118,10 @@ namespace TypeDB.Driver.Connection
                     database,
                     (Pinvoke.TransactionType)type,
                     options.NativeObject);
+
+                // Prevent GC from collecting options during the native call
+                GC.KeepAlive(options);
+
                 return new TypeDBTransaction(nativeTransaction, type, options);
             }
             catch (Pinvoke.Error e)
@@ -115,6 +133,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void Close()
         {
+            // Check if already closed/disposed
             if (!IsOpen())
             {
                 return;
@@ -122,6 +141,8 @@ namespace TypeDB.Driver.Connection
 
             try
             {
+                // Force close the driver - don't release ownership,
+                // let the SWIG finalizer handle memory cleanup
                 Pinvoke.typedb_driver.driver_force_close(NativeObject);
             }
             catch (Pinvoke.Error e)

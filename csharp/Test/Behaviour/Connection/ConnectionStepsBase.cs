@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -39,8 +40,16 @@ namespace TypeDB.Driver.Test.Behaviour
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
 
+        // Sleep between scenarios to let the driver close completely
+        // (`close` is not synced and can cause lock failures in CI)
+        // This mirrors the Java driver's workaround for the same issue.
+        private const int BeforeTimeoutMillis = 10;
+
         public ConnectionStepsBase() // "Before"
         {
+            // Sleep between scenarios to let async driver cleanup complete
+            Thread.Sleep(BeforeTimeoutMillis);
+
             CleanInCaseOfPreviousFail();
         }
 
@@ -80,6 +89,9 @@ namespace TypeDB.Driver.Test.Behaviour
                 Driver.Close();
             }
             Driver = null;
+
+            // Sleep to let async driver cleanup complete
+            Thread.Sleep(BeforeTimeoutMillis);
         }
 
         private void CleanupAllDatabases()
