@@ -17,54 +17,35 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-
-using TypeDB.Driver;
-using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 
-namespace TypeDB.Driver.User
+namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// TypeDB user information.
+    /// User credentials for connecting to TypeDB Server.
     /// </summary>
-    public class User : NativeObjectWrapper<Pinvoke.User>, IUser
+    /// <example>
+    /// <code>
+    /// Credentials credentials = new Credentials("admin", "password");
+    /// </code>
+    /// </example>
+    public class Credentials : NativeObjectWrapper<Pinvoke.Credentials>
     {
-        private readonly UserManager _users;
-
-        internal User(Pinvoke.User nativeUser, UserManager users)
-            : base(nativeUser)
-        {
-            _users = users;
-        }
-
-        /// <inheritdoc/>
-        public string Username
-        {
-            get { return Pinvoke.typedb_driver.user_get_name(NativeObject); }
-        }
-
-        /// <inheritdoc/>
-        public void UpdatePassword(string password)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.user_update_password(NativeObject, password);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
         /// <summary>
-        /// Deletes this user.
+        /// Creates a new <see cref="Credentials"/> for connecting to TypeDB Server.
         /// </summary>
-        public void Delete()
+        /// <param name="username">The name of the user to connect as.</param>
+        /// <param name="password">The password for the user.</param>
+        public Credentials(string username, string password)
+            : base(NewNative(username, password))
+        {
+        }
+
+        private static Pinvoke.Credentials NewNative(string username, string password)
         {
             try
             {
-                Pinvoke.typedb_driver.user_delete(NativeObject);
+                return Pinvoke.typedb_driver.credentials_new(username, password);
             }
             catch (Pinvoke.Error e)
             {
