@@ -114,6 +114,8 @@ namespace TypeDB.Driver.Connection
 
             try
             {
+                // Close the transaction - don't release ownership,
+                // let the SWIG finalizer handle memory cleanup
                 Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
             }
             catch (Pinvoke.Error e)
@@ -141,6 +143,10 @@ namespace TypeDB.Driver.Connection
             {
                 // Execute query and wait for completion
                 var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
+
+                // Prevent GC from collecting options during the native call
+                GC.KeepAlive(options);
+
                 Pinvoke.typedb_driver.query_answer_promise_resolve(promise);
             }
             catch (Pinvoke.Error e)
