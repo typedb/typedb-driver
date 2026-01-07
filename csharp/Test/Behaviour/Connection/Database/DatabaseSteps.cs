@@ -18,6 +18,7 @@
  */
 
 using DataTable = Gherkin.Ast.DataTable;
+using DocString = Gherkin.Ast.DocString;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ using Xunit;
 using Xunit.Gherkin.Quick;
 
 using TypeDB.Driver;
+using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Test.Behaviour;
 
@@ -34,8 +36,8 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [Given(@"connection create database: {word}")]
-        [When(@"connection create database: {word}")]
+        [Given(@"connection create database: (.+)")]
+        [When(@"connection create database: (.+)")]
         public void ConnectionCreateDatabase(string name)
         {
             Driver!.Databases.Create(name);
@@ -85,7 +87,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(taskArray);
         }
 
-        [When(@"connection delete database: {word}")]
+        [When(@"connection delete database: (\S+)")]
         public void ConnectionDeleteDatabase(string name)
         {
             Driver!.Databases.Get(name).Delete();
@@ -103,7 +105,7 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        [When(@"connection delete database; throws exception: {word}")]
+        [When(@"connection delete database; throws exception: (\S+)")]
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             Assert.Throws<TypeDBDriverException>(
@@ -140,7 +142,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(taskArray);
         }
 
-        [Then(@"connection has database: {word}")]
+        [Then(@"connection has database: (.+)")]
         public void ConnectionHasDatabase(string name)
         {
             Assert.True(Driver!.Databases.Contains(name));
@@ -163,7 +165,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(expectedDatabasesSize >= Driver!.Databases.GetAll().Count);
         }
 
-        [Then(@"connection does not have database: {word}")]
+        [Then(@"connection does not have database: (.+)")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
             Assert.False(Driver!.Databases.Contains(name));
@@ -188,6 +190,42 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
             Assert.Equal(0, Driver!.Databases.GetAll().Count);
+        }
+
+        [Then(@"connection create database with empty name; fails")]
+        public void ConnectionCreateDatabaseWithEmptyNameFails()
+        {
+            Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Create(""));
+        }
+
+        [Then(@"connection create database: (.*); fails")]
+        public void ConnectionCreateDatabaseFails(string name)
+        {
+            Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Create(name));
+        }
+
+        [When(@"connection delete database: (.*); fails")]
+        [Then(@"connection delete database: (.*); fails")]
+        public void ConnectionDeleteDatabaseFails(string name)
+        {
+            Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Get(name).Delete());
+        }
+
+        [Given(@"connection delete database: (\S+)")]
+        [Then(@"connection delete database: (\S+)")]
+        public void ConnectionDeleteDatabaseGivenThen(string name)
+        {
+            ConnectionDeleteDatabase(name);
+        }
+
+        [Given(@"typeql schema query")]
+        [When(@"typeql schema query")]
+        [Then(@"typeql schema query")]
+        public void TypeqlSchemaQuery(DocString queryStatements)
+        {
+            Assert.True(Transactions.Count > 0, "No transaction open for query");
+            var tx = Transactions[Transactions.Count - 1];
+            tx.Query(queryStatements.Content);
         }
     }
 }

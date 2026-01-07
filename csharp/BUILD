@@ -94,8 +94,6 @@ nuget_pack(
         "//csharp/Common:common": "TypeDB.Driver.Common",
         "//csharp/Connection:connection": "TypeDB.Driver.Connection",
         "//csharp/Concept:concept": "TypeDB.Driver.Concept",
-        "//csharp/Logic:logic": "TypeDB.Driver.Logic",
-        "//csharp/Query:query": "TypeDB.Driver.Query",
         "//csharp/User:user": "TypeDB.Driver.User",
     },
     files = {
@@ -115,7 +113,7 @@ nuget_push(
 
 filegroup(
     name = "docs_source_files",
-    srcs = [":Drivers.cs"],
+    srcs = [":TypeDB.cs"],
 )
 
 # TODO: Not hermetic - requires doxygen on the host (https://github.com/typedb/bazel-distribution/issues/412)

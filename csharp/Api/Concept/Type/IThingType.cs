@@ -330,96 +330,66 @@ namespace TypeDB.Driver.Api
         Promise<string> GetSyntax(ITypeDBTransaction transaction);
 
         /**
-         * Annotation
+         * Annotation for ownership constraints.
+         * Note: In 3.0, annotations are handled through TypeQL queries rather than programmatic API.
          */
-        public class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
+        public class Annotation
         {
-            /**
-             * @private
-             */
+            private readonly bool _isKey;
+            private readonly bool _isUnique;
             private readonly int _hash;
 
-            private Annotation(Pinvoke.Annotation annotation)
-                : base(annotation)
+            private Annotation(bool isKey, bool isUnique)
             {
-                _hash = (IsKey(), IsUnique()).GetHashCode();
+                _isKey = isKey;
+                _isUnique = isUnique;
+                _hash = (isKey, isUnique).GetHashCode();
             }
 
             /**
              * Produces a <code>@key</code> annotation.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * using static TypeDB.Driver.Api.IThingType.Annotation;
-             * NewKey();
-             * </pre>
              */
             public static Annotation NewKey()
             {
-                return new Annotation(Pinvoke.typedb_driver.annotation_new_key());
+                return new Annotation(true, false);
             }
 
             /**
              * Produces a <code>@unique</code> annotation.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * Annotation.NewUnique();
-             * </pre>
              */
             public static Annotation NewUnique()
             {
-                return new Annotation(Pinvoke.typedb_driver.annotation_new_unique());
+                return new Annotation(false, true);
             }
 
             /**
              * Checks if this <code>Annotation</code> is a <code>@key</code> annotation.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * annotation.IsKey();
-             * </pre>
              */
             public bool IsKey()
             {
-                return Pinvoke.typedb_driver.annotation_is_key(NativeObject);
+                return _isKey;
             }
 
             /**
              * Checks if this <code>Annotation</code> is a <code>@unique</code> annotation.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * annotation.IsUnique();
-             * </pre>
              */
             public bool IsUnique()
             {
-                return Pinvoke.typedb_driver.annotation_is_unique(NativeObject);
+                return _isUnique;
             }
 
             /**
              * Retrieves a string representation of this <code>Annotation</code>.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * annotation.ToString();
-             * </pre>
              */
             public override string ToString()
             {
-                return Pinvoke.typedb_driver.annotation_to_string(NativeObject);
+                if (_isKey) return "@key";
+                if (_isUnique) return "@unique";
+                return "";
             }
 
             /**
              * Checks if this <code>Annotation</code> is equal to another object.
-             *
-             * <h3>Examples</h3>
-             * <pre>
-             * annotation.Equals(obj);
-             * </pre>
-             *
-             * @param obj Object to compare with
              */
             public override bool Equals(object? obj)
             {
@@ -434,8 +404,7 @@ namespace TypeDB.Driver.Api
                 }
 
                 Annotation that = (Annotation)obj;
-
-                return Pinvoke.typedb_driver.annotation_equals(this.NativeObject, that.NativeObject);
+                return _isKey == that._isKey && _isUnique == that._isUnique;
             }
 
             /**

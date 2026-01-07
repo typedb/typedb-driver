@@ -26,42 +26,41 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.User
 {
-    public class UserManager : NativeObjectWrapper<Pinvoke.UserManager>, IUserManager 
+    /// <summary>
+    /// Provides access to user management operations.
+    /// </summary>
+    public class UserManager : IUserManager
     {
-        public UserManager(Pinvoke.Connection nativeConnection) 
-            : base(NewNative(nativeConnection))
+        private readonly Pinvoke.TypeDBDriver _nativeDriver;
+
+        /// <summary>
+        /// Creates a new user manager for the given driver.
+        /// </summary>
+        /// <param name="nativeDriver">The native driver object.</param>
+        public UserManager(Pinvoke.TypeDBDriver nativeDriver)
         {
+            _nativeDriver = nativeDriver;
         }
 
-        private static Pinvoke.UserManager NewNative(Pinvoke.Connection nativeConnection) 
+        /// <inheritdoc/>
+        public bool Contains(string username)
         {
-            try 
+            try
             {
-                return Pinvoke.typedb_driver.user_manager_new(nativeConnection);
-            } 
-            catch (Pinvoke.Error e) 
+                return Pinvoke.typedb_driver.users_contains(_nativeDriver, username);
+            }
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
         }
 
-        public bool Contains(string username) 
-        {
-            try 
-            {
-                return Pinvoke.typedb_driver.users_contains(NativeObject, username);
-            }
-            catch (Pinvoke.Error e) 
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public void Create(string username, string password)
         {
             try
             {
-                Pinvoke.typedb_driver.users_create(NativeObject, username, password);
+                Pinvoke.typedb_driver.users_create(_nativeDriver, username, password);
             }
             catch (Pinvoke.Error e)
             {
@@ -69,23 +68,12 @@ namespace TypeDB.Driver.User
             }
         }
 
-        public void Delete(string username)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.users_delete(NativeObject, username);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public IUser? Get(string username)
         {
             try
             {
-                Pinvoke.User user = Pinvoke.typedb_driver.users_get(NativeObject, username);
+                Pinvoke.User user = Pinvoke.typedb_driver.users_get(_nativeDriver, username);
                 if (user != null)
                 {
                     return new User(user, this);
@@ -99,12 +87,13 @@ namespace TypeDB.Driver.User
             }
         }
 
+        /// <inheritdoc/>
         public ISet<IUser> GetAll()
         {
             try
             {
                 return new NativeEnumerable<Pinvoke.User>(
-                    Pinvoke.typedb_driver.users_all(NativeObject))
+                    Pinvoke.typedb_driver.users_all(_nativeDriver))
                     .Select(obj => new User(obj, this))
                     .ToHashSet<IUser>();
             }
@@ -114,23 +103,12 @@ namespace TypeDB.Driver.User
             }
         }
 
-        public void SetPassword(string username, string password)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.users_set_password(NativeObject, username, password);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public IUser GetCurrentUser()
         {
             try
             {
-                return new User(Pinvoke.typedb_driver.users_current_user(NativeObject), this);
+                return new User(Pinvoke.typedb_driver.users_get_current_user(_nativeDriver), this);
             }
             catch (Pinvoke.Error e)
             {
