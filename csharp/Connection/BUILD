@@ -28,9 +28,6 @@ csharp_library(
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
-        "//csharp/Concept:concept",
-        "//csharp/Logic:logic",
-        "//csharp/Query:query",
         "//csharp/User:user",
         "//csharp:typedb_driver_pinvoke",
     ],

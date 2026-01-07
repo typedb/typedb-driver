@@ -22,57 +22,32 @@ using System.Collections.Generic;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Concept;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
-using TypeDB.Driver.Logic;
-using TypeDB.Driver.Query;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
+    /// <summary>
+    /// A transaction with a TypeDB database.
+    /// </summary>
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
         private readonly List<TransactionOnClose> _callbacks;
 
-        internal TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
-            : base(NewNative(session, type, options))
+        // TODO: Milestone 2 - Add transaction creation from Driver
+        internal TypeDBTransaction(Pinvoke.Transaction transaction, TransactionType type)
+            : base(transaction)
         {
             Type = type;
-            Options = options;
-
-            Concepts = new ConceptManager(NativeObject);
-            Logic = new LogicManager(NativeObject);
-            Query = new QueryManager(NativeObject);
-
             _callbacks = new List<TransactionOnClose>();
         }
 
-        private static Pinvoke.Transaction NewNative(
-            TypeDBSession session, TransactionType type, TypeDBOptions options)
-        {
-            try
-            {
-                return Pinvoke.typedb_driver.transaction_new(
-                    session.NativeObject, (Pinvoke.TransactionType)type, options.NativeObject);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public TransactionType Type { get; }
 
-        public TypeDBOptions Options { get; }
-
-        public IConceptManager Concepts { get; }
-
-        public ILogicManager Logic { get; }
-
-        public IQueryManager Query { get; }
-
+        /// <inheritdoc/>
         public bool IsOpen()
         {
             return NativeObject.IsOwned()
@@ -80,7 +55,8 @@ namespace TypeDB.Driver.Connection
                 : false;
         }
 
-        public void OnClose(Action<Exception> function)
+        /// <inheritdoc/>
+        public void OnClose(Action<Exception?> function)
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
@@ -96,6 +72,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Commit()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -110,6 +87,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Rollback()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -124,6 +102,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Close()
         {
             if (!NativeObject.IsOwned())
@@ -133,7 +112,7 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                Pinvoke.typedb_driver.transaction_force_close(NativeObject);
+                Pinvoke.typedb_driver.transaction_close(NativeObject);
             }
             catch (Pinvoke.Error e)
             {
@@ -145,6 +124,30 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
+        public void Query(string query)
+        {
+            Query(query, new QueryOptions());
+        }
+
+        /// <inheritdoc/>
+        public void Query(string query, QueryOptions options)
+        {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
+
+            try
+            {
+                // Execute query and wait for completion
+                var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
+                Pinvoke.typedb_driver.query_answer_promise_resolve(promise);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             Close();
@@ -152,9 +155,9 @@ namespace TypeDB.Driver.Connection
 
         private class TransactionOnClose : Pinvoke.TransactionCallbackDirector
         {
-            private readonly Action<Exception> _function;
+            private readonly Action<Exception?> _function;
 
-            public TransactionOnClose(Action<Exception> function)
+            public TransactionOnClose(Action<Exception?> function)
             {
                 _function = function;
             }

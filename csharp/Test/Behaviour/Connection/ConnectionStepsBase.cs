@@ -31,26 +31,10 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
-        public static ITypeDBDriver? Driver;
+        public static IDriver? Driver;
 
-        public static List<ITypeDBSession> Sessions = new List<ITypeDBSession>();
-        public static List<Task<ITypeDBSession>> ParallelSessions = new List<Task<ITypeDBSession>>();
-
-        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction>> SessionsToTransactions =
-            new Dictionary<ITypeDBSession, List<ITypeDBTransaction>>();
-        public static Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>> SessionsToParallelTransactions =
-            new Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>>();
-        public static Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>> ParallelSessionsToParallelTransactions =
-            new Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>>();
-
-        public static TypeDBOptions SessionOptions = new TypeDBOptions();
-        public static TypeDBOptions TransactionOptions = new TypeDBOptions();
-
-        public static readonly Dictionary<string, Action<TypeDBOptions, string>> OptionSetters =
-            new Dictionary<string, Action<TypeDBOptions, string>>(){
-                {"session-idle-timeout-millis", (option, val) => option.SessionIdleTimeoutMillis(Int32.Parse(val))},
-                {"transaction-timeout-millis", (option, val) => option.TransactionTimeoutMillis(Int32.Parse(val))}
-        };
+        // TODO: Add transaction tracking when transactions are implemented in Milestone 2
+        public static List<ITypeDBTransaction> Transactions = new List<ITypeDBTransaction>();
 
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
@@ -58,58 +42,60 @@ namespace TypeDB.Driver.Test.Behaviour
         public ConnectionStepsBase() // "Before"
         {
             CleanInCaseOfPreviousFail();
-
-            SessionOptions = SessionOptions.Infer(true);
-            TransactionOptions = TransactionOptions.Infer(true);
         }
 
         public virtual void Dispose() // "After"
         {
-            foreach (var (session, transactions) in SessionsToParallelTransactions)
+            foreach (var tx in Transactions)
             {
-                Task.WaitAll(transactions.ToArray());
-            }
-            SessionsToParallelTransactions.Clear();
-
-            foreach (var session in Sessions)
-            {
-                session.Close();
-            }
-
-            Sessions.Clear();
-            SessionsToTransactions.Clear();
-
-            Task.WaitAll(ParallelSessions.ToArray());
-            ParallelSessions.Clear();
-
-            foreach (var (session, transactions) in ParallelSessionsToParallelTransactions)
-            {
-                session.Wait();
-                Task.WaitAll(transactions.ToArray());
-            }
-            
-            ParallelSessionsToParallelTransactions.Clear();
-
-            if (Driver != null)
-            {
-                foreach (var db in Driver!.Databases.GetAll())
+                if (tx.IsOpen())
                 {
-                    db.Delete();
-                }
-
-                if (Driver.IsOpen())
-                {
-                    Driver!.Close();
+                    tx.Close();
                 }
             }
+            Transactions.Clear();
+
+            // Close the current driver if open
+            if (Driver != null && Driver.IsOpen())
+            {
+                Driver.Close();
+            }
+            Driver = null;
+
+            // Always try to clean up databases
+            CleanupAllDatabases();
         }
 
-        public static ITypeDBTransaction Tx
+        private void CleanupAllDatabases()
         {
-            get { return SessionsToTransactions[Sessions[0]][0]; }
+            try
+            {
+                var cleanupDriver = TypeDB.Driver(
+                    TypeDB.DefaultAddress,
+                    new Credentials("admin", "password"),
+                    new DriverOptions(false, null));
+
+                foreach (var db in cleanupDriver.Databases.GetAll())
+                {
+                    try
+                    {
+                        db.Delete();
+                    }
+                    catch
+                    {
+                        // Ignore individual database deletion errors
+                    }
+                }
+
+                cleanupDriver.Close();
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
         }
 
-        public abstract ITypeDBDriver CreateTypeDBDriver(string address);
+        public abstract IDriver CreateTypeDBDriver(string address);
 
         public abstract void TypeDBStarts();
 
@@ -124,31 +110,119 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Driver.IsOpen());
         }
 
+        [Given(@"connection is open: (.*)")]
+        [Then(@"connection is open: (.*)")]
+        public void ConnectionIsOpen(string expectedState)
+        {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
+            bool expected = bool.Parse(expectedState);
+            Assert.NotNull(Driver);
+            Assert.Equal(expected, Driver.IsOpen());
+        }
+
+        [Given(@"connection has (\d+) databases")]
+        [Then(@"connection has (\d+) databases")]
+        public void ConnectionHasDatabaseCount(int expectedCount)
+        {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
+            Assert.NotNull(Driver);
+            Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
+        }
+
         [When(@"connection closes")]
         [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            Driver!.Close();
+            if (Driver != null && Driver.IsOpen())
+            {
+                Driver.Close();
+            }
             Driver = null;
         }
 
-        public static void ClearTransactions(ITypeDBSession session)
+        [When(@"connection open schema transaction for database: (\S+)")]
+        [Given(@"connection open schema transaction for database: (\S+)")]
+        public void ConnectionOpenSchemaTransactionForDatabase(string name)
         {
-            if (SessionsToTransactions.ContainsKey(session))
-            {
-                SessionsToTransactions[session].Clear();
-            }
+            if (_requiredConfiguration) return;
+
+            var tx = Driver!.Transaction(name, TransactionType.Schema);
+            Transactions.Add(tx);
+        }
+
+        [When(@"connection open read transaction for database: (\S+)")]
+        [Given(@"connection open read transaction for database: (\S+)")]
+        public void ConnectionOpenReadTransactionForDatabase(string name)
+        {
+            if (_requiredConfiguration) return;
+
+            var tx = Driver!.Transaction(name, TransactionType.Read);
+            Transactions.Add(tx);
+        }
+
+        [When(@"connection open write transaction for database: (\S+)")]
+        [Given(@"connection open write transaction for database: (\S+)")]
+        public void ConnectionOpenWriteTransactionForDatabase(string name)
+        {
+            if (_requiredConfiguration) return;
+
+            var tx = Driver!.Transaction(name, TransactionType.Write);
+            Transactions.Add(tx);
+        }
+
+        [Then(@"transaction is open: (.*)")]
+        public void TransactionIsOpen(string expectedState)
+        {
+            if (_requiredConfiguration) return;
+
+            bool expected = bool.Parse(expectedState);
+            Assert.True(Transactions.Count > 0, "No transaction is open");
+            var tx = Transactions[Transactions.Count - 1];
+            Assert.Equal(expected, tx.IsOpen());
+        }
+
+        [Given(@"transaction commits")]
+        [When(@"transaction commits")]
+        [Then(@"transaction commits")]
+        public void TransactionCommits()
+        {
+            if (_requiredConfiguration) return;
+
+            Assert.True(Transactions.Count > 0, "No transaction to commit");
+            var tx = Transactions[Transactions.Count - 1];
+            tx.Commit();
+            Transactions.RemoveAt(Transactions.Count - 1);
+        }
+
+        [Given(@"transaction closes")]
+        [When(@"transaction closes")]
+        [Then(@"transaction closes")]
+        public void TransactionCloses()
+        {
+            if (_requiredConfiguration) return;
+
+            Assert.True(Transactions.Count > 0, "No transaction to close");
+            var tx = Transactions[Transactions.Count - 1];
+            tx.Close();
+            Transactions.RemoveAt(Transactions.Count - 1);
         }
 
         private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
         {
-            TypeDBStarts();
-            ConnectionOpensWithDefaultAuthentication();
-            ConnectionHasBeenOpened();
-            Dispose();
-            ConnectionCloses();
+            try
+            {
+                TypeDBStarts();
+                ConnectionOpensWithDefaultAuthentication();
+                Dispose();
+            }
+            catch
+            {
+                // Ignore cleanup errors from previous failed tests
+            }
         }
     }
 }

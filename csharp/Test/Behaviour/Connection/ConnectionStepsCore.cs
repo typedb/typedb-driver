@@ -29,13 +29,20 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps : ConnectionStepsBase
     {
+        // Default test credentials
+        private const string DefaultUsername = "admin";
+        private const string DefaultPassword = "password";
+
         public BehaviourSteps()
             : base()
         {}
 
-        public override ITypeDBDriver CreateTypeDBDriver(string address)
+        public override IDriver CreateTypeDBDriver(string address)
         {
-            return Drivers.CoreDriver(address);
+            return TypeDB.Driver(
+                address,
+                new Credentials(DefaultUsername, DefaultPassword),
+                new DriverOptions(false, null));
         }
 
         [Given(@"typedb starts")]
@@ -48,14 +55,17 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Driver = CreateTypeDBDriver(Drivers.DEFAULT_ADDRESS);
+            Driver = CreateTypeDBDriver(TypeDB.DefaultAddress);
         }
 
         [Given(@"connection opens with authentication: {}, {}")]
         [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
-            throw new NotImplementedException("Core tests are not expected to use this method");
+            Driver = TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials(username, password),
+                new DriverOptions(false, null));
         }
 
         [Given(@"typedb has configuration")]

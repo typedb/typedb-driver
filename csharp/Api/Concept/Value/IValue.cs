@@ -186,12 +186,12 @@ namespace TypeDB.Driver.Api
          */
         public enum ValueType
         {
-            Object = Pinvoke.ValueType.Object,
-            Bool = Pinvoke.ValueType.Boolean,
-            Long = Pinvoke.ValueType.Long,
-            Double = Pinvoke.ValueType.Double,
-            String = Pinvoke.ValueType.String,
-            DateTime = Pinvoke.ValueType.DateTime,
+            Object = 0,
+            Bool = 1,
+            Long = 2,
+            Double = 3,
+            String = 4,
+            DateTime = 5,
         }
     }
 

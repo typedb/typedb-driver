@@ -338,8 +338,8 @@ namespace TypeDB.Driver.Api
          */
         public enum Transitivity
         {
-            Transitive = Pinvoke.Transitivity.Transitive,
-            Explicit = Pinvoke.Transitivity.Explicit,
+            Transitive = 0,
+            Explicit = 1,
         }
     }
 }
