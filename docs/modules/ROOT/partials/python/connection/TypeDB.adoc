@@ -1,0 +1,33 @@
+[#_TypeDB]
+=== TypeDB
+
+*Package*: `typedb.driver`
+
+// tag::methods[]
+[#_TypeDB_driver_addresses_Mapping_str_str_Iterable_str_str]
+==== driver
+
+[source,python]
+----
+static driver(addresses: Mapping[str, str] | Iterable[str] | str, credentials: Credentials, driver_options: DriverOptions) -> Driver
+----
+
+Creates a connection to TypeDB.
+
+Can be a single string, multiple strings, or multiple pairs of strings. :param credentials: The credentials to connect with. :param driver_options: The driver connection options to connect with.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `addresses` a| Address(-es) of the TypeDB server(-s). a| `Mapping[str, str] \| Iterable[str] \| str` a| 
+|===
+
+[caption=""]
+.Returns
+`Driver`
+
+// end::methods[]
+

@@ -62,6 +62,6 @@ TypeDBDriver* driver_new_for_tests(const char* address, const char* username, co
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);
-
+    driver_tls_config_drop(tls_config);
     return driver;
 }

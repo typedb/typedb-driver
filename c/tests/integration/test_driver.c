@@ -189,7 +189,6 @@ bool test_query_data() {
 
     // Set up schema
     {
-
         transaction = transaction_new(driver, databaseName, Schema, tx_opts);
         if (FAILED()) goto cleanup;
 
