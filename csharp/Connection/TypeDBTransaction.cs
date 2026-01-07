@@ -35,12 +35,14 @@ namespace TypeDB.Driver.Connection
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
         private readonly List<TransactionOnClose> _callbacks;
+        // Keep a reference to prevent GC collection while native code uses it
+        private readonly TransactionOptions _options;
 
-        // TODO: Milestone 2 - Add transaction creation from Driver
-        internal TypeDBTransaction(Pinvoke.Transaction transaction, TransactionType type)
+        internal TypeDBTransaction(Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
             : base(transaction)
         {
             Type = type;
+            _options = options;
             _callbacks = new List<TransactionOnClose>();
         }
 
@@ -64,7 +66,7 @@ namespace TypeDB.Driver.Connection
             {
                 TransactionOnClose callback = new TransactionOnClose(function);
                 _callbacks.Add(callback);
-                Pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
+                Pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released()).Resolve();
             }
             catch (Pinvoke.Error e)
             {
@@ -112,7 +114,7 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                Pinvoke.typedb_driver.transaction_close(NativeObject);
+                Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
             }
             catch (Pinvoke.Error e)
             {

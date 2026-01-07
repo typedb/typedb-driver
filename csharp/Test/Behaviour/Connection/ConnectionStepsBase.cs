@@ -55,19 +55,37 @@ namespace TypeDB.Driver.Test.Behaviour
             }
             Transactions.Clear();
 
-            // Close the current driver if open
+            // Clean up databases using current driver before closing
             if (Driver != null && Driver.IsOpen())
             {
+                try
+                {
+                    foreach (var db in Driver.Databases.GetAll())
+                    {
+                        try
+                        {
+                            db.Delete();
+                        }
+                        catch
+                        {
+                            // Ignore individual database deletion errors
+                        }
+                    }
+                }
+                catch
+                {
+                    // Ignore errors
+                }
+
                 Driver.Close();
             }
             Driver = null;
-
-            // Always try to clean up databases
-            CleanupAllDatabases();
         }
 
         private void CleanupAllDatabases()
         {
+            // Note: This method is not used - cleanup is done in Dispose() using the current driver
+            // Keeping this for potential future use with a separate cleanup driver
             try
             {
                 var cleanupDriver = TypeDB.Driver(
@@ -195,7 +213,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Transactions.Count > 0, "No transaction to commit");
             var tx = Transactions[Transactions.Count - 1];
             tx.Commit();
-            Transactions.RemoveAt(Transactions.Count - 1);
+            // Don't remove from list - tests may want to check IsOpen() afterward
         }
 
         [Given(@"transaction closes")]
@@ -208,16 +226,26 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Transactions.Count > 0, "No transaction to close");
             var tx = Transactions[Transactions.Count - 1];
             tx.Close();
-            Transactions.RemoveAt(Transactions.Count - 1);
+            // Don't remove from list - tests may want to check IsOpen() afterward
         }
 
         private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
         {
             try
             {
-                TypeDBStarts();
-                ConnectionOpensWithDefaultAuthentication();
-                Dispose();
+                // Close any leftover transactions from previous failed tests
+                foreach (var tx in Transactions)
+                {
+                    try { if (tx.IsOpen()) tx.Close(); } catch { }
+                }
+                Transactions.Clear();
+
+                // Close leftover driver
+                if (Driver != null)
+                {
+                    try { if (Driver.IsOpen()) Driver.Close(); } catch { }
+                    Driver = null;
+                }
             }
             catch
             {

@@ -35,6 +35,9 @@ namespace TypeDB.Driver.Connection
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly UserManager _userManager;
+        // Keep references to prevent GC collection while native code uses them
+        private readonly Credentials _credentials;
+        private readonly DriverOptions _driverOptions;
 
         /// <summary>
         /// Creates a new TypeDB driver connection using the 3.0 unified API.
@@ -43,13 +46,10 @@ namespace TypeDB.Driver.Connection
         /// <param name="credentials">The credentials to connect with.</param>
         /// <param name="driverOptions">The driver options (TLS settings, etc.).</param>
         public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
-            : this(Open(address, credentials, driverOptions))
+            : base(Open(address, credentials, driverOptions))
         {
-        }
-
-        private TypeDBDriver(Pinvoke.TypeDBDriver driver)
-            : base(driver)
-        {
+            _credentials = credentials;
+            _driverOptions = driverOptions;
             _databaseManager = new TypeDBDatabaseManager(NativeObject);
             _userManager = new UserManager(NativeObject);
         }
@@ -104,7 +104,7 @@ namespace TypeDB.Driver.Connection
                     database,
                     (Pinvoke.TransactionType)type,
                     options.NativeObject);
-                return new TypeDBTransaction(nativeTransaction, type);
+                return new TypeDBTransaction(nativeTransaction, type, options);
             }
             catch (Pinvoke.Error e)
             {
