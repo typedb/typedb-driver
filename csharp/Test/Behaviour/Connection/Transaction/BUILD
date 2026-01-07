@@ -33,8 +33,6 @@ csharp_behaviour_test(
     steps_files = [
         ":steps",
         "//csharp/Test/Behaviour/Util:steps",
-        "//csharp/Test/Behaviour/Query:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-core",
     ],
