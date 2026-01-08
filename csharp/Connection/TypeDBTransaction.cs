@@ -21,7 +21,9 @@ using System;
 using System.Collections.Generic;
 
 using TypeDB.Driver;
+using TypeDB.Driver.Answer;
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
@@ -114,28 +116,26 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                // Close the transaction - don't release ownership,
-                // let the SWIG finalizer handle memory cleanup
+                _callbacks.Clear();
+
+                // Call transaction_close and wait for it to complete.
+                // This is what Java does.
                 Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
             }
             catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
-            finally
-            {
-                _callbacks.Clear();
-            }
         }
 
         /// <inheritdoc/>
-        public void Query(string query)
+        public IQueryAnswer Query(string query)
         {
-            Query(query, new QueryOptions());
+            return Query(query, new QueryOptions());
         }
 
         /// <inheritdoc/>
-        public void Query(string query, QueryOptions options)
+        public IQueryAnswer Query(string query, QueryOptions options)
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
@@ -147,7 +147,8 @@ namespace TypeDB.Driver.Connection
                 // Prevent GC from collecting options during the native call
                 GC.KeepAlive(options);
 
-                Pinvoke.typedb_driver.query_answer_promise_resolve(promise);
+                var nativeAnswer = Pinvoke.typedb_driver.query_answer_promise_resolve(promise);
+                return QueryAnswer.Of(nativeAnswer);
             }
             catch (Pinvoke.Error e)
             {

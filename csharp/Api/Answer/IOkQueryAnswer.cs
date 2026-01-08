@@ -17,12 +17,17 @@
  * under the License.
  */
 
-using Xunit.Gherkin.Quick;
-
-namespace TypeDB.Driver.Test.Behaviour
+namespace TypeDB.Driver.Api.Answer
 {
-    [FeatureFile("external/typedb_behaviour/query/language/get.feature")]
-    public partial class BehaviourSteps
+    /// <summary>
+    /// Represents a simple Ok message as a server answer. Doesn't contain concepts.
+    /// </summary>
+    public interface IOkQueryAnswer : IQueryAnswer
     {
+        /// <inheritdoc/>
+        bool IQueryAnswer.IsOk => true;
+
+        /// <inheritdoc/>
+        IOkQueryAnswer IQueryAnswer.AsOk() => this;
     }
 }

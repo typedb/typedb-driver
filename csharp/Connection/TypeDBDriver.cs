@@ -134,15 +134,14 @@ namespace TypeDB.Driver.Connection
         public void Close()
         {
             // Check if already closed/disposed
-            if (!IsOpen())
+            if (!NativeObject.IsOwned())
             {
                 return;
             }
 
             try
             {
-                // Force close the driver - don't release ownership,
-                // let the SWIG finalizer handle memory cleanup
+                // Signal the driver to shut down gracefully, like Java/Python do.
                 Pinvoke.typedb_driver.driver_force_close(NativeObject);
             }
             catch (Pinvoke.Error e)

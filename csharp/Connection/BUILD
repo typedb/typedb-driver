@@ -26,6 +26,7 @@ csharp_library(
     srcs = glob(["*.cs", "*/*.cs"],
     ),
     deps = [
+        "//csharp/Answer:answer",
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp/User:user",

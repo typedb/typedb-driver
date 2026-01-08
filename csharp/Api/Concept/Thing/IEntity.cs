@@ -17,40 +17,33 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-
-using TypeDB.Driver.Api;
-
 namespace TypeDB.Driver.Api
 {
-    /**
-     * Instance of data of an entity type, representing a standalone object that exists in the data model independently.
-     * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
-     * played in relation instances.
-     */
+    /// <summary>
+    /// Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+    /// Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
+    /// played in relation instances.
+    /// In TypeDB 3.0, instances are read-only data returned from queries.
+    /// </summary>
     public interface IEntity : IThing
     {
-        /**
-         * Checks if the concept is an <code>IEntity</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entity.IsEntity();
-         * </pre>
-         */
+        /// <summary>
+        /// The unique id of the entity.
+        /// </summary>
+        string IID { get; }
+
+        /// <summary>
+        /// The type which this entity belongs to.
+        /// </summary>
+        new IEntityType Type { get; }
+
+        /// <inheritdoc/>
         bool IConcept.IsEntity()
         {
             return true;
         }
 
-        /**
-         * Casts the concept to <code>IEntity</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entity.AsEntity();
-         * </pre>
-         */
+        /// <inheritdoc/>
         IEntity IConcept.AsEntity()
         {
             return this;

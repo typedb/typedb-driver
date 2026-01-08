@@ -17,78 +17,107 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
-using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Api
 {
-    /**
-     * <p>Attribute is an instance of the attribute type and has a value.
-     * This value is fixed and unique for every given instance of the attribute type.</p>
-     * <p>Attributes can be uniquely addressed by their type and value.</p>
-     */
+    /// <summary>
+    /// Attribute is an instance of the attribute type and has a value.
+    /// This value is fixed and unique for every given instance of the attribute type.
+    /// Attributes can be uniquely addressed by their type and value.
+    /// In TypeDB 3.0, instances are read-only data returned from queries.
+    /// </summary>
     public interface IAttribute : IThing
     {
-        /**
-         * Checks if the concept is an <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.IsAttribute();
-         * </pre>
-         */
+        /// <summary>
+        /// The type which this attribute belongs to.
+        /// </summary>
+        new IAttributeType Type { get; }
+
+        /// <summary>
+        /// Retrieves the value which the attribute instance holds.
+        /// </summary>
+        IValue Value { get; }
+
+        /// <summary>
+        /// Retrieves the description of the value type of the value which the attribute instance holds.
+        /// </summary>
+        string GetValueType();
+
+        /// <summary>
+        /// Returns a boolean value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        bool GetBoolean();
+
+        /// <summary>
+        /// Returns an integer (long) value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        long GetInteger();
+
+        /// <summary>
+        /// Returns a double value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        double GetDouble();
+
+        /// <summary>
+        /// Returns a decimal value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        decimal GetDecimal();
+
+        /// <summary>
+        /// Returns a string value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        string GetString();
+
+        /// <summary>
+        /// Returns a date value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        DateOnly GetDate();
+
+        /// <summary>
+        /// Returns a datetime value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        DateTime GetDatetime();
+
+        /// <summary>
+        /// Returns a datetime with timezone value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        DateTimeOffset GetDatetimeTZ();
+
+        /// <summary>
+        /// Returns a duration value of the value concept that this attribute holds.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        Duration GetDuration();
+
+        /// <summary>
+        /// Returns a struct value of the value concept that this attribute holds
+        /// represented as a dictionary from field names to values.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        IReadOnlyDictionary<string, IValue?> GetStruct();
+
+        /// <inheritdoc/>
         bool IConcept.IsAttribute()
         {
             return true;
         }
 
-        /**
-         * Casts the concept to <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.AsAttribute();
-         * </pre>
-         */
+        /// <inheritdoc/>
         IAttribute IConcept.AsAttribute()
         {
             return this;
         }
-
-        /**
-         * Retrieves the value which the <code>IAttribute</code> instance holds.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.Value;
-         * </pre>
-         */
-        IValue Value { get; }
-
-        /**
-         * Retrieves the instances that own this <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.GetOwners(transaction);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction);
-
-        /**
-         * Retrieves the instances that own this <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.GetOwners(transaction, ownerType);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param ownerType Filter results for only owners of the given type
-         */
-        IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType);
     }
 }

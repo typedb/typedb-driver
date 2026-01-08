@@ -20,6 +20,7 @@
 using System;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Api
@@ -66,14 +67,16 @@ namespace TypeDB.Driver.Api
         /// Executes a TypeQL query in this transaction.
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
-        void Query(string query);
+        /// <returns>The query answer containing the results.</returns>
+        IQueryAnswer Query(string query);
 
         /// <summary>
         /// Executes a TypeQL query in this transaction with custom options.
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
         /// <param name="options">Query options.</param>
-        void Query(string query, QueryOptions options);
+        /// <returns>The query answer containing the results.</returns>
+        IQueryAnswer Query(string query, QueryOptions options);
     }
 
     /// <summary>

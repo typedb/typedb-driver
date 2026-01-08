@@ -142,12 +142,14 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(taskArray);
         }
 
+        [Given(@"connection has database: (.+)")]
         [Then(@"connection has database: (.+)")]
         public void ConnectionHasDatabase(string name)
         {
             Assert.True(Driver!.Databases.Contains(name));
         }
 
+        [Given(@"connection has databases:")]
         [Then(@"connection has databases:")]
         public void ConnectionHasDatabases(DataTable names)
         {
@@ -218,14 +220,30 @@ namespace TypeDB.Driver.Test.Behaviour
             ConnectionDeleteDatabase(name);
         }
 
-        [Given(@"typeql schema query")]
-        [When(@"typeql schema query")]
-        [Then(@"typeql schema query")]
-        public void TypeqlSchemaQuery(DocString queryStatements)
+        [Given(@"connection reset database: (.+)")]
+        [When(@"connection reset database: (.+)")]
+        public void ConnectionResetDatabase(string name)
         {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            tx.Query(queryStatements.Content);
+            // First close any open transactions for this database
+            foreach (var tx in Transactions.ToList())
+            {
+                if (tx.IsOpen())
+                {
+                    tx.Close();
+                }
+            }
+            Transactions.Clear();
+
+            // Delete the database if it exists
+            if (Driver!.Databases.Contains(name))
+            {
+                Driver.Databases.Get(name).Delete();
+            }
+
+            // Recreate the database
+            Driver.Databases.Create(name);
         }
+
+        // Query-related steps moved to QuerySteps.cs
     }
 }

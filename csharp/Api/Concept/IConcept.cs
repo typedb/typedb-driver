@@ -17,325 +17,615 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using TypeDB.Driver;
-using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
-using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// The base interface for all concepts in TypeDB.
+    /// </summary>
     public interface IConcept
     {
-        /**
-         * Checks if the concept is a <code>IType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsType();
-         * </pre>
-         */
-        bool IsType()
-        {
-            return false;
-        }
+        /// <summary>
+        /// The scale used for decimal values.
+        /// </summary>
+        const int DecimalScale = 19;
 
-        /**
-         * Checks if the concept is a <code>IThingType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsThingType();
-         * </pre>
-         */
-        bool IsThingType()
-        {
-            return false;
-        }
+        #region Type Checking - Concept Types
 
-        /**
-         * Checks if the concept is an <code>IEntityType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsEntityType();
-         * </pre>
-         */
-        bool IsEntityType()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is a <see cref="IType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsType()
+        /// </code>
+        /// </example>
+        bool IsType() => false;
 
-        /**
-         * Checks if the concept is an <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsAttributeType();
-         * </pre>
-         */
-        bool IsAttributeType()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is a <see cref="IThingType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsThingType()
+        /// </code>
+        /// </example>
+        bool IsThingType() => false;
 
-        /**
-         * Checks if the concept is a <code>IRelationType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsRelationType();
-         * </pre>
-         */
-        bool IsRelationType()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is an <see cref="IEntityType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsEntityType()
+        /// </code>
+        /// </example>
+        bool IsEntityType() => false;
 
-        /**
-         * Checks if the concept is a <code>IRoleType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsRoleType();
-         * </pre>
-         */
-        bool IsRoleType()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is an <see cref="IAttributeType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsAttributeType()
+        /// </code>
+        /// </example>
+        bool IsAttributeType() => false;
 
-        /**
-         * Checks if the concept is a <code>IThing</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsThing();
-         * </pre>
-         */
-        bool IsThing()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is a <see cref="IRelationType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsRelationType()
+        /// </code>
+        /// </example>
+        bool IsRelationType() => false;
 
-        /**
-         * Checks if the concept is an <code>IEntity</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsEntity();
-         * </pre>
-         */
-        bool IsEntity()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is a <see cref="IRoleType"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsRoleType()
+        /// </code>
+        /// </example>
+        bool IsRoleType() => false;
 
-        /**
-         * Checks if the concept is a <code>IRelation</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsRelation();
-         * </pre>
-         */
-        bool IsRelation()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is an instance (entity, relation, or attribute).
+        /// This is the 3.0 name for what was previously called "Thing".
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsInstance()
+        /// </code>
+        /// </example>
+        bool IsInstance() => false;
 
-        /**
-         * Checks if the concept is an <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsAttribute();
-         * </pre>
-         */
-        bool IsAttribute()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is a <see cref="IThing"/>.
+        /// Note: In 3.0, this is also known as IsInstance().
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsThing()
+        /// </code>
+        /// </example>
+        bool IsThing() => IsInstance();
 
-        /**
-         * Checks if the concept is a <code>IValue</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.IsValue();
-         * </pre>
-         */
-        bool IsValue()
-        {
-            return false;
-        }
+        /// <summary>
+        /// Checks if the concept is an <see cref="IEntity"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsEntity()
+        /// </code>
+        /// </example>
+        bool IsEntity() => false;
 
-        /**
-         * Casts the concept to <code>IType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsType();
-         * </pre>
-         */
+        /// <summary>
+        /// Checks if the concept is a <see cref="IRelation"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsRelation()
+        /// </code>
+        /// </example>
+        bool IsRelation() => false;
+
+        /// <summary>
+        /// Checks if the concept is an <see cref="IAttribute"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsAttribute()
+        /// </code>
+        /// </example>
+        bool IsAttribute() => false;
+
+        /// <summary>
+        /// Checks if the concept is a <see cref="IValue"/>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsValue()
+        /// </code>
+        /// </example>
+        bool IsValue() => false;
+
+        #endregion
+
+        #region Type Checking - Value Types
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type boolean
+        /// or if this Concept is an AttributeType of type boolean.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsBoolean()
+        /// </code>
+        /// </example>
+        bool IsBoolean();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type integer
+        /// or if this Concept is an AttributeType of type integer.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsInteger()
+        /// </code>
+        /// </example>
+        bool IsInteger();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type double
+        /// or if this Concept is an AttributeType of type double.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDouble()
+        /// </code>
+        /// </example>
+        bool IsDouble();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type decimal
+        /// or if this Concept is an AttributeType of type decimal.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDecimal()
+        /// </code>
+        /// </example>
+        bool IsDecimal();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type string
+        /// or if this Concept is an AttributeType of type string.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsString()
+        /// </code>
+        /// </example>
+        bool IsString();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type date
+        /// or if this Concept is an AttributeType of type date.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDate()
+        /// </code>
+        /// </example>
+        bool IsDate();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type datetime
+        /// or if this Concept is an AttributeType of type datetime.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDatetime()
+        /// </code>
+        /// </example>
+        bool IsDatetime();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type datetime-tz
+        /// or if this Concept is an AttributeType of type datetime-tz.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDatetimeTZ()
+        /// </code>
+        /// </example>
+        bool IsDatetimeTZ();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type duration
+        /// or if this Concept is an AttributeType of type duration.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsDuration()
+        /// </code>
+        /// </example>
+        bool IsDuration();
+
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type struct
+        /// or if this Concept is an AttributeType of type struct.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsStruct()
+        /// </code>
+        /// </example>
+        bool IsStruct();
+
+        #endregion
+
+        #region Concept Casting
+
+        /// <summary>
+        /// Casts the concept to <see cref="IType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsType()
+        /// </code>
+        /// </example>
         IType AsType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IType));
         }
 
-        /**
-         * Casts the concept to <code>IThingType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsThingType();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IThingType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a thing type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsThingType()
+        /// </code>
+        /// </example>
         IThingType AsThingType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IThingType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IThingType));
         }
 
-        /**
-         * Casts the concept to <code>IEntityType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsEntityType();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IEntityType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not an entity type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsEntityType()
+        /// </code>
+        /// </example>
         IEntityType AsEntityType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IEntityType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IEntityType));
         }
 
-        /**
-         * Casts the concept to <code>IRelationType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsRelationType();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IRelationType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a relation type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsRelationType()
+        /// </code>
+        /// </example>
         IRelationType AsRelationType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRelationType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IRelationType));
         }
 
-        /**
-         * Casts the concept to <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsAttributeType();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IAttributeType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not an attribute type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsAttributeType()
+        /// </code>
+        /// </example>
         IAttributeType AsAttributeType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IAttributeType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IAttributeType));
         }
 
-        /**
-         * Casts the concept to <code>IRoleType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsRoleType();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IRoleType"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a role type.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsRoleType()
+        /// </code>
+        /// </example>
         IRoleType AsRoleType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRoleType).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IRoleType));
         }
 
-        /**
-         * Casts the concept to <code>IThing</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsThing();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IThing"/> (instance).
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a thing/instance.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsThing()
+        /// </code>
+        /// </example>
         IThing AsThing()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IThing).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IThing));
         }
 
-        /**
-         * Casts the concept to <code>IEntity</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsEntity();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IEntity"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not an entity.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsEntity()
+        /// </code>
+        /// </example>
         IEntity AsEntity()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IEntity).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IEntity));
         }
 
-        /**
-         * Casts the concept to <code>IRelation</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsRelation();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IRelation"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a relation.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsRelation()
+        /// </code>
+        /// </example>
         IRelation AsRelation()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRelation).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IRelation));
         }
 
-        /**
-         * Casts the concept to <code>IAttribute</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsAttribute();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IAttribute"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not an attribute.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsAttribute()
+        /// </code>
+        /// </example>
         IAttribute AsAttribute()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IAttribute).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IAttribute));
         }
 
-        /**
-         * Casts the concept to <code>IValue</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * concept.AsValue();
-         * </pre>
-         */
+        /// <summary>
+        /// Casts the concept to <see cref="IValue"/>.
+        /// </summary>
+        /// <exception cref="TypeDBDriverException">If the concept is not a value.</exception>
+        /// <example>
+        /// <code>
+        /// concept.AsValue()
+        /// </code>
+        /// </example>
         IValue AsValue()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IValue).Name);
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IValue));
         }
 
-        /**
-         * This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attributeType.GetOwners(transaction, annotation, Explicit);
-         * </pre>
-         */
+        #endregion
+
+        #region Value Accessors
+
+        /// <summary>
+        /// Returns a boolean value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetBoolean()
+        /// </code>
+        /// </example>
+        bool? TryGetBoolean();
+
+        /// <summary>
+        /// Returns an integer value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetInteger()
+        /// </code>
+        /// </example>
+        long? TryGetInteger();
+
+        /// <summary>
+        /// Returns a double value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDouble()
+        /// </code>
+        /// </example>
+        double? TryGetDouble();
+
+        /// <summary>
+        /// Returns a decimal value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDecimal()
+        /// </code>
+        /// </example>
+        decimal? TryGetDecimal();
+
+        /// <summary>
+        /// Returns a string value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetString()
+        /// </code>
+        /// </example>
+        string? TryGetString();
+
+        /// <summary>
+        /// Returns a date value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDate()
+        /// </code>
+        /// </example>
+        DateOnly? TryGetDate();
+
+        /// <summary>
+        /// Returns a datetime value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDatetime()
+        /// </code>
+        /// </example>
+        DateTime? TryGetDatetime();
+
+        /// <summary>
+        /// Returns a datetime-tz value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDatetimeTZ()
+        /// </code>
+        /// </example>
+        DateTimeOffset? TryGetDatetimeTZ();
+
+        /// <summary>
+        /// Returns a duration value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetDuration()
+        /// </code>
+        /// </example>
+        Duration? TryGetDuration();
+
+        /// <summary>
+        /// Returns a struct value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetStruct()
+        /// </code>
+        /// </example>
+        IReadOnlyDictionary<string, IValue?>? TryGetStruct();
+
+        #endregion
+
+        #region Metadata Accessors
+
+        /// <summary>
+        /// Retrieves the unique label of the concept.
+        /// If this is an Instance, returns the label of the type of this instance ("unknown" if type fetching is disabled).
+        /// If this is a Value, returns the label of the value type.
+        /// If this is a Type, returns the label of the type.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.GetLabel()
+        /// </code>
+        /// </example>
+        string GetLabel();
+
+        /// <summary>
+        /// Retrieves the unique label of the concept, or null if type fetching is disabled for instances.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetLabel()
+        /// </code>
+        /// </example>
+        string? TryGetLabel();
+
+        /// <summary>
+        /// Retrieves the unique id (IID) of the Concept. Returns null if absent.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetIID()
+        /// </code>
+        /// </example>
+        string? TryGetIID();
+
+        /// <summary>
+        /// Retrieves the string describing the value type of this Concept.
+        /// Returns null if absent.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetValueType()
+        /// </code>
+        /// </example>
+        string? TryGetValueType();
+
+        /// <summary>
+        /// Retrieves the value which this Concept holds.
+        /// Returns null if this Concept does not hold any value.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetValue()
+        /// </code>
+        /// </example>
+        IValue? TryGetValue();
+
+        #endregion
+
+        /// <summary>
+        /// Used to specify whether we need explicit or transitive subtyping, instances, etc.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// attributeType.GetOwners(transaction, annotation, Transitivity.Explicit)
+        /// </code>
+        /// </example>
         public enum Transitivity
         {
             Transitive = 0,
