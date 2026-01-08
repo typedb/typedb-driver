@@ -65,12 +65,18 @@ namespace TypeDB.Driver.Test.Behaviour
         // Sleep between scenarios to let the driver close completely
         // (`close` is not synced and can cause lock failures in CI)
         // This mirrors the Java driver's workaround for the same issue.
-        private const int BeforeTimeoutMillis = 10;
+        private const int BeforeTimeoutMillis = 50;  // Small delay for async cleanup
 
         public ConnectionStepsBase() // "Before"
         {
             // Sleep between scenarios to let async driver cleanup complete
             Thread.Sleep(BeforeTimeoutMillis);
+
+            // Force GC to run BEFORE creating a new driver.
+            // This ensures all finalizers from the previous test complete
+            // before we start creating native objects for this test.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             CleanInCaseOfPreviousFail();
         }
@@ -79,38 +85,63 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             foreach (var tx in Transactions)
             {
-                if (tx.IsOpen())
+                try
                 {
-                    tx.Close();
+                    if (tx.IsOpen())
+                    {
+                        tx.Close();
+                    }
+                    // Explicitly dispose to release native resources immediately
+                    if (tx is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+                catch
+                {
+                    // Ignore cleanup errors
                 }
             }
             Transactions.Clear();
 
             // Clean up databases using current driver before closing
-            if (Driver != null && Driver.IsOpen())
+            if (Driver != null)
             {
-                try
+                if (Driver.IsOpen())
                 {
-                    foreach (var db in Driver.Databases.GetAll())
+                    try
                     {
-                        try
+                        foreach (var db in Driver.Databases.GetAll())
                         {
-                            db.Delete();
-                        }
-                        catch
-                        {
-                            // Ignore individual database deletion errors
+                            try
+                            {
+                                db.Delete();
+                            }
+                            catch
+                            {
+                                // Ignore individual database deletion errors
+                            }
                         }
                     }
-                }
-                catch
-                {
-                    // Ignore errors
+                    catch
+                    {
+                        // Ignore errors
+                    }
                 }
 
-                Driver.Close();
+                // Dispose the driver to free native resources immediately
+                // instead of waiting for GC finalization (which can cause race conditions)
+                if (Driver is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
             Driver = null;
+
+            // Force garbage collection to run any remaining finalizers synchronously
+            // This ensures all native resources are freed before starting the next test
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             // Sleep to let async driver cleanup complete
             Thread.Sleep(BeforeTimeoutMillis);
@@ -197,15 +228,20 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            if (Driver != null && Driver.IsOpen())
+            if (Driver != null)
             {
-                Driver.Close();
+                // Dispose the driver to free native resources immediately
+                if (Driver is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
             Driver = null;
         }
 
         [When(@"connection open schema transaction for database: (\S+)")]
         [Given(@"connection open schema transaction for database: (\S+)")]
+        [Then(@"connection open schema transaction for database: (\S+)")]
         public void ConnectionOpenSchemaTransactionForDatabase(string name)
         {
             if (_requiredConfiguration) return;
@@ -216,6 +252,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [When(@"connection open read transaction for database: (\S+)")]
         [Given(@"connection open read transaction for database: (\S+)")]
+        [Then(@"connection open read transaction for database: (\S+)")]
         public void ConnectionOpenReadTransactionForDatabase(string name)
         {
             if (_requiredConfiguration) return;
@@ -226,6 +263,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [When(@"connection open write transaction for database: (\S+)")]
         [Given(@"connection open write transaction for database: (\S+)")]
+        [Then(@"connection open write transaction for database: (\S+)")]
         public void ConnectionOpenWriteTransactionForDatabase(string name)
         {
             if (_requiredConfiguration) return;
@@ -279,13 +317,14 @@ namespace TypeDB.Driver.Test.Behaviour
                 foreach (var tx in Transactions)
                 {
                     try { if (tx.IsOpen()) tx.Close(); } catch { }
+                    try { if (tx is IDisposable d) d.Dispose(); } catch { }
                 }
                 Transactions.Clear();
 
-                // Close leftover driver
+                // Dispose leftover driver to free native resources
                 if (Driver != null)
                 {
-                    try { if (Driver.IsOpen()) Driver.Close(); } catch { }
+                    try { if (Driver is IDisposable d) d.Dispose(); } catch { }
                     Driver = null;
                 }
             }

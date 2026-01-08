@@ -35,7 +35,13 @@ namespace TypeDB.Driver.Answer
         internal ConceptRowIterator(Pinvoke.QueryAnswer nativeAnswer)
             : base(nativeAnswer)
         {
-            _nativeIterator = Pinvoke.typedb_driver.query_answer_into_rows(nativeAnswer);
+            // query_answer_into_rows CONSUMES the native QueryAnswer via take_ownership in Rust.
+            // We must release ownership on the C# wrapper BEFORE calling into_rows to prevent
+            // the wrapper's finalizer from trying to free an already-freed pointer.
+            // The Released() method creates a new wrapper with swigCMemOwn=false and sets
+            // the original's swigCMemOwn=false as well.
+            var releasedAnswer = nativeAnswer.Released();
+            _nativeIterator = Pinvoke.typedb_driver.query_answer_into_rows(releasedAnswer);
         }
 
         /// <inheritdoc/>

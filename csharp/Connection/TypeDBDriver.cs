@@ -122,7 +122,7 @@ namespace TypeDB.Driver.Connection
                 // Prevent GC from collecting options during the native call
                 GC.KeepAlive(options);
 
-                return new TypeDBTransaction(nativeTransaction, type, options);
+                return new TypeDBTransaction(this, nativeTransaction, type, options);
             }
             catch (Pinvoke.Error e)
             {
@@ -154,6 +154,20 @@ namespace TypeDB.Driver.Connection
         public void Dispose()
         {
             Close();
+            // Dispose all native objects to free native memory immediately
+            // instead of waiting for GC finalization (which can cause race conditions)
+            if (NativeObject is IDisposable nativeDisposable)
+            {
+                nativeDisposable.Dispose();
+            }
+            if (_credentials is IDisposable credentialsDisposable)
+            {
+                credentialsDisposable.Dispose();
+            }
+            if (_driverOptions is IDisposable optionsDisposable)
+            {
+                optionsDisposable.Dispose();
+            }
         }
     }
 }
