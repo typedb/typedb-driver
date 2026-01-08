@@ -21,116 +21,51 @@ using System.Collections.Generic;
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// A TypeDB database.
+    /// </summary>
     public interface IDatabase
     {
-        /**
-         * The database name as a string.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.Name;
-         * </pre>
-         */
+        /// <summary>
+        /// The database name as a string.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// database.Name;
+        /// </code>
+        /// </example>
         public string Name { get; }
 
-        /**
-         * A full schema text as a valid TypeQL define query string.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.GetSchema();
-         * </pre>
-         */
+        /// <summary>
+        /// Returns the full schema text as a valid TypeQL define query string.
+        /// </summary>
+        /// <returns>The schema string.</returns>
+        /// <example>
+        /// <code>
+        /// database.GetSchema();
+        /// </code>
+        /// </example>
         public string GetSchema();
 
-        /**
-         * The types in the schema as a valid TypeQL define query string.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.GetTypeSchema();
-         * </pre>
-         */
+        /// <summary>
+        /// Returns the types in the schema as a valid TypeQL define query string.
+        /// </summary>
+        /// <returns>The type schema string.</returns>
+        /// <example>
+        /// <code>
+        /// database.GetTypeSchema();
+        /// </code>
+        /// </example>
         public string GetTypeSchema();
 
-        /**
-         * The rules in the schema as a valid TypeQL define query string.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.GetRuleSchema();
-         * </pre>
-         */
-        public string GetRuleSchema();
-
-        /**
-         * Set of <code>Replica</code> instances for this database.
-         * <b>Only works in TypeDB Cloud</b>
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.GetReplicas();
-         * </pre>
-         */
-        public ISet<IReplica> GetReplicas();
-
-        /**
-         * Returns the primary replica for this database.
-         * _Only works in TypeDB Cloud_
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.PrimaryReplica;
-         * </pre>
-         */
-        public IReplica? PrimaryReplica { get; }
-
-        /**
-         * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
-         * _Only works in TypeDB Cloud_
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.PreferredReplica;
-         * </pre>
-         */
-        public IReplica? PreferredReplica { get; }
-
-        /**
-         * Deletes this database.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.Delete();
-         * </pre>
-         */
+        /// <summary>
+        /// Deletes this database.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// database.Delete();
+        /// </code>
+        /// </example>
         public void Delete();
-
-        /**
-         * The metadata and state of an individual raft replica of a database.
-         */
-        public interface IReplica
-        {
-            /**
-             * The server hosting this replica.
-             */
-            public string Server { get; }
-
-            /**
-             * The raft protocol ‘term’ of this replica.
-             */
-            public long Term { get; }
-
-            /**
-             * Checks whether this is the primary replica of the raft cluster.
-             */
-            public bool IsPrimary();
-
-            /**
-             * Checks whether this is the preferred replica of the raft cluster.
-             * If true, Operations which can be run on any replica will prefer to use this replica.
-             */
-            public bool IsPreferred();
-        }
     }
 }

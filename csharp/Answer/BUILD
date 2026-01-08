@@ -22,17 +22,15 @@ load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullabl
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
-    name = "query",
+    name = "answer",
     srcs = glob(["*.cs"]),
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp/Concept:concept",
-        "//csharp/Logic:logic",
         "//csharp:typedb_driver_pinvoke",
-        "@paket.csharp_deps//newtonsoft.json",
     ],
-    out = "TypeDB.Driver.Query",
+    out = "TypeDB.Driver.Answer",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

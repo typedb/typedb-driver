@@ -14,9 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

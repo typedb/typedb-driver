@@ -17,8 +17,10 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -28,35 +30,48 @@ using TypeDB.Driver.User;
 
 namespace TypeDB.Driver.Connection
 {
-    public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
+    /// <summary>
+    /// Implementation of the TypeDB driver connection.
+    /// </summary>
+    public class TypeDBDriver : NativeObjectWrapper<Pinvoke.TypeDBDriver>, IDriver
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly UserManager _userManager;
+        // Keep references to prevent GC collection while native code uses them
+        private readonly Credentials _credentials;
+        private readonly DriverOptions _driverOptions;
 
-        public TypeDBDriver(string address)
-            : this(OpenCore(address))
-        {}
-
-        public TypeDBDriver(ICollection<string> initAddresses, TypeDBCredential credential)
-            : this(OpenCloud(initAddresses, credential))
-        {}
-
-        public TypeDBDriver(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
-            : this(OpenCloud(addressTranslation, credential))
-        {}
-
-        private TypeDBDriver(Pinvoke.Connection connection)
-            : base(connection)
+        /// <summary>
+        /// Creates a new TypeDB driver connection using the 3.0 unified API.
+        /// </summary>
+        /// <param name="address">The address (host:port) on which the TypeDB Server is running.</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver options (TLS settings, etc.).</param>
+        public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
+            : base(Open(address, credentials, driverOptions))
         {
-            _databaseManager = new TypeDBDatabaseManager(this.NativeObject);
-            _userManager = new UserManager(this.NativeObject);
+            _credentials = credentials;
+            _driverOptions = driverOptions;
+            _databaseManager = new TypeDBDatabaseManager(NativeObject);
+            _userManager = new UserManager(NativeObject);
         }
 
-        private static Pinvoke.Connection OpenCore(string address)
+        private static Pinvoke.TypeDBDriver Open(string address, Credentials credentials, DriverOptions driverOptions)
         {
             try
             {
-                return Pinvoke.typedb_driver.connection_open_core(address);
+                var result = Pinvoke.typedb_driver.driver_open_with_description(
+                    address,
+                    credentials.NativeObject,
+                    driverOptions.NativeObject,
+                    IDriver.Language);
+
+                // Prevent GC from collecting credentials/driverOptions during the native call
+                // The Rust code borrows these pointers and the objects must remain alive
+                GC.KeepAlive(credentials);
+                GC.KeepAlive(driverOptions);
+
+                return result;
             }
             catch (Pinvoke.Error e)
             {
@@ -64,80 +79,70 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        private static Pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
-        {
-            try
-            {
-                return Pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        private static Pinvoke.Connection OpenCloud(IDictionary<string, string> addressTranslation, TypeDBCredential credential)
-        {
-            try
-            {
-                string[] publicAddresses = new string[addressTranslation.Count];
-                string[] privateAddresses = new string[addressTranslation.Count];
-                int index = 0;
-                foreach (KeyValuePair<string, string> translation in addressTranslation)
-                {
-                    publicAddresses[index] = translation.Key;
-                    privateAddresses[index] = translation.Value;
-                    index++;
-                }
-                return Pinvoke.typedb_driver.connection_open_cloud_translated(publicAddresses, privateAddresses, credential.NativeObject);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public bool IsOpen()
         {
-            return Pinvoke.typedb_driver.connection_is_open(NativeObject);
+            // Check if the SWIG object has been disposed (pointer is null)
+            if (!NativeObject.IsOwned())
+            {
+                return false;
+            }
+            return Pinvoke.typedb_driver.driver_is_open(NativeObject);
         }
 
+        /// <inheritdoc/>
         public IDatabaseManager Databases
         {
             get { return _databaseManager; }
         }
 
-        public IUser GetCurrentUser()
-        {
-            return _userManager.GetCurrentUser();
-        }
-
+        /// <inheritdoc/>
         public IUserManager Users
         {
             get { return _userManager; }
         }
 
-        public ITypeDBSession Session(string database, SessionType type)
+        /// <inheritdoc/>
+        public ITypeDBTransaction Transaction(string database, TransactionType type)
         {
-            return Session(database, type, new TypeDBOptions());
+            return Transaction(database, type, new TransactionOptions());
         }
 
-        public ITypeDBSession Session(
-            string database, SessionType type, TypeDBOptions options)
+        /// <inheritdoc/>
+        public ITypeDBTransaction Transaction(string database, TransactionType type, TransactionOptions options)
         {
-            return new TypeDBSession(Databases, database, type, options);
+            try
+            {
+                Pinvoke.Transaction nativeTransaction = Pinvoke.typedb_driver.transaction_new(
+                    NativeObject,
+                    database,
+                    (Pinvoke.TransactionType)type,
+                    options.NativeObject);
+
+                // Prevent GC from collecting options during the native call
+                GC.KeepAlive(options);
+
+                return new TypeDBTransaction(this, nativeTransaction, type, options);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
         }
 
+        /// <inheritdoc/>
         public void Close()
         {
-            if (!IsOpen())
+            // Check if already closed/disposed
+            if (!NativeObject.IsOwned())
             {
                 return;
             }
 
             try
             {
-                Pinvoke.typedb_driver.connection_force_close(NativeObject);
+                // Signal the driver to shut down gracefully, like Java/Python do.
+                Pinvoke.typedb_driver.driver_force_close(NativeObject);
             }
             catch (Pinvoke.Error e)
             {
@@ -145,9 +150,24 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Close();
+            // Dispose all native objects to free native memory immediately
+            // instead of waiting for GC finalization (which can cause race conditions)
+            if (NativeObject is IDisposable nativeDisposable)
+            {
+                nativeDisposable.Dispose();
+            }
+            if (_credentials is IDisposable credentialsDisposable)
+            {
+                credentialsDisposable.Dispose();
+            }
+            if (_driverOptions is IDisposable optionsDisposable)
+            {
+                optionsDisposable.Dispose();
+            }
         }
     }
 }

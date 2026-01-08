@@ -19,33 +19,17 @@
 
 using System.Collections.Generic;
 
-using TypeDB.Driver.Api;
-
-namespace TypeDB.Driver.Api
+namespace TypeDB.Driver.Api.Answer
 {
-    /**
-     * Contains an element of the group aggregate query result.
-     */
-    public interface IValueGroup
+    /// <summary>
+    /// Represents an iterator over concept documents (represented as <see cref="IJSON"/>s) returned as a server answer.
+    /// </summary>
+    public interface IConceptDocumentIterator : IQueryAnswer, IEnumerable<IJSON>
     {
-        /**
-         * Retrieves the concept that is the group owner.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * conceptMapGroup.Owner;
-         * </pre>
-         */
-        IConcept Owner { get; }
+        /// <inheritdoc/>
+        bool IQueryAnswer.IsConceptDocuments => true;
 
-        /**
-         * Retrieves the <code>Value</code> answer of the group.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * valueGroup.Value;
-         * </pre>
-         */
-        IValue? Value { get; }
+        /// <inheritdoc/>
+        IConceptDocumentIterator IQueryAnswer.AsConceptDocuments() => this;
     }
 }

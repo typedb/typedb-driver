@@ -17,35 +17,17 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-
-using TypeDB.Driver.Api;
-
-namespace TypeDB.Driver.Api
+namespace TypeDB.Driver.Api.Answer
 {
-    /**
-     * Contains an element of the group query result.
-     */
-    public interface IConceptMapGroup
+    /// <summary>
+    /// Represents a simple Ok message as a server answer. Doesn't contain concepts.
+    /// </summary>
+    public interface IOkQueryAnswer : IQueryAnswer
     {
-        /**
-         * Retrieves the concept that is the group owner.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * conceptMapGroup.Owner;
-         * </pre>
-         */
-        IConcept Owner { get; }
+        /// <inheritdoc/>
+        bool IQueryAnswer.IsOk => true;
 
-        /**
-         * Retrieves the <code>IConceptMap</code>s of the group.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * conceptMapGroup.GetConceptMaps();
-         * </pre>
-         */
-        IEnumerable<IConceptMap> GetConceptMaps();
+        /// <inheritdoc/>
+        IOkQueryAnswer IQueryAnswer.AsOk() => this;
     }
 }

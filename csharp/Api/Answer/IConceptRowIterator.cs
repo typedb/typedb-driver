@@ -17,12 +17,19 @@
  * under the License.
  */
 
-using Xunit.Gherkin.Quick;
+using System.Collections.Generic;
 
-namespace TypeDB.Driver.Test.Behaviour
+namespace TypeDB.Driver.Api.Answer
 {
-    [FeatureFile("external/typedb_behaviour/query/language/rule-validation.feature")]
-    public partial class BehaviourSteps
+    /// <summary>
+    /// Represents an iterator over <see cref="IConceptRow"/>s returned as a server answer.
+    /// </summary>
+    public interface IConceptRowIterator : IQueryAnswer, IEnumerable<IConceptRow>
     {
+        /// <inheritdoc/>
+        bool IQueryAnswer.IsConceptRows => true;
+
+        /// <inheritdoc/>
+        IConceptRowIterator IQueryAnswer.AsConceptRows() => this;
     }
 }

@@ -29,20 +29,18 @@ using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
-    public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase
+    /// <summary>
+    /// A TypeDB database.
+    /// </summary>
+    public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase, System.IDisposable
     {
         private string? _name;
-
-        private IDatabase.IReplica? _primaryReplica;
-        private bool _primaryReplicaFetched = false;
-
-        private IDatabase.IReplica? _preferredReplica;
-        private bool _preferredReplicaFetched = false;
 
         public TypeDBDatabase(Pinvoke.Database database)
             : base(database)
         {}
 
+        /// <inheritdoc/>
         public string Name
         {
             get
@@ -52,6 +50,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public string GetSchema()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
@@ -66,6 +65,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public string GetTypeSchema()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
@@ -80,128 +80,49 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        public string GetRuleSchema()
-        {
-            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
-
-            try
-            {
-                return Pinvoke.typedb_driver.database_rule_schema(NativeObject);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public ISet<IDatabase.IReplica> GetReplicas()
-        {
-            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
-
-            return new NativeEnumerable<Pinvoke.ReplicaInfo>(
-                Pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
-                .Select(obj => new Replica(obj))
-                .ToHashSet<IDatabase.IReplica>();
-        }
-
-        public IDatabase.IReplica? PrimaryReplica
-        {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
-                if (_primaryReplicaFetched)
-                {
-                    return _primaryReplica;
-                }
-
-                Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
-                _primaryReplicaFetched = true;
-
-                if (replicaInfo == null)
-                {
-                    return null;
-                }
-
-                return (_primaryReplica = new Replica(replicaInfo));
-            }
-        }
-
-        public IDatabase.IReplica? PreferredReplica
-        {
-            get
-            {
-                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
-                if (_preferredReplicaFetched)
-                {
-                    return _preferredReplica;
-                }
-
-                Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
-                _preferredReplicaFetched = true;
-
-                if (replicaInfo == null)
-                {
-                    return null;
-                }
-
-                return (_preferredReplica = new Replica(replicaInfo));
-            }
-        }
-
+        /// <inheritdoc/>
         public void Delete()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
             try
             {
-                Pinvoke.typedb_driver.database_delete(NativeObject?.Released());
+                // Note: database_delete only consumes the handle if delete succeeds.
+                // If delete fails (e.g., database has open transactions), the handle
+                // remains valid and we should NOT release ownership.
+                // Pass NativeObject directly (not Released()) so we retain ownership on error.
+                bool success = Pinvoke.typedb_driver.database_delete(NativeObject);
+                if (success)
+                {
+                    // Delete succeeded, native side consumed the handle.
+                    // Release ownership to prevent finalizer from double-freeing.
+                    NativeObject.Released();
+                }
+                // If success is false, SWIG will throw due to check_error()
             }
             catch (Pinvoke.Error e)
             {
+                // On error, NativeObject still owns the handle (which is still valid in Rust)
                 throw new TypeDBDriverException(e);
             }
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return Name;
         }
 
-        public class Replica : NativeObjectWrapper<Pinvoke.ReplicaInfo>, IDatabase.IReplica
+        /// <summary>
+        /// Disposes the database wrapper to free native resources immediately.
+        /// </summary>
+        public void Dispose()
         {
-            private string? _server;
-            private long? _term;
-
-            public Replica(Pinvoke.ReplicaInfo replicaInfo)
-                : base(replicaInfo)
-            {}
-
-            public bool IsPrimary()
+            // Dispose the underlying SWIG object to free native memory immediately
+            // instead of waiting for GC finalization (which can cause race conditions)
+            if (NativeObject is System.IDisposable disposable)
             {
-                return Pinvoke.typedb_driver.replica_info_is_primary(NativeObject);
-            }
-
-            public bool IsPreferred()
-            {
-                return Pinvoke.typedb_driver.replica_info_is_preferred(NativeObject);
-            }
-
-            public string Server
-            {
-                get { return _server ?? (_server = Pinvoke.typedb_driver.replica_info_get_server(NativeObject)); }
-            }
-
-            public long Term
-            {
-                get
-                {
-                    if (!_term.HasValue)
-                    {
-                        _term = Pinvoke.typedb_driver.replica_info_get_term(NativeObject);
-                    }
-
-                    return _term.Value;
-                }
+                disposable.Dispose();
             }
         }
     }

@@ -17,14 +17,14 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Common;
-using TypeDB.Driver.Concept;
 
 namespace TypeDB.Driver.Concept
 {
+    /// <summary>
+    /// Base class for type concepts.
+    /// In TypeDB 3.0, types are read-only data returned from queries.
+    /// </summary>
     public abstract class Type : Concept, IType
     {
         private int _hash = 0;
@@ -34,40 +34,14 @@ namespace TypeDB.Driver.Concept
         {
         }
 
-        public abstract Label Label { get; }
-
-        public abstract bool IsRoot();
-
-        public abstract bool IsAbstract();
-
-        public abstract VoidPromise SetLabel(ITypeDBTransaction transaction, string label);
-
-        public abstract VoidPromise Delete(ITypeDBTransaction transaction);
-
-        public abstract Promise<bool> IsDeleted(ITypeDBTransaction transaction);
-
-        public abstract Promise<IType> GetSupertype(ITypeDBTransaction transaction);
-
-        public abstract IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction);
-
-        public abstract IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction);
-
-        public abstract IEnumerable<IType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-
         public override int GetHashCode()
         {
             if (_hash == 0)
             {
-                _hash = ComputeHash();
+                _hash = GetLabel().GetHashCode();
             }
 
             return _hash;
-        }
-
-        private int ComputeHash()
-        {
-            return Label.GetHashCode();
         }
     }
 }
