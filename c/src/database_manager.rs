@@ -22,7 +22,6 @@ use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 use typedb_driver::{box_stream, Database, TypeDBDriver};
 
 use super::{
-    connection::DRIVER_LOCK,
     error::{try_release, unwrap_or_default, unwrap_void},
     iterator::CIterator,
     memory::{borrow_mut, free, release_arc, string_view},
@@ -42,7 +41,6 @@ pub extern "C" fn database_iterator_next(it: *mut DatabaseIterator) -> *const Da
 /// Frees the native rust <code>DatabaseIterator</code> object.
 #[no_mangle]
 pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     free(it);
 }
 
