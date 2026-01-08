@@ -77,5 +77,27 @@ namespace TypeDB.Driver.Api
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets whether to include query structure in query results.
+        /// </summary>
+        public bool? IncludeQueryStructure
+        {
+            get
+            {
+                if (Pinvoke.typedb_driver.query_options_has_include_query_structure(NativeObject))
+                {
+                    return Pinvoke.typedb_driver.query_options_get_include_query_structure(NativeObject);
+                }
+                return null;
+            }
+            set
+            {
+                if (value.HasValue)
+                {
+                    Pinvoke.typedb_driver.query_options_set_include_query_structure(NativeObject, value.Value);
+                }
+            }
+        }
     }
 }

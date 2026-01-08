@@ -39,6 +39,7 @@ pub(crate) struct BackgroundRuntime {
     is_open: AtomicCell<bool>,
     shutdown_sink: UnboundedSender<()>,
 
+    grpc_worker: Option<JoinHandle<()>>,
     callback_handler: Option<JoinHandle<()>>,
     callback_handler_sink: Option<Sender<(Callback, AsyncOneshotSender<()>)>>,
 }
@@ -49,11 +50,11 @@ impl BackgroundRuntime {
         let (shutdown_sink, mut shutdown_source) = unbounded_async();
         let async_runtime = runtime::Builder::new_current_thread().enable_time().enable_io().build()?;
         let async_runtime_handle = async_runtime.handle().clone();
-        thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
+        let grpc_worker = Some(thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
             async_runtime.block_on(async move {
                 shutdown_source.recv().await;
             });
-        })?;
+        })?);
 
         let (callback_handler_sink, callback_handler_source) = unbounded::<(Callback, AsyncOneshotSender<()>)>();
         let callback_handler = Some(thread::Builder::new().name("Callback handler".to_owned()).spawn(move || {
@@ -67,6 +68,7 @@ impl BackgroundRuntime {
             async_runtime_handle,
             is_open,
             shutdown_sink,
+            grpc_worker,
             callback_handler,
             callback_handler_sink: Some(callback_handler_sink),
         })
@@ -82,6 +84,9 @@ impl BackgroundRuntime {
 
     pub(crate) fn force_close(&self) -> Result {
         self.is_open.store(false);
+        // Note: We send shutdown but don't wait here.
+        // The caller should ensure proper cleanup happens before freeing memory.
+        // The actual thread join happens in Drop.
         self.shutdown_sink.send(())?;
         Ok(())
     }
@@ -114,6 +119,13 @@ impl Drop for BackgroundRuntime {
         drop(self.callback_handler_sink.take());
         if let Err(err) = self.callback_handler.take().unwrap().join() {
             error!("Error shutting down the callback handler thread: {:?}", err);
+        }
+        // Join the gRPC worker thread to ensure async runtime cleanup completes
+        // before memory is freed.
+        if let Some(grpc_worker) = self.grpc_worker.take() {
+            if let Err(err) = grpc_worker.join() {
+                error!("Error shutting down the gRPC worker thread: {:?}", err);
+            }
         }
     }
 }

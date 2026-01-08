@@ -17,29 +17,29 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-using System.Linq;
-
-using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
-using TypeDB.Driver.Concept;
-using static TypeDB.Driver.Api.IThingType;
 
 using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Concept
 {
+    /// <summary>
+    /// Base class for instance concepts (Entity, Relation, Attribute).
+    /// In TypeDB 3.0, instances are read-only data returned from queries.
+    /// </summary>
     public abstract class Thing : Concept, IThing
     {
-        private string? _iid;
-        private int _hash = 0;
+        protected int _hash = 0;
 
         internal Thing(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
+        /// <summary>
+        /// Creates the appropriate Thing subtype from a native concept.
+        /// </summary>
         public static IThing ThingOf(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity(nativeConcept))
@@ -52,143 +52,35 @@ namespace TypeDB.Driver.Concept
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
+        /// <summary>
+        /// Gets the IID of this instance.
+        /// </summary>
         public string IID
         {
-            get { return _iid ?? (_iid = Pinvoke.typedb_driver.thing_get_iid(NativeObject)); }
+            get { return TryGetIID() ?? throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE); }
         }
 
+        /// <summary>
+        /// Gets the type of this instance.
+        /// </summary>
         public abstract IThingType Type { get; }
 
-        public bool IsInferred()
-        {
-            return Pinvoke.typedb_driver.thing_get_is_inferred(NativeObject);
-        }
-
+        /// <summary>
+        /// Returns this instance as IThing.
+        /// </summary>
         public IThing AsThing()
         {
             return this;
-        }
-
-        public IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
-        {
-            Pinvoke.Concept[] attributeTypesArray = attributeTypes
-                .Select(obj => ((AttributeType)obj).NativeObject)
-                .ToArray<Pinvoke.Concept>();
-
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.thing_get_has(
-                        NativeTransaction(transaction),
-                        NativeObject,
-                        attributeTypesArray,
-                        new Pinvoke.Annotation[0]))
-                    .Select(obj => new Attribute(obj));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public IEnumerable<IAttribute> GetHas(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
-        {
-            Pinvoke.Annotation[] annotationsArray = annotations
-                .Select(obj => obj.NativeObject)
-                .ToArray<Pinvoke.Annotation>();
-
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.thing_get_has(
-                        NativeTransaction(transaction),
-                        NativeObject,
-                        new Pinvoke.Concept[0],
-                        annotationsArray))
-                    .Select(obj => new Attribute(obj));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public IEnumerable<IRelation> GetRelations(
-            ITypeDBTransaction transaction, params IRoleType[] roleTypes)
-        {
-            Pinvoke.Concept[] roleTypesArray = roleTypes
-                .Select(obj => ((RoleType)obj).NativeObject)
-                .ToArray<Pinvoke.Concept>();
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.thing_get_relations(
-                        NativeTransaction(transaction), NativeObject, roleTypesArray))
-                    .Select(obj => new Relation(obj));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public IEnumerable<IRoleType> GetPlaying(ITypeDBTransaction transaction)
-        {
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.thing_get_playing(
-                        NativeTransaction(transaction), NativeObject))
-                    .Select(obj => new RoleType(obj));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public VoidPromise SetHas(ITypeDBTransaction transaction, IAttribute attribute)
-        {
-            return new VoidPromise(Pinvoke.typedb_driver.thing_set_has(
-                NativeTransaction(transaction),
-                NativeObject,
-                ((Attribute)attribute).NativeObject).Resolve);
-        }
-
-        public VoidPromise UnsetHas(ITypeDBTransaction transaction, IAttribute attribute)
-        {
-            return new VoidPromise(Pinvoke.typedb_driver.thing_unset_has(
-                NativeTransaction(transaction),
-                NativeObject,
-                ((Attribute)attribute).NativeObject).Resolve);
-        }
-
-        public VoidPromise Delete(ITypeDBTransaction transaction)
-        {
-            return new VoidPromise(Pinvoke.typedb_driver.thing_delete(
-                NativeTransaction(transaction), NativeObject).Resolve);
-        }
-
-        public Promise<bool> IsDeleted(ITypeDBTransaction transaction)
-        {
-            return new Promise<bool>(Pinvoke.typedb_driver.thing_is_deleted(
-                NativeTransaction(transaction), NativeObject).Resolve);
         }
 
         public override int GetHashCode()
         {
             if (_hash == 0)
             {
-                _hash = ComputeHash();
+                _hash = IID.GetHashCode();
             }
 
             return _hash;
-        }
-
-        private int ComputeHash()
-        {
-            return IID.GetHashCode();
         }
     }
 }

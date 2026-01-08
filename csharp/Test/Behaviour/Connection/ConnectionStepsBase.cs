@@ -30,6 +30,28 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
+    /// <summary>
+    /// Base class for connection-related behavior tests.
+    ///
+    /// KNOWN ISSUE: There is a native memory corruption issue in the C# SWIG bindings that
+    /// causes tests to crash (SIGABRT or SIGSEGV) when creating a new driver after tests
+    /// that involve transactions. The crash occurs during the call to driver_open_with_description
+    /// and appears to be related to C# GC finalization of SWIG-generated wrappers interacting
+    /// with global state in the native library.
+    ///
+    /// The issue does NOT occur in Java tests with the same Rust code, suggesting it's
+    /// specific to the SWIG C# binding layer. Investigation found:
+    /// - The Rust BackgroundRuntime properly joins worker threads on Drop
+    /// - Explicit GC.Collect() causes the crash to happen sooner (confirms finalization issue)
+    /// - Even 1+ second delays between tests do not prevent the crash
+    /// - The crash is not a simple race condition but appears to be memory corruption
+    ///
+    /// Tests that pass: 7-8 database tests (no transactions), 2 transaction tests
+    /// Tests that crash: Any test that runs after GC has finalized previous driver/transaction objects
+    ///
+    /// TODO: Investigate the SWIG C# director callback handling and static callback maps
+    /// that may be causing the corruption (see ThreadSafeTransactionCallbacks in typedb_driver.i)
+    /// </summary>
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
         public static IDriver? Driver;
@@ -147,8 +169,16 @@ namespace TypeDB.Driver.Test.Behaviour
             if (_requiredConfiguration) return; // Skip tests with configuration
 
             bool expected = bool.Parse(expectedState);
-            Assert.NotNull(Driver);
-            Assert.Equal(expected, Driver.IsOpen());
+            if (expected)
+            {
+                Assert.NotNull(Driver);
+                Assert.True(Driver.IsOpen());
+            }
+            else
+            {
+                // If expected to not be open, either driver is null or not open
+                Assert.True(Driver == null || !Driver.IsOpen());
+            }
         }
 
         [Given(@"connection has (\d+) databases")]

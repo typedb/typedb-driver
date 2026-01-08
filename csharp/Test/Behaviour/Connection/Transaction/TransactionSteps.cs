@@ -198,57 +198,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(assertions.ToArray());
         }
 
-        [Given(@"typeql write query")]
-        [When(@"typeql write query")]
-        [Then(@"typeql write query")]
-        public void TypeqlWriteQuery(DocString queryStatements)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            tx.Query(queryStatements.Content);
-        }
-
-        [Then(@"typeql write query; fails")]
-        public void TypeqlWriteQueryFails(DocString queryStatements)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            Assert.Throws<TypeDBDriverException>(() => tx.Query(queryStatements.Content));
-        }
-
-        [Then(@"typeql schema query; fails")]
-        public void TypeqlSchemaQueryFails(DocString queryStatements)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            Assert.Throws<TypeDBDriverException>(() => tx.Query(queryStatements.Content));
-        }
-
-        [Then(@"typeql write query; parsing fails")]
-        public void TypeqlWriteQueryParsingFails(DocString queryStatements)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            Assert.Throws<TypeDBDriverException>(() => tx.Query(queryStatements.Content));
-        }
-
-        // TODO: Implement proper answer handling in Milestone 3
-        [Given(@"get answers of typeql read query")]
-        [When(@"get answers of typeql read query")]
-        public void GetAnswersOfTypeqlReadQuery(DocString queryStatements)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction open for query");
-            var tx = Transactions[Transactions.Count - 1];
-            // For now, just execute the query - answer handling will be added in Milestone 3
-            tx.Query(queryStatements.Content);
-        }
-
-        // TODO: Implement proper answer size checking in Milestone 3
-        [Then(@"answer size is: (\d+)")]
-        public void AnswerSizeIs(int expectedSize)
-        {
-            // Placeholder - proper answer handling will be added in Milestone 3
-            // For now, we skip this check
-        }
+        // Query-related steps moved to QuerySteps.cs
     }
 }

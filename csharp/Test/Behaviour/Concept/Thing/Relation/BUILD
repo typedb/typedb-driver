@@ -14,20 +14,16 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
-
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
 filegroup(
     name = "steps",
     srcs = ["RelationSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
 csharp_behaviour_test(
     name = "test-core",
     test_files = ["RelationTest.cs"],
@@ -41,13 +37,14 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Concept/Type/RelationType:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-core",
     ],
     features = ["@typedb_behaviour//concept/thing:relation.feature"],
     deps = [
         "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Concept:concept",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
         "//csharp/Test/Behaviour/Util:util",
@@ -55,7 +52,6 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["RelationTest.cs"],
@@ -69,13 +65,14 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Concept/Type/RelationType:steps",
         "//csharp/Test/Behaviour/Concept/Type/ThingType:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
     features = ["@typedb_behaviour//concept/thing:relation.feature"],
     deps = [
         "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Concept:concept",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
         "//csharp/Test/Behaviour/Util:util",
@@ -84,7 +81,6 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
