@@ -22,7 +22,6 @@ use std::{ffi::c_char, path::Path};
 use typedb_driver::Database;
 
 use super::{
-    connection::DRIVER_LOCK,
     error::{try_release_string, unwrap_void},
     memory::release_string,
 };
@@ -31,7 +30,6 @@ use crate::memory::{borrow_arc, clone_arc, decrement_arc, string_view};
 /// Frees the native rust <code>Database</code> object (boxed Arc handle).
 #[no_mangle]
 pub extern "C" fn database_close(database: *const Database) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     decrement_arc(database);
 }
 

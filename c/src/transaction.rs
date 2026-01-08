@@ -21,7 +21,6 @@ use std::{ffi::c_char, ptr::null_mut};
 
 use typedb_driver::{Error, Promise, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
-use super::connection::DRIVER_LOCK;
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{
     analyze::AnalyzedQueryPromise, answer::QueryAnswerPromise, error::try_release, memory::string_view,
@@ -85,8 +84,6 @@ pub extern "C" fn transaction_submit_close(txn: *mut Transaction) {
 /// their handler objects (like SWIG directors) are freed.
 #[no_mangle]
 pub extern "C" fn transaction_close_sync(txn: *mut Transaction) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
-
     if txn.is_null() {
         return;
     }
