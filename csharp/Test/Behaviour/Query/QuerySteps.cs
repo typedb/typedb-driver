@@ -765,6 +765,387 @@ namespace TypeDB.Driver.Test.Behaviour
 
         #endregion
 
+        #region Uniquely Identify Answer Concepts Steps
+
+        /// <summary>
+        /// Interface for matching concepts against expected identifiers.
+        /// Based on the Node.js/Java implementation pattern.
+        /// </summary>
+        private interface IConceptMatcher
+        {
+            bool Matches(IConcept concept);
+        }
+
+        /// <summary>
+        /// Matches type concepts by label (e.g., "label:person" for entity type person).
+        /// </summary>
+        private class TypeLabelMatcher : IConceptMatcher
+        {
+            private readonly string _label;
+
+            public TypeLabelMatcher(string label)
+            {
+                _label = label;
+            }
+
+            public bool Matches(IConcept concept)
+            {
+                if (!concept.IsType())
+                    return false;
+
+                string actualLabel;
+                if (concept.IsRoleType())
+                {
+                    // RoleType has scoped labels like "employment:employee"
+                    actualLabel = concept.AsRoleType().GetLabel();
+                }
+                else
+                {
+                    actualLabel = concept.AsType().GetLabel();
+                }
+
+                return actualLabel == _label;
+            }
+        }
+
+        /// <summary>
+        /// Base class for attribute-based matchers with value comparison.
+        /// </summary>
+        private abstract class AttributeMatcherBase : IConceptMatcher
+        {
+            protected readonly string TypeLabel;
+            protected readonly string Value;
+
+            protected AttributeMatcherBase(string typeAndValue)
+            {
+                // Parse "typeLabel:value" format
+                var colonIndex = typeAndValue.IndexOf(':');
+                if (colonIndex < 0)
+                {
+                    throw new BehaviourTestException($"Invalid attribute identifier format: {typeAndValue}. Expected 'typeLabel:value'");
+                }
+                TypeLabel = typeAndValue.Substring(0, colonIndex);
+                Value = typeAndValue.Substring(colonIndex + 1);
+            }
+
+            protected bool CheckValue(IAttribute attribute)
+            {
+                var value = attribute.Value;
+                var valueType = value.GetValueType().ToLower();
+
+                switch (valueType)
+                {
+                    case "boolean":
+                        return value.GetBoolean() == bool.Parse(Value);
+                    case "integer":
+                    case "long":
+                        return value.GetInteger() == long.Parse(Value);
+                    case "double":
+                        return Math.Abs(value.GetDouble() - double.Parse(Value, System.Globalization.CultureInfo.InvariantCulture)) < 0.0001;
+                    case "decimal":
+                        return value.GetDecimal() == decimal.Parse(Value, System.Globalization.CultureInfo.InvariantCulture);
+                    case "string":
+                        // Strip quotes from expected value if present
+                        var expectedStr = Value;
+                        if (expectedStr.StartsWith("\"") && expectedStr.EndsWith("\""))
+                        {
+                            expectedStr = expectedStr.Substring(1, expectedStr.Length - 2);
+                        }
+                        return value.GetString() == expectedStr;
+                    case "date":
+                        return value.GetDate() == DateOnly.Parse(Value);
+                    case "datetime":
+                        // Parse datetime value
+                        return CompareDateTime(value.GetDatetime(), Value);
+                    default:
+                        return false;
+                }
+            }
+
+            private bool CompareDateTime(DateTime actual, string expected)
+            {
+                // Try various datetime formats
+                if (DateTime.TryParse(expected, out var parsed))
+                {
+                    return actual == parsed;
+                }
+                return false;
+            }
+
+            public abstract bool Matches(IConcept concept);
+        }
+
+        /// <summary>
+        /// Matches attribute concepts by type label and value (e.g., "attr:name:Alice").
+        /// </summary>
+        private class AttributeValueMatcher : AttributeMatcherBase
+        {
+            public AttributeValueMatcher(string typeAndValue) : base(typeAndValue) { }
+
+            public override bool Matches(IConcept concept)
+            {
+                if (!concept.IsAttribute())
+                    return false;
+
+                var attribute = concept.AsAttribute();
+                if (attribute.Type.GetLabel() != TypeLabel)
+                    return false;
+
+                return CheckValue(attribute);
+            }
+        }
+
+        /// <summary>
+        /// Matches thing concepts (Entity/Relation/Attribute) by their key attribute (e.g., "key:ref:0").
+        /// Uses a subquery approach since TypeDB 3.0's read-only concept API doesn't have GetHas().
+        /// </summary>
+        private class ThingKeyMatcher : AttributeMatcherBase
+        {
+            public ThingKeyMatcher(string typeAndValue) : base(typeAndValue) { }
+
+            public override bool Matches(IConcept concept)
+            {
+                if (!concept.IsThing())
+                    return false;
+
+                var thing = concept.AsThing();
+
+                // Get the IID of this thing
+                var thingIid = thing.TryGetIID();
+                if (thingIid == null)
+                    return false;
+
+                // Use the current transaction to run a subquery
+                var tx = ConnectionStepsBase.Transactions[ConnectionStepsBase.Transactions.Count - 1];
+
+                // Build a query to find things with this specific key attribute value
+                // Format: match $x iid <iid>, has <typeLabel> <value>;
+                string valueStr = Value;
+                string query;
+
+                // Try to determine if the value is numeric or string
+                if (long.TryParse(valueStr, out _))
+                {
+                    // Integer value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else if (double.TryParse(valueStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out _))
+                {
+                    // Double value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else if (valueStr == "true" || valueStr == "false")
+                {
+                    // Boolean value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else
+                {
+                    // String value - needs quotes
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} \"{valueStr}\";";
+                }
+
+                try
+                {
+                    var answer = tx.Query(query);
+                    if (answer.IsConceptRows)
+                    {
+                        // Check if any rows are returned - if so, the thing has this key
+                        var rows = answer.AsConceptRows().ToList();
+                        return rows.Count > 0;
+                    }
+                    return false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Matches Value concepts by value type and value (e.g., "value:long:42").
+        /// </summary>
+        private class ValueMatcher : IConceptMatcher
+        {
+            private readonly string _valueType;
+            private readonly string _value;
+
+            public ValueMatcher(string typeAndValue)
+            {
+                // Parse "valueType:value" format
+                var colonIndex = typeAndValue.IndexOf(':');
+                if (colonIndex < 0)
+                {
+                    throw new BehaviourTestException($"Invalid value identifier format: {typeAndValue}. Expected 'valueType:value'");
+                }
+                _valueType = typeAndValue.Substring(0, colonIndex);
+                _value = typeAndValue.Substring(colonIndex + 1);
+            }
+
+            public bool Matches(IConcept concept)
+            {
+                if (!concept.IsValue())
+                    return false;
+
+                var value = concept.AsValue();
+                var actualType = value.GetValueType().ToLower();
+
+                // Map type names (some variations exist)
+                var expectedType = _valueType.ToLower();
+                if (expectedType == "long") expectedType = "integer";
+                if (actualType == "long") actualType = "integer";
+
+                if (actualType != expectedType)
+                    return false;
+
+                switch (actualType)
+                {
+                    case "boolean":
+                        return value.GetBoolean() == bool.Parse(_value);
+                    case "integer":
+                        return value.GetInteger() == long.Parse(_value);
+                    case "double":
+                        return Math.Abs(value.GetDouble() - double.Parse(_value, System.Globalization.CultureInfo.InvariantCulture)) < 0.0001;
+                    case "string":
+                        return value.GetString() == _value;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Matches null/absent concepts (represented by "none" in test tables).
+        /// </summary>
+        private class NoneMatcher : IConceptMatcher
+        {
+            public bool Matches(IConcept concept)
+            {
+                // This matcher should match null concepts, but the Matches method
+                // receives a non-null concept, so it should always return false.
+                // The check for null is done in AnswerConceptsMatch.
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parses a concept identifier and returns the appropriate matcher.
+        /// Format: "identifierType:identifierBody"
+        /// Examples: "label:person", "key:email:john@example.com", "attr:name:Alice", "value:long:42", "none"
+        /// </summary>
+        private IConceptMatcher ParseConceptIdentifier(string identifier)
+        {
+            // Special case: "none" means the concept should be null/absent
+            if (identifier == "none")
+            {
+                return new NoneMatcher();
+            }
+
+            var colonIndex = identifier.IndexOf(':');
+            if (colonIndex < 0)
+            {
+                throw new BehaviourTestException($"Invalid concept identifier format: {identifier}");
+            }
+
+            var identifierType = identifier.Substring(0, colonIndex);
+            var identifierBody = identifier.Substring(colonIndex + 1);
+
+            switch (identifierType)
+            {
+                case "label":
+                    return new TypeLabelMatcher(identifierBody);
+                case "key":
+                    return new ThingKeyMatcher(identifierBody);
+                case "attr":
+                    return new AttributeValueMatcher(identifierBody);
+                case "value":
+                    return new ValueMatcher(identifierBody);
+                default:
+                    throw new BehaviourTestException($"Unknown concept identifier type: {identifierType}");
+            }
+        }
+
+        /// <summary>
+        /// Checks if a set of concept identifiers matches a concept row.
+        /// </summary>
+        private bool AnswerConceptsMatch(Dictionary<string, string> answerIdentifier, IConceptRow row)
+        {
+            foreach (var kv in answerIdentifier)
+            {
+                var variable = kv.Key;
+                var conceptIdentifier = kv.Value;
+                var concept = row.Get(variable);
+
+                // Special handling for "none" - the concept should be null
+                if (conceptIdentifier == "none")
+                {
+                    if (concept != null)
+                        return false;
+                    continue;
+                }
+
+                var matcher = ParseConceptIdentifier(conceptIdentifier);
+
+                if (concept == null || !matcher.Matches(concept))
+                    return false;
+            }
+            return true;
+        }
+
+        [Given(@"uniquely identify answer concepts")]
+        [Then(@"uniquely identify answer concepts")]
+        public void UniquelyIdentifyAnswerConcepts(DataTable table)
+        {
+            CollectRowsAnswerIfNeeded();
+
+            // Parse table header to get variable names
+            var rows = table.Rows.ToList();
+            var headerRow = rows[0];
+            var varNames = headerRow.Cells.Select(c => c.Value).ToList();
+
+            // Parse expected answer identifiers from table
+            var answerIdentifiers = new List<Dictionary<string, string>>();
+            for (int i = 1; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                var cells = row.Cells.ToList();
+                var identifier = new Dictionary<string, string>();
+                for (int j = 0; j < varNames.Count; j++)
+                {
+                    identifier[varNames[j]] = cells[j].Value;
+                }
+                answerIdentifiers.Add(identifier);
+            }
+
+            // Verify the number of answers matches
+            Assert.Equal(answerIdentifiers.Count, _collectedRows!.Count);
+
+            // Track which answers match each identifier
+            var resultSet = answerIdentifiers.Select(ai => (ai, new List<IConceptRow>())).ToList();
+
+            foreach (var answer in _collectedRows!)
+            {
+                foreach (var (answerIdentifier, matchedAnswers) in resultSet)
+                {
+                    if (AnswerConceptsMatch(answerIdentifier, answer))
+                    {
+                        matchedAnswers.Add(answer);
+                    }
+                }
+            }
+
+            // Each identifier should match exactly one answer
+            foreach (var (answerIdentifier, matchedAnswers) in resultSet)
+            {
+                var identifierStr = string.Join(", ", answerIdentifier.Select(kv => $"{kv.Key}={kv.Value}"));
+                Assert.True(matchedAnswers.Count == 1,
+                    $"Each answer identifier should match precisely 1 answer, but [{matchedAnswers.Count}] matched the identifier [{identifierStr}].");
+            }
+        }
+
+        #endregion
+
         #region Answer Document Steps
 
         [Then(@"answer contains document:")]

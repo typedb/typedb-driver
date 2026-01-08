@@ -17,15 +17,14 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::{ptr::null, sync::Arc};
 
 use typedb_driver::{BoxStream, Result};
 
 use super::{
     error::try_release_optional,
-    memory::{borrow_mut, release_optional},
+    memory::{borrow_mut, release_arc, release_optional},
 };
-use crate::error::try_release_optional_arc;
 
 pub struct CIterator<T: 'static>(pub(super) BoxStream<'static, T>);
 
@@ -37,6 +36,9 @@ pub(super) fn iterator_try_next<T: 'static>(it: *mut CIterator<Result<T>>) -> *m
     try_release_optional(borrow_mut(it).0.next())
 }
 
-pub(super) fn iterator_arc_next<T: 'static>(it: *mut CIterator<Arc<T>>) -> *const T {
-    try_release_optional_arc(borrow_mut(it).0.next())
+/// Iterates over Arc elements, returning unique boxed Arc handles.
+/// The returned pointer is typed as *const T for FFI compatibility, but actually
+/// points to a Box<Arc<T>>. It must be passed to take_arc or decrement_arc exactly once.
+pub(crate) fn iterator_boxed_arc_next<T: 'static>(it: *mut CIterator<Arc<T>>) -> *const T {
+    borrow_mut(it).0.next().map(release_arc).unwrap_or_else(null)
 }
