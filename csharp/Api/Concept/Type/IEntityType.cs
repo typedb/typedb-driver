@@ -17,58 +17,25 @@
  * under the License.
  */
 
-using System.Collections.Generic;
-
-using TypeDB.Driver;
-using TypeDB.Driver.Api;
-using TypeDB.Driver.Common;
-
 namespace TypeDB.Driver.Api
 {
-    /**
-     * Entity types represent the classification of independent objects in the data model of the business domain.
-     */
+    /// <summary>
+    /// Represents an entity type in TypeDB.
+    /// Entity types represent the classification of independent objects in the data model.
+    /// In TypeDB 3.0, types are read-only data returned from queries.
+    /// </summary>
     public interface IEntityType : IThingType
     {
-        /**
-         * {@inheritDoc}
-         */
+        /// <inheritdoc/>
         bool IConcept.IsEntityType()
         {
             return true;
         }
-    
-        /**
-         * {@inheritDoc}
-         */
+
+        /// <inheritdoc/>
         IEntityType IConcept.AsEntityType()
         {
             return this;
         }
-    
-        /**
-         * Creates and returns a new instance of this <code>IEntityType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entityType.Create(transaction).Resolve();
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        Promise<IEntity> Create(ITypeDBTransaction transaction);
-    
-        /**
-         * Sets the supplied <code>IEntityType</code> as the supertype of the current <code>IEntityType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entityType.SetSupertype(transaction, entityType).Resolve();
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param superEntityType The <code>IEntityType</code> to set as the supertype of this <code>IEntityType</code>
-         */
-        VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType superEntityType);
     }
 }
