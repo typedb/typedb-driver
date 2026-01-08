@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ffi::c_char, path::Path, sync::{LazyLock, Mutex}};
+use std::{ffi::c_char, path::Path};
 
 use typedb_driver::{Credentials, DriverOptions, TypeDBDriver};
 
@@ -28,19 +28,6 @@ use super::{
 use crate::memory::release;
 
 const DRIVER_LANG: &'static str = "c";
-
-/// Global mutex for serializing all connection-related operations.
-/// This is needed specifically for C# because the .NET GC can run finalizers
-/// on a separate thread, causing race conditions when one thread is creating
-/// a new driver while another thread is destroying old credentials/options/driver objects.
-/// Python (GIL) and Java (different GC model) don't have this issue.
-///
-/// Protected operations:
-/// - credentials_new/drop
-/// - driver_options_new/drop
-/// - driver_open_with_description
-/// - driver_close
-pub(super) static DRIVER_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
 /// Open a TypeDB C Driver to a TypeDB server available at the provided address.
 ///
@@ -75,7 +62,6 @@ pub extern "C" fn driver_open_with_description(
     driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     try_release(TypeDBDriver::new_with_description(
         string_view(address),
         borrow(credentials).clone(),
@@ -88,7 +74,6 @@ pub extern "C" fn driver_open_with_description(
 /// Closing a driver frees the underlying Rust object.
 #[no_mangle]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     free(driver);
 }
 
@@ -110,14 +95,12 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
 // @param password The password for the user
 #[no_mangle]
 pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     release(Credentials::new(string_view(username), string_view(password)))
 }
 
 // Frees the native rust <code>Credentials</code> object
 #[no_mangle]
 pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     free(credentials);
 }
 
@@ -127,7 +110,6 @@ pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
 // @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
 #[no_mangle]
 pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
     try_release(DriverOptions::new(is_tls_enabled, tls_root_ca_path))
 }
@@ -135,6 +117,5 @@ pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c
 // Frees the native rust <code>DriverOptions</code> object
 #[no_mangle]
 pub extern "C" fn driver_options_drop(driver_options: *mut DriverOptions) {
-    let _lock = DRIVER_LOCK.lock().unwrap();
     free(driver_options);
 }
