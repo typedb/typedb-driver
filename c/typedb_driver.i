@@ -62,10 +62,13 @@ struct Type {};
 %dropproxy(TransactionOptions, transaction_options)
 %dropproxy(QueryOptions, query_options)
 
-#define typedb_driver_drop driver_close
-#define transaction_drop transaction_submit_close
+// Use transaction_close_sync for the destructor to ensure callbacks are invoked
+// before SWIG directors are finalized by the managed runtime's GC.
+// transaction_submit_close is kept for explicit async close.
+#define transaction_drop transaction_close_sync
 #define database_drop database_close
 
+#define typedb_driver_drop driver_close
 %dropproxy(TypeDBDriver, typedb_driver)
 %dropproxy(Transaction, transaction)
 
@@ -134,101 +137,124 @@ struct Type {};
 %promiseproxy(QueryAnswerPromise, query_answer_promise)
 %promiseproxy(VoidPromise, void_promise)
 
-%feature("director") TransactionCallbackDirector;
-%inline %{
-struct TransactionCallbackDirector {
-    TransactionCallbackDirector() {}
-    virtual ~TransactionCallbackDirector() {}
-    virtual void callback(Error*) = 0;
-};
-%}
-
 %{
 #include <memory>
 #include <iostream>
 #include <mutex>
+#include <atomic>
 #include <unordered_map>
 
+// Forward declaration for the director class
+struct TransactionCallbackDirector;
+
+// Thread-safe map for callback directors, defined first so director can use it
 class ThreadSafeTransactionCallbacks {
 private:
-    // 1. The static map to protect
     static std::unordered_map<size_t, TransactionCallbackDirector*> s_transactionOnCloseCallbacks;
-
-    // 2. The static mutex to manage access
     static std::mutex s_mutex;
 
 public:
-    // Delete copy/move constructors and assignment operators
-    // to prevent accidental copying of the singleton-like structure
     ThreadSafeTransactionCallbacks(const ThreadSafeTransactionCallbacks&) = delete;
     ThreadSafeTransactionCallbacks& operator=(const ThreadSafeTransactionCallbacks&) = delete;
 
-    // --- Core Operations ---
-
-    /**
-     * @brief Inserts a key-value pair into the map in a thread-safe manner.
-     */
     static void insert(size_t key, TransactionCallbackDirector* value) {
-        // Lock the mutex for the duration of this scope
         std::lock_guard<std::mutex> lock(s_mutex);
-
-        // Thread-safe insertion
         s_transactionOnCloseCallbacks[key] = value;
     }
 
-    /**
-     * @brief Retrieves a value associated with a key in a thread-safe manner.
-     * @returns The value pointer, or nullptr if the key is not found.
-     */
-    static TransactionCallbackDirector* find(size_t key) {
-        // Lock the mutex for the duration of this scope
+    // Find and remove atomically, returning the value if found
+    // This prevents race conditions between find and remove
+    static TransactionCallbackDirector* findAndRemove(size_t key) {
         std::lock_guard<std::mutex> lock(s_mutex);
-
-        // Thread-safe lookup
         auto it = s_transactionOnCloseCallbacks.find(key);
         if (it != s_transactionOnCloseCallbacks.end()) {
-            return it->second;
+            auto* result = it->second;
+            s_transactionOnCloseCallbacks.erase(it);
+            return result;
         }
-        return nullptr; // Return nullptr if not found
+        return nullptr;
     }
 
-    /**
-     * @brief Removes a key-value pair from the map in a thread-safe manner.
-     */
     static void remove(size_t key) {
-        // Lock the mutex for the duration of this scope
         std::lock_guard<std::mutex> lock(s_mutex);
-
-        // Thread-safe removal
         s_transactionOnCloseCallbacks.erase(key);
     }
-
-    // Add other necessary map operations (e.g., size(), contains(), clear()) here...
 };
 
 // Initialize the static members
 std::unordered_map<size_t, TransactionCallbackDirector*> ThreadSafeTransactionCallbacks::s_transactionOnCloseCallbacks;
 std::mutex ThreadSafeTransactionCallbacks::s_mutex;
+%}
 
-static void transaction_callback_execute(size_t ID, Error* error) {
-    try {
-        auto cb = ThreadSafeTransactionCallbacks::find(ID);
-        cb->callback(error);
-        ThreadSafeTransactionCallbacks::remove(ID);
-    } catch (std::exception const& e) {
-        std::cerr << "[ERROR] " << e.what() << std::endl;
+// Director class exposed to SWIG - tracks its callback ID for cleanup on destruction
+%feature("director") TransactionCallbackDirector;
+%inline %{
+struct TransactionCallbackDirector {
+    size_t _callbackID;
+    bool _registered;
+
+    TransactionCallbackDirector() : _callbackID(0), _registered(false) {
+        std::cerr << "[DEBUG] TransactionCallbackDirector created: " << this << std::endl << std::flush;
     }
+
+    virtual ~TransactionCallbackDirector() {
+        std::cerr << "[DEBUG] TransactionCallbackDirector destructor: " << this << " registered=" << _registered << " id=" << _callbackID << std::endl << std::flush;
+        // When GC finalizes this director, remove from the map to prevent dangling pointer
+        if (_registered) {
+            std::cerr << "[DEBUG] TransactionCallbackDirector removing from map: id=" << _callbackID << std::endl << std::flush;
+            ThreadSafeTransactionCallbacks::remove(_callbackID);
+            std::cerr << "[DEBUG] TransactionCallbackDirector removed from map: id=" << _callbackID << std::endl << std::flush;
+        }
+        std::cerr << "[DEBUG] TransactionCallbackDirector destructor complete: " << this << std::endl << std::flush;
+    }
+
+    void setCallbackID(size_t id) {
+        _callbackID = id;
+        _registered = true;
+        std::cerr << "[DEBUG] TransactionCallbackDirector setCallbackID: " << this << " id=" << id << std::endl << std::flush;
+    }
+
+    virtual void callback(Error*) = 0;
+};
+%}
+
+%{
+static void transaction_callback_execute(size_t ID, Error* error) {
+    std::cerr << "[DEBUG] transaction_callback_execute called: ID=" << ID << " error=" << error << std::endl;
+    try {
+        // Use findAndRemove to atomically get and remove the callback
+        // This prevents race with director destructor
+        auto cb = ThreadSafeTransactionCallbacks::findAndRemove(ID);
+        std::cerr << "[DEBUG] transaction_callback_execute findAndRemove result: ID=" << ID << " cb=" << cb << std::endl;
+        if (cb != nullptr) {
+            // Mark as unregistered so destructor won't try to remove again
+            cb->_registered = false;
+            std::cerr << "[DEBUG] transaction_callback_execute invoking callback: ID=" << ID << std::endl;
+            cb->callback(error);
+            std::cerr << "[DEBUG] transaction_callback_execute callback complete: ID=" << ID << std::endl;
+        } else {
+            // Callback was already removed by director destructor - this is expected
+            // when the managed runtime GC'd the callback object before the native
+            // callback could be invoked.
+            std::cerr << "[INFO] Transaction callback ID " << ID << " already cleaned up by GC" << std::endl;
+        }
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] Exception in transaction callback: " << e.what() << std::endl;
+    }
+    std::cerr << "[DEBUG] transaction_callback_execute done: ID=" << ID << std::endl;
 }
 %}
 
 %rename(transaction_on_close) transaction_on_close_register;
 %ignore transaction_on_close;
 %inline %{
-#include <atomic>
 VoidPromise* transaction_on_close_register(const Transaction* transaction, TransactionCallbackDirector* handler) {
     static std::atomic_size_t nextID;
     std::size_t ID = nextID.fetch_add(1);
+    std::cerr << "[DEBUG] transaction_on_close_register: ID=" << ID << " handler=" << handler << std::endl;
+    handler->setCallbackID(ID);  // Track ID in director for cleanup on destruction
     ThreadSafeTransactionCallbacks::insert(ID, handler);
+    std::cerr << "[DEBUG] transaction_on_close_register inserted into map: ID=" << ID << std::endl;
     return transaction_on_close(transaction, ID, &transaction_callback_execute);
 }
 %}

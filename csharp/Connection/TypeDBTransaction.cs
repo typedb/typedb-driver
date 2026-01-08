@@ -39,10 +39,15 @@ namespace TypeDB.Driver.Connection
         private readonly List<TransactionOnClose> _callbacks;
         // Keep a reference to prevent GC collection while native code uses it
         private readonly TransactionOptions _options;
+        // Keep a reference to the driver to prevent it from being GC'd while the transaction is alive.
+        // The transaction's native object uses the driver's BackgroundRuntime, which would be freed
+        // if the driver is garbage collected, causing use-after-free crashes.
+        private readonly IDriver _driver;
 
-        internal TypeDBTransaction(Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
+        internal TypeDBTransaction(IDriver driver, Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
             : base(transaction)
         {
+            _driver = driver;
             Type = type;
             _options = options;
             _callbacks = new List<TransactionOnClose>();
@@ -116,11 +121,16 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                _callbacks.Clear();
-
                 // Call transaction_close and wait for it to complete.
-                // This is what Java does.
+                // IMPORTANT: We must wait for close to complete BEFORE clearing callbacks.
+                // The native close process invokes OnClose callbacks, which go through
+                // the SWIG director mechanism. If we clear _callbacks first, the GC can
+                // finalize TransactionOnClose objects and release their SWIG directors
+                // while native code is still trying to invoke them, causing use-after-free.
                 Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
+
+                // Now safe to clear callbacks - all native callbacks have been invoked
+                _callbacks.Clear();
             }
             catch (Pinvoke.Error e)
             {
@@ -147,7 +157,11 @@ namespace TypeDB.Driver.Connection
                 // Prevent GC from collecting options during the native call
                 GC.KeepAlive(options);
 
-                var nativeAnswer = Pinvoke.typedb_driver.query_answer_promise_resolve(promise);
+                // query_answer_promise_resolve CONSUMES the native promise via take_ownership in Rust.
+                // We must release ownership on the C# wrapper BEFORE calling resolve to prevent
+                // the wrapper's finalizer from trying to free an already-freed pointer.
+                var releasedPromise = promise.Released();
+                var nativeAnswer = Pinvoke.typedb_driver.query_answer_promise_resolve(releasedPromise);
                 return QueryAnswer.Of(nativeAnswer);
             }
             catch (Pinvoke.Error e)
@@ -160,6 +174,12 @@ namespace TypeDB.Driver.Connection
         public void Dispose()
         {
             Close();
+            // Dispose the underlying SWIG object to free native memory immediately
+            // instead of waiting for GC finalization (which can cause race conditions)
+            if (NativeObject is System.IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
 
         private class TransactionOnClose : Pinvoke.TransactionCallbackDirector

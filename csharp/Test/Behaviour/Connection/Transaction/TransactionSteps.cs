@@ -70,6 +70,15 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => tx.Commit());
         }
 
+        [Then(@"transaction commits; fails with a message containing: ""(.*)""")]
+        public void TransactionCommitsFailsWithMessage(string expectedMessage)
+        {
+            Assert.True(Transactions.Count > 0, "No transaction to commit");
+            var tx = Transactions[Transactions.Count - 1];
+            var exception = Assert.Throws<TypeDBDriverException>(() => tx.Commit());
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
         [Given(@"transaction rollbacks")]
         [When(@"transaction rollbacks")]
         [Then(@"transaction rollbacks")]

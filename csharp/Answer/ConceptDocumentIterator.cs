@@ -36,8 +36,12 @@ namespace TypeDB.Driver.Answer
         internal ConceptDocumentIterator(Pinvoke.QueryAnswer nativeAnswer)
             : base(nativeAnswer)
         {
+            // query_answer_into_documents CONSUMES the native QueryAnswer via take_ownership in Rust.
+            // We must release ownership on the C# wrapper BEFORE calling into_documents to prevent
+            // the wrapper's finalizer from trying to free an already-freed pointer.
+            var releasedAnswer = nativeAnswer.Released();
             _nativeEnumerable = new NativeEnumerable<string>(
-                Pinvoke.typedb_driver.query_answer_into_documents(nativeAnswer));
+                Pinvoke.typedb_driver.query_answer_into_documents(releasedAnswer));
         }
 
         /// <inheritdoc/>
