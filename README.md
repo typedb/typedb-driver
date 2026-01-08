@@ -1,3 +1,5 @@
+[![TypeDB](https://github.com/typedb/.github/raw/master/profile/banner.png)](https://typedb.com/)
+
 # TypeDB Drivers
 
 [![Factory](https://factory.vaticle.com/api/status/typedb/typedb-driver/badge.svg)](https://factory.vaticle.com/typedb/typedb-driver)
@@ -8,11 +10,11 @@ This repository stores all TypeDB Drivers built and supported by TypeDB.
 
 See the table below for links to README files, documentation, and source code.
 
-| Driver          | Readme                                                                          | Documentation                                                                     | Driver location                                                          |
-|-----------------|---------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| Rust            | [README](https://github.com/typedb/typedb-driver/tree/master/rust/README.md)    | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/rust)       | [`rust/`](https://github.com/typedb/typedb-driver/tree/master/rust)      |
-| Python          | [README](https://github.com/typedb/typedb-driver/tree/master/python/README.md)  | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/python)     | [`python/`](https://github.com/typedb/typedb-driver/tree/master/python)  |
-| Java            | [README](https://github.com/typedb/typedb-driver/tree/master/java/README.md)    | [Documentation](https://typedb.com/docs/drivers/java/overview)                    | [`java/`](https://github.com/typedb/typedb-driver/tree/master/java)      |
+| Driver          | Readme                                                                          | Documentation                                                                     | Driver location                                                           |
+|-----------------|---------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| Rust            | [README](https://github.com/typedb/typedb-driver/tree/master/rust/README.md)    | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/rust)       | [`rust/`](https://github.com/typedb/typedb-driver/tree/master/rust)       |
+| Python          | [README](https://github.com/typedb/typedb-driver/tree/master/python/README.md)  | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/python)     | [`python/`](https://github.com/typedb/typedb-driver/tree/master/python)   |
+| Java            | [README](https://github.com/typedb/typedb-driver/tree/master/java/README.md)    | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/java/)      | [`java/`](https://github.com/typedb/typedb-driver/tree/master/java)       |
 | Typescript HTTP | [README](https://github.com/typedb/typedb-driver/tree/master/http-ts/README.md) | [Documentation](https://typedb.com/docs/reference/typedb-http-drivers/typescript) | [`http-ts/`](https://github.com/typedb/typedb-driver/tree/master/http-ts) |
 
 There are also some GRPC drivers that are available for TypeDB 2.x but have not been upgraded to 3.x yet. Please contact
