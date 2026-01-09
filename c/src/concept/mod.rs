@@ -19,7 +19,6 @@
 
 use std::ptr::addr_of_mut;
 
-use itertools::Itertools;
 use typedb_driver::{answer::ConceptRow, concept::Concept, BoxPromise, Promise, Result};
 
 use super::{iterator::iterator_try_next, memory::free};

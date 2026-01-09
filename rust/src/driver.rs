@@ -54,45 +54,6 @@ impl TypeDBDriver {
 
     pub const DEFAULT_ADDRESS: &'static str = "localhost:1729";
 
-    /// Initialize logging configuration for the TypeDB driver.
-    ///
-    /// This function sets up tracing with the following priority:
-    /// 1. TYPEDB_DRIVER_LOG environment variable (if set). Use TYPEDB_DRIVER_CLIB_LOG to see memory exchanges
-    /// 1.  environment variable (if set)
-    /// 2. RUST_LOG environment variable (if set)
-    /// 3. Default level (INFO)
-    ///
-    /// The logging is initialized only once using a static flag to prevent
-    /// multiple initializations in applications that create multiple drivers.
-    pub fn init_logging() {
-        use std::sync::Once;
-        static INIT: Once = Once::new();
-
-        INIT.call_once(|| {
-            let clib_level = if let Ok(typedb_driver_clib_log) = std::env::var("TYPEDB_DRIVER_CLIB_LOG") {
-                typedb_driver_clib_log
-            } else {
-                "info".to_owned()
-            };
-            // Try to get log level from TYPEDB_DRIVER_LOG first
-            let env_filter = if let Ok(typedb_log_level) = std::env::var("TYPEDB_DRIVER_LOG") {
-                EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", typedb_log_level, clib_level))
-            } else if let Ok(rust_log) = std::env::var("RUST_LOG") {
-                // If RUST_LOG is set, use it but scope it to typedb_driver only
-                EnvFilter::new(&format!("typedb_driver={},typedb_driver_clib={}", rust_log, clib_level))
-            } else {
-                EnvFilter::new(&format!("typedb_driver=info,typedb_driver_clib={}", clib_level))
-            };
-
-            // Initialize the tracing subscriber
-            if let Err(e) =
-                tracing_subscriber::registry().with(env_filter).with(tracing_fmt::layer().with_target(false)).try_init()
-            {
-                eprintln!("Failed to initialize logging: {}", e);
-            }
-        });
-    }
-
     /// Creates a new TypeDB Server connection.
     ///
     /// # Arguments
@@ -153,8 +114,6 @@ impl TypeDBDriver {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
     ) -> Result<Self> {
-        Self::init_logging();
-
         debug!("Initializing TypeDB driver with description: {}", driver_lang.as_ref());
         let id = address.as_ref().to_string();
         let address: Address = id.parse()?;

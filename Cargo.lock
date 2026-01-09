@@ -787,19 +787,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
-name = "env_logger"
-version = "0.10.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cd405aab171cb85d6735e5c8d9db038c17d3ca007a4d2c25f337935c3d90580"
-dependencies = [
- "humantime",
- "is-terminal",
- "log",
- "regex",
- "termcolor",
-]
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1378,17 +1365,6 @@ dependencies = [
  "bitflags 2.9.4",
  "cfg-if",
  "libc",
-]
-
-[[package]]
-name = "is-terminal"
-version = "0.4.16"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e04d7f318608d35d4b61ddd75cbdaee86b023ebe2bd5a66ee0915f0bf93095a9"
-dependencies = [
- "hermit-abi 0.5.2",
- "libc",
- "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -2557,15 +2533,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "termcolor"
-version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06794f8f6c5c898b3275aebefa6b8a1cb24cd2c6c79397ab15774837a0bc5755"
-dependencies = [
- "winapi-util",
-]
-
-[[package]]
 name = "terminal_size"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2875,7 +2842,6 @@ dependencies = [
  "futures",
  "http",
  "itertools 0.10.5",
- "log",
  "maybe-async",
  "prost",
  "rand 0.8.5",
@@ -2898,7 +2864,7 @@ dependencies = [
 [[package]]
 name = "typedb-protocol"
 version = "0.0.0"
-source = "git+https://github.com/typedb/typedb-protocol?rev=ce6ffc5b25670dd3f35bdb0fcefdf7374eed4638#ce6ffc5b25670dd3f35bdb0fcefdf7374eed4638"
+source = "git+https://github.com/typedb/typedb-protocol?tag=3.7.0#3b75931f30f2b5cecf192515bb95071cd98a6e10"
 dependencies = [
  "prost",
  "tonic",
@@ -2910,10 +2876,9 @@ name = "typedb_driver_clib"
 version = "0.0.0"
 dependencies = [
  "chrono",
- "env_logger",
  "itertools 0.10.5",
- "log",
  "tracing",
+ "tracing-subscriber",
  "typedb-driver",
 ]
 

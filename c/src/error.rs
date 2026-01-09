@@ -24,7 +24,6 @@ use std::{
     sync::Arc,
 };
 
-use env_logger::Env;
 use tracing::{debug, warn};
 use typedb_driver::{Error, Result};
 
@@ -32,15 +31,6 @@ use super::memory::{free, release_arc, release_optional, release_string};
 
 thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
-}
-
-/// Enables logging in the TypeDB driver.
-#[no_mangle]
-pub extern "C" fn init_logging() {
-    const ENV_VAR: &str = "TYPEDB_DRIVER_LOG_LEVEL";
-    if let Err(err) = env_logger::try_init_from_env(Env::new().filter(ENV_VAR)) {
-        warn!("{err}");
-    }
 }
 
 fn ok_record<T>(result: Result<T>) -> Option<T> {
