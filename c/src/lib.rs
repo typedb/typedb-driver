@@ -77,11 +77,7 @@ pub extern "C" fn init_logging() {
             }
         }
 
-        if let Err(e) = tracing_subscriber::registry()
-            .with(filter)
-            .with(fmt::layer().with_target(false))
-            .try_init()
-        {
+        if let Err(e) = tracing_subscriber::registry().with(filter).with(fmt::layer().with_target(false)).try_init() {
             eprintln!("Failed to initialize logging: {}", e);
         }
     });
