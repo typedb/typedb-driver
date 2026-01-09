@@ -55,6 +55,7 @@ build:
         bazel build //java/...
         bazel build //python/...
         bazel build //http-ts/...
+        bazel build //csharp/...
         
         bazel run @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
@@ -279,11 +280,26 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
-        
+
         tool/http-ts/install-deps.sh
 
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //http-ts/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-community-server.sh
+        exit $TEST_SUCCESS
+
+    test-csharp-behaviour-community:
+      image: typedb-ubuntu-22.04
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+
+        tool/test/start-community-server.sh &&
+          .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
