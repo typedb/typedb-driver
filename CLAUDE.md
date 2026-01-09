@@ -128,9 +128,14 @@ BDD tests use Gherkin specifications from the `typedb-behaviour` repository.
 
 Driver logging is controlled via environment variables:
 
-- `TYPEDB_DRIVER_LOG`: Log level for driver core (`debug`, `info`, `warn`, `error`, `trace`)
-- `TYPEDB_DRIVER_CLIB_LOG`: Log level for C FFI layer
-- `RUST_LOG`: Standard Rust logging (lower priority than above)
+- `TYPEDB_DRIVER_LOG`: Fine-grained control using the same syntax as `RUST_LOG`.
+  Example: `TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace`
+
+- `TYPEDB_DRIVER_LOG_LEVEL`: Simple log level (`debug`, `info`, `warn`, `error`, `trace`) that
+  applies to both `typedb_driver` and `typedb_driver_clib` crates. Overrides `TYPEDB_DRIVER_LOG`.
+  Example: `TYPEDB_DRIVER_LOG_LEVEL=debug`
+
+If neither is set, the default level is INFO.
 
 For FFI-based drivers (Python/Java/C), call `init_logging()` to enable logging output.
 
