@@ -70,13 +70,8 @@
 
 	[dependencies.typedb-protocol]
 		features = []
-		rev = "ce6ffc5b25670dd3f35bdb0fcefdf7374eed4638"
 		git = "https://github.com/typedb/typedb-protocol"
-		default-features = false
-
-	[dependencies.log]
-		features = ["kv", "kv_unstable", "std", "value-bag"]
-		version = "0.4.27"
+		tag = "3.7.0"
 		default-features = false
 
 	[dependencies.serde]
