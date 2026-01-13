@@ -5,25 +5,24 @@
 
 
 
-This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
+Used to specify whether we need explicit or transitive subtyping, instances, etc.
 
+ 
+  attributeType.GetOwners(transaction, annotation, Transitivity.Explicit)
+ 
+ 
+  
+   TypeDB.Driver.Api.IConcept.Transitivity
+  
+  
+   Transitivity
+  
+  
+   Used to specify whether we need explicit or transitive subtyping, instances, etc.
+  
+  
+   Definition IConcept.cs:630
+  
+ 
 
-[caption=""]
-.Examples
-[source,cs]
-----
-attributeType.GetOwners(transaction, annotation, Explicit);
-----
-
-[caption=""]
-.Enum constants
-// tag::enum_constants[]
-[cols=""]
-[options="header"]
-|===
-|Name
-a| `Explicit`
-a| `Transitive`
-|===
-// end::enum_constants[]
 

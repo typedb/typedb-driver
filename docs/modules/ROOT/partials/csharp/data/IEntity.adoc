@@ -10,7 +10,7 @@
 
 
 
-Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances. In TypeDB 3.0, instances are read-only data returned from queries.
 
 // tag::methods[]
 [#_IEntity_IConcept_TypeDB_Driver_Api_IEntity_AsEntity_]
@@ -23,7 +23,28 @@ IEntity IConcept. AsEntity()
 
 
 
-Casts the concept to ``IEntity``.
+Casts the concept to IEntity.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not an entity.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsEntity()
+ 
+
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -32,12 +53,21 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IEntity IConcept.`
 
-[caption=""]
-.Code examples
+[#_string_TypeDB_Driver_Api_IEntity_IID]
+==== IID
+
 [source,cs]
 ----
-entity.AsEntity();
+string TypeDB.Driver.Api.IEntity.IID
 ----
+
+
+
+The unique id of the entity.
+
+[caption=""]
+.Returns
+`string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
 ==== IsEntity
@@ -49,7 +79,13 @@ bool IConcept. IsEntity()
 
 
 
-Checks if the concept is an ``IEntity``.
+Checks if the concept is an IEntity.
+
+ 
+  concept.IsEntity()
+ 
+
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -58,12 +94,23 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `bool IConcept.`
 
-[caption=""]
-.Code examples
+[#_new_IEntityType_TypeDB_Driver_Api_IEntity_Type]
+==== Type
+
 [source,cs]
 ----
-entity.IsEntity();
+new IEntityType TypeDB.Driver.Api.IEntity.Type
 ----
+
+
+
+The type which this entity belongs to.
+
+Implements TypeDB.Driver.Api.IThing.
+
+[caption=""]
+.Returns
+`new IEntityType`
 
 // end::methods[]
 

@@ -1,0 +1,120 @@
+[#_TypeDB]
+=== TypeDB
+
+*Package*: `TypeDB.Driver`
+
+
+
+Entry point for creating TypeDB driver connections.
+
+// tag::methods[]
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_string_address_Credentials_credentials_DriverOptions_driverOptions_]
+==== Driver
+
+[source,cs]
+----
+static IDriver Driver(string address, Credentials credentials, DriverOptions driverOptions)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB server available at the provided address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running. a| `string`
+a| `credentials` a| The Credentials to connect with. a| `Credentials`
+a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_Credentials_credentials_DriverOptions_driverOptions_]
+==== Driver
+
+[source,cs]
+----
+static IDriver Driver(Credentials credentials, DriverOptions driverOptions)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB server available at the default address (localhost:1729).
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `credentials` a| The Credentials to connect with. a| `Credentials`
+a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_string_address_Credentials_credentials_]
+==== Driver
+
+[source,cs]
+----
+static IDriver Driver(string address, Credentials credentials)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB server available at the provided address with no TLS.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running. a| `string`
+a| `credentials` a| The Credentials to connect with. a| `Credentials`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_Credentials_credentials_]
+==== Driver
+
+[source,cs]
+----
+static IDriver Driver(Credentials credentials)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB server available at the default address with no TLS.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `credentials` a| The Credentials to connect with. a| `Credentials`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+// end::methods[]
+

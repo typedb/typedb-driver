@@ -1,0 +1,76 @@
+[#_QueryTypeExtensions]
+=== QueryTypeExtensions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Extension methods for QueryType.
+
+// tag::methods[]
+[#_static_QueryType_TypeDB_Driver_Api_QueryTypeExtensions_FromNative_PinvokeQueryType_nativeType_]
+==== FromNative
+
+[source,cs]
+----
+static QueryType FromNative(Pinvoke::QueryType nativeType)
+----
+
+
+
+Creates a QueryType from a native QueryType.
+
+[caption=""]
+.Returns
+`QueryType`
+
+[#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsRead_this_QueryType_type_]
+==== IsRead
+
+[source,cs]
+----
+static bool IsRead(this QueryType type)
+----
+
+
+
+Checks if this is a read query.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsSchema_this_QueryType_type_]
+==== IsSchema
+
+[source,cs]
+----
+static bool IsSchema(this QueryType type)
+----
+
+
+
+Checks if this is a schema query.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsWrite_this_QueryType_type_]
+==== IsWrite
+
+[source,cs]
+----
+static bool IsWrite(this QueryType type)
+----
+
+
+
+Checks if this is a write query.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

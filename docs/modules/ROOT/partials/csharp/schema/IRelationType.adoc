@@ -11,7 +11,7 @@
 
 
 
-Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles. Other types can play roles in relations if it’s mentioned in their definition. A relation type must specify at least one role.
+Represents a relation type in TypeDB. Relation types represent relationships between types and have roles. In TypeDB 3.0, types are read-only data returned from queries.
 
 // tag::methods[]
 [#_IRelationType_IConcept_TypeDB_Driver_Api_IRelationType_AsRelationType_]
@@ -24,7 +24,26 @@ IRelationType IConcept. AsRelationType()
 
 
 
-Casts the concept to ``IRelationType``.
+Casts the concept to IRelationType.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not a relation type.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsRelationType()
+ 
 
 
 
@@ -34,202 +53,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IRelationType IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-concept.AsRelationType();
-----
-
-[#_Promise_IRelation_TypeDB_Driver_Api_IRelationType_Create_ITypeDBTransaction_transaction_]
-==== Create
-
-[source,cs]
-----
-Promise< IRelation > Create(ITypeDBTransaction transaction)
-----
-
-
-
-Creates and returns an instance of this ``IRelationType``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`Promise< IRelation >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.Create(transaction).Resolve();
-----
-
-[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_]
-==== GetRelates
-
-[source,cs]
-----
-IEnumerable< IRoleType > GetRelates(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves roles that this ``IRelationType`` relates to directly or via inheritance.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRelationType::getRelates(ITypeDBTransaction, IConcept.Transitivity)
----- 
-
-
-[caption=""]
-.Returns
-`IEnumerable< IRoleType >`
-
-[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
-==== GetRelates
-
-[source,cs]
-----
-IEnumerable< IRoleType > GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
-----
-
-
-
-Retrieves roles that this ``IRelationType`` relates to directly or via inheritance.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and inherited relates, ``Explicit`` for direct relates only a| `IConcept​.Transitivity`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IRoleType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.GetRelates(transaction, transitivity);
-----
-
-[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
-==== GetRelates
-
-[source,cs]
-----
-Promise< IRoleType > GetRelates(ITypeDBTransaction transaction, string roleLabel)
-----
-
-
-
-Retrieves roles that this ``IRelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``IRoleType`` or ``null``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `roleLabel` a| Label of the role we wish to retrieve a| `string`
-|===
-
-[caption=""]
-.Returns
-`Promise< IRoleType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.GetRelates(transaction, roleLabel).Resolve();
-----
-
-[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelatesOverridden_ITypeDBTransaction_transaction_IRoleType_roleType_]
-==== GetRelatesOverridden
-
-[source,cs]
-----
-Promise< IRoleType > GetRelatesOverridden(ITypeDBTransaction transaction, IRoleType roleType)
-----
-
-
-
-Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRelationType::GetRelatesOverridden(ITypeDBTransaction, string)
----- 
-
-
-[caption=""]
-.Returns
-`Promise< IRoleType >`
-
-[#_Promise_IRoleType_TypeDB_Driver_Api_IRelationType_GetRelatesOverridden_ITypeDBTransaction_transaction_string_roleLabel_]
-==== GetRelatesOverridden
-
-[source,cs]
-----
-Promise< IRoleType > GetRelatesOverridden(ITypeDBTransaction transaction, string roleLabel)
-----
-
-
-
-Retrieves a ``IRoleType`` that is overridden by the role with the ``role_label``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `roleLabel` a| Label of the role that overrides an inherited role a| `string`
-|===
-
-[caption=""]
-.Returns
-`Promise< IRoleType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.GetRelatesOverridden(transaction, roleLabel).Resolve();
-----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRelationType_IsRelationType_]
 ==== IsRelationType
@@ -241,7 +64,11 @@ bool IConcept. IsRelationType()
 
 
 
-Checks if the concept is a ``IRelationType``.
+Checks if the concept is a IRelationType.
+
+ 
+  concept.IsRelationType()
+ 
 
 
 
@@ -251,198 +78,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-concept.IsRelationType();
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
-==== SetRelates
-
-[source,cs]
-----
-VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel)
-----
-
-
-
-Sets the new role that this ``IRelationType`` relates to.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRelationType::SetRelates(ITypeDBTransaction, string, string)
----- 
-
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_IRoleType_overriddenType_]
-==== SetRelates
-
-[source,cs]
-----
-VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, IRoleType overriddenType)
-----
-
-
-
-Sets the new role that this ``IRelationType`` relates to.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRelationType::SetRelates(ITypeDBTransaction, string, string)
----- 
-
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetRelates_ITypeDBTransaction_transaction_string_roleLabel_string_overriddenLabel_]
-==== SetRelates
-
-[source,cs]
-----
-VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, string? overriddenLabel)
-----
-
-
-
-Sets the new role that this ``IRelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `roleLabel` a| The new role for the ``IRelationType`` to relate to a| `string`
-a| `overriddenLabel` a| The label being overridden, if applicable a| `string?`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.SetRelates(transaction, roleLabel).Resolve();
-relationType.SetRelates(transaction, roleLabel, overriddenLabel).Resolve();
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_SetSupertype_ITypeDBTransaction_transaction_IRelationType_superRelationType_]
-==== SetSupertype
-
-[source,cs]
-----
-VoidPromise SetSupertype(ITypeDBTransaction transaction, IRelationType superRelationType)
-----
-
-
-
-Sets the supplied ``IRelationType`` as the supertype of the current ``IRelationType``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `superRelationType` a| The ``IRelationType`` to set as the supertype of this ``IRelationType`` a| `IRelationType`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.SetSupertype(transaction, superRelationType).Resolve();
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates_ITypeDBTransaction_transaction_IRoleType_roleType_]
-==== UnsetRelates
-
-[source,cs]
-----
-VoidPromise UnsetRelates(ITypeDBTransaction transaction, IRoleType roleType)
-----
-
-
-
-Disallows this ``IRelationType`` from relating to the given role.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRelationType::UnsetRelates(ITypeDBTransaction, string)
----- 
-
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[#_VoidPromise_TypeDB_Driver_Api_IRelationType_UnsetRelates_ITypeDBTransaction_transaction_string_roleLabel_]
-==== UnsetRelates
-
-[source,cs]
-----
-VoidPromise UnsetRelates(ITypeDBTransaction transaction, string roleLabel)
-----
-
-
-
-Disallows this ``IRelationType`` from relating to the given role.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `roleLabel` a| The role to not relate to the relation type. a| `string`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-relationType.UnsetRelates(transaction, roleLabel).Resolve();
-----
 
 // end::methods[]
 

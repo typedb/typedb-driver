@@ -1,0 +1,39 @@
+[#_QueryType]
+=== QueryType
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Used to specify the type of the executed query.
+
+ 
+  conceptRow.QueryType
+ 
+
+
+ 
+  
+   Enumerator
+  
+  
+   Read&nbsp;
+   
+
+A read-only query that retrieves data.
+  
+  
+   Write&nbsp;
+   
+
+A write query that modifies data.
+  
+  
+   Schema&nbsp;
+   
+
+A schema query that modifies the schema.
+  
+ 
+
+
