@@ -16,48 +16,56 @@
 # under the License.
 
 dir_mapping = {
+    # Connection
+    "TypeDB.adoc": "connection",
+    "IDriver.adoc": "connection",
+    "Credentials.adoc": "connection",
+    "DriverOptions.adoc": "connection",
+    "IDatabaseManager.adoc": "connection",
+    "IDatabase.adoc": "connection",
+    "IUserManager.adoc": "connection",
+    "IUser.adoc": "connection",
+
+    # Transaction
     "ITypeDBTransaction.adoc": "transaction",
     "TransactionType.adoc": "transaction",
-    "IQueryManager.adoc": "transaction",
-    "IExplanation.adoc": "answer",
-    "IConceptMap.adoc": "answer",
-    "IExplainable.adoc": "answer",
-    "IExplainables.adoc": "answer",
-    "IConceptMapGroup.adoc": "answer",
-    "IValueGroup.adoc": "answer",
-    "Promise__T__.adoc": "answer",
-    "VoidPromise.adoc": "answer",
-    "Drivers.adoc": "connection",
-    "ITypeDBDriver.adoc": "connection",
-    "TypeDBCredential.adoc": "connection",
-    "IUserManager.adoc": "connection",
-    "IReplica.adoc": "connection",
-    "IUser.adoc": "connection",
-    "IDatabase.adoc": "connection",
-    "IDatabaseManager.adoc": "connection",
-    "IRule.adoc": "logic",
-    "ILogicManager.adoc": "logic",
-    "IValue.Type.adoc": "schema",
-    "IRelationType.adoc": "schema",
-    "IAttributeType.adoc": "schema",
-    "IRoleType.adoc": "schema",
-    "IEntityType.adoc": "schema",
-    "Annotation.adoc": "schema",
-    "IThingType.adoc": "schema",
-    "IType.adoc": "schema",
-    "Label.adoc": "schema",
+    "TransactionOptions.adoc": "transaction",
+    "QueryOptions.adoc": "transaction",
+
+    # Answer
+    "IQueryAnswer.adoc": "answer",
+    "IOkQueryAnswer.adoc": "answer",
+    "IConceptRowIterator.adoc": "answer",
+    "IConceptRow.adoc": "answer",
+    "IConceptDocumentIterator.adoc": "answer",
+    "IJSON.adoc": "answer",
+    "QueryType.adoc": "answer",
+    "QueryTypeExtensions.adoc": "answer",
+
+    # Concept
     "IConcept.adoc": "concept",
-    "IConceptManager.adoc": "concept",
     "Transitivity.adoc": "concept",
-    "IRelation.adoc": "data",
+
+    # Schema
+    "IType.adoc": "schema",
+    "IThingType.adoc": "schema",
+    "IEntityType.adoc": "schema",
+    "IRelationType.adoc": "schema",
+    "IRoleType.adoc": "schema",
+    "IAttributeType.adoc": "schema",
+
+    # Data
+    "IThing.adoc": "data",
     "IEntity.adoc": "data",
+    "IRelation.adoc": "data",
     "IAttribute.adoc": "data",
     "IValue.adoc": "data",
-    "ValueType.adoc": "data",
-    "ValueTypeExtensions.adoc": "data",
-    "IThing.adoc": "data",
-    "ITypeDBSession.adoc": "session",
-    "SessionType.adoc": "session",
-    "TypeDBOptions.adoc": "session",
+
+    # Common
+    "Promise__T__.adoc": "answer",
+    "VoidPromise.adoc": "answer",
+    "Label.adoc": "schema",
+
+    # Errors
     "TypeDBDriverException.adoc": "errors",
 }

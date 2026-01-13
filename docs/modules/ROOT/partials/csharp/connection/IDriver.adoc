@@ -1,0 +1,159 @@
+[#_IDriver]
+=== IDriver
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+// tag::methods[]
+[#_void_TypeDB_Driver_Api_IDriver_Close_]
+==== Close
+
+[source,cs]
+----
+void Close()
+----
+
+
+
+Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
+
+ 
+  driver.Close();
+ 
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_IDatabaseManager_TypeDB_Driver_Api_IDriver_Databases]
+==== Databases
+
+[source,cs]
+----
+IDatabaseManager TypeDB.Driver.Api.IDriver.Databases
+----
+
+
+
+The IDatabaseManager for this connection, providing access to database management methods.
+
+ 
+  driver.Databases
+ 
+
+
+[caption=""]
+.Returns
+`IDatabaseManager`
+
+[#_bool_TypeDB_Driver_Api_IDriver_IsOpen_]
+==== IsOpen
+
+[source,cs]
+----
+bool IsOpen()
+----
+
+
+
+Checks whether this connection is presently open.
+
+ 
+  Returns
+ 
+ 
+  ``true`` if the connection is open, ``false`` otherwise.
+ 
+
+
+ 
+  driver.IsOpen();
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
+==== Transaction
+
+[source,cs]
+----
+ITypeDBTransaction Transaction(string database, TransactionType type)
+----
+
+
+
+Opens a transaction to perform read or write queries on the database.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database to open a transaction for. a| `string`
+a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| `TransactionType`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBTransaction`
+
+[#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
+==== Transaction
+
+[source,cs]
+----
+ITypeDBTransaction Transaction(string database, TransactionType type, TransactionOptions options)
+----
+
+
+
+Opens a transaction to perform read or write queries on the database with custom options.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database to open a transaction for. a| `string`
+a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| `TransactionType`
+a| `options` a| Transaction options to configure the opened transaction. a| `TransactionOptions`
+|===
+
+[caption=""]
+.Returns
+`ITypeDBTransaction`
+
+[#_IUserManager_TypeDB_Driver_Api_IDriver_Users]
+==== Users
+
+[source,cs]
+----
+IUserManager TypeDB.Driver.Api.IDriver.Users
+----
+
+
+
+The IUserManager instance for this connection, providing access to user management methods.
+
+ 
+  driver.Users
+ 
+
+
+[caption=""]
+.Returns
+`IUserManager`
+
+// end::methods[]
+
