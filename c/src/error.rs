@@ -79,7 +79,7 @@ pub(super) fn unwrap_void(result: Result) {
     ok_record(result);
 }
 
-pub(crate) fn record_error(err: Error) {
+fn record_error(err: Error) {
     debug!("Encountered error {err} in typedb-driver-rust");
     LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(err));
 }
