@@ -1,0 +1,32 @@
+[#_methods_answer_querytype]
+=== querytype
+
+[#_Struct_QueryType]
+==== Struct QueryType
+
+
+
+This enum is used to specify the type of the query resulted in this answer.
+
+
+[#_Enum_QueryType]
+==== Enum QueryType
+
+
+
+This enum is used to specify the type of the query resulted in this answer.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `ReadQuery`
+a| `SchemaQuery`
+a| `WriteQuery`
+|===
+// end::enum_constants[]
+

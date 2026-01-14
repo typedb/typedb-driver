@@ -1,0 +1,42 @@
+[#_methods_connection_useriterator]
+=== useriterator
+
+[#_Struct_UserIterator]
+==== Struct UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_user_iterator_drop]
+==== user_iterator_drop
+
+[source,cpp]
+----
+void user_iterator_drop(struct UserIterator* it)
+----
+
+
+
+Frees the native rust ``UserIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_user_iterator_next]
+==== user_iterator_next
+
+[source,cpp]
+----
+struct User* user_iterator_next(struct UserIterator* it)
+----
+
+
+
+Forwards the ``UserIterator`` and returns the next ``User`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct User*`
+

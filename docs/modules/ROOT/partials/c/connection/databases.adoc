@@ -1,0 +1,112 @@
+[#_methods_connection_databases]
+=== databases
+
+[#_database_schema]
+==== database_schema
+
+[source,cpp]
+----
+char* database_schema(const struct Database* database)
+----
+
+
+
+A full schema text as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_databases_all]
+==== databases_all
+
+[source,cpp]
+----
+struct DatabaseIterator* databases_all(struct TypeDBDriver* driver)
+----
+
+
+
+Returns a ``DatabaseIterator`` over all databases present on the TypeDB server.
+
+[caption=""]
+.Returns
+`struct DatabaseIterator*`
+
+[#_databases_contains]
+==== databases_contains
+
+[source,cpp]
+----
+bool databases_contains(struct TypeDBDriver* driver, const char* name)
+----
+
+
+
+Checks if a database with the given name exists.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_databases_create]
+==== databases_create
+
+[source,cpp]
+----
+void databases_create(struct TypeDBDriver* driver, const char* name)
+----
+
+
+
+Create a database with the given name.
+
+[caption=""]
+.Returns
+`void`
+
+[#_databases_get]
+==== databases_get
+
+[source,cpp]
+----
+const struct Database* databases_get(struct TypeDBDriver* driver, const char* name)
+----
+
+
+
+Retrieve the database with the given name.
+
+[caption=""]
+.Returns
+`const struct Database*`
+
+[#_databases_import_from_file]
+==== databases_import_from_file
+
+[source,cpp]
+----
+void databases_import_from_file(struct TypeDBDriver* driver, const char* name, const char* schema, const char* data_file)
+----
+
+
+
+Create a database with the given name based on previously exported another database's data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
+a| `name` a| The name of the database to be created. a| `const char*`
+a| `schema` a| The schema definition query string for the database. a| `const char*`
+a| `data_file` a| The exported database file path to import the data from. a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`void`
+

@@ -1,0 +1,74 @@
+[#_methods_analyze_conjunction]
+=== conjunction
+
+[#_Struct_Conjunction]
+==== Struct Conjunction
+
+
+
+A representation of the constraints involved in the query, and types inferred for each variable.
+
+[#_conjunction_drop]
+==== conjunction_drop
+
+[source,cpp]
+----
+void conjunction_drop(struct Conjunction* obj)
+----
+
+
+
+Frees the native rust ``Conjunction`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_conjunction_get_annotated_variables]
+==== conjunction_get_annotated_variables
+
+[source,cpp]
+----
+struct VariableIterator* conjunction_get_annotated_variables(const struct Conjunction* conjunction)
+----
+
+
+
+Returns the variables in the current conjunction for which type annotations are available
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_conjunction_get_constraints]
+==== conjunction_get_constraints
+
+[source,cpp]
+----
+struct ConstraintWithSpanIterator* conjunction_get_constraints(const struct Conjunction* conjunction)
+----
+
+
+
+Returns the ``Constraint``s in the given conjunction.
+
+[caption=""]
+.Returns
+`struct ConstraintWithSpanIterator*`
+
+[#_conjunction_get_variable_annotations]
+==== conjunction_get_variable_annotations
+
+[source,cpp]
+----
+struct VariableAnnotations* conjunction_get_variable_annotations(const struct Conjunction* conjunction, const struct Variable* variable)
+----
+
+
+
+Returns the inferred types for the specified variable in the specified conjunction.
+
+[caption=""]
+.Returns
+`struct VariableAnnotations*`
+

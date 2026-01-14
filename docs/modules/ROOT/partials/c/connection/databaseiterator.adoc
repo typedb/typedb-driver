@@ -1,0 +1,42 @@
+[#_methods_connection_databaseiterator]
+=== databaseiterator
+
+[#_Struct_DatabaseIterator]
+==== Struct DatabaseIterator
+
+
+
+An ``Iterator`` over databases present on the TypeDB server.
+
+[#_database_iterator_drop]
+==== database_iterator_drop
+
+[source,cpp]
+----
+void database_iterator_drop(struct DatabaseIterator* it)
+----
+
+
+
+Frees the native rust ``DatabaseIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_database_iterator_next]
+==== database_iterator_next
+
+[source,cpp]
+----
+const struct Database* database_iterator_next(struct DatabaseIterator* it)
+----
+
+
+
+Forwards the ``DatabaseIterator`` and returns the next ``Database`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`const struct Database*`
+

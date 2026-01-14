@@ -1,0 +1,19 @@
+[#_methods_analyze_constraintwithspan]
+=== constraintwithspan
+
+[#_constraint_with_span_drop]
+==== constraint_with_span_drop
+
+[source,cpp]
+----
+void constraint_with_span_drop(struct ConstraintWithSpan* obj)
+----
+
+
+
+Frees the native rust ``Constraint`` object.
+
+[caption=""]
+.Returns
+`void`
+

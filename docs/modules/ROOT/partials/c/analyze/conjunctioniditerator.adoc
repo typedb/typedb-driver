@@ -1,0 +1,35 @@
+[#_methods_analyze_conjunctioniditerator]
+=== conjunctioniditerator
+
+[#_conjunction_id_iterator_drop]
+==== conjunction_id_iterator_drop
+
+[source,cpp]
+----
+void conjunction_id_iterator_drop(struct ConjunctionIDIterator* it)
+----
+
+
+
+Frees the native rust ``ConjunctionIDIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_conjunction_id_iterator_next]
+==== conjunction_id_iterator_next
+
+[source,cpp]
+----
+struct ConjunctionID* conjunction_id_iterator_next(struct ConjunctionIDIterator* it)
+----
+
+
+
+Forwards the ``ConjunctionIDIterator`` and returns the next ``ConjunctionID`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConjunctionID*`
+

@@ -1,0 +1,32 @@
+[#_methods_transaction_transactiontype]
+=== transactiontype
+
+[#_Struct_TransactionType]
+==== Struct TransactionType
+
+
+
+This enum is used to specify the type of transaction.
+
+
+[#_Enum_TransactionType]
+==== Enum TransactionType
+
+
+
+This enum is used to specify the type of transaction.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Read = 0`
+a| `Schema = 2`
+a| `Write = 1`
+|===
+// end::enum_constants[]
+

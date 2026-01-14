@@ -1,0 +1,35 @@
+[#_methods_analyze_variableiterator]
+=== variableiterator
+
+[#_variable_iterator_drop]
+==== variable_iterator_drop
+
+[source,cpp]
+----
+void variable_iterator_drop(struct VariableIterator* it)
+----
+
+
+
+Frees the native rust ``VariableIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_variable_iterator_next]
+==== variable_iterator_next
+
+[source,cpp]
+----
+struct Variable* variable_iterator_next(struct VariableIterator* it)
+----
+
+
+
+Forwards the ``VariableIterator`` and returns the next ``Variable`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Variable*`
+

@@ -1,0 +1,35 @@
+[#_methods_analyze_variableannotationsiterator]
+=== variableannotationsiterator
+
+[#_variable_annotations_iterator_drop]
+==== variable_annotations_iterator_drop
+
+[source,cpp]
+----
+void variable_annotations_iterator_drop(struct VariableAnnotationsIterator* it)
+----
+
+
+
+Frees the native rust ``VariableAnnotationsIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_variable_annotations_iterator_next]
+==== variable_annotations_iterator_next
+
+[source,cpp]
+----
+struct VariableAnnotations* variable_annotations_iterator_next(struct VariableAnnotationsIterator* it)
+----
+
+
+
+Forwards the ``VariableAnnotationsIterator`` and returns the next ``VariableAnnotations`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct VariableAnnotations*`
+

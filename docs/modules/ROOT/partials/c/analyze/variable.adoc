@@ -1,0 +1,74 @@
+[#_methods_analyze_variable]
+=== variable
+
+[#_Struct_Variable]
+==== Struct Variable
+
+
+
+Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``
+
+[#_variable_drop]
+==== variable_drop
+
+[source,cpp]
+----
+void variable_drop(struct Variable* obj)
+----
+
+
+
+Frees the native rust ``Variable`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_variable_get_name]
+==== variable_get_name
+
+[source,cpp]
+----
+char* variable_get_name(const struct Pipeline* pipeline_structure, const struct Variable* variable)
+----
+
+
+
+Returns the name of the specified variable if it has one, and null otherwise. The ``Pipeline`` must be the one that contains the variable.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_variable_id_as_u32]
+==== variable_id_as_u32
+
+[source,cpp]
+----
+uint32_t variable_id_as_u32(const struct Variable* variable)
+----
+
+
+
+Returns the Variable id as u32 to use in hash, equality etc.
+
+[caption=""]
+.Returns
+`uint32_t`
+
+[#_variable_string_repr]
+==== variable_string_repr
+
+[source,cpp]
+----
+char* variable_string_repr(const struct Variable* variable)
+----
+
+
+
+Returns a string representation of the variable. Does not resolve the name.
+
+[caption=""]
+.Returns
+`char*`
+

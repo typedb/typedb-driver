@@ -1,0 +1,35 @@
+[#_methods_analyze_analyzed]
+=== analyzed
+
+[#_analyzed_fetch]
+==== analyzed_fetch
+
+[source,cpp]
+----
+struct Fetch* analyzed_fetch(const struct AnalyzedQuery* analyzed_query)
+----
+
+
+
+Returns the analyzed fetch
+
+[caption=""]
+.Returns
+`struct Fetch*`
+
+[#_analyzed_preamble]
+==== analyzed_preamble
+
+[source,cpp]
+----
+struct FunctionIterator* analyzed_preamble(const struct AnalyzedQuery* analyzed_query)
+----
+
+
+
+Returns the analyzed functions in the preamble of the query.
+
+[caption=""]
+.Returns
+`struct FunctionIterator*`
+

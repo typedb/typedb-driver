@@ -1,0 +1,115 @@
+[#_methods_answer_queryanswer]
+=== queryanswer
+
+[#_query_answer_drop]
+==== query_answer_drop
+
+[source,cpp]
+----
+void query_answer_drop(struct QueryAnswer* query_answer)
+----
+
+
+
+Frees the native rust ``QueryAnswer`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_query_answer_get_query_type]
+==== query_answer_get_query_type
+
+[source,cpp]
+----
+enum QueryType query_answer_get_query_type(const struct QueryAnswer* query_answer)
+----
+
+
+
+Retrieve the executed query's type of the ``QueryAnswer``.
+
+[caption=""]
+.Returns
+`enum QueryType`
+
+[#_query_answer_into_documents]
+==== query_answer_into_documents
+
+[source,cpp]
+----
+struct StringIterator* query_answer_into_documents(struct QueryAnswer* query_answer)
+----
+
+
+
+Produces an ``Iterator`` over all JSON ``ConceptDocument``s in this ``QueryAnswer``.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_query_answer_into_rows]
+==== query_answer_into_rows
+
+[source,cpp]
+----
+struct ConceptRowIterator* query_answer_into_rows(struct QueryAnswer* query_answer)
+----
+
+
+
+Produces an ``Iterator`` over all ``ConceptRow``s in this ``QueryAnswer``.
+
+[caption=""]
+.Returns
+`struct ConceptRowIterator*`
+
+[#_query_answer_is_concept_document_stream]
+==== query_answer_is_concept_document_stream
+
+[source,cpp]
+----
+bool query_answer_is_concept_document_stream(const struct QueryAnswer* query_answer)
+----
+
+
+
+Checks if the query answer is a ``ConceptDocumentStream``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_query_answer_is_concept_row_stream]
+==== query_answer_is_concept_row_stream
+
+[source,cpp]
+----
+bool query_answer_is_concept_row_stream(const struct QueryAnswer* query_answer)
+----
+
+
+
+Checks if the query answer is a ``ConceptRowStream``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_query_answer_is_ok]
+==== query_answer_is_ok
+
+[source,cpp]
+----
+bool query_answer_is_ok(const struct QueryAnswer* query_answer)
+----
+
+
+
+Checks if the query answer is an ``Ok``.
+
+[caption=""]
+.Returns
+`bool`
+

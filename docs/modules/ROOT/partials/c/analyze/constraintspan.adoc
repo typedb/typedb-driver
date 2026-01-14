@@ -1,0 +1,35 @@
+[#_methods_analyze_constraintspan]
+=== constraintspan
+
+[#_constraint_span_begin]
+==== constraint_span_begin
+
+[source,cpp]
+----
+int64_t constraint_span_begin(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+The offset of the first character of the specified constraint in the source query .
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_constraint_span_end]
+==== constraint_span_end
+
+[source,cpp]
+----
+int64_t constraint_span_end(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+The offset after the last character of the specified constraint in the source query .
+
+[caption=""]
+.Returns
+`int64_t`
+

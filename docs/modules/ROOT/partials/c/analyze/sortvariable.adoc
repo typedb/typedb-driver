@@ -1,0 +1,58 @@
+[#_methods_analyze_sortvariable]
+=== sortvariable
+
+[#_Struct_SortVariable]
+==== Struct SortVariable
+
+
+
+The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``
+
+[#_sort_variable_drop]
+==== sort_variable_drop
+
+[source,cpp]
+----
+void sort_variable_drop(struct SortVariable* obj)
+----
+
+
+
+Frees the native rust ``SortVariable`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_sort_variable_get_order]
+==== sort_variable_get_order
+
+[source,cpp]
+----
+enum SortOrder sort_variable_get_order(const struct SortVariable* sort_variable)
+----
+
+
+
+Returns the sort order for the variable being sorted on.
+
+[caption=""]
+.Returns
+`enum SortOrder`
+
+[#_sort_variable_get_variable]
+==== sort_variable_get_variable
+
+[source,cpp]
+----
+struct Variable* sort_variable_get_variable(const struct SortVariable* sort_variable)
+----
+
+
+
+Returns the variable being sorted on.
+
+[caption=""]
+.Returns
+`struct Variable*`
+

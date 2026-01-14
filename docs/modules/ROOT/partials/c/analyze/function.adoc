@@ -1,0 +1,106 @@
+[#_methods_analyze_function]
+=== function
+
+[#_Struct_Function]
+==== Struct Function
+
+
+
+Holds a representation of the function, and the result of type-inference for each variable.
+
+[#_function_argument_annotations]
+==== function_argument_annotations
+
+[source,cpp]
+----
+struct VariableAnnotationsIterator* function_argument_annotations(const struct Function* function)
+----
+
+
+
+Returns the inferred type for each argument of the function.
+
+[caption=""]
+.Returns
+`struct VariableAnnotationsIterator*`
+
+[#_function_argument_variables]
+==== function_argument_variables
+
+[source,cpp]
+----
+struct VariableIterator* function_argument_variables(const struct Function* function)
+----
+
+
+
+Returns the ``Variable``s which are the arguments of the function.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_function_body]
+==== function_body
+
+[source,cpp]
+----
+struct Pipeline* function_body(const struct Function* function)
+----
+
+
+
+A representation of the ``Pipeline`` which forms the body of the function.
+
+[caption=""]
+.Returns
+`struct Pipeline*`
+
+[#_function_drop]
+==== function_drop
+
+[source,cpp]
+----
+void function_drop(struct Function* obj)
+----
+
+
+
+Frees the native rust ``Function`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_function_return_annotations]
+==== function_return_annotations
+
+[source,cpp]
+----
+struct VariableAnnotationsIterator* function_return_annotations(const struct Function* function)
+----
+
+
+
+Returns the inferred type for each concept returned by the function.
+
+[caption=""]
+.Returns
+`struct VariableAnnotationsIterator*`
+
+[#_function_return_operation]
+==== function_return_operation
+
+[source,cpp]
+----
+struct ReturnOperation* function_return_operation(const struct Function* function)
+----
+
+
+
+A representation of the ``ReturnOperation`` of the function.
+
+[caption=""]
+.Returns
+`struct ReturnOperation*`
+

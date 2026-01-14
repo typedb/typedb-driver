@@ -1,0 +1,112 @@
+[#_methods_analyze_constraintvertex]
+=== constraintvertex
+
+[#_Struct_ConstraintVertex]
+==== Struct ConstraintVertex
+
+
+
+The answer to a TypeDB query is a set of concepts which satisfy the ``Constraints`` in the query. A ``ConstraintVertex`` is either a variable, or some identifier of the concept.
+
+ A ``Variable`` is a vertex the query must match and return.
+ A ``Label`` uniquely identifies a type
+ A ``Value`` represents a primitive value literal in TypeDB.
+ A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name. The types inferred for ``Variable``, ``Label`` and ``NamedRole`` vertices can be read from the ``variable_annotations`` field of the ``Conjunction`` it is in.
+
+
+[#_constraint_vertex_as_label]
+==== constraint_vertex_as_label
+
+[source,cpp]
+----
+struct Concept* constraint_vertex_as_label(const struct ConstraintVertex* vertex)
+----
+
+
+
+Unwraps the ``ConstraintVertex`` instance as a Label. Will panic if the instance is not a Label variant.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_constraint_vertex_as_named_role]
+==== constraint_vertex_as_named_role
+
+[source,cpp]
+----
+struct NamedRole* constraint_vertex_as_named_role(const struct ConstraintVertex* vertex)
+----
+
+
+
+Unwraps the ``ConstraintVertex`` instance as a NamedRole. 'links' &amp; 'relates' constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity Will panic if the instance is not a NamedRole variant.
+
+[caption=""]
+.Returns
+`struct NamedRole*`
+
+[#_constraint_vertex_as_value]
+==== constraint_vertex_as_value
+
+[source,cpp]
+----
+struct Concept* constraint_vertex_as_value(const struct ConstraintVertex* vertex)
+----
+
+
+
+Unwraps the ``ConstraintVertex`` instance as a Value. Will panic if the instance is not a Value variant.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_constraint_vertex_as_variable]
+==== constraint_vertex_as_variable
+
+[source,cpp]
+----
+struct Variable* constraint_vertex_as_variable(const struct ConstraintVertex* vertex)
+----
+
+
+
+Unwraps the ``ConstraintVertex`` instance as a Variable. Will panic if the instance is not a Variable variant.
+
+[caption=""]
+.Returns
+`struct Variable*`
+
+[#_constraint_vertex_drop]
+==== constraint_vertex_drop
+
+[source,cpp]
+----
+void constraint_vertex_drop(struct ConstraintVertex* obj)
+----
+
+
+
+Frees the native rust ``ConstraintVertex`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_constraint_vertex_variant]
+==== constraint_vertex_variant
+
+[source,cpp]
+----
+enum ConstraintVertexVariant constraint_vertex_variant(const struct ConstraintVertex* vertex)
+----
+
+
+
+Returns the variant of the constraint
+
+[caption=""]
+.Returns
+`enum ConstraintVertexVariant`
+

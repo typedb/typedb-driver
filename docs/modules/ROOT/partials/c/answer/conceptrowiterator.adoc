@@ -1,0 +1,42 @@
+[#_methods_answer_conceptrowiterator]
+=== conceptrowiterator
+
+[#_Struct_ConceptRowIterator]
+==== Struct ConceptRowIterator
+
+
+
+Iterator over the ``ConceptRow``s returned by an API method or query.
+
+[#_concept_row_iterator_drop]
+==== concept_row_iterator_drop
+
+[source,cpp]
+----
+void concept_row_iterator_drop(struct ConceptRowIterator* it)
+----
+
+
+
+Frees the native rust ``ConceptRowIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_row_iterator_next]
+==== concept_row_iterator_next
+
+[source,cpp]
+----
+struct ConceptRow* concept_row_iterator_next(struct ConceptRowIterator* it)
+----
+
+
+
+Forwards the ``ConceptRowIterator`` and returns the next ``ConceptRow`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConceptRow*`
+

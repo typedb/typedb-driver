@@ -1,0 +1,739 @@
+[#_methods_analyze_constraint]
+=== constraint
+
+[#_constraint_comparison_get_comparator]
+==== constraint_comparison_get_comparator
+
+[source,cpp]
+----
+enum Comparator constraint_comparison_get_comparator(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns the comparator used in the comparison. Will panic if the Constraint is not a Comparison constraint.
+
+[caption=""]
+.Returns
+`enum Comparator`
+
+[#_constraint_comparison_get_lhs]
+==== constraint_comparison_get_lhs
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_comparison_get_lhs(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns the left-hand side vertex. Will panic if the Constraint is not a Comparison constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_comparison_get_rhs]
+==== constraint_comparison_get_rhs
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_comparison_get_rhs(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns the right-hand side vertex. Will panic if the Constraint is not a Comparison constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_expression_get_arguments]
+==== constraint_expression_get_arguments
+
+[source,cpp]
+----
+struct ConstraintVertexIterator* constraint_expression_get_arguments(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns the expression arguments - These are any variables used in the right-hand side of the expression. Will panic if the Constraint is not an Expression constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertexIterator*`
+
+[#_constraint_expression_get_assigned]
+==== constraint_expression_get_assigned
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_expression_get_assigned(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns the variable assigned by the expression. Will panic if the Constraint is not an Expression constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_expression_get_text]
+==== constraint_expression_get_text
+
+[source,cpp]
+----
+char* constraint_expression_get_text(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns the expression text. Will panic if the Constraint is not an Expression constraint.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_function_call_get_arguments]
+==== constraint_function_call_get_arguments
+
+[source,cpp]
+----
+struct ConstraintVertexIterator* constraint_function_call_get_arguments(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and returns the variables passed as arguments to the function call . Will panic if the Constraint is not a FunctionCall constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertexIterator*`
+
+[#_constraint_function_call_get_assigned]
+==== constraint_function_call_get_assigned
+
+[source,cpp]
+----
+struct ConstraintVertexIterator* constraint_function_call_get_assigned(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and returns the variables assigned by the function call. Will panic if the Constraint is not a FunctionCall constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertexIterator*`
+
+[#_constraint_function_call_get_name]
+==== constraint_function_call_get_name
+
+[source,cpp]
+----
+char* constraint_function_call_get_name(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and returns the function name. Will panic if the Constraint is not a FunctionCall constraint.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_has_get_attribute]
+==== constraint_has_get_attribute
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_has_get_attribute(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Has`` constraint, and returns the attribute vertex. Will panic if the Constraint is not a Has constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_has_get_exactness]
+==== constraint_has_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_has_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+(FUTURE-USE: Currently always ConstraintExactness::Subtypes) Unwraps the ``Constraint`` instance as a ``Has`` constraint, and returns the exactness of the attribute match. Will panic if the Constraint is not a Has constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_has_get_owner]
+==== constraint_has_get_owner
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_has_get_owner(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Has`` constraint, and returns the owner vertex. Will panic if the Constraint is not a Has constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_iid_get_iid]
+==== constraint_iid_get_iid
+
+[source,cpp]
+----
+char* constraint_iid_get_iid(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Iid`` constraint, and returns the iid value as a string. Will panic if the Constraint is not an Iid constraint.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_iid_get_variable]
+==== constraint_iid_get_variable
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_iid_get_variable(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Iid`` constraint, and returns the concept (variable) the iid applies to. Will panic if the Constraint is not an Iid constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_is_get_lhs]
+==== constraint_is_get_lhs
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_is_get_lhs(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Is`` constraint, and returns the left-hand side vertex. Will panic if the Constraint is not an Is constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_is_get_rhs]
+==== constraint_is_get_rhs
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_is_get_rhs(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Is`` constraint, and returns the right-hand side vertex. Will panic if the Constraint is not an Is constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_isa_get_exactness]
+==== constraint_isa_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_isa_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the exactness of the type match. Will panic if the Constraint is not an Isa constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_isa_get_instance]
+==== constraint_isa_get_instance
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_isa_get_instance(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the instance vertex. Will panic if the Constraint is not an Isa constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_isa_get_type]
+==== constraint_isa_get_type
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_isa_get_type(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the type vertex. Will panic if the Constraint is not an Isa constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_kind_get_kind]
+==== constraint_kind_get_kind
+
+[source,cpp]
+----
+enum Kind constraint_kind_get_kind(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Kind`` constraint, and returns the ``Kind`` of the type-vertex. Will panic if the Constraint is not a Kind constraint.
+
+[caption=""]
+.Returns
+`enum Kind`
+
+[#_constraint_kind_get_type]
+==== constraint_kind_get_type
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_kind_get_type(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Kind`` constraint, and returns the associated type vertex. Will panic if the Constraint is not a Kind constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_label_get_label]
+==== constraint_label_get_label
+
+[source,cpp]
+----
+char* constraint_label_get_label(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Label`` constraint, and returns the label string. Will panic if the Constraint is not a Label constraint.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_label_get_variable]
+==== constraint_label_get_variable
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_label_get_variable(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Label`` constraint, and returns the type-vertex the label applies to. Will panic if the Constraint is not a Label constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_links_get_exactness]
+==== constraint_links_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_links_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+(FUTURE-USE: Currently always ConstraintExactness::Subtypes) Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the exactness of the role-type match. Will panic if the Constraint is not a Links constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_links_get_player]
+==== constraint_links_get_player
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_links_get_player(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the player vertex. Will panic if the Constraint is not a Links constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_links_get_relation]
+==== constraint_links_get_relation
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_links_get_relation(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the relation vertex. Will panic if the Constraint is not a Links constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_links_get_role]
+==== constraint_links_get_role
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_links_get_role(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the role vertex. Will panic if the Constraint is not a Links constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_not_get_conjunction]
+==== constraint_not_get_conjunction
+
+[source,cpp]
+----
+struct ConjunctionID* constraint_not_get_conjunction(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Not`` constraint, and returns the ``ConjunctionID`` of the negated conjunction. Will panic if the Constraint is not a Not constraint.
+
+[caption=""]
+.Returns
+`struct ConjunctionID*`
+
+[#_constraint_or_get_branches]
+==== constraint_or_get_branches
+
+[source,cpp]
+----
+struct ConjunctionIDIterator* constraint_or_get_branches(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Or`` constraint, and returns the ``ConjunctionID``s of the conjunction in each of the branches. Will panic if the Constraint is not an Or constraint.
+
+[caption=""]
+.Returns
+`struct ConjunctionIDIterator*`
+
+[#_constraint_owns_get_attribute]
+==== constraint_owns_get_attribute
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_owns_get_attribute(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Owns`` constraint, and returns the attribute-type vertex. Will panic if the Constraint is not an Owns constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_owns_get_exactness]
+==== constraint_owns_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_owns_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+(FUTURE-USE: Currently always ConstraintExactness::Subtypes) Will panic if the Constraint is not an Owns constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_owns_get_owner]
+==== constraint_owns_get_owner
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_owns_get_owner(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as an ``Owns`` constraint, and returns the owner-type vertex. Will panic if the Constraint is not an Owns constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_plays_get_exactness]
+==== constraint_plays_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_plays_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+(FUTURE-USE: Currently always ConstraintExactness::Subtypes)
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_plays_get_player]
+==== constraint_plays_get_player
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_plays_get_player(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Plays`` constraint, and returns the player type vertex. Will panic if the Constraint is not a Plays constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_plays_get_role]
+==== constraint_plays_get_role
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_plays_get_role(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Plays`` constraint, and returns the role-type vertex. Will panic if the Constraint is not a Plays constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_relates_get_exactness]
+==== constraint_relates_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_relates_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the exactness of the relation match. Will panic if the Constraint is not a Relates constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_relates_get_relation]
+==== constraint_relates_get_relation
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_relates_get_relation(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the relation-type vertex. Will panic if the Constraint is not a Relates constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_relates_get_role]
+==== constraint_relates_get_role
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_relates_get_role(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the role-type vertex. Will panic if the Constraint is not a Relates constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_string_repr]
+==== constraint_string_repr
+
+[source,cpp]
+----
+char* constraint_string_repr(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Returns a string representation of the constraint
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_sub_get_exactness]
+==== constraint_sub_get_exactness
+
+[source,cpp]
+----
+enum ConstraintExactness constraint_sub_get_exactness(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the exactness of the subtype match. If Exact (i.e. ``sub!``), only the immediate subtype is returned else, (i.e. ``sub``) the type itself and all subtypes are returned. Will panic if the Constraint is not a Sub constraint.
+
+[caption=""]
+.Returns
+`enum ConstraintExactness`
+
+[#_constraint_sub_get_subtype]
+==== constraint_sub_get_subtype
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_sub_get_subtype(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the subtype vertex. Will panic if the Constraint is not a Sub constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_sub_get_supertype]
+==== constraint_sub_get_supertype
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_sub_get_supertype(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the supertype vertex. Will panic if the Constraint is not a Sub constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_try_get_conjunction]
+==== constraint_try_get_conjunction
+
+[source,cpp]
+----
+struct ConjunctionID* constraint_try_get_conjunction(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Try`` constraint, and returns the ``ConjunctionID`` of the optionally matched conjunction. Will panic if the Constraint is not a Try constraint.
+
+[caption=""]
+.Returns
+`struct ConjunctionID*`
+
+[#_constraint_value_get_attribute_type]
+==== constraint_value_get_attribute_type
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_value_get_attribute_type(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Value`` constraint, and returns the attribute type vertex. Will panic if the Constraint is not a Value constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_value_get_value_type]
+==== constraint_value_get_value_type
+
+[source,cpp]
+----
+char* constraint_value_get_value_type(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``Value`` constraint, and returns the specified ValueType as a string. Will panic if the Constraint is not a Value constraint.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_constraint_variant]
+==== constraint_variant
+
+[source,cpp]
+----
+enum ConstraintVariant constraint_variant(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+The variant of the specified constraint
+
+[caption=""]
+.Returns
+`enum ConstraintVariant`
+

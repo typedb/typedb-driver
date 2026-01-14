@@ -1,0 +1,35 @@
+[#_methods_analyze_pipelinestageiterator]
+=== pipelinestageiterator
+
+[#_pipeline_stage_iterator_drop]
+==== pipeline_stage_iterator_drop
+
+[source,cpp]
+----
+void pipeline_stage_iterator_drop(struct PipelineStageIterator* it)
+----
+
+
+
+Frees the native rust ``PipelineStageIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_pipeline_stage_iterator_next]
+==== pipeline_stage_iterator_next
+
+[source,cpp]
+----
+struct PipelineStage* pipeline_stage_iterator_next(struct PipelineStageIterator* it)
+----
+
+
+
+Forwards the ``PipelineStageIterator`` and returns the next ``PipelineStage`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct PipelineStage*`
+

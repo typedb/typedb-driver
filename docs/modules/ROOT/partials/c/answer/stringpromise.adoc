@@ -1,0 +1,42 @@
+[#_methods_answer_stringpromise]
+=== stringpromise
+
+[#_Struct_StringPromise]
+==== Struct StringPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
+
+[#_string_promise_drop]
+==== string_promise_drop
+
+[source,cpp]
+----
+void string_promise_drop(struct StringPromise* promise)
+----
+
+
+
+Frees the native rust ``StringPromise`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_promise_resolve]
+==== string_promise_resolve
+
+[source,cpp]
+----
+char* string_promise_resolve(struct StringPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`char*`
+

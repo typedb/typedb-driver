@@ -1,0 +1,48 @@
+[#_methods_analyze_constraintexactness]
+=== constraintexactness
+
+[#_Struct_ConstraintExactness]
+==== Struct ConstraintExactness
+
+
+
+Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
+
+[#_Enum_ConstraintExactness]
+==== Enum ConstraintExactness
+
+
+
+Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
+
+ 
+  
+   Enumerator
+  
+  
+   Exact&nbsp;
+   
+
+Indicates the constraint matches exactly the specified type - e.g. ``isa!`` or ``sub!``
+  
+  
+   Subtypes&nbsp;
+   
+
+Indicates the constraint matches the specified type and its subtypes - e.g. ``isa!`` or ``sub!``
+  
+ 
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Exact`
+a| `Subtypes`
+|===
+// end::enum_constants[]
+

@@ -1,0 +1,31 @@
+[#_methods_concept_kind]
+=== kind
+
+[#_Struct_Kind]
+==== Struct Kind
+
+
+
+Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
+
+[#_Enum_Kind]
+==== Enum Kind
+
+
+
+Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Attribute`
+a| `Entity`
+a| `Relation`
+a| `Role`
+|===
+// end::enum_constants[]
+

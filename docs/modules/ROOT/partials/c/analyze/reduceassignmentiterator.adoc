@@ -1,0 +1,35 @@
+[#_methods_analyze_reduceassignmentiterator]
+=== reduceassignmentiterator
+
+[#_reduce_assignment_iterator_drop]
+==== reduce_assignment_iterator_drop
+
+[source,cpp]
+----
+void reduce_assignment_iterator_drop(struct ReduceAssignmentIterator* it)
+----
+
+
+
+Frees the native rust ``ReduceAssignmentIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_reduce_assignment_iterator_next]
+==== reduce_assignment_iterator_next
+
+[source,cpp]
+----
+struct ReduceAssignment* reduce_assignment_iterator_next(struct ReduceAssignmentIterator* it)
+----
+
+
+
+Forwards the ``ReduceAssignmentIterator`` and returns the next ``ReduceAssignment`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ReduceAssignment*`
+

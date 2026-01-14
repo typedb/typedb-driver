@@ -1,0 +1,139 @@
+[#_methods_transaction_transactionoptions]
+=== transactionoptions
+
+[#_Struct_TransactionOptions]
+==== Struct TransactionOptions
+
+
+
+TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.
+
+
+[#_transaction_options_drop]
+==== transaction_options_drop
+
+[source,cpp]
+----
+void transaction_options_drop(struct TransactionOptions* options)
+----
+
+
+
+Frees the native Rust ``TransactionOptions`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_transaction_options_get_schema_lock_acquire_timeout_millis]
+==== transaction_options_get_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+int64_t transaction_options_get_schema_lock_acquire_timeout_millis(const struct TransactionOptions* options)
+----
+
+
+
+Returns the value set for the schema lock acquire timeout in this ``TransactionOptions`` object. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_transaction_options_get_transaction_timeout_millis]
+==== transaction_options_get_transaction_timeout_millis
+
+[source,cpp]
+----
+int64_t transaction_options_get_transaction_timeout_millis(const struct TransactionOptions* options)
+----
+
+
+
+Returns the value set for the transaction timeout in this ``TransactionOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_transaction_options_has_schema_lock_acquire_timeout_millis]
+==== transaction_options_has_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+bool transaction_options_has_schema_lock_acquire_timeout_millis(const struct TransactionOptions* options)
+----
+
+
+
+Checks whether the option for schema lock acquire timeout was explicitly set for this ``TransactionOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_transaction_options_has_transaction_timeout_millis]
+==== transaction_options_has_transaction_timeout_millis
+
+[source,cpp]
+----
+bool transaction_options_has_transaction_timeout_millis(const struct TransactionOptions* options)
+----
+
+
+
+Checks whether the option for transaction timeout was explicitly set for this ``TransactionOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_transaction_options_new]
+==== transaction_options_new
+
+[source,cpp]
+----
+struct TransactionOptions* transaction_options_new(void)
+----
+
+
+
+Produces a new ``TransactionOptions`` object.
+
+[caption=""]
+.Returns
+`struct TransactionOptions*`
+
+[#_transaction_options_set_schema_lock_acquire_timeout_millis]
+==== transaction_options_set_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+void transaction_options_set_schema_lock_acquire_timeout_millis(struct TransactionOptions* options, int64_t timeout_millis)
+----
+
+
+
+Explicitly sets schema lock acquire timeout. If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
+
+[caption=""]
+.Returns
+`void`
+
+[#_transaction_options_set_transaction_timeout_millis]
+==== transaction_options_set_transaction_timeout_millis
+
+[source,cpp]
+----
+void transaction_options_set_transaction_timeout_millis(struct TransactionOptions* options, int64_t timeout_millis)
+----
+
+
+
+Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`void`
+

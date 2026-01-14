@@ -1,0 +1,218 @@
+[#_methods_analyze_pipelinestage]
+=== pipelinestage
+
+[#_Struct_PipelineStage]
+==== Struct PipelineStage
+
+
+
+Representation of a stage in a ``Pipeline``.
+
+[#_pipeline_stage_delete_get_deleted_variables]
+==== pipeline_stage_delete_get_deleted_variables
+
+[source,cpp]
+----
+struct VariableIterator* pipeline_stage_delete_get_deleted_variables(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Delete stage, and returns the variables deleted. Will panic if the stage is not a Delete.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_pipeline_stage_drop]
+==== pipeline_stage_drop
+
+[source,cpp]
+----
+void pipeline_stage_drop(struct PipelineStage* obj)
+----
+
+
+
+Frees the native rust ``PipelineStage`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_pipeline_stage_get_block]
+==== pipeline_stage_get_block
+
+[source,cpp]
+----
+struct ConjunctionID* pipeline_stage_get_block(const struct PipelineStage* stage)
+----
+
+
+
+Returns the block of the pipeline stage - this is the ``ConjunctionID`` of the root conjunction. Will panic if the stage does not have a block.
+
+[caption=""]
+.Returns
+`struct ConjunctionID*`
+
+[#_pipeline_stage_limit_get_limit]
+==== pipeline_stage_limit_get_limit
+
+[source,cpp]
+----
+int64_t pipeline_stage_limit_get_limit(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Limit stage, and returns the limit applied. Will panic if the stage is not a Limit stage.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_pipeline_stage_offset_get_offset]
+==== pipeline_stage_offset_get_offset
+
+[source,cpp]
+----
+int64_t pipeline_stage_offset_get_offset(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as an Offset stage, and returns the offset applied. Will panic if the stage is not an Offset stage.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_pipeline_stage_reduce_get_groupby]
+==== pipeline_stage_reduce_get_groupby
+
+[source,cpp]
+----
+struct VariableIterator* pipeline_stage_reduce_get_groupby(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Reduce stage, and returns the variables being grouped on. Will panic if the stage is not a Reduce stage.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_pipeline_stage_reduce_get_reducer_assignments]
+==== pipeline_stage_reduce_get_reducer_assignments
+
+[source,cpp]
+----
+struct ReduceAssignmentIterator* pipeline_stage_reduce_get_reducer_assignments(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Reduce stage, and returns the reducers applied and the variables their results are assigned to. Will panic if the stage is not a Reduce stage.
+
+[caption=""]
+.Returns
+`struct ReduceAssignmentIterator*`
+
+[#_pipeline_stage_require_get_variables]
+==== pipeline_stage_require_get_variables
+
+[source,cpp]
+----
+struct VariableIterator* pipeline_stage_require_get_variables(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Require stage, and returns the required variables. Will panic if the stage is not a Require stage.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_pipeline_stage_select_get_variables]
+==== pipeline_stage_select_get_variables
+
+[source,cpp]
+----
+struct VariableIterator* pipeline_stage_select_get_variables(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Select stage, and returns the variables selected. Will panic if the stage is not a Select.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_pipeline_stage_sort_get_sort_variables]
+==== pipeline_stage_sort_get_sort_variables
+
+[source,cpp]
+----
+struct SortVariableIterator* pipeline_stage_sort_get_sort_variables(const struct PipelineStage* stage)
+----
+
+
+
+Unwraps the ``PipelineStage`` instance as a Sort stage, and returns the ``SortVariable``. Will panic if the stage is not a Sort stage.
+
+[caption=""]
+.Returns
+`struct SortVariableIterator*`
+
+[#_pipeline_stage_string_repr]
+==== pipeline_stage_string_repr
+
+[source,cpp]
+----
+char* pipeline_stage_string_repr(const struct PipelineStage* stage)
+----
+
+
+
+Returns a string representation of the pipeline stage
+
+[caption=""]
+.Returns
+`char*`
+
+[#_pipeline_stage_variant]
+==== pipeline_stage_variant
+
+[source,cpp]
+----
+enum PipelineStageVariant pipeline_stage_variant(const struct PipelineStage* stage)
+----
+
+
+
+Returns the variant of the ``Pipeline`` stage.
+
+[caption=""]
+.Returns
+`enum PipelineStageVariant`
+
+[#_pipeline_stages]
+==== pipeline_stages
+
+[source,cpp]
+----
+struct PipelineStageIterator* pipeline_stages(const struct Pipeline* pipeline)
+----
+
+
+
+Returns an iterator over the stages making up the ``Pipeline``
+
+[caption=""]
+.Returns
+`struct PipelineStageIterator*`
+

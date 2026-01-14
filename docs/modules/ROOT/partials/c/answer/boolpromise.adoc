@@ -1,0 +1,42 @@
+[#_methods_answer_boolpromise]
+=== boolpromise
+
+[#_Struct_BoolPromise]
+==== Struct BoolPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
+
+[#_bool_promise_drop]
+==== bool_promise_drop
+
+[source,cpp]
+----
+void bool_promise_drop(struct BoolPromise* promise)
+----
+
+
+
+Frees the native rust ``BoolPromise`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_bool_promise_resolve]
+==== bool_promise_resolve
+
+[source,cpp]
+----
+bool bool_promise_resolve(struct BoolPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``BoolPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`bool`
+

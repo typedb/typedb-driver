@@ -1,0 +1,35 @@
+[#_methods_analyze_constraintvertexiterator]
+=== constraintvertexiterator
+
+[#_constraint_vertex_iterator_drop]
+==== constraint_vertex_iterator_drop
+
+[source,cpp]
+----
+void constraint_vertex_iterator_drop(struct ConstraintVertexIterator* it)
+----
+
+
+
+Frees the native rust ``ConstraintVertexIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_constraint_vertex_iterator_next]
+==== constraint_vertex_iterator_next
+
+[source,cpp]
+----
+struct ConstraintVertex* constraint_vertex_iterator_next(struct ConstraintVertexIterator* it)
+----
+
+
+
+Forwards the ``ConstraintVertexIterator`` and returns the next ``ConstraintVertex`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+

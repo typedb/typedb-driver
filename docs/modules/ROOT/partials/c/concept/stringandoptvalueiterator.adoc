@@ -1,0 +1,42 @@
+[#_methods_concept_stringandoptvalueiterator]
+=== stringandoptvalueiterator
+
+[#_Struct_StringAndOptValueIterator]
+==== Struct StringAndOptValueIterator
+
+
+
+Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.
+
+[#_string_and_opt_value_iterator_drop]
+==== string_and_opt_value_iterator_drop
+
+[source,cpp]
+----
+void string_and_opt_value_iterator_drop(struct StringAndOptValueIterator* it)
+----
+
+
+
+Frees the native rust ``StringAndOptValueIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_string_and_opt_value_iterator_next]
+==== string_and_opt_value_iterator_next
+
+[source,cpp]
+----
+struct StringAndOptValue* string_and_opt_value_iterator_next(struct StringAndOptValueIterator* it)
+----
+
+
+
+Forwards the ``StringAndOptValueIterator`` and returns the next ``StringAndOptValue`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct StringAndOptValue*`
+
