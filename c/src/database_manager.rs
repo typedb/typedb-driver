@@ -24,18 +24,18 @@ use typedb_driver::{box_stream, Database, TypeDBDriver};
 use super::{
     error::{try_release, unwrap_or_default, unwrap_void},
     iterator::CIterator,
-    memory::{borrow_mut, free, release_arc, string_view},
+    memory::{borrow_mut, free, string_view},
 };
-use crate::iterator::iterator_boxed_arc_next;
+use crate::{error::try_release_arc, iterator::iterator_arc_next};
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
 pub struct DatabaseIterator(CIterator<Arc<Database>>);
 
 /// Forwards the <code>DatabaseIterator</code> and returns the next <code>Database</code> if it exists,
-/// or null if there are no more elements. Returns a unique boxed Arc handle.
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn database_iterator_next(it: *mut DatabaseIterator) -> *const Database {
-    unsafe { iterator_boxed_arc_next(addr_of_mut!((*it).0)) }
+    unsafe { iterator_arc_next(addr_of_mut!((*it).0)) }
 }
 
 /// Frees the native rust <code>DatabaseIterator</code> object.
@@ -84,15 +84,8 @@ pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_c
     unwrap_or_default(borrow_mut(driver).databases().contains(string_view(name)))
 }
 
-/// Retrieve the database with the given name. Returns a unique boxed Arc handle.
+/// Retrieve the database with the given name.
 #[no_mangle]
 pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
-    use std::ptr::null;
-    match borrow_mut(driver).databases().get(string_view(name)) {
-        Ok(arc) => release_arc(arc),
-        Err(err) => {
-            crate::error::record_error(err);
-            null()
-        }
-    }
+    try_release_arc(borrow_mut(driver).databases().get(string_view(name)))
 }

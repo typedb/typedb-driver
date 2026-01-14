@@ -23,53 +23,38 @@ use typedb_driver::Database;
 
 use super::{
     error::{try_release_string, unwrap_void},
-    memory::release_string,
+    memory::{borrow, release_string},
 };
-use crate::memory::{borrow_arc, clone_arc, decrement_arc, string_view};
+use crate::memory::{decrement_arc, string_view, take_arc};
 
-/// Frees the native rust <code>Database</code> object (boxed Arc handle).
+/// Frees the native rust <code>Database</code> object
 #[no_mangle]
 pub extern "C" fn database_close(database: *const Database) {
-    decrement_arc(database);
+    decrement_arc(database)
 }
 
 /// The database name as a string.
 #[no_mangle]
 pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
-    release_string(borrow_arc(database).name().to_owned())
+    release_string(borrow(database).name().to_owned())
 }
 
 /// Deletes this database.
-/// Returns true if the delete succeeded and the handle was consumed.
-/// Returns false if the delete failed - the handle is still valid and must be freed with database_close.
 #[no_mangle]
-pub extern "C" fn database_delete(database: *const Database) -> bool {
-    // Clone the Arc to attempt the delete without consuming the handle
-    let arc_clone = clone_arc(database);
-    match arc_clone.delete() {
-        Ok(()) => {
-            // Delete succeeded - consume the original handle
-            decrement_arc(database);
-            true
-        }
-        Err(err) => {
-            // Delete failed - handle remains valid, caller can retry or close it
-            crate::error::record_error(err);
-            false
-        }
-    }
+pub extern "C" fn database_delete(database: *const Database) {
+    unwrap_void(take_arc(database).delete());
 }
 
 /// A full schema text as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
-    try_release_string(borrow_arc(database).schema())
+    try_release_string(borrow(database).schema())
 }
 
 /// The types in the schema as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
-    try_release_string(borrow_arc(database).type_schema())
+    try_release_string(borrow(database).type_schema())
 }
 
 /// Export a database into a schema definition and a data files saved to the disk.
@@ -86,7 +71,7 @@ pub extern "C" fn database_export_to_file(
 ) {
     let schema_file_path = Path::new(string_view(schema_file));
     let data_file_path = Path::new(string_view(data_file));
-    unwrap_void(borrow_arc(database).export_to_file(schema_file_path, data_file_path))
+    unwrap_void(borrow(database).export_to_file(schema_file_path, data_file_path))
 }
 
 // /// Iterator over the <code>ReplicaInfo</code> corresponding to each replica of a TypeDB cloud database.

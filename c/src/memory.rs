@@ -51,51 +51,21 @@ pub(super) fn release_optional_string(str: Option<String>) -> *mut c_char {
     str.map(release_string).unwrap_or_else(null_mut)
 }
 
-/// Releases an Arc by boxing it, returning a UNIQUE handle.
-/// Unlike Arc::into_raw which returns the same pointer for all clones of an Arc,
-/// this function returns a unique pointer for each call, making it safe for FFI
-/// where multiple wrappers may hold references to the same underlying data.
-///
-/// The returned pointer is typed as *const T for FFI compatibility, but actually
-/// points to a Box<Arc<T>>. It must be passed to take_arc or decrement_arc exactly once.
 pub(super) fn release_arc<T>(t: Arc<T>) -> *const T {
-    let raw = Box::into_raw(Box::new(t));
-    trace!("Releasing ownership of boxed arc <{}> @ {:?}", std::any::type_name::<T>(), raw);
-    // Cast to *const T for FFI, but it actually points to Arc<T>
-    raw as *const T
+    let raw = Arc::into_raw(t);
+    trace!("Releasing ownership of arc <{}> @ {:?}", std::any::type_name::<T>(), raw);
+    raw
 }
 
-/// Takes ownership of a boxed Arc, returning the Arc.
-/// The pointer must have been created by release_arc.
 pub(super) fn take_arc<T>(raw: *const T) -> Arc<T> {
-    assert!(!raw.is_null());
-    unsafe { *Box::from_raw(raw as *mut Arc<T>) }
+    trace!("Taking ownership of arced <{}> @ {:?}", std::any::type_name::<T>(), raw);
+    unsafe { Arc::from_raw(raw) }
 }
 
-/// Decrements the refcount of a boxed Arc by taking and dropping it.
-/// The pointer must have been created by release_arc.
 pub(super) fn decrement_arc<T>(raw: *const T) {
+    trace!("Decrementing arced <{}> @ {:?}", std::any::type_name::<T>(), raw);
     assert!(!raw.is_null());
-    drop(take_arc(raw));
-}
-
-/// Borrows through a boxed Arc, returning a reference to the inner T.
-/// The pointer must have been created by release_arc.
-pub(super) fn borrow_arc<T>(raw: *const T) -> &'static T {
-    trace!("Borrowing boxed arc <{}> @ {:?}", std::any::type_name::<T>(), raw);
-    assert!(!raw.is_null());
-    // Cast to the true type and dereference through the Arc
-    unsafe { &**(raw as *const Arc<T>) }
-}
-
-/// Clones the Arc inside a boxed Arc handle, returning a new Arc.
-/// The pointer must have been created by release_arc.
-/// The original handle remains valid.
-pub(super) fn clone_arc<T>(raw: *const T) -> Arc<T> {
-    trace!("Cloning boxed arc <{}> @ {:?}", std::any::type_name::<T>(), raw);
-    assert!(!raw.is_null());
-    // Cast to the true type and clone the Arc
-    unsafe { Arc::clone(&*(raw as *const Arc<T>)) }
+    drop(take_arc(raw))
 }
 
 pub(super) fn borrow<T>(raw: *const T) -> &'static T {

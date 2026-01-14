@@ -29,10 +29,7 @@ using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
-    /// <summary>
-    /// A TypeDB database.
-    /// </summary>
-    public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase, System.IDisposable
+    public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase
     {
         private string? _name;
 
@@ -80,50 +77,23 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        /// <inheritdoc/>
         public void Delete()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
             try
             {
-                // Note: database_delete only consumes the handle if delete succeeds.
-                // If delete fails (e.g., database has open transactions), the handle
-                // remains valid and we should NOT release ownership.
-                // Pass NativeObject directly (not Released()) so we retain ownership on error.
-                bool success = Pinvoke.typedb_driver.database_delete(NativeObject);
-                if (success)
-                {
-                    // Delete succeeded, native side consumed the handle.
-                    // Release ownership to prevent finalizer from double-freeing.
-                    NativeObject.Released();
-                }
-                // If success is false, SWIG will throw due to check_error()
+                Pinvoke.typedb_driver.database_delete(NativeObject?.Released());
             }
             catch (Pinvoke.Error e)
             {
-                // On error, NativeObject still owns the handle (which is still valid in Rust)
                 throw new TypeDBDriverException(e);
             }
         }
 
-        /// <inheritdoc/>
         public override string ToString()
         {
             return Name;
-        }
-
-        /// <summary>
-        /// Disposes the database wrapper to free native resources immediately.
-        /// </summary>
-        public void Dispose()
-        {
-            // Dispose the underlying SWIG object to free native memory immediately
-            // instead of waiting for GC finalization (which can cause race conditions)
-            if (NativeObject is System.IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
         }
     }
 }
