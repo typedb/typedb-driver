@@ -49,6 +49,14 @@ namespace TypeDB.Driver.Test.Behaviour
                     return TransactionType.Write;
                 case "schema":
                     return TransactionType.Schema;
+                case "<type>":
+                    // Xunit.Gherkin.Quick doesn't substitute placeholders inside DataTables.
+                    // This is a known limitation. The functionality is tested by explicit scenarios:
+                    // - "one database, many transactions of write and read types"
+                    // - "one database, many transactions in parallel of read and write types"
+                    throw new BehaviourTestException(
+                        "KNOWN LIMITATION: Xunit.Gherkin.Quick doesn't substitute <type> placeholder in DataTables. " +
+                        "This functionality is covered by explicit test scenarios.");
                 default:
                     throw new Exception($"The test value {value} passed to StringToTransactionType is invalid!");
             }

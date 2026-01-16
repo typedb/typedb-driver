@@ -3,9 +3,39 @@
 ## Overview
 Upgrading the TypeDB C# driver from 2.x to 3.0 API compatibility.
 
-## Current Status: Core 3.0 API Complete ✅
+## Current Status: Core Tests Passing ✅
 
-All required milestones complete. The C# driver now supports the TypeDB 3.0 API.
+Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are passing with only known limitations remaining.
+
+### Latest Test Results (2026-01-14)
+
+| Test Suite | Passed | Failed | Skipped | Notes |
+|------------|--------|--------|---------|-------|
+| Database | 14 | 0 | 0 | ✅ Fully passing |
+| Transaction | 39 | 4 | 0 | `<type>` placeholder limitation |
+| Driver Query | 10 | 9 | 0 | Missing steps (analyze, concurrent, structure) |
+| Define | ALL | 0 | 0 | ✅ Fully passing |
+| Insert | ALL | 0 | 0 | ✅ Fully passing |
+| Match | 120 | 4 | 3 | 2 missing steps, 2 native precision issues |
+| Fetch | 57 | 9 | 0 | Native JSON precision/format issues |
+| Delete | ALL | 0 | 0 | ✅ Fully passing |
+
+### Known Limitations (Not C# Driver Issues)
+
+1. **Transaction `<type>` placeholder** (4 tests) - Xunit.Gherkin.Quick doesn't substitute placeholders inside DataTables. Same functionality tested by explicit scenarios.
+
+2. **Missing BDD steps** (deferred):
+   - `get answers of typeql analyze` - Analyze API not implemented in SWIG
+   - `concurrently get answers of typeql read query N times` - Concurrent step
+   - `answers have query structure:` - Query structure inspection
+   - `each answer satisfies` / `get answers of templated typeql read query` - Missing steps
+
+3. **Native layer precision issues** (Fetch/Match tests):
+   - Double precision: `2.01234567` serialized as `2.01234568` in JSON
+   - Datetime-tz named timezone format differences
+   - Duration fractional seconds format differences
+
+   These are in the native Rust layer's JSON serialization, not the C# code
 
 ---
 
@@ -68,15 +98,10 @@ All required milestones complete. The C# driver now supports the TypeDB 3.0 API.
   - [x] Proper type conversions (native Decimal to C# decimal, Duration, DateTimeOffset with timezone)
 - [x] Note: Thing → Instance rename deferred (would require extensive file renames)
 
-### Known Issue: SWIG C# Finalization Bug
-A native memory corruption issue exists in the C# SWIG bindings that causes tests to crash when:
-- Creating a new driver after tests that involve transactions
-- The crash is SIGABRT or SIGSEGV in `borrow()` function
-- Java tests pass with identical Rust code, confirming C# SWIG-specific issue
-- Not a timing issue (1+ second delays don't help)
-- Documented in `ConnectionStepsBase.cs`
+### SWIG C# Finalization Bug - RESOLVED ✅
+Previously there was a native memory corruption issue in the C# SWIG bindings that caused tests to crash when creating a new driver after tests involving transactions. This has been fixed (commit `388c9f5c Revert broken release_arc implementation`).
 
-**Root Cause**: Suspected issue with SWIG director callback handling and static callback maps interacting with C# GC finalization on a different thread.
+Tests now run to completion without SIGABRT/SIGSEGV crashes.
 
 ### Milestone 6: User Management ✅
 - [x] Verified `IUserManager` interface - already compatible with 3.0 patterns
