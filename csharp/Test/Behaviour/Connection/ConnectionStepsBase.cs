@@ -321,6 +321,30 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
                 Transactions.Clear();
 
+                // Clean up leftover databases from previous failed tests
+                // Create a fresh driver to do cleanup since the old one might be in a bad state
+                try
+                {
+                    var cleanupDriver = TypeDB.Driver(
+                        TypeDB.DefaultAddress,
+                        new Credentials("admin", "password"),
+                        new DriverOptions(false, null));
+
+                    if (cleanupDriver.IsOpen())
+                    {
+                        foreach (var db in cleanupDriver.Databases.GetAll())
+                        {
+                            try { db.Delete(); } catch { }
+                        }
+                    }
+
+                    if (cleanupDriver is IDisposable cd) cd.Dispose();
+                }
+                catch
+                {
+                    // Ignore - server might not be running yet
+                }
+
                 // Dispose leftover driver to free native resources
                 if (Driver != null)
                 {
