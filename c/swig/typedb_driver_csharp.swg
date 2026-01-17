@@ -551,17 +551,22 @@
 %}
 %enddef
 
+/* 3.0 API iterators */
 %iterator(Concept, Concept, concept)
+%iterator(ConceptRow, ConceptRow, concept_row)
+%iterator(string, String, string)
+%iterator(StringAndOptValue, StringAndOptValue, string_and_opt_value)
+%iterator(User, User, user)
+%iterator(Database, Database, database)
+
+/* Legacy 2.x API iterators - kept for compatibility */
 %iterator(RolePlayer, RolePlayer, role_player)
 %iterator(ConceptMap, ConceptMap, concept_map)
 %iterator(ConceptMapGroup, ConceptMapGroup, concept_map_group)
 %iterator(ValueGroup, ValueGroup, value_group)
 %iterator(Explanation, Explanation, explanation)
-%iterator(string, String, string)
 %iterator(StringPair, StringPair, string_pair)
 %iterator(Rule, Rule, rule)
-%iterator(User, User, user)
-%iterator(Database, Database, database)
 %iterator(ReplicaInfo, ReplicaInfo, replica_info)
 %iterator(SchemaException, SchemaException, schema_exception)
 
@@ -677,3 +682,51 @@
 {
     return $imcall;
 }
+
+
+/* QueryAnswer needs custom handling because into_rows/into_documents consume ownership */
+%typemap(csbody) QueryAnswer %{
+    private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+    protected bool swigCMemOwn;
+
+    internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
+    {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+    }
+
+    internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
+    {
+        return (obj == null)
+            ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero)
+            : obj.swigCPtr;
+    }
+
+    public ConceptRowIterator IntoRows()
+    {
+        swigCMemOwn = false;
+        return typedb_driver.query_answer_into_rows(this);
+    }
+
+    public StringIterator IntoDocuments()
+    {
+        swigCMemOwn = false;
+        return typedb_driver.query_answer_into_documents(this);
+    }
+%}
+
+%typemap(csdisposing, methodname="Dispose", methodmodifiers="protected", parameters="bool disposing") QueryAnswer %{{
+    lock(this)
+    {
+        if (swigCPtr.Handle != global::System.IntPtr.Zero)
+        {
+            if (swigCMemOwn)
+            {
+                swigCMemOwn = false;
+                typedb_driverPINVOKE.delete_QueryAnswer(swigCPtr);
+            }
+
+            swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+        }
+    }
+}%}
