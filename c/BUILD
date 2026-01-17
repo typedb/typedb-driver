@@ -243,9 +243,10 @@ test_to_example(
     name = "example",
     input = "//c/tests/integration:example.c",
     output = "c/example.c",
-    removed_lines = ["assert", "FAILED()", "delete_database_if_exists", "common.h", "c/typedb_driver.h"],
+    removed_lines = ["assert", "FAILED()", "delete_database_if_exists", "common.h"],
     changed_words = {
         "TYPEDB_EXAMPLE_FUNC": "main",
+        "c/typedb_driver.h": "typedb_driver.h",
     },
     header_comment_sign = "//",
 )

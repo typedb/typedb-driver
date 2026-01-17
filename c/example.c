@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "typedb_driver.h"
-
 int main() {
     // Open a driver connection
     Credentials* credentials = credentials_new("admin", "password");

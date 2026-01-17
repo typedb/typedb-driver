@@ -21,10 +21,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "typedb_driver.h"
-
-// EXAMPLE END MARKER
 #include "c/typedb_driver.h"
+// EXAMPLE END MARKER
+
 #include "common.h"
 
 #define FAILED() check_error_may_print(__FILE__, __LINE__)
@@ -285,6 +284,11 @@ cleanup:
 // EXAMPLE END MARKER
 
 bool test_example() {
-    TYPEDB_EXAMPLE_FUNC();
-    return !check_error();
+    int result = TYPEDB_EXAMPLE_FUNC();
+    // Clear any errors from cleanup (delete_database_if_exists may leave error state)
+    if (check_error()) {
+        Error* error = get_last_error();
+        error_drop(error);
+    }
+    return result == 0;
 }
