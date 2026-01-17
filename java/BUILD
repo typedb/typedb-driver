@@ -31,7 +31,10 @@ load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_exam
 
 java_library(
     name = "driver-java",
-    srcs = glob(["*.java"]),
+    srcs = glob(
+        ["*.java"],
+        exclude = ["TypeDBExample.java"],
+    ),
     resources = ["//:LICENSE"],
     tags = ["maven_coordinates=com.typedb:typedb-driver:{pom_version}"],
     deps = [
@@ -39,6 +42,16 @@ java_library(
         "//java/api",
         "//java/common",
         "//java/connection",
+    ],
+)
+
+java_library(
+    name = "driver-example-lib",
+    srcs = ["TypeDBExample.java"],
+    deps = [
+        ":driver-java",
+        "//java/api",
+        "//java/common",
     ],
 )
 
