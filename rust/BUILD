@@ -137,6 +137,16 @@ update_markdown_example(
     removed_header = "//",
 )
 
+rust_library(
+    name = "driver-example-lib",
+    srcs = ["example.rs"],
+    deps = [
+        ":typedb_driver",
+        "@crates//:async-std",
+        "@crates//:futures",
+    ],
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
