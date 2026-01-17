@@ -430,7 +430,7 @@ public interface Concept {
     // TODO: Could be useful to have isStruct(struct_name)
 
     /**
-     * Returns a <code>boolean</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Boolean&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -441,7 +441,7 @@ public interface Concept {
     Optional<Boolean> tryGetBoolean();
 
     /**
-     * Returns a <code>integer</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Long&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -452,7 +452,7 @@ public interface Concept {
     Optional<Long> tryGetInteger();
 
     /**
-     * Returns a <code>double</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Double&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -463,7 +463,7 @@ public interface Concept {
     Optional<Double> tryGetDouble();
 
     /**
-     * Returns a <code>decimal</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;BigDecimal&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -474,7 +474,7 @@ public interface Concept {
     Optional<BigDecimal> tryGetDecimal();
 
     /**
-     * Returns a <code>string</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;String&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -485,7 +485,7 @@ public interface Concept {
     Optional<String> tryGetString();
 
     /**
-     * Returns a <code>date</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;LocalDate&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -496,7 +496,7 @@ public interface Concept {
     Optional<LocalDate> tryGetDate();
 
     /**
-     * Returns a <code>datetime</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;LocalDateTime&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -507,7 +507,7 @@ public interface Concept {
     Optional<LocalDateTime> tryGetDatetime();
 
     /**
-     * Returns a <code>datetime-tz</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;ZonedDateTime&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -518,7 +518,7 @@ public interface Concept {
     Optional<ZonedDateTime> tryGetDatetimeTZ();
 
     /**
-     * Returns a <code>duration</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Duration&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
@@ -529,7 +529,7 @@ public interface Concept {
     Optional<Duration> tryGetDuration();
 
     /**
-     * Returns a <code>struct</code> value of this <code>Concept</code>.
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Map&lt;String, Optional&lt;Value&gt;&gt;&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
      * <h3>Examples</h3>
