@@ -31,6 +31,7 @@ load("@typedb_bazel_distribution//platform:constraints.bzl", "constraint_linux_a
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load("//c:docs_structure.bzl", "dir_mapping", "force_file")
 load("//tool/docs:c/rules.bzl", "doxygen_c_to_adoc")
+load("//tool/docs:examples/rules.bzl", "test_to_example", "update_markdown_example")
 
 clib_srcs = glob(["src/**/*.rs"])
 
@@ -238,6 +239,37 @@ doxygen_c_to_adoc(
     tags = ["manual"]
 )
 
+test_to_example(
+    name = "example",
+    input = "//c/tests/integration:example.c",
+    output = "c/example.c",
+    removed_lines = ["assert", "FAILED()", "delete_database_if_exists", "common.h", "c/typedb_driver.h"],
+    changed_words = {
+        "TYPEDB_EXAMPLE_FUNC": "main",
+    },
+    header_comment_sign = "//",
+)
+
+update_markdown_example(
+    name = "readme_example",
+    input = ":example.c",
+    output = ":README.md",
+    start_marker = "EXAMPLE_START_MARKER",
+    end_marker = "EXAMPLE_END_MARKER",
+    language_tag = "c",
+    removed_header = "//",
+)
+
+cc_library(
+    name = "driver-example-lib",
+    srcs = ["example.c"],
+    deps = [
+        ":typedb_driver_clib_headers",
+        ":typedb_driver_clib",
+    ],
+    includes = ["."],
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
@@ -246,7 +278,7 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
-    exclude = [".clang-format", "README.md", "Cargo.lock", "Cargo.toml"] + glob(["docs/**/*.adoc"]),
+    exclude = [".clang-format", "README.md", "Cargo.lock", "Cargo.toml", "example.c"] + glob(["docs/**/*.adoc"]),
     license_type = "apache-header",
 )
 

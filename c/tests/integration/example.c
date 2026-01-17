@@ -1,32 +1,36 @@
-# TypeDB C Driver
-The TypeDB C driver provides C bindings to the rust driver. 
-It also serves as the base on which the other wrapper drivers are built.
-It is not very ergonomic to be used directly as a C driver. That is future work.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-## Usage
-The driver is distributed as an archive containing the headers & a shared library.
-```
-|- include/
-|  |- typedb_driver.h
-|
-|- lib/
-   |- libtypedb_driver_clib.<ext>
-```
-
-As usual, add the include paths to your compile step & the library to your link step. For Windows, the 'import-lib' `typedb_driver_clib.dll.lib` is provided to link against.
-A sample [CMakeLists.txt](https://github.com/typedb/typedb-driver/blob/master/c/tests/assembly/CMakeLists.txt) file is available in the TypeDB Driver repository.
-
-## Quickstart
-
-<!-- EXAMPLE_START_MARKER -->
-
-```c
+// EXAMPLE START MARKER
 #include <stdio.h>
 #include <string.h>
 
 #include "typedb_driver.h"
 
-int main() {
+// EXAMPLE END MARKER
+#include "c/typedb_driver.h"
+#include "common.h"
+
+#define FAILED() check_error_may_print(__FILE__, __LINE__)
+
+// EXAMPLE START MARKER
+int TYPEDB_EXAMPLE_FUNC() {
     // Open a driver connection
     Credentials* credentials = credentials_new("admin", "password");
     DriverOptions* driver_options = driver_options_new(false, NULL);
@@ -47,6 +51,10 @@ int main() {
 
     // Create a database
     const char* databaseName = "typedb";
+    // EXAMPLE END MARKER
+    delete_database_if_exists(driver, databaseName);
+    if (FAILED()) goto cleanup;
+    // EXAMPLE START MARKER
     databases_create(driver, databaseName);
     if (check_error()) {
         printf("Failed to create database\n");
@@ -268,82 +276,15 @@ int main() {
     printf("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!\n");
 
 cleanup:
+    // EXAMPLE END MARKER
+    delete_database_if_exists(driver, databaseName);
+    // EXAMPLE START MARKER
     driver_close(driver);
     return 0;
 }
-```
+// EXAMPLE END MARKER
 
-<!-- EXAMPLE_END_MARKER --> 
-
-## Architecture
-### Interface
-`typedb_driver.h` is a single header containing all the functions needed for a complete TypeDB driver.
-
-Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
-```c
-struct TypeDBDriver *driver_open(const char *address,
-                                 const struct Credentials *credentials,
-                                 const struct DriverOptions *driver_options);
-``` 
-
-These pointers are then used for further operations:
-```c
-    char* dbName = "hello";
-    DriverOptions* options = driver_options_new(false, NULL);;;
-    Credentials* creds = credentials_new(username, password);
-    TypeDBDriver* driver = driver_open(address, creds, options);
-    databases_create(driver, dbName);
-    Database* database = databases_get(driver, dbName);
-    char* gotName = database_name(database);
-    assert(0 == strcmp(gotName, dbName));
-    ...
-```
-
-### Memory management
-All pointers returned by the driver point to memory managed by rust. 
-To free the memory, the rust driver provides `*_drop` methods for each type of pointer.
-A `char*` returned from rust must be freed using `void string_free(char*)`.
-Types which have `*_close` methods will be freed on close. 
-```c
-    ...
-    string_free(gotName);
-    database_close(database);
-    driver_close(connection);
-```
-
-### Error handling
-To check if an error has occurred, use `bool check_error()`
-```c
-if (check_error()) {
-    Error* error = get_last_error();
-    char* errcode = error_code(error);
-    char* errmsg = error_message(error);
-    // Handle error...
-    string_free(errmsg);
-    string_free(errcode);
-    error_drop(error);
+bool test_example() {
+    TYPEDB_EXAMPLE_FUNC();
+    return !check_error();
 }
-```
-
-### Iterators and promises
-Iterators can be forwarded with the `*_iterator_next` method,
-which returns `NULL` when the end has been reached.
-```c
-    DatabaseIterator* it = databases_all(driver);
-    Database* database = NULL;
-    while (NULL != (database = database_iterator_next(it))) {
-        ...
-    }
-    database_iterator_drop(it);
-```
-Promises are resolved with the `*_promise_resolve` method, which also frees the memory.
-```c
-Transaction* tx = ...;
-...
-VoidPromise* promise = transaction_commit(tx); 
-void_promise_resolve(promise);
-if (check_error()) { /* handle */ }
-```
-**Note**: Server-side errors will only be available when the promise is resolved 
-or the first element in the iterator is requested (by calling`_next`). You must do this to 
-know whether an operation succeeded, regardless of your interest in the result. 
