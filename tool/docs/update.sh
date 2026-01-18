@@ -22,6 +22,6 @@ bazel run //java:docs_adoc
 bazel run //python:docs_adoc
 bazel run //http-ts:docs_adoc
 #bazel run //nodejs:docs_adoc
-bazel run //c:docs_adoc
+bazel run --action_env=PATH=$PATH //c:docs_adoc
 #bazel run //cpp:docs_adoc
 #bazel run //csharp:docs_adoc

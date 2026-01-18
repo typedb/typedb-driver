@@ -118,6 +118,16 @@ void init_logging(void)
 
 Enables logging in the TypeDB driver.
 
+This function sets up tracing with two environment variables:
+
+ ``TYPEDB_DRIVER_LOG``: Fine-grained control using the same syntax as ``RUST_LOG``. Example: ``TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace``
+ ``TYPEDB_DRIVER_LOG_LEVEL``: Simple log level that applies to both ``typedb_driver`` and ``typedb_driver_clib`` crates. Overrides any settings from ``TYPEDB_DRIVER_LOG``. Example: ``TYPEDB_DRIVER_LOG_LEVEL=debug``
+
+
+If neither is set, the default level is INFO for driver crates.
+
+The logging is initialized only once to prevent multiple initializations in applications that create multiple drivers.
+
 [caption=""]
 .Returns
 `void`

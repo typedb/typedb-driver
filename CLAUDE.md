@@ -147,3 +147,15 @@ For FFI-based drivers (Python/Java/C), call `init_logging()` to enable logging o
 - Rust edition: 2021
 - Line width: 120 characters
 - Error handling: Structured error codes with `typedb_error!` macro
+
+## Before Pushing
+
+Run these commands before pushing changes:
+
+```bash
+# Format Rust code
+bazel run @rules_rust//:rustfmt --@rules_rust//:rustfmt.toml=//rust:rustfmt.toml
+
+# Regenerate API documentation (if API changes were made)
+tool/docs/update.sh
+```

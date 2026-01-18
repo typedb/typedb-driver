@@ -720,7 +720,7 @@ concept.isValue();
 java.util.Optional<java.lang.Boolean> tryGetBoolean()
 ----
 
-Returns a ``boolean`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;Boolean&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -742,7 +742,7 @@ concept.tryGetBoolean();
 java.util.Optional<java.time.LocalDate> tryGetDate()
 ----
 
-Returns a ``date`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;LocalDate&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -764,7 +764,7 @@ concept.tryGetDate();
 java.util.Optional<java.time.LocalDateTime> tryGetDatetime()
 ----
 
-Returns a ``datetime`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;LocalDateTime&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -786,7 +786,7 @@ concept.tryGetDatetime();
 java.util.Optional<java.time.ZonedDateTime> tryGetDatetimeTZ()
 ----
 
-Returns a ``datetime-tz`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;ZonedDateTime&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -808,7 +808,7 @@ concept.tryGetDatetimeTZ();
 java.util.Optional<java.math.BigDecimal> tryGetDecimal()
 ----
 
-Returns a ``decimal`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;BigDecimal&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -830,7 +830,7 @@ concept.tryGetDecimal();
 java.util.Optional<java.lang.Double> tryGetDouble()
 ----
 
-Returns a ``double`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;Double&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -852,7 +852,7 @@ concept.tryGetDouble();
 java.util.Optional<Duration> tryGetDuration()
 ----
 
-Returns a ``duration`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;Duration&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -897,7 +897,7 @@ concept.tryGetIID();
 java.util.Optional<java.lang.Long> tryGetInteger()
 ----
 
-Returns a ``integer`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;Long&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -942,7 +942,7 @@ concept.tryGetLabel();
 java.util.Optional<java.lang.String> tryGetString()
 ----
 
-Returns a ``string`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;String&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
@@ -964,7 +964,7 @@ concept.tryGetString();
 java.util.Optional<java.util.Map<java.lang.String,​java.util.Optional<Value>>> tryGetStruct()
 ----
 
-Returns a ``struct`` value of this ``Concept``. If it's not a ``Value`` or it has another type, returns ``null``. 
+Returns the value of this ``Concept`` as an ``Optional&lt;Map&lt;String, Optional&lt;Value&gt;&gt;&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
 
 
 [caption=""]
