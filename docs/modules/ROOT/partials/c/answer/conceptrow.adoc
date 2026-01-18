@@ -1,0 +1,170 @@
+[#_methods_answer_conceptrow]
+=== conceptrow
+
+[#_Struct_ConceptRow]
+==== Struct ConceptRow
+
+
+
+A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
+
+[#_concept_row_drop]
+==== concept_row_drop
+
+[source,cpp]
+----
+void concept_row_drop(struct ConceptRow* concept_row)
+----
+
+
+
+Frees the native rust ``ConceptRow`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_row_equals]
+==== concept_row_equals
+
+[source,cpp]
+----
+bool concept_row_equals(const struct ConceptRow* lhs, const struct ConceptRow* rhs)
+----
+
+
+
+Checks whether the provided ``ConceptRow`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_concept_row_get]
+==== concept_row_get
+
+[source,cpp]
+----
+struct Concept* concept_row_get(const struct ConceptRow* concept_row, const char* column_name)
+----
+
+
+
+Retrieves a concept for a given column name.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_row_get_column_names]
+==== concept_row_get_column_names
+
+[source,cpp]
+----
+struct StringIterator* concept_row_get_column_names(const struct ConceptRow* concept_row)
+----
+
+
+
+Produces an ``Iterator`` over all ``String`` column names of the ``ConceptRow``'s header.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_concept_row_get_concepts]
+==== concept_row_get_concepts
+
+[source,cpp]
+----
+struct ConceptIterator* concept_row_get_concepts(const struct ConceptRow* concept_row)
+----
+
+
+
+Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptRow``.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_concept_row_get_index]
+==== concept_row_get_index
+
+[source,cpp]
+----
+struct Concept* concept_row_get_index(const struct ConceptRow* concept_row, uintptr_t column_index)
+----
+
+
+
+Retrieves a concept for a given column index.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_row_get_query_structure]
+==== concept_row_get_query_structure
+
+[source,cpp]
+----
+struct Pipeline* concept_row_get_query_structure(const struct ConceptRow* concept_row)
+----
+
+
+
+Retrieve the executed query's structure from the ``ConceptRow``'s header, if set. It must be requested via "include query structure" in ``QueryOptions``
+
+[caption=""]
+.Returns
+`struct Pipeline*`
+
+[#_concept_row_get_query_type]
+==== concept_row_get_query_type
+
+[source,cpp]
+----
+enum QueryType concept_row_get_query_type(const struct ConceptRow* concept_row)
+----
+
+
+
+Retrieve the executed query's type of the ``ConceptRow``'s header.
+
+[caption=""]
+.Returns
+`enum QueryType`
+
+[#_concept_row_involved_conjunctions]
+==== concept_row_involved_conjunctions
+
+[source,cpp]
+----
+struct ConjunctionIDIterator* concept_row_involved_conjunctions(const struct ConceptRow* concept_row)
+----
+
+
+
+Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row. May be null.
+
+[caption=""]
+.Returns
+`struct ConjunctionIDIterator*`
+
+[#_concept_row_to_string]
+==== concept_row_to_string
+
+[source,cpp]
+----
+char* concept_row_to_string(const struct ConceptRow* concept_row)
+----
+
+
+
+A string representation of this ConceptRow.
+
+[caption=""]
+.Returns
+`char*`
+

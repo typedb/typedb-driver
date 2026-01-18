@@ -1,0 +1,35 @@
+[#_methods_analyze_constraintwithspaniterator]
+=== constraintwithspaniterator
+
+[#_constraint_with_span_iterator_drop]
+==== constraint_with_span_iterator_drop
+
+[source,cpp]
+----
+void constraint_with_span_iterator_drop(struct ConstraintWithSpanIterator* it)
+----
+
+
+
+Frees the native rust ``ConstraintWithSpanIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_constraint_with_span_iterator_next]
+==== constraint_with_span_iterator_next
+
+[source,cpp]
+----
+struct ConstraintWithSpan* constraint_with_span_iterator_next(struct ConstraintWithSpanIterator* it)
+----
+
+
+
+Forwards the ``ConstraintWithSpanIterator`` and returns the next ``ConstraintWithSpan`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ConstraintWithSpan*`
+

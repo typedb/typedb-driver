@@ -25,6 +25,10 @@ include::{page-version}@external-typedb-driver::partial$java/transaction/Transac
 
 include::{page-version}@external-typedb-driver::partial$java/transaction/Transaction.Type.adoc[]
 
+include::{page-version}@external-typedb-driver::partial$java/transaction/TransactionOptions.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$java/transaction/QueryOptions.adoc[]
+
 [#_answer_header]
 == Answer
 

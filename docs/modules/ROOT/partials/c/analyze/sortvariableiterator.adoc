@@ -1,0 +1,35 @@
+[#_methods_analyze_sortvariableiterator]
+=== sortvariableiterator
+
+[#_sort_variable_iterator_drop]
+==== sort_variable_iterator_drop
+
+[source,cpp]
+----
+void sort_variable_iterator_drop(struct SortVariableIterator* it)
+----
+
+
+
+Frees the native rust ``SortVariableIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_sort_variable_iterator_next]
+==== sort_variable_iterator_next
+
+[source,cpp]
+----
+struct SortVariable* sort_variable_iterator_next(struct SortVariableIterator* it)
+----
+
+
+
+Forwards the ``SortVariableIterator`` and returns the next ``SortVariable`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct SortVariable*`
+

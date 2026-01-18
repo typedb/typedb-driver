@@ -1,0 +1,294 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// EXAMPLE START MARKER
+#include <stdio.h>
+#include <string.h>
+
+#include "c/typedb_driver.h"
+// EXAMPLE END MARKER
+
+#include "common.h"
+
+#define FAILED() check_error_may_print(__FILE__, __LINE__)
+
+// EXAMPLE START MARKER
+int TYPEDB_EXAMPLE_FUNC() {
+    // Open a driver connection
+    Credentials* credentials = credentials_new("admin", "password");
+    DriverOptions* driver_options = driver_options_new(false, NULL);
+    TypeDBDriver* driver = driver_open("127.0.0.1:1729", credentials, driver_options);
+    credentials_drop(credentials);
+    driver_options_drop(driver_options);
+
+    if (check_error()) {
+        Error* error = get_last_error();
+        char* errcode = error_code(error);
+        char* errmsg = error_message(error);
+        printf("Failed to connect: %s: %s\n", errcode, errmsg);
+        string_free(errmsg);
+        string_free(errcode);
+        error_drop(error);
+        return 1;
+    }
+
+    // Create a database
+    const char* databaseName = "typedb";
+    // EXAMPLE END MARKER
+    delete_database_if_exists(driver, databaseName);
+    if (FAILED()) goto cleanup;
+    // EXAMPLE START MARKER
+    databases_create(driver, databaseName);
+    if (check_error()) {
+        printf("Failed to create database\n");
+        goto cleanup;
+    }
+
+    // Check if the database exists
+    if (databases_contains(driver, databaseName)) {
+        printf("Database '%s' created successfully\n", databaseName);
+    }
+
+    // Create transaction options
+    TransactionOptions* tx_options = transaction_options_new();
+    transaction_options_set_transaction_timeout_millis(tx_options, 10000);
+    QueryOptions* query_options = query_options_new();
+
+    // Open a schema transaction to define the schema
+    {
+        Transaction* transaction = transaction_new(driver, databaseName, Schema, tx_options);
+        if (check_error()) {
+            printf("Failed to open schema transaction\n");
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        // Define schema
+        const char* define_query =
+            "define "
+            "entity person, owns name, owns age; "
+            "attribute name, value string; "
+            "attribute age, value integer;";
+
+        QueryAnswerPromise* define_promise = transaction_query(transaction, define_query, query_options);
+        QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
+        if (check_error()) {
+            printf("Failed to define schema\n");
+            transaction_close(transaction);
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        if (query_answer_is_ok(define_answer)) {
+            printf("Schema defined successfully\n");
+        }
+        query_answer_drop(define_answer);
+
+        // Commit the schema transaction
+        void_promise_resolve(transaction_commit(transaction));
+        if (check_error()) {
+            printf("Failed to commit schema transaction\n");
+        }
+    }
+
+    // Open a read transaction to query types
+    {
+        Transaction* transaction = transaction_new(driver, databaseName, Read, tx_options);
+        if (check_error()) {
+            printf("Failed to open read transaction\n");
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        // Match query for entity types
+        QueryAnswerPromise* match_promise = transaction_query(transaction, "match entity $x;", query_options);
+        QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
+        if (check_error()) {
+            printf("Failed to execute match query\n");
+            transaction_close(transaction);
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        if (query_answer_is_concept_row_stream(match_answer)) {
+            printf("Query returned concept rows\n");
+
+            ConceptRowIterator* rows = query_answer_into_rows(match_answer);
+            ConceptRow* row;
+            while (NULL != (row = concept_row_iterator_next(rows))) {
+                // Get column names
+                StringIterator* columns = concept_row_get_column_names(row);
+                char* column_name = string_iterator_next(columns);
+                string_iterator_drop(columns);
+
+                // Get concept by column name
+                Concept* concept = concept_row_get(row, column_name);
+                if (concept != NULL && concept_is_entity_type(concept)) {
+                    char* label = concept_get_label(concept);
+                    printf("Found entity type: %s\n", label);
+                    string_free(label);
+                }
+                concept_drop(concept);
+                string_free(column_name);
+                concept_row_drop(row);
+            }
+            concept_row_iterator_drop(rows);
+        } else {
+            query_answer_drop(match_answer);
+        }
+
+        transaction_close(transaction);
+    }
+
+    // Open a write transaction to insert data
+    {
+        Transaction* transaction = transaction_new(driver, databaseName, Write, tx_options);
+        if (check_error()) {
+            printf("Failed to open write transaction\n");
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        // Insert data
+        const char* insert_query = "insert $p isa person, has name \"Alice\", has age 30;";
+        QueryAnswerPromise* insert_promise = transaction_query(transaction, insert_query, query_options);
+        QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
+        if (check_error()) {
+            printf("Failed to insert data\n");
+            transaction_close(transaction);
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        if (query_answer_is_concept_row_stream(insert_answer)) {
+            ConceptRowIterator* rows = query_answer_into_rows(insert_answer);
+            ConceptRow* row;
+            while (NULL != (row = concept_row_iterator_next(rows))) {
+                Concept* concept = concept_row_get(row, "p");
+                if (concept != NULL && concept_is_entity(concept)) {
+                    char* iid = concept_try_get_iid(concept);
+                    if (iid != NULL) {
+                        printf("Inserted entity with IID: %s\n", iid);
+                        string_free(iid);
+                    }
+                }
+                concept_drop(concept);
+                concept_row_drop(row);
+            }
+            concept_row_iterator_drop(rows);
+        } else {
+            query_answer_drop(insert_answer);
+        }
+
+        // Commit the write transaction
+        void_promise_resolve(transaction_commit(transaction));
+        if (check_error()) {
+            printf("Failed to commit write transaction\n");
+        } else {
+            printf("Data inserted and committed successfully\n");
+        }
+    }
+
+    // Open a read transaction to query the inserted data
+    {
+        Transaction* transaction = transaction_new(driver, databaseName, Read, tx_options);
+        if (check_error()) {
+            printf("Failed to open read transaction\n");
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        // Query with options to include instance types
+        query_options_set_include_instance_types(query_options, true);
+
+        QueryAnswerPromise* query_promise = transaction_query(transaction, "match $p isa person, has name $n, has age $a;", query_options);
+        QueryAnswer* query_answer = query_answer_promise_resolve(query_promise);
+        if (check_error()) {
+            printf("Failed to query data\n");
+            transaction_close(transaction);
+            transaction_options_drop(tx_options);
+            query_options_drop(query_options);
+            goto cleanup;
+        }
+
+        if (query_answer_is_concept_row_stream(query_answer)) {
+            printf("Query results:\n");
+            ConceptRowIterator* rows = query_answer_into_rows(query_answer);
+            ConceptRow* row;
+            int count = 0;
+            while (NULL != (row = concept_row_iterator_next(rows))) {
+                // Get the name attribute value
+                Concept* name_concept = concept_row_get(row, "n");
+                if (name_concept != NULL && concept_is_string(name_concept)) {
+                    char* name = concept_get_string(name_concept);
+                    printf("  Name: %s\n", name);
+                    string_free(name);
+                }
+                concept_drop(name_concept);
+
+                // Get the age attribute value
+                Concept* age_concept = concept_row_get(row, "a");
+                if (age_concept != NULL && concept_is_integer(age_concept)) {
+                    int64_t age = concept_get_integer(age_concept);
+                    printf("  Age: %lld\n", (long long)age);
+                }
+                concept_drop(age_concept);
+
+                concept_row_drop(row);
+                count++;
+            }
+            concept_row_iterator_drop(rows);
+            printf("Total persons found: %d\n", count);
+        } else {
+            query_answer_drop(query_answer);
+        }
+
+        transaction_close(transaction);
+    }
+
+    transaction_options_drop(tx_options);
+    query_options_drop(query_options);
+
+    printf("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!\n");
+
+cleanup:
+    // EXAMPLE END MARKER
+    delete_database_if_exists(driver, databaseName);
+    // EXAMPLE START MARKER
+    driver_close(driver);
+    return 0;
+}
+// EXAMPLE END MARKER
+
+bool test_example() {
+    int result = TYPEDB_EXAMPLE_FUNC();
+    // Clear any errors from cleanup (delete_database_if_exists may leave error state)
+    if (check_error()) {
+        Error* error = get_last_error();
+        error_drop(error);
+    }
+    return result == 0;
+}

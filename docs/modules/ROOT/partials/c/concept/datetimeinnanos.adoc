@@ -1,0 +1,10 @@
+[#_methods_concept_datetimeinnanos]
+=== datetimeinnanos
+
+[#_Struct_DatetimeInNanos]
+==== Struct DatetimeInNanos
+
+
+
+A ``DatetimeInNanos`` used to represent datetime as a pair of seconds part and a number of nanoseconds since the last seconds boundary.
+

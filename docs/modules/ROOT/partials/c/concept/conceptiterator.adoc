@@ -1,0 +1,42 @@
+[#_methods_concept_conceptiterator]
+=== conceptiterator
+
+[#_Struct_ConceptIterator]
+==== Struct ConceptIterator
+
+
+
+Iterator over the ``Concepts``s returned by an API method or query.
+
+[#_concept_iterator_drop]
+==== concept_iterator_drop
+
+[source,cpp]
+----
+void concept_iterator_drop(struct ConceptIterator* it)
+----
+
+
+
+Frees the native rust ``ConceptIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_iterator_next]
+==== concept_iterator_next
+
+[source,cpp]
+----
+struct Concept* concept_iterator_next(struct ConceptIterator* it)
+----
+
+
+
+Forwards the ``ConceptIterator`` and returns the next ``Concept`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Concept*`
+

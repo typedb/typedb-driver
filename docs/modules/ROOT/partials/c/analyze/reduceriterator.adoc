@@ -1,0 +1,35 @@
+[#_methods_analyze_reduceriterator]
+=== reduceriterator
+
+[#_reducer_iterator_drop]
+==== reducer_iterator_drop
+
+[source,cpp]
+----
+void reducer_iterator_drop(struct ReducerIterator* it)
+----
+
+
+
+Frees the native rust ``ReducerIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_reducer_iterator_next]
+==== reducer_iterator_next
+
+[source,cpp]
+----
+struct Reducer* reducer_iterator_next(struct ReducerIterator* it)
+----
+
+
+
+Forwards the ``ReducerIterator`` and returns the next ``Reducer`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Reducer*`
+

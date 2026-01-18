@@ -1,0 +1,35 @@
+[#_methods_analyze_functioniterator]
+=== functioniterator
+
+[#_function_iterator_drop]
+==== function_iterator_drop
+
+[source,cpp]
+----
+void function_iterator_drop(struct FunctionIterator* it)
+----
+
+
+
+Frees the native rust ``FunctionIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_function_iterator_next]
+==== function_iterator_next
+
+[source,cpp]
+----
+struct Function* function_iterator_next(struct FunctionIterator* it)
+----
+
+
+
+Forwards the ``FunctionIterator`` and returns the next ``Function`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Function*`
+

@@ -1,0 +1,19 @@
+[#_methods_answer_string]
+=== string
+
+[#_string_free]
+==== string_free
+
+[source,cpp]
+----
+void string_free(char* str)
+----
+
+
+
+Frees a native rust string. _WARNING: Always use this function to free strings returned by the driver. Using the standard C free function will create a dangling reference on the rust side._
+
+[caption=""]
+.Returns
+`void`
+

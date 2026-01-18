@@ -1,0 +1,10 @@
+[#_methods_connection_typedbdriver]
+=== typedbdriver
+
+[#_Struct_TypeDBDriver]
+==== Struct TypeDBDriver
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+

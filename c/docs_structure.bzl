@@ -17,77 +17,131 @@
 
 # Used to map types/functions in the code to a directory & file.
 # Keys of dir_mapping are a prefix of the normalised type or function name.
-# A name is stripped of underscores, made lowercase  resolved to the longest matching key.
+# A name is stripped of underscores, made lowercase and resolved to the longest matching key.
 # This key is used as the filename of the file their documentation will be appended to (unless `force_file` overrides it)
 # The value is the corresponding directory in which the file must sit.
 dir_mapping = {
+    # Connection
+    "driver": "connection",
+    "credential": "connection",
+    "driveroptions": "connection",
 
-    "connection": "connection",
-    "credential" : "connection",
-    "replica": "connection",
-    "user": "connection",
+    # Database
     "database": "connection",
-    "init_logging": "connection",
+    "databasemanager": "connection",
 
-    "session" : "session",
-    "options": "session",
+    # User
+    "user": "connection",
+    "usermanager": "connection",
 
+    # Transaction
     "transaction": "transaction",
-    "query": "transaction",
+    "transactiontype": "transaction",
+    "transactionoptions": "transaction",
+    "queryoptions": "transaction",
 
-    "SchemaException" : "errors",
-    "schema_exception" : "errors",
-    "check_error" : "errors",
-    "get_last_error" : "errors",
-    "error" : "errors",
+    # Answer
+    "queryanswer": "answer",
+    "querytype": "answer",
+    "conceptrow": "answer",
 
-    "Annotation" : "schema",
-    "Transitivity": "schema",
-    "ValueType": "schema",
-    "attribute_type" : "schema",
-    "entity_type" : "schema",
-    "relation_type" : "schema",
-    "role_type" : "schema",
+    # Concept
+    "concept": "concept",
+    "datetimeinnanos": "concept",
+    "datetimeandtimezone": "concept",
+    "stringandoptvalue": "concept",
 
+    # Value types (re-exported from Rust driver)
+    "decimal": "value",
+    "duration": "value",
+    "timezone": "value",
+    "kind": "concept",
+    "valuetype": "concept",
 
-    "rule" : "logic",
-    "logic" : "logic",
+    # Analyze
+    "analyzedquery": "analyze",
+    "pipeline": "analyze",
+    "pipelinestage": "analyze",
+    "conjunction": "analyze",
+    "conjunctionid": "analyze",
+    "constraint": "analyze",
+    "constraintvertex": "analyze",
+    "constraintspan": "analyze",
+    "constraintwithspan": "analyze",
+    "variable": "analyze",
+    "variableannotations": "analyze",
+    "fetch": "analyze",
+    "function": "analyze",
+    "returnoperation": "analyze",
+    "reducer": "analyze",
+    "reduceassignment": "analyze",
+    "sortvariable": "analyze",
+    "sortorder": "analyze",
+    "namedrole": "analyze",
+    "comparator": "analyze",
 
-    "ConceptMap": "answer",
-    "BoolPromise" : "answer",
-    "VoidPromise" : "answer",
-    "string" : "answer",
-    "bool_promise" : "answer",
-    "void_promise" : "answer",
+    # Additional types
+    "constraintexactness": "analyze",
+    "typedbdriver": "connection",
 
+    # Additional function prefixes
+    "databases": "connection",
+    "users": "connection",
+    "entity": "concept",
+    "relation": "concept",
+    "attribute": "concept",
+    "init": "connection",
+    "check": "errors",
+    "get": "errors",
+    "bool": "answer",
+    "void": "answer",
+    "datetime": "concept",
+    "query": "answer",
+    "named": "analyze",
+    "return": "analyze",
+    "sort": "analyze",
+    "analyzed": "analyze",
+    "string": "answer",
+    "reduce": "analyze",
 
-    "OwnerAttributePair" : "answer",
-    "ValueGroup" : "answer",
-    "concept_map": "answer",
-    "explain": "answer",
-    "explanation": "answer",
+    # Errors
+    "error": "errors",
+    "checkerror": "errors",
+    "getlasterror": "errors",
 
-    "concept" : "concept",
-    "attribute" : "concept",
-    "entity" : "concept",
-    "relation" : "concept",
-    "role_player" : "concept",
-    "RolePlayer" : "concept",
-    "thing" : "concept",
-    "value" : "concept",
+    # Iterators
+    "stringiterator": "answer",
+    "conceptiterator": "concept",
+    "conceptrowiterator": "answer",
+    "functioniterator": "analyze",
+    "conjunctioniditerator": "analyze",
+    "constraintwithspaniterator": "analyze",
+    "constraintvertexiterator": "analyze",
+    "pipelinestageiterator": "analyze",
+    "sortvariableiterator": "analyze",
+    "reduceassignmentiterator": "analyze",
+    "reduceriterator": "analyze",
+    "variableannotationsiterator": "analyze",
+    "variableiterator": "analyze",
+    "useriterator": "connection",
+    "stringandoptvalueiterator": "concept",
 
-    # Extra files
-    "primitives" : "answer",
+    # Promise types
+    "voidpromise": "answer",
+    "boolpromise": "answer",
+    "stringpromise": "answer",
+    "conceptpromise": "answer",
+    "analyzedquerypromise": "analyze",
+    "queryanswerpromise": "answer",
+    "databaseiterator": "connection",
+
+    # Init logging goes to connection
+    "initlogging": "connection",
 }
 
 # If a function name 'matches', the value here is used as the filename instead.
 force_file = {
-    "check_error" : "error",
-    "get_last_error" : "error",
-    "init_logging" : "connection",
-
-    "boolpromise" : "primitives",
-    "voidpromise" : "primitives",
-    "string" : "primitives",
-    "explain" : "explanation",
+    "initlogging": "driver",
+    "checkerror": "error",
+    "getlasterror": "error",
 }

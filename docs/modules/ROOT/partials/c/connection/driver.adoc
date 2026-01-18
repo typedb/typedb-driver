@@ -1,0 +1,134 @@
+[#_methods_connection_driver]
+=== driver
+
+[#_driver_close]
+==== driver_close
+
+[source,cpp]
+----
+void driver_close(struct TypeDBDriver* driver)
+----
+
+
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. Closing a driver frees the underlying Rust object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_force_close]
+==== driver_force_close
+
+[source,cpp]
+----
+void driver_force_close(struct TypeDBDriver* driver)
+----
+
+
+
+Forcibly closes the driver. To be used in exceptional cases.
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_is_open]
+==== driver_is_open
+
+[source,cpp]
+----
+bool driver_is_open(const struct TypeDBDriver* driver)
+----
+
+
+
+Checks whether this connection is presently open.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_driver_open]
+==== driver_open
+
+[source,cpp]
+----
+struct TypeDBDriver* driver_open(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+----
+
+
+
+Open a TypeDB C Driver to a TypeDB server available at the provided address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running a| `const char*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_driver_open_with_description]
+==== driver_open_with_description
+
+[source,cpp]
+----
+struct TypeDBDriver* driver_open_with_description(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB server available at the provided address. This method allows driver language specification for drivers built on top of the native C layer.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running a| `const char*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_init_logging]
+==== init_logging
+
+[source,cpp]
+----
+void init_logging(void)
+----
+
+
+
+Enables logging in the TypeDB driver.
+
+This function sets up tracing with two environment variables:
+
+ ``TYPEDB_DRIVER_LOG``: Fine-grained control using the same syntax as ``RUST_LOG``. Example: ``TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace``
+ ``TYPEDB_DRIVER_LOG_LEVEL``: Simple log level that applies to both ``typedb_driver`` and ``typedb_driver_clib`` crates. Overrides any settings from ``TYPEDB_DRIVER_LOG``. Example: ``TYPEDB_DRIVER_LOG_LEVEL=debug``
+
+
+If neither is set, the default level is INFO for driver crates.
+
+The logging is initialized only once to prevent multiple initializations in applications that create multiple drivers.
+
+[caption=""]
+.Returns
+`void`
+

@@ -1,0 +1,58 @@
+[#_methods_analyze_reduceassignment]
+=== reduceassignment
+
+[#_Struct_ReduceAssignment]
+==== Struct ReduceAssignment
+
+
+
+Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``
+
+[#_reduce_assignment_drop]
+==== reduce_assignment_drop
+
+[source,cpp]
+----
+void reduce_assignment_drop(struct ReduceAssignment* obj)
+----
+
+
+
+Frees the native rust ``ReduceAssignment`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_reduce_assignment_get_assigned]
+==== reduce_assignment_get_assigned
+
+[source,cpp]
+----
+struct Variable* reduce_assignment_get_assigned(const struct ReduceAssignment* reduce_assignment)
+----
+
+
+
+The variable being assigned to in this ReduceAssignment. e.g. ``$c`` in ``$c = sum($x)``
+
+[caption=""]
+.Returns
+`struct Variable*`
+
+[#_reduce_assignment_get_reducer]
+==== reduce_assignment_get_reducer
+
+[source,cpp]
+----
+struct Reducer* reduce_assignment_get_reducer(const struct ReduceAssignment* reduce_assignment)
+----
+
+
+
+The reducer applied in this ReduceAssignment. e.g. ``sum($x)`` in ``$c = sum($x)``
+
+[caption=""]
+.Returns
+`struct Reducer*`
+

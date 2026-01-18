@@ -19,6 +19,11 @@ package(default_visibility = ["//visibility:public"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 
+exports_files(
+    ["example.c"],
+    visibility = ["//c:__subpackages__"],
+)
+
 cc_library(
     name = "lib-test-driver",
     srcs = glob(["*.c", "*.h"]),

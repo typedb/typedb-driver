@@ -1,0 +1,58 @@
+[#_methods_analyze_reducer]
+=== reducer
+
+[#_Struct_Reducer]
+==== Struct Reducer
+
+
+
+Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.
+
+[#_reducer_drop]
+==== reducer_drop
+
+[source,cpp]
+----
+void reducer_drop(struct Reducer* obj)
+----
+
+
+
+Frees the native rust ``Reducer`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_reducer_get_arguments]
+==== reducer_get_arguments
+
+[source,cpp]
+----
+struct VariableIterator* reducer_get_arguments(const struct Reducer* reducer)
+----
+
+
+
+The arguments to this Reducer. e.g. ``$x`` in ``sum($x)``
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_reducer_get_name]
+==== reducer_get_name
+
+[source,cpp]
+----
+char* reducer_get_name(const struct Reducer* reducer)
+----
+
+
+
+The name of the operation applied by this Reducer. e.g. ``sum`` in ``sum($x)``
+
+[caption=""]
+.Returns
+`char*`
+

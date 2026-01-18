@@ -26,8 +26,9 @@ include::{page-version}@external-typedb-driver::partial$rust/transaction/Transac
 
 include::{page-version}@external-typedb-driver::partial$rust/transaction/TransactionType.adoc[]
 
-// TODO: Enable when Options are introduced
-// include::{page-version}@external-typedb-driver::partial$rust/transaction/Options.adoc[]
+include::{page-version}@external-typedb-driver::partial$rust/transaction/TransactionOptions.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$rust/transaction/QueryOptions.adoc[]
 
 [#_answer_header]
 == Answer

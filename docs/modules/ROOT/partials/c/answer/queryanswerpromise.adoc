@@ -1,0 +1,42 @@
+[#_methods_answer_queryanswerpromise]
+=== queryanswerpromise
+
+[#_Struct_QueryAnswerPromise]
+==== Struct QueryAnswerPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
+
+[#_query_answer_promise_drop]
+==== query_answer_promise_drop
+
+[source,cpp]
+----
+void query_answer_promise_drop(struct QueryAnswerPromise* promise)
+----
+
+
+
+Frees the native rust ``QueryAnswerPromise`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_query_answer_promise_resolve]
+==== query_answer_promise_resolve
+
+[source,cpp]
+----
+struct QueryAnswer* query_answer_promise_resolve(struct QueryAnswerPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``QueryAnswer`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`struct QueryAnswer*`
+

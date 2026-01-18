@@ -1,0 +1,10 @@
+[#_methods_value_decimal]
+=== decimal
+
+[#_Struct_Decimal]
+==== Struct Decimal
+
+
+
+A fixed-point decimal number. Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
+

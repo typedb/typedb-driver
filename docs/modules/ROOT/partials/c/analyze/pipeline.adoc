@@ -1,0 +1,42 @@
+[#_methods_analyze_pipeline]
+=== pipeline
+
+[#_Struct_Pipeline]
+==== Struct Pipeline
+
+
+
+A representation of a query pipeline.
+
+[#_pipeline_drop]
+==== pipeline_drop
+
+[source,cpp]
+----
+void pipeline_drop(struct Pipeline* obj)
+----
+
+
+
+Frees the native rust ``Pipeline`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_pipeline_get_conjunction]
+==== pipeline_get_conjunction
+
+[source,cpp]
+----
+struct Conjunction* pipeline_get_conjunction(const struct Pipeline* pipeline, const struct ConjunctionID* conjunction_id)
+----
+
+
+
+Returns the ``Conjunction`` corresponding to the ConjunctionID. The ``Pipeline`` must be the one that contains the Conjunction &amp; ConjunctionID.
+
+[caption=""]
+.Returns
+`struct Conjunction*`
+

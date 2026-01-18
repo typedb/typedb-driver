@@ -1,0 +1,106 @@
+[#_methods_analyze_returnoperation]
+=== returnoperation
+
+[#_Struct_ReturnOperation]
+==== Struct ReturnOperation
+
+
+
+A representation of the return operation of the function
+
+[#_return_operation_drop]
+==== return_operation_drop
+
+[source,cpp]
+----
+void return_operation_drop(struct ReturnOperation* obj)
+----
+
+
+
+Frees the native rust ``ReturnOperation`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_return_operation_reducers]
+==== return_operation_reducers
+
+[source,cpp]
+----
+struct ReducerIterator* return_operation_reducers(const struct ReturnOperation* return_operation)
+----
+
+
+
+Unwraps the ``ReturnOperation`` instance as a Reduce variant, and returns the reducers applied. Will panic if the instance is not a Reduce variant.
+
+[caption=""]
+.Returns
+`struct ReducerIterator*`
+
+[#_return_operation_single_selector]
+==== return_operation_single_selector
+
+[source,cpp]
+----
+char* return_operation_single_selector(const struct ReturnOperation* return_operation)
+----
+
+
+
+Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the selector applied. Will panic if the instance is not a Single variant.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_return_operation_single_variables]
+==== return_operation_single_variables
+
+[source,cpp]
+----
+struct VariableIterator* return_operation_single_variables(const struct ReturnOperation* return_operation)
+----
+
+
+
+Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the returned variables. Will panic if the instance is not a Single variant.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_return_operation_stream_variables]
+==== return_operation_stream_variables
+
+[source,cpp]
+----
+struct VariableIterator* return_operation_stream_variables(const struct ReturnOperation* return_operation)
+----
+
+
+
+Unwraps the ``ReturnOperation`` instance as a Stream variant, and returns the returned variables. Will panic if the instance is not a Stream variant.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+
+[#_return_operation_variant]
+==== return_operation_variant
+
+[source,cpp]
+----
+enum ReturnOperationVariant return_operation_variant(const struct ReturnOperation* return_operation)
+----
+
+
+
+Returns the variant of the ``ReturnOperation``.
+
+[caption=""]
+.Returns
+`enum ReturnOperationVariant`
+

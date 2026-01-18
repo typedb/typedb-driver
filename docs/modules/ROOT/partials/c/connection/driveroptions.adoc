@@ -1,0 +1,10 @@
+[#_methods_connection_driveroptions]
+=== driveroptions
+
+[#_Struct_DriverOptions]
+==== Struct DriverOptions
+
+
+
+User connection settings for connecting to TypeDB.
+

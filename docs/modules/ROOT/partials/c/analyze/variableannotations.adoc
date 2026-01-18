@@ -1,0 +1,83 @@
+[#_methods_analyze_variableannotations]
+=== variableannotations
+
+[#_variable_annotations_drop]
+==== variable_annotations_drop
+
+[source,cpp]
+----
+void variable_annotations_drop(struct VariableAnnotations* obj)
+----
+
+
+
+Frees the native rust ``VariableAnnotations`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_variable_annotations_instance]
+==== variable_annotations_instance
+
+[source,cpp]
+----
+struct ConceptIterator* variable_annotations_instance(const struct VariableAnnotations* annotations)
+----
+
+
+
+Unwraps the ``VariableAnnotations`` instance as annotations for an Instance variable, and returns the possible types of the instances the variable may hold. Will panic if the variable is not an Instance variable.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_variable_annotations_type]
+==== variable_annotations_type
+
+[source,cpp]
+----
+struct ConceptIterator* variable_annotations_type(const struct VariableAnnotations* annotations)
+----
+
+
+
+Unwraps the ``VariableAnnotations`` instance as annotations for a Type variable, and returns the possible types the variable may be. Will panic if the variable is not a Type variable.
+
+[caption=""]
+.Returns
+`struct ConceptIterator*`
+
+[#_variable_annotations_value]
+==== variable_annotations_value
+
+[source,cpp]
+----
+struct StringIterator* variable_annotations_value(const struct VariableAnnotations* annotations)
+----
+
+
+
+Unwraps the ``VariableAnnotations`` instance as annotations for a Value variable, and returns the possible ValueTypes the value may be. Will panic if the variable is not a Value variable.
+
+[caption=""]
+.Returns
+`struct StringIterator*`
+
+[#_variable_annotations_variant]
+==== variable_annotations_variant
+
+[source,cpp]
+----
+enum VariableAnnotationsVariant variable_annotations_variant(const struct VariableAnnotations* annotations)
+----
+
+
+
+Returns the variant of the specified VariableAnnotations. This tells us whether the variable holds an instance, a type or a raw value.
+
+[caption=""]
+.Returns
+`enum VariableAnnotationsVariant`
+

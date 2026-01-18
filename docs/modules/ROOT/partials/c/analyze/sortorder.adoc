@@ -1,0 +1,29 @@
+[#_methods_analyze_sortorder]
+=== sortorder
+
+[#_Struct_SortOrder]
+==== Struct SortOrder
+
+
+
+The order of a variable being sorted on in a ``PipelineStage::Sort``
+
+[#_Enum_SortOrder]
+==== Enum SortOrder
+
+
+
+The order of a variable being sorted on in a ``PipelineStage::Sort``
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Ascending`
+a| `Descending`
+|===
+// end::enum_constants[]
+

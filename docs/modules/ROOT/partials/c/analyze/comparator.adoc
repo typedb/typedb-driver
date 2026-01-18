@@ -1,0 +1,51 @@
+[#_methods_analyze_comparator]
+=== comparator
+
+[#_Struct_Comparator]
+==== Struct Comparator
+
+
+
+A representation of the comparator used in a comparison constraint.
+
+[#_Enum_Comparator]
+==== Enum Comparator
+
+
+
+A representation of the comparator used in a comparison constraint.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Contains`
+a| `Equal`
+a| `Greater`
+a| `GreaterOrEqual`
+a| `LessOrEqual`
+a| `LessThan`
+a| `Like`
+a| `NotEqual`
+|===
+// end::enum_constants[]
+
+[#_comparator_get_name]
+==== comparator_get_name
+
+[source,cpp]
+----
+char* comparator_get_name(enum Comparator comparator)
+----
+
+
+
+Unwraps the ``Comparator`` and returns its name (or symbol).
+
+[caption=""]
+.Returns
+`char*`
+

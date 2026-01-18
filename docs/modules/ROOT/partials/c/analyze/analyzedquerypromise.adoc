@@ -1,0 +1,35 @@
+[#_methods_analyze_analyzedquerypromise]
+=== analyzedquerypromise
+
+[#_analyzed_query_promise_drop]
+==== analyzed_query_promise_drop
+
+[source,cpp]
+----
+void analyzed_query_promise_drop(struct AnalyzedQueryPromise* promise)
+----
+
+
+
+Frees the native rust ``AnalyzePromise`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_analyzed_query_promise_resolve]
+==== analyzed_query_promise_resolve
+
+[source,cpp]
+----
+struct AnalyzedQuery* analyzed_query_promise_resolve(struct AnalyzedQueryPromise* promise)
+----
+
+
+
+Waits for and returns the result of the Analyze request. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`struct AnalyzedQuery*`
+

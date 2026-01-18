@@ -34,6 +34,10 @@ TEST(TestQuery, TestData) {
     EXPECT_TRUE(test_query_data());
 }
 
+TEST(TestExample, TestExample) {
+    EXPECT_TRUE(test_example());
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

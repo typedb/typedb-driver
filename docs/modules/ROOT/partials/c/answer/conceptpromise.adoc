@@ -1,0 +1,42 @@
+[#_methods_answer_conceptpromise]
+=== conceptpromise
+
+[#_Struct_ConceptPromise]
+==== Struct ConceptPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
+
+[#_concept_promise_drop]
+==== concept_promise_drop
+
+[source,cpp]
+----
+void concept_promise_drop(struct ConceptPromise* promise)
+----
+
+
+
+Frees the native rust ``ConceptPromise`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_concept_promise_resolve]
+==== concept_promise_resolve
+
+[source,cpp]
+----
+struct Concept* concept_promise_resolve(struct ConceptPromise* promise)
+----
+
+
+
+Waits for and returns the result of the operation represented by the ``ConceptPromise`` object. In case the operation failed, the error flag will only be set when the promise is resolved. The native promise object is freed when it is resolved.
+
+[caption=""]
+.Returns
+`struct Concept*`
+

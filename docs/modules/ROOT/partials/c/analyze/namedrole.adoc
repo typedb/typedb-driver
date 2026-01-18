@@ -1,0 +1,90 @@
+[#_methods_analyze_namedrole]
+=== namedrole
+
+[#_Struct_NamedRole]
+==== Struct NamedRole
+
+
+
+A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
+
+[#_named_role_as_u32]
+==== named_role_as_u32
+
+[source,cpp]
+----
+uint32_t named_role_as_u32(const struct NamedRole* named_role)
+----
+
+
+
+Returns a u32 identifying the named role instance. Meant to be used to implement hash, equality etc.
+
+[caption=""]
+.Returns
+`uint32_t`
+
+[#_named_role_drop]
+==== named_role_drop
+
+[source,cpp]
+----
+void named_role_drop(struct NamedRole* obj)
+----
+
+
+
+Frees the native rust ``NamedRole`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_named_role_get_name]
+==== named_role_get_name
+
+[source,cpp]
+----
+char* named_role_get_name(const struct NamedRole* named_role)
+----
+
+
+
+Returns the role name associated with the NamedRole.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_named_role_get_variable]
+==== named_role_get_variable
+
+[source,cpp]
+----
+struct Variable* named_role_get_variable(const struct NamedRole* named_role)
+----
+
+
+
+Returns the role-type variable associated with the NamedRole.
+
+[caption=""]
+.Returns
+`struct Variable*`
+
+[#_named_role_string_repr]
+==== named_role_string_repr
+
+[source,cpp]
+----
+char* named_role_string_repr(const struct NamedRole* named_role)
+----
+
+
+
+Returns a string representation of the NamedRole
+
+[caption=""]
+.Returns
+`char*`
+

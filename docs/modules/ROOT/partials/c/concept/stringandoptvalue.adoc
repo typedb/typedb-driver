@@ -1,0 +1,26 @@
+[#_methods_concept_stringandoptvalue]
+=== stringandoptvalue
+
+[#_Struct_StringAndOptValue]
+==== Struct StringAndOptValue
+
+
+
+A ``StringAndOptValue`` used to represent the pair of variables involved in an ownership. ``_0`` and ``_1`` are the owner and attribute variables respectively.
+
+[#_string_and_opt_value_drop]
+==== string_and_opt_value_drop
+
+[source,cpp]
+----
+void string_and_opt_value_drop(struct StringAndOptValue* string_and_opt_value)
+----
+
+
+
+Frees the native rust ``StringAndOptValue`` object
+
+[caption=""]
+.Returns
+`void`
+

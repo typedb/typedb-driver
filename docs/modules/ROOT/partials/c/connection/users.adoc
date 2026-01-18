@@ -1,0 +1,83 @@
+[#_methods_connection_users]
+=== users
+
+[#_users_all]
+==== users_all
+
+[source,cpp]
+----
+struct UserIterator* users_all(const struct TypeDBDriver* driver)
+----
+
+
+
+Retrieves all users which exist on the TypeDB server.
+
+[caption=""]
+.Returns
+`struct UserIterator*`
+
+[#_users_contains]
+==== users_contains
+
+[source,cpp]
+----
+bool users_contains(const struct TypeDBDriver* driver, const char* username)
+----
+
+
+
+Checks if a user with the given name exists.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_users_create]
+==== users_create
+
+[source,cpp]
+----
+void users_create(const struct TypeDBDriver* driver, const char* username, const char* password)
+----
+
+
+
+Creates a user with the given name &amp; password.
+
+[caption=""]
+.Returns
+`void`
+
+[#_users_get]
+==== users_get
+
+[source,cpp]
+----
+struct User* users_get(const struct TypeDBDriver* driver, const char* username)
+----
+
+
+
+Retrieves a user with the given name.
+
+[caption=""]
+.Returns
+`struct User*`
+
+[#_users_get_current_user]
+==== users_get_current_user
+
+[source,cpp]
+----
+struct User* users_get_current_user(const struct TypeDBDriver* driver)
+----
+
+
+
+Retrieves the username of the user who opened this connection
+
+[caption=""]
+.Returns
+`struct User*`
+

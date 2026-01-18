@@ -2,85 +2,162 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}@external-typedb-driver::partial$c/connection/connection.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/connection/driver.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/connection/credentials.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/connection/typedbdriver.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/connection/credential.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/connection/driveroptions.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/connection/databases.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$c/connection/database.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/connection/replica.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/connection/databaseiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/connection/users.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$c/connection/user.adoc[]
 
-[#_session_header]
-== Session
-
-include::{page-version}@external-typedb-driver::partial$c/session/session.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$c/session/options.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/connection/useriterator.adoc[]
 
 [#_transaction_header]
 == Transaction
 
 include::{page-version}@external-typedb-driver::partial$c/transaction/transaction.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/transaction/query.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/transaction/transactiontype.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/transaction/transactionoptions.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/transaction/queryoptions.adoc[]
 
 [#_answer_header]
 == Answer
 
-include::{page-version}@external-typedb-driver::partial$c/answer/conceptmap.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/answer/queryanswer.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/answer/valuegroup.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/answer/queryanswerpromise.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/answer/primitives.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/answer/querytype.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/answer/explanation.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/answer/conceptrow.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/conceptrowiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/voidpromise.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/boolpromise.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/stringpromise.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/conceptpromise.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/string.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/answer/stringiterator.adoc[]
 
 [#_concept_header]
 == Concept
 
 include::{page-version}@external-typedb-driver::partial$c/concept/concept.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/concept/thing.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/concept/conceptiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/concept/kind.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$c/concept/entity.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/concept/attribute.adoc[]
-
 include::{page-version}@external-typedb-driver::partial$c/concept/relation.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/concept/roleplayer.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/concept/attribute.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/concept/value.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/concept/datetimeinnanos.adoc[]
 
-[#_schema_header]
-== Schema
+include::{page-version}@external-typedb-driver::partial$c/concept/datetimeandtimezone.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/schema/entitytype.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/concept/stringandoptvalue.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/schema/attributetype.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/concept/stringandoptvalueiterator.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/schema/relationtype.adoc[]
+[#_value_header]
+== Value
 
-include::{page-version}@external-typedb-driver::partial$c/schema/roletype.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/value/decimal.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/schema/annotation.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/value/duration.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/schema/transitivity.adoc[]
+[#_analyze_header]
+== Analyze
 
-include::{page-version}@external-typedb-driver::partial$c/schema/valuetype.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/analyze/analyzed.adoc[]
 
-[#_logic_header]
-== Logic
+include::{page-version}@external-typedb-driver::partial$c/analyze/analyzedquery.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/logic/logic.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/analyze/analyzedquerypromise.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$c/logic/rule.adoc[]
+include::{page-version}@external-typedb-driver::partial$c/analyze/pipeline.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/pipelinestage.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/pipelinestageiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/conjunction.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/conjunctionid.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/conjunctioniditerator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraint.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintexactness.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintspan.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintwithspan.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintwithspaniterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintvertex.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/constraintvertexiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/variable.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/variableannotations.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/variableannotationsiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/variableiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/fetch.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/function.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/functioniterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/returnoperation.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/reducer.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/reduceriterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/reduceassignment.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/reduceassignmentiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/sortvariable.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/sortvariableiterator.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/sortorder.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/namedrole.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$c/analyze/comparator.adoc[]
 
 [#_errors_header]
 == Errors
 
 include::{page-version}@external-typedb-driver::partial$c/errors/error.adoc[]
-
-include::{page-version}@external-typedb-driver::partial$c/errors/schemaexception.adoc[]

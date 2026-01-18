@@ -79,7 +79,8 @@ public interface Value extends Concept {
     boolean getBoolean();
 
     /**
-     * Returns a <code>integer</code> value of this value concept. If the value has another type, raises an exception.
+     * Returns the value of this value concept as a <code>long</code>.
+     * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -100,7 +101,7 @@ public interface Value extends Concept {
     double getDouble();
 
     /**
-     * Returns a <code>decimal</code> value of this value concept.
+     * Returns the value of this value concept as a <code>BigDecimal</code>.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -111,7 +112,8 @@ public interface Value extends Concept {
     BigDecimal getDecimal();
 
     /**
-     * Returns a <code>string</code> value of this value concept. If the value has another type, raises an exception.
+     * Returns the value of this value concept as a <code>String</code>.
+     * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -121,7 +123,7 @@ public interface Value extends Concept {
     String getString();
 
     /**
-     * Returns a <code>date</code> value of this value concept.
+     * Returns the value of this value concept as a <code>LocalDate</code>.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -132,7 +134,7 @@ public interface Value extends Concept {
     LocalDate getDate();
 
     /**
-     * Returns a <code>datetime</code> value of this value concept.
+     * Returns the value of this value concept as a <code>LocalDateTime</code>.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -143,7 +145,7 @@ public interface Value extends Concept {
     LocalDateTime getDatetime();
 
     /**
-     * Returns a <code>datetime-tz</code> value of this value concept.
+     * Returns the value of this value concept as a <code>ZonedDateTime</code>.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -154,7 +156,7 @@ public interface Value extends Concept {
     ZonedDateTime getDatetimeTZ();
 
     /**
-     * Returns a <code>duration</code> value of this value concept.
+     * Returns the value of this value concept as a <code>Duration</code>.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>
@@ -165,7 +167,8 @@ public interface Value extends Concept {
     Duration getDuration();
 
     /**
-     * Returns a <code>struct</code> value of this value concept represented as a map from field names to values.
+     * Returns the value of this value concept as a <code>Map&lt;String, Optional&lt;Value&gt;&gt;</code>
+     * representing a struct with field names mapped to values.
      * If the value has another type, raises an exception.
      *
      * <h3>Examples</h3>

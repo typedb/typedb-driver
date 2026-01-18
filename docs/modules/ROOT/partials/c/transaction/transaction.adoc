@@ -8,49 +8,48 @@
 
 A transaction with a TypeDB database.
 
-[#_Struct_TransactionType]
-==== Struct TransactionType
+[#_transaction_analyze]
+==== transaction_analyze
+
+[source,cpp]
+----
+struct AnalyzedQueryPromise* transaction_analyze(struct Transaction* transaction, const char* query)
+----
 
 
 
-This enum is used to specify the type of transaction.
-
-
-[#_Enum_TransactionType]
-==== Enum TransactionType
-
-
-
-This enum is used to specify the type of transaction.
+Analyzes a TypeQL query in the transaction.
 
 
 [caption=""]
-.Enum constants
-// tag::enum_constants[]
-[cols=""]
+.Input parameters
+[cols=",,"]
 [options="header"]
 |===
-|Name
-a| `Read = 0`
-a| `Write = 1`
+|Name |Description |Type
+a| `transaction` a| The ``Transaction`` to analyze the query within. a| `struct Transaction*`
+a| `query` a| The query string. a| `const char*`
 |===
-// end::enum_constants[]
+
+[caption=""]
+.Returns
+`struct AnalyzedQueryPromise*`
 
 [#_transaction_close]
 ==== transaction_close
 
 [source,cpp]
 ----
-void transaction_close(struct Transaction* txn)
+struct VoidPromise* transaction_close(struct Transaction* txn)
 ----
 
 
 
-Closes the transaction and frees the native rust object.
+Forcibly closes this transaction. To be used in exceptional cases.
 
 [caption=""]
 .Returns
-`void`
+`struct VoidPromise*`
 
 [#_transaction_commit]
 ==== transaction_commit
@@ -67,22 +66,6 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 [caption=""]
 .Returns
 `struct VoidPromise*`
-
-[#_transaction_force_close]
-==== transaction_force_close
-
-[source,cpp]
-----
-void transaction_force_close(struct Transaction* txn)
-----
-
-
-
-Forcibly closes this transaction. To be used in exceptional cases.
-
-[caption=""]
-.Returns
-`void`
 
 [#_transaction_is_open]
 ==== transaction_is_open
@@ -105,7 +88,7 @@ Checks whether this transaction is open.
 
 [source,cpp]
 ----
-struct Transaction* transaction_new(const struct Session* session, enum TransactionType type_, const struct Options* options)
+struct Transaction* transaction_new(struct TypeDBDriver* driver, const char* database_name, enum TransactionType type_, const struct TransactionOptions* options)
 ----
 
 
@@ -119,8 +102,10 @@ Opens a transaction to perform read or write queries on the database connected t
 [options="header"]
 |===
 |Name |Description |Type
-a| `type_` a| The type of transaction to be created (Write or Read). a| `enum TransactionType`
-a| `options` a| Options for the transaction a| `const struct Options*`
+a| `databases` a| The ``DatabaseManager`` object on this connection. a| 
+a| `database_name` a| The name of the database with which the transaction connects. a| `const char*`
+a| `type_` a| The type of transaction to be created (Write / Read / Schema). a| `enum TransactionType`
+a| `options` a| ``TransactionOptions`` to configure the opened transaction. a| `const struct TransactionOptions*`
 |===
 
 [caption=""]
@@ -132,7 +117,7 @@ a| `options` a| Options for the transaction a| `const struct Options*`
 
 [source,cpp]
 ----
-void transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, void(*)(uintptr_t, struct Error*) callback)
+struct VoidPromise* transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, void(*)(uintptr_t, struct Error*) callback)
 ----
 
 
@@ -153,7 +138,35 @@ a| `callback` a| The function to be called a|
 
 [caption=""]
 .Returns
-`void`
+`struct VoidPromise*`
+
+[#_transaction_query]
+==== transaction_query
+
+[source,cpp]
+----
+struct QueryAnswerPromise* transaction_query(struct Transaction* transaction, const char* query, const struct QueryOptions* options)
+----
+
+
+
+Performs a TypeQL query in the transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The ``Transaction`` to execute the query within. a| `struct Transaction*`
+a| `query` a| The query string. a| `const char*`
+a| `options` a| ``QueryOptions`` to configure the executed query. a| `const struct QueryOptions*`
+|===
+
+[caption=""]
+.Returns
+`struct QueryAnswerPromise*`
 
 [#_transaction_rollback]
 ==== transaction_rollback
@@ -170,4 +183,20 @@ Rolls back the uncommitted changes made via this transaction.
 [caption=""]
 .Returns
 `struct VoidPromise*`
+
+[#_transaction_submit_close]
+==== transaction_submit_close
+
+[source,cpp]
+----
+void transaction_submit_close(struct Transaction* txn)
+----
+
+
+
+Closes the transaction and frees the native rust object.
+
+[caption=""]
+.Returns
+`void`
 

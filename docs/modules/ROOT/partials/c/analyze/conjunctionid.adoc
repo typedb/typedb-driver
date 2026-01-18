@@ -1,0 +1,58 @@
+[#_methods_analyze_conjunctionid]
+=== conjunctionid
+
+[#_Struct_ConjunctionID]
+==== Struct ConjunctionID
+
+
+
+Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.
+
+[#_conjunction_id_as_u32]
+==== conjunction_id_as_u32
+
+[source,cpp]
+----
+uint32_t conjunction_id_as_u32(const struct ConjunctionID* conjunction_id)
+----
+
+
+
+Returns the ConjunctionID as u32 to use in hash, equality etc.
+
+[caption=""]
+.Returns
+`uint32_t`
+
+[#_conjunction_id_drop]
+==== conjunction_id_drop
+
+[source,cpp]
+----
+void conjunction_id_drop(struct ConjunctionID* obj)
+----
+
+
+
+Frees the native rust ``ConjunctionID`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_conjunction_id_string_repr]
+==== conjunction_id_string_repr
+
+[source,cpp]
+----
+char* conjunction_id_string_repr(const struct ConjunctionID* conjunction_id)
+----
+
+
+
+Returns a string representation of the ConjunctionID.
+
+[caption=""]
+.Returns
+`char*`
+
