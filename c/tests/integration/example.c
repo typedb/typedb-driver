@@ -91,7 +91,7 @@ int TYPEDB_EXAMPLE_FUNC() {
         QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
         if (check_error()) {
             printf("Failed to define schema\n");
-            transaction_close(transaction);
+            transaction_submit_close(transaction);
             transaction_options_drop(tx_options);
             query_options_drop(query_options);
             goto cleanup;
@@ -124,7 +124,7 @@ int TYPEDB_EXAMPLE_FUNC() {
         QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
         if (check_error()) {
             printf("Failed to execute match query\n");
-            transaction_close(transaction);
+            transaction_submit_close(transaction);
             transaction_options_drop(tx_options);
             query_options_drop(query_options);
             goto cleanup;
@@ -157,7 +157,7 @@ int TYPEDB_EXAMPLE_FUNC() {
             query_answer_drop(match_answer);
         }
 
-        transaction_close(transaction);
+        transaction_submit_close(transaction);
     }
 
     // Open a write transaction to insert data
@@ -176,7 +176,7 @@ int TYPEDB_EXAMPLE_FUNC() {
         QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
         if (check_error()) {
             printf("Failed to insert data\n");
-            transaction_close(transaction);
+            transaction_submit_close(transaction);
             transaction_options_drop(tx_options);
             query_options_drop(query_options);
             goto cleanup;
@@ -228,7 +228,7 @@ int TYPEDB_EXAMPLE_FUNC() {
         QueryAnswer* query_answer = query_answer_promise_resolve(query_promise);
         if (check_error()) {
             printf("Failed to query data\n");
-            transaction_close(transaction);
+            transaction_submit_close(transaction);
             transaction_options_drop(tx_options);
             query_options_drop(query_options);
             goto cleanup;
@@ -266,7 +266,7 @@ int TYPEDB_EXAMPLE_FUNC() {
             query_answer_drop(query_answer);
         }
 
-        transaction_close(transaction);
+        transaction_submit_close(transaction);
     }
 
     transaction_options_drop(tx_options);
