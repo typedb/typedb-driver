@@ -1,7 +1,7 @@
 [#_enum_Constraint]
 === Constraint
 
-`class`
+`enum`
 
 A representation of a TypeQL constraint.
 

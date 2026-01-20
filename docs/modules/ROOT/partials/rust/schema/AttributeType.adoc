@@ -1,7 +1,7 @@
 [#_struct_AttributeType]
 === AttributeType
 
-`class`
+`struct`
 
 *Implements traits:*
 

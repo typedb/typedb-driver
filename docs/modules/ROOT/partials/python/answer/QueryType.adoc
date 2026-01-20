@@ -29,7 +29,7 @@ a| `WRITE` a| `1`
 
 // tag::methods[]
 [#_QueryType_is_read_]
-==== is_read()
+==== is_read
 
 [source,python]
 ----
@@ -43,7 +43,7 @@ is_read() -> bool
 `bool`
 
 [#_QueryType_is_schema_]
-==== is_schema()
+==== is_schema
 
 [source,python]
 ----
@@ -57,7 +57,7 @@ is_schema() -> bool
 `bool`
 
 [#_QueryType_is_write_]
-==== is_write()
+==== is_write
 
 [source,python]
 ----

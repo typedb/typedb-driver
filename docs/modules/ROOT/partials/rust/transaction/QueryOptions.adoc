@@ -1,7 +1,7 @@
 [#_struct_QueryOptions]
 === QueryOptions
 
-`class`
+`struct`
 
 *Implements traits:*
 

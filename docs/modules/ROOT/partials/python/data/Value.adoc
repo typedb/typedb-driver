@@ -11,7 +11,7 @@
 
 // tag::methods[]
 [#_Value_as_value_]
-==== as_value()
+==== as_value
 
 [source,python]
 ----
@@ -32,7 +32,7 @@ value.as_value()
 ----
 
 [#_Value_get_]
-==== get()
+==== get
 
 [source,python]
 ----
@@ -53,7 +53,7 @@ value.get()
 ----
 
 [#_Value_get_boolean_]
-==== get_boolean()
+==== get_boolean
 
 [source,python]
 ----
@@ -74,7 +74,7 @@ value.get_boolean()
 ----
 
 [#_Value_get_date_]
-==== get_date()
+==== get_date
 
 [source,python]
 ----
@@ -95,7 +95,7 @@ value.get_date()
 ----
 
 [#_Value_get_datetime_]
-==== get_datetime()
+==== get_datetime
 
 [source,python]
 ----
@@ -116,7 +116,7 @@ value.get_datetime()
 ----
 
 [#_Value_get_datetime_tz_]
-==== get_datetime_tz()
+==== get_datetime_tz
 
 [source,python]
 ----
@@ -137,7 +137,7 @@ value.get_datetime_tz()
 ----
 
 [#_Value_get_decimal_]
-==== get_decimal()
+==== get_decimal
 
 [source,python]
 ----
@@ -158,7 +158,7 @@ value.get_decimal()
 ----
 
 [#_Value_get_double_]
-==== get_double()
+==== get_double
 
 [source,python]
 ----
@@ -179,7 +179,7 @@ value.get_double()
 ----
 
 [#_Value_get_duration_]
-==== get_duration()
+==== get_duration
 
 [source,python]
 ----
@@ -200,7 +200,7 @@ value.get_duration()
 ----
 
 [#_Value_get_integer_]
-==== get_integer()
+==== get_integer
 
 [source,python]
 ----
@@ -221,7 +221,7 @@ value.get_integer()
 ----
 
 [#_Value_get_string_]
-==== get_string()
+==== get_string
 
 [source,python]
 ----
@@ -242,7 +242,7 @@ value.get_string()
 ----
 
 [#_Value_get_struct_]
-==== get_struct()
+==== get_struct
 
 [source,python]
 ----
@@ -263,7 +263,7 @@ value.get_struct()
 ----
 
 [#_Value_get_type_]
-==== get_type()
+==== get_type
 
 [source,python]
 ----
@@ -284,7 +284,7 @@ value.get_type()
 ----
 
 [#_Value_is_value_]
-==== is_value()
+==== is_value
 
 [source,python]
 ----

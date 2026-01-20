@@ -9,7 +9,7 @@ Contains a row of concepts with a header.
 
 // tag::methods[]
 [#_ConceptRow_columnNames_]
-==== columnNames()
+==== columnNames
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ conceptRow.columnNames();
 ----
 
 [#_ConceptRow_concepts_]
-==== concepts()
+==== concepts
 
 [source,java]
 ----
@@ -55,7 +55,7 @@ conceptRow.concepts();
 ----
 
 [#_ConceptRow_get_java_lang_String]
-==== get()
+==== get
 
 [source,java]
 ----
@@ -88,7 +88,7 @@ conceptRow.get(columnName);
 ----
 
 [#_ConceptRow_getIndex_long]
-==== getIndex()
+==== getIndex
 
 [source,java]
 ----
@@ -121,7 +121,7 @@ conceptRow.getIndex(columnIndex);
 ----
 
 [#_ConceptRow_getQueryStructure_]
-==== getQueryStructure()
+==== getQueryStructure
 
 [source,java]
 ----
@@ -143,7 +143,7 @@ conceptRow.getQueryStructure();
 ----
 
 [#_ConceptRow_getQueryType_]
-==== getQueryType()
+==== getQueryType
 
 [source,java]
 ----
@@ -166,7 +166,7 @@ conceptRow.getQueryType();
 ----
 
 [#_ConceptRow_involvedConjunctions_]
-==== involvedConjunctions()
+==== involvedConjunctions
 
 [source,java]
 ----

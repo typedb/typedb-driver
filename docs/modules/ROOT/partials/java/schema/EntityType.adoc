@@ -14,7 +14,7 @@ Entity types represent the classification of independent objects in the data mod
 
 // tag::methods[]
 [#_EntityType_asAttribute_]
-==== asAttribute()
+==== asAttribute
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ concept.asAttribute();
 ----
 
 [#_EntityType_asAttributeType_]
-==== asAttributeType()
+==== asAttributeType
 
 [source,java]
 ----
@@ -58,7 +58,7 @@ concept.asAttributeType();
 ----
 
 [#_EntityType_asEntity_]
-==== asEntity()
+==== asEntity
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ concept.asEntity();
 ----
 
 [#_EntityType_asEntityType_]
-==== asEntityType()
+==== asEntityType
 
 [source,java]
 ----
@@ -103,7 +103,7 @@ concept.asEntityType();
 ----
 
 [#_EntityType_asInstance_]
-==== asInstance()
+==== asInstance
 
 [source,java]
 ----
@@ -125,7 +125,7 @@ concept.asInstance();
 ----
 
 [#_EntityType_asRelation_]
-==== asRelation()
+==== asRelation
 
 [source,java]
 ----
@@ -147,7 +147,7 @@ concept.asRelation();
 ----
 
 [#_EntityType_asRelationType_]
-==== asRelationType()
+==== asRelationType
 
 [source,java]
 ----
@@ -169,7 +169,7 @@ concept.asRelationType();
 ----
 
 [#_EntityType_asRoleType_]
-==== asRoleType()
+==== asRoleType
 
 [source,java]
 ----
@@ -191,7 +191,7 @@ concept.asRoleType();
 ----
 
 [#_EntityType_asValue_]
-==== asValue()
+==== asValue
 
 [source,java]
 ----
@@ -213,7 +213,7 @@ concept.asValue();
 ----
 
 [#_EntityType_getLabel_]
-==== getLabel()
+==== getLabel
 
 [source,java]
 ----
@@ -236,7 +236,7 @@ concept.getLabel();
 ----
 
 [#_EntityType_isAttribute_]
-==== isAttribute()
+==== isAttribute
 
 [source,java]
 ----
@@ -259,7 +259,7 @@ concept.isAttribute();
 ----
 
 [#_EntityType_isAttributeType_]
-==== isAttributeType()
+==== isAttributeType
 
 [source,java]
 ----
@@ -282,7 +282,7 @@ concept.isAttributeType();
 ----
 
 [#_EntityType_isBoolean_]
-==== isBoolean()
+==== isBoolean
 
 [source,java]
 ----
@@ -305,7 +305,7 @@ concept.isBoolean()
 ----
 
 [#_EntityType_isDate_]
-==== isDate()
+==== isDate
 
 [source,java]
 ----
@@ -328,7 +328,7 @@ concept.isDate();
 ----
 
 [#_EntityType_isDatetime_]
-==== isDatetime()
+==== isDatetime
 
 [source,java]
 ----
@@ -351,7 +351,7 @@ concept.isDatetime();
 ----
 
 [#_EntityType_isDatetimeTZ_]
-==== isDatetimeTZ()
+==== isDatetimeTZ
 
 [source,java]
 ----
@@ -374,7 +374,7 @@ concept.isDatetimeTZ();
 ----
 
 [#_EntityType_isDecimal_]
-==== isDecimal()
+==== isDecimal
 
 [source,java]
 ----
@@ -397,7 +397,7 @@ concept.isDecimal();
 ----
 
 [#_EntityType_isDouble_]
-==== isDouble()
+==== isDouble
 
 [source,java]
 ----
@@ -420,7 +420,7 @@ concept.isDouble();
 ----
 
 [#_EntityType_isDuration_]
-==== isDuration()
+==== isDuration
 
 [source,java]
 ----
@@ -443,7 +443,7 @@ concept.isDuration();
 ----
 
 [#_EntityType_isEntity_]
-==== isEntity()
+==== isEntity
 
 [source,java]
 ----
@@ -466,7 +466,7 @@ concept.isEntity();
 ----
 
 [#_EntityType_isEntityType_]
-==== isEntityType()
+==== isEntityType
 
 [source,java]
 ----
@@ -489,7 +489,7 @@ concept.isEntityType();
 ----
 
 [#_EntityType_isInstance_]
-==== isInstance()
+==== isInstance
 
 [source,java]
 ----
@@ -512,7 +512,7 @@ concept.isInstance();
 ----
 
 [#_EntityType_isInteger_]
-==== isInteger()
+==== isInteger
 
 [source,java]
 ----
@@ -535,7 +535,7 @@ concept.isInteger();
 ----
 
 [#_EntityType_isRelation_]
-==== isRelation()
+==== isRelation
 
 [source,java]
 ----
@@ -558,7 +558,7 @@ concept.isRelation();
 ----
 
 [#_EntityType_isRelationType_]
-==== isRelationType()
+==== isRelationType
 
 [source,java]
 ----
@@ -581,7 +581,7 @@ concept.isRelationType();
 ----
 
 [#_EntityType_isRoleType_]
-==== isRoleType()
+==== isRoleType
 
 [source,java]
 ----
@@ -604,7 +604,7 @@ concept.isRoleType();
 ----
 
 [#_EntityType_isString_]
-==== isString()
+==== isString
 
 [source,java]
 ----
@@ -627,7 +627,7 @@ concept.isString();
 ----
 
 [#_EntityType_isStruct_]
-==== isStruct()
+==== isStruct
 
 [source,java]
 ----
@@ -650,7 +650,7 @@ concept.isStruct();
 ----
 
 [#_EntityType_isValue_]
-==== isValue()
+==== isValue
 
 [source,java]
 ----
@@ -673,7 +673,7 @@ concept.isValue();
 ----
 
 [#_EntityType_tryGetBoolean_]
-==== tryGetBoolean()
+==== tryGetBoolean
 
 [source,java]
 ----
@@ -695,7 +695,7 @@ concept.tryGetBoolean();
 ----
 
 [#_EntityType_tryGetDate_]
-==== tryGetDate()
+==== tryGetDate
 
 [source,java]
 ----
@@ -717,7 +717,7 @@ concept.tryGetDate();
 ----
 
 [#_EntityType_tryGetDatetime_]
-==== tryGetDatetime()
+==== tryGetDatetime
 
 [source,java]
 ----
@@ -739,7 +739,7 @@ concept.tryGetDatetime();
 ----
 
 [#_EntityType_tryGetDatetimeTZ_]
-==== tryGetDatetimeTZ()
+==== tryGetDatetimeTZ
 
 [source,java]
 ----
@@ -761,7 +761,7 @@ concept.tryGetDatetimeTZ();
 ----
 
 [#_EntityType_tryGetDecimal_]
-==== tryGetDecimal()
+==== tryGetDecimal
 
 [source,java]
 ----
@@ -783,7 +783,7 @@ concept.tryGetDecimal();
 ----
 
 [#_EntityType_tryGetDouble_]
-==== tryGetDouble()
+==== tryGetDouble
 
 [source,java]
 ----
@@ -805,7 +805,7 @@ concept.tryGetDouble();
 ----
 
 [#_EntityType_tryGetDuration_]
-==== tryGetDuration()
+==== tryGetDuration
 
 [source,java]
 ----
@@ -827,7 +827,7 @@ concept.tryGetDuration();
 ----
 
 [#_EntityType_tryGetIID_]
-==== tryGetIID()
+==== tryGetIID
 
 [source,java]
 ----
@@ -850,7 +850,7 @@ concept.tryGetIID();
 ----
 
 [#_EntityType_tryGetInteger_]
-==== tryGetInteger()
+==== tryGetInteger
 
 [source,java]
 ----
@@ -872,7 +872,7 @@ concept.tryGetInteger();
 ----
 
 [#_EntityType_tryGetLabel_]
-==== tryGetLabel()
+==== tryGetLabel
 
 [source,java]
 ----
@@ -895,7 +895,7 @@ concept.tryGetLabel();
 ----
 
 [#_EntityType_tryGetString_]
-==== tryGetString()
+==== tryGetString
 
 [source,java]
 ----
@@ -917,7 +917,7 @@ concept.tryGetString();
 ----
 
 [#_EntityType_tryGetStruct_]
-==== tryGetStruct()
+==== tryGetStruct
 
 [source,java]
 ----
@@ -939,7 +939,7 @@ concept.tryGetStruct();
 ----
 
 [#_EntityType_tryGetValue_]
-==== tryGetValue()
+==== tryGetValue
 
 [source,java]
 ----
@@ -962,7 +962,7 @@ concept.tryGetValue();
 ----
 
 [#_EntityType_tryGetValueType_]
-==== tryGetValueType()
+==== tryGetValueType
 
 [source,java]
 ----

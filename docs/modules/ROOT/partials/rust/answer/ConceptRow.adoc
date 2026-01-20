@@ -1,7 +1,7 @@
 [#_struct_ConceptRow]
 === ConceptRow
 
-`class`
+`struct`
 
 *Implements traits:*
 

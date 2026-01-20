@@ -1,7 +1,7 @@
 [#_enum_QueryType]
 === QueryType
 
-`class`
+`enum`
 
 This enum is used to specify the type of the query resulted in this answer.
 

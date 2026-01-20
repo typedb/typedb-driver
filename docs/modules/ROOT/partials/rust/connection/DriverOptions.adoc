@@ -1,7 +1,7 @@
 [#_struct_DriverOptions]
 === DriverOptions
 
-`class`
+`struct`
 
 *Implements traits:*
 

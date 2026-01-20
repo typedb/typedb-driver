@@ -1,7 +1,7 @@
 [#_struct_ReduceAssignment]
 === ReduceAssignment
 
-`class`
+`struct`
 
 *Implements traits:*
 

@@ -1,7 +1,7 @@
 [#_struct_EntityType]
 === EntityType
 
-`class`
+`struct`
 
 *Implements traits:*
 

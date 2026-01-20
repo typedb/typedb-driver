@@ -1,7 +1,7 @@
 [#_enum_ReturnOperation]
 === ReturnOperation
 
-`class`
+`enum`
 
 A representation of the return operation of the function
 

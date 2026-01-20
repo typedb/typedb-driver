@@ -2,7 +2,7 @@
 === reduceassignmentiterator
 
 [#_reduce_assignment_iterator_drop]
-==== reduce_assignment_iterator_drop()
+==== reduce_assignment_iterator_drop
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``ReduceAssignmentIterator`` object.
 `void`
 
 [#_reduce_assignment_iterator_next]
-==== reduce_assignment_iterator_next()
+==== reduce_assignment_iterator_next
 
 [source,cpp]
 ----

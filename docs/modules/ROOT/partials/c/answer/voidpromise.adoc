@@ -11,7 +11,7 @@
 Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
 
 [#_void_promise_drop]
-==== void_promise_drop()
+==== void_promise_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``VoidPromise`` object.
 `void`
 
 [#_void_promise_resolve]
-==== void_promise_resolve()
+==== void_promise_resolve
 
 [source,cpp]
 ----

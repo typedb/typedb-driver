@@ -1,7 +1,7 @@
 [#_struct_Database]
 === Database
 
-`class`
+`struct`
 
 *Implements traits:*
 

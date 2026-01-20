@@ -13,7 +13,7 @@ Represents an ‘offset’ stage: offset &lt;offset&gt;
 
 // tag::methods[]
 [#_OffsetStage_offset_]
-==== offset()
+==== offset
 
 [source,python]
 ----

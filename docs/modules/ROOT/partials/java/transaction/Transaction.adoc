@@ -11,7 +11,7 @@
 
 // tag::methods[]
 [#_Transaction_analyze_java_lang_String]
-==== analyze()
+==== analyze
 
 [source,java]
 ----
@@ -44,7 +44,7 @@ transaction.analyze("match $x isa person;");
 ----
 
 [#_Transaction_close_]
-==== close()
+==== close
 
 [source,java]
 ----
@@ -67,7 +67,7 @@ transaction.close()
 ----
 
 [#_Transaction_commit_]
-==== commit()
+==== commit
 
 [source,java]
 ----
@@ -90,7 +90,7 @@ transaction.commit()
 ----
 
 [#_Transaction_getType_]
-==== getType()
+==== getType
 
 [source,java]
 ----
@@ -113,7 +113,7 @@ transaction.getType();
 ----
 
 [#_Transaction_isOpen_]
-==== isOpen()
+==== isOpen
 
 [source,java]
 ----
@@ -136,7 +136,7 @@ transaction.isOpen();
 ----
 
 [#_Transaction_onClose_java_util_function_Consumer_java_lang_Throwable_]
-==== onClose()
+==== onClose
 
 [source,java]
 ----
@@ -167,7 +167,7 @@ transaction.onClose(function);
 ----
 
 [#_Transaction_options_]
-==== options()
+==== options
 
 [source,java]
 ----
@@ -182,7 +182,7 @@ The options for the transaction
 `TransactionOptions`
 
 [#_Transaction_query_java_lang_String]
-==== query()
+==== query
 
 [source,java]
 ----
@@ -215,7 +215,7 @@ transaction.query("define entity person;");
 ----
 
 [#_Transaction_query_java_lang_String_QueryOptions]
-==== query()
+==== query
 
 [source,java]
 ----
@@ -250,7 +250,7 @@ transaction.query("define entity person;");
 ----
 
 [#_Transaction_rollback_]
-==== rollback()
+==== rollback
 
 [source,java]
 ----

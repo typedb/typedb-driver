@@ -1,7 +1,7 @@
 [#_enum_Value]
 === Value
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

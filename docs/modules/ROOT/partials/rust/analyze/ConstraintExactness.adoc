@@ -1,7 +1,7 @@
 [#_enum_ConstraintExactness]
 === ConstraintExactness
 
-`class`
+`enum`
 
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. <code>isa!</code> would be represented as an <code>Constraint::Isa</code> with its exactness field <code>ConstraintExactness::Exact</code>.
 

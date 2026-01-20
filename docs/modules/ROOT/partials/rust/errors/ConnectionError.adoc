@@ -1,7 +1,7 @@
 [#_enum_ConnectionError]
 === ConnectionError
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

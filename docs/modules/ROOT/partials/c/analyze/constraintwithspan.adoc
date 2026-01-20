@@ -2,7 +2,7 @@
 === constraintwithspan
 
 [#_constraint_with_span_drop]
-==== constraint_with_span_drop()
+==== constraint_with_span_drop
 
 [source,cpp]
 ----

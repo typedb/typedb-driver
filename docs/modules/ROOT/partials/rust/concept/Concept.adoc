@@ -1,7 +1,7 @@
 [#_enum_Concept]
 === Concept
 
-`class`
+`enum`
 
 The fundamental TypeQL object.
 

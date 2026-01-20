@@ -13,7 +13,7 @@ Represents an ‘insert’ stage: insert &lt;block&gt;
 
 // tag::methods[]
 [#_InsertStage_block_]
-==== block()
+==== block
 
 [source,python]
 ----

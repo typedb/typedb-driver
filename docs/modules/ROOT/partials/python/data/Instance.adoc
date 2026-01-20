@@ -11,7 +11,7 @@
 
 // tag::methods[]
 [#_Instance_as_instance_]
-==== as_instance()
+==== as_instance
 
 [source,python]
 ----
@@ -32,7 +32,7 @@ instance.as_instance()
 ----
 
 [#_Instance_get_type_]
-==== get_type()
+==== get_type
 
 [source,python]
 ----
@@ -53,7 +53,7 @@ instance.get_type()
 ----
 
 [#_Instance_is_instance_]
-==== is_instance()
+==== is_instance
 
 [source,python]
 ----

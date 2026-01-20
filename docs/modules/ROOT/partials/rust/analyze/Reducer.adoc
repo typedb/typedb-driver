@@ -1,7 +1,7 @@
 [#_struct_Reducer]
 === Reducer
 
-`class`
+`struct`
 
 *Implements traits:*
 

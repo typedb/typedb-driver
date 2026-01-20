@@ -1,7 +1,7 @@
 [#_struct_ConceptDocument]
 === ConceptDocument
 
-`class`
+`struct`
 
 *Implements traits:*
 

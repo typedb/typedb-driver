@@ -1,7 +1,7 @@
 [#_struct_RelationType]
 === RelationType
 
-`class`
+`struct`
 
 *Implements traits:*
 

@@ -13,7 +13,7 @@ Entity types represent the classification of independent objects in the data mod
 
 // tag::methods[]
 [#_EntityType_as_entity_type_]
-==== as_entity_type()
+==== as_entity_type
 
 [source,python]
 ----
@@ -34,7 +34,7 @@ entity_type.as_entity_type()
 ----
 
 [#_EntityType_is_entity_type_]
-==== is_entity_type()
+==== is_entity_type
 
 [source,python]
 ----

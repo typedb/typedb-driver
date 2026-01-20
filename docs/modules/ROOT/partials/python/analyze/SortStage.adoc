@@ -13,7 +13,7 @@ Represents a ‘sort’ stage: sort &lt;variables-and-order&gt;
 
 // tag::methods[]
 [#_SortStage_variables_]
-==== variables()
+==== variables
 
 [source,python]
 ----

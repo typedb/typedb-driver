@@ -1,7 +1,7 @@
 [#_struct_Struct]
 === Struct
 
-`class`
+`struct`
 
 *Implements traits:*
 

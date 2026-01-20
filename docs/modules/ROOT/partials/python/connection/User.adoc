@@ -22,7 +22,7 @@ a| `name` a| `str` a| Returns the name of this user.
 
 // tag::methods[]
 [#_User_delete_username]
-==== delete()
+==== delete
 
 [source,python]
 ----
@@ -52,7 +52,7 @@ driver.users.delete(username)
 ----
 
 [#_User_update_password_password_old_password_new]
-==== update_password()
+==== update_password
 
 [source,python]
 ----

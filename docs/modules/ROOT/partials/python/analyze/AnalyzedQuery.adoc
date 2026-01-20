@@ -9,7 +9,7 @@ An AnalyzedQuery contains the server’s representation of the query and preambl
 
 // tag::methods[]
 [#_AnalyzedQuery_fetch_]
-==== fetch()
+==== fetch
 
 [source,python]
 ----
@@ -23,7 +23,7 @@ A representation of the Fetch stage of the query, if it has one.
 `'Fetch' | None`
 
 [#_AnalyzedQuery_pipeline_]
-==== pipeline()
+==== pipeline
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ A representation of the query as a Pipeline.
 `Pipeline`
 
 [#_AnalyzedQuery_preamble_]
-==== preamble()
+==== preamble
 
 [source,python]
 ----

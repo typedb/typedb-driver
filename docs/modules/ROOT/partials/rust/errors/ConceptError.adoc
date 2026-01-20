@@ -1,7 +1,7 @@
 [#_enum_ConceptError]
 === ConceptError
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

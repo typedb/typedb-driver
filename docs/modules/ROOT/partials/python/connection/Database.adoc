@@ -18,7 +18,7 @@ a| `name` a| `str` a| The database name as a string.
 
 // tag::methods[]
 [#_Database_delete_]
-==== delete()
+==== delete
 
 [source,python]
 ----
@@ -39,7 +39,7 @@ database.delete()
 ----
 
 [#_Database_export_to_file_schema_file_path_str_data_file_path_str]
-==== export_to_file()
+==== export_to_file
 
 [source,python]
 ----
@@ -70,7 +70,7 @@ database.export_to_file("schema.typeql", "data.typedb")
 ----
 
 [#_Database_schema_]
-==== schema()
+==== schema
 
 [source,python]
 ----
@@ -91,7 +91,7 @@ database.schema()
 ----
 
 [#_Database_type_schema_]
-==== type_schema()
+==== type_schema
 
 [source,python]
 ----

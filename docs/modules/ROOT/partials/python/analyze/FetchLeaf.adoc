@@ -13,7 +13,7 @@ The leaf of a Fetch object. Holds information on the value it can hold.
 
 // tag::methods[]
 [#_FetchLeaf_annotations_]
-==== annotations()
+==== annotations
 
 [source,python]
 ----

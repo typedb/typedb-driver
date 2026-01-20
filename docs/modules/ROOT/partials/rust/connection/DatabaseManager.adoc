@@ -1,7 +1,7 @@
 [#_struct_DatabaseManager]
 === DatabaseManager
 
-`class`
+`struct`
 
 *Implements traits:*
 

@@ -1,7 +1,7 @@
 [#_struct_TransactionOptions]
 === TransactionOptions
 
-`class`
+`struct`
 
 *Implements traits:*
 

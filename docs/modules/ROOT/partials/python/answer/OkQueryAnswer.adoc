@@ -13,7 +13,7 @@ Represents a simple Ok message as a server answer. Doesn’t contain concepts.
 
 // tag::methods[]
 [#_OkQueryAnswer_as_ok_]
-==== as_ok()
+==== as_ok
 
 [source,python]
 ----
@@ -34,7 +34,7 @@ query_answer.as_ok()
 ----
 
 [#_OkQueryAnswer_is_ok_]
-==== is_ok()
+==== is_ok
 
 [source,python]
 ----

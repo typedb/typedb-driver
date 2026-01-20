@@ -1,7 +1,7 @@
 [#_enum_Leaf]
 === Leaf
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

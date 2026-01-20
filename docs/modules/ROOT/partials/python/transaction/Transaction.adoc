@@ -19,7 +19,7 @@ a| `type` a| `TransactionType` a| The transaction’s type (READ, WRITE, or SCHE
 
 // tag::methods[]
 [#_Transaction_close_]
-==== close()
+==== close
 
 [source,python]
 ----
@@ -40,7 +40,7 @@ transaction.close()
 ----
 
 [#_Transaction_commit_]
-==== commit()
+==== commit
 
 [source,python]
 ----
@@ -61,7 +61,7 @@ transaction.commit()
 ----
 
 [#_Transaction_is_open_]
-==== is_open()
+==== is_open
 
 [source,python]
 ----
@@ -82,7 +82,7 @@ transaction.is_open()
 ----
 
 [#_Transaction_on_close_function_Callable]
-==== on_close()
+==== on_close
 
 [source,python]
 ----
@@ -112,7 +112,7 @@ transaction.on_close(function)
 ----
 
 [#_Transaction_query_query_str_options_QueryOptions_None]
-==== query()
+==== query
 
 [source,python]
 ----
@@ -143,7 +143,7 @@ transaction.query("define entity person;", options).resolve()
 ----
 
 [#_Transaction_rollback_]
-==== rollback()
+==== rollback
 
 [source,python]
 ----

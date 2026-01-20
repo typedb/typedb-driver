@@ -1,7 +1,7 @@
 [#_enum_TransactionType]
 === TransactionType
 
-`class`
+`enum`
 
 This enum is used to specify the type of transaction.
 

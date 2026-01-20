@@ -1,7 +1,7 @@
 [#_enum_QueryAnswer]
 === QueryAnswer
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

@@ -1,7 +1,7 @@
 [#_trait_Promise]
 === Trait Promise
 
-`class`
+`struct`
 
 [tabs]
 ====

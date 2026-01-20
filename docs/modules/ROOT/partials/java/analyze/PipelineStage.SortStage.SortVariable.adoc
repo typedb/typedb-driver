@@ -9,7 +9,7 @@ A variable and its sort order
 
 // tag::methods[]
 [#_PipelineStage_SortStage_SortVariable_order_]
-==== order()
+==== order
 
 [source,java]
 ----
@@ -23,7 +23,7 @@ The sort order (ascending or descending)
 `com.typedb.driver.jni.SortOrder`
 
 [#_PipelineStage_SortStage_SortVariable_variable_]
-==== variable()
+==== variable
 
 [source,java]
 ----

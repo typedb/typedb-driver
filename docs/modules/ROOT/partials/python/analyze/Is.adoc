@@ -13,7 +13,7 @@ Represents an ‘is’ constraint: &lt;lhs&gt; is &lt;rhs&gt;
 
 // tag::methods[]
 [#_Is_lhs_]
-==== lhs()
+==== lhs
 
 [source,python]
 ----
@@ -27,7 +27,7 @@ lhs() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Is_rhs_]
-==== rhs()
+==== rhs
 
 [source,python]
 ----

@@ -1,7 +1,7 @@
 [#_enum_TypeAnnotations]
 === TypeAnnotations
 
-`class`
+`enum`
 
 The category of a variable, and the possible types determined by type-inference.
 

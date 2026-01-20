@@ -12,7 +12,7 @@ TypeDB transaction options. ``TransactionOptions`` object can be used to overrid
 
 
 [#_transaction_options_drop]
-==== transaction_options_drop()
+==== transaction_options_drop
 
 [source,cpp]
 ----
@@ -28,7 +28,7 @@ Frees the native Rust ``TransactionOptions`` object.
 `void`
 
 [#_transaction_options_get_schema_lock_acquire_timeout_millis]
-==== transaction_options_get_schema_lock_acquire_timeout_millis()
+==== transaction_options_get_schema_lock_acquire_timeout_millis
 
 [source,cpp]
 ----
@@ -44,7 +44,7 @@ Returns the value set for the schema lock acquire timeout in this ``TransactionO
 `int64_t`
 
 [#_transaction_options_get_transaction_timeout_millis]
-==== transaction_options_get_transaction_timeout_millis()
+==== transaction_options_get_transaction_timeout_millis
 
 [source,cpp]
 ----
@@ -60,7 +60,7 @@ Returns the value set for the transaction timeout in this ``TransactionOptions``
 `int64_t`
 
 [#_transaction_options_has_schema_lock_acquire_timeout_millis]
-==== transaction_options_has_schema_lock_acquire_timeout_millis()
+==== transaction_options_has_schema_lock_acquire_timeout_millis
 
 [source,cpp]
 ----
@@ -76,7 +76,7 @@ Checks whether the option for schema lock acquire timeout was explicitly set for
 `bool`
 
 [#_transaction_options_has_transaction_timeout_millis]
-==== transaction_options_has_transaction_timeout_millis()
+==== transaction_options_has_transaction_timeout_millis
 
 [source,cpp]
 ----
@@ -92,7 +92,7 @@ Checks whether the option for transaction timeout was explicitly set for this ``
 `bool`
 
 [#_transaction_options_new]
-==== transaction_options_new()
+==== transaction_options_new
 
 [source,cpp]
 ----
@@ -108,7 +108,7 @@ Produces a new ``TransactionOptions`` object.
 `struct TransactionOptions*`
 
 [#_transaction_options_set_schema_lock_acquire_timeout_millis]
-==== transaction_options_set_schema_lock_acquire_timeout_millis()
+==== transaction_options_set_schema_lock_acquire_timeout_millis
 
 [source,cpp]
 ----
@@ -124,7 +124,7 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 `void`
 
 [#_transaction_options_set_transaction_timeout_millis]
-==== transaction_options_set_transaction_timeout_millis()
+==== transaction_options_set_transaction_timeout_millis
 
 [source,cpp]
 ----

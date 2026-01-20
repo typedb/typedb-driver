@@ -1,7 +1,7 @@
 [#_struct_SortVariable]
 === SortVariable
 
-`class`
+`struct`
 
 *Implements traits:*
 

@@ -1,7 +1,7 @@
 [#_enum_Fetch]
 === Fetch
 
-`class`
+`enum`
 
 A representation of the ‘fetch’ stage of a query
 

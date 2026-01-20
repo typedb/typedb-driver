@@ -7,7 +7,7 @@
 
 // tag::methods[]
 [#_Duration_equals_java_lang_Object]
-==== equals()
+==== equals
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ label.equals(obj);
 ----
 
 [#_Duration_getDatePart_]
-==== getDatePart()
+==== getDatePart
 
 [source,java]
 ----
@@ -60,7 +60,7 @@ duration.getDatePart();
 ----
 
 [#_Duration_getDays_]
-==== getDays()
+==== getDays
 
 [source,java]
 ----
@@ -82,7 +82,7 @@ duration.getMonths();
 ----
 
 [#_Duration_getMonths_]
-==== getMonths()
+==== getMonths
 
 [source,java]
 ----
@@ -104,7 +104,7 @@ duration.getMonths();
 ----
 
 [#_Duration_getNano_]
-==== getNano()
+==== getNano
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ duration.getNano();
 ----
 
 [#_Duration_getSeconds_]
-==== getSeconds()
+==== getSeconds
 
 [source,java]
 ----
@@ -148,7 +148,7 @@ duration.getSeconds();
 ----
 
 [#_Duration_getTimePart_]
-==== getTimePart()
+==== getTimePart
 
 [source,java]
 ----
@@ -170,7 +170,7 @@ duration.getTimePart();
 ----
 
 [#_Duration_parse_java_lang_String]
-==== parse()
+==== parse
 
 [source,java]
 ----
@@ -202,7 +202,7 @@ Duration.parse("P1Y10M7DT15H44M5.00394892S");
 ----
 
 [#_Duration_toString_]
-==== toString()
+==== toString
 
 [source,java]
 ----

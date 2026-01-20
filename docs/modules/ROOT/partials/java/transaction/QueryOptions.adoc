@@ -9,7 +9,7 @@ TypeDB transaction options. ``QueryOptions`` object can be used to override the 
 
 // tag::methods[]
 [#_QueryOptions_QueryOptions_]
-==== QueryOptions()
+==== QueryOptions
 
 [source,java]
 ----
@@ -31,7 +31,7 @@ QueryOptions options = QueryOptions();
 ----
 
 [#_QueryOptions_includeInstanceTypes_]
-==== includeInstanceTypes()
+==== includeInstanceTypes
 
 [source,java]
 ----
@@ -54,7 +54,7 @@ options.includeInstanceTypes();
 ----
 
 [#_QueryOptions_includeInstanceTypes_boolean]
-==== includeInstanceTypes()
+==== includeInstanceTypes
 
 [source,java]
 ----
@@ -85,7 +85,7 @@ options.includeInstanceTypes(includeInstanceTypes);
 ----
 
 [#_QueryOptions_includeQueryStructure_]
-==== includeQueryStructure()
+==== includeQueryStructure
 
 [source,java]
 ----
@@ -116,7 +116,7 @@ options.includeQueryStructure();
 ----
 
 [#_QueryOptions_includeQueryStructure_boolean]
-==== includeQueryStructure()
+==== includeQueryStructure
 
 [source,java]
 ----
@@ -147,7 +147,7 @@ options.includeQueryStructure(true);
 ----
 
 [#_QueryOptions_prefetchSize_]
-==== prefetchSize()
+==== prefetchSize
 
 [source,java]
 ----
@@ -170,7 +170,7 @@ options.prefetchSize();
 ----
 
 [#_QueryOptions_prefetchSize_int]
-==== prefetchSize()
+==== prefetchSize
 
 [source,java]
 ----

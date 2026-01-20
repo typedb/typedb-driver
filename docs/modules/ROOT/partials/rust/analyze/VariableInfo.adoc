@@ -1,7 +1,7 @@
 [#_struct_VariableInfo]
 === VariableInfo
 
-`class`
+`struct`
 
 *Implements traits:*
 

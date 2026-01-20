@@ -1,7 +1,7 @@
 [#_enum_JSON]
 === JSON
 
-`class`
+`enum`
 
 [caption=""]
 .Enum variants

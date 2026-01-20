@@ -9,7 +9,7 @@ Provides access to all user management methods.
 
 // tag::methods[]
 [#_UserManager_all_]
-==== all()
+==== all
 
 [source,python]
 ----
@@ -30,7 +30,7 @@ driver.users.all()
 ----
 
 [#_UserManager_contains_username_str]
-==== contains()
+==== contains
 
 [source,python]
 ----
@@ -60,7 +60,7 @@ driver.users.contains(username)
 ----
 
 [#_UserManager_create_username_str_password_str]
-==== create()
+==== create
 
 [source,python]
 ----
@@ -91,7 +91,7 @@ driver.users.create(username, password)
 ----
 
 [#_UserManager_get_username_str]
-==== get()
+==== get
 
 [source,python]
 ----
@@ -121,7 +121,7 @@ driver.users.get(username)
 ----
 
 [#_UserManager_get_current_user_]
-==== get_current_user()
+==== get_current_user
 
 [source,python]
 ----

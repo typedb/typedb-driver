@@ -22,7 +22,7 @@ a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this 
 
 // tag::methods[]
 [#_QueryAnswer_as_concept_documents_]
-==== as_concept_documents()
+==== as_concept_documents
 
 [source,python]
 ----
@@ -43,7 +43,7 @@ query_answer.as_concept_documents()
 ----
 
 [#_QueryAnswer_as_concept_rows_]
-==== as_concept_rows()
+==== as_concept_rows
 
 [source,python]
 ----
@@ -64,7 +64,7 @@ query_answer.as_concept_rows()
 ----
 
 [#_QueryAnswer_as_ok_]
-==== as_ok()
+==== as_ok
 
 [source,python]
 ----
@@ -85,7 +85,7 @@ query_answer.as_ok()
 ----
 
 [#_QueryAnswer_is_concept_documents_]
-==== is_concept_documents()
+==== is_concept_documents
 
 [source,python]
 ----
@@ -106,7 +106,7 @@ query_answer.is_concept_documents()
 ----
 
 [#_QueryAnswer_is_concept_rows_]
-==== is_concept_rows()
+==== is_concept_rows
 
 [source,python]
 ----
@@ -127,7 +127,7 @@ query_answer.is_concept_rows()
 ----
 
 [#_QueryAnswer_is_ok_]
-==== is_ok()
+==== is_ok
 
 [source,python]
 ----

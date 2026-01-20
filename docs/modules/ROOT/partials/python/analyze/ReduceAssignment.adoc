@@ -9,7 +9,7 @@ An assignment of a reducer to a variable.
 
 // tag::methods[]
 [#_ReduceAssignment_assigned_]
-==== assigned()
+==== assigned
 
 [source,python]
 ----
@@ -23,7 +23,7 @@ assigned() -> Variable
 `Variable`
 
 [#_ReduceAssignment_reducer_]
-==== reducer()
+==== reducer
 
 [source,python]
 ----

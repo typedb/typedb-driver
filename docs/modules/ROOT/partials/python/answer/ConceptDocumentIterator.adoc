@@ -13,7 +13,7 @@ Represents an iterator over ``ConceptRow``s returned as a server answer.
 
 // tag::methods[]
 [#_ConceptDocumentIterator_as_concept_documents_]
-==== as_concept_documents()
+==== as_concept_documents
 
 [source,python]
 ----
@@ -34,7 +34,7 @@ query_answer.as_concept_documents()
 ----
 
 [#_ConceptDocumentIterator_is_concept_documents_]
-==== is_concept_documents()
+==== is_concept_documents
 
 [source,python]
 ----

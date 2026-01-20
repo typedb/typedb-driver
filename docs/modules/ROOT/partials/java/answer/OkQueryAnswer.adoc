@@ -13,7 +13,7 @@ Represents a simple Ok message as a server answer. Doesn't contain concepts.
 
 // tag::methods[]
 [#_OkQueryAnswer_asConceptDocuments_]
-==== asConceptDocuments()
+==== asConceptDocuments
 
 [source,java]
 ----
@@ -35,7 +35,7 @@ concept.asConceptDocuments();
 ----
 
 [#_OkQueryAnswer_asConceptRows_]
-==== asConceptRows()
+==== asConceptRows
 
 [source,java]
 ----
@@ -57,7 +57,7 @@ concept.asConceptRows();
 ----
 
 [#_OkQueryAnswer_asOk_]
-==== asOk()
+==== asOk
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ concept.asOk();
 ----
 
 [#_OkQueryAnswer_getQueryType_]
-==== getQueryType()
+==== getQueryType
 
 [source,java]
 ----
@@ -103,7 +103,7 @@ queryAnswer.getQueryType();
 ----
 
 [#_OkQueryAnswer_isConceptDocuments_]
-==== isConceptDocuments()
+==== isConceptDocuments
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ concept.isConceptDocuments();
 ----
 
 [#_OkQueryAnswer_isConceptRows_]
-==== isConceptRows()
+==== isConceptRows
 
 [source,java]
 ----
@@ -149,7 +149,7 @@ concept.isConceptRows();
 ----
 
 [#_OkQueryAnswer_isOk_]
-==== isOk()
+==== isOk
 
 [source,java]
 ----

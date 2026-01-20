@@ -13,7 +13,7 @@ Represents a value constraint: &lt;attribute_type&gt; value &lt;value_type&gt;
 
 // tag::methods[]
 [#_Value_attribute_type_]
-==== attribute_type()
+==== attribute_type
 
 [source,python]
 ----
@@ -27,7 +27,7 @@ attribute_type() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Value_value_type_]
-==== value_type()
+==== value_type
 
 [source,python]
 ----

@@ -1,7 +1,7 @@
 [#_struct_AnalyzedQuery]
 === AnalyzedQuery
 
-`class`
+`struct`
 
 *Implements traits:*
 
