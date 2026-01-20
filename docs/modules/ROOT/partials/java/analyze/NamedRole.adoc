@@ -1,5 +1,5 @@
 [#_NamedRole]
-=== NamedRole
+=== class NamedRole
 
 *Package*: `com.typedb.driver.api.analyze`
 

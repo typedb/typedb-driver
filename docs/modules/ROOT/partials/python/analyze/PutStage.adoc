@@ -1,5 +1,5 @@
 [#_PutStage]
-=== PutStage
+=== class PutStage
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

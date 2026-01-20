@@ -2,7 +2,7 @@
 === queryoptions
 
 [#_Struct_QueryOptions]
-==== Struct QueryOptions
+==== class Struct QueryOptions
 
 
 

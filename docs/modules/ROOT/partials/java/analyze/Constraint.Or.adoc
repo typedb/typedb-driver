@@ -1,5 +1,5 @@
 [#_Constraint_Or]
-=== Constraint.Or
+=== class Constraint.Or
 
 *Package*: `com.typedb.driver.api.analyze`
 

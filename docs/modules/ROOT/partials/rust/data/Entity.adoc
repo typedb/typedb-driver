@@ -1,5 +1,5 @@
 [#_struct_Entity]
-=== Entity
+=== enum Entity
 
 *Implements traits:*
 

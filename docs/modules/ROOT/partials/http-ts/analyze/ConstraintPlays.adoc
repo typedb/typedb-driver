@@ -1,5 +1,5 @@
 [#_ConstraintPlays]
-==== ConstraintPlays
+==== class ConstraintPlays
 
 [caption=""]
 .Fields

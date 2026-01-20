@@ -1,5 +1,5 @@
 [#_Owns]
-=== Owns
+=== class Owns
 
 *Package*: `typedb.api.analyze.constraint`
 

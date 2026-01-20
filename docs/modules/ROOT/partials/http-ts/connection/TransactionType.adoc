@@ -1,5 +1,5 @@
 [#_TransactionType]
-=== TransactionType
+=== class TransactionType
 
 [source,typescript]
 ----

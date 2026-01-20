@@ -1,5 +1,5 @@
 [#_Label]
-=== Label
+=== class Label
 
 *Package*: `typedb.api.analyze.constraint`
 

@@ -1,5 +1,5 @@
 [#_QueryAnswer]
-=== QueryAnswer
+=== class QueryAnswer
 
 *Package*: `com.typedb.driver.api.answer`
 

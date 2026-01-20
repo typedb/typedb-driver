@@ -2,7 +2,7 @@
 === stringiterator
 
 [#_Struct_StringIterator]
-==== Struct StringIterator
+==== class Struct StringIterator
 
 
 

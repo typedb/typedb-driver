@@ -2,7 +2,7 @@
 === fetch
 
 [#_Struct_Fetch]
-==== Struct Fetch
+==== class Struct Fetch
 
 
 

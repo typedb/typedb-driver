@@ -1,5 +1,5 @@
 [#_trait_Promise]
-=== Trait Promise
+=== enum Trait Promise
 
 [tabs]
 ====

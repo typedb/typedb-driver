@@ -1,5 +1,5 @@
 [#_Database]
-=== Database
+=== class Database
 
 *Package*: `typedb.api.connection.database`
 

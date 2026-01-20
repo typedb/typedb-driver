@@ -2,7 +2,7 @@
 === error
 
 [#_Struct_Error]
-==== Struct Error
+==== class Struct Error
 
 
 

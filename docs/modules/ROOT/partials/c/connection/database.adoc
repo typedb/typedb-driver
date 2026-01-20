@@ -2,7 +2,7 @@
 === database
 
 [#_Struct_Database]
-==== Struct Database
+==== class Struct Database
 
 
 

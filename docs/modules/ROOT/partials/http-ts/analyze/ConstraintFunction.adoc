@@ -1,5 +1,5 @@
 [#_ConstraintFunction]
-==== ConstraintFunction
+==== class ConstraintFunction
 
 [caption=""]
 .Fields

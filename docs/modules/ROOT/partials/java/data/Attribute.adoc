@@ -1,5 +1,5 @@
 [#_Attribute]
-=== Attribute
+=== class Attribute
 
 *Package*: `com.typedb.driver.api.concept.instance`
 

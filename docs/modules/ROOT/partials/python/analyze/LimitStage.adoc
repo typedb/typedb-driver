@@ -1,5 +1,5 @@
 [#_LimitStage]
-=== LimitStage
+=== class LimitStage
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

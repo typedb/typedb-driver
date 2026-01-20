@@ -2,14 +2,14 @@
 === comparator
 
 [#_Struct_Comparator]
-==== Struct Comparator
+==== class Struct Comparator
 
 
 
 A representation of the comparator used in a comparison constraint.
 
 [#_Enum_Comparator]
-==== Enum Comparator
+==== class Enum Comparator
 
 
 

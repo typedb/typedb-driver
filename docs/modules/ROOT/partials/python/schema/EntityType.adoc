@@ -1,5 +1,5 @@
 [#_EntityType]
-=== EntityType
+=== class EntityType
 
 *Package*: `typedb.api.concept.type.entity_type`
 

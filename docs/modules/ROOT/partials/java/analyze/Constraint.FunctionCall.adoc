@@ -1,5 +1,5 @@
 [#_Constraint_FunctionCall]
-=== Constraint.FunctionCall
+=== class Constraint.FunctionCall
 
 *Package*: `com.typedb.driver.api.analyze`
 

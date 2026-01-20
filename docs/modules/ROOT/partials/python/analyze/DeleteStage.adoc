@@ -1,5 +1,5 @@
 [#_DeleteStage]
-=== DeleteStage
+=== class DeleteStage
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

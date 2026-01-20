@@ -2,7 +2,7 @@
 === reducer
 
 [#_Struct_Reducer]
-==== Struct Reducer
+==== class Struct Reducer
 
 
 

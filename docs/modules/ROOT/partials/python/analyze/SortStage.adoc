@@ -1,5 +1,5 @@
 [#_SortStage]
-=== SortStage
+=== class SortStage
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

@@ -1,5 +1,5 @@
 [#_struct_Database]
-=== Database
+=== enum Database
 
 *Implements traits:*
 

@@ -1,5 +1,5 @@
 [#_QueryConjunctionLegacy]
-=== QueryConjunctionLegacy
+=== class QueryConjunctionLegacy
 
 [caption=""]
 .Fields

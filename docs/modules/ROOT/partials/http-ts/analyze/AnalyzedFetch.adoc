@@ -1,5 +1,5 @@
 [#_AnalyzedFetch]
-=== AnalyzedFetch
+=== class AnalyzedFetch
 
 [source,typescript]
 ----

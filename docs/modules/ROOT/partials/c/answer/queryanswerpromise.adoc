@@ -2,7 +2,7 @@
 === queryanswerpromise
 
 [#_Struct_QueryAnswerPromise]
-==== Struct QueryAnswerPromise
+==== class Struct QueryAnswerPromise
 
 
 

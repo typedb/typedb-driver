@@ -1,5 +1,5 @@
 [#_Comparison]
-=== Comparison
+=== class Comparison
 
 *Package*: `typedb.api.analyze.constraint`
 

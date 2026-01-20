@@ -1,5 +1,5 @@
 [#_AttributeType]
-=== AttributeType
+=== class AttributeType
 
 *Package*: `com.typedb.driver.api.concept.type`
 

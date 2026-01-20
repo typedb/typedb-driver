@@ -1,5 +1,5 @@
 [#_FunctionCall]
-=== FunctionCall
+=== class FunctionCall
 
 *Package*: `typedb.api.analyze.constraint`
 

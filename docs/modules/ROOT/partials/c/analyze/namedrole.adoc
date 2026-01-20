@@ -2,7 +2,7 @@
 === namedrole
 
 [#_Struct_NamedRole]
-==== Struct NamedRole
+==== class Struct NamedRole
 
 
 

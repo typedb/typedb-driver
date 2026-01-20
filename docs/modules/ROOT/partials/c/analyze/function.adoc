@@ -2,7 +2,7 @@
 === function
 
 [#_Struct_Function]
-==== Struct Function
+==== class Struct Function
 
 
 

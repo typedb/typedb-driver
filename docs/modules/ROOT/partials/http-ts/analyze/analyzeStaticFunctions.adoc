@@ -1,5 +1,5 @@
 [#_analyzeStaticFunctions]
-=== Static Functions
+=== class Static Functions
 
 // tag::methods[]
 [#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable]

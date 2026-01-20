@@ -1,5 +1,5 @@
 [#_PipelineStage_UpdateStage]
-=== PipelineStage.UpdateStage
+=== class PipelineStage.UpdateStage
 
 *Package*: `com.typedb.driver.api.analyze`
 

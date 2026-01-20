@@ -1,5 +1,5 @@
 [#_ConstraintExactness]
-=== ConstraintExactness
+=== class ConstraintExactness
 
 *Package*: `typedb.common.enums`
 

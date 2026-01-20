@@ -1,5 +1,5 @@
 [#_Conjunction]
-=== Conjunction
+=== class Conjunction
 
 *Package*: `typedb.api.analyze.conjunction`
 

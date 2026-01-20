@@ -1,5 +1,5 @@
 [#_TransactionOptions]
-=== TransactionOptions
+=== class TransactionOptions
 
 *Package*: `typedb.api.connection.transaction_options`
 

@@ -1,5 +1,5 @@
 [#_FetchList]
-=== FetchList
+=== class FetchList
 
 *Package*: `typedb.api.analyze.fetch`
 

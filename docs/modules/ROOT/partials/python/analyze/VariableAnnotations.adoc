@@ -1,5 +1,5 @@
 [#_VariableAnnotations]
-=== VariableAnnotations
+=== class VariableAnnotations
 
 *Package*: `typedb.api.analyze.variable_annotations`
 

@@ -1,5 +1,5 @@
 [#_JSON]
-=== JSON
+=== class JSON
 
 *Package*: `com.typedb.driver.api.answer`
 

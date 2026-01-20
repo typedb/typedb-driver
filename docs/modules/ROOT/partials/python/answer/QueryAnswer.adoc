@@ -1,5 +1,5 @@
 [#_QueryAnswer]
-=== QueryAnswer
+=== class QueryAnswer
 
 *Package*: `typedb.api.answer.query_answer`
 

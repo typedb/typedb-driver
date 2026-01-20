@@ -1,5 +1,5 @@
 [#_struct_SortVariable]
-=== SortVariable
+=== enum SortVariable
 
 *Implements traits:*
 

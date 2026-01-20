@@ -1,5 +1,5 @@
 [#_AnalyzedFunction]
-=== AnalyzedFunction
+=== class AnalyzedFunction
 
 [caption=""]
 .Fields

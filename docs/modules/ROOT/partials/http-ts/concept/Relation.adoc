@@ -1,5 +1,5 @@
 [#_Relation]
-=== Relation
+=== class Relation
 
 [caption=""]
 .Fields

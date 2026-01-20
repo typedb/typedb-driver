@@ -1,5 +1,5 @@
 [#_struct_ReduceAssignment]
-=== ReduceAssignment
+=== enum ReduceAssignment
 
 *Implements traits:*
 

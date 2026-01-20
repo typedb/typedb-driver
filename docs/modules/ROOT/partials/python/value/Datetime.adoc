@@ -1,5 +1,5 @@
 [#_Datetime]
-=== Datetime
+=== class Datetime
 
 *Package*: `typedb.common.datetime`
 

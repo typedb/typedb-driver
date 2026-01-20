@@ -1,5 +1,5 @@
 [#_ConstraintVertexAny]
-==== ConstraintVertexAny
+==== class ConstraintVertexAny
 
 [source,typescript]
 ----

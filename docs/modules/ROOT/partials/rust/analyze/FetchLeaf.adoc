@@ -1,5 +1,5 @@
 [#_struct_FetchLeaf]
-=== FetchLeaf
+=== enum FetchLeaf
 
 *Implements traits:*
 

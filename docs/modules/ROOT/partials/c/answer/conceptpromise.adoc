@@ -2,7 +2,7 @@
 === conceptpromise
 
 [#_Struct_ConceptPromise]
-==== Struct ConceptPromise
+==== class Struct ConceptPromise
 
 
 

@@ -1,5 +1,5 @@
 [#_enum_MigrationError]
-=== MigrationError
+=== struct MigrationError
 
 [caption=""]
 .Enum variants

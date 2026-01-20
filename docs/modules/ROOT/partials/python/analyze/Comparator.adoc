@@ -1,5 +1,5 @@
 [#_Comparator]
-=== Comparator
+=== class Comparator
 
 *Package*: `typedb.common.enums`
 

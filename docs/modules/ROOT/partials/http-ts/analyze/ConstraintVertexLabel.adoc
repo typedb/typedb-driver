@@ -1,5 +1,5 @@
 [#_ConstraintVertexLabel]
-==== ConstraintVertexLabel
+==== class ConstraintVertexLabel
 
 [caption=""]
 .Fields

@@ -1,5 +1,5 @@
 [#_ConceptRowAnswer]
-=== ConceptRowAnswer
+=== class ConceptRowAnswer
 
 [caption=""]
 .Fields

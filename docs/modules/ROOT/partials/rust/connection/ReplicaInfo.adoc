@@ -1,5 +1,5 @@
 [#_struct_ReplicaInfo]
-=== ReplicaInfo
+=== enum ReplicaInfo
 
 *Implements traits:*
 

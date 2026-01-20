@@ -1,5 +1,5 @@
 [#_struct_ConjunctionID]
-=== ConjunctionID
+=== enum ConjunctionID
 
 *Implements traits:*
 

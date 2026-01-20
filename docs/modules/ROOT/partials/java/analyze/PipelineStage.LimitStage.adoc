@@ -1,5 +1,5 @@
 [#_PipelineStage_LimitStage]
-=== PipelineStage.LimitStage
+=== class PipelineStage.LimitStage
 
 *Package*: `com.typedb.driver.api.analyze`
 

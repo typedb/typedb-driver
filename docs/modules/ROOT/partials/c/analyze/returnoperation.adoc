@@ -2,7 +2,7 @@
 === returnoperation
 
 [#_Struct_ReturnOperation]
-==== Struct ReturnOperation
+==== class Struct ReturnOperation
 
 
 

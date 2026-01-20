@@ -1,5 +1,5 @@
 [#_ConstraintVertex]
-=== ConstraintVertex
+=== class ConstraintVertex
 
 *Package*: `typedb.api.analyze.constraint_vertex`
 

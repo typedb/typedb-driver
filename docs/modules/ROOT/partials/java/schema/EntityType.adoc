@@ -1,5 +1,5 @@
 [#_EntityType]
-=== EntityType
+=== class EntityType
 
 *Package*: `com.typedb.driver.api.concept.type`
 

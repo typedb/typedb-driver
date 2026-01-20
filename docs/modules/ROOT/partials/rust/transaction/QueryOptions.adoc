@@ -1,5 +1,5 @@
 [#_struct_QueryOptions]
-=== QueryOptions
+=== enum QueryOptions
 
 *Implements traits:*
 

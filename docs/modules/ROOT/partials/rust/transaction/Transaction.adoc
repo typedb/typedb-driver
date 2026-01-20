@@ -1,5 +1,5 @@
 [#_struct_Transaction]
-=== Transaction
+=== enum Transaction
 
 *Implements traits:*
 

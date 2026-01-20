@@ -1,5 +1,5 @@
 [#_ReturnOperationSingle]
-=== ReturnOperationSingle
+=== class ReturnOperationSingle
 
 *Package*: `typedb.api.analyze.function`
 

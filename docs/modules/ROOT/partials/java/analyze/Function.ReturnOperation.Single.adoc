@@ -1,5 +1,5 @@
 [#_Function_ReturnOperation_Single]
-=== Function.ReturnOperation.Single
+=== class Function.ReturnOperation.Single
 
 *Package*: `com.typedb.driver.api.analyze`
 

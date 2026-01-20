@@ -1,5 +1,5 @@
 [#_InstantiableType]
-=== InstantiableType
+=== class InstantiableType
 
 [source,typescript]
 ----

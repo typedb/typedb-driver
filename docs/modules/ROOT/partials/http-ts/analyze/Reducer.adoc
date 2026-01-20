@@ -1,5 +1,5 @@
 [#_Reducer]
-=== Reducer
+=== class Reducer
 
 [caption=""]
 .Fields

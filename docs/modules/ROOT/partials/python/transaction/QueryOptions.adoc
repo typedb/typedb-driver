@@ -1,5 +1,5 @@
 [#_QueryOptions]
-=== QueryOptions
+=== class QueryOptions
 
 *Package*: `typedb.api.connection.query_options`
 

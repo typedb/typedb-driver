@@ -1,5 +1,5 @@
 [#_ConstraintIsaExact]
-==== ConstraintIsaExact
+==== class ConstraintIsaExact
 
 [caption=""]
 .Fields

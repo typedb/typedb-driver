@@ -2,7 +2,7 @@
 === constraintvertex
 
 [#_Struct_ConstraintVertex]
-==== Struct ConstraintVertex
+==== class Struct ConstraintVertex
 
 
 

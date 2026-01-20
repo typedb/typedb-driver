@@ -1,5 +1,5 @@
 [#_Instance]
-=== Instance
+=== class Instance
 
 *Package*: `typedb.api.concept.instance.instance`
 

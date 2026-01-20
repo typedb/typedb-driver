@@ -1,5 +1,5 @@
 [#_DriverOptions]
-=== DriverOptions
+=== class DriverOptions
 
 *Package*: `typedb.api.connection.driver_options`
 

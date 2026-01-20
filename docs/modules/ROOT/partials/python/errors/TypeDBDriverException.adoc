@@ -1,5 +1,5 @@
 [#_TypeDBDriverException]
-=== TypeDBDriverException
+=== class TypeDBDriverException
 
 *Package*: `typedb.common.exception`
 

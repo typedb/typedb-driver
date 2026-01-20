@@ -2,7 +2,7 @@
 === databaseiterator
 
 [#_Struct_DatabaseIterator]
-==== Struct DatabaseIterator
+==== class Struct DatabaseIterator
 
 
 

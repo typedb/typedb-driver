@@ -1,5 +1,5 @@
 [#_ConstraintComparison]
-==== ConstraintComparison
+==== class ConstraintComparison
 
 [caption=""]
 .Fields

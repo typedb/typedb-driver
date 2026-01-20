@@ -2,7 +2,7 @@
 === transactiontype
 
 [#_Struct_TransactionType]
-==== Struct TransactionType
+==== class Struct TransactionType
 
 
 
@@ -10,7 +10,7 @@ This enum is used to specify the type of transaction.
 
 
 [#_Enum_TransactionType]
-==== Enum TransactionType
+==== class Enum TransactionType
 
 
 

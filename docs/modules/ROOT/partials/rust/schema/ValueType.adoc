@@ -1,5 +1,5 @@
 [#_enum_ValueType]
-=== ValueType
+=== struct ValueType
 
 Represents the type of primitive value is held by a Value or Attribute.
 

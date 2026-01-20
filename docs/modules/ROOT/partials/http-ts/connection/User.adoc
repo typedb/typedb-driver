@@ -1,5 +1,5 @@
 [#_User]
-=== User
+=== class User
 
 [caption=""]
 .Fields

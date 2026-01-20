@@ -1,5 +1,5 @@
 [#_Promise]
-=== Promise
+=== class Promise
 
 *Package*: `typedb.common.promise`
 

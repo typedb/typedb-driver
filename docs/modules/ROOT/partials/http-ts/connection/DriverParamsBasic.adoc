@@ -1,5 +1,5 @@
 [#_DriverParamsBasic]
-==== DriverParamsBasic
+==== class DriverParamsBasic
 
 [caption=""]
 .Fields

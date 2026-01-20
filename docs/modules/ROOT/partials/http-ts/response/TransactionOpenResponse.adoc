@@ -1,5 +1,5 @@
 [#_TransactionOpenResponse]
-=== TransactionOpenResponse
+=== class TransactionOpenResponse
 
 [caption=""]
 .Fields

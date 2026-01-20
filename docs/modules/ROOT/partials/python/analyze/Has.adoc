@@ -1,5 +1,5 @@
 [#_Has]
-=== Has
+=== class Has
 
 *Package*: `typedb.api.analyze.constraint`
 

@@ -1,5 +1,5 @@
 [#_RoleType]
-=== RoleType
+=== class RoleType
 
 *Package*: `typedb.api.concept.type.role_type`
 

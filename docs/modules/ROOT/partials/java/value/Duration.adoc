@@ -1,5 +1,5 @@
 [#_Duration]
-=== Duration
+=== class Duration
 
 *Package*: `com.typedb.driver.common`
 

@@ -1,5 +1,5 @@
 [#_Constraint_Owns]
-=== Constraint.Owns
+=== class Constraint.Owns
 
 *Package*: `com.typedb.driver.api.analyze`
 

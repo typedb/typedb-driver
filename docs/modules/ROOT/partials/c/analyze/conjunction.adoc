@@ -2,7 +2,7 @@
 === conjunction
 
 [#_Struct_Conjunction]
-==== Struct Conjunction
+==== class Struct Conjunction
 
 
 

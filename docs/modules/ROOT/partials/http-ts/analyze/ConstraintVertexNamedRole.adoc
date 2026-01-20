@@ -1,5 +1,5 @@
 [#_ConstraintVertexNamedRole]
-==== ConstraintVertexNamedRole
+==== class ConstraintVertexNamedRole
 
 [caption=""]
 .Fields

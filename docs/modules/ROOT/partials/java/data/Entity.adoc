@@ -1,5 +1,5 @@
 [#_Entity]
-=== Entity
+=== class Entity
 
 *Package*: `com.typedb.driver.api.concept.instance`
 

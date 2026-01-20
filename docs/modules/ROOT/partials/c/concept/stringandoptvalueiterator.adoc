@@ -2,7 +2,7 @@
 === stringandoptvalueiterator
 
 [#_Struct_StringAndOptValueIterator]
-==== Struct StringAndOptValueIterator
+==== class Struct StringAndOptValueIterator
 
 
 

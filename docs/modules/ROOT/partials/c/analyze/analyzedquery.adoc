@@ -2,7 +2,7 @@
 === analyzedquery
 
 [#_Struct_AnalyzedQuery]
-==== Struct AnalyzedQuery
+==== class Struct AnalyzedQuery
 
 
 

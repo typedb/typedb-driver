@@ -2,7 +2,7 @@
 === stringpromise
 
 [#_Struct_StringPromise]
-==== Struct StringPromise
+==== class Struct StringPromise
 
 
 

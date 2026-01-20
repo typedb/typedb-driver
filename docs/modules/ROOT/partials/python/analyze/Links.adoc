@@ -1,5 +1,5 @@
 [#_Links]
-=== Links
+=== class Links
 
 *Package*: `typedb.api.analyze.constraint`
 

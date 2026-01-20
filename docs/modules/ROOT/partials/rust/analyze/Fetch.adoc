@@ -1,5 +1,5 @@
 [#_enum_Fetch]
-=== Fetch
+=== struct Fetch
 
 A representation of the ‘fetch’ stage of a query
 

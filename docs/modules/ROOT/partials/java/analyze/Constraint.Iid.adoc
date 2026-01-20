@@ -1,5 +1,5 @@
 [#_Constraint_Iid]
-=== Constraint.Iid
+=== class Constraint.Iid
 
 *Package*: `com.typedb.driver.api.analyze`
 

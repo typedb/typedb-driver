@@ -1,5 +1,5 @@
 [#_QueryResponse]
-=== QueryResponse
+=== class QueryResponse
 
 [source,typescript]
 ----

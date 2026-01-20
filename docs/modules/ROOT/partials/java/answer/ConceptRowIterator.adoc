@@ -1,5 +1,5 @@
 [#_ConceptRowIterator]
-=== ConceptRowIterator
+=== class ConceptRowIterator
 
 *Package*: `com.typedb.driver.api.answer`
 

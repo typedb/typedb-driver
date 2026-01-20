@@ -1,5 +1,5 @@
 [#_NamedRole]
-=== NamedRole
+=== class NamedRole
 
 *Package*: `typedb.api.analyze.named_role`
 

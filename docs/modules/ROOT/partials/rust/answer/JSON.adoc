@@ -1,5 +1,5 @@
 [#_enum_JSON]
-=== JSON
+=== struct JSON
 
 [caption=""]
 .Enum variants

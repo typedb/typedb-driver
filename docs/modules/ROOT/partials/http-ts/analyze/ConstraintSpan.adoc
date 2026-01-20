@@ -1,5 +1,5 @@
 [#_ConstraintSpan]
-==== ConstraintSpan
+==== class ConstraintSpan
 
 [caption=""]
 .Fields

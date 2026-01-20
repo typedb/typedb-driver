@@ -2,7 +2,7 @@
 === stringandoptvalue
 
 [#_Struct_StringAndOptValue]
-==== Struct StringAndOptValue
+==== class Struct StringAndOptValue
 
 
 

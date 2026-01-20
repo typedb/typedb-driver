@@ -1,5 +1,5 @@
 [#_FunctionSingleReturnSelector]
-=== FunctionSingleReturnSelector
+=== class FunctionSingleReturnSelector
 
 [source,typescript]
 ----

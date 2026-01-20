@@ -1,5 +1,5 @@
 [#_enum_AnalyzeError]
-=== AnalyzeError
+=== struct AnalyzeError
 
 [caption=""]
 .Enum variants

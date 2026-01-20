@@ -1,5 +1,5 @@
 [#_ConstraintNot]
-==== ConstraintNot
+==== class ConstraintNot
 
 [caption=""]
 .Fields

@@ -1,5 +1,5 @@
 [#_Plays]
-=== Plays
+=== class Plays
 
 *Package*: `typedb.api.analyze.constraint`
 

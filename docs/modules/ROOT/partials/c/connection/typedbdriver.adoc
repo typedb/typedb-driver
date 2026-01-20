@@ -2,7 +2,7 @@
 === typedbdriver
 
 [#_Struct_TypeDBDriver]
-==== Struct TypeDBDriver
+==== class Struct TypeDBDriver
 
 
 

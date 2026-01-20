@@ -1,5 +1,5 @@
 [#_UserManager]
-=== UserManager
+=== class UserManager
 
 *Package*: `com.typedb.driver.api.user`
 

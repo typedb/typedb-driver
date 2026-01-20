@@ -1,5 +1,5 @@
 [#_enum_Value]
-=== Value
+=== struct Value
 
 [caption=""]
 .Enum variants

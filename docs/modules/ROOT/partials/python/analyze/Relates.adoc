@@ -1,5 +1,5 @@
 [#_Relates]
-=== Relates
+=== class Relates
 
 *Package*: `typedb.api.analyze.constraint`
 

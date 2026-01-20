@@ -1,5 +1,5 @@
 [#_RequireStage]
-=== RequireStage
+=== class RequireStage
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

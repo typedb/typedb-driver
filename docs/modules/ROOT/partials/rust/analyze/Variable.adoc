@@ -1,5 +1,5 @@
 [#_struct_Variable]
-=== Variable
+=== enum Variable
 
 *Implements traits:*
 

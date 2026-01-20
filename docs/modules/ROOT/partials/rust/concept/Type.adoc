@@ -1,5 +1,5 @@
 [#_enum_Type]
-=== Type
+=== struct Type
 
 [caption=""]
 .Enum variants

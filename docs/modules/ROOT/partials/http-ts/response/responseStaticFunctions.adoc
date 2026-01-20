@@ -1,5 +1,5 @@
 [#_responseStaticFunctions]
-=== Static Functions
+=== class Static Functions
 
 // tag::methods[]
 [#_isApiError_isApiError_err_any]

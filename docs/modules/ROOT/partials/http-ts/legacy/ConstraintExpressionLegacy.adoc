@@ -1,5 +1,5 @@
 [#_ConstraintExpressionLegacy]
-==== ConstraintExpressionLegacy
+==== class ConstraintExpressionLegacy
 
 [caption=""]
 .Fields

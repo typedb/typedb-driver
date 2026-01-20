@@ -1,5 +1,5 @@
 [#_QueryStructureLegacy]
-=== QueryStructureLegacy
+=== class QueryStructureLegacy
 
 [caption=""]
 .Fields

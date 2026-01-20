@@ -2,7 +2,7 @@
 === duration
 
 [#_Struct_Duration]
-==== Struct Duration
+==== class Struct Duration
 
 
 

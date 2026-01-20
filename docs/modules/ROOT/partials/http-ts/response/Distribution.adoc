@@ -1,5 +1,5 @@
 [#_Distribution]
-=== Distribution
+=== class Distribution
 
 [source,typescript]
 ----

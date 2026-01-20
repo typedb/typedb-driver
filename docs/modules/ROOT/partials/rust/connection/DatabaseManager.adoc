@@ -1,5 +1,5 @@
 [#_struct_DatabaseManager]
-=== DatabaseManager
+=== enum DatabaseManager
 
 *Implements traits:*
 

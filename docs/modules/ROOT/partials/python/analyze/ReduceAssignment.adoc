@@ -1,5 +1,5 @@
 [#_ReduceAssignment]
-=== ReduceAssignment
+=== class ReduceAssignment
 
 *Package*: `typedb.api.analyze.pipeline_stage.ReduceStage`
 

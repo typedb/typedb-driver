@@ -1,5 +1,5 @@
 [#_Answer]
-=== Answer
+=== class Answer
 
 [source,typescript]
 ----

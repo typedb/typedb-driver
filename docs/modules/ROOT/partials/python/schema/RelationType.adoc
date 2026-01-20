@@ -1,5 +1,5 @@
 [#_RelationType]
-=== RelationType
+=== class RelationType
 
 *Package*: `typedb.api.concept.type.relation_type`
 

@@ -1,5 +1,5 @@
 [#_DriverParams]
-==== DriverParams
+==== class DriverParams
 
 [source,typescript]
 ----

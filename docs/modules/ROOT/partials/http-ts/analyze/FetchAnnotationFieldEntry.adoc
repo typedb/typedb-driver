@@ -1,5 +1,5 @@
 [#_FetchAnnotationFieldEntry]
-=== FetchAnnotationFieldEntry
+=== class FetchAnnotationFieldEntry
 
 [source,typescript]
 ----

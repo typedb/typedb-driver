@@ -2,7 +2,7 @@
 === voidpromise
 
 [#_Struct_VoidPromise]
-==== Struct VoidPromise
+==== class Struct VoidPromise
 
 
 

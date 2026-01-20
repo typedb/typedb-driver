@@ -1,5 +1,5 @@
 [#_VariableInfo]
-=== VariableInfo
+=== class VariableInfo
 
 [caption=""]
 .Fields

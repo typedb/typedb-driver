@@ -2,7 +2,7 @@
 === concept
 
 [#_Struct_Concept]
-==== Struct Concept
+==== class Struct Concept
 
 
 

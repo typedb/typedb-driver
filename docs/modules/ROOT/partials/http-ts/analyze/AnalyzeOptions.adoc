@@ -1,5 +1,5 @@
 [#_AnalyzeOptions]
-=== AnalyzeOptions
+=== class AnalyzeOptions
 
 [caption=""]
 .Fields

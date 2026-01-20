@@ -1,5 +1,5 @@
 [#_PipelineStage_RequireStage]
-=== PipelineStage.RequireStage
+=== class PipelineStage.RequireStage
 
 *Package*: `com.typedb.driver.api.analyze`
 

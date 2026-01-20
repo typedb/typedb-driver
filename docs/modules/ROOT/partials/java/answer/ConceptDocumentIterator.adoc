@@ -1,5 +1,5 @@
 [#_ConceptDocumentIterator]
-=== ConceptDocumentIterator
+=== class ConceptDocumentIterator
 
 *Package*: `com.typedb.driver.api.answer`
 

@@ -1,5 +1,5 @@
 [#_OkQueryResponse]
-=== OkQueryResponse
+=== class OkQueryResponse
 
 [caption=""]
 .Fields

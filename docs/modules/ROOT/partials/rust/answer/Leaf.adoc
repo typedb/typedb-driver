@@ -1,5 +1,5 @@
 [#_enum_Leaf]
-=== Leaf
+=== struct Leaf
 
 [caption=""]
 .Enum variants

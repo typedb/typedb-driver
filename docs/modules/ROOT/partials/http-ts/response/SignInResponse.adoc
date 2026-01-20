@@ -1,5 +1,5 @@
 [#_SignInResponse]
-=== SignInResponse
+=== class SignInResponse
 
 [caption=""]
 .Fields

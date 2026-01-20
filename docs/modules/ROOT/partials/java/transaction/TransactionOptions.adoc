@@ -1,5 +1,5 @@
 [#_TransactionOptions]
-=== TransactionOptions
+=== class TransactionOptions
 
 *Package*: `com.typedb.driver.api`
 

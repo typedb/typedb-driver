@@ -1,5 +1,5 @@
 [#_Value]
-=== Value
+=== class Value
 
 [caption=""]
 .Fields

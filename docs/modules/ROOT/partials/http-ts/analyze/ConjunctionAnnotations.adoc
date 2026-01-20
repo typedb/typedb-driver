@@ -1,5 +1,5 @@
 [#_ConjunctionAnnotations]
-=== ConjunctionAnnotations
+=== class ConjunctionAnnotations
 
 [caption=""]
 .Fields

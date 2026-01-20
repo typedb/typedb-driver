@@ -1,5 +1,5 @@
 [#_ConstraintLinks]
-==== ConstraintLinks
+==== class ConstraintLinks
 
 [caption=""]
 .Fields

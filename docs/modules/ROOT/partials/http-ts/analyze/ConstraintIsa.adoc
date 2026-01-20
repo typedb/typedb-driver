@@ -1,5 +1,5 @@
 [#_ConstraintIsa]
-==== ConstraintIsa
+==== class ConstraintIsa
 
 [caption=""]
 .Fields

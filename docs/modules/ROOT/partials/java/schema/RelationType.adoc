@@ -1,5 +1,5 @@
 [#_RelationType]
-=== RelationType
+=== class RelationType
 
 *Package*: `com.typedb.driver.api.concept.type`
 

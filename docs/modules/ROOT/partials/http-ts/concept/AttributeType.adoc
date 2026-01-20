@@ -1,5 +1,5 @@
 [#_AttributeType]
-=== AttributeType
+=== class AttributeType
 
 [caption=""]
 .Fields

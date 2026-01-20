@@ -61,11 +61,24 @@ data class Class(
                 || superClasses.isNotEmpty()
     }
 
+    fun nameDescriptor(language: String): String {
+        return when (language) {
+            "rust" -> {
+                if (this.enumConstants.isNotEmpty()) {
+                    "struct"
+                } else {
+                    "enum"
+                }
+            }
+            else -> "class"
+        }
+    }
+
     fun toAsciiDoc(language: String, mergeWith: Class? = null, headerLevel: Int = 3): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(headerLevel, this.name)
+        result += builder.header(headerLevel, this.nameDescriptor(language) + " " + this.name)
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 

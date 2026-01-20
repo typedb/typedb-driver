@@ -1,5 +1,5 @@
 [#_enum_InternalError]
-=== InternalError
+=== struct InternalError
 
 [caption=""]
 .Enum variants

@@ -1,5 +1,5 @@
 [#_TypeDB]
-=== TypeDB
+=== class TypeDB
 
 *Package*: `typedb.driver`
 

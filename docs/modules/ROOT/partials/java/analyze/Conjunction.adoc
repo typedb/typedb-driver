@@ -1,5 +1,5 @@
 [#_Conjunction]
-=== Conjunction
+=== class Conjunction
 
 *Package*: `com.typedb.driver.api.analyze`
 

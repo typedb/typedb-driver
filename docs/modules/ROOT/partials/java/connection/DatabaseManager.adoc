@@ -1,5 +1,5 @@
 [#_DatabaseManager]
-=== DatabaseManager
+=== class DatabaseManager
 
 *Package*: `com.typedb.driver.api.database`
 

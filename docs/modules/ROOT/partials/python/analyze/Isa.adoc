@@ -1,5 +1,5 @@
 [#_Isa]
-=== Isa
+=== class Isa
 
 *Package*: `typedb.api.analyze.constraint`
 

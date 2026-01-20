@@ -1,5 +1,5 @@
 [#_Reducer]
-=== Reducer
+=== class Reducer
 
 *Package*: `typedb.api.analyze.reducer`
 

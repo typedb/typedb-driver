@@ -1,5 +1,5 @@
 [#_Transaction_Type]
-=== Transaction.Type
+=== class Transaction.Type
 
 *Package*: `com.typedb.driver.api`
 

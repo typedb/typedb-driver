@@ -1,5 +1,5 @@
 [#_VariableAnnotations]
-=== VariableAnnotations
+=== class VariableAnnotations
 
 *Package*: `com.typedb.driver.api.analyze`
 

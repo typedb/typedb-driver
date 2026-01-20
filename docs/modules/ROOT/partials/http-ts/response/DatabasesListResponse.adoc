@@ -1,5 +1,5 @@
 [#_DatabasesListResponse]
-=== DatabasesListResponse
+=== class DatabasesListResponse
 
 [caption=""]
 .Fields

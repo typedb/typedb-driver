@@ -2,7 +2,7 @@
 === conceptrow
 
 [#_Struct_ConceptRow]
-==== Struct ConceptRow
+==== class Struct ConceptRow
 
 
 

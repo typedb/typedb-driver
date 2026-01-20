@@ -1,5 +1,5 @@
 [#_enum_TransactionType]
-=== TransactionType
+=== struct TransactionType
 
 This enum is used to specify the type of transaction.
 

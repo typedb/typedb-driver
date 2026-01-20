@@ -1,5 +1,5 @@
 [#_ConstraintOr]
-==== ConstraintOr
+==== class ConstraintOr
 
 [caption=""]
 .Fields

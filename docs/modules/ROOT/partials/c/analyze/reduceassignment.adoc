@@ -2,7 +2,7 @@
 === reduceassignment
 
 [#_Struct_ReduceAssignment]
-==== Struct ReduceAssignment
+==== class Struct ReduceAssignment
 
 
 

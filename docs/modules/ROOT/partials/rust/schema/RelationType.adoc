@@ -1,5 +1,5 @@
 [#_struct_RelationType]
-=== RelationType
+=== enum RelationType
 
 *Implements traits:*
 

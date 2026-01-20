@@ -1,5 +1,5 @@
 [#_Entity]
-=== Entity
+=== class Entity
 
 [caption=""]
 .Fields

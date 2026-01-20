@@ -1,5 +1,5 @@
 [#_User]
-=== User
+=== class User
 
 *Package*: `typedb.api.user.user`
 

@@ -2,7 +2,7 @@
 === variable
 
 [#_Struct_Variable]
-==== Struct Variable
+==== class Struct Variable
 
 
 

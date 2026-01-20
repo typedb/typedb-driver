@@ -1,5 +1,5 @@
 [#_QueryType]
-=== QueryType
+=== class QueryType
 
 *Package*: `com.typedb.driver.api`
 

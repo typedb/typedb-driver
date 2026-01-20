@@ -1,5 +1,5 @@
 [#_QueryResponseBase]
-=== QueryResponseBase
+=== class QueryResponseBase
 
 [caption=""]
 .Fields

@@ -1,5 +1,5 @@
 [#_FetchObject]
-=== FetchObject
+=== class FetchObject
 
 *Package*: `typedb.api.analyze.fetch`
 

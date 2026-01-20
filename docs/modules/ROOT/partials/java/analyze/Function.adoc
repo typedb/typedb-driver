@@ -1,5 +1,5 @@
 [#_Function]
-=== Function
+=== class Function
 
 *Package*: `com.typedb.driver.api.analyze`
 

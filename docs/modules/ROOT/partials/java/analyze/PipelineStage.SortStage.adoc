@@ -1,5 +1,5 @@
 [#_PipelineStage_SortStage]
-=== PipelineStage.SortStage
+=== class PipelineStage.SortStage
 
 *Package*: `com.typedb.driver.api.analyze`
 

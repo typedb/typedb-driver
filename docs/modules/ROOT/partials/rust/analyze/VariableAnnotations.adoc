@@ -1,5 +1,5 @@
 [#_struct_VariableAnnotations]
-=== VariableAnnotations
+=== enum VariableAnnotations
 
 *Implements traits:*
 

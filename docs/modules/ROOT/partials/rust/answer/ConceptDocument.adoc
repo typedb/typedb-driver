@@ -1,5 +1,5 @@
 [#_struct_ConceptDocument]
-=== ConceptDocument
+=== enum ConceptDocument
 
 *Implements traits:*
 

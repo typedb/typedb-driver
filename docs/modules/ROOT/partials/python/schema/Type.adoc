@@ -1,5 +1,5 @@
 [#_Type]
-=== Type
+=== class Type
 
 *Package*: `typedb.api.concept.type.type`
 

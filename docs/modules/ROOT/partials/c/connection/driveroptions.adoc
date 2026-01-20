@@ -2,7 +2,7 @@
 === driveroptions
 
 [#_Struct_DriverOptions]
-==== Struct DriverOptions
+==== class Struct DriverOptions
 
 
 

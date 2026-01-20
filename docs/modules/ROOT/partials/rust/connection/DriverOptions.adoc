@@ -1,5 +1,5 @@
 [#_struct_DriverOptions]
-=== DriverOptions
+=== enum DriverOptions
 
 *Implements traits:*
 

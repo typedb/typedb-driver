@@ -2,7 +2,7 @@
 === transactionoptions
 
 [#_Struct_TransactionOptions]
-==== Struct TransactionOptions
+==== class Struct TransactionOptions
 
 
 

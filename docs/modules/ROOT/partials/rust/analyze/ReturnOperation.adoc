@@ -1,5 +1,5 @@
 [#_enum_ReturnOperation]
-=== ReturnOperation
+=== struct ReturnOperation
 
 A representation of the return operation of the function
 

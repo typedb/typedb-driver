@@ -1,5 +1,5 @@
 [#_Database]
-=== Database
+=== class Database
 
 *Package*: `com.typedb.driver.api.database`
 

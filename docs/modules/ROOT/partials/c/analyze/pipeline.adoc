@@ -2,7 +2,7 @@
 === pipeline
 
 [#_Struct_Pipeline]
-==== Struct Pipeline
+==== class Struct Pipeline
 
 
 

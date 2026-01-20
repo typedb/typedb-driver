@@ -1,5 +1,5 @@
 [#_enum_TimeZone]
-=== TimeZone
+=== struct TimeZone
 
 TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.
 

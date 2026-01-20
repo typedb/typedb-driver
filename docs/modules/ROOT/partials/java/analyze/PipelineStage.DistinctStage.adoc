@@ -1,5 +1,5 @@
 [#_PipelineStage_DistinctStage]
-=== PipelineStage.DistinctStage
+=== class PipelineStage.DistinctStage
 
 *Package*: `com.typedb.driver.api.analyze`
 

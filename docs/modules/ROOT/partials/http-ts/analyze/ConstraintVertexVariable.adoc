@@ -1,5 +1,5 @@
 [#_ConstraintVertexVariable]
-==== ConstraintVertexVariable
+==== class ConstraintVertexVariable
 
 [caption=""]
 .Fields

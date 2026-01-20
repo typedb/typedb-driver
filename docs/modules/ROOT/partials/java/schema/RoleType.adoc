@@ -1,5 +1,5 @@
 [#_RoleType]
-=== RoleType
+=== class RoleType
 
 *Package*: `com.typedb.driver.api.concept.type`
 

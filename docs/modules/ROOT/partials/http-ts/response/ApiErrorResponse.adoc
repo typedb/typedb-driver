@@ -1,5 +1,5 @@
 [#_ApiErrorResponse]
-=== ApiErrorResponse
+=== class ApiErrorResponse
 
 [caption=""]
 .Fields

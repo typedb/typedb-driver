@@ -2,7 +2,7 @@
 === boolpromise
 
 [#_Struct_BoolPromise]
-==== Struct BoolPromise
+==== class Struct BoolPromise
 
 
 
