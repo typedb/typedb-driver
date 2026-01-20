@@ -13,7 +13,7 @@ Represents a "limit" stage: limit &lt;limit&gt; e.g. ``limit 5``
 
 // tag::methods[]
 [#_PipelineStage_LimitStage_asDelete_]
-==== asDelete
+==== - asDelete
 
 [source,java]
 ----
@@ -27,7 +27,7 @@ PipelineStage.DeleteStage asDelete()
 `PipelineStage.DeleteStage`
 
 [#_PipelineStage_LimitStage_asDistinct_]
-==== asDistinct
+==== - asDistinct
 
 [source,java]
 ----
@@ -41,7 +41,7 @@ PipelineStage.DistinctStage asDistinct()
 `PipelineStage.DistinctStage`
 
 [#_PipelineStage_LimitStage_asInsert_]
-==== asInsert
+==== - asInsert
 
 [source,java]
 ----
@@ -55,7 +55,7 @@ PipelineStage.InsertStage asInsert()
 `PipelineStage.InsertStage`
 
 [#_PipelineStage_LimitStage_asLimit_]
-==== asLimit
+==== - asLimit
 
 [source,java]
 ----
@@ -69,7 +69,7 @@ PipelineStage.LimitStage asLimit()
 `PipelineStage.LimitStage`
 
 [#_PipelineStage_LimitStage_asMatch_]
-==== asMatch
+==== - asMatch
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ PipelineStage.MatchStage asMatch()
 `PipelineStage.MatchStage`
 
 [#_PipelineStage_LimitStage_asOffset_]
-==== asOffset
+==== - asOffset
 
 [source,java]
 ----
@@ -97,7 +97,7 @@ PipelineStage.OffsetStage asOffset()
 `PipelineStage.OffsetStage`
 
 [#_PipelineStage_LimitStage_asPut_]
-==== asPut
+==== - asPut
 
 [source,java]
 ----
@@ -111,7 +111,7 @@ PipelineStage.PutStage asPut()
 `PipelineStage.PutStage`
 
 [#_PipelineStage_LimitStage_asReduce_]
-==== asReduce
+==== - asReduce
 
 [source,java]
 ----
@@ -125,7 +125,7 @@ PipelineStage.ReduceStage asReduce()
 `PipelineStage.ReduceStage`
 
 [#_PipelineStage_LimitStage_asRequire_]
-==== asRequire
+==== - asRequire
 
 [source,java]
 ----
@@ -139,7 +139,7 @@ PipelineStage.RequireStage asRequire()
 `PipelineStage.RequireStage`
 
 [#_PipelineStage_LimitStage_asSelect_]
-==== asSelect
+==== - asSelect
 
 [source,java]
 ----
@@ -153,7 +153,7 @@ PipelineStage.SelectStage asSelect()
 `PipelineStage.SelectStage`
 
 [#_PipelineStage_LimitStage_asSort_]
-==== asSort
+==== - asSort
 
 [source,java]
 ----
@@ -167,7 +167,7 @@ PipelineStage.SortStage asSort()
 `PipelineStage.SortStage`
 
 [#_PipelineStage_LimitStage_asUpdate_]
-==== asUpdate
+==== - asUpdate
 
 [source,java]
 ----
@@ -181,7 +181,7 @@ PipelineStage.UpdateStage asUpdate()
 `PipelineStage.UpdateStage`
 
 [#_PipelineStage_LimitStage_getVariant_]
-==== getVariant
+==== - getVariant
 
 [source,java]
 ----
@@ -195,7 +195,7 @@ com.typedb.driver.jni.PipelineStageVariant getVariant()
 `com.typedb.driver.jni.PipelineStageVariant`
 
 [#_PipelineStage_LimitStage_isDelete_]
-==== isDelete
+==== - isDelete
 
 [source,java]
 ----
@@ -209,7 +209,7 @@ boolean isDelete()
 `boolean`
 
 [#_PipelineStage_LimitStage_isDistinct_]
-==== isDistinct
+==== - isDistinct
 
 [source,java]
 ----
@@ -223,7 +223,7 @@ boolean isDistinct()
 `boolean`
 
 [#_PipelineStage_LimitStage_isInsert_]
-==== isInsert
+==== - isInsert
 
 [source,java]
 ----
@@ -237,7 +237,7 @@ boolean isInsert()
 `boolean`
 
 [#_PipelineStage_LimitStage_isLimit_]
-==== isLimit
+==== - isLimit
 
 [source,java]
 ----
@@ -251,7 +251,7 @@ boolean isLimit()
 `boolean`
 
 [#_PipelineStage_LimitStage_isMatch_]
-==== isMatch
+==== - isMatch
 
 [source,java]
 ----
@@ -265,7 +265,7 @@ boolean isMatch()
 `boolean`
 
 [#_PipelineStage_LimitStage_isOffset_]
-==== isOffset
+==== - isOffset
 
 [source,java]
 ----
@@ -279,7 +279,7 @@ boolean isOffset()
 `boolean`
 
 [#_PipelineStage_LimitStage_isPut_]
-==== isPut
+==== - isPut
 
 [source,java]
 ----
@@ -293,7 +293,7 @@ boolean isPut()
 `boolean`
 
 [#_PipelineStage_LimitStage_isReduce_]
-==== isReduce
+==== - isReduce
 
 [source,java]
 ----
@@ -307,7 +307,7 @@ boolean isReduce()
 `boolean`
 
 [#_PipelineStage_LimitStage_isRequire_]
-==== isRequire
+==== - isRequire
 
 [source,java]
 ----
@@ -321,7 +321,7 @@ boolean isRequire()
 `boolean`
 
 [#_PipelineStage_LimitStage_isSelect_]
-==== isSelect
+==== - isSelect
 
 [source,java]
 ----
@@ -335,7 +335,7 @@ boolean isSelect()
 `boolean`
 
 [#_PipelineStage_LimitStage_isSort_]
-==== isSort
+==== - isSort
 
 [source,java]
 ----
@@ -349,7 +349,7 @@ boolean isSort()
 `boolean`
 
 [#_PipelineStage_LimitStage_isUpdate_]
-==== isUpdate
+==== - isUpdate
 
 [source,java]
 ----
@@ -363,7 +363,7 @@ boolean isUpdate()
 `boolean`
 
 [#_PipelineStage_LimitStage_limit_]
-==== limit
+==== - limit
 
 [source,java]
 ----

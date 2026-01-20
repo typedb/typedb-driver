@@ -11,7 +11,7 @@
 Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.
 
 [#_string_and_opt_value_iterator_drop]
-==== string_and_opt_value_iterator_drop
+==== - string_and_opt_value_iterator_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``StringAndOptValueIterator`` object
 `void`
 
 [#_string_and_opt_value_iterator_next]
-==== string_and_opt_value_iterator_next
+==== - string_and_opt_value_iterator_next
 
 [source,cpp]
 ----

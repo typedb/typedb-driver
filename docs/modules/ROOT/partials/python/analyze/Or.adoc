@@ -1,0 +1,30 @@
+[#_Or]
+=== Or
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents an ‘or’ constraint: { &lt;branches[0]&gt; } or { &lt;branches[1]&gt; } [or …]
+
+// tag::methods[]
+[#_Or_branches_]
+==== - branches
+
+[source,python]
+----
+branches() -> Iterator['ConjunctionID']
+----
+
+Index into Pipeline.conjunctions
+
+[caption=""]
+.Returns
+`Iterator['ConjunctionID']`
+
+// end::methods[]
+

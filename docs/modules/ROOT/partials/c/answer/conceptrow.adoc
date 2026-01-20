@@ -11,7 +11,7 @@
 A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
 
 [#_concept_row_drop]
-==== concept_row_drop
+==== - concept_row_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``ConceptRow`` object.
 `void`
 
 [#_concept_row_equals]
-==== concept_row_equals
+==== - concept_row_equals
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Checks whether the provided ``ConceptRow`` objects are equal
 `bool`
 
 [#_concept_row_get]
-==== concept_row_get
+==== - concept_row_get
 
 [source,cpp]
 ----
@@ -59,7 +59,7 @@ Retrieves a concept for a given column name.
 `struct Concept*`
 
 [#_concept_row_get_column_names]
-==== concept_row_get_column_names
+==== - concept_row_get_column_names
 
 [source,cpp]
 ----
@@ -75,7 +75,7 @@ Produces an ``Iterator`` over all ``String`` column names of the ``ConceptRow``'
 `struct StringIterator*`
 
 [#_concept_row_get_concepts]
-==== concept_row_get_concepts
+==== - concept_row_get_concepts
 
 [source,cpp]
 ----
@@ -91,7 +91,7 @@ Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptRow``.
 `struct ConceptIterator*`
 
 [#_concept_row_get_index]
-==== concept_row_get_index
+==== - concept_row_get_index
 
 [source,cpp]
 ----
@@ -107,7 +107,7 @@ Retrieves a concept for a given column index.
 `struct Concept*`
 
 [#_concept_row_get_query_structure]
-==== concept_row_get_query_structure
+==== - concept_row_get_query_structure
 
 [source,cpp]
 ----
@@ -123,7 +123,7 @@ Retrieve the executed query's structure from the ``ConceptRow``'s header, if set
 `struct Pipeline*`
 
 [#_concept_row_get_query_type]
-==== concept_row_get_query_type
+==== - concept_row_get_query_type
 
 [source,cpp]
 ----
@@ -139,7 +139,7 @@ Retrieve the executed query's type of the ``ConceptRow``'s header.
 `enum QueryType`
 
 [#_concept_row_involved_conjunctions]
-==== concept_row_involved_conjunctions
+==== - concept_row_involved_conjunctions
 
 [source,cpp]
 ----
@@ -155,7 +155,7 @@ Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row. May 
 `struct ConjunctionIDIterator*`
 
 [#_concept_row_to_string]
-==== concept_row_to_string
+==== - concept_row_to_string
 
 [source,cpp]
 ----

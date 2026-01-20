@@ -1,0 +1,56 @@
+[#_Duration]
+=== Duration
+
+`class`
+
+*Package*: `typedb.common.duration`
+
+A relative duration, which contains months, days, and nanoseconds. Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component. Not convertible to datetime.timedelta due to the lack of months and nanos alternatives.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `days` a| `int` a| The days part of the duration
+a| `months` a| `int` a| The months part of the duration
+a| `nanos` a| `int` a| The nanoseconds part of the duration
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_Duration_fromstring_duration_str_str]
+==== - fromstring
+
+[source,python]
+----
+classmethod fromstring(duration_str: str) -> Duration
+----
+
+Parses a Duration object from a string in ISO 8601 format.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `duration_str` a| A string representation of the duration. Expected format: PnYnMnDTnHnMnS / PnW a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`Duration`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Duration.fromstring("P1Y10M7DT15H44M5.00394892S")
+Duration.fromstring("P55W")
+----
+
+// end::methods[]
+

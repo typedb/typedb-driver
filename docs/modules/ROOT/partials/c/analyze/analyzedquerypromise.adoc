@@ -2,7 +2,7 @@
 === analyzedquerypromise
 
 [#_analyzed_query_promise_drop]
-==== analyzed_query_promise_drop
+==== - analyzed_query_promise_drop
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``AnalyzePromise`` object.
 `void`
 
 [#_analyzed_query_promise_resolve]
-==== analyzed_query_promise_resolve
+==== - analyzed_query_promise_resolve
 
 [source,cpp]
 ----

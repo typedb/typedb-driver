@@ -1,0 +1,100 @@
+[#_Relation]
+=== Relation
+
+`class`
+
+*Package*: `typedb.api.concept.instance.relation`
+
+*Supertypes:*
+
+* `Instance`
+
+Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
+
+// tag::methods[]
+[#_Relation_as_relation_]
+==== - as_relation
+
+[source,python]
+----
+as_relation() -> Relation
+----
+
+Casts the concept to ``Relation``.
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation.as_relation()
+----
+
+[#_Relation_get_iid_]
+==== - get_iid
+
+[source,python]
+----
+get_iid() -> str
+----
+
+Retrieves the unique id of the ``Relation``.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation.get_iid()
+----
+
+[#_Relation_get_type_]
+==== - get_type
+
+[source,python]
+----
+get_type() -> RelationType
+----
+
+Retrieves the type which this ``Relation`` belongs to.
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation.get_type()
+----
+
+[#_Relation_is_relation_]
+==== - is_relation
+
+[source,python]
+----
+is_relation() -> bool
+----
+
+Checks if the concept is a ``Relation``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation.is_relation()
+----
+
+// end::methods[]
+

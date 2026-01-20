@@ -1,0 +1,96 @@
+[#_Fetch]
+=== Fetch
+
+`class`
+
+*Package*: `typedb.api.analyze.fetch`
+
+A representation of the ‘fetch’ stage of a query.
+
+// tag::methods[]
+[#_Fetch_as_leaf_]
+==== - as_leaf
+
+[source,python]
+----
+as_leaf() -> FetchLeaf
+----
+
+Down-casts this Fetch as a FetchLeaf variant.
+
+[caption=""]
+.Returns
+`FetchLeaf`
+
+[#_Fetch_as_list_]
+==== - as_list
+
+[source,python]
+----
+as_list() -> FetchList
+----
+
+Down-casts this Fetch as a FetchList variant.
+
+[caption=""]
+.Returns
+`FetchList`
+
+[#_Fetch_as_object_]
+==== - as_object
+
+[source,python]
+----
+as_object() -> FetchObject
+----
+
+Down-casts this Fetch as a FetchObject variant.
+
+[caption=""]
+.Returns
+`FetchObject`
+
+[#_Fetch_is_leaf_]
+==== - is_leaf
+
+[source,python]
+----
+is_leaf() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Fetch_is_list_]
+==== - is_list
+
+[source,python]
+----
+is_list() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Fetch_is_object_]
+==== - is_object
+
+[source,python]
+----
+is_object() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

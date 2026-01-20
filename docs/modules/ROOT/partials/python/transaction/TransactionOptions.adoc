@@ -1,0 +1,31 @@
+[#_TransactionOptions]
+=== TransactionOptions
+
+`class`
+
+*Package*: `typedb.api.connection.transaction_options`
+
+TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.
+
+Options could be specified either as constructor arguments or using properties assignment.
+
+[caption=""]
+.Examples
+[source,python]
+----
+transaction_options = TransactionOptions(transaction_timeout_millis=20_000)
+transaction_options.schema_lock_acquire_timeout_millis = 50_000
+----
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `schema_lock_acquire_timeout_millis` a| `int \| None` a| If set, specifies how long the driver should wait if opening a transaction is blocked by a schema write lock.
+a| `transaction_timeout_millis` a| `int \| None` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+|===
+// end::properties[]
+

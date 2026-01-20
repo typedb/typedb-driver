@@ -1,0 +1,151 @@
+[#_QueryAnswer]
+=== QueryAnswer
+
+`class`
+
+*Package*: `typedb.api.answer.query_answer`
+
+General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this ``QueryAnswer``.
+
+
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_QueryAnswer_as_concept_documents_]
+==== - as_concept_documents
+
+[source,python]
+----
+as_concept_documents() -> ConceptDocumentIterator
+----
+
+Casts the query answer to ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`ConceptDocumentIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_documents()
+----
+
+[#_QueryAnswer_as_concept_rows_]
+==== - as_concept_rows
+
+[source,python]
+----
+as_concept_rows() -> ConceptRowIterator
+----
+
+Casts the query answer to ``ConceptRowIterator``.
+
+[caption=""]
+.Returns
+`ConceptRowIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_rows()
+----
+
+[#_QueryAnswer_as_ok_]
+==== - as_ok
+
+[source,python]
+----
+as_ok() -> OkQueryAnswer
+----
+
+Casts the query answer to ``OkQueryAnswer``.
+
+[caption=""]
+.Returns
+`OkQueryAnswer`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_ok()
+----
+
+[#_QueryAnswer_is_concept_documents_]
+==== - is_concept_documents
+
+[source,python]
+----
+is_concept_documents() -> bool
+----
+
+Checks if the query answer is a ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_documents()
+----
+
+[#_QueryAnswer_is_concept_rows_]
+==== - is_concept_rows
+
+[source,python]
+----
+is_concept_rows() -> bool
+----
+
+Checks if the query answer is a ``ConceptRowIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_rows()
+----
+
+[#_QueryAnswer_is_ok_]
+==== - is_ok
+
+[source,python]
+----
+is_ok() -> bool
+----
+
+Checks if the query answer is an ``Ok``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_ok()
+----
+
+// end::methods[]
+

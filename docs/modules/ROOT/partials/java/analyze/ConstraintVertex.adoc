@@ -9,7 +9,7 @@ The answer to a TypeDB query is a set of concepts which satisfy the constraints 
 
 // tag::methods[]
 [#_ConstraintVertex_asLabel_]
-==== asLabel
+==== - asLabel
 
 [source,java]
 ----
@@ -23,7 +23,7 @@ Down-casts this vertex to a type label.
 `Type`
 
 [#_ConstraintVertex_asNamedRole_]
-==== asNamedRole
+==== - asNamedRole
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ Down-casts this vertex to a NamedRole. This is an internal variable injected to 
 `NamedRole`
 
 [#_ConstraintVertex_asValue_]
-==== asValue
+==== - asValue
 
 [source,java]
 ----
@@ -51,7 +51,7 @@ Down-casts this vertex to a value.
 `Value`
 
 [#_ConstraintVertex_asVariable_]
-==== asVariable
+==== - asVariable
 
 [source,java]
 ----
@@ -65,7 +65,7 @@ Down-casts this variable to a vertex.
 `Variable`
 
 [#_ConstraintVertex_isLabel_]
-==== isLabel
+==== - isLabel
 
 [source,java]
 ----
@@ -79,7 +79,7 @@ Checks if this vertex is a label.
 `boolean`
 
 [#_ConstraintVertex_isNamedRole_]
-==== isNamedRole
+==== - isNamedRole
 
 [source,java]
 ----
@@ -93,7 +93,7 @@ Checks if this vertex is a named role.
 `boolean`
 
 [#_ConstraintVertex_isValue_]
-==== isValue
+==== - isValue
 
 [source,java]
 ----
@@ -107,7 +107,7 @@ Checks if this vertex is a value.
 `boolean`
 
 [#_ConstraintVertex_isVariable_]
-==== isVariable
+==== - isVariable
 
 [source,java]
 ----

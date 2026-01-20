@@ -1,0 +1,74 @@
+[#_QueryType]
+=== QueryType
+
+`class`
+
+*Package*: `typedb.api.answer.query_type`
+
+Used to specify the type of the executed query.
+
+[caption=""]
+.Examples
+[source,python]
+----
+concept_row.query_type
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `READ` a| `0`
+a| `SCHEMA` a| `2`
+a| `WRITE` a| `1`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_QueryType_is_read_]
+==== - is_read
+
+[source,python]
+----
+is_read() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_QueryType_is_schema_]
+==== - is_schema
+
+[source,python]
+----
+is_schema() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_QueryType_is_write_]
+==== - is_write
+
+[source,python]
+----
+is_write() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

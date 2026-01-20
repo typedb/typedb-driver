@@ -2,7 +2,7 @@
 === users
 
 [#_users_all]
-==== users_all
+==== - users_all
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Retrieves all users which exist on the TypeDB server.
 `struct UserIterator*`
 
 [#_users_contains]
-==== users_contains
+==== - users_contains
 
 [source,cpp]
 ----
@@ -34,7 +34,7 @@ Checks if a user with the given name exists.
 `bool`
 
 [#_users_create]
-==== users_create
+==== - users_create
 
 [source,cpp]
 ----
@@ -50,7 +50,7 @@ Creates a user with the given name &amp; password.
 `void`
 
 [#_users_get]
-==== users_get
+==== - users_get
 
 [source,cpp]
 ----
@@ -66,7 +66,7 @@ Retrieves a user with the given name.
 `struct User*`
 
 [#_users_get_current_user]
-==== users_get_current_user
+==== - users_get_current_user
 
 [source,cpp]
 ----

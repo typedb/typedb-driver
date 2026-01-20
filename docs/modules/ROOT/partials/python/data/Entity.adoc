@@ -1,0 +1,102 @@
+[#_Entity]
+=== Entity
+
+`class`
+
+*Package*: `typedb.api.concept.instance.entity`
+
+*Supertypes:*
+
+* `Instance`
+
+Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+
+Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+
+// tag::methods[]
+[#_Entity_as_entity_]
+==== - as_entity
+
+[source,python]
+----
+as_entity() -> Entity
+----
+
+Casts the concept to ``Entity``.
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+entity.as_entity()
+----
+
+[#_Entity_get_iid_]
+==== - get_iid
+
+[source,python]
+----
+get_iid() -> str
+----
+
+Retrieves the unique id of the ``Entity``.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+entity.get_iid()
+----
+
+[#_Entity_get_type_]
+==== - get_type
+
+[source,python]
+----
+get_type() -> EntityType
+----
+
+Retrieves the type which this ``Entity`` belongs to.
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+entity.get_type()
+----
+
+[#_Entity_is_entity_]
+==== - is_entity
+
+[source,python]
+----
+is_entity() -> bool
+----
+
+Checks if the concept is an ``Entity``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+entity.is_entity()
+----
+
+// end::methods[]
+

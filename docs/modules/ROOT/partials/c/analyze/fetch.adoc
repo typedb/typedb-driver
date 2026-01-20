@@ -11,7 +11,7 @@
 A representation of the 'fetch' stage of a query
 
 [#_fetch_drop]
-==== fetch_drop
+==== - fetch_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``Fetch`` object.
 `void`
 
 [#_fetch_leaf_annotations]
-==== fetch_leaf_annotations
+==== - fetch_leaf_annotations
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Unwraps the ``Fetch`` instance as a Leaf variant, and returns an iterator over p
 `struct StringIterator*`
 
 [#_fetch_list_element]
-==== fetch_list_element
+==== - fetch_list_element
 
 [source,cpp]
 ----
@@ -59,7 +59,7 @@ Unwraps the ``Fetch`` instance as a List variant, and returns the ``Fetch`` for 
 `struct Fetch*`
 
 [#_fetch_object_fields]
-==== fetch_object_fields
+==== - fetch_object_fields
 
 [source,cpp]
 ----
@@ -75,7 +75,7 @@ Unwraps the ``Fetch`` instance as an Object variant, and returns the available f
 `struct StringIterator*`
 
 [#_fetch_object_get_field]
-==== fetch_object_get_field
+==== - fetch_object_get_field
 
 [source,cpp]
 ----
@@ -91,7 +91,7 @@ Unwraps the ``Fetch`` instance as an Object variant, and returns the value of th
 `struct Fetch*`
 
 [#_fetch_variant]
-==== fetch_variant
+==== - fetch_variant
 
 [source,cpp]
 ----

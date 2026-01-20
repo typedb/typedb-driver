@@ -2,7 +2,7 @@
 === variableiterator
 
 [#_variable_iterator_drop]
-==== variable_iterator_drop
+==== - variable_iterator_drop
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``VariableIterator`` object.
 `void`
 
 [#_variable_iterator_next]
-==== variable_iterator_next
+==== - variable_iterator_next
 
 [source,cpp]
 ----

@@ -1,0 +1,62 @@
+[#_RelationType]
+=== RelationType
+
+`class`
+
+*Package*: `typedb.api.concept.type.relation_type`
+
+*Supertypes:*
+
+* `Type`
+
+Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles.
+
+Other types can play roles in relations if it’s mentioned in their definition.
+
+A relation type must specify at least one role.
+
+// tag::methods[]
+[#_RelationType_as_relation_type_]
+==== - as_relation_type
+
+[source,python]
+----
+as_relation_type() -> RelationType
+----
+
+Casts the concept to ``RelationType``.
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation_type.as_relation_type()
+----
+
+[#_RelationType_is_relation_type_]
+==== - is_relation_type
+
+[source,python]
+----
+is_relation_type() -> bool
+----
+
+Checks if the concept is a ``RelationType``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+relation_type.is_relation_type()
+----
+
+// end::methods[]
+

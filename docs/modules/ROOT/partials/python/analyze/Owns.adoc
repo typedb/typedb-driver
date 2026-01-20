@@ -1,0 +1,58 @@
+[#_Owns]
+=== Owns
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents an ‘owns’ constraint: &lt;owner&gt; owns &lt;attribute&gt;
+
+// tag::methods[]
+[#_Owns_attribute_]
+==== - attribute
+
+[source,python]
+----
+attribute() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Owns_exactness_]
+==== - exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Owns_owner_]
+==== - owner
+
+[source,python]
+----
+owner() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

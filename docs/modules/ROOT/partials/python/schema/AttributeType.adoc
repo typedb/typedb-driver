@@ -1,0 +1,64 @@
+[#_AttributeType]
+=== AttributeType
+
+`class`
+
+*Package*: `typedb.api.concept.type.attribute_type`
+
+*Supertypes:*
+
+* `Type`
+
+Attribute types represent properties that other types can own.
+
+Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type.
+
+Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value.
+
+Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+// tag::methods[]
+[#_AttributeType_as_attribute_type_]
+==== - as_attribute_type
+
+[source,python]
+----
+as_attribute_type() -> AttributeType
+----
+
+Casts the concept to ``AttributeType``.
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_attribute_type()
+----
+
+[#_AttributeType_is_attribute_type_]
+==== - is_attribute_type
+
+[source,python]
+----
+is_attribute_type() -> bool
+----
+
+Checks if the concept is an ``AttributeType``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_attribute_type()
+----
+
+// end::methods[]
+

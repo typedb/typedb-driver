@@ -1,0 +1,72 @@
+[#_Links]
+=== Links
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘links’ constraint: &lt;relation&gt; links (&lt;role&gt;: &lt;player&gt;)
+
+// tag::methods[]
+[#_Links_exactness_]
+==== - exactness
+
+[source,python]
+----
+exactness() -> ConstraintExactness
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintExactness`
+
+[#_Links_player_]
+==== - player
+
+[source,python]
+----
+player() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Links_relation_]
+==== - relation
+
+[source,python]
+----
+relation() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Links_role_]
+==== - role
+
+[source,python]
+----
+role() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

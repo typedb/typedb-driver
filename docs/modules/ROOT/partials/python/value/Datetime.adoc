@@ -1,0 +1,208 @@
+[#_Datetime]
+=== Datetime
+
+`class`
+
+*Package*: `typedb.common.datetime`
+
+An extension class for ``datetime.datetime`` class to store additional information about nanoseconds. It is split to a timestamp (time zoned or not) based on the number of full seconds and a nanoseconds part.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `date` a| `date` a| Return the date part.
+a| `datetime_without_nanos` a| `datetime` a| Return the standard library’s datetime, containing data up to microseconds.
+a| `day` a| `int` a| Return the datetime’s day (1-31).
+a| `hour` a| `int` a| Return the datetime’s hour (0-23).
+a| `microsecond` a| `int` a| Return the rounded number of microseconds.
+a| `minute` a| `int` a| Return the datetime’s minute (0-59).
+a| `month` a| `int` a| Return the datetime’s month (1-12).
+a| `nanos` a| `int` a| Return the nanoseconds part.
+a| `offset_seconds` a| `str \| None` a| Return the timezone offset (local minus UTC) in seconds. None if an IANA name is used for the initialisation instead.
+a| `second` a| `int` a| Return the datetime’s second (0-59).
+a| `total_seconds` a| `float` a| Return the total number of seconds including the nanoseconds part as a float.
+
+ValueError – If timestamp is before the start of the epoch.
+a| `tz_name` a| `str \| None` a| Return the timezone IANA name. None if fixed offset is used for the initialisation instead.
+a| `tzinfo` a| `tzinfo` a| Return timezone info.
+a| `weekday` a| `int` a| Return the day of the week as an integer, where Monday == 0 … Sunday == 6.
+a| `year` a| `int` a| Return the datetime’s year (1-9999).
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_Datetime_fromstring_datetime_str_str_tz_name_str_None_offset_seconds_int_None_datetime_fmt_str]
+==== - fromstring
+
+[source,python]
+----
+classmethod fromstring(datetime_str: str, tz_name: str | None = None, offset_seconds: int | None = None, datetime_fmt: str = '%Y-%m-%dT%H:%M:%S') -> Datetime
+----
+
+Parses a Datetime object from a string with an optional nanoseconds part with a specified ``tz_name`` or ``offset_seconds``. The timestamp is adjusted to the given timezone similarly to ``datetime.fromtimestamp``. To save timestamp and tz without automatic adjustment, see ``Datetime.utcfromstring``.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `datetime_str` a| The timezone-aware datetime string to parse. Should either be “{datetime_fmt}” or “{datetime_fmt}.{nanos}”. All digits of {nanos} after the 9th one are truncated! a| `str` a| 
+a| `tz_name` a| A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA. a| `str \| None` a| `None`
+a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00). a| `int \| None` a| `None`
+a| `datetime_fmt` a| The format of the datetime string without the fractional (.%f) part. Default is “%Y-%m-%dT%H:%M:%S”. a| `str` a| `'%Y-%m-%dT%H:%M:%S'`
+|===
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Datetime.fromstring("2024-09-21T18:34:22", tz_name="America/New_York")
+Datetime.fromstring("2024-09-21T18:34:22.009257123", tz_name="Europe/London")
+Datetime.fromstring("2024-09-21", tz_name="Asia/Calcutta", datetime_fmt="%Y-%m-%d")
+Datetime.fromstring("21/09/24 18:34", tz_name="Africa/Cairo", datetime_fmt="%d/%m/%y %H:%M")
+----
+
+[#_Datetime_fromtimestamp_timestamp_seconds_int_subsec_nanos_int_tz_name_str_None_offset_seconds_int_None]
+==== - fromtimestamp
+
+[source,python]
+----
+classmethod fromtimestamp(timestamp_seconds: int, subsec_nanos: int, tz_name: str | None = None, offset_seconds: int | None = None)
+----
+
+Creates a new ``Datetime`` based on a timestamp with a specified ``tz_name`` or ``offset_seconds``. The timestamp is adjusted to the given timezone similarly to ``datetime.fromtimestamp``. To save timestamp and tz without automatic adjustment, see ``Datetime.utcfromtimestamp``.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `timestamp_seconds` a| Amount of full seconds since the epoch in the specified timezone (``tz_name``). a| `int` a| 
+a| `subsec_nanos` a| A number of nanoseconds since the last seconds boundary. Should be between 0 and 999,999,999. a| `int` a| 
+a| `tz_name` a| A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA. a| `str \| None` a| `None`
+a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00). a| `int \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+``
+
+[#_Datetime_isoformat_]
+==== - isoformat
+
+[source,python]
+----
+isoformat() -> str
+----
+
+Return the time formatted according to ISO.
+
+[caption=""]
+.Returns
+`str`
+
+[#_Datetime_offset_seconds_fromstring_offset_str]
+==== - offset_seconds_fromstring
+
+[source,python]
+----
+classmethod offset_seconds_fromstring(offset: str) -> int
+----
+
+Converts a timezone offset in the format +HHMM or -HHMM to seconds.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `offset` a| A string representing the timezone offset in the format +HHMM or -HHMM. a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`int`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Datetime.fromstring("2024-09-21T18:34:22.009257123", offset_seconds=Datetime.offset_seconds_fromstring("+0100"))
+----
+
+[#_Datetime_utcfromstring_datetime_str_str_tz_name_str_None_offset_seconds_int_None_datetime_fmt_str]
+==== - utcfromstring
+
+[source,python]
+----
+classmethod utcfromstring(datetime_str: str, tz_name: str | None = None, offset_seconds: int | None = None, datetime_fmt: str = '%Y-%m-%dT%H:%M:%S') -> Datetime
+----
+
+Parses a Datetime object from a string with an optional nanoseconds part based on a timestamp in the given timezone (``tz_name``) or UTC by default. If ``tz_name`` is passed, the timestamp is not adjusted, saving the data as is. For automatic timestamp adjustment, see ``Datetime.fromstring``.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `datetime_str` a| The timezone-aware datetime string to parse. Should either be “{datetime_fmt}” or “{datetime_fmt}.{nanos}”. All digits of {nanos} after the 9th one are truncated! a| `str` a| 
+a| `tz_name` a| A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA. a| `str \| None` a| `None`
+a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00). a| `int \| None` a| `None`
+a| `datetime_fmt` a| The format of the datetime string without the fractional (.%f) part. Default is “%Y-%m-%dT%H:%M:%S”. a| `str` a| `'%Y-%m-%dT%H:%M:%S'`
+|===
+
+[caption=""]
+.Returns
+`Datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Datetime.utcfromstring("2024-09-21T18:34:22")
+Datetime.utcfromstring("2024-09-21T18:34:22.009257123")
+Datetime.utcfromstring("2024-09-21T18:34:22.009257123", tz_name="Europe/London")
+Datetime.utcfromstring("2024-09-21", datetime_fmt="%Y-%m-%d")
+Datetime.utcfromstring("21/09/24 18:34", tz_name="Europe/London", datetime_fmt="%d/%m/%y %H:%M")
+----
+
+[#_Datetime_utcfromtimestamp_timestamp_seconds_int_subsec_nanos_int_tz_name_str_None_offset_seconds_int_None]
+==== - utcfromtimestamp
+
+[source,python]
+----
+classmethod utcfromtimestamp(timestamp_seconds: int, subsec_nanos: int, tz_name: str | None = None, offset_seconds: int | None = None)
+----
+
+Creates a new ``Datetime`` based on a timestamp in the given timezone (``tz_name``) or UTC by default. If ``tz_name`` is passed, the timestamp is not adjusted, saving the data as is. For automatic timestamp adjustment, see ``Datetime.fromtimestamp``.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `timestamp_seconds` a| Amount of full seconds since the epoch in UTC. a| `int` a| 
+a| `subsec_nanos` a| A number of nanoseconds since the last seconds boundary. Should be between 0 and 999,999,999. a| `int` a| 
+a| `tz_name` a| A timezone name. Accepts any format suitable for ``ZoneInfo``, e.g. IANA. a| `str \| None` a| `None`
+a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000 for -05:00). a| `int \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+``
+
+// end::methods[]
+

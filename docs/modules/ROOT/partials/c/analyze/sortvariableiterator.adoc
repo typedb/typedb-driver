@@ -2,7 +2,7 @@
 === sortvariableiterator
 
 [#_sort_variable_iterator_drop]
-==== sort_variable_iterator_drop
+==== - sort_variable_iterator_drop
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``SortVariableIterator`` object.
 `void`
 
 [#_sort_variable_iterator_next]
-==== sort_variable_iterator_next
+==== - sort_variable_iterator_next
 
 [source,cpp]
 ----

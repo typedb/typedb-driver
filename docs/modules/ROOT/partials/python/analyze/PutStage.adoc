@@ -1,0 +1,30 @@
+[#_PutStage]
+=== PutStage
+
+`class`
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘put’ stage: put &lt;block&gt;
+
+// tag::methods[]
+[#_PutStage_block_]
+==== - block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

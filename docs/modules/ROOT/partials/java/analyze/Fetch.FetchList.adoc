@@ -9,7 +9,7 @@ A ``List`` of ``Fetch`` documents.
 
 // tag::methods[]
 [#_Fetch_FetchList_element_]
-==== element
+==== - element
 
 [source,java]
 ----

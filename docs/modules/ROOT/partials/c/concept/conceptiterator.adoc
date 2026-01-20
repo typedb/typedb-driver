@@ -11,7 +11,7 @@
 Iterator over the ``Concepts``s returned by an API method or query.
 
 [#_concept_iterator_drop]
-==== concept_iterator_drop
+==== - concept_iterator_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``ConceptIterator`` object
 `void`
 
 [#_concept_iterator_next]
-==== concept_iterator_next
+==== - concept_iterator_next
 
 [source,cpp]
 ----

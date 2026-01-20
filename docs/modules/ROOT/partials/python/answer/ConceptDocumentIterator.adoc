@@ -1,0 +1,58 @@
+[#_ConceptDocumentIterator]
+=== ConceptDocumentIterator
+
+`class`
+
+*Package*: `typedb.api.answer.concept_document_iterator`
+
+*Supertypes:*
+
+* `QueryAnswer`
+
+Represents an iterator over ``ConceptRow``s returned as a server answer.
+
+// tag::methods[]
+[#_ConceptDocumentIterator_as_concept_documents_]
+==== - as_concept_documents
+
+[source,python]
+----
+as_concept_documents() -> ConceptDocumentIterator
+----
+
+Casts the query answer to ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`ConceptDocumentIterator`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.as_concept_documents()
+----
+
+[#_ConceptDocumentIterator_is_concept_documents_]
+==== - is_concept_documents
+
+[source,python]
+----
+is_concept_documents() -> bool
+----
+
+Checks if the query answer is a ``ConceptDocumentIterator``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+query_answer.is_concept_documents()
+----
+
+// end::methods[]
+

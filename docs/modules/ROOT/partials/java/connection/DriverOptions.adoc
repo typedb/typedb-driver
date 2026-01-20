@@ -17,7 +17,7 @@ DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certif
 
 // tag::methods[]
 [#_DriverOptions_DriverOptions_boolean_java_lang_String]
-==== DriverOptions
+==== - DriverOptions
 
 [source,java]
 ----

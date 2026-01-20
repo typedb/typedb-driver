@@ -1,0 +1,44 @@
+[#_Kind]
+=== Kind
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
+
+// tag::methods[]
+[#_Kind_kind_]
+==== - kind
+
+[source,python]
+----
+kind() -> typedb.common.enums.Kind
+----
+
+
+
+[caption=""]
+.Returns
+`typedb.common.enums.Kind`
+
+[#_Kind_type_]
+==== - type
+
+[source,python]
+----
+type() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

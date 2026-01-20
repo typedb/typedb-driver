@@ -1,0 +1,28 @@
+[#_ReturnOperationReduce]
+=== ReturnOperationReduce
+
+`class`
+
+*Package*: `typedb.api.analyze.function`
+
+*Supertypes:*
+
+* `ReturnOperation`
+
+// tag::methods[]
+[#_ReturnOperationReduce_reducers_]
+==== - reducers
+
+[source,python]
+----
+reducers() -> Iterator['Reducer']
+----
+
+Gets the reducers used to compute the aggregations.
+
+[caption=""]
+.Returns
+`Iterator['Reducer']`
+
+// end::methods[]
+

@@ -1,0 +1,79 @@
+[#_User]
+=== User
+
+`class`
+
+*Package*: `typedb.api.user.user`
+
+TypeDB user information
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `str` a| Returns the name of this user.
+
+
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_User_delete_username]
+==== - delete
+
+[source,python]
+----
+delete() -> None
+----
+
+Deletes a user with the given name.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The name of the user to be deleted a|  a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.users.delete(username)
+----
+
+[#_User_update_password_password_old_password_new]
+==== - update_password
+
+[source,python]
+----
+update_password(password: str) -> None
+----
+
+Updates the password for this user.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `password_old` a| The current password of this user a|  a| 
+a| `password_new` a| The new password a|  a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+// end::methods[]
+

@@ -9,7 +9,7 @@ Exceptions raised by the driver.
 
 // tag::methods[]
 [#_TypeDBDriverException_getErrorMessage_]
-==== getErrorMessage
+==== - getErrorMessage
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ public com.typedb.driver.common.exception.ErrorMessage getErrorMessage()
 `public com.typedb.driver.common.exception.ErrorMessage`
 
 [#_TypeDBDriverException_getName_]
-==== getName
+==== - getName
 
 [source,java]
 ----

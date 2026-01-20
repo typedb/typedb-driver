@@ -1,0 +1,96 @@
+[#_VariableAnnotations]
+=== VariableAnnotations
+
+`class`
+
+*Package*: `typedb.api.analyze.variable_annotations`
+
+Holds typing information about a variable (instance/type/value annotations).
+
+// tag::methods[]
+[#_VariableAnnotations_as_instance_]
+==== - as_instance
+
+[source,python]
+----
+as_instance() -> Iterator['Type']
+----
+
+The possible Types of instances this variable can hold.
+
+[caption=""]
+.Returns
+`Iterator['Type']`
+
+[#_VariableAnnotations_as_type_]
+==== - as_type
+
+[source,python]
+----
+as_type() -> Iterator['Type']
+----
+
+The possible types this variable can hold.
+
+[caption=""]
+.Returns
+`Iterator['Type']`
+
+[#_VariableAnnotations_as_value_]
+==== - as_value
+
+[source,python]
+----
+as_value() -> Iterator[str]
+----
+
+The possible ValueType(s) of values this variable can hold.
+
+[caption=""]
+.Returns
+`Iterator[str]`
+
+[#_VariableAnnotations_is_instance_]
+==== - is_instance
+
+[source,python]
+----
+is_instance() -> bool
+----
+
+Returns True if this variable is an Instance variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_VariableAnnotations_is_type_]
+==== - is_type
+
+[source,python]
+----
+is_type() -> bool
+----
+
+Returns True if this variable is a Type variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_VariableAnnotations_is_value_]
+==== - is_value
+
+[source,python]
+----
+is_value() -> bool
+----
+
+Returns True if this variable is a Value variable.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

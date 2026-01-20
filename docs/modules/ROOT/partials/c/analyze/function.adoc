@@ -11,7 +11,7 @@
 Holds a representation of the function, and the result of type-inference for each variable.
 
 [#_function_argument_annotations]
-==== function_argument_annotations
+==== - function_argument_annotations
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Returns the inferred type for each argument of the function.
 `struct VariableAnnotationsIterator*`
 
 [#_function_argument_variables]
-==== function_argument_variables
+==== - function_argument_variables
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Returns the ``Variable``s which are the arguments of the function.
 `struct VariableIterator*`
 
 [#_function_body]
-==== function_body
+==== - function_body
 
 [source,cpp]
 ----
@@ -59,7 +59,7 @@ A representation of the ``Pipeline`` which forms the body of the function.
 `struct Pipeline*`
 
 [#_function_drop]
-==== function_drop
+==== - function_drop
 
 [source,cpp]
 ----
@@ -75,7 +75,7 @@ Frees the native rust ``Function`` object.
 `void`
 
 [#_function_return_annotations]
-==== function_return_annotations
+==== - function_return_annotations
 
 [source,cpp]
 ----
@@ -91,7 +91,7 @@ Returns the inferred type for each concept returned by the function.
 `struct VariableAnnotationsIterator*`
 
 [#_function_return_operation]
-==== function_return_operation
+==== - function_return_operation
 
 [source,cpp]
 ----

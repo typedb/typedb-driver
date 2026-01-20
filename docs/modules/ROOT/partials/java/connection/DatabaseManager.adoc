@@ -9,7 +9,7 @@ Provides access to all database management methods.
 
 // tag::methods[]
 [#_DatabaseManager_all_]
-==== all
+==== - all
 
 [source,java]
 ----
@@ -33,7 +33,7 @@ driver.databases().all()
 ----
 
 [#_DatabaseManager_contains_java_lang_String]
-==== contains
+==== - contains
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ driver.databases().contains(name)
 ----
 
 [#_DatabaseManager_create_java_lang_String]
-==== create
+==== - create
 
 [source,java]
 ----
@@ -98,7 +98,7 @@ driver.databases().create(name)
 ----
 
 [#_DatabaseManager_get_java_lang_String]
-==== get
+==== - get
 
 [source,java]
 ----
@@ -131,7 +131,7 @@ driver.databases().get(name)
 ----
 
 [#_DatabaseManager_importFromFile_java_lang_String_java_lang_String_java_lang_String]
-==== importFromFile
+==== - importFromFile
 
 [source,java]
 ----

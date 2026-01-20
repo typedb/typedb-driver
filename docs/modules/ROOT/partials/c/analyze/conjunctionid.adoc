@@ -11,7 +11,7 @@
 Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.
 
 [#_conjunction_id_as_u32]
-==== conjunction_id_as_u32
+==== - conjunction_id_as_u32
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Returns the ConjunctionID as u32 to use in hash, equality etc.
 `uint32_t`
 
 [#_conjunction_id_drop]
-==== conjunction_id_drop
+==== - conjunction_id_drop
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Frees the native rust ``ConjunctionID`` object.
 `void`
 
 [#_conjunction_id_string_repr]
-==== conjunction_id_string_repr
+==== - conjunction_id_string_repr
 
 [source,cpp]
 ----

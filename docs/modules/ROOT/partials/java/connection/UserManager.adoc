@@ -9,7 +9,7 @@ Provides access to all user management methods.
 
 // tag::methods[]
 [#_UserManager_all_]
-==== all
+==== - all
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ driver.users().all();
 ----
 
 [#_UserManager_contains_java_lang_String]
-==== contains
+==== - contains
 
 [source,java]
 ----
@@ -65,7 +65,7 @@ driver.users().contains(username);
 ----
 
 [#_UserManager_create_java_lang_String_java_lang_String]
-==== create
+==== - create
 
 [source,java]
 ----
@@ -99,7 +99,7 @@ driver.users().create(username, password);
 ----
 
 [#_UserManager_get_java_lang_String]
-==== get
+==== - get
 
 [source,java]
 ----
@@ -132,7 +132,7 @@ driver.users().get(username);
 ----
 
 [#_UserManager_getCurrentUser_]
-==== getCurrentUser
+==== - getCurrentUser
 
 [source,java]
 ----

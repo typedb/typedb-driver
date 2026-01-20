@@ -11,7 +11,7 @@
 A transaction with a TypeDB database.
 
 [#_transaction_analyze]
-==== transaction_analyze
+==== - transaction_analyze
 
 [source,cpp]
 ----
@@ -38,7 +38,7 @@ a| `query` a| The query string. a| `const char*`
 `struct AnalyzedQueryPromise*`
 
 [#_transaction_close]
-==== transaction_close
+==== - transaction_close
 
 [source,cpp]
 ----
@@ -54,7 +54,7 @@ Forcibly closes this transaction. To be used in exceptional cases.
 `struct VoidPromise*`
 
 [#_transaction_commit]
-==== transaction_commit
+==== - transaction_commit
 
 [source,cpp]
 ----
@@ -70,7 +70,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 `struct VoidPromise*`
 
 [#_transaction_is_open]
-==== transaction_is_open
+==== - transaction_is_open
 
 [source,cpp]
 ----
@@ -86,7 +86,7 @@ Checks whether this transaction is open.
 `bool`
 
 [#_transaction_new]
-==== transaction_new
+==== - transaction_new
 
 [source,cpp]
 ----
@@ -115,7 +115,7 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction. a| `
 `struct Transaction*`
 
 [#_transaction_on_close]
-==== transaction_on_close
+==== - transaction_on_close
 
 [source,cpp]
 ----
@@ -143,7 +143,7 @@ a| `callback` a| The function to be called a|
 `struct VoidPromise*`
 
 [#_transaction_query]
-==== transaction_query
+==== - transaction_query
 
 [source,cpp]
 ----
@@ -171,7 +171,7 @@ a| `options` a| ``QueryOptions`` to configure the executed query. a| `const stru
 `struct QueryAnswerPromise*`
 
 [#_transaction_rollback]
-==== transaction_rollback
+==== - transaction_rollback
 
 [source,cpp]
 ----
@@ -187,7 +187,7 @@ Rolls back the uncommitted changes made via this transaction.
 `struct VoidPromise*`
 
 [#_transaction_submit_close]
-==== transaction_submit_close
+==== - transaction_submit_close
 
 [source,cpp]
 ----

@@ -2,7 +2,7 @@
 === user
 
 [#_user_delete]
-==== user_delete
+==== - user_delete
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Deletes this database.
 `void`
 
 [#_user_drop]
-==== user_drop
+==== - user_drop
 
 [source,cpp]
 ----
@@ -34,7 +34,7 @@ Frees the native rust ``User`` object.
 `void`
 
 [#_user_get_name]
-==== user_get_name
+==== - user_get_name
 
 [source,cpp]
 ----
@@ -50,7 +50,7 @@ Returns the name of this user.
 `char*`
 
 [#_user_update_password]
-==== user_update_password
+==== - user_update_password
 
 [source,cpp]
 ----

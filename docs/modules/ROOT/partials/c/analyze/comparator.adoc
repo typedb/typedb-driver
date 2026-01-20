@@ -38,7 +38,7 @@ a| `NotEqual`
 // end::enum_constants[]
 
 [#_comparator_get_name]
-==== comparator_get_name
+==== - comparator_get_name
 
 [source,cpp]
 ----

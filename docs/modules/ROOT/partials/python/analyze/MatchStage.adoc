@@ -1,0 +1,30 @@
+[#_MatchStage]
+=== MatchStage
+
+`class`
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘match’ stage: match &lt;block&gt;
+
+// tag::methods[]
+[#_MatchStage_block_]
+==== - block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+The index into Pipeline.conjunctions.
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

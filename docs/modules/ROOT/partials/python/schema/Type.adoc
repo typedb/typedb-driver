@@ -1,0 +1,35 @@
+[#_Type]
+=== Type
+
+`class`
+
+*Package*: `typedb.api.concept.type.type`
+
+*Supertypes:*
+
+* `Concept`
+
+// tag::methods[]
+[#_Type_is_type_]
+==== - is_type
+
+[source,python]
+----
+is_type() -> bool
+----
+
+Checks if the concept is a ``Type``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+type_.is_type()
+----
+
+// end::methods[]
+

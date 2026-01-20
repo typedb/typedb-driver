@@ -1,0 +1,44 @@
+[#_Iid]
+=== Iid
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents an IID constraint: &lt;concept&gt; iid &lt;iid&gt;
+
+// tag::methods[]
+[#_Iid_iid_]
+==== - iid
+
+[source,python]
+----
+iid() -> str
+----
+
+
+
+[caption=""]
+.Returns
+`str`
+
+[#_Iid_variable_]
+==== - variable
+
+[source,python]
+----
+variable() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

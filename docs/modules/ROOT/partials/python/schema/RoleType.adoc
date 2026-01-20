@@ -1,0 +1,60 @@
+[#_RoleType]
+=== RoleType
+
+`class`
+
+*Package*: `typedb.api.concept.type.role_type`
+
+*Supertypes:*
+
+* `Type`
+
+Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
+
+Roles allow a schema to enforce logical constraints on types of role players.
+
+// tag::methods[]
+[#_RoleType_as_role_type_]
+==== - as_role_type
+
+[source,python]
+----
+as_role_type() -> RoleType
+----
+
+Casts the concept to ``RoleType``.
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+role_type.as_role_type()
+----
+
+[#_RoleType_is_role_type_]
+==== - is_role_type
+
+[source,python]
+----
+is_role_type() -> bool
+----
+
+Checks if the concept is a ``RoleType``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+role_type.is_role_type()
+----
+
+// end::methods[]
+

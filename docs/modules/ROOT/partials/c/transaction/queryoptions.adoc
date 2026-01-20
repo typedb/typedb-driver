@@ -12,7 +12,7 @@ TypeDB query options. ``QueryOptions`` object can be used to override the defaul
 
 
 [#_query_options_drop]
-==== query_options_drop
+==== - query_options_drop
 
 [source,cpp]
 ----
@@ -28,7 +28,7 @@ Frees the native Rust ``QueryOptions`` object.
 `void`
 
 [#_query_options_get_include_instance_types]
-==== query_options_get_include_instance_types
+==== - query_options_get_include_instance_types
 
 [source,cpp]
 ----
@@ -44,7 +44,7 @@ Returns the value set for the "include instance types" flag in this ``QueryOptio
 `bool`
 
 [#_query_options_get_include_query_structure]
-==== query_options_get_include_query_structure
+==== - query_options_get_include_query_structure
 
 [source,cpp]
 ----
@@ -60,7 +60,7 @@ Returns the value set for 'include query structure' in this ``QueryOptions`` obj
 `bool`
 
 [#_query_options_get_prefetch_size]
-==== query_options_get_prefetch_size
+==== - query_options_get_prefetch_size
 
 [source,cpp]
 ----
@@ -76,7 +76,7 @@ Returns the value set for the prefetch size in this ``QueryOptions`` object. If 
 `int64_t`
 
 [#_query_options_has_include_instance_types]
-==== query_options_has_include_instance_types
+==== - query_options_has_include_instance_types
 
 [source,cpp]
 ----
@@ -92,7 +92,7 @@ Checks whether the "include instance types" flag was explicitly set for this ``Q
 `bool`
 
 [#_query_options_has_include_query_structure]
-==== query_options_has_include_query_structure
+==== - query_options_has_include_query_structure
 
 [source,cpp]
 ----
@@ -108,7 +108,7 @@ Checks whether the prefetch size was explicitly set for this ``QueryOptions`` ob
 `bool`
 
 [#_query_options_has_prefetch_size]
-==== query_options_has_prefetch_size
+==== - query_options_has_prefetch_size
 
 [source,cpp]
 ----
@@ -124,7 +124,7 @@ Checks whether the prefetch size was explicitly set for this ``QueryOptions`` ob
 `bool`
 
 [#_query_options_new]
-==== query_options_new
+==== - query_options_new
 
 [source,cpp]
 ----
@@ -140,7 +140,7 @@ Produces a new ``QueryOptions`` object.
 `struct QueryOptions*`
 
 [#_query_options_set_include_instance_types]
-==== query_options_set_include_instance_types
+==== - query_options_set_include_instance_types
 
 [source,cpp]
 ----
@@ -156,7 +156,7 @@ Explicitly set the "include instance types" flag. If set, specifies if types sho
 `void`
 
 [#_query_options_set_include_query_structure]
-==== query_options_set_include_query_structure
+==== - query_options_set_include_query_structure
 
 [source,cpp]
 ----
@@ -172,7 +172,7 @@ Explicitly set the prefetch size. If set, it requests the server to include the 
 `void`
 
 [#_query_options_set_prefetch_size]
-==== query_options_set_prefetch_size
+==== - query_options_set_prefetch_size
 
 [source,cpp]
 ----

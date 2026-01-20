@@ -1,0 +1,30 @@
+[#_Try]
+=== Try
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a ‘try’ constraint: try { &lt;conjunction&gt; }
+
+// tag::methods[]
+[#_Try_conjunction_]
+==== - conjunction
+
+[source,python]
+----
+conjunction() -> ConjunctionID
+----
+
+Index into Pipeline.conjunctions
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

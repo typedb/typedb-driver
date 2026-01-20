@@ -1,0 +1,30 @@
+[#_UpdateStage]
+=== UpdateStage
+
+`class`
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents an ‘update’ stage: update &lt;block&gt;
+
+// tag::methods[]
+[#_UpdateStage_block_]
+==== - block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+// end::methods[]
+

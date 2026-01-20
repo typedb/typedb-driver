@@ -1,0 +1,44 @@
+[#_DeleteStage]
+=== DeleteStage
+
+`class`
+
+*Package*: `typedb.api.analyze.pipeline_stage`
+
+*Supertypes:*
+
+* `PipelineStage`
+
+Represents a ‘delete’ stage.
+
+// tag::methods[]
+[#_DeleteStage_block_]
+==== - block
+
+[source,python]
+----
+block() -> ConjunctionID
+----
+
+
+
+[caption=""]
+.Returns
+`ConjunctionID`
+
+[#_DeleteStage_deleted_variables_]
+==== - deleted_variables
+
+[source,python]
+----
+deleted_variables() -> Iterator['Variable']
+----
+
+The variables for which the unified concepts are to be deleted.
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

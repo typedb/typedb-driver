@@ -2,7 +2,7 @@
 === queryanswer
 
 [#_query_answer_drop]
-==== query_answer_drop
+==== - query_answer_drop
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``QueryAnswer`` object.
 `void`
 
 [#_query_answer_get_query_type]
-==== query_answer_get_query_type
+==== - query_answer_get_query_type
 
 [source,cpp]
 ----
@@ -34,7 +34,7 @@ Retrieve the executed query's type of the ``QueryAnswer``.
 `enum QueryType`
 
 [#_query_answer_into_documents]
-==== query_answer_into_documents
+==== - query_answer_into_documents
 
 [source,cpp]
 ----
@@ -50,7 +50,7 @@ Produces an ``Iterator`` over all JSON ``ConceptDocument``s in this ``QueryAnswe
 `struct StringIterator*`
 
 [#_query_answer_into_rows]
-==== query_answer_into_rows
+==== - query_answer_into_rows
 
 [source,cpp]
 ----
@@ -66,7 +66,7 @@ Produces an ``Iterator`` over all ``ConceptRow``s in this ``QueryAnswer``.
 `struct ConceptRowIterator*`
 
 [#_query_answer_is_concept_document_stream]
-==== query_answer_is_concept_document_stream
+==== - query_answer_is_concept_document_stream
 
 [source,cpp]
 ----
@@ -82,7 +82,7 @@ Checks if the query answer is a ``ConceptDocumentStream``.
 `bool`
 
 [#_query_answer_is_concept_row_stream]
-==== query_answer_is_concept_row_stream
+==== - query_answer_is_concept_row_stream
 
 [source,cpp]
 ----
@@ -98,7 +98,7 @@ Checks if the query answer is a ``ConceptRowStream``.
 `bool`
 
 [#_query_answer_is_ok]
-==== query_answer_is_ok
+==== - query_answer_is_ok
 
 [source,cpp]
 ----

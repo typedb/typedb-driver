@@ -1,0 +1,35 @@
+[#_TypeDB]
+=== TypeDB
+
+`class`
+
+*Package*: `typedb.driver`
+
+// tag::methods[]
+[#_TypeDB_driver_address_str_credentials_Credentials_driver_options_DriverOptions]
+==== - driver
+
+[source,python]
+----
+static driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver
+----
+
+Creates a connection to TypeDB.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `address` a| Address of the TypeDB server. a| `str` a| 
+a| `credentials` a| The credentials to connect with. a| `Credentials` a| 
+a| `driver_options` a| The connection settings to connect with. a| `DriverOptions` a| 
+|===
+
+[caption=""]
+.Returns
+`Driver`
+
+// end::methods[]
+

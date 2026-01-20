@@ -14,7 +14,7 @@ Represents an iterator over ``ConceptRow``s returned as a server answer.
 
 // tag::methods[]
 [#_ConceptRowIterator_asConceptRows_]
-==== asConceptRows
+==== - asConceptRows
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ concept.asConceptRows();
 ----
 
 [#_ConceptRowIterator_isConceptRows_]
-==== isConceptRows
+==== - isConceptRows
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ concept.isConceptRows();
 ----
 
 [#_ConceptRowIterator_stream_]
-==== stream
+==== - stream
 
 [source,java]
 ----

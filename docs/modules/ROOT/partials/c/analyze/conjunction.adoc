@@ -11,7 +11,7 @@
 A representation of the constraints involved in the query, and types inferred for each variable.
 
 [#_conjunction_drop]
-==== conjunction_drop
+==== - conjunction_drop
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``Conjunction`` object.
 `void`
 
 [#_conjunction_get_annotated_variables]
-==== conjunction_get_annotated_variables
+==== - conjunction_get_annotated_variables
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Returns the variables in the current conjunction for which type annotations are 
 `struct VariableIterator*`
 
 [#_conjunction_get_constraints]
-==== conjunction_get_constraints
+==== - conjunction_get_constraints
 
 [source,cpp]
 ----
@@ -59,7 +59,7 @@ Returns the ``Constraint``s in the given conjunction.
 `struct ConstraintWithSpanIterator*`
 
 [#_conjunction_get_variable_annotations]
-==== conjunction_get_variable_annotations
+==== - conjunction_get_variable_annotations
 
 [source,cpp]
 ----
