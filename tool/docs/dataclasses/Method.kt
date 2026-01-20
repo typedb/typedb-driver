@@ -38,7 +38,7 @@ data class Method(
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(headerLevel, this.name + "()")
+        result += builder.header(headerLevel, this.name)
         result += builder.codeBlock(this.signature, language)
         result += "${this.description.joinToString("\n\n")}\n\n"
 

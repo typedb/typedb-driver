@@ -70,6 +70,13 @@ data class Class(
                     "struct"
                 }
             }
+            "c" -> {
+                if (this.enumConstants.isNotEmpty()) {
+                    "rust enum (pointer)"
+                } else {
+                    "rust struct (pointer)"
+                }
+            }
             else -> "class"
         }
     }
@@ -79,7 +86,7 @@ data class Class(
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
         result += builder.header(headerLevel,  this.name)
-        var nameDescriptor = nameDescriptor(this.name)
+        val nameDescriptor = nameDescriptor(language)
         result += "`$nameDescriptor`\n\n"
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
