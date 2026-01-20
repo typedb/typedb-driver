@@ -2,7 +2,7 @@
 === constraint
 
 [#_constraint_comparison_get_comparator]
-==== - constraint_comparison_get_comparator
+==== constraint_comparison_get_comparator()
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns 
 `enum Comparator`
 
 [#_constraint_comparison_get_lhs]
-==== - constraint_comparison_get_lhs
+==== constraint_comparison_get_lhs()
 
 [source,cpp]
 ----
@@ -34,7 +34,7 @@ Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns 
 `struct ConstraintVertex*`
 
 [#_constraint_comparison_get_rhs]
-==== - constraint_comparison_get_rhs
+==== constraint_comparison_get_rhs()
 
 [source,cpp]
 ----
@@ -50,7 +50,7 @@ Unwraps the ``Constraint`` instance as a ``Comparison`` constraint, and returns 
 `struct ConstraintVertex*`
 
 [#_constraint_expression_get_arguments]
-==== - constraint_expression_get_arguments
+==== constraint_expression_get_arguments()
 
 [source,cpp]
 ----
@@ -66,7 +66,7 @@ Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns
 `struct ConstraintVertexIterator*`
 
 [#_constraint_expression_get_assigned]
-==== - constraint_expression_get_assigned
+==== constraint_expression_get_assigned()
 
 [source,cpp]
 ----
@@ -82,7 +82,7 @@ Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns
 `struct ConstraintVertex*`
 
 [#_constraint_expression_get_text]
-==== - constraint_expression_get_text
+==== constraint_expression_get_text()
 
 [source,cpp]
 ----
@@ -98,7 +98,7 @@ Unwraps the ``Constraint`` instance as an ``Expression`` constraint, and returns
 `char*`
 
 [#_constraint_function_call_get_arguments]
-==== - constraint_function_call_get_arguments
+==== constraint_function_call_get_arguments()
 
 [source,cpp]
 ----
@@ -114,7 +114,7 @@ Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and return
 `struct ConstraintVertexIterator*`
 
 [#_constraint_function_call_get_assigned]
-==== - constraint_function_call_get_assigned
+==== constraint_function_call_get_assigned()
 
 [source,cpp]
 ----
@@ -130,7 +130,7 @@ Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and return
 `struct ConstraintVertexIterator*`
 
 [#_constraint_function_call_get_name]
-==== - constraint_function_call_get_name
+==== constraint_function_call_get_name()
 
 [source,cpp]
 ----
@@ -146,7 +146,7 @@ Unwraps the ``Constraint`` instance as a ``FunctionCall`` constraint, and return
 `char*`
 
 [#_constraint_has_get_attribute]
-==== - constraint_has_get_attribute
+==== constraint_has_get_attribute()
 
 [source,cpp]
 ----
@@ -162,7 +162,7 @@ Unwraps the ``Constraint`` instance as a ``Has`` constraint, and returns the att
 `struct ConstraintVertex*`
 
 [#_constraint_has_get_exactness]
-==== - constraint_has_get_exactness
+==== constraint_has_get_exactness()
 
 [source,cpp]
 ----
@@ -178,7 +178,7 @@ enum ConstraintExactness constraint_has_get_exactness(const struct ConstraintWit
 `enum ConstraintExactness`
 
 [#_constraint_has_get_owner]
-==== - constraint_has_get_owner
+==== constraint_has_get_owner()
 
 [source,cpp]
 ----
@@ -194,7 +194,7 @@ Unwraps the ``Constraint`` instance as a ``Has`` constraint, and returns the own
 `struct ConstraintVertex*`
 
 [#_constraint_iid_get_iid]
-==== - constraint_iid_get_iid
+==== constraint_iid_get_iid()
 
 [source,cpp]
 ----
@@ -210,7 +210,7 @@ Unwraps the ``Constraint`` instance as an ``Iid`` constraint, and returns the ii
 `char*`
 
 [#_constraint_iid_get_variable]
-==== - constraint_iid_get_variable
+==== constraint_iid_get_variable()
 
 [source,cpp]
 ----
@@ -226,7 +226,7 @@ Unwraps the ``Constraint`` instance as an ``Iid`` constraint, and returns the co
 `struct ConstraintVertex*`
 
 [#_constraint_is_get_lhs]
-==== - constraint_is_get_lhs
+==== constraint_is_get_lhs()
 
 [source,cpp]
 ----
@@ -242,7 +242,7 @@ Unwraps the ``Constraint`` instance as an ``Is`` constraint, and returns the lef
 `struct ConstraintVertex*`
 
 [#_constraint_is_get_rhs]
-==== - constraint_is_get_rhs
+==== constraint_is_get_rhs()
 
 [source,cpp]
 ----
@@ -258,7 +258,7 @@ Unwraps the ``Constraint`` instance as an ``Is`` constraint, and returns the rig
 `struct ConstraintVertex*`
 
 [#_constraint_isa_get_exactness]
-==== - constraint_isa_get_exactness
+==== constraint_isa_get_exactness()
 
 [source,cpp]
 ----
@@ -274,7 +274,7 @@ Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the ex
 `enum ConstraintExactness`
 
 [#_constraint_isa_get_instance]
-==== - constraint_isa_get_instance
+==== constraint_isa_get_instance()
 
 [source,cpp]
 ----
@@ -290,7 +290,7 @@ Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the in
 `struct ConstraintVertex*`
 
 [#_constraint_isa_get_type]
-==== - constraint_isa_get_type
+==== constraint_isa_get_type()
 
 [source,cpp]
 ----
@@ -306,7 +306,7 @@ Unwraps the ``Constraint`` instance as an ``Isa`` constraint, and returns the ty
 `struct ConstraintVertex*`
 
 [#_constraint_kind_get_kind]
-==== - constraint_kind_get_kind
+==== constraint_kind_get_kind()
 
 [source,cpp]
 ----
@@ -322,7 +322,7 @@ Unwraps the ``Constraint`` instance as a ``Kind`` constraint, and returns the ``
 `enum Kind`
 
 [#_constraint_kind_get_type]
-==== - constraint_kind_get_type
+==== constraint_kind_get_type()
 
 [source,cpp]
 ----
@@ -338,7 +338,7 @@ Unwraps the ``Constraint`` instance as a ``Kind`` constraint, and returns the as
 `struct ConstraintVertex*`
 
 [#_constraint_label_get_label]
-==== - constraint_label_get_label
+==== constraint_label_get_label()
 
 [source,cpp]
 ----
@@ -354,7 +354,7 @@ Unwraps the ``Constraint`` instance as a ``Label`` constraint, and returns the l
 `char*`
 
 [#_constraint_label_get_variable]
-==== - constraint_label_get_variable
+==== constraint_label_get_variable()
 
 [source,cpp]
 ----
@@ -370,7 +370,7 @@ Unwraps the ``Constraint`` instance as a ``Label`` constraint, and returns the t
 `struct ConstraintVertex*`
 
 [#_constraint_links_get_exactness]
-==== - constraint_links_get_exactness
+==== constraint_links_get_exactness()
 
 [source,cpp]
 ----
@@ -386,7 +386,7 @@ enum ConstraintExactness constraint_links_get_exactness(const struct ConstraintW
 `enum ConstraintExactness`
 
 [#_constraint_links_get_player]
-==== - constraint_links_get_player
+==== constraint_links_get_player()
 
 [source,cpp]
 ----
@@ -402,7 +402,7 @@ Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the p
 `struct ConstraintVertex*`
 
 [#_constraint_links_get_relation]
-==== - constraint_links_get_relation
+==== constraint_links_get_relation()
 
 [source,cpp]
 ----
@@ -418,7 +418,7 @@ Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the r
 `struct ConstraintVertex*`
 
 [#_constraint_links_get_role]
-==== - constraint_links_get_role
+==== constraint_links_get_role()
 
 [source,cpp]
 ----
@@ -434,7 +434,7 @@ Unwraps the ``Constraint`` instance as a ``Links`` constraint, and returns the r
 `struct ConstraintVertex*`
 
 [#_constraint_not_get_conjunction]
-==== - constraint_not_get_conjunction
+==== constraint_not_get_conjunction()
 
 [source,cpp]
 ----
@@ -450,7 +450,7 @@ Unwraps the ``Constraint`` instance as a ``Not`` constraint, and returns the ``C
 `struct ConjunctionID*`
 
 [#_constraint_or_get_branches]
-==== - constraint_or_get_branches
+==== constraint_or_get_branches()
 
 [source,cpp]
 ----
@@ -466,7 +466,7 @@ Unwraps the ``Constraint`` instance as an ``Or`` constraint, and returns the ``C
 `struct ConjunctionIDIterator*`
 
 [#_constraint_owns_get_attribute]
-==== - constraint_owns_get_attribute
+==== constraint_owns_get_attribute()
 
 [source,cpp]
 ----
@@ -482,7 +482,7 @@ Unwraps the ``Constraint`` instance as an ``Owns`` constraint, and returns the a
 `struct ConstraintVertex*`
 
 [#_constraint_owns_get_exactness]
-==== - constraint_owns_get_exactness
+==== constraint_owns_get_exactness()
 
 [source,cpp]
 ----
@@ -498,7 +498,7 @@ enum ConstraintExactness constraint_owns_get_exactness(const struct ConstraintWi
 `enum ConstraintExactness`
 
 [#_constraint_owns_get_owner]
-==== - constraint_owns_get_owner
+==== constraint_owns_get_owner()
 
 [source,cpp]
 ----
@@ -514,7 +514,7 @@ Unwraps the ``Constraint`` instance as an ``Owns`` constraint, and returns the o
 `struct ConstraintVertex*`
 
 [#_constraint_plays_get_exactness]
-==== - constraint_plays_get_exactness
+==== constraint_plays_get_exactness()
 
 [source,cpp]
 ----
@@ -530,7 +530,7 @@ enum ConstraintExactness constraint_plays_get_exactness(const struct ConstraintW
 `enum ConstraintExactness`
 
 [#_constraint_plays_get_player]
-==== - constraint_plays_get_player
+==== constraint_plays_get_player()
 
 [source,cpp]
 ----
@@ -546,7 +546,7 @@ Unwraps the ``Constraint`` instance as a ``Plays`` constraint, and returns the p
 `struct ConstraintVertex*`
 
 [#_constraint_plays_get_role]
-==== - constraint_plays_get_role
+==== constraint_plays_get_role()
 
 [source,cpp]
 ----
@@ -562,7 +562,7 @@ Unwraps the ``Constraint`` instance as a ``Plays`` constraint, and returns the r
 `struct ConstraintVertex*`
 
 [#_constraint_relates_get_exactness]
-==== - constraint_relates_get_exactness
+==== constraint_relates_get_exactness()
 
 [source,cpp]
 ----
@@ -578,7 +578,7 @@ Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the
 `enum ConstraintExactness`
 
 [#_constraint_relates_get_relation]
-==== - constraint_relates_get_relation
+==== constraint_relates_get_relation()
 
 [source,cpp]
 ----
@@ -594,7 +594,7 @@ Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the
 `struct ConstraintVertex*`
 
 [#_constraint_relates_get_role]
-==== - constraint_relates_get_role
+==== constraint_relates_get_role()
 
 [source,cpp]
 ----
@@ -610,7 +610,7 @@ Unwraps the ``Constraint`` instance as a ``Relates`` constraint, and returns the
 `struct ConstraintVertex*`
 
 [#_constraint_string_repr]
-==== - constraint_string_repr
+==== constraint_string_repr()
 
 [source,cpp]
 ----
@@ -626,7 +626,7 @@ Returns a string representation of the constraint
 `char*`
 
 [#_constraint_sub_get_exactness]
-==== - constraint_sub_get_exactness
+==== constraint_sub_get_exactness()
 
 [source,cpp]
 ----
@@ -642,7 +642,7 @@ Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the exa
 `enum ConstraintExactness`
 
 [#_constraint_sub_get_subtype]
-==== - constraint_sub_get_subtype
+==== constraint_sub_get_subtype()
 
 [source,cpp]
 ----
@@ -658,7 +658,7 @@ Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the sub
 `struct ConstraintVertex*`
 
 [#_constraint_sub_get_supertype]
-==== - constraint_sub_get_supertype
+==== constraint_sub_get_supertype()
 
 [source,cpp]
 ----
@@ -674,7 +674,7 @@ Unwraps the ``Constraint`` instance as a ``Sub`` constraint, and returns the sup
 `struct ConstraintVertex*`
 
 [#_constraint_try_get_conjunction]
-==== - constraint_try_get_conjunction
+==== constraint_try_get_conjunction()
 
 [source,cpp]
 ----
@@ -690,7 +690,7 @@ Unwraps the ``Constraint`` instance as a ``Try`` constraint, and returns the ``C
 `struct ConjunctionID*`
 
 [#_constraint_value_get_attribute_type]
-==== - constraint_value_get_attribute_type
+==== constraint_value_get_attribute_type()
 
 [source,cpp]
 ----
@@ -706,7 +706,7 @@ Unwraps the ``Constraint`` instance as a ``Value`` constraint, and returns the a
 `struct ConstraintVertex*`
 
 [#_constraint_value_get_value_type]
-==== - constraint_value_get_value_type
+==== constraint_value_get_value_type()
 
 [source,cpp]
 ----
@@ -722,7 +722,7 @@ Unwraps the ``Constraint`` instance as a ``Value`` constraint, and returns the s
 `char*`
 
 [#_constraint_variant]
-==== - constraint_variant
+==== constraint_variant()
 
 [source,cpp]
 ----

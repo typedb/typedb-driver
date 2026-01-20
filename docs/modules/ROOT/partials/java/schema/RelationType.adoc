@@ -14,7 +14,7 @@ Relation types (or subtypes of the relation root type) represent relationships b
 
 // tag::methods[]
 [#_RelationType_asAttribute_]
-==== - asAttribute
+==== asAttribute()
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ concept.asAttribute();
 ----
 
 [#_RelationType_asAttributeType_]
-==== - asAttributeType
+==== asAttributeType()
 
 [source,java]
 ----
@@ -58,7 +58,7 @@ concept.asAttributeType();
 ----
 
 [#_RelationType_asEntity_]
-==== - asEntity
+==== asEntity()
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ concept.asEntity();
 ----
 
 [#_RelationType_asEntityType_]
-==== - asEntityType
+==== asEntityType()
 
 [source,java]
 ----
@@ -102,7 +102,7 @@ concept.asEntityType();
 ----
 
 [#_RelationType_asInstance_]
-==== - asInstance
+==== asInstance()
 
 [source,java]
 ----
@@ -124,7 +124,7 @@ concept.asInstance();
 ----
 
 [#_RelationType_asRelation_]
-==== - asRelation
+==== asRelation()
 
 [source,java]
 ----
@@ -146,7 +146,7 @@ concept.asRelation();
 ----
 
 [#_RelationType_asRelationType_]
-==== - asRelationType
+==== asRelationType()
 
 [source,java]
 ----
@@ -169,7 +169,7 @@ concept.asRelationType();
 ----
 
 [#_RelationType_asRoleType_]
-==== - asRoleType
+==== asRoleType()
 
 [source,java]
 ----
@@ -191,7 +191,7 @@ concept.asRoleType();
 ----
 
 [#_RelationType_asValue_]
-==== - asValue
+==== asValue()
 
 [source,java]
 ----
@@ -213,7 +213,7 @@ concept.asValue();
 ----
 
 [#_RelationType_getLabel_]
-==== - getLabel
+==== getLabel()
 
 [source,java]
 ----
@@ -236,7 +236,7 @@ concept.getLabel();
 ----
 
 [#_RelationType_isAttribute_]
-==== - isAttribute
+==== isAttribute()
 
 [source,java]
 ----
@@ -259,7 +259,7 @@ concept.isAttribute();
 ----
 
 [#_RelationType_isAttributeType_]
-==== - isAttributeType
+==== isAttributeType()
 
 [source,java]
 ----
@@ -282,7 +282,7 @@ concept.isAttributeType();
 ----
 
 [#_RelationType_isBoolean_]
-==== - isBoolean
+==== isBoolean()
 
 [source,java]
 ----
@@ -305,7 +305,7 @@ concept.isBoolean()
 ----
 
 [#_RelationType_isDate_]
-==== - isDate
+==== isDate()
 
 [source,java]
 ----
@@ -328,7 +328,7 @@ concept.isDate();
 ----
 
 [#_RelationType_isDatetime_]
-==== - isDatetime
+==== isDatetime()
 
 [source,java]
 ----
@@ -351,7 +351,7 @@ concept.isDatetime();
 ----
 
 [#_RelationType_isDatetimeTZ_]
-==== - isDatetimeTZ
+==== isDatetimeTZ()
 
 [source,java]
 ----
@@ -374,7 +374,7 @@ concept.isDatetimeTZ();
 ----
 
 [#_RelationType_isDecimal_]
-==== - isDecimal
+==== isDecimal()
 
 [source,java]
 ----
@@ -397,7 +397,7 @@ concept.isDecimal();
 ----
 
 [#_RelationType_isDouble_]
-==== - isDouble
+==== isDouble()
 
 [source,java]
 ----
@@ -420,7 +420,7 @@ concept.isDouble();
 ----
 
 [#_RelationType_isDuration_]
-==== - isDuration
+==== isDuration()
 
 [source,java]
 ----
@@ -443,7 +443,7 @@ concept.isDuration();
 ----
 
 [#_RelationType_isEntity_]
-==== - isEntity
+==== isEntity()
 
 [source,java]
 ----
@@ -466,7 +466,7 @@ concept.isEntity();
 ----
 
 [#_RelationType_isEntityType_]
-==== - isEntityType
+==== isEntityType()
 
 [source,java]
 ----
@@ -489,7 +489,7 @@ concept.isEntityType();
 ----
 
 [#_RelationType_isInstance_]
-==== - isInstance
+==== isInstance()
 
 [source,java]
 ----
@@ -512,7 +512,7 @@ concept.isInstance();
 ----
 
 [#_RelationType_isInteger_]
-==== - isInteger
+==== isInteger()
 
 [source,java]
 ----
@@ -535,7 +535,7 @@ concept.isInteger();
 ----
 
 [#_RelationType_isRelation_]
-==== - isRelation
+==== isRelation()
 
 [source,java]
 ----
@@ -558,7 +558,7 @@ concept.isRelation();
 ----
 
 [#_RelationType_isRelationType_]
-==== - isRelationType
+==== isRelationType()
 
 [source,java]
 ----
@@ -581,7 +581,7 @@ concept.isRelationType();
 ----
 
 [#_RelationType_isRoleType_]
-==== - isRoleType
+==== isRoleType()
 
 [source,java]
 ----
@@ -604,7 +604,7 @@ concept.isRoleType();
 ----
 
 [#_RelationType_isString_]
-==== - isString
+==== isString()
 
 [source,java]
 ----
@@ -627,7 +627,7 @@ concept.isString();
 ----
 
 [#_RelationType_isStruct_]
-==== - isStruct
+==== isStruct()
 
 [source,java]
 ----
@@ -650,7 +650,7 @@ concept.isStruct();
 ----
 
 [#_RelationType_isValue_]
-==== - isValue
+==== isValue()
 
 [source,java]
 ----
@@ -673,7 +673,7 @@ concept.isValue();
 ----
 
 [#_RelationType_tryGetBoolean_]
-==== - tryGetBoolean
+==== tryGetBoolean()
 
 [source,java]
 ----
@@ -695,7 +695,7 @@ concept.tryGetBoolean();
 ----
 
 [#_RelationType_tryGetDate_]
-==== - tryGetDate
+==== tryGetDate()
 
 [source,java]
 ----
@@ -717,7 +717,7 @@ concept.tryGetDate();
 ----
 
 [#_RelationType_tryGetDatetime_]
-==== - tryGetDatetime
+==== tryGetDatetime()
 
 [source,java]
 ----
@@ -739,7 +739,7 @@ concept.tryGetDatetime();
 ----
 
 [#_RelationType_tryGetDatetimeTZ_]
-==== - tryGetDatetimeTZ
+==== tryGetDatetimeTZ()
 
 [source,java]
 ----
@@ -761,7 +761,7 @@ concept.tryGetDatetimeTZ();
 ----
 
 [#_RelationType_tryGetDecimal_]
-==== - tryGetDecimal
+==== tryGetDecimal()
 
 [source,java]
 ----
@@ -783,7 +783,7 @@ concept.tryGetDecimal();
 ----
 
 [#_RelationType_tryGetDouble_]
-==== - tryGetDouble
+==== tryGetDouble()
 
 [source,java]
 ----
@@ -805,7 +805,7 @@ concept.tryGetDouble();
 ----
 
 [#_RelationType_tryGetDuration_]
-==== - tryGetDuration
+==== tryGetDuration()
 
 [source,java]
 ----
@@ -827,7 +827,7 @@ concept.tryGetDuration();
 ----
 
 [#_RelationType_tryGetIID_]
-==== - tryGetIID
+==== tryGetIID()
 
 [source,java]
 ----
@@ -850,7 +850,7 @@ concept.tryGetIID();
 ----
 
 [#_RelationType_tryGetInteger_]
-==== - tryGetInteger
+==== tryGetInteger()
 
 [source,java]
 ----
@@ -872,7 +872,7 @@ concept.tryGetInteger();
 ----
 
 [#_RelationType_tryGetLabel_]
-==== - tryGetLabel
+==== tryGetLabel()
 
 [source,java]
 ----
@@ -895,7 +895,7 @@ concept.tryGetLabel();
 ----
 
 [#_RelationType_tryGetString_]
-==== - tryGetString
+==== tryGetString()
 
 [source,java]
 ----
@@ -917,7 +917,7 @@ concept.tryGetString();
 ----
 
 [#_RelationType_tryGetStruct_]
-==== - tryGetStruct
+==== tryGetStruct()
 
 [source,java]
 ----
@@ -939,7 +939,7 @@ concept.tryGetStruct();
 ----
 
 [#_RelationType_tryGetValue_]
-==== - tryGetValue
+==== tryGetValue()
 
 [source,java]
 ----
@@ -962,7 +962,7 @@ concept.tryGetValue();
 ----
 
 [#_RelationType_tryGetValueType_]
-==== - tryGetValueType
+==== tryGetValueType()
 
 [source,java]
 ----

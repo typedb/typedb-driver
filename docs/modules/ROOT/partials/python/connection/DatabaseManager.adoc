@@ -9,7 +9,7 @@ Provides access to all database management methods.
 
 // tag::methods[]
 [#_DatabaseManager_all_]
-==== - all
+==== all()
 
 [source,python]
 ----
@@ -30,7 +30,7 @@ driver.databases.all()
 ----
 
 [#_DatabaseManager_contains_name_str]
-==== - contains
+==== contains()
 
 [source,python]
 ----
@@ -60,7 +60,7 @@ driver.databases.contains(name)
 ----
 
 [#_DatabaseManager_create_name_str]
-==== - create
+==== create()
 
 [source,python]
 ----
@@ -90,7 +90,7 @@ driver.databases.create(name)
 ----
 
 [#_DatabaseManager_get_name_str]
-==== - get
+==== get()
 
 [source,python]
 ----
@@ -120,7 +120,7 @@ driver.databases.get(name)
 ----
 
 [#_DatabaseManager_import_from_file_name_str_schema_str_data_file_path_str]
-==== - import_from_file
+==== import_from_file()
 
 [source,python]
 ----

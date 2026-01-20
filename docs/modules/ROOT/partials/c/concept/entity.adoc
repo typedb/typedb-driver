@@ -2,7 +2,7 @@
 === entity
 
 [#_entity_get_type]
-==== - entity_get_type
+==== entity_get_type()
 
 [source,cpp]
 ----

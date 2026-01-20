@@ -7,7 +7,7 @@
 
 // tag::methods[]
 [#_Database_delete_]
-==== - delete
+==== delete()
 
 [source,java]
 ----
@@ -30,7 +30,7 @@ database.delete()
 ----
 
 [#_Database_exportToFile_java_lang_String_java_lang_String]
-==== - exportToFile
+==== exportToFile()
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ database.exportToFile("schema.typeql", "data.typedb")
 ----
 
 [#_Database_name_]
-==== - name
+==== name()
 
 [source,java]
 ----
@@ -79,7 +79,7 @@ The database name as a string.
 `java.lang.String`
 
 [#_Database_schema_]
-==== - schema
+==== schema()
 
 [source,java]
 ----
@@ -103,7 +103,7 @@ database.schema()
 ----
 
 [#_Database_typeSchema_]
-==== - typeSchema
+==== typeSchema()
 
 [source,java]
 ----

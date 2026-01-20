@@ -9,7 +9,7 @@ A representation of the constraints involved in the query, and types inferred fo
 
 // tag::methods[]
 [#_Conjunction_annotated_variables_]
-==== - annotated_variables
+==== annotated_variables()
 
 [source,java]
 ----
@@ -23,7 +23,7 @@ The variables that have annotations in this conjunction.
 `java.util.stream.Stream<? extends Variable>`
 
 [#_Conjunction_constraints_]
-==== - constraints
+==== constraints()
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ The ``Constraint``s in the conjunction.
 `java.util.stream.Stream<? extends Constraint>`
 
 [#_Conjunction_variable_annotations_Variable]
-==== - variable_annotations
+==== variable_annotations()
 
 [source,java]
 ----

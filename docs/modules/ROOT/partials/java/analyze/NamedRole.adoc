@@ -9,7 +9,7 @@
 
 // tag::methods[]
 [#_NamedRole_name_]
-==== - name
+==== name()
 
 [source,java]
 ----
@@ -23,7 +23,7 @@ The unscoped role name specified in the query.
 `java.lang.String`
 
 [#_NamedRole_variable_]
-==== - variable
+==== variable()
 
 [source,java]
 ----

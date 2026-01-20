@@ -19,7 +19,7 @@ Multiple types can own the same attribute type, and different instances of the s
 
 // tag::methods[]
 [#_AttributeType_as_attribute_type_]
-==== - as_attribute_type
+==== as_attribute_type()
 
 [source,python]
 ----
@@ -40,7 +40,7 @@ attribute.as_attribute_type()
 ----
 
 [#_AttributeType_is_attribute_type_]
-==== - is_attribute_type
+==== is_attribute_type()
 
 [source,python]
 ----

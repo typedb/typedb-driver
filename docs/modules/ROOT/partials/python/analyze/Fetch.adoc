@@ -9,7 +9,7 @@ A representation of the ‘fetch’ stage of a query.
 
 // tag::methods[]
 [#_Fetch_as_leaf_]
-==== - as_leaf
+==== as_leaf()
 
 [source,python]
 ----
@@ -23,7 +23,7 @@ Down-casts this Fetch as a FetchLeaf variant.
 `FetchLeaf`
 
 [#_Fetch_as_list_]
-==== - as_list
+==== as_list()
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ Down-casts this Fetch as a FetchList variant.
 `FetchList`
 
 [#_Fetch_as_object_]
-==== - as_object
+==== as_object()
 
 [source,python]
 ----
@@ -51,7 +51,7 @@ Down-casts this Fetch as a FetchObject variant.
 `FetchObject`
 
 [#_Fetch_is_leaf_]
-==== - is_leaf
+==== is_leaf()
 
 [source,python]
 ----
@@ -65,7 +65,7 @@ is_leaf() -> bool
 `bool`
 
 [#_Fetch_is_list_]
-==== - is_list
+==== is_list()
 
 [source,python]
 ----
@@ -79,7 +79,7 @@ is_list() -> bool
 `bool`
 
 [#_Fetch_is_object_]
-==== - is_object
+==== is_object()
 
 [source,python]
 ----

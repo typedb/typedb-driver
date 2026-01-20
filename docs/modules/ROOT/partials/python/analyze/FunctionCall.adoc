@@ -13,7 +13,7 @@ Represents a function call: let &lt;assigned&gt; = name(&lt;arguments&gt;)
 
 // tag::methods[]
 [#_FunctionCall_arguments_]
-==== - arguments
+==== arguments()
 
 [source,python]
 ----
@@ -27,7 +27,7 @@ arguments() -> Iterator['ConstraintVertex']
 `Iterator['ConstraintVertex']`
 
 [#_FunctionCall_assigned_]
-==== - assigned
+==== assigned()
 
 [source,python]
 ----
@@ -41,7 +41,7 @@ assigned() -> Iterator['ConstraintVertex']
 `Iterator['ConstraintVertex']`
 
 [#_FunctionCall_name_]
-==== - name
+==== name()
 
 [source,python]
 ----

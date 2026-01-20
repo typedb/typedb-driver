@@ -9,7 +9,7 @@ A representation of a query pipeline.
 
 // tag::methods[]
 [#_Pipeline_conjunction_ConjunctionID]
-==== - conjunction
+==== conjunction()
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ a| `conjunctionID` a| The ConjunctionID of the conjunction to retrieve a| `Conju
 `java.util.Optional<? extends Conjunction>`
 
 [#_Pipeline_getVariableName_Variable]
-==== - getVariableName
+==== getVariableName()
 
 [source,java]
 ----
@@ -46,7 +46,7 @@ Gets the name of the specified variable, if it has one.
 `java.util.Optional<java.lang.String>`
 
 [#_Pipeline_stages_]
-==== - stages
+==== stages()
 
 [source,java]
 ----

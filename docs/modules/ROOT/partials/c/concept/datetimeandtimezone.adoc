@@ -11,7 +11,7 @@
 A ``DatetimeAndTimeZone`` used to represent time zoned datetime in FFI. Time zone can be represented either as an IANA ``Tz`` or as a ``FixedOffset``. Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 
 [#_datetime_and_time_zone_drop]
-==== - datetime_and_time_zone_drop
+==== datetime_and_time_zone_drop()
 
 [source,cpp]
 ----

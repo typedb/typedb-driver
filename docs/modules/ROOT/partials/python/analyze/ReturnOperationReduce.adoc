@@ -11,7 +11,7 @@
 
 // tag::methods[]
 [#_ReturnOperationReduce_reducers_]
-==== - reducers
+==== reducers()
 
 [source,python]
 ----

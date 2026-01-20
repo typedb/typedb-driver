@@ -13,7 +13,7 @@ Represents a ‘not’ constraint: not { &lt;conjunction&gt; }
 
 // tag::methods[]
 [#_Not_conjunction_]
-==== - conjunction
+==== conjunction()
 
 [source,python]
 ----

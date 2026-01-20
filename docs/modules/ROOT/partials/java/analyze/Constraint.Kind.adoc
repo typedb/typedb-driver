@@ -17,7 +17,7 @@ Represents a kind constraint:
 
 // tag::methods[]
 [#_Constraint_Kind_asComparison_]
-==== - asComparison
+==== asComparison()
 
 [source,java]
 ----
@@ -31,7 +31,7 @@ Constraint.Comparison asComparison()
 `Constraint.Comparison`
 
 [#_Constraint_Kind_asExpression_]
-==== - asExpression
+==== asExpression()
 
 [source,java]
 ----
@@ -45,7 +45,7 @@ Constraint.Expression asExpression()
 `Constraint.Expression`
 
 [#_Constraint_Kind_asFunctionCall_]
-==== - asFunctionCall
+==== asFunctionCall()
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ Constraint.FunctionCall asFunctionCall()
 `Constraint.FunctionCall`
 
 [#_Constraint_Kind_asHas_]
-==== - asHas
+==== asHas()
 
 [source,java]
 ----
@@ -73,7 +73,7 @@ Constraint.Has asHas()
 `Constraint.Has`
 
 [#_Constraint_Kind_asIid_]
-==== - asIid
+==== asIid()
 
 [source,java]
 ----
@@ -87,7 +87,7 @@ Constraint.Iid asIid()
 `Constraint.Iid`
 
 [#_Constraint_Kind_asIs_]
-==== - asIs
+==== asIs()
 
 [source,java]
 ----
@@ -101,7 +101,7 @@ Constraint.Is asIs()
 `Constraint.Is`
 
 [#_Constraint_Kind_asIsa_]
-==== - asIsa
+==== asIsa()
 
 [source,java]
 ----
@@ -115,7 +115,7 @@ Constraint.Isa asIsa()
 `Constraint.Isa`
 
 [#_Constraint_Kind_asKind_]
-==== - asKind
+==== asKind()
 
 [source,java]
 ----
@@ -129,7 +129,7 @@ Constraint.Kind asKind()
 `Constraint.Kind`
 
 [#_Constraint_Kind_asLabel_]
-==== - asLabel
+==== asLabel()
 
 [source,java]
 ----
@@ -143,7 +143,7 @@ Constraint.Label asLabel()
 `Constraint.Label`
 
 [#_Constraint_Kind_asLinks_]
-==== - asLinks
+==== asLinks()
 
 [source,java]
 ----
@@ -157,7 +157,7 @@ Constraint.Links asLinks()
 `Constraint.Links`
 
 [#_Constraint_Kind_asNot_]
-==== - asNot
+==== asNot()
 
 [source,java]
 ----
@@ -171,7 +171,7 @@ Constraint.Not asNot()
 `Constraint.Not`
 
 [#_Constraint_Kind_asOr_]
-==== - asOr
+==== asOr()
 
 [source,java]
 ----
@@ -185,7 +185,7 @@ Constraint.Or asOr()
 `Constraint.Or`
 
 [#_Constraint_Kind_asOwns_]
-==== - asOwns
+==== asOwns()
 
 [source,java]
 ----
@@ -199,7 +199,7 @@ Constraint.Owns asOwns()
 `Constraint.Owns`
 
 [#_Constraint_Kind_asPlays_]
-==== - asPlays
+==== asPlays()
 
 [source,java]
 ----
@@ -213,7 +213,7 @@ Constraint.Plays asPlays()
 `Constraint.Plays`
 
 [#_Constraint_Kind_asRelates_]
-==== - asRelates
+==== asRelates()
 
 [source,java]
 ----
@@ -227,7 +227,7 @@ Constraint.Relates asRelates()
 `Constraint.Relates`
 
 [#_Constraint_Kind_asSub_]
-==== - asSub
+==== asSub()
 
 [source,java]
 ----
@@ -241,7 +241,7 @@ Constraint.Sub asSub()
 `Constraint.Sub`
 
 [#_Constraint_Kind_asTry_]
-==== - asTry
+==== asTry()
 
 [source,java]
 ----
@@ -255,7 +255,7 @@ Constraint.Try asTry()
 `Constraint.Try`
 
 [#_Constraint_Kind_asValue_]
-==== - asValue
+==== asValue()
 
 [source,java]
 ----
@@ -269,7 +269,7 @@ Constraint.Value asValue()
 `Constraint.Value`
 
 [#_Constraint_Kind_isComparison_]
-==== - isComparison
+==== isComparison()
 
 [source,java]
 ----
@@ -283,7 +283,7 @@ boolean isComparison()
 `boolean`
 
 [#_Constraint_Kind_isExpression_]
-==== - isExpression
+==== isExpression()
 
 [source,java]
 ----
@@ -297,7 +297,7 @@ boolean isExpression()
 `boolean`
 
 [#_Constraint_Kind_isFunctionCall_]
-==== - isFunctionCall
+==== isFunctionCall()
 
 [source,java]
 ----
@@ -311,7 +311,7 @@ boolean isFunctionCall()
 `boolean`
 
 [#_Constraint_Kind_isHas_]
-==== - isHas
+==== isHas()
 
 [source,java]
 ----
@@ -325,7 +325,7 @@ boolean isHas()
 `boolean`
 
 [#_Constraint_Kind_isIid_]
-==== - isIid
+==== isIid()
 
 [source,java]
 ----
@@ -339,7 +339,7 @@ boolean isIid()
 `boolean`
 
 [#_Constraint_Kind_isIs_]
-==== - isIs
+==== isIs()
 
 [source,java]
 ----
@@ -353,7 +353,7 @@ boolean isIs()
 `boolean`
 
 [#_Constraint_Kind_isIsa_]
-==== - isIsa
+==== isIsa()
 
 [source,java]
 ----
@@ -367,7 +367,7 @@ boolean isIsa()
 `boolean`
 
 [#_Constraint_Kind_isKind_]
-==== - isKind
+==== isKind()
 
 [source,java]
 ----
@@ -381,7 +381,7 @@ boolean isKind()
 `boolean`
 
 [#_Constraint_Kind_isLabel_]
-==== - isLabel
+==== isLabel()
 
 [source,java]
 ----
@@ -395,7 +395,7 @@ boolean isLabel()
 `boolean`
 
 [#_Constraint_Kind_isLinks_]
-==== - isLinks
+==== isLinks()
 
 [source,java]
 ----
@@ -409,7 +409,7 @@ boolean isLinks()
 `boolean`
 
 [#_Constraint_Kind_isNot_]
-==== - isNot
+==== isNot()
 
 [source,java]
 ----
@@ -423,7 +423,7 @@ boolean isNot()
 `boolean`
 
 [#_Constraint_Kind_isOr_]
-==== - isOr
+==== isOr()
 
 [source,java]
 ----
@@ -437,7 +437,7 @@ boolean isOr()
 `boolean`
 
 [#_Constraint_Kind_isOwns_]
-==== - isOwns
+==== isOwns()
 
 [source,java]
 ----
@@ -451,7 +451,7 @@ boolean isOwns()
 `boolean`
 
 [#_Constraint_Kind_isPlays_]
-==== - isPlays
+==== isPlays()
 
 [source,java]
 ----
@@ -465,7 +465,7 @@ boolean isPlays()
 `boolean`
 
 [#_Constraint_Kind_isRelates_]
-==== - isRelates
+==== isRelates()
 
 [source,java]
 ----
@@ -479,7 +479,7 @@ boolean isRelates()
 `boolean`
 
 [#_Constraint_Kind_isSub_]
-==== - isSub
+==== isSub()
 
 [source,java]
 ----
@@ -493,7 +493,7 @@ boolean isSub()
 `boolean`
 
 [#_Constraint_Kind_isTry_]
-==== - isTry
+==== isTry()
 
 [source,java]
 ----
@@ -507,7 +507,7 @@ boolean isTry()
 `boolean`
 
 [#_Constraint_Kind_isValue_]
-==== - isValue
+==== isValue()
 
 [source,java]
 ----
@@ -521,7 +521,7 @@ boolean isValue()
 `boolean`
 
 [#_Constraint_Kind_kind_]
-==== - kind
+==== kind()
 
 [source,java]
 ----
@@ -535,7 +535,7 @@ com.typedb.driver.jni.Kind kind()
 `com.typedb.driver.jni.Kind`
 
 [#_Constraint_Kind_span_]
-==== - span
+==== span()
 
 [source,java]
 ----
@@ -549,7 +549,7 @@ Gets the span of this constraint.
 `Constraint.Span`
 
 [#_Constraint_Kind_type_]
-==== - type
+==== type()
 
 [source,java]
 ----
@@ -563,7 +563,7 @@ ConstraintVertex type()
 `ConstraintVertex`
 
 [#_Constraint_Kind_variant_]
-==== - variant
+==== variant()
 
 [source,java]
 ----

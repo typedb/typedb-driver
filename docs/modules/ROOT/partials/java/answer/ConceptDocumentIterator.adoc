@@ -14,7 +14,7 @@ Represents an iterator over concept documents (represented as ``JSON``s) returne
 
 // tag::methods[]
 [#_ConceptDocumentIterator_asConceptDocuments_]
-==== - asConceptDocuments
+==== asConceptDocuments()
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ concept.asConceptDocuments();
 ----
 
 [#_ConceptDocumentIterator_isConceptDocuments_]
-==== - isConceptDocuments
+==== isConceptDocuments()
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ concept.isConceptDocuments();
 ----
 
 [#_ConceptDocumentIterator_stream_]
-==== - stream
+==== stream()
 
 [source,java]
 ----

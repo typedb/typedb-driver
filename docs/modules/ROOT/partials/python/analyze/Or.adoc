@@ -13,7 +13,7 @@ Represents an ‘or’ constraint: { &lt;branches[0]&gt; } or { &lt;branches[1]&
 
 // tag::methods[]
 [#_Or_branches_]
-==== - branches
+==== branches()
 
 [source,python]
 ----

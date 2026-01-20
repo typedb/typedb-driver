@@ -36,7 +36,7 @@ a| `year` a| `int` a| Return the datetime’s year (1-9999).
 
 // tag::methods[]
 [#_Datetime_fromstring_datetime_str_str_tz_name_str_None_offset_seconds_int_None_datetime_fmt_str]
-==== - fromstring
+==== fromstring()
 
 [source,python]
 ----
@@ -72,7 +72,7 @@ Datetime.fromstring("21/09/24 18:34", tz_name="Africa/Cairo", datetime_fmt="%d/%
 ----
 
 [#_Datetime_fromtimestamp_timestamp_seconds_int_subsec_nanos_int_tz_name_str_None_offset_seconds_int_None]
-==== - fromtimestamp
+==== fromtimestamp()
 
 [source,python]
 ----
@@ -98,7 +98,7 @@ a| `offset_seconds` a| Offset in seconds from UTC (e.g., 3600 for +01:00, -18000
 ``
 
 [#_Datetime_isoformat_]
-==== - isoformat
+==== isoformat()
 
 [source,python]
 ----
@@ -112,7 +112,7 @@ Return the time formatted according to ISO.
 `str`
 
 [#_Datetime_offset_seconds_fromstring_offset_str]
-==== - offset_seconds_fromstring
+==== offset_seconds_fromstring()
 
 [source,python]
 ----
@@ -142,7 +142,7 @@ Datetime.fromstring("2024-09-21T18:34:22.009257123", offset_seconds=Datetime.off
 ----
 
 [#_Datetime_utcfromstring_datetime_str_str_tz_name_str_None_offset_seconds_int_None_datetime_fmt_str]
-==== - utcfromstring
+==== utcfromstring()
 
 [source,python]
 ----
@@ -179,7 +179,7 @@ Datetime.utcfromstring("21/09/24 18:34", tz_name="Europe/London", datetime_fmt="
 ----
 
 [#_Datetime_utcfromtimestamp_timestamp_seconds_int_subsec_nanos_int_tz_name_str_None_offset_seconds_int_None]
-==== - utcfromtimestamp
+==== utcfromtimestamp()
 
 [source,python]
 ----

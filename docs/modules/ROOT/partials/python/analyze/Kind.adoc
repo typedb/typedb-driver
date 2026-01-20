@@ -13,7 +13,7 @@ Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
 
 // tag::methods[]
 [#_Kind_kind_]
-==== - kind
+==== kind()
 
 [source,python]
 ----
@@ -27,7 +27,7 @@ kind() -> typedb.common.enums.Kind
 `typedb.common.enums.Kind`
 
 [#_Kind_type_]
-==== - type
+==== type()
 
 [source,python]
 ----

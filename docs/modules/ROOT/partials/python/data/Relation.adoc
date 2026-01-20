@@ -13,7 +13,7 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 
 // tag::methods[]
 [#_Relation_as_relation_]
-==== - as_relation
+==== as_relation()
 
 [source,python]
 ----
@@ -34,7 +34,7 @@ relation.as_relation()
 ----
 
 [#_Relation_get_iid_]
-==== - get_iid
+==== get_iid()
 
 [source,python]
 ----
@@ -55,7 +55,7 @@ relation.get_iid()
 ----
 
 [#_Relation_get_type_]
-==== - get_type
+==== get_type()
 
 [source,python]
 ----
@@ -76,7 +76,7 @@ relation.get_type()
 ----
 
 [#_Relation_is_relation_]
-==== - is_relation
+==== is_relation()
 
 [source,python]
 ----

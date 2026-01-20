@@ -11,7 +11,7 @@
 A representation of a query pipeline.
 
 [#_pipeline_drop]
-==== - pipeline_drop
+==== pipeline_drop()
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``Pipeline`` object.
 `void`
 
 [#_pipeline_get_conjunction]
-==== - pipeline_get_conjunction
+==== pipeline_get_conjunction()
 
 [source,cpp]
 ----

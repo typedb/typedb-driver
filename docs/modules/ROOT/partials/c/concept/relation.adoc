@@ -2,7 +2,7 @@
 === relation
 
 [#_relation_get_type]
-==== - relation_get_type
+==== relation_get_type()
 
 [source,cpp]
 ----

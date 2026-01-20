@@ -11,7 +11,7 @@
 Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.
 
 [#_reducer_drop]
-==== - reducer_drop
+==== reducer_drop()
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``Reducer`` object.
 `void`
 
 [#_reducer_get_arguments]
-==== - reducer_get_arguments
+==== reducer_get_arguments()
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ The arguments to this Reducer. e.g. ``$x`` in ``sum($x)``
 `struct VariableIterator*`
 
 [#_reducer_get_name]
-==== - reducer_get_name
+==== reducer_get_name()
 
 [source,cpp]
 ----

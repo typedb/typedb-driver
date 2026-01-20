@@ -2,7 +2,7 @@
 === variableannotationsiterator
 
 [#_variable_annotations_iterator_drop]
-==== - variable_annotations_iterator_drop
+==== variable_annotations_iterator_drop()
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``VariableAnnotationsIterator`` object.
 `void`
 
 [#_variable_annotations_iterator_next]
-==== - variable_annotations_iterator_next
+==== variable_annotations_iterator_next()
 
 [source,cpp]
 ----

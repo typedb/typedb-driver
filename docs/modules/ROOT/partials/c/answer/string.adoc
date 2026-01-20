@@ -2,7 +2,7 @@
 === string
 
 [#_string_free]
-==== - string_free
+==== string_free()
 
 [source,cpp]
 ----

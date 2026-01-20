@@ -13,7 +13,7 @@ Represents a ‘links’ constraint: &lt;relation&gt; links (&lt;role&gt;: &lt;p
 
 // tag::methods[]
 [#_Links_exactness_]
-==== - exactness
+==== exactness()
 
 [source,python]
 ----
@@ -27,7 +27,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Links_player_]
-==== - player
+==== player()
 
 [source,python]
 ----
@@ -41,7 +41,7 @@ player() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Links_relation_]
-==== - relation
+==== relation()
 
 [source,python]
 ----
@@ -55,7 +55,7 @@ relation() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Links_role_]
-==== - role
+==== role()
 
 [source,python]
 ----

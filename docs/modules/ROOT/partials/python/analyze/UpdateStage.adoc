@@ -13,7 +13,7 @@ Represents an ‘update’ stage: update &lt;block&gt;
 
 // tag::methods[]
 [#_UpdateStage_block_]
-==== - block
+==== block()
 
 [source,python]
 ----

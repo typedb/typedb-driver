@@ -9,7 +9,7 @@ Holds a representation of a function, and the result of type-inference for each 
 
 // tag::methods[]
 [#_Function_argument_annotations_]
-==== - argument_annotations
+==== argument_annotations()
 
 [source,python]
 ----
@@ -23,7 +23,7 @@ Gets the type annotations for each argument of the function.
 `Iterator['VariableAnnotations']`
 
 [#_Function_argument_variables_]
-==== - argument_variables
+==== argument_variables()
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ Gets the variables which are the arguments of the function.
 `Iterator['Variable']`
 
 [#_Function_body_]
-==== - body
+==== body()
 
 [source,python]
 ----
@@ -51,7 +51,7 @@ Gets the pipeline which forms the body of the function.
 `Pipeline`
 
 [#_Function_return_annotations_]
-==== - return_annotations
+==== return_annotations()
 
 [source,python]
 ----
@@ -65,7 +65,7 @@ Gets the type annotations for each concept returned by the function.
 `Iterator['VariableAnnotations']`
 
 [#_Function_return_operation_]
-==== - return_operation
+==== return_operation()
 
 [source,python]
 ----

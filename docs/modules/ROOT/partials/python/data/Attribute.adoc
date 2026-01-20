@@ -15,7 +15,7 @@ Attributes can be uniquely addressed by their type and value.
 
 // tag::methods[]
 [#_Attribute_as_attribute_]
-==== - as_attribute
+==== as_attribute()
 
 [source,python]
 ----
@@ -36,7 +36,7 @@ attribute.as_attribute()
 ----
 
 [#_Attribute_get_boolean_]
-==== - get_boolean
+==== get_boolean()
 
 [source,python]
 ----
@@ -57,7 +57,7 @@ attribute.get_boolean()
 ----
 
 [#_Attribute_get_date_]
-==== - get_date
+==== get_date()
 
 [source,python]
 ----
@@ -78,7 +78,7 @@ attribute.get_date()
 ----
 
 [#_Attribute_get_datetime_]
-==== - get_datetime
+==== get_datetime()
 
 [source,python]
 ----
@@ -99,7 +99,7 @@ attribute.get_datetime()
 ----
 
 [#_Attribute_get_datetime_tz_]
-==== - get_datetime_tz
+==== get_datetime_tz()
 
 [source,python]
 ----
@@ -120,7 +120,7 @@ attribute.get_datetime_tz()
 ----
 
 [#_Attribute_get_decimal_]
-==== - get_decimal
+==== get_decimal()
 
 [source,python]
 ----
@@ -141,7 +141,7 @@ attribute.get_decimal()
 ----
 
 [#_Attribute_get_double_]
-==== - get_double
+==== get_double()
 
 [source,python]
 ----
@@ -162,7 +162,7 @@ attribute.get_double()
 ----
 
 [#_Attribute_get_duration_]
-==== - get_duration
+==== get_duration()
 
 [source,python]
 ----
@@ -183,7 +183,7 @@ attribute.get_duration()
 ----
 
 [#_Attribute_get_integer_]
-==== - get_integer
+==== get_integer()
 
 [source,python]
 ----
@@ -204,7 +204,7 @@ attribute.get_integer()
 ----
 
 [#_Attribute_get_string_]
-==== - get_string
+==== get_string()
 
 [source,python]
 ----
@@ -225,7 +225,7 @@ attribute.get_string()
 ----
 
 [#_Attribute_get_struct_]
-==== - get_struct
+==== get_struct()
 
 [source,python]
 ----
@@ -246,7 +246,7 @@ attribute.get_struct()
 ----
 
 [#_Attribute_get_type_]
-==== - get_type
+==== get_type()
 
 [source,python]
 ----
@@ -267,7 +267,7 @@ attribute.get_type()
 ----
 
 [#_Attribute_get_value_]
-==== - get_value
+==== get_value()
 
 [source,python]
 ----
@@ -288,7 +288,7 @@ attribute.get_value()
 ----
 
 [#_Attribute_get_value_type_]
-==== - get_value_type
+==== get_value_type()
 
 [source,python]
 ----
@@ -309,7 +309,7 @@ attribute.get_value_type()
 ----
 
 [#_Attribute_is_attribute_]
-==== - is_attribute
+==== is_attribute()
 
 [source,python]
 ----

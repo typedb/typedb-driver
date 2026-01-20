@@ -9,7 +9,7 @@ A variable and its sort order.
 
 // tag::methods[]
 [#_SortVariable_order_]
-==== - order
+==== order()
 
 [source,python]
 ----
@@ -23,7 +23,7 @@ order() -> SortOrder
 `SortOrder`
 
 [#_SortVariable_variable_]
-==== - variable
+==== variable()
 
 [source,python]
 ----

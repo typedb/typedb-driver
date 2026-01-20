@@ -2,7 +2,7 @@
 === databases
 
 [#_database_schema]
-==== - database_schema
+==== database_schema()
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ A full schema text as a valid TypeQL define query string.
 `char*`
 
 [#_databases_all]
-==== - databases_all
+==== databases_all()
 
 [source,cpp]
 ----
@@ -34,7 +34,7 @@ Returns a ``DatabaseIterator`` over all databases present on the TypeDB server.
 `struct DatabaseIterator*`
 
 [#_databases_contains]
-==== - databases_contains
+==== databases_contains()
 
 [source,cpp]
 ----
@@ -50,7 +50,7 @@ Checks if a database with the given name exists.
 `bool`
 
 [#_databases_create]
-==== - databases_create
+==== databases_create()
 
 [source,cpp]
 ----
@@ -66,7 +66,7 @@ Create a database with the given name.
 `void`
 
 [#_databases_get]
-==== - databases_get
+==== databases_get()
 
 [source,cpp]
 ----
@@ -82,7 +82,7 @@ Retrieve the database with the given name.
 `const struct Database*`
 
 [#_databases_import_from_file]
-==== - databases_import_from_file
+==== databases_import_from_file()
 
 [source,cpp]
 ----

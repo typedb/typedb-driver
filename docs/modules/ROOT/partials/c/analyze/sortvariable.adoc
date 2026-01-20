@@ -11,7 +11,7 @@
 The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``
 
 [#_sort_variable_drop]
-==== - sort_variable_drop
+==== sort_variable_drop()
 
 [source,cpp]
 ----
@@ -27,7 +27,7 @@ Frees the native rust ``SortVariable`` object.
 `void`
 
 [#_sort_variable_get_order]
-==== - sort_variable_get_order
+==== sort_variable_get_order()
 
 [source,cpp]
 ----
@@ -43,7 +43,7 @@ Returns the sort order for the variable being sorted on.
 `enum SortOrder`
 
 [#_sort_variable_get_variable]
-==== - sort_variable_get_variable
+==== sort_variable_get_variable()
 
 [source,cpp]
 ----

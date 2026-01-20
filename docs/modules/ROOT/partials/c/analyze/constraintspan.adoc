@@ -2,7 +2,7 @@
 === constraintspan
 
 [#_constraint_span_begin]
-==== - constraint_span_begin
+==== constraint_span_begin()
 
 [source,cpp]
 ----
@@ -18,7 +18,7 @@ The offset of the first character of the specified constraint in the source quer
 `int64_t`
 
 [#_constraint_span_end]
-==== - constraint_span_end
+==== constraint_span_end()
 
 [source,cpp]
 ----

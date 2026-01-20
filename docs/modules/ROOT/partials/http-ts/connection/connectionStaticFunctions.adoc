@@ -5,7 +5,7 @@
 
 // tag::methods[]
 [#_isBasicParams_isBasicParams_params_DriverParams]
-==== - isBasicParams
+==== isBasicParams()
 
 [source,typescript]
 ----
@@ -28,7 +28,7 @@ a| `params` a|  a| `DriverParams`
 `params is DriverParamsBasic`
 
 [#_isTranslatedParams_isTranslatedParams_params_DriverParams]
-==== - isTranslatedParams
+==== isTranslatedParams()
 
 [source,typescript]
 ----
@@ -51,7 +51,7 @@ a| `params` a|  a| `DriverParams`
 `params is DriverParamsTranslated`
 
 [#_remoteOrigin_remoteOrigin_params_DriverParams]
-==== - remoteOrigin
+==== remoteOrigin()
 
 [source,typescript]
 ----
